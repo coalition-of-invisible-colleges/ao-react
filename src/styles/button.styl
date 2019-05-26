@@ -1,0 +1,42 @@
+@import "./colours"
+
+button
+  width: 100%
+  color:contentColour
+  background:accent4
+  border:1px solid accent4
+  font-family: sans-serif
+  font-weight: lighter
+  font-size: 1em
+  text-transform: lowercase
+  padding:10px 0
+  opacity:0.9
+  font-weight:bold
+
+button:hover
+  opacity:1
+
+.primary
+  color:main
+  background:accent2
+  border-color: accent2
+
+.halfsize
+  width:calc(50% - 2px)
+  height:auto
+  color:contentColour
+  background:accent4
+  border:1px solid accent4
+  padding:0
+
+.halfsize:first-of-type
+  margin:5px 4px 5px 0
+
+.halfsize:nth-of-type(2)
+  margin:5px 0
+
+.halfsize img
+  width:50%
+  height:auto
+  line-height:75px
+  vertical-align:middle
