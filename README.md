@@ -1,9 +1,9 @@
 
 #### Autonomous Organization
 
-AO is javascrinfrastructure to help share & co-ordinate
+AO is locally run infrastructure to help create successful commons hackerspaces.
 
-`git clone dctrl.ca`
+`git clone ...`
 `cd ao`
 
 `yarn install`
@@ -11,13 +11,14 @@ AO is javascrinfrastructure to help share & co-ordinate
 `yarn start`
 
 Feature list:
-    - Connect resources with rfid readers and pin activated hardware
-    - Maintain list of accounts associated with rfid tag & password
+    - Connect physical resources (door, vending) with readers and pin activated hardware.
+    - Maintain list of accounts associated with rfid tags.
     - Accounts can create cards, send them between accounts, create lists of priorities, plunge cards into cards inception.
 
 To fully function ao requires sqlite3, bitcoind, and clightning. Example configuration.js:
 
-`module.exports = {
+````
+module.exports = {
     bitcoind:{
         username:'dctrl',
         password:'123',
@@ -33,8 +34,7 @@ To fully function ao requires sqlite3, bitcoind, and clightning. Example configu
     sqlite3: {
         file: '/home/trhode/.ao/database.sqlite3'
     }
-
 }
-`
+````
 
-The addresses created by ao are on this device - backup the ~/.lightning/hsm_secret file.
+The addresses created by ao are on this device - backup the ~/.lightning/hsm_secret file - this is very experimental; use at your own risk.
