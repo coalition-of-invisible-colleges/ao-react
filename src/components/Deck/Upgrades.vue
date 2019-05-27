@@ -194,6 +194,7 @@ export default {
 
 .selected
     background: white
+    border-radius: 40px 40px 0 0
 
 .formlabel
     padding-top: 1em

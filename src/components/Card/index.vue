@@ -170,7 +170,7 @@ export default {
     margin-bottom: .25em
     padding:1em
     //border-radius: 12px
-    box-shadow: -7px 7px 7px 1px #151515
+    box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5)
 
 .dont-break-out
   overflow-wrap: break-word
