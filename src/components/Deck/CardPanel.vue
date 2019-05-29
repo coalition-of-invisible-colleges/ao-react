@@ -9,13 +9,18 @@
             img.fl(v-if='!open && topCard.color === "green"', src='../../assets/images/backGreen.svg')
             img.fl(v-if='!open && topCard.color === "purple"', src='../../assets/images/backPurple.svg')
             img.fl(v-if='!open && topCard.color === "blue"', src='../../assets/images/backBlue.svg')
-        .six.grid(:class='panelSty')
-            .toglr.fr(@click='toggleOpen')
+        .two.grid.horizcenter(:class='panelSty')
+            .box.verticalcenter
+                h3(v-if='!open') {{ top + 1 }}
+        .two.grid.horizcenter(:class='panelSty')
+            .toglr.fr.mandalign(@click='toggleOpen')
                 img(v-if='open', src='../../assets/images/openRed.svg')
                 img(v-else, src='../../assets/images/open.svg')
-            .box
-                h3(v-if='!open') {{ top + 1 }} / {{ c.length }}
+        .two.grid.horizcenter(:class='panelSty')
+            .box.verticalcenter
+                h3(v-if='!open') {{ c.length }}
                 h3(v-else) all
+
         .three.grid(@click='next')
             span &nbsp;
             img.fr(v-if='!open && topCard.color === "red"', , src='../../assets/images/forwardRed.svg')
@@ -231,13 +236,23 @@ img
 .ptr
     cursor: pointer
     margin-bottom: 0
-    margin-top: .5em
+    margin: 1em 0 0.5em 0
+    background-color: rgba(51, 51, 51, 0.3)
+    border-radius: 40px
 
 .fr
     float: right
-
+    margin-left: 0.5em
+    margin-top: 0.5em
+    //margin-bottom: 0.8em
+    margin-right: 0.5em
+    
 .fl
     float: left
+    margin-right: 0.5em
+    margin-top: 0.5em
+    //margin-bottom: 0.8em
+    margin-left: 0.5em
 
 .fadey
     opacity: 0.36
@@ -249,5 +264,13 @@ img
     min-height: 1em
     background: softGrey
 
+.verticalcenter
+    margin-top: 1em
 
+.horizcenter
+    text-align: center
+    
+.mandalign
+    margin-top: 5px
+    
 </style>

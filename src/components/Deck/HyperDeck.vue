@@ -7,7 +7,7 @@
             hypercard(v-else  :b="parent" )
             .bar()
         .six.columns.buffer
-            div.upgradesbar(:class='cardInputSty')
+            div.upgradesbar()
                 upgrades(:b='parent')
             priorities.padbottom(:taskId="parent.taskId")
     div.fadey(:class='cardInputSty')
@@ -135,6 +135,8 @@ export default {
 .upgradesbar
   height: fit-content
   margin-bottom: 2em
+  background-color: rgba(21, 21, 21, 0.25)
+  border-radius: 40px
   
 .upgrade
     height: 4em
@@ -150,7 +152,8 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 0.5em
+    padding: 1em 0 1em 0
+    margin: 0 1em
 
 .slide-fade-enter-active {
   transition: all .6s ease;
