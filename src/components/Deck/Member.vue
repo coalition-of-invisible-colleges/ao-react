@@ -1,17 +1,21 @@
 <template lang='pug'>
 
-.memberrow.membershipcard
-      .row
-          .eleven.grid
-              label.hackername {{ m.name }}
-          .one.grid
-              img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
-              img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
-      .row
-          .nine.grid
-              label {{ m.balance.toFixed(2) }}
-          .three.grid
-              dctrl-active(:m='m')
+.memberrow.membershipcard.agedwrapper
+    .agedbackground.freshpaper(v-if='cardAge < 8')
+    .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
+    .agedbackground.montholdpaper(v-else-if='cardAge < 90')
+    .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
+    .row
+        .eleven.grid
+            label.hackername {{ m.name }}
+        .one.grid
+            img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
+            img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
+    .row
+        .nine.grid
+            label {{ m.balance.toFixed(2) }}
+        .three.grid
+            dctrl-active(:m='m')
 
 
 </template>
@@ -36,6 +40,16 @@ export default {
             })
             return isLoggedIn
         },
+        cardInputSty(){
+            return {
+                redwx : this.b.color == 'red',
+                bluewx : this.b.color == 'blue',
+                greenwx : this.b.color == 'green',
+                yellowwx : this.b.color == 'yellow',
+                purplewx : this.b.color == 'purple',
+                blackwx : this.b.color == 'black',
+            }
+        }
     },
     methods: {
         getName(taskId){
@@ -73,9 +87,8 @@ label
     font-size: 1.5em
 
 .membershipcard
-    border: 4px solid white
     padding: 1em
-    background: rgba(0, 0, 0, 0.75)
+    width: auto
 
 .logindicator
     float: right
@@ -83,4 +96,38 @@ label
 .logindicator:after
     clear: both
 
+.agedwrapper
+    position: relative
+
+.agedbackground
+    background-image: url('../../assets/images/paper.jpg')
+    background-repeat: no-repeat
+    background-position: center center
+    background-size: cover
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    position: absolute
+    width: 100%
+    height: 100%
+    pointer-events: none
+    //border-radius: 12px
+
+.freshpaper
+    background-image: url('../../assets/images/paper.jpg')
+    opacity: 0.2
+
+.weekoldpaper
+    background-image: url('../../assets/images/paper_aged_1.png')
+    opacity: 0.25
+
+.montholdpaper
+    background-image: url('../../assets/images/paper_aged_2.png')
+    opacity: 0.3
+
+.threemontholdpaper
+    background-image: url('../../assets/images/paper_aged_3.png')
+    opacity: 0.35
+    
 </style>

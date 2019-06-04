@@ -152,7 +152,7 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 1em 0 1em 0
+    padding: 1em 2em 1em 0
     margin: 0 1em
 
 .slide-fade-enter-active {
