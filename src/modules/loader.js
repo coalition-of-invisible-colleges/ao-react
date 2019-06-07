@@ -1,11 +1,7 @@
 import request from 'superagent'
 import uuidV1 from 'uuid/v1'
 import io from 'socket.io-client'
-const socket = io(window.location, {
-    reconnection: 'true',
-    reconnectionAttempts: 'Infinity',
-    reconnectionDelay: 10000
-})
+const socket = io()
 
 const actions = {
     loadCurrent({ commit, state, dispatch }){
@@ -40,7 +36,7 @@ const actions = {
             console.log('disconnected from server')
             commit('setConnected', 'disconnected')
             commit('setConnectionError', 'disconnect: ' + reason)
-            socket.open()
+            //socket.open()
        })
 
         socket.on('connect_error', (error)=> {
