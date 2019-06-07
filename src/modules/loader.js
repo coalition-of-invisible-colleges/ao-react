@@ -10,17 +10,6 @@ const socket = io(window.location, {
 const actions = {
     loadCurrent({ commit, state, dispatch }){
         console.log('loadCurrent')
-
-        socket.on('authenticated', ()=> {
-            console.log('authentication rec, applying stream')
-            commit('setConnected', 'connected')
-            commit('setConnectionError', '')
-            socket.on('eventstream', ev => {
-                console.log('stream triggered c!!')
-                commit('applyEvent', ev)
-                dispatch('displayEvent', ev)
-            })
-        })
         
         socket.on('unauthorized', (reason)=> {
             console.log('unauthorized event')
@@ -33,6 +22,17 @@ const actions = {
             socket.emit('authentication', {
                 session: state.session,
                 token: state.token
+            })
+
+            socket.on('authenticated', ()=> {
+                console.log('authentication rec, applying stream')
+                commit('setConnected', 'connected')
+                commit('setConnectionError', '')
+                socket.on('eventstream', ev => {
+                    console.log('stream triggered c!!')
+                    commit('applyEvent', ev)
+                    dispatch('displayEvent', ev)
+                })
             })
         })
 
