@@ -17,7 +17,18 @@ ul.navigation
         br
         span.subheading ({{$store.getters.member.name}})
     router-link(to='/dash' ) Dashboard
-
+    div.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
+      .dot.redwx
+      span disconnected
+    div.connectedstatus(v-if="$store.state.loader.connected == 'connecting'")
+      .dot.yellowwx
+      span connecting
+    div.connectedstatus(v-if="$store.state.loader.connected == 'connected'")
+      .dot.greenwx
+      span connected
+    div.connectedstatus(v-if="$store.state.loader.connectionError")
+      .dot.purplewx
+      span {{ $store.state.loader.connectionError }}
 </template>
 
 <script>
@@ -176,5 +187,15 @@ hr
 .subheading
     opacity: 0.9
     font-size: 85%
+
+.connectedstatus
+    margin-top: 1em
+    
+.dot
+  height: 0.5em
+  width: 0.5em
+  border-radius: 50%
+  display: inline-block
+  margin-right: 0.5em
 
 </style>
