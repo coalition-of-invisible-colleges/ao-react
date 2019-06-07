@@ -132,7 +132,7 @@ export default {
   width: fit-content
   background-color: rgba(51, 51, 51, 0.3)
   color: accent1
-  margin: 1em auto 1em auto
+  margin: 0 auto 0 auto
   text-align: center
   padding: 0.5em
 

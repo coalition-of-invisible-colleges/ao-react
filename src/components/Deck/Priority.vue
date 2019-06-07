@@ -1,10 +1,12 @@
 <template lang='pug'>
 
-.priorities
+.priorities.clearboth
     router-link(:to='"/task/" + taskId')
         img.singleship(v-if='!isBounty'  src='../../assets/images/singleship.svg')
         img.singleship(v-else  src='../../assets/images/cash1.svg')
-    span {{ name }} !
+    div.agedwrapper(:class="cardInputSty")
+        .agedbackground.freshpaper
+        span {{ name }} !
 
 </template>
 
@@ -27,6 +29,23 @@ export default {
             return this.$store.getters.bounties.some( t => {
                 return t.taskId === this.taskId
             })
+        },
+        cardInputSty() {
+          let color
+          this.$store.state.tasks.some(t => {
+              if (this.taskId === t.taskId){
+                  color = t.color
+                  return true
+              }
+          })
+          return {
+              redwx : color == 'red',
+              bluewx : color == 'blue',
+              greenwx : color == 'green',
+              yellowwx : color == 'yellow',
+              purplewx : color == 'purple',
+              blackwx : color == 'black',
+          }
         }
     }
 }
@@ -40,9 +59,38 @@ export default {
 .priorities
     color: white
 
+.clearboth
+    clear: both
+    
 .singleship
     display: inline
     height: 2em
     margin-right: 2em
+    
+.agedwrapper
+    position: relative
+    margin-bottom: 0.5em
+    width: 80%
+    float: right
+    padding: 0.5em
 
+.agedbackground
+    background-image: url('../../assets/images/paper.jpg')
+    background-repeat: no-repeat
+    background-position: center center
+    background-size: cover
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    position: absolute
+    width: 100%
+    height: 100%
+    pointer-events: none
+    //border-radius: 12px
+
+.freshpaper
+    background-image: url('../../assets/images/paper.jpg')
+    opacity: 0.2
+    
 </style>

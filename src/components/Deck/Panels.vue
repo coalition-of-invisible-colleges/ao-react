@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.deck
+.panel
     .row
       .four.columns(v-if='red.length > 0')
           card-panel(:c='red', :taskId='inId')
@@ -55,10 +55,10 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/button'
 
-.deck
+.panel
     width: 100%
-    padding: 0
-    margin: 0 1em
+    margin: 0 1em 0 -1em
+    padding: 0 2em
 
 .card
     padding: 2em

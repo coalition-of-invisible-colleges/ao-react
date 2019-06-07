@@ -49,6 +49,7 @@ function startDctrlAo(){
 
         socketProtector(io, {
             authenticate: socketAuth,
+            timeout: 2000
         })
 
         const filteredStream = evStream
