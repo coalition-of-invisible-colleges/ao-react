@@ -7,17 +7,14 @@
         .agedbackground.freshpaper
         span {{ name }} !!
         .row
-            .five.grid
+            .six.grid
                 button.accept(@click='claim')
                     img.arrow.fr(src='../../assets/images/buddadoge.svg')
                     span complete
-            .five.grid
+            .six.grid
                 button.dontaccept(@click='refuse')
                     img.arrow.fl(src='../../assets/images/buddadoge.svg')
                     span refocus
-            .two.grid.cur(@click='nextAction')
-                img.arrow.fl(src='../../assets/images/downRed.svg')
-
 
 </template>
 
@@ -113,9 +110,8 @@ button
     clear: both
     
 .singleship
-    display: inline
-    height: 2em
-    margin-right: 2em
+    width: 3.3724em
+    margin-top: 0.5em
 
 .arrow
     height: 3.35em
@@ -140,10 +136,11 @@ button
 
 .agedwrapper
     position: relative
-    margin-bottom: 0.5em
+    margin-top: 0.5em
     float: right
     padding: 0.5em
-    width: 80%
+    width: calc(100% - 5.5em)
+    margin-right: 0.5em
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')

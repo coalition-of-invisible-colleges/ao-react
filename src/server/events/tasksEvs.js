@@ -216,6 +216,15 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback){
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskAllocated(taskId, allocatedId, memberId) {
+  let newEvent = {
+     type: "task-allocated",
+     taskId, 
+     allocatedId, 
+     memberId
+  }
+}
+
 function invoiceCreated(taskId, bolt11, payment_hash, callback){
     let newEvent = {
         type: "invoice-created",
@@ -244,6 +253,7 @@ export default {
   taskGuilded,
   taskSubTasked,
   taskDeSubTasked,
+  taskAllocated,
   addressUpdated,
   invoiceCreated,
   taskBoostedLightning,

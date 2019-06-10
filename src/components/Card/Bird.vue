@@ -80,15 +80,6 @@ export default {
     margin:10px 0
     padding:20px
 
-.row
-    width: 100%
-    .mainColumn
-      width:calc(100% - 75px - 4%)
-    .secondaryColumn
-      width:75px
-      button
-        height:75px
-
 .btn
     width:100%
     margin-top: 2em

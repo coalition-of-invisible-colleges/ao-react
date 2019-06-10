@@ -19,19 +19,19 @@ const actions = {
                 session: state.session,
                 token: state.token
             })
-
-            socket.on('authenticated', ()=> {
-                console.log('authentication rec, applying stream')
-                commit('setConnected', 'connected')
-                commit('setConnectionError', '')
-                socket.on('eventstream', ev => {
-                    console.log('stream triggered c!!')
-                    commit('applyEvent', ev)
-                    dispatch('displayEvent', ev)
-                })
-            })
         })
 
+        socket.on('authenticated', ()=> {
+            console.log('authentication rec, applying stream')
+            commit('setConnected', 'connected')
+            commit('setConnectionError', '')
+            socket.on('eventstream', ev => {
+                console.log('stream triggered c!!')
+                commit('applyEvent', ev)
+                dispatch('displayEvent', ev)
+            })
+        })
+        
         socket.on('disconnect', (reason)=> {
             console.log('disconnected from server')
             commit('setConnected', 'disconnected')

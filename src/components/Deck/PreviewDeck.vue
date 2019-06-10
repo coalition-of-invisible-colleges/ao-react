@@ -3,7 +3,8 @@
 .preview(v-if='deck.length > 0')
     .row
       .four.grid
-          .bead.redwx(v-for="(b,i) in red", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
+          img.tinyboat(v-for="(b,i) in task.priorities", v-if="i < 5"  :b="b", @click='goto(b.taskId)', src='../../assets/images/boatbtnselected.svg')
+          .bead.redwx(v-for="(b,i) in red", v-if="i < (5 - task.priorities.length)"  :b="b", @click='goto(b.taskId)')
       .four.grid
           .bead.greenwx(v-for="(b,i) in green", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
       .four.grid
@@ -88,6 +89,11 @@ export default {
     width: 100%
     opacity: 0.5
 
+.tinyboat
+    height: 15px
+    width: 100%
+    display: inline-block;
+    
 .bead
     height: 15px
     width: 100%

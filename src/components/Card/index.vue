@@ -20,8 +20,8 @@
             img.upgrade(v-if='calcVal', src='../../assets/images/cash1.svg')
             span + {{ calcVal }}
         linky(:x='b.name')
-        priorities.tinypriorities(v-if='b.guild', :taskId="b.taskId", :inId='b.taskId')
         preview-deck.pd(:task='b')
+        priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   .row
       scroll.faded(:b='b', :inId='inId')
       img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
@@ -265,12 +265,6 @@ export default {
 
 .ungrabbedcoin {
   opacity: 0.3
-}
-
-.tinypriorities {
-    font-size: 75%
-    margin-bottom: 2em
-    color: white
 }
 
 .pd

@@ -72,13 +72,10 @@ export default new Vuex.Store({
 
           state.tasks.forEach(t => {
               let isMemberId = ( memberId === t.name )
-              console.log("matching",  t.name, {isMemberId})
               if (isMemberId){
-                  console.log("found matching task")
                   _.assign(card, t)
               }
           })
-          console.log("membercard", card )
           return card
       },
       channels(state, getters){
