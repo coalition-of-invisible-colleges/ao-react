@@ -57,15 +57,6 @@ export default {
         resetCard(){
             this.task.name = ''
         },
-        lookupTask(){
-            let found = false
-            this.$store.state.tasks.some(task => {
-                if(task.name == this.task.name) {
-                    found = task.taskId
-                }
-            })
-            return found
-        },
         subTaskTask(taskId) {
             request
                 .post('/events')
@@ -81,8 +72,8 @@ export default {
                 })
         },
         createOrFindTask(){
-            let found = this.lookupTask()
-            if(!found) {
+            let foundId = this.matchCard
+            if(!foundId) {
                 request
                     .post('/events')
                     .set('Authorization', this.$store.state.loader.token)
@@ -97,19 +88,23 @@ export default {
                         let n = this.task.name.slice()
                         this.$store.state.tasks.forEach( t => {
                             if (t.name === n){
-                                this.subTaskTask()
+                                this.subTaskTask(t.taskId)
                             }
                         })
                     })
             }
-            this.subTaskTask()
+            this.subTaskTask(foundId)
         },
     },
     computed: {
         matchCard(){
-            return this.$store.state.tasks.filter(t => {
-                return t.name === this.task.name
+            let foundId
+            this.$store.state.tasks.filter(t => {
+                if(t.name === this.task.name) {
+                    foundId = t.taskId
+                }
             })
+            return foundId
         },
         colorWord(){
             switch (this.task.color) {
