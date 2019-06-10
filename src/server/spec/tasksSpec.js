@@ -61,6 +61,9 @@ module.exports = function(req,res, next){
       case 'task-prioritized':
           specTaskPrioritized(req, res, next)
           break
+      case 'task-allocated':
+          specTaskAllocated(req, res, next)
+          break
       case 'invoice-created':
           specInvoiceCreated(req, res, next)
           break
@@ -411,6 +414,20 @@ function specTaskSwapped(req, res, next){
       req.body.taskId,
       req.body.swapId1,
       req.body.swapId2,
+      req.body.blame,
+      utils.buildResCallback(res)
+    )
+  } else {
+    res.status(200).send(errRes)
+  }
+}
+
+function specTaskAllocated(req, res, next) {
+  let errRes = []
+  if (validators.isTaskId(req.body.taskId, errRes)) {
+    events.tasksEvs.taskAllocated(
+      req.body.taskId,
+      req.body.allocatedId,
       req.body.blame,
       utils.buildResCallback(res)
     )

@@ -2,19 +2,24 @@
 
 .upgrades
     .row
-        .four.grid(@click='select(0)', :class='{selected: show === 0}')
+        .three.grid(@click='select(0)', :class='{selected: show === 0 && b.priorities.length > 0}')
+            img.upgrade(v-if='!show',  src='../../assets/images/boatblack.svg')
+            img.upgrade(v-else, src='../../assets/images/boatbtnselected.svg')
+        .three.grid(@click='select(1)', :class='{selected: show === 1}')
             img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
-        .four.grid(@click='select(1)', :class='{selected: show === 1}')
+        .three.grid(@click='select(2)', :class='{selected: show === 2}')
             img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-        .four.grid(@click='select(2)', :class='{selected: show === 2}')
+        .three.grid(@click='select(3)', :class='{selected: show === 3}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
     .mainbg
       transition(name='slide-fade')
         div(v-if='show === 0')
+            priorities(:taskId="b.taskId", :inId='b.taskId')
+        div(v-if='show === 1')
             guild-create
             current(v-for='n in nameList'  :memberId='n')
             img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-        template(v-if='show === 1')
+        template(v-if='show === 2')
           .box
             form-box(v-if='!b.bolt11'   :btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
               fancy-input(labelText='choose amount')
@@ -22,7 +27,7 @@
             pay-req(v-else   :bolt11='b.bolt11')
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
-        resource-book(v-if='show === 2', :tId='b.taskId')
+        resource-book(v-if='show === 3', :tId='b.taskId')
 
 </template>
 
@@ -46,6 +51,7 @@ import PayReq from './PayReq'
 import PayAddress from './PayAddress'
 import FancyInput from '../slotUtils/FancyInput'
 import Current from '../Members/Current'
+import Priorities from './Priorities'
 
 export default {
     props: ['b'],
@@ -54,11 +60,11 @@ export default {
         HyperDeck, Hypercard, GuildCreate,
         BountyCreate, PreviewDeck, Actions,
         ResourceBook, FormBox, Tag, PayReq,
-        PayAddress, FancyInput, Current
+        PayAddress, FancyInput, Current, Priorities
     },
     data(){
         return {
-            show: false,
+            show: 0,
             payreqAmount: '',
         }
     },

@@ -16,9 +16,9 @@
               img.agedbackground
   transition(name="slide-fade")
       .cc(v-if='showCreate')
-          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter='createTask').paperwrapper
+          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter='createOrFindTask').paperwrapper
           img.specialoverlay
-          button(@click='createTask').fwi Create Card
+          button(@click='createOrFindTask').fwi Create Card
 
 </template>
 
@@ -57,36 +57,52 @@ export default {
         resetCard(){
             this.task.name = ''
         },
-        createTask(){
+        lookupTask(){
+            let found = false
+            this.$store.state.tasks.some(task => {
+                if(task.name == this.task.name) {
+                    found = task.taskId
+                }
+            })
+            return found
+        },
+        subTaskTask(taskId) {
             request
                 .post('/events')
                 .set('Authorization', this.$store.state.loader.token)
                 .send({
-                    type: 'task-created',
-                    name: this.task.name,
-                    color: this.task.color,
-                    deck: [this.$store.getters.member.memberId],
+                    type: 'task-sub-tasked',
+                    taskId: this.taskId,
+                    subTask: taskId,
                 })
                 .end((err,res)=>{
-                    if (err) return console.log(err);
-                    let n = this.task.name.slice()
-                    this.$store.state.tasks.forEach( t => {
-                        if (t.name === n){
-                            request
-                                .post('/events')
-                                .set('Authorization', this.$store.state.loader.token)
-                                .send({
-                                    type: 'task-sub-tasked',
-                                    taskId: this.taskId,
-                                    subTask: t.taskId,
-                                })
-                                .end((err,res)=>{
-                                    console.log({err,res})
-                                    this.resetCard()
-                                })
-                        }
-                    })
+                    console.log({err,res})
+                    this.resetCard()
                 })
+        },
+        createOrFindTask(){
+            let found = this.lookupTask()
+            if(!found) {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                        type: 'task-created',
+                        name: this.task.name,
+                        color: this.task.color,
+                        deck: [this.$store.getters.member.memberId],
+                    })
+                    .end((err,res)=>{
+                        if (err) return console.log(err);
+                        let n = this.task.name.slice()
+                        this.$store.state.tasks.forEach( t => {
+                            if (t.name === n){
+                                this.subTaskTask()
+                            }
+                        })
+                    })
+            }
+            this.subTaskTask()
         },
     },
     computed: {

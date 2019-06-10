@@ -5,6 +5,7 @@
         hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
         div(v-else   @click='setAction(i)')
             hyperpriority(:taskId='t')
+    div.clearboth
 
 </template>
 
@@ -50,7 +51,7 @@ export default {
                   p = t.priorities
               }
           })
-          return p
+          return p.slice().reverse()
       }
   },
   components:{
@@ -67,6 +68,9 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/button'
 
+.priorities
+    padding-bottom: 0.5em
+    
 button
     background: darkteal
 
@@ -144,5 +148,8 @@ img
 
 .fl
     float: left
+
+.clearboth
+    clear: both
 
 </style>

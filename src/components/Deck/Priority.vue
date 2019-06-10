@@ -63,16 +63,15 @@ export default {
     clear: both
     
 .singleship
-    display: inline
-    height: 2em
-    margin-right: 2em
+    width: 3.3724em
     
 .agedwrapper
     position: relative
-    margin-bottom: 0.5em
-    width: 80%
+    margin-top: 0.5em
+    width: calc(100% - 5.5em)
     float: right
     padding: 0.5em
+    margin-right: 0.5em
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')

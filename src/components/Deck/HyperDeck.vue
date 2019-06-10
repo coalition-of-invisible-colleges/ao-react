@@ -9,7 +9,6 @@
         .six.columns.buffer
             div.upgradesbar()
                 upgrades(:b='parent')
-            priorities.padbottom(:taskId="parent.taskId")
     div.fadey(:class='cardInputSty')
         task-create(:taskId='parent.taskId')
         panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
