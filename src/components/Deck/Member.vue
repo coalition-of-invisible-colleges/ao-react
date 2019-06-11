@@ -16,7 +16,8 @@
             label {{ m.balance.toFixed(2) }}
         .three.grid
             dctrl-active(:m='m')
-
+            button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
+            button.smallcaps.redwx(v-else, @click='activate') activate
 
 </template>
 
@@ -26,6 +27,7 @@ import DctrlActive from '../Members/DctrlActive'
 import Badges from '../Members/Badges'
 import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
+import request from 'superagent'
 
 export default {
     props: ['m'],
@@ -61,7 +63,34 @@ export default {
                 }
             })
             return name
+        },
+        deactivate() {
+            console.log("deactivate called")
+            request
+                .post('/events')
+                .set('Authorization', this.$store.state.loader.token)
+                .send({
+                    type: 'member-deactivated',
+                    memberId: this.$store.getters.member.memberId,
+                })
+                .end((err,res)=>{
+                    console.log({err,res})
+                })
+        },
+        activate() {
+            console.log("activate called")
+            request
+                .post('/events')
+                .set('Authorization', this.$store.state.loader.token)
+                .send({
+                    type: 'member-activated',
+                    memberId: this.$store.getters.member.memberId,
+                })
+                .end((err,res)=>{
+                    console.log({err,res})
+                })
         }
+
     }
 }
 
@@ -113,6 +142,7 @@ label
     height: 100%
     pointer-events: none
     //border-radius: 12px
+    z-index: -1
 
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
@@ -129,5 +159,15 @@ label
 .threemontholdpaper
     background-image: url('../../assets/images/paper_aged_3.png')
     opacity: 0.35
-    
+   
+.smallcaps
+    color: #fff
+    width: 100%
+    border-radius: 50%
+    opacity: 0.75
+    padding: 0.5em
+    border-style: solid
+    border-color: white
+    border-width: 2px
+
 </style>

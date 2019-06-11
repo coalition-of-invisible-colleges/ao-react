@@ -11,7 +11,6 @@ function membersMuts(members, ev){
                   if ( member.active < 0) {
                       member.active = -1 * member.active
                   }
-                  member.active ++
               }
           })
           break
