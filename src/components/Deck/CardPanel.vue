@@ -9,14 +9,14 @@
             img.fl(v-if='!open && topCard.color === "green"', src='../../assets/images/backGreen.svg')
             img.fl(v-if='!open && topCard.color === "purple"', src='../../assets/images/backPurple.svg')
             img.fl(v-if='!open && topCard.color === "blue"', src='../../assets/images/backBlue.svg')
-        .two.grid.horizcenter(:class='panelSty')
+        .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ top + 1 }}
-        .two.grid.horizcenter(:class='panelSty')
-            .toglr.fr.mandalign(@click='toggleOpen')
+        .four.grid.horizcenter(:class='panelSty')
+            .toglr.mandalign(@click='toggleOpen')
                 img(v-if='open', src='../../assets/images/openRed.svg')
                 img(v-else, src='../../assets/images/open.svg')
-        .two.grid.horizcenter(:class='panelSty')
+        .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
                 h3(v-else) all
@@ -272,5 +272,8 @@ img
     
 .mandalign
     margin-top: 5px
-    
+
+.center
+    text-align: center
+
 </style>
