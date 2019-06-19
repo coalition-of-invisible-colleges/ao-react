@@ -43,7 +43,6 @@ export default {
   methods:{
       getTask(taskId){
           let gt = this.$store.getters.hashMap[taskId]
-          console.log({gt, taskId})
           return gt
       },
   },

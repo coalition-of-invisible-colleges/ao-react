@@ -23,7 +23,6 @@ div.totop
                    button.dontaccept(@click='refuse')
                        img.arrow.fl(src='../../assets/images/buddadoge.svg')
                        span I Do Not Accept
-
 </template>
 
 <script>
@@ -36,31 +35,31 @@ export default {
     components: { Current },
     methods:{
         accept(){
-            request
+          let sending = {
+              type: 'task-sub-tasked',
+              taskId: this.$store.getters.member.memberId,
+              subTask: this.b.taskId,
+          }
+
+          request
+              .post('/events')
+              .set('Authorization', this.$store.state.loader.token)
+              .send(sending)
+              .end((err,res)=>{
+
+                request
                 .post('/events')
                 .set('Authorization', this.$store.state.loader.token)
                 .send({
-                    type: 'task-grabbed',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
+                  type: 'task-grabbed',
+                  taskId: this.b.taskId,
+                  memberId: this.$store.getters.member.memberId,
                 })
                 .end((err,res)=>{
 
                 })
+          })
 
-            let sending = {
-                type: 'task-sub-tasked',
-                taskId: this.$store.getters.member.taskId,
-                subTask: this.b.taskId,
-            }
-            console.log("accept ", {sending})
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send(sending)
-                .end((err,res)=>{
-
-                })
         },
         refuse(){
             request

@@ -5,7 +5,6 @@
         img.scrolly(src='../../assets/images/scroll.svg')
     div(v-else @click='canIt')
         img(v-if='!isCared'  src='../../assets/images/garbage.svg').scrolly
-
 </template>
 
 <script>

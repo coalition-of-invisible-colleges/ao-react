@@ -12,13 +12,10 @@
   img.claimvine(v-for='n in b.claimed', v-if='n === $store.getters.member.memberId', src='../../assets/images/mark.svg')
   .row()
     .mainColumn.columns.name
-        img.upgrade(v-if='b.book.type', src='../../assets/images/time.svg')
-        h2(v-if='b.guild')
-            img.upgrade(src='../../assets/images/spartan.png')
-            span {{ b.guild }}
-        h2(v-if='calcVal')
-            img.upgrade(v-if='calcVal', src='../../assets/images/cash1.svg')
-            span + {{ calcVal }}
+
+        span(v-if='b.guild')
+            img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
+            span.bold {{b.guild}}
         linky(:x='b.name')
         preview-deck.pd(:task='b')
         priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
@@ -28,7 +25,7 @@
       p.hodlcount() {{ b.deck.length }}
       vine.faded(:b='b')
   passed(:b='b')
-  
+  button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
@@ -53,11 +50,20 @@ export default {
     },
     components: { FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities },
     methods: {
+        purge(){
+          request
+              .post('/events')
+              .set('Authorization', this.$store.state.loader.token)
+              .send({
+                  type: 'task-removed',
+                  taskId: this.b.taskId,
+              })
+              .end((err,res)=>{
+
+              })
+        },
         goIn(){
             this.$router.push("/task/" + this.b.taskId)
-        },
-        toggleActive(){
-            this.active = !this.active
         },
         toggleGrab(){
             if (this.isGrabbed) {
@@ -308,6 +314,14 @@ export default {
 .threemontholdpaper
     background-image: url('../../assets/images/paper_aged_3.png')
     opacity: 0.35
+
+
+.smallguild
+    height: 1.67em
+
+.bold
+    height: 1.21
+    font-weight: bolder
 
 // .innerborder
 //     // border: 20px solid white;

@@ -1,13 +1,10 @@
 <template lang='pug'>
 
-#archive(v-if="$store.getters.member")
+#archive
     .row.shipwrapper
         .shipbackground
-        .four.columns(v-if='$store.getters.inbox.length > 0')
-        .columns(:class='{eight: $store.getters.inbox.length > 0}')
             h3 {{$store.getters.member.name}} Archive
-            panels(:c='$store.getters.recurasaurus')
-
+            panels(:c='$store.getters.archive')
 </template>
 
 <script>

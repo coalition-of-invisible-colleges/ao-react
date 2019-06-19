@@ -7,7 +7,6 @@
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
         span {{ name }} !
-
 </template>
 
 <script>
@@ -61,10 +60,10 @@ export default {
 
 .clearboth
     clear: both
-    
+
 .singleship
     width: 3.3724em
-    
+
 .agedwrapper
     position: relative
     margin-top: 0.5em
@@ -91,5 +90,5 @@ export default {
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-    
+
 </style>

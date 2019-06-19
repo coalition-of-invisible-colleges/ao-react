@@ -7,9 +7,7 @@
             img(v-else, src='../../assets/images/loggedOut.svg')
             label {{ m.name }}
         .eight.columns
-            priorities(:taskId='getTaskId')
-
-
+            priorities(:taskId='m.memberId')
 </template>
 
 
@@ -34,15 +32,6 @@ export default {
             })
             return isLoggedIn
         },
-        getTaskId(){
-            let id
-            this.$store.getters.memberCards.forEach( t => {
-                if (this.m.memberId === t.name){
-                    id = t.taskId
-                }
-            })
-            return id
-        }
     },
     methods: {
         getName(taskId){

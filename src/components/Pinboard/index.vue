@@ -5,11 +5,11 @@
         home
     .pinboard(v-else)
         .row
-            .five.columns
+            .eight.columns
                 card-panel(:c='guilds')
-            .seven.columns
+                members
+            .four.columns
                 img.fw(src='../../assets/images/buddadoge.svg')
-    members
     img.fw(src='../../assets/memes/Spiderman.jpg')
 </template>
 

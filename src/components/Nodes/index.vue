@@ -6,15 +6,6 @@
             summaryy
         .six.columns
             channel(v-for='n in $store.getters.channels', :c='n')
-    why-lightning
-    .row
-        .four.columns
-            img#worf(src='../../assets/images/kisspng-visual-arts-vaporwave-desktop-wallpaper-clip-art-5af5e5f0e8ad73.1781218515260646249531.png')
-        .seven.columns
-            .j A decentralized payment system empowers users and bypasses entrenched systems.
-            .j Reduce capacity for incompetence, manipulation, corruption, and tyranny.
-            .j Separate state & money!
-
 </template>
 
 <script>

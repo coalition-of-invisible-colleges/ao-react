@@ -1,12 +1,14 @@
 <template lang='pug'>
 
 #home.row
-    manage
     nodes
+    manage
     img#whales(src='../assets/images/cryptowhales.jpg')
-    shared-title(title='Manage AO Account')
     changer
-
+    .shipwrapper
+        .shipbackground
+        h3 rollsafe membrane
+        panels(:c='$store.getters.eternalVoid')
 </template>
 
 <script>
@@ -19,10 +21,12 @@ import TaskCreate from './forms/TaskCreate'
 import PreviewDeck from './Deck/PreviewDeck'
 import Calendar from './MemberCalendar'
 import Nodes from './Nodes'
+import Panels from './Deck/Panels'
+import WhyLightning from './Nodes/WhyLightning'
 
 export default {
     components:{
-        SharedTitle, Auth, Manage, Changer, TaskCreate, PreviewDeck, Calendar, Nodes
+        SharedTitle, Auth, Manage, Changer, TaskCreate, PreviewDeck, Calendar, Nodes, Panels, WhyLightning
     },
 }
 
@@ -56,6 +60,25 @@ a:visited
 #whales
     width: 100%
     opacity: 0.4567
+
+.shipwrapper
+    position: relative
+
+.shipbackground
+    background-image: url('../assets/images/archive.svg')
+    background-repeat: no-repeat
+    background-position: center center
+    background-size: contain
+    opacity: 0.2
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    position: absolute
+    z-index: -1
+    width: 100%
+    height: 100%
+    min-height: 99vh
 
 
 </style>

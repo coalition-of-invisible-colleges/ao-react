@@ -6,7 +6,6 @@ import tasks from './tasks'
 import resources from './resources'
 import sessions from './sessions'
 
-import recent from './recent'
 
 export default {
     cash,
@@ -14,5 +13,4 @@ export default {
     tasks,
     resources,
     sessions,
-    recent,
 }

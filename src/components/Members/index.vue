@@ -2,14 +2,9 @@
 
 #member
     .list(v-if="$store.getters.isLoggedIn")
-        .row
-            .three.columns
-                router-link(to='/members')
-                    img#sunexper(src='../../assets/images/kisspng-sunlight-sunlight-solar-eclipse-sun-png-5ac3de5a164717.6591244715227858820913.png')
-            .nine.columns
-                h2 {{ $store.getters.activeMembers.length }} active doges
-                row(v-for="m in $store.getters.activeMembers", :m="m")
-                purg
+        h2 {{ $store.getters.activeMembers.length }} active doges
+        row(v-for="m in $store.getters.activeMembers", :m="m")
+        purg
     .padding(v-else)
         p dctrl member
         ol
@@ -18,7 +13,6 @@
             li Possible human, magical entity, fairy, cyborg or alien.
         p
             strong visit a node to find out more
-
 </template>
 
 <script>

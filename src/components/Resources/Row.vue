@@ -15,10 +15,8 @@
                 button.refill replenish
             button.use(@click='use')
                 span use
-            router-link.fw(:to='"/task/" + resourcesTaskId')
+            router-link.fw(:to='"/task/" + r.resourceId')
                 img.viney(src='../../assets/images/vinebtn.svg')
-
-
 </template>
 
 <script>
@@ -33,15 +31,6 @@ export default {
     props: ['r'],
     components: { Current, PayReq },
     computed: {
-        resourcesTaskId(){
-            let r
-            this.$store.getters.resourceCards.forEach(t => {
-                if (t.name === this.r.resourceId){
-                    r = t.taskId
-                }
-            })
-            return r
-        },
         trackStock(){
             return !(this.r.stock == undefined)
         },
