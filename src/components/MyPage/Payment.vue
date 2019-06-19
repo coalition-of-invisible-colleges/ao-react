@@ -66,7 +66,7 @@ export default {
         name(){
             let name = '...loading'
             this.$store.state.members.forEach( member => {
-                if (member.memberId === this.$store.getters.memberId){
+                if (member.memberId === this.$store.getters.member.memberId){
                     name = member.name.slice()
                 }
             })
@@ -88,7 +88,7 @@ export default {
             return this.$store.getters.member.address
         },
         memberId(){
-            return this.$store.getters.memberId
+            return this.$store.getters.member.memberId
         },
         invoice(){
             let invoice
@@ -115,7 +115,7 @@ export default {
                   type: 'invoice-created',
                   sats: this.sats,
                   memo: 'Payment from ' + this.$store.getters.member.name,
-                  ownerId: this.$store.getters.memberId
+                  ownerId: this.$store.getters.member.memberId
               })
               .end((err,res)=>{
                   if (err) return console.log(err);

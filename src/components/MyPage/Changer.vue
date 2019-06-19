@@ -41,13 +41,13 @@ export default {
                   return {
                       field: this.change.field,
                       newfield: cryptoUtils.createHash( this.change.newfield),
-                      memberId: this.$store.getters.memberId
+                      memberId: this.$store.getters.member.memberId
                   }
             }
             return {
                 field: this.change.field,
                 newfield: this.change.newfield,
-                memberId: this.$store.getters.memberId
+                memberId: this.$store.getters.member.memberId
             }
         },
         secure(){

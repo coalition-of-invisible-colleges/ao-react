@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         toggleHidden: function(badge){
-            let ourId = this.$store.getters.memberId
+            let ourId = this.$store.getters.member.memberId
             if(ourId == this.m.memberId){
                      request
                         .post('/events')

@@ -161,7 +161,7 @@ export default new Vuex.Store({
       eternalVoid(state, getters){
           let void_orphans = getters.unheld.filter( t => {
               let notHeld = getters.withinHeld.indexOf(t.taskId) === -1
-              let notMember = getters.memberIds.indexOf(t.name) === -1
+              let notMember = getters.member.memberIds.indexOf(t.name) === -1
               let notResource = getters.resourceIds.indexOf(t.name) === -1
               return notHeld && notMember && notResource
           })
@@ -187,41 +187,6 @@ export default new Vuex.Store({
               return calculations.calculateTaskPayout(t) > 1
           })
       },
-      admins(state, getters){
-        let admins = state.members.filter(m => {
-            return m.badges.some( b => {
-                return (b.badge === 'admin')
-            })
-        })
-        let withRecent = admins.map( (m, i) => {
-            state.recent.forEach(ev => {
-                if ( ev.memberId == m.memberId ) {
-                    m.recentTs = - ev.timestamp
-                }
-            })
-        })
-        return _.sortBy(admins, 'recentTs')
-      },
-      mrclean(state, getters){
-          let time = 0
-          let who = ''
-          state.tasks.forEach(task => {
-              if (task.lastClaimed > time){
-                  time = task.lastClaimed
-                  who = task.lastClaimedBy
-              }
-          })
-          return who
-      },
-      memberId(state, getters){
-          let id
-          state.sessions.forEach( s => {
-              if (s.session === state.loader.session){
-                  id = s.ownerId
-              }
-          })
-          return id
-      },
       isAdmin(state, getters){
           let isAdmin
           getters.member.badges.forEach( b => {
@@ -232,33 +197,32 @@ export default new Vuex.Store({
           return isAdmin
       },
       isLoggedIn(state, getters){
-          let isLoggedIn = !!getters.memberId
+          let isLoggedIn = !!getters.member.memberId
           return isLoggedIn
       },
       member(state, getters){
           let loggedInMember = {}
           state.members.forEach(member => {
-              if( getters.memberId === member.memberId){
+              if( getters.member.memberId === member.memberId){
                   _.assign(loggedInMember, member)
               }
           })
           return loggedInMember
       },
       activeMembers(state, getters){
-          let active = state.members.filter(m => {
+          return state.members.filter(m => {
               let isAdmin = m.badges.some( b => {
                   return (b.badge === 'admin')
               })
               return (m.active > 0 && !isAdmin)
           })
-          let withRecent = active.map( (m, i) => {
-              state.recent.forEach(ev => {
-                  if ( ev.memberId == m.memberId ) {
-                      m.recentTs = - ev.timestamp
-                  }
-              })
-          })
-          return _.sortBy( active, 'recentTs')
+          // let withRecent = active.map( (m, i) => {
+          //     state.recent.forEach(ev => {
+          //         if ( ev.memberId == m.memberId ) {
+          //             m.recentTs = - ev.timestamp
+          //         }
+          //     })
+          // })
       },
       perMonth(state, getters){
           let fixed = parseFloat(state.cash.rent)

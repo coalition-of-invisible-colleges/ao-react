@@ -21,7 +21,7 @@ export default {
                 .set('Authorization', this.$store.state.loader.token)
                 .send({
                     type: 'badge-removed',
-                    memberId: this.$store.getters.memberId,
+                    memberId: this.$store.getters.member.memberId,
                     badge: this.badgename
                 })
                 .end((err,res)=>{
@@ -36,7 +36,7 @@ export default {
                 .set('Authorization', this.$store.state.loader.token)
                 .send({
                     type: 'badge-added',
-                    memberId: this.$store.getters.memberId,
+                    memberId: this.$store.getters.member.memberId,
                     badge: this.badgename
                 })
                 .end((err,res)=>{

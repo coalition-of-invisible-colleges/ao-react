@@ -22,7 +22,7 @@ export default {
     mounted(){
         let resourceId = this.$router.currentRoute.path.split('/')[2]
         this.info.resourceId = resourceId
-        this.info.memberId = this.$store.getters.memberId
+        this.info.memberId = this.$store.getters.member.memberId
         console.log('set Ids', this.info.memberId, this.info.resourceId)
     },
     data(){

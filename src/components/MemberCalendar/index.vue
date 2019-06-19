@@ -23,7 +23,7 @@ export default {
       let memberId = this.$router.currentRoute.path.split('/')[2]
       if (!memberId){
           // This sets the default shown to the logged in member
-          memberId = this.$store.getters.memberId
+          memberId = this.$store.getters.member.memberId
       }
       this.id = memberId
     },

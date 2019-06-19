@@ -25,7 +25,7 @@ export default {
         return {
             info: {
                 taskId: '',
-                memberId: this.$store.getters.memberId,
+                memberId: this.$store.getters.member.memberId,
                 notes: ''
             }
         }
