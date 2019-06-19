@@ -4,22 +4,6 @@
     shared-title(title='Manage Autonomous Organization')
     .row
       .six.columns.info
-        .row
-            .seven.grid
-                p.underline.padd Node Cost
-                p Active Doges
-            .one.grid
-                .equals =
-            .four.grid.equals2
-                p Cost each
-        .row
-            .seven.grid
-                p.number.underline.padd {{ parseInt($store.state.cash.rent) }}
-                p.number {{ $store.getters.activeMembers.length }}
-            .one.grid
-                .equals =
-            .four.grid
-                p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
         button(:class='{open: showAo}' @click='toggleAo')
             span(v-if='showAo') hide ao controls
             span(v-else) open ao controls
@@ -29,6 +13,22 @@
               li On the first AO distributes node cost to active
               li On the eleventh AO deactivates owing
               li Activate account at the treasure chest on your deck
+            .row
+                .seven.grid
+                    p.underline.padd Node Cost
+                    p Active Doges
+                .one.grid
+                    .equals =
+                .four.grid.equals2
+                    p Cost each
+            .row
+                .seven.grid
+                    p.number.underline.padd {{ parseInt($store.state.cash.rent) }}
+                    p.number {{ $store.getters.activeMembers.length }}
+                .one.grid
+                    .equals =
+                .four.grid
+                    p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
             .row
                 .six.columns
                   p.input-instructions Set Node Cost
@@ -46,7 +46,6 @@
         resources
       .six.columns
         img#sundogepurp(src="../../assets/images/ao.svg")
-
 </template>
 
 <script>

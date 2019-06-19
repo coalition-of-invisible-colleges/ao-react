@@ -20,7 +20,6 @@
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
                 h3(v-else) all
-
         .three.grid(@click='next')
             span &nbsp;
             img.fr(v-if='!open && topCard.color === "red"', , src='../../assets/images/forwardRed.svg')
@@ -42,7 +41,6 @@
         hypercard(v-for='b in c'  :b="b"  :inId='taskId')
     .box(v-else  :class='panelSty')
         hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId')
-
 </template>
 
 <script>
@@ -246,7 +244,7 @@ img
     margin-top: 0.5em
     //margin-bottom: 0.8em
     margin-right: 0.5em
-    
+
 .fl
     float: left
     margin-right: 0.5em
@@ -269,7 +267,7 @@ img
 
 .horizcenter
     text-align: center
-    
+
 .mandalign
     margin-top: 5px
 

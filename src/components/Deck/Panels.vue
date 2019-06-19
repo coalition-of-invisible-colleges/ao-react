@@ -15,7 +15,6 @@
           card-panel(:c='yellow', :taskId='inId')
       .four.columns(v-if='purple.length > 0')
           card-panel(:c='purple', :taskId='inId')
-
 </template>
 
 <script>

@@ -51,6 +51,14 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
+      hashMap(state){
+          let hashMap = {}
+          state.tasks.forEach(t => {
+              Vue.set(hashMap, t.taskId, t)
+          })
+          console.log("created hashmap:", {hashMap})
+          return hashMap
+      },
       resourceCards(state, getters){
           return state.tasks.filter(t => {
               return state.resources.some(r => {

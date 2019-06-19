@@ -42,13 +42,9 @@ export default {
   },
   methods:{
       getTask(taskId){
-          let task
-          this.$store.state.tasks.forEach( t => {
-              if (taskId === t.taskId) {
-                  task = t
-              }
-          })
-          return task
+          let gt = this.$store.getters.hashMap[taskId]
+          console.log({gt, taskId})
+          return gt
       },
   },
   computed: {
@@ -83,14 +79,14 @@ export default {
           let tasks = []
           if (this.taskId) {
               let subTasks = []
-              this.$store.state.tasks.forEach( t => {
-                  if (this.taskId === t.taskId){
-                      t.subTasks.slice().reverse().forEach(t => tasks.push( this.getTask(t)))
-                  }
-              })
+              let t = this.$store.getters.hashMap[this.taskId]
+              t.subTasks.slice().reverse().forEach(subtask => tasks.push( this.getTask(subtask)))
+              console.log("created tasks", {tasks, t}, 'from tid: ', this.taskId)
           } else if (this.task && this.task.subTasks) {
               this.task.subTasks.forEach( tId => tasks.push( this.getTask(tId) ))
+              console.log("created tasks", {tasks}, 'from task: ', this.task)
           }
+          console.log({tasks})
           return tasks
       },
       cardAge(){
@@ -130,13 +126,13 @@ export default {
 
 .padbottom
     margin-bottom: 2em
-    
+
 .upgradesbar
   height: fit-content
   margin-bottom: 2em
   background-color: rgba(21, 21, 21, 0.25)
   border-radius: 40px
-  
+
 .upgrade
     height: 4em
     border: 4px solid rgba(0, 0, 0, 0.5)
@@ -171,7 +167,7 @@ export default {
 
 .paperwrapper
     position: relative
-    
+
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
     background-repeat: no-repeat
@@ -234,8 +230,8 @@ export default {
 
 // .purplewx
 //   background-color: rgba(134, 66, 169, 0.2)
-  
+
 // .redwx
 //   background-color: rgba(255, 0, 0, 0.2)
-    
+
 </style>

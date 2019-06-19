@@ -11,7 +11,6 @@
                 img.fw(src='../../assets/images/buddadoge.svg')
     members
     img.fw(src='../../assets/memes/Spiderman.jpg')
-
 </template>
 
 <script>
@@ -43,13 +42,13 @@ export default {
               return aVal < bVal
           })
       },
-      bounties(){
-          return this.$store.getters.bounties.slice().sort((a, b) => {
-              let aVal = parseInt( calculations.calculateTaskPayout(a) )
-              let bVal = parseInt( calculations.calculateTaskPayout(b) )
-              return aVal < bVal
-          })
-      },
+      // bounties(){
+      //     return this.$store.getters.bounties.slice().sort((a, b) => {
+      //         let aVal = parseInt( calculations.calculateTaskPayout(a) )
+      //         let bVal = parseInt( calculations.calculateTaskPayout(b) )
+      //         return aVal < bVal
+      //     })
+      // },
   },
   components:{
       SharedTitle,
