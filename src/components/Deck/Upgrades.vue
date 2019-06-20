@@ -2,9 +2,8 @@
 
 .upgrades
     .row
-        .three.grid(@click='select(0)', :class='{selected: show === 0 && b.priorities.length > 0}')
-            img.upgrade(v-if='!show',  src='../../assets/images/boatblack.svg')
-            img.upgrade(v-else, src='../../assets/images/boatbtnselected.svg')
+        .three.grid(@click='select(0)', :class='{selected: show === 0}')
+            img.upgrade(src='../../assets/images/boatblack.svg')
         .three.grid(@click='select(1)', :class='{selected: show === 1}')
             img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
         .three.grid(@click='select(2)', :class='{selected: show === 2}')
@@ -28,7 +27,6 @@
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
         resource-book(v-if='show === 3', :tId='b.taskId')
-
 </template>
 
 <script>
@@ -197,10 +195,12 @@ export default {
 
 .upgrades
     width: 100%
+    padding: 0.3em
 
 .selected
-    background: white
+    background: softGrey
     border-radius: 40px 40px 0 0
+    padding-bottom: 0.654321em
 
 .formlabel
     padding-top: 1em

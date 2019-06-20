@@ -1,14 +1,11 @@
 <template lang='pug'>
 
-#home.row
+#home
     nodes
     manage
     img#whales(src='../assets/images/cryptowhales.jpg')
     changer
-    .shipwrapper
-        .shipbackground
-        h3 rollsafe membrane
-        panels(:c='$store.getters.eternalVoid')
+    rollsafe
 </template>
 
 <script>
@@ -23,10 +20,12 @@ import Calendar from './MemberCalendar'
 import Nodes from './Nodes'
 import Panels from './Deck/Panels'
 import WhyLightning from './Nodes/WhyLightning'
-
+import Rollsafe from './Deck/Rollsafe'
 export default {
     components:{
-        SharedTitle, Auth, Manage, Changer, TaskCreate, PreviewDeck, Calendar, Nodes, Panels, WhyLightning
+        SharedTitle, Auth, Manage, Changer,
+        TaskCreate, PreviewDeck, Calendar, Nodes,
+        Panels, WhyLightning, Rollsafe
     },
 }
 
@@ -59,26 +58,6 @@ a:visited
 
 #whales
     width: 100%
-    opacity: 0.4567
-
-.shipwrapper
-    position: relative
-
-.shipbackground
-    background-image: url('../assets/images/archive.svg')
-    background-repeat: no-repeat
-    background-position: center center
-    background-size: contain
-    opacity: 0.2
-    top: 0
-    left: 0
-    bottom: 0
-    right: 0
-    position: absolute
-    z-index: -1
-    width: 100%
-    height: 100%
-    min-height: 99vh
-
+    opacity: 0.234567
 
 </style>

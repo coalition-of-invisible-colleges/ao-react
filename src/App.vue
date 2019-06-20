@@ -1,18 +1,9 @@
 <template lang='pug'>
 
 #app
-    .bg
-    .feed
-        event-feed
-    .mobile
-        mobile-heading
-            router-view
-    main
-      .side_bar
-          main-menu
-      .content
-          router-view
-
+  .contain
+    main-menu
+    router-view
 </template>
 
 <script>
@@ -42,14 +33,17 @@ export default {
 
 @import "./styles/normalize"
 @import "./styles/breakpoints"
+@import "./styles/skeleton"
 @import "./styles/colours"
 @import "./styles/input"
 
+.contain
+    padding-left: 1em
+    padding-right: 1em
 
 #app
     position:relative
     color: accent1
-    //font-family:'sans-serif'
     font-weight: lighter
 
 body

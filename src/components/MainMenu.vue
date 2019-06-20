@@ -1,11 +1,7 @@
 <template lang='pug'>
 
 nav
-  router-link(to='/')
-      img(src='../assets/images/dctrl.svg')
   navigation
-  auth
-
 </template>
 
 <script>

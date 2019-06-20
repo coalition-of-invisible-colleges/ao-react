@@ -12,7 +12,6 @@
   img.claimvine(v-for='n in b.claimed', v-if='n === $store.getters.member.memberId', src='../../assets/images/mark.svg')
   .row()
     .mainColumn.columns.name
-
         span(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
             span.bold {{b.guild}}
@@ -274,7 +273,7 @@ export default {
 }
 
 .pd
-    max-width: 75px
+    max-width: 63px
     position: relative;
     right: 0
 

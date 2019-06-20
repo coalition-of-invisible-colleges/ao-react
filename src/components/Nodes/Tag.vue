@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 div(v-html='tag')
-
 </template>
 
 <script>
