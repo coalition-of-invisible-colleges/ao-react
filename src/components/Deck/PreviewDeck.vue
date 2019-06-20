@@ -15,7 +15,6 @@
           .bead.yellowwx(v-for="(b,i) in yellow", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
       .four.grid
           .bead.purplewx(v-for="(b,i) in purple", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
-
 </template>
 
 <script>
@@ -27,13 +26,7 @@ export default {
   props: ['memberId', 'taskId', 'task'],
   methods:{
     getTask(taskId){
-        let task
-        this.$store.state.tasks.forEach( t => {
-            if (taskId === t.taskId) {
-                task = t
-            }
-        })
-        return task
+        return this.$store.getters.hashMap[taskId]
     },
     goto(taskId){
         this.$router.push("/task/" + taskId)
@@ -46,11 +39,8 @@ export default {
               tasks = this.$store.state.tasks.filter( t => t.deck.indexOf(this.memberId) !== -1 )
           } else if (this.taskId) {
               let subTasks = []
-              this.$store.state.tasks.forEach( t => {
-                  if (this.taskId === t.taskId){
-                      t.subTasks.forEach(t => tasks.push( this.getTask(t)))
-                  }
-              })
+              let t = this.$store.getters.hashMap[this.taskId]
+              t.subTasks.forEach(t => tasks.push( this.getTask(t)))
           } else if (this.task && this.task.subTasks) {
               this.task.subTasks.forEach( tId => tasks.push( this.getTask(tId) ))
           }
@@ -93,9 +83,9 @@ export default {
     height: 15px
     width: 100%
     display: inline-block;
-    
+
 .bead
-    height: 15px
+    height: 7px
     width: 100%
     border-radius: 50%;
     display: inline-block;

@@ -11,29 +11,27 @@ AO is locally run infrastructure to help create successful commons hackerspaces.
 `yarn start`
 
 Feature list:
-    - Connect physical resources (door, vending) with readers and pin activated hardware.
-    - Maintain list of accounts associated with rfid tags.
-    - Accounts can create cards, send them between accounts, create lists of priorities, plunge cards into cards inception.
+    * Connect physical resources (door, vending) with readers and pin activated hardware.
+    * Maintain list of accounts associated with rfid tags.
+    * Accounts can create cards, send them between accounts, create lists of priorities, plunge cards into cards inception.
 
 To fully function ao requires sqlite3, bitcoind, and clightning. Example configuration.js:
 
 ````
 module.exports = {
     bitcoind:{
-        username:'dctrl',
-        password:'123',
         network: 'regtest'
-    },
-    bitcoinAverage: {
-        pub: '',
-        secret: ''
     },
     clightning: {
         dir:'/home/trhode/.lightning'
     },
     sqlite3: {
         file: '/home/trhode/.ao/database.sqlite3'
-    }
+    },
+    bitcoinAverage: {
+        pub: '',
+        secret: ''
+    },
 }
 ````
 

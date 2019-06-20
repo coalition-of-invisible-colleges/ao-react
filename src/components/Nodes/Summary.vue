@@ -8,7 +8,6 @@
       p.local local ({{ $store.getters.totalLocal.toLocaleString() }})
     .six.grid
       p.remote remote ({{ $store.getters.totalRemote.toLocaleString() }})
-
 </template>
 
 <script>

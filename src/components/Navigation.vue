@@ -1,22 +1,25 @@
 <template lang='pug'>
 
-ul.navigation
-  div(v-if='$store.getters.isLoggedIn')
-    hr
+.navigation
     .pricebox
-        img.bullimg(src="../assets/images/bulluni.svg")
-        span.btc 1 BTC is ${{ cadPrice.toLocaleString() }}
-        span.sat $ 1 is {{ sats.toLocaleString() }} satoshis
-    hr
-    router-link(to='/' exact) Local
-    router-link(to='/deck')
-        span(v-if='$store.getters.inbox.length > 0')
-            img.smallbird(src='../assets/images/birdbtn.svg')
-            span {{ $store.getters.inbox.length }} |
-        span Deck
-        br
-        span.subheading ({{$store.getters.member.name}})
-    router-link(to='/dash' ) Dashboard
+        img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg")
+        img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg")
+        img.bullimg(v-if='showImg === "uni"'  src="../assets/images/bulluni.svg")
+        div(v-if='$store.getters.isLoggedIn')
+            div(@click='setImg("sun")')
+                router-link(to='/' exact) Guilds
+            div(@click='setImg("uni")')
+                router-link(:to='"/task/" + $store.getters.member.memberId')
+                    span(v-if='$store.getters.inbox.length > 0')
+                      img.smallbird(src='../assets/images/birdbtn.svg')
+                      span {{ $store.getters.inbox.length }} |
+                    span Deck
+                      br
+                      span.subheading ({{$store.getters.member.name}})
+            div(@click='setImg("bull")')
+                router-link(to='/dash' ) Dashboard
+            auth
+        auth(v-else)
     div.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
       .dot.redwx
       span disconnected
@@ -42,15 +45,26 @@ import FancyInput from './slotUtils/FancyInput'
 export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput },
+    mounted(){
+        switch (this.$router.currentRoute.path){
+            case "/": return this.showImg = "sun"
+            case "/dash": return this.showImg = "bull"
+        }
+    },
     data(){
         return {
             showBtc: false,
             search: '',
+            showImg: 'uni',
         }
     },
     methods: {
         toggleShowBtc(){
             this.showBtc = !this.showBtc
+        },
+        setImg(x){
+            console.log("setting image", {x})
+            this.showImg = x
         }
     },
     computed: {
@@ -60,7 +74,7 @@ export default {
         },
         cadPrice(){
             return parseFloat( this.$store.state.cash.spot.toFixed(2) )
-        }
+        },
     }
 }
 
@@ -190,7 +204,7 @@ hr
 
 .connectedstatus
     margin-top: 1em
-    
+
 .dot
   height: 0.5em
   width: 0.5em

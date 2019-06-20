@@ -6,7 +6,6 @@
         div(v-else   @click='setAction(i)')
             hyperpriority(:taskId='t')
     div.clearboth
-
 </template>
 
 <script>
@@ -70,7 +69,7 @@ export default {
 
 .priorities
     padding-bottom: 0.5em
-    
+
 button
     background: darkteal
 
