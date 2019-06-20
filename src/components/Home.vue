@@ -24,20 +24,19 @@
                         button(@click='trySidewalk("color", "yellow")').yellowwx
                     .two.grid
                         button(@click='trySidewalk("color", "black")').blackwx
+            .six.columns
+                  img#dctrlverse(src="./../assets/images/dctrlverse.png")
         .row
             .six.grid
                 img#sundogepurp(src="./../assets/images/ao.svg")
             .six.grid
                 shared-title(title='What is an Autonomous Organization?')
-                p Open source web application and server for replicating community commons.
-                p Attempt at fairness and reduced administration.
-                p Hypercard (holographic?) concept extrapolator and coordination facilitator.
-                p Controller of the bitpepsi.
-                p UI nightmare.
-        img#dctrlverse(src="./../assets/images/dctrlverse.png")
+                p On site server, and raspberry pis serving open source web application
+                p Attempt at fairness and reduced administration while sharing.
+                p Holographic communication, organization, and prioritization tool.
+                a(href='https://github.com/AutonomousOrganization') github.com/AutonomousOrganization
         p Decentralization fails without accepting responsibility and striving to create. Exploring dogeconciousness is worthy.
         img#sundogepurp(src="./../assets/images/sundogepurp.png")
-
 </template>
 
 <script>
