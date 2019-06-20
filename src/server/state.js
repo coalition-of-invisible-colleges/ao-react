@@ -46,16 +46,21 @@ const pubState = {
 function applyBackup(b){
     modules.cash.mutations.setCurrent(serverState.cash, b)
     modules.tasks.mutations.setCurrent(serverState.tasks, b)
-    modules.members.mutations.setCurrent(serverState.members, b)
+    // modules.members.mutations.setCurrent(serverState.members, b)
     modules.sessions.mutations.setCurrent(serverState.sessions, b)
     modules.resources.mutations.setCurrent(serverState.resources, b)
 
     // TODO: b contains secrets
     modules.cash.mutations.setCurrent(pubState.cash, b)
     modules.tasks.mutations.setCurrent(pubState.tasks, b)
-    modules.members.mutations.setCurrent(pubState.members, b)
+    // modules.members.mutations.setCurrent(pubState.members, b)
     modules.sessions.mutations.setCurrent(pubState.sessions, b)
     modules.resources.mutations.setCurrent(pubState.resources, b)
+
+    b.members.forEach( m => {
+        applyEvent(serverState, m)
+        applyEvent(pubState, m)
+    })
 }
 
 function applyEvent(state, ev) {
