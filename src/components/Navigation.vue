@@ -46,10 +46,10 @@ export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput },
     mounted(){
-        switch (this.$router.currentRoute.path){
-            case "/": return this.showImg = "sun"
-            case "/dash": return this.showImg = "bull"
-        }
+        this.setToRoute()
+    },
+    watch: {
+      '$route': 'setToRoute'
     },
     data(){
         return {
@@ -59,6 +59,13 @@ export default {
         }
     },
     methods: {
+        setToRoute(){
+            switch (this.$router.currentRoute.path){
+              case "/": return this.showImg = "sun"
+              case "/dash": return this.showImg = "bull"
+              default: return this.showImg = "uni"
+            }
+        },
         toggleShowBtc(){
             this.showBtc = !this.showBtc
         },
