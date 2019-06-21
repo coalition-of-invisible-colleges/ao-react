@@ -99,7 +99,11 @@ export default new Vuex.Store({
                   guilds.push(t)
               }
           })
-          return guilds
+          return guilds.sort((a, b) => {
+              let aVal = a.deck.length
+              let bVal = b.deck.length
+              return aVal < bVal
+          })
       },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId
