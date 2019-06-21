@@ -41,11 +41,11 @@ export default {
                 let msSince = now - ev.timestamp
                 if (
                     ev.type == 'resource-used' &&
-                    ev.resourceId == this.r.resourceId
+                    ev.resourceId == this.r.resourceId &&
+                    currentMembers.indexOf(ev.memberId) === -1 &&
+                    msSince < 1000 * 60 * 60 * 2
                 ){
-                    if (currentMembers.indexOf(ev.memberId) === -1 ){
-                        currentMembers.push(ev.memberId)
-                    }
+                    currentMembers.push(ev.memberId)
                 }
             })
             return currentMembers
