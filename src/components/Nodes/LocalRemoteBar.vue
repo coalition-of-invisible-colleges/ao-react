@@ -3,7 +3,6 @@
 .localremote
   .local(:style='l') {{ parseFloat( c.channel_sat ).toLocaleString() }}
   .remote(:style='r') {{ parseFloat( c.channel_total_sat - c.channel_sat ).toLocaleString() }}
-
 </template>
 
 <script>

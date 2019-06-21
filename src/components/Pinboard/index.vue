@@ -31,9 +31,6 @@ import Calendar from '../MemberCalendar'
 import Members from '../Members'
 
 export default {
-  data(){
-      return { }
-  },
   computed: {
       guilds(){
           return this.$store.getters.guilds

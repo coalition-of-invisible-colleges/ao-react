@@ -20,28 +20,11 @@ const serverState = {
     usedTxIds: [],
     outputs: [],
     channels: [],
+    info: {},
   },
 }
 
-const pubState = {
-  recent: [],
-  sessions: [],
-  members: [],
-  tasks: [],
-  resources: [],
-  cash: {
-    currency: 'CAD',
-    cash: 0,
-    spot: 0,
-    rent: 0,
-    variable: 0,
-    cap: 75,
-    pay_index: 0,
-    usedTxIds: [],
-    outputs: [],
-    channels: [],
-  },
-}
+const pubState = Object.assign({}, serverState)
 
 function applyBackup(b){
     modules.cash.mutations.setCurrent(serverState.cash, b)

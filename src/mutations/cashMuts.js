@@ -40,6 +40,9 @@ function cashMuts(cash, ev){
 			case "task-boosted-lightning":
 				cash.pay_index = ev.pay_index
 				break
+			case "get-node-info":
+					cash.info = ev.info
+					break
 		}
 }
 

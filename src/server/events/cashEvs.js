@@ -1,5 +1,14 @@
 const dctrlDb = require('../dctrlDb')
 
+
+function getNodeInfo(info, callback){
+    let newEvent = {
+        type: "get-node-info",
+        info
+    }
+    dctrlDb.triggerShadow(newEvent)
+}
+
 function cashIncreased(amount, notes, callback) {
   let newEvent = {
       type: "cash-increased",

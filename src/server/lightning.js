@@ -20,11 +20,17 @@ function newAddress(){
     return client.newaddr('p2sh-segwit')
 }
 
+
+function updateAll(){
+    checkFunds()
+    getInfo()
+}
+
 function watchOnChain(){
-    hashblockStream.onValue(checkFunds)
+    hashblockStream.onValue(updateAll)
     setTimeout( () => {
-        checkFunds()
-    }, 3000)
+        updateAll()
+    }, 3456)
 }
 
 function checkFunds(){
@@ -45,6 +51,20 @@ function checkFunds(){
                     }
                 })
             } catch (err) {console.log("lighting error; maybe lightningd (c-lightning) is not running")}
+        })
+        .catch(console.log)
+}
+
+function getInfo(){
+    return client
+        .getinfo()
+        .then(result => {
+            console.log("getinfo", result)
+            try {
+                cashEvs.getNodeInfo(result.info)
+            } catch (err){
+              
+            }
         })
         .catch(console.log)
 }
