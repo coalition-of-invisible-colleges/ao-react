@@ -35,11 +35,9 @@ function reactions(ev){
                     if (r.resourceId === ev.taskId){
                         let amount = parseFloat( ev.amount ) | 1
                         let charge = parseFloat( r.charge )
-
                         if (charge > 0 && amount > 0){
                             amount = amount / charge
                         }
-
                         console.log('trying to cast resource Used', r.resourceId, '', amount, 0, '')
                         events.resourcesEvs.resourceUsed(r.resourceId, '', amount, 0, '', console.log)
                     }

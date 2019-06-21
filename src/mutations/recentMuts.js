@@ -12,16 +12,15 @@ function recentMuts(recent, ev){
 										offset += 1
 								}
 						})
-						// XXX relies on ordering -- using splice to delete multiple gets wierd b/c array length is changing
 						recent.splice(0, offset)
 						break
 				default:
-						let isMemberEv = /member.+/.test(ev.type)
-						let isTaskEv = /task.+/.test(ev.type)
+						// let isMemberEv = /member.+/.test(ev.type)
+						// let isTaskEv = /task.+/.test(ev.type)
 						let isResourceEv = /resource.+/.test(ev.type)
-						let isCashEv = /cash.+/.test(ev.type)
-						if (isMemberEv || isTaskEv || isResourceEv || isCashEv){
-								// recent.push(ev)
+						// let isCashEv = /cash.+/.test(ev.type)
+						if (isResourceEv){
+								recent.push(ev)
 						}
 		}
 }
