@@ -22,7 +22,8 @@ export default {
     },
     methods: {
       open(){
-        window.open('https://blockstream.info/tx/' + this.c.funding_txid)
+        // window.open('https://blockstream.info/tx/' + this.c.funding_txid)
+        window.open('https://www.blockchain.com/btc/tx/' + this.c.funding_txid)
       }
     }
 }

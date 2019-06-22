@@ -11,7 +11,7 @@ const state = {
     usedTxIds: [],
     outputs: [],
     channels: [],
-    info: {},
+    info: {'x':1},
     pay_index: 0,
 }
 

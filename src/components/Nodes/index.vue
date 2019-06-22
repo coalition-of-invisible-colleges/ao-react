@@ -3,8 +3,11 @@
 #nodes
     .row
         .six.columns
+            p {{ $store.state.cash.info.alias }} - {{ $store.state.cash.info.id }}
+            p Blocks: {{ $store.state.cash.info.blockheight }}
             summaryy
         .six.columns
+            p {{ $store.state.cash.info.num_active_channels }} Active Lightning Channels
             channel(v-for='n in $store.getters.channels', :c='n')
 </template>
 

@@ -20,10 +20,10 @@
             img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
         template(v-if='show === 2')
           .box
-            form-box(v-if='!b.bolt11'   :btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-              fancy-input(labelText='choose amount')
-                  input.input-effect(v-model='payreqAmount')
-            pay-req(v-else   :bolt11='b.bolt11')
+            form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                label Create new invoice; choose amount
+                input(v-model='payreqAmount')
+            pay-req(:bolt11='b.bolt11')
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
         resource-book(v-if='show === 3', :tId='b.taskId')

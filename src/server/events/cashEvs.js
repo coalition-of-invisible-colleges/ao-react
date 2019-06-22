@@ -92,4 +92,5 @@ export default {
   capSet,
   variableSet,
   fundsSet,
+  getNodeInfo,
 }
