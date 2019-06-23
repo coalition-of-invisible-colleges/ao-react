@@ -16,10 +16,18 @@
             priorities(:taskId="b.taskId", :inId='b.taskId')
         template(v-if='show === 1')
           .row
-            h1(v-if='b.guild') {{ b.guild }} - guild
-            guild-create(v-else)
-            img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-            current(v-for='n in nameList'  :memberId='n')
+            div(v-if='!isDoge')
+                img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                h1(v-if='b.guild') {{ b.guild }} - guild
+                current(v-for='n in nameList'  :memberId='n')
+                guild-create
+            div(v-else)
+                .gui current {{isDoge.name}} missions
+                template(v-for='g in dogeGuilds')
+                  div
+                    router-link(:to='"/task/" + g.taskId')
+                        span.gui * {{ g.guild }}
+                        span - {{ g.name }}
         template(v-if='show === 2')
           .box
             form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
@@ -119,6 +127,25 @@ export default {
         }
     },
     computed: {
+        dogeGuilds(){
+            let guilds = []
+            this.$store.getters.guilds.forEach( g => {
+                if (g.deck.indexOf( this.isDoge.memberId ) > -1){
+                    guilds.push(g)
+                }
+            })
+            return guilds
+        },
+        isDoge(){
+            let doge
+            this.$store.state.members.some( m => {
+                if (m.memberId ==  this.b.taskId){
+                    doge = m
+                    return true
+                }
+            })
+            return doge
+        },
         isDecked(){
           return this.$store.getters.memberCard.subTasks.indexOf(this.b.taskId) > -1
         },
@@ -281,5 +308,9 @@ h3
 
 .centerchildren
     text-align: center;
+
+.gui
+    font-size: 1.8em
+
 
 </style>

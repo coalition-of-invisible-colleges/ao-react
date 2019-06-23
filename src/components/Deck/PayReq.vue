@@ -9,7 +9,6 @@
         .small {{ bolt11 }}
     .six.columns
         div(v-html='imgTag')
-
 </template>
 
 <script>
@@ -21,7 +20,7 @@ export default {
     props: ['bolt11'],
     computed: {
         imgTag(){
-            let typeNumber = 10;
+            let typeNumber = 0;
             let errorCorrectionLevel = 'L';
             let qr = qrcode(typeNumber, errorCorrectionLevel);
             let data = this.bolt11
