@@ -4,7 +4,8 @@
     .row
         .six.columns.card()
             member-row(v-if='dogeCard', :m='dogeCard')
-            hypercard(v-else  :b="parent" )
+            resource-row(v-if='resourceCard'   :r='resourceCard')
+            hypercard(v-if='!dogeCard && !resourceCard'  :b="parent" )
             .bar()
         .six.columns.buffer
             div.upgradesbar()
@@ -12,7 +13,6 @@
     div.fadey(:class='cardInputSty')
         task-create(:taskId='parent.taskId')
         panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
-        bounty-card(v-if='bountyValue > 1'  :b='parent')
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -31,6 +31,7 @@ import Panels from './Panels'
 import Priorities from './Priorities'
 import Upgrades from './Upgrades'
 import MemberRow from './Member'
+import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 
 export default {
@@ -38,7 +39,7 @@ export default {
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
-      Upgrades, BountyCard
+      Upgrades, BountyCard, ResourceRow
   },
   methods:{
       getTask(taskId){
@@ -57,6 +58,16 @@ export default {
                   mc = m
               }
           })
+          return mc
+      },
+      resourceCard(){
+          let mc
+          this.$store.state.resources.forEach( r => {
+              if (this.parent.name === r.resourceId ){
+                  mc = Object.assign({}, r)
+              }
+          })
+          console.log('resource card', mc)
           return mc
       },
       cardInputSty(){

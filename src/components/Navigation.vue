@@ -2,9 +2,11 @@
 
 .navigation
     .pricebox
-        img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg")
-        img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg")
-        img.bullimg(v-if='showImg === "uni"'  src="../assets/images/bulluni.svg")
+        img.bullimg(v-if='!$store.getters.isLoggedIn' src='../assets/images/dctrl.svg')
+        div(v-else)
+            img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg")
+            img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg")
+            img.bullimg(v-if='showImg === "uni"'  src="../assets/images/bulluni.svg")
         div(v-if='$store.getters.isLoggedIn')
             div(@click='setImg("sun")')
                 router-link(to='/' exact) Guilds

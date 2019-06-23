@@ -15,6 +15,9 @@
         span(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
             span.bold {{b.guild}}
+        span(v-if='calcVal >= 1')
+            img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+            span {{ calcVal }}
         linky(:x='b.name')
     .one.grid
         preview-deck(:task='b')

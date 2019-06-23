@@ -14,10 +14,12 @@
       transition(name='slide-fade')
         div(v-if='show === 0')
             priorities(:taskId="b.taskId", :inId='b.taskId')
-        div(v-if='show === 1')
-            guild-create
-            current(v-for='n in nameList'  :memberId='n')
+        template(v-if='show === 1')
+          .row
+            h1(v-if='b.guild') {{ b.guild }} - guild
+            guild-create(v-else)
             img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+            current(v-for='n in nameList'  :memberId='n')
         template(v-if='show === 2')
           .box
             form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
@@ -26,7 +28,8 @@
             pay-req(:bolt11='b.bolt11')
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
-        resource-book(v-if='show === 3', :tId='b.taskId')
+        template(v-if='show === 3')
+            img(src='../../assets/images/timecubewithwhite.png')
 </template>
 
 <script>
