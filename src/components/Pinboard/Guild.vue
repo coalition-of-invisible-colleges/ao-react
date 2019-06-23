@@ -9,7 +9,6 @@
             p.big {{ g.name }}
         .four.grid
             preview-deck(:taskId='g.taskId')
-
 </template>
 
 <script>
@@ -27,11 +26,6 @@ import HyperDeck from '../Deck/HyperDeck'
 
 export default {
   props: ['g'],
-  computed: {
-      guilds(){
-          return this.$store.getters.guilds
-      },
-  },
   components:{
       Hypercard,
       SharedTitle,

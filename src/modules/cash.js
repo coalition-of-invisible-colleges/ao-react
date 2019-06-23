@@ -11,6 +11,7 @@ const state = {
     usedTxIds: [],
     outputs: [],
     channels: [],
+    info: {'x':1},
     pay_index: 0,
 }
 
@@ -25,6 +26,7 @@ const mutations = {
         state.usedTxIds = current.cash.usedTxIds
         state.outputs = current.cash.outputs
         state.channels = current.cash.channels
+        state.info = current.cash.info
     },
     applyEvent: M.cashMuts
 }

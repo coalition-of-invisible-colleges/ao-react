@@ -31,16 +31,9 @@ import Calendar from '../MemberCalendar'
 import Members from '../Members'
 
 export default {
-  data(){
-      return { }
-  },
   computed: {
       guilds(){
-          return this.$store.getters.guilds.slice().sort((a, b) => {
-              let aVal = a.deck.length
-              let bVal = b.deck.length
-              return aVal < bVal
-          })
+          return this.$store.getters.guilds
       },
       // bounties(){
       //     return this.$store.getters.bounties.slice().sort((a, b) => {

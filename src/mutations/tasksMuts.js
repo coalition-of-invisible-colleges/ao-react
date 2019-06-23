@@ -19,11 +19,11 @@ function tasksMuts(tasks, ev) {
             newEv.color = "blue"
             newEv.address = ''
             newEv.allocations = {}
-            ev.bolt11 = ''
-            ev.payment_hash = ''
-            ev.boost = 0
-            ev.monthlyValue = 0
-            ev.cap = 0
+            newEv.bolt11 = ''
+            newEv.payment_hash = ''
+            newEv.boost = 0
+            newEv.monthlyValue = 0
+            newEv.cap = 0
             tasks.push(newEv)
             break
         case "member-created":
@@ -40,11 +40,11 @@ function tasksMuts(tasks, ev) {
             newEv.color = "blue"
             newEv.address = ''
             newEv.allocations = {}
-            ev.bolt11 = ''
-            ev.payment_hash = ''
-            ev.boost = 0
-            ev.monthlyValue = 0
-            ev.cap = 0
+            newEv.bolt11 = ''
+            newEv.payment_hash = ''
+            newEv.boost = 0
+            newEv.monthlyValue = 0
+            newEv.cap = 0
             tasks.push(newEv)
             break
         case "task-created":
@@ -253,7 +253,7 @@ function tasksMuts(tasks, ev) {
 
             let newSubTasks = task.subTasks.slice()
             newSubTasks[originalIndex] = original.taskId
-            newSubTasks[swapIndex] = swap.taskId            
+            newSubTasks[swapIndex] = swap.taskId
             task.subTasks = newSubTasks
             break
         case "task-allocated":

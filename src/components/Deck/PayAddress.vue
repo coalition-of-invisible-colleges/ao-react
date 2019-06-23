@@ -9,7 +9,6 @@
         h4 {{ address }}
     .six.columns
         div(v-html='imgTag')
-
 </template>
 
 <script>

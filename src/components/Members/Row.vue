@@ -8,6 +8,8 @@
             label {{ m.name }}
         .eight.columns
             priorities(:taskId='m.memberId')
+            router-link.fw(:to='"/task/" + m.memberId')
+                img.viney(src='../../assets/images/vinebtn.svg')
 </template>
 
 
@@ -67,5 +69,12 @@ label
     border-bottom: .2em dashed softGrey
     padding-bottom: .3em
     margin-bottom: .5em
+
+.fw
+    width: 100%
+
+.viney
+    float: right
+    height: 1.3em
 
 </style>

@@ -2,14 +2,10 @@
 
 .channel
   .row.grid
-    .one.grid
-      img#active(v-if='c.active', src='../../assets/images/check.svg')
-      img#active(v-else, src='../../assets/images/warn.svg')
     .three.grid
       .dontbreak(@click='open') {{ c.funding_txid }}
-    .eight.grid
+    .nine.grid
       local-remote-bar(:c='c')
-
 </template>
 
 <script>
@@ -26,7 +22,8 @@ export default {
     },
     methods: {
       open(){
-        window.open('https://blockstream.info/tx/' + this.c.funding_txid)
+        // window.open('https://blockstream.info/tx/' + this.c.funding_txid)
+        window.open('https://www.blockchain.com/btc/tx/' + this.c.funding_txid)
       }
     }
 }
@@ -55,5 +52,6 @@ img
     cursor: pointer
     color: purple
     text-decoration: underline;
+    font-size: .4em
 
 </style>

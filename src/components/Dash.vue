@@ -3,8 +3,8 @@
 #home
     nodes
     manage
-    img#whales(src='../assets/images/cryptowhales.jpg')
     changer
+    img#whales(src='../assets/images/cryptowhales.jpg')
     rollsafe
 </template>
 

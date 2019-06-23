@@ -8,7 +8,6 @@
         ol
             li Raspberry pi running fobtap rfid scan point.
             li Door, vending machine, ... many possibilities
-
 </template>
 
 <script>

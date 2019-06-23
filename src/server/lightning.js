@@ -20,11 +20,17 @@ function newAddress(){
     return client.newaddr('p2sh-segwit')
 }
 
+
+function updateAll(){
+    checkFunds()
+    getInfo()
+}
+
 function watchOnChain(){
-    hashblockStream.onValue(checkFunds)
+    hashblockStream.onValue(updateAll)
     setTimeout( () => {
-        checkFunds()
-    }, 3000)
+        updateAll()
+    }, 3456)
 }
 
 function checkFunds(){
@@ -49,6 +55,19 @@ function checkFunds(){
         .catch(console.log)
 }
 
+function getInfo(){
+    return client
+        .getinfo()
+        .then(result => {
+            try {
+                cashEvs.getNodeInfo(result, console.log)
+            } catch (err){
+                console.log("error from cashEvs", err)
+            }
+        })
+        .catch(console.log)
+}
+
 function recordEveryInvoice(start){
     console.log("waiting on invoices after ", start)
     client.waitanyinvoice(start)
@@ -62,16 +81,6 @@ function recordEveryInvoice(start){
             recordEveryInvoice(start + 1)
         })
         .catch(console.log)
-}
-
-function getInfo(){
-    client.getinfo()
-        .then( info => {
-            console.log({info})
-        })
-        .catch(err => {
-
-        })
 }
 
 module.exports = {

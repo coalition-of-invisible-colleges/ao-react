@@ -14,19 +14,30 @@
       transition(name='slide-fade')
         div(v-if='show === 0')
             priorities(:taskId="b.taskId", :inId='b.taskId')
-        div(v-if='show === 1')
-            guild-create
-            current(v-for='n in nameList'  :memberId='n')
-            img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+        template(v-if='show === 1')
+          .row
+            div(v-if='!isDoge')
+                img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                h1(v-if='b.guild') {{ b.guild }} - guild
+                current(v-for='n in nameList'  :memberId='n')
+                guild-create
+            div(v-else)
+                .gui current {{isDoge.name}} missions
+                template(v-for='g in dogeGuilds')
+                  div
+                    router-link(:to='"/task/" + g.taskId')
+                        span.gui * {{ g.guild }}
+                        span - {{ g.name }}
         template(v-if='show === 2')
           .box
-            form-box(v-if='!b.bolt11'   :btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-              fancy-input(labelText='choose amount')
-                  input.input-effect(v-model='payreqAmount')
-            pay-req(v-else   :bolt11='b.bolt11')
+            form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                label Create new invoice; choose amount
+                input(v-model='payreqAmount')
+            pay-req(:bolt11='b.bolt11')
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
-        resource-book(v-if='show === 3', :tId='b.taskId')
+        template(v-if='show === 3')
+            img(src='../../assets/images/timecubewithwhite.png')
 </template>
 
 <script>
@@ -116,6 +127,25 @@ export default {
         }
     },
     computed: {
+        dogeGuilds(){
+            let guilds = []
+            this.$store.getters.guilds.forEach( g => {
+                if (g.deck.indexOf( this.isDoge.memberId ) > -1){
+                    guilds.push(g)
+                }
+            })
+            return guilds
+        },
+        isDoge(){
+            let doge
+            this.$store.state.members.some( m => {
+                if (m.memberId ==  this.b.taskId){
+                    doge = m
+                    return true
+                }
+            })
+            return doge
+        },
         isDecked(){
           return this.$store.getters.memberCard.subTasks.indexOf(this.b.taskId) > -1
         },
@@ -278,5 +308,9 @@ h3
 
 .centerchildren
     text-align: center;
+
+.gui
+    font-size: 1.8em
+
 
 </style>

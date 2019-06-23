@@ -85,7 +85,9 @@ export default {
     display: inline-block;
 
 .bead
-    height: 7px
+    padding: 0
+    margin:0
+    height: 5px
     width: 100%
     border-radius: 50%;
     display: inline-block;
