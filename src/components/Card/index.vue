@@ -10,19 +10,20 @@
       .two.grid
           flag(:b='b', :inId='inId')
   img.claimvine(v-for='n in b.claimed', v-if='n === $store.getters.member.memberId', src='../../assets/images/mark.svg')
-  .row()
-    .mainColumn.columns.name
+  .row
+    .eleven.grid
         span(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
             span.bold {{b.guild}}
         linky(:x='b.name')
-        preview-deck.pd(:task='b')
-        priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
+    .one.grid
+        preview-deck(:task='b')
   .row
       scroll.faded(:b='b', :inId='inId')
       img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
       p.hodlcount() {{ b.deck.length }}
       vine.faded(:b='b')
+  priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
   button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
@@ -183,17 +184,6 @@ export default {
   word-break: break-word
   hyphens: auto
 
-.row
-    position: relative
-    width: 100%
-    .mainColumn
-      width:calc(100% - 75px - 4%)
-    .secondaryColumn
-      padding-bottom: 1em
-      width:75px
-      button
-        height:75px
-
 .btn
     width:100%
     margin-top: 4em
@@ -271,11 +261,6 @@ export default {
 .ungrabbedcoin {
   opacity: 0.3
 }
-
-.pd
-    max-width: 63px
-    position: relative;
-    right: 0
 
 .faded
     opacity: 0.235654
