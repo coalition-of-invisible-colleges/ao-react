@@ -59,7 +59,6 @@ function getInfo(){
     return client
         .getinfo()
         .then(result => {
-            console.log("getinfo", result)
             try {
                 cashEvs.getNodeInfo(result, console.log)
             } catch (err){

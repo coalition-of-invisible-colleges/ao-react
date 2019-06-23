@@ -24,7 +24,26 @@ const serverState = {
   },
 }
 
-const pubState = Object.assign({}, serverState)
+const pubState = {
+  recent: [],
+  sessions: [],
+  members: [],
+  tasks: [],
+  resources: [],
+  cash: {
+    currency: 'CAD',
+    cash: 0,
+    spot: 0,
+    rent: 0,
+    variable: 0,
+    cap: 75,
+    pay_index: 0,
+    usedTxIds: [],
+    outputs: [],
+    channels: [],
+    info: {},
+  },
+}
 
 function applyBackup(b){
     modules.cash.mutations.setCurrent(serverState.cash, b)
@@ -39,14 +58,22 @@ function applyBackup(b){
     // modules.members.mutations.setCurrent(pubState.members, b)
     // modules.resources.mutations.setCurrent(pubState.resources, b)
 
+    let uniqueMembers = []
     b.members.forEach( m => {
-        applyEvent(serverState, m)
-        applyEvent(pubState, removeSensitive(m))
+        if ( uniqueMembers.indexOf(r.name) === -1 ){
+          uniqueMembers.push(m.name)
+          applyEvent(serverState, m)
+          applyEvent(pubState, removeSensitive(m))
+        }
     })
 
+    let uniqueResources = []
     b.resources.forEach( r => {
-        applyEvent(serverState, r)
-        applyEvent(pubState, removeSensitive(r))
+        if ( uniqueResources.indexOf(r.name) === -1 ){
+          uniqueResources.push(r.name)
+          applyEvent(serverState, r)
+          applyEvent(pubState, removeSensitive(r))
+        }
     })
 }
 
