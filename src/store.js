@@ -100,15 +100,9 @@ export default new Vuex.Store({
               }
           })
 
-          let sortedByHolders = allGuilds.sort((a, b) => {
-              let aVal = a.deck.length
-              let bVal = b.deck.length
-              return aVal < bVal
-          })
-
           let guilds = []
           let uniqueG = []
-          sortedByHolders.forEach((c, i) => {
+          allGuilds.forEach((c, i) => {
               if (i > 5 && c.deck.length < 5){
                   return
               }
@@ -119,7 +113,11 @@ export default new Vuex.Store({
           })
 
           console.log("got from total: ", guilds.length, "  from  ",  allGuilds.length)
-          return guilds
+          return guilds.sort((a, b) => {
+              let aVal = a.deck.length
+              let bVal = b.deck.length
+              return aVal < bVal
+          })
       },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId

@@ -33,7 +33,7 @@
             form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
                 label Create new invoice; choose amount
                 input(v-model='payreqAmount')
-            pay-req(:bolt11='b.bolt11')
+            pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
         template(v-if='show === 3')
