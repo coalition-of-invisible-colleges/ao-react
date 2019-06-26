@@ -1,5 +1,30 @@
 
 #### Autonomous Organization
+Feature list:
+    * Connect physical resources (door, vending) with readers and pin activated hardware.
+    * Maintain list of accounts associated with rfid tags.
+    * Accounts can create cards, send them between accounts, create lists of priorities, plunge cards into cards inception.
+    
+To fully function, ao requires sqlite3, bitcoind, and clightning. When you have them installed you must create a configuration.js file in the ao folder. configuration.js example...
+
+    module.exports = {
+    bitcoind:{
+        network: 'regtest'
+    },
+    clightning: {
+        dir:'/home/trhode/.lightning'
+    },
+    sqlite3: {
+        file: '/home/trhode/.ao/database.sqlite3'
+    },
+    bitcoinAverage: {
+        pub: '',
+        secret: ''
+    },
+}
+
+
+
 
 AO is locally run infrastructure to help create successful commons hackerspaces.
 
@@ -9,13 +34,6 @@ AO is locally run infrastructure to help create successful commons hackerspaces.
 `yarn install`
 `yarn compile`
 `yarn start`
-
-Feature list:
-    * Connect physical resources (door, vending) with readers and pin activated hardware.
-    * Maintain list of accounts associated with rfid tags.
-    * Accounts can create cards, send them between accounts, create lists of priorities, plunge cards into cards inception.
-
-To fully function ao requires sqlite3, bitcoind, and clightning. Example configuration.js:
 
 ````
 module.exports = {
