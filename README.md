@@ -20,8 +20,7 @@ To fully function, ao requires sqlite3, bitcoind, and clightning. When you have 
     bitcoinAverage: {
         pub: '',
         secret: ''
-    },
-}
+    }}
 
 
 
