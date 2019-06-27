@@ -2,13 +2,14 @@
 
 .upgrades
     .row
-        .three.grid(@click='select(0)', :class='{selected: show === 0}')
-            img.upgrade(src='../../assets/images/boatblack.svg')
-        .three.grid(@click='select(1)', :class='{selected: show === 1}')
+        .three.grid.boat.tooltip(@click='select(0)', :class='{selected: show === 0}')
+            .tooltiptext prioritize this card
+            img.upgrade.boat(src='../../assets/images/boatblack.svg')
+        .three.grid.guild(@click='select(1)', :class='{selected: show === 1}')
             img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
-        .three.grid(@click='select(2)', :class='{selected: show === 2}')
+        .three.grid.bounty(@click='select(2)', :class='{selected: show === 2}')
             img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-        .three.grid(@click='select(3)', :class='{selected: show === 3}')
+        .three.grid.timecube(@click='select(3)', :class='{selected: show === 3}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
     .mainbg
       transition(name='slide-fade')
@@ -228,7 +229,7 @@ export default {
     padding: 0.3em
 
 .selected
-    background: softGrey
+    background: blue
     border-radius: 40px 40px 0 0
     padding-bottom: 0.654321em
 
@@ -312,5 +313,31 @@ h3
 .gui
     font-size: 1.8em
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  top: -5px;
+  left:105%;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
 
 </style>
