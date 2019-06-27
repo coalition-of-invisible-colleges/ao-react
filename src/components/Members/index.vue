@@ -2,7 +2,8 @@
 
 #member
     .list(v-if="$store.getters.isLoggedIn")
-        row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+        h2 {{ $store.getters.activeMembers.length }} active fobs
+        row(v-for="m in $store.getters.recentMembers", :m="m")
         purg
     .padding(v-else)
         p dctrl member
