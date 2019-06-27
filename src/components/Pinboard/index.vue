@@ -7,7 +7,8 @@
         .row
             .eight.columns
                 card-panel(:c='$store.getters.pubguilds')
-                members
+                row(v-for="m in $store.getters.recentMembers.slice(0,7)", :m="m")
+                router-link(to='/members/') see all 
             .four.columns
                 img.fw(src='../../assets/images/buddadoge.svg')
     img.fw(src='../../assets/memes/Spiderman.jpg')
@@ -29,18 +30,11 @@ import Home from '../Home'
 import CardPanel from '../Deck/CardPanel'
 import Calendar from '../MemberCalendar'
 import Members from '../Members'
+import Row from '../Members/Row'
 
 export default {
-  computed: {
-      // bounties(){
-      //     return this.$store.getters.bounties.slice().sort((a, b) => {
-      //         let aVal = parseInt( calculations.calculateTaskPayout(a) )
-      //         let bVal = parseInt( calculations.calculateTaskPayout(b) )
-      //         return aVal < bVal
-      //     })
-      // },
-  },
   components:{
+      Row,
       SharedTitle,
       Hypercard,
       CrazyBtn,

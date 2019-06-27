@@ -3,6 +3,7 @@ import _ from 'lodash'
 function membersMuts(members, ev){
   switch (ev.type){
       case "member-created":
+          ev.lastUsed = ev.timestamp
           members.push(ev)
           break
       case "member-activated":
@@ -48,6 +49,7 @@ function membersMuts(members, ev){
           members.forEach( member => {
               if (member.memberId === ev.memberId){
                   member.balance -= parseFloat(ev.charged)
+                  member.lastUsed = ev.timestamp
               }
           })
           break

@@ -225,8 +225,16 @@ export default new Vuex.Store({
               totalRemote += (c.channel_total_sat - c.channel_sat)
           })
           return totalRemote
-      }
+      },
+      recentMembers(state, getters){
 
+          let recentMembers = state.members.slice()
+
+          recentMembers.sort((a, b) => {
+              return b.lastUsed - a.lastUsed
+          })
+          return recentMembers
+      },
   },
   middlewares: [],
   strict: process.env.NODE_ENV !== 'production'
