@@ -6,7 +6,7 @@
     .pinboard(v-else)
         .row
             .eight.columns
-                card-panel(:c='guilds')
+                card-panel(:c='$store.getters.pubguilds')
                 members
             .four.columns
                 img.fw(src='../../assets/images/buddadoge.svg')
@@ -32,9 +32,6 @@ import Members from '../Members'
 
 export default {
   computed: {
-      guilds(){
-          return this.$store.getters.guilds
-      },
       // bounties(){
       //     return this.$store.getters.bounties.slice().sort((a, b) => {
       //         let aVal = parseInt( calculations.calculateTaskPayout(a) )

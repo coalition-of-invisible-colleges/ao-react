@@ -60,7 +60,7 @@ function applyBackup(b){
 
     let uniqueMembers = []
     b.members.forEach( m => {
-        if ( uniqueMembers.indexOf(r.name) === -1 ){
+        if ( uniqueMembers.indexOf(m.name) === -1 ){
           uniqueMembers.push(m.name)
           applyEvent(serverState, m)
           applyEvent(pubState, removeSensitive(m))

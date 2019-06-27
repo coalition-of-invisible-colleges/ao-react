@@ -145,31 +145,27 @@ export default new Vuex.Store({
           return state.tasks.filter(t => t.deck.length > 0 || t.guild)
       },
       guilds(state, getters){
-          let allGuilds = []
-          state.tasks.forEach( t => {
-              if (t.guild) {
-                  allGuilds.push(t)
-              }
-          })
-
+          return state.tasks.filter(t => t.guild)
+      },
+      pubguilds(state, getters){
           let guilds = []
           let uniqueG = []
-          allGuilds.forEach((c, i) => {
-              if (i > 5 && c.deck.length < 5){
+          getters.guilds.forEach((c, i) => {
+              if (c.deck.length < 5 && guilds.length >= 5){
                   return
               }
+
               if (uniqueG.indexOf(c.guild) === -1){
                   guilds.push(c)
                   uniqueG.push(c.guild)
               }
           })
-
-          console.log("got from total: ", guilds.length, "  from  ",  allGuilds.length)
-          return guilds.sort((a, b) => {
+          guilds.sort( (a, b) => {
               let aVal = a.deck.length
               let bVal = b.deck.length
-              return aVal < bVal
+              return bVal - aVal
           })
+          return guilds
       },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId
