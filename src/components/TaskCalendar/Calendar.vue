@@ -9,13 +9,14 @@
             img(src='../../assets/images/right.svg')
     .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
     .placeholder(v-for='placeholder in firstDay')
-    day(v-for='day in days', :day="day", :month='month', :year='year')
+    day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId')
 </template>
 
 <script>
 import Day from './Day.vue'
 
 export default {
+  props: ['inId'],
   components: {
     Day
   },
@@ -79,7 +80,7 @@ export default {
   margin:15px
 
 #calendar
-    color: accent1
+    color: main
     font-size:2em
 
 .menu
@@ -93,7 +94,7 @@ export default {
     height: 100px
     border-style:solid
     border-width: 1px
-    border-color: accent4
+    border-color: main
 .placeholder
     @extends .calendar-column
 .day

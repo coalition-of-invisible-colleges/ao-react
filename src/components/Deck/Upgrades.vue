@@ -39,7 +39,7 @@
           template(v-if='show === 3')
             div
               div(v-if='isDoge || b.guild')
-                  task-calendar()
+                  task-calendar(:inId='b.taskId')
               div(v-else)
                   resource-book(:tId='b.taskId')
                   p(v-if='calcTime') {{ calcTime.slice(0,15) }}
