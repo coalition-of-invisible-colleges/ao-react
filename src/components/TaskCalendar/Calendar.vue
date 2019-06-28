@@ -10,7 +10,6 @@
     .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
     .placeholder(v-for='placeholder in firstDay')
     day(v-for='day in days', :day="day", :month='month', :year='year')
-
 </template>
 
 <script>
@@ -26,8 +25,8 @@ export default {
             this.year++
             this.month = 0
           }
-            else {
-              this.month++
+          else {
+            this.month++
           }
       },
       prevMonth(){
@@ -78,7 +77,7 @@ export default {
 .inline
   display:inline-block
   margin:15px
-  
+
 #calendar
     color: accent1
     font-size:2em

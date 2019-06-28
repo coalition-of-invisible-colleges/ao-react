@@ -2,7 +2,6 @@
 
 .expandedcard
     hyper-deck(:taskId='id')
-
 </template>
 
 <script>
@@ -41,15 +40,6 @@ export default {
     computed: {
         id(){
             return this.$route.path.split('/')[2]
-        },
-        calcTask(){
-            let task = {}
-            this.$store.state.tasks.forEach( t => {
-                if (this.id === t.taskId){
-                    task = t
-                }
-            })
-            return task
         },
     },
 }

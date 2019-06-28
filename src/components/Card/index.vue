@@ -18,6 +18,9 @@
         span(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
             span {{ calcVal }}
+        span(v-if='cardStart')
+            img.smallguild(src='../../assets/images/timecubewithwhite.png')
+            span {{ cardStart.toFixed(1) }} days
         linky(:x='b.name')
     .one.grid
         preview-deck(:task='b')
@@ -110,6 +113,14 @@ export default {
         }
     },
     computed: {
+        cardStart(){
+            if ( this.b.book.startTs ){
+              let now = Date.now()
+              let msTill = this.b.book.startTs - now
+              let days = msTill / (1000 * 60 * 60 * 24)
+              return days
+            }
+        },
         calcVal(){
             let v = calculations.calculateTaskPayout(this.b)
             return parseInt(v)

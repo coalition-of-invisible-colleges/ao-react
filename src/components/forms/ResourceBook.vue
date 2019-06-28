@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #newresource
-    form-box(btntxt="Book Space"  event='resource-booked' v-bind:data='resource')
+    form-box(btntxt="set time"  event='resource-booked' v-bind:data='resource')
         label select day
         input(v-model='ymd' type='date')
         label select hour
@@ -34,7 +34,7 @@ const HOUR = 1000 * 60 * 60
 const HALFDAY = HOUR * 12
 
 export default {
-  props:['tId'],
+    props:['tId'],
     components: {
         SharedTitle, FormBox, FancyInput
     },
