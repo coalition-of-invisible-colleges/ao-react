@@ -220,7 +220,8 @@ function tasksMuts(tasks, ev) {
         case "resource-booked":
             tasks.forEach( task => {
                 if (task.taskId === ev.resourceId) {
-                        task.book = ev
+                    console.log('task matched booking', ev)
+                    task.book = ev
                 }
             })
             break

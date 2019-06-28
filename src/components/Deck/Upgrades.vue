@@ -11,7 +11,7 @@
         .three.grid(@click='select(3)', :class='{selected: show === 3}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
     .mainbg
-      transition(name='slide-fade')
+      transition(name='slide-fade'  mode='out-in')
         div(v-if='show === 0')
             priorities(:taskId="b.taskId", :inId='b.taskId')
         template(v-if='show === 1')
@@ -37,7 +37,9 @@
             form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
             pay-address(v-else   :address='b.address')
         template(v-if='show === 3')
-            img(src='../../assets/images/timecubewithwhite.png')
+          div
+            p book? {{ b.book }}
+            resource-book(:tId='b.taskId')
 </template>
 
 <script>
