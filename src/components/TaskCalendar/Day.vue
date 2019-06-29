@@ -1,7 +1,7 @@
 <template lang="pug">
 .day
   .date {{ day }}
-  img.upgrade(src='../../assets/images/timecubewithwhite.png')
+  img.upgrade(v-for='t in ev' src='../../assets/images/timecubewithwhite.png')
 </template>
 
 <script>
@@ -17,11 +17,13 @@ function getDMY(ts){
 
 export default {
   components: {},
-  props: ['day', 'month', 'year', 'inId'],
+  props: ['day', 'month', 'year', 'inId', 'ev'],
   computed: {
-      todaysEvents(){
-          return this.$store.getters[this.inId]
+      calcDayRange(){
+
+          return
       },
+
   },
 }
 </script>

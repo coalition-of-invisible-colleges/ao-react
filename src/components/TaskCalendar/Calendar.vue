@@ -9,11 +9,19 @@
             img(src='../../assets/images/right.svg')
     .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
     .placeholder(v-for='placeholder in firstDay')
-    day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId')
+    day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
 </template>
 
 <script>
 import Day from './Day.vue'
+
+function getDMY(ts){
+    let d = new Date(ts)
+    let day =  d.getDate()
+    let month = d.getMonth()
+    let year = d.getFullYear()
+    return { day, month, year }
+}
 
 export default {
   props: ['inId'],
@@ -47,6 +55,34 @@ export default {
       }
   },
   computed: {
+    eventsByDay(){
+        let evs = {
+
+        }
+        this.todaysEvents.forEach(t => {
+            console.log("inIds event 1 ", t)
+            if (t && t.book && t.book.startTs){
+                let date = getDMY(t.book.startTs)
+                console.log("got date", date)
+                if (date.month === this.month && date.year === this.year){
+                    console.log("evetn matching year month")
+                    if (!evs[date.day]){
+                        evs[date.day] = []
+                    }
+                    evs[date.day].push(t)
+                  }
+
+            }
+        })
+        console.log()
+        return evs
+
+    },
+    todaysEvents(){
+        return this.$store.getters.hashMap[this.inId].subTasks.map(tId => {
+            return this.$store.getters.hashMap[tId]
+        })
+    },
     firstDay(){
       let date = new Date(this.year, this.month, 1)
       let firstDay = date.getDay()
