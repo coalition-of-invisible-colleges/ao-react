@@ -56,9 +56,7 @@ export default {
   },
   computed: {
     eventsByDay(){
-        let evs = {
-
-        }
+        let evs = {}
         this.todaysEvents.forEach(t => {
             console.log("inIds event 1 ", t)
             if (t && t.book && t.book.startTs){
@@ -71,12 +69,9 @@ export default {
                     }
                     evs[date.day].push(t)
                   }
-
             }
         })
-        console.log()
         return evs
-
     },
     todaysEvents(){
         return this.$store.getters.hashMap[this.inId].subTasks.map(tId => {
@@ -121,7 +116,7 @@ export default {
 
 .menu
     text-align: center
-    color: accent4
+    color: darkteal
 
 .calendar-column
     float: left
@@ -130,7 +125,7 @@ export default {
     height: 100px
     border-style:solid
     border-width: 1px
-    border-color: main
+    border-color: darkteal
 .placeholder
     @extends .calendar-column
 .day
@@ -142,7 +137,7 @@ export default {
     font-weight:lighter
     font-size: .7em
     border-style:solid
-    color:accent4
+    color:darkteal
 .date
     background-color: white
     float: right

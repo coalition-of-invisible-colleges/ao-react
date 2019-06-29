@@ -1,7 +1,7 @@
 <template lang="pug">
 .day
   .date {{ day }}
-  img.upgrade(v-for='t in ev' src='../../assets/images/timecubewithwhite.png')
+  img.upgrade(v-for='t in ev'  @click="toTask(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
 </template>
 
 <script>
@@ -18,6 +18,21 @@ function getDMY(ts){
 export default {
   components: {},
   props: ['day', 'month', 'year', 'inId', 'ev'],
+  methods: {
+      styl(color){
+        return {
+            redwx : color == 'red',
+            bluewx : color == 'blue',
+            greenwx : color == 'green',
+            yellowwx : color == 'yellow',
+            purplewx : color == 'purple',
+            blackwx : color == 'black',
+        }
+      },
+      toTask(tId){
+          this.$router.push("/task/" + tId)
+      }
+  },
   computed: {
       calcDayRange(){
 
@@ -38,7 +53,7 @@ label
     color: black
 
 .upgrade
-    width: 80%
+    width: 60%
 
 .type
     font-size: .5em
