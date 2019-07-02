@@ -5,7 +5,9 @@
         .four.columns
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
-            label {{ m.name }}
+            label {{ m.name }} -
+                br
+                span.yellowtx(v-for='g in rowsGuilds')  {{ g }} -
         .eight.columns
             priorities(:taskId='m.memberId')
             router-link.fw(:to='"/task/" + m.memberId')
@@ -34,19 +36,16 @@ export default {
             })
             return isLoggedIn
         },
-    },
-    methods: {
-        getName(taskId){
-            let name
-            this.$store.state.tasks.some(t => {
-                if (taskId === t.taskId){
-                    name = t.name
-                    return true
+        rowsGuilds(){
+            let g = []
+            this.$store.getters.pubguilds.forEach(t => {
+                if (t.deck.indexOf(this.m.memberId) > -1){
+                    g.push(t.guild)
                 }
             })
-            return name
+            return g
         }
-    }
+    },
 }
 
 </script>

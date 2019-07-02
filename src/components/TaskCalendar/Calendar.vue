@@ -4,7 +4,9 @@
     .row.menu
         .inline(@click='prevMonth')
             img(src='../../assets/images/left.svg')
-        .inline {{ monthName }} - {{year}}
+        .inline
+            span(v-if='card.guild') {{card.guild}} -
+            span {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
             img(src='../../assets/images/right.svg')
     .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
@@ -73,8 +75,11 @@ export default {
         })
         return evs
     },
+    card(){
+        return this.$store.getters.hashMap[this.inId]
+    },
     todaysEvents(){
-        return this.$store.getters.hashMap[this.inId].subTasks.map(tId => {
+        return this.card.subTasks.map(tId => {
             return this.$store.getters.hashMap[tId]
         })
     },

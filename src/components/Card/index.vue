@@ -1,5 +1,6 @@
 <template lang='pug'>
-.task(v-if='b'  :class="cardInputSty").dont-break-out.agedwrapper
+
+.task(v-if='b'  :class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -321,14 +322,5 @@ export default {
     height: 1.21
     font-weight: bolder
 
-// .innerborder
-//     // border: 20px solid white;
-//     // box-shadow: inset 0px 0px 0px 10px white;
-//     // box-sizing: border-box; /* Include padding and border in element's width and height */
-//     padding: 2em
-//     // .inner-outline {
-//     outline: 4px double rgba(255, 255, 255, 0.235654);
-//     outline-offset: -16px;
-//     // }
 
 </style>

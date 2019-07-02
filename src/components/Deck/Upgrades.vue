@@ -41,8 +41,8 @@
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
               div(v-else)
+                  .gui(v-if='calcTime') {{ calcTime.slice(0,15) }}
                   resource-book(:tId='b.taskId')
-                  p(v-if='calcTime') {{ calcTime.slice(0,15) }}
 </template>
 
 <script>
