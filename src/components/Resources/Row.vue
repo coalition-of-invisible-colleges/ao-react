@@ -3,6 +3,8 @@
 .resources
     h3 {{ r.name }}
         span(v-if='r.stock && r.stock >= 0').stock ({{ r.stock }} remain)
+    img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+    span {{ val }}
     .invoices(v-if='showInvoices')
         pay-req(v-if='invoice', :i='invoice')
     .row
@@ -23,6 +25,7 @@
 import request from 'superagent'
 import Current from './Current'
 import PayReq from './PayReq'
+import calculations from '../../calculations'
 
 export default {
     data(){
@@ -31,6 +34,12 @@ export default {
     props: ['r'],
     components: { Current, PayReq },
     computed: {
+        val(){
+            return calculations.calculateTaskPayout(this.resourceCard)
+        },
+        resourceCard(){
+            return this.$store.getters.hashMap[this.r.resourceId]
+        },
         trackStock(){
             return !(this.r.stock == undefined)
         },
@@ -94,6 +103,7 @@ button
 
 .resources
     color: accent1
+    background-color: darkteal
     border-color: accent4
     border-bottom-style: solid
     border-width: 3px

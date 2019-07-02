@@ -1,5 +1,6 @@
 <template lang='pug'>
-.task(v-if='b'  :class="cardInputSty").dont-break-out.agedwrapper
+
+.task(v-if='b'  :class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -18,6 +19,9 @@
         span(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
             span {{ calcVal }}
+        span(v-if='cardStart')
+            img.smallguild(src='../../assets/images/timecubewithwhite.png')
+            span {{ cardStart.toFixed(1) }} days
         linky(:x='b.name')
     .one.grid
         preview-deck(:task='b')
@@ -25,10 +29,10 @@
       scroll.faded(:b='b', :inId='inId')
       img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
       p.hodlcount() {{ b.deck.length }}
-      vine.faded(:b='b')
+      vine(:b='b')
   priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
-  button(v-if='b.deck.length === 0' @click='purge') purge
+  //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
@@ -110,6 +114,14 @@ export default {
         }
     },
     computed: {
+        cardStart(){
+            if ( this.b.book.startTs ){
+              let now = Date.now()
+              let msTill = this.b.book.startTs - now
+              let days = msTill / (1000 * 60 * 60 * 24)
+              return days
+            }
+        },
         calcVal(){
             let v = calculations.calculateTaskPayout(this.b)
             return parseInt(v)
@@ -310,14 +322,5 @@ export default {
     height: 1.21
     font-weight: bolder
 
-// .innerborder
-//     // border: 20px solid white;
-//     // box-shadow: inset 0px 0px 0px 10px white;
-//     // box-sizing: border-box; /* Include padding and border in element's width and height */
-//     padding: 2em
-//     // .inner-outline {
-//     outline: 4px double rgba(255, 255, 255, 0.235654);
-//     outline-offset: -16px;
-//     // }
 
 </style>

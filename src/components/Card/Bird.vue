@@ -13,7 +13,6 @@
             option(disabled, value='') to guild
             option(v-for='n in $store.getters.guilds', :value="n.taskId") {{ n.guild }}
         form-box(v-if='toGuild' btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo')
-
 </template>
 
 <script>

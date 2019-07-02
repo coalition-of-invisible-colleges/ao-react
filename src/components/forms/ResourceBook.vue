@@ -1,8 +1,10 @@
 <template lang='pug'>
 
 #newresource
-    form-box(btntxt="Book Space"  event='resource-booked' v-bind:data='resource')
+    form-box(btntxt="set time"  event='resource-booked' v-bind:data='resource')
+        label select day
         input(v-model='ymd' type='date')
+        label select hour
         .row.padd
             select.eight.grid(v-model='hour')
                 option(value='1') 1
@@ -20,16 +22,7 @@
             select.four.grid(v-model='meridiem')
                 option(value='am') am
                 option(value='pm') pm
-        fancy-input(labelText='Expected Duration')
-            input.input-effect(v-model='duration' type='number')
-        hr
-        //- div.br(v-if='resource.eventType == "charged"')
-        //-     fancy-input(labelText='Amount to charge')
-        //-         input.input-effect(v-model='resource.charge' type='text')
-        //- hr
-        //- p.input-instructions Explanation to set shenanigan expectation level.
-        //- textarea(v-model='resource.notes')
-
+        //- input.input-effect(v-model='duration' type='number')
 </template>
 
 <script>
@@ -41,7 +34,7 @@ const HOUR = 1000 * 60 * 60
 const HALFDAY = HOUR * 12
 
 export default {
-  props:['tId'],
+    props:['tId'],
     components: {
         SharedTitle, FormBox, FancyInput
     },
@@ -58,14 +51,13 @@ export default {
             hour: 1,
             meridiem : 'pm',
             duration : 3,
-            evType:'xxd',
             urlId: '',
         }
     },
     computed: {
         resource() {
             return {
-                eventType: this.evType,
+                eventType: 'resource-booked',
                 resourceId: this.tId,
                 memberId: this.$store.getters.member.memberId,
                 taskId: '',

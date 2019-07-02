@@ -4,14 +4,14 @@
     .pricebox
         img.bullimg(v-if='!$store.getters.isLoggedIn' src='../assets/images/dctrl.svg')
         div(v-else)
-            img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg")
-            img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg")
-            img.bullimg(v-if='showImg === "uni"'  src="../assets/images/bulluni.svg")
+            img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle("sun")')
+            img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle("bull")')
+            img.bullimg(v-if='showImg === "uni"'  src="../assets/images/bulluni.svg"  @click='cycle("uni")')
         div(v-if='$store.getters.isLoggedIn')
             div(@click='setImg("sun")')
                 router-link(to='/' exact) Guilds
             div(@click='setImg("uni")')
-                router-link(:to='"/task/" + $store.getters.member.memberId')
+                router-link(to='/deck/')
                     span(v-if='$store.getters.inbox.length > 0')
                       img.smallbird(src='../assets/images/birdbtn.svg')
                       span {{ $store.getters.inbox.length }} |
@@ -61,6 +61,14 @@ export default {
         }
     },
     methods: {
+        cycle(from){
+            switch(from){
+                case 'uni': return this.$router.push('/dash')
+                case 'bull': return this.$router.push('/')
+                case 'sun': return this.$router.push('/deck')
+            }
+            this.setToRoute()
+        },
         setToRoute(){
             switch (this.$router.currentRoute.path){
               case "/": return this.showImg = "sun"

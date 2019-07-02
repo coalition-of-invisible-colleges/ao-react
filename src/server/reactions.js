@@ -40,6 +40,7 @@ function reactions(ev){
                         }
                         console.log('trying to cast resource Used', r.resourceId, '', amount, 0, '')
                         events.resourcesEvs.resourceUsed(r.resourceId, '', amount, 0, '', console.log)
+                        return true
                     }
                 })
 

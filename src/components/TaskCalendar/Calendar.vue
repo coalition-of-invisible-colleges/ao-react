@@ -4,19 +4,29 @@
     .row.menu
         .inline(@click='prevMonth')
             img(src='../../assets/images/left.svg')
-        .inline {{ monthName }} - {{year}}
+        .inline
+            span(v-if='card.guild') {{card.guild}} -
+            span {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
             img(src='../../assets/images/right.svg')
     .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
     .placeholder(v-for='placeholder in firstDay')
-    day(v-for='day in days', :day="day", :month='month', :year='year')
-
+    day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
 </template>
 
 <script>
 import Day from './Day.vue'
 
+function getDMY(ts){
+    let d = new Date(ts)
+    let day =  d.getDate()
+    let month = d.getMonth()
+    let year = d.getFullYear()
+    return { day, month, year }
+}
+
 export default {
+  props: ['inId'],
   components: {
     Day
   },
@@ -26,8 +36,8 @@ export default {
             this.year++
             this.month = 0
           }
-            else {
-              this.month++
+          else {
+            this.month++
           }
       },
       prevMonth(){
@@ -47,6 +57,32 @@ export default {
       }
   },
   computed: {
+    eventsByDay(){
+        let evs = {}
+        this.todaysEvents.forEach(t => {
+            console.log("inIds event 1 ", t)
+            if (t && t.book && t.book.startTs){
+                let date = getDMY(t.book.startTs)
+                console.log("got date", date)
+                if (date.month === this.month && date.year === this.year){
+                    console.log("evetn matching year month")
+                    if (!evs[date.day]){
+                        evs[date.day] = []
+                    }
+                    evs[date.day].push(t)
+                  }
+            }
+        })
+        return evs
+    },
+    card(){
+        return this.$store.getters.hashMap[this.inId]
+    },
+    todaysEvents(){
+        return this.card.subTasks.map(tId => {
+            return this.$store.getters.hashMap[tId]
+        })
+    },
     firstDay(){
       let date = new Date(this.year, this.month, 1)
       let firstDay = date.getDay()
@@ -78,14 +114,14 @@ export default {
 .inline
   display:inline-block
   margin:15px
-  
+
 #calendar
-    color: accent1
+    color: main
     font-size:2em
 
 .menu
     text-align: center
-    color: accent4
+    color: darkteal
 
 .calendar-column
     float: left
@@ -94,7 +130,7 @@ export default {
     height: 100px
     border-style:solid
     border-width: 1px
-    border-color: accent4
+    border-color: darkteal
 .placeholder
     @extends .calendar-column
 .day
@@ -106,7 +142,7 @@ export default {
     font-weight:lighter
     font-size: .7em
     border-style:solid
-    color:accent4
+    color:darkteal
 .date
     background-color: white
     float: right

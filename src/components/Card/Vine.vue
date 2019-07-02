@@ -3,7 +3,6 @@
 .vine(@click='toTop')
   router-link(:to='"/task/" + b.taskId')
     img.viney(src='../../assets/images/vinebtn.svg')
-
 </template>
 
 <script>
@@ -80,5 +79,4 @@ label
 .viney
     float: right
     height: 1.3em
-
 </style>

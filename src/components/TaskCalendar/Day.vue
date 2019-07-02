@@ -1,9 +1,7 @@
 <template lang="pug">
 .day
   .date {{ day }}
-  template(v-for='t in taskers')
-    label.type {{ t }}
-
+  img.upgrade(v-for='t in ev'  @click="toTask(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
 </template>
 
 <script>
@@ -14,28 +12,33 @@ function getDMY(ts){
     let day =  d.getDate()
     let month = d.getMonth()
     let year = d.getFullYear()
-    return { day, month, year}
+    return { day, month, year }
 }
 
 export default {
   components: {},
-  props: ['day', 'month', 'year'],
-  computed: {
-      todaysEvents(){
-          let t = []
-          return t
+  props: ['day', 'month', 'year', 'inId', 'ev'],
+  methods: {
+      styl(color){
+        return {
+            redwx : color == 'red',
+            bluewx : color == 'blue',
+            greenwx : color == 'green',
+            yellowwx : color == 'yellow',
+            purplewx : color == 'purple',
+            blackwx : color == 'black',
+        }
       },
-      taskers(){
-          let taskers = []
-          this.todaysEvents.forEach( ev => {
-              this.$store.state.members.forEach(member => {
-                  if (ev.memberId === member.memberId){
-                      taskers.push(member.name)
-                  }
-              })
-          })
-          return _.uniq(taskers)
+      toTask(tId){
+          this.$router.push("/task/" + tId)
       }
+  },
+  computed: {
+      calcDayRange(){
+
+          return
+      },
+
   },
 }
 </script>
@@ -47,7 +50,10 @@ export default {
 label
     padding: 0
     margin: 0
-    color: accent2
+    color: black
+
+.upgrade
+    width: 60%
 
 .type
     font-size: .5em
@@ -57,19 +63,17 @@ label
 
 .day
     position: relative
-    background-color: main
+    background-color: softGrey
     overflow: visible
 
 .date
     text-align:right
-    height: 30px
+    height: 1.7em
     margin-top: 0
     margin-bottom:-30px
     font-weight: bolder
     font-size: .9em
     padding: 5px 5px 5px 5px
-
-
 
 .amount
     font-size: .49em
@@ -82,8 +86,6 @@ label
 
 .dec
     color: red
-
-
 
 .b
 		text-align: center

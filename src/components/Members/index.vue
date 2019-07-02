@@ -2,8 +2,8 @@
 
 #member
     .list(v-if="$store.getters.isLoggedIn")
-        h2 {{ $store.getters.activeMembers.length }} active doges
-        row(v-for="m in $store.getters.activeMembers", :m="m")
+        h2 {{ $store.getters.activeMembers.length }} active fobs
+        row(v-for="m in $store.getters.recentMembers", :m="m")
         purg
     .padding(v-else)
         p dctrl member

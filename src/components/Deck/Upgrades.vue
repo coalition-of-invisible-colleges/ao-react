@@ -10,34 +10,39 @@
             img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
         .three.grid(@click='select(3)', :class='{selected: show === 3}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
-    .mainbg
-      transition(name='slide-fade')
-        div(v-if='show === 0')
-            priorities(:taskId="b.taskId", :inId='b.taskId')
-        template(v-if='show === 1')
-          .row
-            div(v-if='!isDoge')
-                img.dogepepecoin(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                h1(v-if='b.guild') {{ b.guild }} - guild
-                current(v-for='n in nameList'  :memberId='n')
-                guild-create
-            div(v-else)
-                .gui current {{isDoge.name}} missions
-                template(v-for='g in dogeGuilds')
-                  div
-                    router-link(:to='"/task/" + g.taskId')
-                        span.gui * {{ g.guild }}
-                        span - {{ g.name }}
-        template(v-if='show === 2')
-          .box
-            form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                label Create new invoice; choose amount
-                input(v-model='payreqAmount')
-            pay-req(:bolt11='b.bolt11')
-            form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
-            pay-address(v-else   :address='b.address')
-        template(v-if='show === 3')
-            img(src='../../assets/images/timecubewithwhite.png')
+    .row.mainbg
+      transition(name='slide-fade'  mode='out-in')
+          div(v-if='show === 0')
+              priorities(:taskId="b.taskId", :inId='b.taskId')
+          template(v-if='show === 1')
+            div
+              div(v-if='!isDoge')
+                  img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                  label.gui(v-if='b.guild') {{ b.guild }} - guild
+                  current(v-for='n in nameList'  :memberId='n')
+                  guild-create
+              div(v-else)
+                  .gui current {{isDoge.name}} missions
+                  template(v-for='g in dogeGuilds')
+                    div
+                      router-link(:to='"/task/" + g.taskId')
+                          span.gui * {{ g.guild }}
+                          span - {{ g.name }}
+          template(v-if='show === 2')
+            .box
+              form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                  label Create new invoice; choose amount
+                  input(v-model='payreqAmount')
+              pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
+              form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
+              pay-address(v-else   :address='b.address')
+          template(v-if='show === 3')
+            div
+              div(v-if='isDoge || b.guild')
+                  task-calendar(:inId='b.taskId')
+              div(v-else)
+                  .gui(v-if='calcTime') {{ calcTime.slice(0,15) }}
+                  resource-book(:tId='b.taskId')
 </template>
 
 <script>
@@ -50,6 +55,7 @@ import TaskCreate from '../forms/TaskCreate'
 import HyperDeck from '../Deck/HyperDeck'
 import PreviewDeck from '../Deck/PreviewDeck'
 import Hypercard from '../Card'
+import TaskCalendar from '../TaskCalendar/Calendar'
 import GuildCreate from '../forms/GuildCreate'
 import BountyCreate from '../forms/BountyCreate'
 import ResourceBook from '../forms/ResourceBook'
@@ -69,7 +75,8 @@ export default {
         HyperDeck, Hypercard, GuildCreate,
         BountyCreate, PreviewDeck, Actions,
         ResourceBook, FormBox, Tag, PayReq,
-        PayAddress, FancyInput, Current, Priorities
+        PayAddress, FancyInput, Current, Priorities,
+        TaskCalendar
     },
     data(){
         return {
@@ -175,12 +182,8 @@ export default {
         },
         calcTime(){
             if (this.b.book.startTs){
-                let now = Date.now()
-                let secondsTill = this.b.book.startTs - now
-                let days = secondsTill / (1000 * 60 * 60 * 24)
-                return parseInt(days)
-            } else {
-                return false
+                let now = new Date(this.b.book.startTs)
+                return now.toString()
             }
         },
         calcVal(){
@@ -275,10 +278,10 @@ h3
     padding: .4321em
 
 .slide-fade-enter-active {
-  transition: all .6s ease;
+  transition: all .06s ease;
 }
 .slide-fade-leave-active {
-  transition: all .4s ease;
+  transition: all .05s ease;
 }
 .slide-fade-enter {
   // transform: translateY(-400px);
@@ -312,5 +315,10 @@ h3
 .gui
     font-size: 1.8em
 
+.row .three
+    height: 5em
+
+.dogep
+    height: 3em
 
 </style>

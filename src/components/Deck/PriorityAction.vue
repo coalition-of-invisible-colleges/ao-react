@@ -5,7 +5,8 @@
         img.singleship(src='../../assets/images/singleship.svg')
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
-        span {{ name }} !!
+        hyper-card(:b='card')
+        h3 {{card.name}}
         .row
             .six.grid
                 button.accept(@click='claim')
@@ -15,14 +16,15 @@
                 button.dontaccept(@click='refuse')
                     img.arrow.fl(src='../../assets/images/buddadoge.svg')
                     span refocus
-
 </template>
 
 <script>
 
 import request from 'superagent'
+import HyperCard from '../Card'
 
 export default {
+    components: { HyperCard },
     data(){
         return {
             notes: ''
@@ -30,24 +32,14 @@ export default {
     },
     props: ['taskId', 'nextAction', 'inId'],
     computed: {
+        card(){
+            return this.$store.getters.hashMap[this.taskId]
+        },
         name(){
-            let name
-            this.$store.state.tasks.some(t => {
-                if (this.taskId === t.taskId){
-                    name = t.name
-                    return true
-                }
-            })
-            return name
+            return this.card.name
         },
         cardInputSty() {
-          let color
-          this.$store.state.tasks.some(t => {
-              if (this.taskId === t.taskId){
-                  color = t.color
-                  return true
-              }
-          })
+          let color = this.card.color
           return {
               redwx : color == 'red',
               bluewx : color == 'blue',
@@ -108,7 +100,7 @@ button
 
 .clearboth
     clear: both
-    
+
 .singleship
     width: 3.3724em
     margin-top: 0.5em

@@ -12,6 +12,35 @@ import calculations from './calculations'
 
 Vue.use(Vuex)
 
+function fullDeck(subTasks, allTasks = [], state, getters){
+      subTasks.forEach(tId => {
+          let task = state.tasks.filter( t => tId === t.taskId)[0]
+          if(task) {
+              if(allTasks.indexOf(task) === -1) {
+                  allTasks.push(task)
+              } else {
+                  return allTasks
+              }
+
+              let allSubTasks = []
+              if(task.subTasks && task.subTasks.length > 0) {
+                  allSubTasks = fullDeck(task.subTasks, allTasks, state, getters)
+              }
+              let newSubTasks = []
+              allSubTasks.forEach(st => {
+                if(allTasks.filter(t => t.taskId === st.taskId).length === 0) {
+                    newSubTasks.push(st)
+                }
+              })
+              if(newSubTasks.length === 0 && allSubTasks.length > 0) {
+                  return allTasks
+              }
+              allTasks = allTasks.concat(newSubTasks)
+          }
+      })
+      return allTasks
+}
+
 export default new Vuex.Store({
   modules: {
       loader, eventstream, recent,
@@ -48,6 +77,29 @@ export default new Vuex.Store({
       },
       recurasaurus(state, getters){
           console.log("recursasaurus")
+          let tasks = getters.hodld
+          let subTaskIds = getters.memberCard.subTasks
+
+          let fd = fullDeck(subTaskIds, [], state, getters)
+
+          let notInDeck = []
+          tasks.forEach(t => {
+            if(fd.filter(t2 => t2.taskId === t.taskId).length === 0) {
+              notInDeck.push(t)
+            }
+          })
+          let fullNotInDeck = []
+          notInDeck.forEach( t => {
+              fullNotInDeck = fullNotInDeck.concat(fullDeck(t.subTasks,[], state, getters))
+          })
+
+          let condensedNotInDeck = []
+          notInDeck.forEach(t => {
+            if(fullNotInDeck.filter(t2 => t2.taskId === t.taskId).length === 0) {
+              condensedNotInDeck.push(t)
+            }
+          })
+          return condensedNotInDeck.slice()
       },
       withinHeld(state, getters){
           let w = []
@@ -93,32 +145,26 @@ export default new Vuex.Store({
           return state.tasks.filter(t => t.deck.length > 0 || t.guild)
       },
       guilds(state, getters){
-          let allGuilds = []
-          state.tasks.forEach( t => {
-              if (t.guild) {
-                  allGuilds.push(t)
-              }
-          })
-
-          let sortedByHolders = allGuilds.sort((a, b) => {
-              let aVal = a.deck.length
-              let bVal = b.deck.length
-              return aVal < bVal
-          })
-
+          return state.tasks.filter(t => t.guild)
+      },
+      pubguilds(state, getters){
           let guilds = []
           let uniqueG = []
-          sortedByHolders.forEach((c, i) => {
-              if (i > 5 && c.deck.length < 5){
+          getters.guilds.forEach((c, i) => {
+              if (c.deck.length < 5 && guilds.length >= 5){
                   return
               }
+
               if (uniqueG.indexOf(c.guild) === -1){
                   guilds.push(c)
                   uniqueG.push(c.guild)
               }
           })
-
-          console.log("got from total: ", guilds.length, "  from  ",  allGuilds.length)
+          guilds.sort( (a, b) => {
+              let aVal = a.deck.length
+              let bVal = b.deck.length
+              return bVal - aVal
+          })
           return guilds
       },
       isLoggedIn(state, getters){
@@ -179,8 +225,16 @@ export default new Vuex.Store({
               totalRemote += (c.channel_total_sat - c.channel_sat)
           })
           return totalRemote
-      }
+      },
+      recentMembers(state, getters){
 
+          let recentMembers = state.members.slice()
+
+          recentMembers.sort((a, b) => {
+              return b.lastUsed - a.lastUsed
+          })
+          return recentMembers
+      },
   },
   middlewares: [],
   strict: process.env.NODE_ENV !== 'production'
