@@ -5,11 +5,16 @@
         home
     .pinboard(v-else)
         .row
-            .eight.columns
-                card-panel(:c='$store.getters.pubguilds')
+            .seven.columns
+                div(@click='cycleGuilds').bluewx
+                    h1 {{ showGuild + 1 }} of {{ $store.getters.pubguilds.length }}
+                        img.fr(src='../../assets/images/right.svg')
+                hypercard(:b='$store.getters.pubguilds[showGuild]')
+                div.space
                 row(v-for="m in $store.getters.recentMembers.slice(0,7)", :m="m")
-                router-link(to='/members/') see all 
-            .four.columns
+                router-link(to='/members/') see all
+            .five.columns
+                calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
                 img.fw(src='../../assets/images/buddadoge.svg')
     img.fw(src='../../assets/memes/Spiderman.jpg')
 </template>
@@ -28,7 +33,7 @@ import WhyLightning from '../Nodes/WhyLightning'
 import PreviewDeck from '../Deck/PreviewDeck'
 import Home from '../Home'
 import CardPanel from '../Deck/CardPanel'
-import Calendar from '../MemberCalendar'
+import Calendar from '../TaskCalendar/Calendar'
 import Members from '../Members'
 import Row from '../Members/Row'
 
@@ -48,6 +53,17 @@ export default {
       Calendar,
       Members,
   },
+  data(){
+      return {
+          showGuild: 0
+      }
+  },
+  methods:{
+      cycleGuilds(){
+          console.log('cycling')
+          this.showGuild = (this.showGuild + 1) % this.$store.getters.pubguilds.length
+      }
+  }
 }
 
 </script>
@@ -58,6 +74,16 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/grid'
 @import '../../styles/button'
+
+.space
+    height: 1.1em
+
+ h1
+  cursor: pointer
+  text-align: center
+  color: main
+  img
+    height: 2em
 
 #wrex
     width: 100%
@@ -106,6 +132,9 @@ h2
 
 .nextg
     cursor: pointer
+
+.fw
+    width: 100%
 
 .fr
     float: right

@@ -30,27 +30,20 @@ export default {
         this.action = ii
     },
     getTask(taskId){
-        let task
-        this.$store.state.tasks.forEach( t => {
-            if (taskId === t.taskId) {
-                task = t
-            }
-        })
-        return task
+        return this.$store.getters.hashMap[taskId]
     },
     nextAction(){
         this.action = (this.action + 1) % this.getPriorities.length
     }
   },
   computed: {
+      card(){
+          return this.$store.getters.hashMap[this.taskId]
+      },
       getPriorities(){
-          let p = []
-          this.$store.state.tasks.forEach( t => {
-              if (this.taskId === t.taskId){
-                  p = t.priorities
-              }
-          })
-          return p.slice().reverse()
+          if (this.card && this.card.priorities){
+              return this.card.priorities.slice().reverse()
+          }
       }
   },
   components:{
