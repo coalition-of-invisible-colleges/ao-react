@@ -7,7 +7,9 @@
             img(v-else, src='../../assets/images/loggedOut.svg')
             label {{ m.name }} -
                 br
-                span.yellowtx(v-for='g in rowsGuilds')  {{ g }} -
+                span(v-for='g in rowsGuilds')
+                    router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }}
+                    span -
         .eight.columns
             priorities(:taskId='m.memberId')
             router-link.fw(:to='"/task/" + m.memberId')
@@ -40,7 +42,7 @@ export default {
             let g = []
             this.$store.getters.pubguilds.forEach(t => {
                 if (t.deck.indexOf(this.m.memberId) > -1){
-                    g.push(t.guild)
+                    g.push(t)
                 }
             })
             return g
@@ -75,5 +77,8 @@ label
 .viney
     float: right
     height: 1.3em
+
+.yellowtx
+    text-decoration: none
 
 </style>
