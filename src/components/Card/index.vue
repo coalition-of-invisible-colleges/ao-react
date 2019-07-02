@@ -29,10 +29,10 @@
       scroll.faded(:b='b', :inId='inId')
       img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
       p.hodlcount() {{ b.deck.length }}
-      vine.faded(:b='b')
+      vine(:b='b')
   priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
-  button(v-if='b.deck.length === 0' @click='purge') purge
+  //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
