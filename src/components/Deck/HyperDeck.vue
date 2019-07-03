@@ -13,6 +13,8 @@
     div.fadey(:class='cardInputSty')
         task-create(:taskId='parent.taskId')
         panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
+        h2 completed
+        panels(v-if='claimed.length > 0', :c='claimed', :inId='parent.taskId')
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -35,7 +37,7 @@ import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 
 export default {
-  props: ['taskId', 'task'],
+  props: ['taskId'],
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
@@ -43,11 +45,13 @@ export default {
   },
   methods:{
       getTask(taskId){
-          let gt = this.$store.getters.hashMap[taskId]
-          return gt
+          return this.$store.getters.hashMap[taskId]
       },
   },
   computed: {
+      card(){
+          return this.$store.getters.hashMap[this.taskId]
+      },
       bountyValue(){
           return calculations.calculateTaskPayout(this.parent)
       },
@@ -88,15 +92,16 @@ export default {
       deck(){
           let tasks = []
           if (this.taskId) {
-              let subTasks = []
-              let t = this.$store.getters.hashMap[this.taskId]
-              t.subTasks.slice().reverse().forEach(subtask => tasks.push( this.getTask(subtask)))
-              console.log("created tasks", {tasks, t}, 'from tid: ', this.taskId)
-          } else if (this.task && this.task.subTasks) {
-              this.task.subTasks.forEach( tId => tasks.push( this.getTask(tId) ))
-              console.log("created tasks", {tasks}, 'from task: ', this.task)
+              this.card.subTasks.slice().reverse().forEach(subtask => tasks.push( this.getTask(subtask)))
           }
-          console.log({tasks})
+          return tasks
+      },
+      claimed(){
+          let tasks = []
+          if (this.taskId) {
+              this.card.claimed.forEach(subtask => tasks.push( this.getTask(subtask)))
+          }
+          console.log(this.card.claimed.length, 'should have ', tasks.length)
           return tasks
       },
       cardAge(){

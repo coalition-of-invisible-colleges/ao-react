@@ -106,6 +106,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach( t => {
                     t.subTasks = t.subTasks.filter(st => st !== ev.taskId)
                     t.priorities = t.priorities.filter(st => st !== ev.taskId)
+                    t.claimed = t.claimed.filter(st => st !== ev.taskId)
             })
             break
         case "task-prioritized":
@@ -114,6 +115,7 @@ function tasksMuts(tasks, ev) {
                   if (task.priorities.indexOf(ev.taskId) === -1){
                       task.priorities.push(ev.taskId)
                       task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
+                      task.claimed = task.claimed.filter(st => st !== ev.taskId)
                   }
               }
             })
@@ -139,7 +141,8 @@ function tasksMuts(tasks, ev) {
         case "task-de-sub-tasked":
             tasks.forEach(task => {
                     if (task.taskId === ev.taskId) {
-                            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
+                        task.claimed = _.filter(task.claimed, tId => tId !== ev.subTask )
                     }
             })
             break
@@ -162,6 +165,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.inId) {
                         task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
+                        task.claimed.push(ev.taskId)
                 }
                 if (task.taskId === ev.taskId){
                         task.claimed.push(ev.memberId)
