@@ -2,6 +2,7 @@
 
 .priorities
     template(v-for='(t, i) of getPriorities')
+        div(@click='allocate(t)') allcate! {{card.allocations[t]}}
         hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
         div(v-else   @click='setAction(i)')
             hyperpriority(:taskId='t')
@@ -9,7 +10,7 @@
 </template>
 
 <script>
-
+import request from 'superagent'
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
@@ -22,6 +23,20 @@ export default {
       }
   },
   methods:{
+    allocate(tId){
+      console.log(tId, 'allocate called')
+      request
+          .post('/events')
+          .set('Authorization', this.$store.state.loader.token)
+          .send({
+              type: 'task-allocated',
+              taskId: this.taskId,
+              allocatedId: tId
+          })
+          .end((err,res)=>{
+              console.log({err, res, tId})
+          })
+    },
     setAction(ii){
         if (ii === this.action){
             this.action = -1

@@ -216,13 +216,14 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback){
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskAllocated(taskId, allocatedId, memberId) {
+function taskAllocated(taskId, allocatedId, memberId, callback) {
   let newEvent = {
      type: "task-allocated",
-     taskId, 
-     allocatedId, 
+     taskId,
+     allocatedId,
      memberId
   }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function invoiceCreated(taskId, bolt11, payment_hash, callback){

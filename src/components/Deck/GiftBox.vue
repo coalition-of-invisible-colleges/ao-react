@@ -6,7 +6,6 @@
     span Gifts
     card-panel(:c="$store.getters.inbox")
     img.fw(src='../../assets/images/pins.svg')
-
 </template>
 
 <script>
