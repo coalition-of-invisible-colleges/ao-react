@@ -12,9 +12,11 @@
                 upgrades(:b='parent')
     div.fadey(:class='cardInputSty')
         task-create(:taskId='parent.taskId')
-        panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
-        h2 completed
-        panels(v-if='claimed.length > 0', :c='claimed', :inId='parent.taskId')
+        h2(v-if='claimed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, bluewx: showCompleted}').fr completed
+        div(v-if='showCompleted')
+            panels(v-if='claimed.length > 0', :c='claimed', :inId='parent.taskId')
+        div(v-else)
+            panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -38,6 +40,9 @@ import BountyCard from '../Bounties/BountyCard'
 
 export default {
   props: ['taskId'],
+  data(){
+      return { showCompleted: false }
+  },
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
@@ -47,6 +52,10 @@ export default {
       getTask(taskId){
           return this.$store.getters.hashMap[taskId]
       },
+      toggleShowComplete(){
+          this.showCompleted = !this.showCompleted
+          console.log('set th', this.showCompleted)
+      }
   },
   computed: {
       card(){
@@ -121,6 +130,12 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/button'
+
+.bluewx
+    color: white
+
+.faded
+    opacity: 0.4
 
 .deck
     width: 100%
