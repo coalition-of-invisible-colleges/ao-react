@@ -78,6 +78,23 @@ export default {
             console.log('got swipe down')
             this.swap(1)
         });
+
+        var Press = new Hammer.Press({
+          time: 500
+        });
+        mc.add(Press)
+
+        mc.on('press', (e) => {
+            e.preventDefault()
+            navigator.clipboard.writeText(this.c[0].name)
+            .then(() => {
+              //console.log('card copied to clipboard');
+            })
+            .catch(err => {
+              // This can happen if the user denies clipboard permissions:
+              console.error('could not copy text: ', err);
+            });
+        });
   },
   data(){
       return {
