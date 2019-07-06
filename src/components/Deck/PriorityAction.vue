@@ -2,7 +2,7 @@
 
 .priorityaction.clearboth
     router-link(:to='"/task/" + taskId')
-        img.singleship(src='../../assets/images/singleship.svg')
+        img.singleship(src='../../assets/images/vinebtn.svg')
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
         hyper-card(:b='card')
