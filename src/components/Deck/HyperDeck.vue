@@ -11,10 +11,10 @@
             div.upgradesbar()
                 upgrades(:b='parent')
     div.fadey(:class='cardInputSty')
-        task-create(:taskId='parent.taskId')
         h2(v-if='claimed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, bluewx: showCompleted}').fr completed
-        div(v-if='claimed.length === 0 && showCompleted')
-            panels(v-if='claimed.length > 0', :c='claimed', :inId='parent.taskId')
+        task-create(:taskId='parent.taskId')
+        div(v-if='claimed.length > 0 && showCompleted')
+            panels(:c='claimed', :inId='parent.taskId')
         div(v-else)
             panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
     img.fw(src='../../assets/images/pixeldesert.png')

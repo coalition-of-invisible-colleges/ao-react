@@ -2,7 +2,7 @@
 
 .priorities
     template(v-for='(t, i) of getPriorities')
-        //- div(@click='allocate(t)') allcate! {{card.allocations[t]}}
+        div(@click='allocate(t)') allcate! {{ card.allocations }}
         hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
         div(v-else   @click='setAction(i)')
             hyperpriority(:taskId='t')

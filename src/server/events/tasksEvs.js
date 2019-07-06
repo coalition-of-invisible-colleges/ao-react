@@ -223,6 +223,7 @@ function taskAllocated(taskId, allocatedId, memberId, callback) {
      allocatedId,
      memberId
   }
+  console.log('creating event?' , newEvent)
   dctrlDb.insertEvent(newEvent, callback)
 }
 
