@@ -89,11 +89,6 @@ button
 .priorities
     color: red
 
-.singleship
-    display: inline
-    height: 4em
-    margin-right: 2em
-
 .arrow
     height: 3.35em
     border-radius: 3px

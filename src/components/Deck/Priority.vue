@@ -2,7 +2,7 @@
 
 .priorities.clearboth
     router-link(:to='"/task/" + taskId')
-        img.singleship(v-if='!isBounty'  src='../../assets/images/vinebtn.svg')
+        //- img.singleship(v-if='!isBounty'  src='../../assets/images/vinebtn.svg')
         img.singleship(v-else  src='../../assets/images/cash1.svg')
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper

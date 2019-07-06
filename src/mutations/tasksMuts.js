@@ -273,6 +273,9 @@ function tasksMuts(tasks, ev) {
                         ev.amount = 1
                         task.allocations.push(ev)
                     }
+                    let reprioritized = _.filter( task.priorities, d => d !== ev.allocatedId )
+                    reprioritized.push(ev.allocatedId)
+                    task.priorities = reprioritized
                 }
             })
             break
