@@ -77,6 +77,9 @@ label
     margin-bottom: -50px
 
 .viney
-    float: right
     height: 1.3em
+    position: absolute
+    bottom: 0.5em
+    right: 0.5em
+    
 </style>
