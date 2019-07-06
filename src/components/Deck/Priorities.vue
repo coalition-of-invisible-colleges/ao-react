@@ -2,14 +2,22 @@
 
 .priorities
     template(v-for='(t, i) of getPriorities')
-        div(@click='allocate(t)') allcate! {{ card.allocations }}
-        hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
-        div(v-else   @click='setAction(i)')
-            hyperpriority(:taskId='t')
+      .row
+        img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
+        span - {{ checkAllocated(t) }}
+        span.agedwrapper(:class="cardInputSty(t)")
+            .agedbackground.freshpaper
+            span - {{ getTask(t).name }}
+        //- hypercard(v-if='action === i'  :b='getTask(t)'  :inId='taskId')
+        //- img.singleship(@click='allocate(t)'  src='../../assets/images/vinebtn.svg')
+        //- hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
+        //- hyperpriority(v-else  :taskId='t')
     div.clearboth
 </template>
 
 <script>
+
+
 import request from 'superagent'
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
@@ -23,6 +31,26 @@ export default {
       }
   },
   methods:{
+    cardInputSty(t) {
+      let color = this.getTask(t).color
+      return {
+          redwx : color == 'red',
+          bluewx : color == 'blue',
+          greenwx : color == 'green',
+          yellowwx : color == 'yellow',
+          purplewx : color == 'purple',
+          blackwx : color == 'black',
+      }
+    },
+    checkAllocated(t){
+        let allocatedAmount = 0
+        this.card.allocations.forEach(als => {
+            if (als.allocatedId === t){
+                allocatedAmount = als.amount
+            }
+        })
+        return allocatedAmount
+    },
     allocate(tId){
       console.log(tId, 'allocate called')
       request
