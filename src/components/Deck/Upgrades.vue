@@ -22,11 +22,11 @@
                   current(v-for='n in nameList'  :memberId='n')
                   guild-create
               div(v-else)
-                  .gui current {{isDoge.name}} missions
+                  .gui {{isDoge.name}}'s missions
                   template(v-for='g in dogeGuilds')
                     div
-                      router-link(:to='"/task/" + g.taskId')
-                          span.gui * {{ g.guild }}
+                      router-link.nl(:to='"/task/" + g.taskId')
+                          span.gui {{ g.guild }}
                           span - {{ g.name }}
           template(v-if='show === 2')
             .box
@@ -41,7 +41,7 @@
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
               div(v-else)
-                  .gui(v-if='calcTime') {{ calcTime.slice(0,15) }}
+                  .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
                   resource-book(:tId='b.taskId')
 </template>
 
@@ -226,6 +226,9 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 
+.nl
+    text-decoration:none
+
 .upgrades
     width: 100%
     padding: 0.3em
@@ -313,7 +316,7 @@ h3
     text-align: center;
 
 .gui
-    font-size: 1.8em
+    font-size: 1.5em
 
 .row .three
     height: 5em

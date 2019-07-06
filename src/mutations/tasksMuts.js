@@ -18,7 +18,7 @@ function tasksMuts(tasks, ev) {
             newEv.deck = []
             newEv.color = "blue"
             newEv.address = ''
-            newEv.allocations = {}
+            newEv.allocations = []
             newEv.bolt11 = ''
             newEv.payment_hash = ''
             newEv.boost = 0
@@ -39,7 +39,7 @@ function tasksMuts(tasks, ev) {
             newEv.deck = []
             newEv.color = "blue"
             newEv.address = ''
-            newEv.allocations = {}
+            newEv.allocations = []
             newEv.bolt11 = ''
             newEv.payment_hash = ''
             newEv.boost = 0
@@ -61,7 +61,7 @@ function tasksMuts(tasks, ev) {
             ev.boost = 0
             ev.monthlyValue = 0
             ev.cap = 0
-            ev.allocations = {}
+            ev.allocations = []
             tasks.push(ev)
             break
         case "address-updated":
@@ -263,10 +263,15 @@ function tasksMuts(tasks, ev) {
         case "task-allocated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
-                    if(task.allocated[ev.allocatedId] < 1) {
-                        task.allocated[ev.allocatedId] = 1
-                    } else {
-                        task.allocated[ev.allocatedId]++
+                    let alreadyPointed = task.allocations.some(als => {
+                        if (als.allocatedId === ev.allocatedId){
+                            als.amount += 1
+                            return true
+                        }
+                    })
+                    if (!alreadyPointed){
+                        ev.amount = 1
+                        task.allocations.push(ev)
                     }
                 }
             })
