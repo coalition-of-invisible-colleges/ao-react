@@ -45,7 +45,12 @@ export default {
     },
     checkAllocated(t){
         let allocatedAmount = 0
-        this.card.allocations.forEach(als => {
+        console.log("checkAllocated. this.card = ", this.card)
+        if(!Array.isArray(this.card.allocations)) {
+            return -1
+        }
+        let parent = this.getTask(this.card.taskId)
+        parent.allocations.forEach(als => {
             if (als.allocatedId === t){
                 allocatedAmount = als.amount
             }
@@ -192,20 +197,22 @@ img
     // position: absolute
     display: inline
     height: 4em
-    margin-right: 2em
        
 .singleship
-    // position: absolute
+    position: absolute
     width: 3.3724em
 
 .allocated
     position: absolute
-    padding-left: 1em
+    padding-left: 0.25em
     width: 2em
     text-align: center
+    font-size: 0.95em
+    margin-top: 0.5em
     color: white
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
     font-size: 1.5em
+    pointer-events: none
     
 .onelinecard
     width: 100%

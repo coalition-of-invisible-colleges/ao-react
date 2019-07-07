@@ -63,6 +63,8 @@ export default {
 
 .singleship
     width: 3.3724em
+    position: absolute
+    margin-top: 1em
 
 .agedwrapper
     position: relative
