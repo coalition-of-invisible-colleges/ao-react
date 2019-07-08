@@ -5,6 +5,8 @@
         .agedbackground.freshpaper
         hyper-card(:b='card')
         h3 {{card.name}}
+          router-link(:to='"/task/" + card.taskId')
+            img.singleship(src='../../assets/images/vinebtn.svg')
         .row
             .six.grid
                 button.accept(@click='claim')
@@ -14,6 +16,7 @@
                 button.dontaccept(@click='refuse')
                     img.arrow.fl(src='../../assets/images/buddadoge.svg')
                     span refocus
+
 </template>
 
 <script>
