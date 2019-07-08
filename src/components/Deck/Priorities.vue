@@ -2,17 +2,12 @@
 
 .priorities
     template.clearboth(v-for='(t, i) of getPriorities')
-      .row
+      .row(@click='setAction(i)')
         .shipcontainer
             img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
             .allocated {{ checkAllocated(t) }}
-            hyperpriority(:taskId='t')
-        //- span.agedwrapper(:class="cardInputSty(t)")
-        //-     .agedbackground.freshpaper
-        //-     span.onelinecard {{ getTask(t).name }}
-        //- hypercard(v-if='action === i'  :b='getTask(t)'  :inId='taskId')
-        //- img.singleship(@click='allocate(t)'  src='../../assets/images/vinebtn.svg')
-        //- hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
+            hyperpriority-action(v-if='action === i'  :taskId='t'  :nextAction='nextAction'  :inId='taskId')
+            hyperpriority(v-else  :taskId='t')
     div.clearboth
 </template>
 
@@ -72,9 +67,9 @@ export default {
           })
     },
     setAction(ii){
+        console.log('set action called ', ii)
         if (ii === this.action){
-            this.action = -1
-            return
+            return this.action = false
         }
         this.action = ii
     },
@@ -197,7 +192,7 @@ img
     // position: absolute
     display: inline
     height: 4em
-       
+
 .singleship
     position: absolute
     width: 3.3724em
@@ -213,10 +208,13 @@ img
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
     font-size: 1.5em
     pointer-events: none
-    
+
 .onelinecard
     width: 100%
     margin-left: 3em
     padding: 0.5em
-    
+
+.top
+    z-index: 9001
+
 </style>

@@ -166,18 +166,25 @@ function tasksMuts(tasks, ev) {
                 if (task.taskId === ev.inId) {
                         task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
                         task.claimed.push(ev.taskId)
+                        let alloc = false
+                        task.allocations = task.allocations.filter(al => {
+
+                            if (al.allocatedId === ev.taskId){
+
+                                alloc = al.amount
+                                return false
+                            }
+                            return true
+                        })
+                        if (alloc){
+                            task.boost = task.boost - alloc
+                        }
                 }
                 if (task.taskId === ev.taskId){
                         task.claimed.push(ev.memberId)
                         task.lastClaimed = ev.timestamp
-                        task.boost = 0
                 }
             })
-            /*tasks.forEach(task => {
-                if(task.allocated[taskId] > 0) {
-                    bounty += task.allocated[taskId]
-                }
-            })*/
             break
         case "task-cap-updated":
             tasks.forEach(task => {
