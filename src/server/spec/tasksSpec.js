@@ -233,13 +233,15 @@ function specTaskClaimed(req, res, next){
   let errRes = []
   let paid = 0
   state.pubState.tasks.forEach( task => {
-      task.allocations.forEach( al => {
+      if (task.allocations && Array.isArray(task.allocations) ){
+        task.allocations.forEach( al => {
           if (al.allocatedId === req.body.taskId){
-              paid = paid + al.amount
+            paid = paid + al.amount
           }
-      })
+        })
+      }
   })
-  
+
   if (
     validators.isTaskId(req.body.taskId, errRes) &&
     validators.isTaskId(req.body.inId, errRes) &&

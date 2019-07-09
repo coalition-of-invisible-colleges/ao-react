@@ -167,6 +167,7 @@ function tasksMuts(tasks, ev) {
                         task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
                         task.claimed.push(ev.taskId)
                         let alloc = false
+                        if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
                         task.allocations = task.allocations.filter(al => {
 
                             if (al.allocatedId === ev.taskId){
