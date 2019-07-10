@@ -102,8 +102,12 @@ label
 .birdy
     float: left
     height: .777em
-
+    cursor: pointer
+    
 .faded
     opacity: 0.235654
 
+.faded:hover
+    opacity: 1
+    
 </style>

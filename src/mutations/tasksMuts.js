@@ -125,15 +125,15 @@ function tasksMuts(tasks, ev) {
                 if (task.taskId === ev.inId){
                     task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
                     task.subTasks.push(ev.taskId)
+                    if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
+                    task.allocations = task.allocations.filter(al => al.allocatedId !== ev.taskId)
                 }
             })
             break
         case "task-sub-tasked":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
-                    if(task.subTasks.indexOf(ev.subTask) !== -1) {
-                        return
-                    }
+                    task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
                     task.subTasks.push(ev.subTask)
                 }
             })
@@ -271,6 +271,9 @@ function tasksMuts(tasks, ev) {
         case "task-allocated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
+                    if(!task.allocations || !Array.isArray(task.allocations)) {
+                        task.allocations = []
+                    }
                     let alreadyPointed = task.allocations.some(als => {
                         if (als.allocatedId === ev.allocatedId){
                             als.amount += 1

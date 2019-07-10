@@ -2,12 +2,13 @@
 
 .priorities
     template.clearboth(v-for='(t, i) of getPriorities')
-      .row(@click='setAction(i)')
+      .row
         .shipcontainer
             img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-            .allocated {{ checkAllocated(t) }}
-            hyperpriority-action(v-if='action === i'  :taskId='t'  :nextAction='nextAction'  :inId='taskId')
-            hyperpriority(v-else  :taskId='t')
+            .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
+            span(@click='setAction(i)')
+                hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction'  :inId='taskId')
+                hyperpriority(v-else :taskId='t')
     div.clearboth
 </template>
 

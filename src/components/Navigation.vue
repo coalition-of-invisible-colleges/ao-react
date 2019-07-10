@@ -169,6 +169,7 @@ hr
 
 .bullimg
     height: 11em
+    cursor: pointer
 
 .pricebox
     display: flex
