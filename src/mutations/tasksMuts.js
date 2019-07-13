@@ -18,7 +18,7 @@ function tasksMuts(tasks, ev) {
             newEv.deck = []
             newEv.color = "blue"
             newEv.address = ''
-            newEv.allocations = {}
+            newEv.allocations = []
             newEv.bolt11 = ''
             newEv.payment_hash = ''
             newEv.boost = 0
@@ -39,7 +39,7 @@ function tasksMuts(tasks, ev) {
             newEv.deck = []
             newEv.color = "blue"
             newEv.address = ''
-            newEv.allocations = {}
+            newEv.allocations = []
             newEv.bolt11 = ''
             newEv.payment_hash = ''
             newEv.boost = 0
@@ -61,7 +61,7 @@ function tasksMuts(tasks, ev) {
             ev.boost = 0
             ev.monthlyValue = 0
             ev.cap = 0
-            ev.allocations = {}
+            ev.allocations = []
             tasks.push(ev)
             break
         case "address-updated":
@@ -106,6 +106,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach( t => {
                     t.subTasks = t.subTasks.filter(st => st !== ev.taskId)
                     t.priorities = t.priorities.filter(st => st !== ev.taskId)
+                    t.claimed = t.claimed.filter(st => st !== ev.taskId)
             })
             break
         case "task-prioritized":
@@ -114,6 +115,7 @@ function tasksMuts(tasks, ev) {
                   if (task.priorities.indexOf(ev.taskId) === -1){
                       task.priorities.push(ev.taskId)
                       task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
+                      task.claimed = task.claimed.filter(st => st !== ev.taskId)
                   }
               }
             })
@@ -139,7 +141,8 @@ function tasksMuts(tasks, ev) {
         case "task-de-sub-tasked":
             tasks.forEach(task => {
                     if (task.taskId === ev.taskId) {
-                            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
+                        task.claimed = _.filter(task.claimed, tId => tId !== ev.subTask )
                     }
             })
             break
@@ -162,18 +165,27 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.inId) {
                         task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
+                        task.claimed.push(ev.taskId)
+                        let alloc = false
+                        if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
+                        task.allocations = task.allocations.filter(al => {
+
+                            if (al.allocatedId === ev.taskId){
+
+                                alloc = al.amount
+                                return false
+                            }
+                            return true
+                        })
+                        if (alloc){
+                            task.boost = task.boost - alloc
+                        }
                 }
                 if (task.taskId === ev.taskId){
                         task.claimed.push(ev.memberId)
                         task.lastClaimed = ev.timestamp
-                        task.boost = 0
                 }
             })
-            /*tasks.forEach(task => {
-                if(task.allocated[taskId] > 0) {
-                    bounty += task.allocated[taskId]
-                }
-            })*/
             break
         case "task-cap-updated":
             tasks.forEach(task => {
@@ -259,11 +271,19 @@ function tasksMuts(tasks, ev) {
         case "task-allocated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
-                    if(task.allocated[ev.allocatedId] < 1) {
-                        task.allocated[ev.allocatedId] = 1
-                    } else {
-                        task.allocated[ev.allocatedId]++
+                    let alreadyPointed = task.allocations.some(als => {
+                        if (als.allocatedId === ev.allocatedId){
+                            als.amount += 1
+                            return true
+                        }
+                    })
+                    if (!alreadyPointed){
+                        ev.amount = 1
+                        task.allocations.push(ev)
                     }
+                    let reprioritized = _.filter( task.priorities, d => d !== ev.allocatedId )
+                    reprioritized.push(ev.allocatedId)
+                    task.priorities = reprioritized
                 }
             })
             break

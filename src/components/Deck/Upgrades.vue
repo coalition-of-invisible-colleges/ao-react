@@ -22,12 +22,13 @@
                   current(v-for='n in nameList'  :memberId='n')
                   guild-create
               div(v-else)
-                  .gui current {{isDoge.name}} missions
-                  template(v-for='g in dogeGuilds')
-                    div
-                      router-link(:to='"/task/" + g.taskId')
-                          span.gui * {{ g.guild }}
-                          span - {{ g.name }}
+                  .gui.title {{isDoge.name}}'s missions
+                  ul
+                    template(v-for='g in dogeGuilds')
+                      li.spaced
+                        router-link.nl(:to='"/task/" + g.taskId')
+                            span.gui {{ g.guild }}
+                            div.description {{ g.name }}
           template(v-if='show === 2')
             .box
               form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
@@ -41,7 +42,7 @@
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
               div(v-else)
-                  .gui(v-if='calcTime') {{ calcTime.slice(0,15) }}
+                  .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
                   resource-book(:tId='b.taskId')
 </template>
 
@@ -226,6 +227,9 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 
+.nl
+    text-decoration:none
+
 .upgrades
     width: 100%
     padding: 0.3em
@@ -313,7 +317,7 @@ h3
     text-align: center;
 
 .gui
-    font-size: 1.8em
+    font-size: 1.5em
 
 .row .three
     height: 5em
@@ -321,4 +325,14 @@ h3
 .dogep
     height: 3em
 
+.spaced
+    margin-bottom: 1em
+
+.title
+    padding: 0.5em 0.5em 0 0.5em
+    text-align: center
+    
+.description
+    color: white
+     
 </style>

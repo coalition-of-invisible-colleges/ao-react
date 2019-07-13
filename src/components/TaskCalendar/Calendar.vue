@@ -89,7 +89,7 @@ export default {
       return firstDay
     },
     days(){
-      return  new Date(this.year, this.month, 0).getDate()
+      return  new Date(this.year, this.month + 1, 0).getDate()
     },
     monthName(){
         var mL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

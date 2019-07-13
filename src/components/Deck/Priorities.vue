@@ -1,15 +1,20 @@
 <template lang='pug'>
 
 .priorities
-    template(v-for='(t, i) of getPriorities')
-        hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction', :inId='taskId')
-        div(v-else   @click='setAction(i)')
-            hyperpriority(:taskId='t')
+    template.clearboth(v-for='(t, i) of getPriorities')
+      .row(@click='setAction(i)')
+        .shipcontainer
+            img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
+            .allocated {{ checkAllocated(t) }}
+            hyperpriority-action(v-if='action === i'  :taskId='t'  :nextAction='nextAction'  :inId='taskId')
+            hyperpriority(v-else  :taskId='t')
     div.clearboth
 </template>
 
 <script>
 
+
+import request from 'superagent'
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
@@ -22,10 +27,49 @@ export default {
       }
   },
   methods:{
+    cardInputSty(t) {
+      let color = this.getTask(t).color
+      return {
+          redwx : color == 'red',
+          bluewx : color == 'blue',
+          greenwx : color == 'green',
+          yellowwx : color == 'yellow',
+          purplewx : color == 'purple',
+          blackwx : color == 'black',
+      }
+    },
+    checkAllocated(t){
+        let allocatedAmount = 0
+        console.log("checkAllocated. this.card = ", this.card)
+        if(!Array.isArray(this.card.allocations)) {
+            return -1
+        }
+        let parent = this.getTask(this.card.taskId)
+        parent.allocations.forEach(als => {
+            if (als.allocatedId === t){
+                allocatedAmount = als.amount
+            }
+        })
+        return allocatedAmount
+    },
+    allocate(tId){
+      console.log(tId, 'allocate called')
+      request
+          .post('/events')
+          .set('Authorization', this.$store.state.loader.token)
+          .send({
+              type: 'task-allocated',
+              taskId: this.taskId,
+              allocatedId: tId
+          })
+          .end((err,res)=>{
+              console.log({err, res, tId})
+          })
+    },
     setAction(ii){
+        console.log('set action called ', ii)
         if (ii === this.action){
-            this.action = -1
-            return
+            return this.action = false
         }
         this.action = ii
     },
@@ -143,5 +187,34 @@ img
 
 .clearboth
     clear: both
+
+.shipcontainer
+    // position: absolute
+    display: inline
+    height: 4em
+
+.singleship
+    position: absolute
+    width: 3.3724em
+
+.allocated
+    position: absolute
+    padding-left: 0.25em
+    width: 2em
+    text-align: center
+    font-size: 0.95em
+    margin-top: 0.5em
+    color: white
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
+    font-size: 1.5em
+    pointer-events: none
+
+.onelinecard
+    width: 100%
+    margin-left: 3em
+    padding: 0.5em
+
+.top
+    z-index: 9001
 
 </style>
