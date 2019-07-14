@@ -63,9 +63,9 @@ export default {
     methods: {
         cycle(from){
             switch(from){
-                case 'uni': return this.$router.push('/dash')
-                case 'bull': return this.$router.push('/')
-                case 'sun': return this.$router.push('/deck')
+                case 'uni': return this.$router.push('/')
+                case 'bull': return this.$router.push('/deck')
+                case 'sun': return this.$router.push('/dash')
             }
             this.setToRoute()
         },

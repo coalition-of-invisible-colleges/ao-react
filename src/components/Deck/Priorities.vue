@@ -197,6 +197,7 @@ img
 .singleship
     position: absolute
     width: 3.3724em
+    cursor: pointer
 
 .allocated
     position: absolute
