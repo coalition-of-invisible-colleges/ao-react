@@ -32,7 +32,6 @@
                             span.gui {{ g.guild }}
                             div.description {{ g.name }}
           template(v-if='show === 2')
-            .box
               form-box.invoiceform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
                   h2 create new invoice
                   label.adjusttop.fl choose amount:
