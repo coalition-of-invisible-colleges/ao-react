@@ -32,6 +32,7 @@
                             span.gui {{ g.guild }}
                             div.description {{ g.name }}
           template(v-if='show === 2')
+            .box
               form-box.invoiceform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
                   h2 create new invoice
                   label.adjusttop.fl choose amount:
@@ -40,12 +41,11 @@
               form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
               pay-address(v-else   :address='b.address')
           template(v-if='show === 3')
-            .box
-              div(v-if='isDoge || b.guild')
-                  task-calendar(:inId='b.taskId')
-              div(v-else)
-                  .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
-                  resource-book(:tId='b.taskId')
+            div(v-if='isDoge || b.guild')
+                task-calendar(:inId='b.taskId')
+            div(v-else)
+                .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
+                resource-book(:tId='b.taskId')
 </template>
 
 <script>
