@@ -43,7 +43,7 @@ export default {
 
 .guildcreate
   background: transparent
-  padding: 2.5em
+  padding: 0em 2.5em
   color: white
 
 .choose

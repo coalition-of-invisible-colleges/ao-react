@@ -17,10 +17,12 @@
           template(v-if='show === 1')
             div
               div(v-if='!isDoge')
-                  img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                  label.gui(v-if='b.guild') {{ b.guild }} - guild
-                  current(v-for='n in nameList'  :memberId='n')
-                  guild-create
+                  .box
+                      h2(v-if='b.guild') {{ b.guild }} - guild
+                      h2(v-else) hodlers
+                      current.indent(v-for='n in nameList'  :memberId='n')
+                      img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                      guild-create
               div(v-else)
                   .gui.title {{isDoge.name}}'s missions
                   ul
@@ -31,14 +33,15 @@
                             div.description {{ g.name }}
           template(v-if='show === 2')
             .box
-              form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                  label Create new invoice; choose amount
-                  input(v-model='payreqAmount')
+              form-box.invoiceform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                  h2 create new invoice
+                  label.adjusttop.fl choose amount:
+                  input.smallbox.fr(v-model='payreqAmount')
               pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
               form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
               pay-address(v-else   :address='b.address')
           template(v-if='show === 3')
-            div
+            .box
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
               div(v-else)
@@ -232,7 +235,6 @@ export default {
 
 .upgrades
     width: 100%
-    padding: 0.3em
 
 .selected
     background: softGrey
@@ -324,6 +326,8 @@ h3
 
 .dogep
     height: 3em
+    padding: 0 calc(50% - 1.5em)
+    margin-top: 1em
 
 .spaced
     margin-bottom: 1em
@@ -334,5 +338,26 @@ h3
     
 .description
     color: white
-     
+
+.box
+    width: 75%
+    margin: 0 auto
+
+.smallbox
+    width: 4em
+    margin-bottom: 1em
+    
+.adjusttop
+    margin-top: 0.3em
+    
+.invoiceform
+    margin-bottom: 1em
+
+h2
+    text-align: center
+    margin-top: 0.5em
+
+.indent
+    margin-left: 40%
+    
 </style>
