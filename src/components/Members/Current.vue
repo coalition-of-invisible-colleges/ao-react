@@ -1,15 +1,36 @@
 <template lang='pug'>
 
 .current(v-if='memberId')
-    img(src='../../assets/images/bullet.svg')
-    p {{ name }}
+    span.checkmark(v-if='isCompleted') ☑
+    span.checkmark(v-else  @click='complete') ☐
+    span {{ name }}
 
 </template>
 
 <script>
 
+import request from 'superagent'
+
 export default {
-  props: ['memberId'],
+  props: ['memberId', 'taskId', 'inId'],
+  methods:{
+    complete(){
+        console.log('taskId is ' + this.taskId + ' and memberId is ' + this.memberId)
+        request
+                .post('/events')
+                .set('Authorization', this.$store.state.loader.token)
+                .send({
+                    type: 'task-claimed',
+                    taskId: this.taskId,
+                    memberId: this.memberId,
+                    inId: this.inId,
+                    notes: 'checked by ' + this.$store.getters.member.memberId
+                })
+                .end((err,res)=>{
+
+                })
+    }
+  },
   computed:{
     name(){
         let memberId = this.memberId
@@ -20,7 +41,12 @@ export default {
             }
         })
         return name
-    }
+    },
+    isCompleted(){
+        let completed = this.$store.getters.hashMap[this.taskId].completed
+        if(!completed) return false
+        return completed.indexOf(this.memberId) > -1
+    },
   }
 }
 
@@ -36,6 +62,11 @@ img
 p
     margin-left: 1em
     color: white
+    font-size: 1.2em
 
-
+.checkmark
+    font-size: 2em
+    cursor: pointer
+    color: white
+    
 </style>

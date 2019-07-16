@@ -20,7 +20,7 @@
                   .box
                       h2(v-if='b.guild') {{ b.guild }} - guild
                       h2(v-else) hodlers
-                      current.indent(v-for='n in nameList'  :memberId='n')
+                      current(v-for='n in nameList'  :memberId='n'  :taskId='b.taskId'  :inId='ugly')
                       img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                       guild-create
               div(v-else)
@@ -41,11 +41,12 @@
               form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
               pay-address(v-else   :address='b.address')
           template(v-if='show === 3')
-            div(v-if='isDoge || b.guild')
-                task-calendar(:inId='b.taskId')
-            div(v-else)
-                .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
-                resource-book(:tId='b.taskId')
+            div
+              div(v-if='isDoge || b.guild')
+                  task-calendar(:inId='b.taskId')
+              div(v-else)
+                  .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
+                  resource-book(:tId='b.taskId')
 </template>
 
 <script>
@@ -355,8 +356,5 @@ h3
 h2
     text-align: center
     margin-top: 0.5em
-
-.indent
-    margin-left: 40%
     
 </style>
