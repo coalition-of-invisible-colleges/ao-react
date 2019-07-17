@@ -69,5 +69,5 @@ export default {
     height: 9em
 
 .centerform
-    margin: 0 auto
+    margin: 0 auto 1em auto
 </style>

@@ -177,7 +177,7 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 1em 1em 1em 0
+    padding: 1em 2em 1em 0
     margin: 0 1em
 
 .slide-fade-enter-active {
@@ -255,11 +255,13 @@ export default {
     font-size: 1.35em
     font-weight: bold
     padding: 0.5em
+    margin-right: -0.5em
 
 .completedtabbed
     background-color: rgba(0, 0, 0, 0.3)
     border-radius: 5px
     color: white
+    margin-right: -0.5em
 
 // .bluewx
 //   background-color: rgba(255, 0, 0, 0.2)
