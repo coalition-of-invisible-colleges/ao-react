@@ -41,7 +41,6 @@ export default {
     },
     checkAllocated(t){
         let allocatedAmount = 0
-        console.log("checkAllocated. this.card = ", this.card)
         if(!Array.isArray(this.card.allocations)) {
             return -1
         }

@@ -123,15 +123,6 @@ export default {
               return days
             }
         },
-        calcVal(){
-            let v = calculations.calculateTaskPayout(this.b)
-            return parseInt(v)
-        },
-        countClass(){
-            return {
-                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
-            }
-        },
         cardInputSty(){
           return {
               redwx : this.b.color == 'red',
@@ -141,6 +132,15 @@ export default {
               purplewx : this.b.color == 'purple',
               blackwx : this.b.color == 'black',
           }
+        },
+        calcVal(){
+            let v = calculations.calculateTaskPayout(this.b)
+            return parseInt(v)
+        },
+        countClass(){
+            return {
+                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
+            }
         },
         parent(){
           let task

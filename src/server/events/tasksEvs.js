@@ -142,6 +142,16 @@ function taskClaimed(taskId, memberId, paid, notes, blame, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskUnclaimed(taskId, memberId, blame, callback) {
+  let newEvent = {
+    type: "task-unclaimed",
+    taskId,
+    memberId,
+    blame,
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function taskBoosted(taskId, amount, txid, callback) {
   let newEvent = {
       type: "task-boosted",
@@ -241,6 +251,7 @@ export default {
   taskBountied,
   taskBoosted,
   taskClaimed,
+  taskUnclaimed,
   taskRefocused,
   taskInstructionsUpdated,
   taskRateUpdated,

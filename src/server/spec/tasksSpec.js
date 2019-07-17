@@ -30,6 +30,9 @@ module.exports = function(req,res, next){
       case 'task-claimed':
           specTaskClaimed(req, res, next)
           break
+      case 'task-unclaimed':
+          specTaskUnclaimed(req, res, next)
+          break
       case 'task-refocused':
           specTaskRefocused(req, res, next)
           break
@@ -252,6 +255,24 @@ function specTaskClaimed(req, res, next){
       req.body.memberId,
       paid,
       req.body.notes,
+      req.body.blame,
+      utils.buildResCallback(res)
+    )
+  } else {
+      res.status(400).send(errRes)
+  }
+}
+
+function specTaskUnclaimed(req, res, next){
+  let errRes = []
+  if (
+    validators.isTaskId(req.body.taskId, errRes) &&
+    validators.isMemberId(req.body.memberId, errRes) &&
+    validators.isNotes(req.body.notes, errRes)
+  ){
+    events.tasksEvs.taskUnclaimed(
+      req.body.taskId,
+      req.body.memberId,
       req.body.blame,
       utils.buildResCallback(res)
     )

@@ -163,25 +163,42 @@ function tasksMuts(tasks, ev) {
         case "task-claimed":
             let bounty = 0
             tasks.forEach(task => {
-                task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
-                task.claimed.push(ev.taskId)
-                let alloc = false
-                if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
-                task.allocations = task.allocations.filter(al => {
-
-                    if (al.allocatedId === ev.taskId){
-
-                        alloc = al.amount
+                let found = false
+                task.priorities = task.priorities.filter( taskId => {
+                    if(taskId !== ev.taskId) {
+                        return true
+                    } else {
+                        found = true
                         return false
                     }
-                    return true
                 })
-                if (alloc){
-                    task.boost = task.boost - alloc
+                if(found) {
+                    task.claimed.push(ev.taskId)
+                    let alloc = false
+                    if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
+                    task.allocations = task.allocations.filter(al => {
+
+                        if (al.allocatedId === ev.taskId){
+
+                            alloc = al.amount
+                            return false
+                        }
+                        return true
+                    })
+                    if (alloc){
+                        task.boost = task.boost - alloc
+                    }
                 }
                 if (task.taskId === ev.taskId){
-                        task.claimed.push(ev.memberId)
-                        task.lastClaimed = ev.timestamp
+                    task.claimed.push(ev.memberId)
+                    task.lastClaimed = ev.timestamp
+                }
+            })
+            break
+        case "task-unclaimed":
+            tasks.forEach(task => {
+                if(task.taskId === ev.taskId){
+                    task.claimed = task.claimed.filter(mId => { mId !== ev.memberId})
                 }
             })
             break

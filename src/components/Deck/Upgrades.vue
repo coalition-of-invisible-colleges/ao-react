@@ -20,7 +20,7 @@
                   .box
                       h2(v-if='b.guild') {{ b.guild }} - guild
                       h2(v-else) hodlers
-                      current(v-for='n in nameList'  :memberId='n'  :taskId='b.taskId'  :inId='ugly')
+                      current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                       img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                       guild-create
               div(v-else)
@@ -356,5 +356,6 @@ h3
 h2
     text-align: center
     margin-top: 0.5em
+    color: white
     
 </style>
