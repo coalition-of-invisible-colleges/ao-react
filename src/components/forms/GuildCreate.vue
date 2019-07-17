@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .guildcreate
-  form-box(btntxt="create guild" event='task-guilded' v-bind:data="task")
+  form-box.centerform(btntxt="create guild" event='task-guilded' v-bind:data="task")
     fancy-input(labelText='code name')
         input.input-effect(v-model='task.guild' type='text')
 
@@ -68,4 +68,6 @@ export default {
 .cashup
     height: 9em
 
+.centerform
+    margin: 0 auto
 </style>

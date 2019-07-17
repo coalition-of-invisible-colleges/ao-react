@@ -13,7 +13,6 @@
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')
         day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
-    .spacer
 </template>
 
 <script>

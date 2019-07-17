@@ -33,18 +33,19 @@
                             div.description {{ g.name }}
           template(v-if='show === 2')
             .box
-              form-box.invoiceform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                  h2 create new invoice
+              form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                  h2 send points here
                   label.adjusttop.fl choose amount:
                   input.smallbox.fr(v-model='payreqAmount')
               pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
-              form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
+              form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
               pay-address(v-else   :address='b.address')
           template(v-if='show === 3')
             div
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
-              div(v-else)
+              .box(v-else)
+                  h2 timecube
                   .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
                   resource-book(:tId='b.taskId')
 </template>
@@ -350,12 +351,11 @@ h3
 .adjusttop
     margin-top: 0.3em
     
-.invoiceform
-    margin-bottom: 1em
+.centerform
+    margin: 0 auto 1em auto
 
 h2
     text-align: center
     margin-top: 0.5em
     color: white
-    
 </style>

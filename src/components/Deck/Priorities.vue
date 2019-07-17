@@ -1,6 +1,8 @@
 <template lang='pug'>
 
 .priorities
+    .empty(v-if='getPriorities.length < 1')
+      img.bdoge(src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of getPriorities')
       .row
         .shipcontainer
@@ -217,5 +219,13 @@ img
 
 .top
     z-index: 9001
-
+ 
+.empty
+    height: 3em
+    padding-top: 0.6em
+    padding-bottom: 0.2em
+    
+.bdoge
+    width: 100%
+    opacity: 0.3
 </style>

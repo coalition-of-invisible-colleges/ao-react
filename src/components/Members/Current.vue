@@ -1,12 +1,14 @@
 <template lang='pug'>
 
-.current(v-if='memberId')
+.current(v-if='memberId && b.guild.length > 0')
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name {{ name }} 
     router-link.plain(v-for='c in completions'  :to='"/task/" + c.taskId')
         span.checkmark(:class="cardInputSty(c.color)") ☑
-
+.current(v-else)
+    img.bullet(src='../../assets/images/bullet.svg')
+    span.name {{ name }} 
 </template>
 
 <script>
@@ -110,6 +112,10 @@ img
     font-size: 2em
     margin-right: 0.25em
 
+.bullet
+    height: 0.7em
+    margin-right: 0.25em
+    
 .clickable
     cursor: pointer
     color: white
