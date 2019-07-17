@@ -244,14 +244,12 @@ function specTaskClaimed(req, res, next){
 
   if (
     validators.isTaskId(req.body.taskId, errRes) &&
-    validators.isTaskId(req.body.inId, errRes) &&
     validators.isMemberId(req.body.memberId, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
     events.tasksEvs.taskClaimed(
       req.body.taskId,
       req.body.memberId,
-      req.body.inId,
       paid,
       req.body.notes,
       req.body.blame,

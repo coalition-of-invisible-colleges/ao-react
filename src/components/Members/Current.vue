@@ -23,7 +23,6 @@ export default {
                     type: 'task-claimed',
                     taskId: this.taskId,
                     memberId: this.memberId,
-                    inId: this.inId,
                     notes: 'checked by ' + this.$store.getters.member.memberId
                 })
                 .end((err,res)=>{
@@ -43,7 +42,7 @@ export default {
         return name
     },
     isCompleted(){
-        let completed = this.$store.getters.hashMap[this.taskId].completed
+        let completed = this.$store.getters.hashMap[this.taskId].claimed
         if(!completed) return false
         return completed.indexOf(this.memberId) > -1
     },

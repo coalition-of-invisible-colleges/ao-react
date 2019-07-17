@@ -163,23 +163,21 @@ function tasksMuts(tasks, ev) {
         case "task-claimed":
             let bounty = 0
             tasks.forEach(task => {
-                if (task.taskId === ev.inId) {
-                        task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
-                        task.claimed.push(ev.taskId)
-                        let alloc = false
-                        if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
-                        task.allocations = task.allocations.filter(al => {
+                task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
+                task.claimed.push(ev.taskId)
+                let alloc = false
+                if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
+                task.allocations = task.allocations.filter(al => {
 
-                            if (al.allocatedId === ev.taskId){
+                    if (al.allocatedId === ev.taskId){
 
-                                alloc = al.amount
-                                return false
-                            }
-                            return true
-                        })
-                        if (alloc){
-                            task.boost = task.boost - alloc
-                        }
+                        alloc = al.amount
+                        return false
+                    }
+                    return true
+                })
+                if (alloc){
+                    task.boost = task.boost - alloc
                 }
                 if (task.taskId === ev.taskId){
                         task.claimed.push(ev.memberId)

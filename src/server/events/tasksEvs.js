@@ -130,12 +130,11 @@ function taskPassed(taskId, fromMemberId, toMemberId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskClaimed(taskId, memberId, inId, paid, notes, blame, callback) {
+function taskClaimed(taskId, memberId, paid, notes, blame, callback) {
   let newEvent = {
     type: "task-claimed",
     taskId,
     memberId,
-    inId,
     paid,
     notes,
     blame,
