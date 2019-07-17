@@ -80,7 +80,9 @@ export default {
             let task = this.$store.getters.hashMap[t]
             if(!task || !task.claimed) return
             if(task.claimed.indexOf(this.memberId) > -1) {
-                completions.push(task)
+                if(completions.indexOf(task) === -1) {
+                    completions.push(task)
+                }
             }
         })
         return completions
@@ -101,6 +103,8 @@ img
     color: white
     font-size: 1.2em
     margin-right: 1em
+    position: relative
+    top: -0.3em
     
 .checkmark
     font-size: 2em
