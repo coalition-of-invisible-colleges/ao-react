@@ -1,13 +1,16 @@
 <template lang='pug'>
 
 .priorities
+    .empty(v-if='getPriorities.length < 1')
+      img.bdoge(src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of getPriorities')
-      .row(@click='setAction(i)')
+      .row
         .shipcontainer
             img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-            .allocated {{ checkAllocated(t) }}
-            hyperpriority-action(v-if='action === i'  :taskId='t'  :nextAction='nextAction'  :inId='taskId')
-            hyperpriority(v-else  :taskId='t')
+            .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
+            span(@click='setAction(i)')
+                hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction'  :inId='taskId')
+                hyperpriority(v-else :taskId='t')
     div.clearboth
 </template>
 
@@ -40,7 +43,6 @@ export default {
     },
     checkAllocated(t){
         let allocatedAmount = 0
-        console.log("checkAllocated. this.card = ", this.card)
         if(!Array.isArray(this.card.allocations)) {
             return -1
         }
@@ -196,6 +198,7 @@ img
 .singleship
     position: absolute
     width: 3.3724em
+    cursor: pointer
 
 .allocated
     position: absolute
@@ -216,5 +219,13 @@ img
 
 .top
     z-index: 9001
-
+ 
+.empty
+    height: 3em
+    padding-top: 0.6em
+    padding-bottom: 0.2em
+    
+.bdoge
+    width: 100%
+    opacity: 0.3
 </style>

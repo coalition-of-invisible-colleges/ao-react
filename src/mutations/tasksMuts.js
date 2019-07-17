@@ -125,15 +125,15 @@ function tasksMuts(tasks, ev) {
                 if (task.taskId === ev.inId){
                     task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
                     task.subTasks.push(ev.taskId)
+                    if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
+                    task.allocations = task.allocations.filter(al => al.allocatedId !== ev.taskId)
                 }
             })
             break
         case "task-sub-tasked":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
-                    if(task.subTasks.indexOf(ev.subTask) !== -1) {
-                        return
-                    }
+                    task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
                     task.subTasks.push(ev.subTask)
                 }
             })
@@ -163,27 +163,42 @@ function tasksMuts(tasks, ev) {
         case "task-claimed":
             let bounty = 0
             tasks.forEach(task => {
-                if (task.taskId === ev.inId) {
-                        task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
-                        task.claimed.push(ev.taskId)
-                        let alloc = false
-                        if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
-                        task.allocations = task.allocations.filter(al => {
+                let found = false
+                task.priorities = task.priorities.filter( taskId => {
+                    if(taskId !== ev.taskId) {
+                        return true
+                    } else {
+                        found = true
+                        return false
+                    }
+                })
+                if(found) {
+                    task.claimed.push(ev.taskId)
+                    let alloc = false
+                    if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
+                    task.allocations = task.allocations.filter(al => {
 
-                            if (al.allocatedId === ev.taskId){
+                        if (al.allocatedId === ev.taskId){
 
-                                alloc = al.amount
-                                return false
-                            }
-                            return true
-                        })
-                        if (alloc){
-                            task.boost = task.boost - alloc
+                            alloc = al.amount
+                            return false
                         }
+                        return true
+                    })
+                    if (alloc){
+                        task.boost = task.boost - alloc
+                    }
                 }
                 if (task.taskId === ev.taskId){
-                        task.claimed.push(ev.memberId)
-                        task.lastClaimed = ev.timestamp
+                    task.claimed.push(ev.memberId)
+                    task.lastClaimed = ev.timestamp
+                }
+            })
+            break
+        case "task-unclaimed":
+            tasks.forEach(task => {
+                if(task.taskId === ev.taskId){
+                    task.claimed = task.claimed.filter(mId => { mId !== ev.memberId})
                 }
             })
             break
@@ -271,6 +286,9 @@ function tasksMuts(tasks, ev) {
         case "task-allocated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
+                    if(!task.allocations || !Array.isArray(task.allocations)) {
+                        task.allocations = []
+                    }
                     let alreadyPointed = task.allocations.some(als => {
                         if (als.allocatedId === ev.allocatedId){
                             als.amount += 1

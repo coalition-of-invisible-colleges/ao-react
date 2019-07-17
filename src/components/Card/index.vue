@@ -123,15 +123,6 @@ export default {
               return days
             }
         },
-        calcVal(){
-            let v = calculations.calculateTaskPayout(this.b)
-            return parseInt(v)
-        },
-        countClass(){
-            return {
-                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
-            }
-        },
         cardInputSty(){
           return {
               redwx : this.b.color == 'red',
@@ -141,6 +132,15 @@ export default {
               purplewx : this.b.color == 'purple',
               blackwx : this.b.color == 'black',
           }
+        },
+        calcVal(){
+            let v = calculations.calculateTaskPayout(this.b)
+            return parseInt(v)
+        },
+        countClass(){
+            return {
+                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
+            }
         },
         parent(){
           let task
@@ -259,6 +259,7 @@ export default {
   position: absolute
   left: calc(50% - 17.5px)
   bottom: 0.75em
+  cursor: pointer
 }
 
 .hodlcount {
@@ -275,11 +276,14 @@ export default {
 }
 
 .ungrabbedcoin {
-  opacity: 0.3
+    opacity: 0.3
 }
 
 .faded
     opacity: 0.235654
+
+.faded:hover
+    opacity: 1
 
 .agedwrapper
     position: relative

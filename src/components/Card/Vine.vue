@@ -81,5 +81,6 @@ label
     position: absolute
     bottom: 0.5em
     right: 0.5em
+    cursor: pointer
     
 </style>

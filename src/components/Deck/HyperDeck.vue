@@ -11,7 +11,7 @@
             div.upgradesbar()
                 upgrades(:b='parent')
     div.fadey(:class='cardInputSty')
-        h2(v-if='claimed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, bluewx: showCompleted}').fr completed
+        .completed(v-if='claimed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
         task-create(:taskId='parent.taskId')
         div(v-if='claimed.length > 0 && showCompleted')
             panels(:c='claimed', :inId='parent.taskId')
@@ -177,7 +177,7 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 1em 2em 1em 0
+    padding: 1em 1em 1em 0
     margin: 0 1em
 
 .slide-fade-enter-active {
@@ -248,6 +248,18 @@ export default {
     // bottom: 0;
     // height: 0;
     // z-index: -3
+
+.completed
+    float: right
+    cursor: pointer
+    font-size: 1.35em
+    font-weight: bold
+    padding: 0.5em
+
+.completedtabbed
+    background-color: rgba(0, 0, 0, 0.3)
+    border-radius: 5px
+    color: white
 
 // .bluewx
 //   background-color: rgba(255, 0, 0, 0.2)

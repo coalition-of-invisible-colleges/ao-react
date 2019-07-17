@@ -108,5 +108,6 @@ label
     left: 0.5em
     bottom: 0.5em
     height: 1.3em
+    cursor: pointer
 
 </style>
