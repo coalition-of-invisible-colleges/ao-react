@@ -6,11 +6,29 @@
     template.clearboth(v-for='(t, i) of getPriorities')
       .row
         .shipcontainer
-            img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-            .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
-            span(@click='setAction(i)')
-                hyperpriority-action(v-if='action === i', :taskId='t', :nextAction='nextAction'  :inId='taskId')
-                hyperpriority(v-else :taskId='t')
+          img.singleship(@click='allocate(t, this.taskId)'  src='../../assets/images/singleship.svg')
+          .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
+          span(@click='setAction(t)')
+            hyperpriority-action(v-if='action === t', :taskId='t', :nextAction='nextAction', :inId='taskId')
+            hyperpriority(v-else :taskId='t')
+      .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
+        .first(v-if='k==0')
+        .shipcontainer
+          img.singleship(@click='allocate(st, t)'  src='../../assets/images/singleship.svg')
+          .allocated(v-if='checkAllocated(st) > 0') {{ checkAllocated(st) }}
+          span(@click='setAction(st)')
+            hyperpriority-action(v-if='action === st',  :taskId='st', :inId='t')
+            //- :nextAction='nextSubAction(st)',
+            hyperpriority(v-else  :taskId='st')
+        .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
+          .first(v-if='k==0')
+          .shipcontainer
+            img.singleship(@click='allocate(st2, st)'  src='../../assets/images/singleship.svg')
+            .allocated(v-if='checkAllocated(st2) > 0') {{ checkAllocated(st2) }}
+            span(@click='setAction(st2)'  )
+              hyperpriority-action(v-if='action === st2', :taskId='st2', :inId='st')
+              //- :nextAction='nextSubAction(st)',
+              hyperpriority(v-else  :taskId='st2')
     div.clearboth
 </template>
 
@@ -54,14 +72,14 @@ export default {
         })
         return allocatedAmount
     },
-    allocate(tId){
+    allocate(tId, inId){
       console.log(tId, 'allocate called')
       request
           .post('/events')
           .set('Authorization', this.$store.state.loader.token)
           .send({
               type: 'task-allocated',
-              taskId: this.taskId,
+              taskId: inId,
               allocatedId: tId
           })
           .end((err,res)=>{
@@ -79,18 +97,29 @@ export default {
         return this.$store.getters.hashMap[taskId]
     },
     nextAction(){
-        this.action = (this.action + 1) % this.getPriorities.length
+        this.action = this.getPriorities[(this.getPriorities.indexOf(this.action) + 1) % this.getPriorities.length]
+    },
+    nextSubAction(inId){
+        let context = this.getSubPriorities(inId)
+        console.log("context is ", context)
+        this.action = context.slice()[(context.slice().indexOf(this.action) + 1) % context.slice().length]
+    },
+    getSubPriorities(taskId){
+      let card = this.$store.getters.hashMap[taskId]
+      if(card && card.priorities){
+          return card.priorities.slice().reverse()
+      }
     }
   },
   computed: {
       card(){
           return this.$store.getters.hashMap[this.taskId]
       },
-      getPriorities(){
+      getPriorities(){  
           if (this.card && this.card.priorities){
               return this.card.priorities.slice().reverse()
           }
-      }
+      },
   },
   components:{
       Hyperpriority,
@@ -194,6 +223,7 @@ img
     // position: absolute
     display: inline
     height: 4em
+    clear: both
 
 .singleship
     position: absolute
@@ -228,4 +258,10 @@ img
 .bdoge
     width: 100%
     opacity: 0.3
+.subpriority
+    margin-left: 2em
+    width: calc(100% - 2em)
+    
+.first
+    margin-top: 2em
 </style>
