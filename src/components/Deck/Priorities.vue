@@ -6,29 +6,26 @@
     template.clearboth(v-for='(t, i) of getPriorities')
       .row
         .shipcontainer
-          img.singleship(@click='allocate(t, this.taskId)'  src='../../assets/images/singleship.svg')
+          img.singleship(@click='allocate(t, taskId)'  src='../../assets/images/singleship.svg')
           .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
-          span(@click='setAction(t)')
+          span.ptr(@click='setAction(t)')
             hyperpriority-action(v-if='action === t', :taskId='t', :inId='taskId')
-            //- :nextAction='nextAction',
             hyperpriority(v-else  :taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
         .clearboth
         .shipcontainer
           img.singleship(@click='allocate(st, t)'  src='../../assets/images/singleship.svg')
           .allocated(v-if='checkAllocated(st) > 0') {{ checkAllocated(st) }}
-          span(@click='setAction(st)')
+          span.ptr(@click='setAction(st)')
             hyperpriority-action(v-if='action === st',  :taskId='st', :inId='t')
-            //- :nextAction='nextSubAction(st)',
             hyperpriority(v-else  :taskId='st')
         .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
           .clearboth
           .shipcontainer
             img.singleship(@click='allocate(st2, st)'  src='../../assets/images/singleship.svg')
             .allocated(v-if='checkAllocated(st2) > 0') {{ checkAllocated(st2) }}
-            span(@click='setAction(st2)'  )
+            span.ptr(@click='setAction(st2)')
               hyperpriority-action(v-if='action === st2', :taskId='st2', :inId='st')
-              //- :nextAction='nextSubAction(st)',
               hyperpriority(v-else  :taskId='st2')
     div.clearboth
 </template>
@@ -116,7 +113,7 @@ export default {
       card(){
           return this.$store.getters.hashMap[this.taskId]
       },
-      getPriorities(){  
+      getPriorities(){
           if (this.card && this.card.priorities){
               return this.card.priorities.slice().reverse()
           }
@@ -250,12 +247,12 @@ img
 
 .top
     z-index: 9001
- 
+
 .empty
     height: 3em
     padding-top: 0.6em
     padding-bottom: 0.2em
-    
+
 .bdoge
     width: 100%
     opacity: 0.3
