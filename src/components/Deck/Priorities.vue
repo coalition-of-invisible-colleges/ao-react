@@ -9,10 +9,11 @@
           img.singleship(@click='allocate(t, this.taskId)'  src='../../assets/images/singleship.svg')
           .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
           span(@click='setAction(t)')
-            hyperpriority-action(v-if='action === t', :taskId='t', :nextAction='nextAction', :inId='taskId')
-            hyperpriority(v-else :taskId='t')
+            hyperpriority-action(v-if='action === t', :taskId='t', :inId='taskId')
+            //- :nextAction='nextAction',
+            hyperpriority(v-else  :taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
-        .first(v-if='k==0')
+        .clearboth
         .shipcontainer
           img.singleship(@click='allocate(st, t)'  src='../../assets/images/singleship.svg')
           .allocated(v-if='checkAllocated(st) > 0') {{ checkAllocated(st) }}
@@ -21,7 +22,7 @@
             //- :nextAction='nextSubAction(st)',
             hyperpriority(v-else  :taskId='st')
         .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
-          .first(v-if='k==0')
+          .clearboth
           .shipcontainer
             img.singleship(@click='allocate(st2, st)'  src='../../assets/images/singleship.svg')
             .allocated(v-if='checkAllocated(st2) > 0') {{ checkAllocated(st2) }}
@@ -261,7 +262,4 @@ img
 .subpriority
     margin-left: 2em
     width: calc(100% - 2em)
-    
-.first
-    margin-top: 2em
 </style>
