@@ -3,10 +3,10 @@
 .priorityaction.clearboth
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
-        hyper-card(:b='card')
-        h3 {{card.name}}
-          router-link(:to='"/task/" + card.taskId')
+        //- hyper-card(:b='card')
+        router-link.fr(:to='"/task/" + taskId')
             img.singleship(src='../../assets/images/vinebtn.svg')
+        h3.ptr(@dblclick.stop.pre='goIn') {{card.name}}
         .row
             .six.grid
                 button.accept(@click='claim')
@@ -16,7 +16,6 @@
                 button.dontaccept(@click='refuse')
                     img.arrow.fl(src='../../assets/images/buddadoge.svg')
                     span refocus
-
 </template>
 
 <script>
@@ -52,6 +51,9 @@ export default {
         }
     },
     methods: {
+        goIn(){
+            this.$router.push("/task/" + this.taskId)
+        },
         claim(){
             request
                 .post('/events')

@@ -14,7 +14,7 @@
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
         .clearboth
         .shipcontainer
-          img.singleship(@click='allocate(st, t)'  src='../../assets/images/singleship.svg')
+          img.singleship(src='../../assets/images/singleship.svg')
           .allocated(v-if='checkAllocated(st) > 0') {{ checkAllocated(st) }}
           span.ptr(@click='setAction(st)')
             hyperpriority-action(v-if='action === st',  :taskId='st', :inId='t')
@@ -22,7 +22,7 @@
         .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
           .clearboth
           .shipcontainer
-            img.singleship(@click='allocate(st2, st)'  src='../../assets/images/singleship.svg')
+            img.singleship(src='../../assets/images/singleship.svg')
             .allocated(v-if='checkAllocated(st2) > 0') {{ checkAllocated(st2) }}
             span.ptr(@click='setAction(st2)')
               hyperpriority-action(v-if='action === st2', :taskId='st2', :inId='st')
@@ -46,6 +46,9 @@ export default {
       }
   },
   methods:{
+    goIn(tId){
+        this.$router.push("/task/" + tId)
+    },
     cardInputSty(t) {
       let color = this.getTask(t).color
       return {
