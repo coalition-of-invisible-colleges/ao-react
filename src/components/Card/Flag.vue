@@ -130,11 +130,15 @@ label
 .flaggy
     float: right
     height: .777em
+    cursor: pointer
 
 .prioritized
     height: 1.3em
 
 .faded
     opacity: 0.235654
+
+.faded:hover
+    opacity: 1
 
 </style>

@@ -25,13 +25,14 @@
         linky(:x='b.name')
     .one.grid
         preview-deck(:task='b')
-  .row
-      scroll.faded(:b='b', :inId='inId')
-      img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-      p.hodlcount() {{ b.deck.length }}
-      vine(:b='b')
   priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
+  .row
+      scroll.faded(:b='b', :inId='inId')
+      vine.faded(:b='b')
+      .spacer
+      img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+      p.hodlcount() {{ b.deck.length }}
   //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
@@ -122,15 +123,6 @@ export default {
               return days
             }
         },
-        calcVal(){
-            let v = calculations.calculateTaskPayout(this.b)
-            return parseInt(v)
-        },
-        countClass(){
-            return {
-                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
-            }
-        },
         cardInputSty(){
           return {
               redwx : this.b.color == 'red',
@@ -140,6 +132,15 @@ export default {
               purplewx : this.b.color == 'purple',
               blackwx : this.b.color == 'black',
           }
+        },
+        calcVal(){
+            let v = calculations.calculateTaskPayout(this.b)
+            return parseInt(v)
+        },
+        countClass(){
+            return {
+                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
+            }
         },
         parent(){
           let task
@@ -257,7 +258,8 @@ export default {
   height: 35px
   position: absolute
   left: calc(50% - 17.5px)
-  bottom: 0
+  bottom: 0.75em
+  cursor: pointer
 }
 
 .hodlcount {
@@ -265,7 +267,7 @@ export default {
     left: calc(50% - 17.5px)
     text-align: center
     width: 35px
-    bottom: 9px
+    bottom: calc(0.75em + 9px)
     padding-bottom: 0
     margin-bottom: 0
     font-weight: bold
@@ -274,11 +276,14 @@ export default {
 }
 
 .ungrabbedcoin {
-  opacity: 0.3
+    opacity: 0.3
 }
 
 .faded
     opacity: 0.235654
+
+.faded:hover
+    opacity: 1
 
 .agedwrapper
     position: relative
@@ -322,5 +327,9 @@ export default {
     height: 1.21
     font-weight: bolder
 
-
+.spacer
+    clear: both
+    height: 2.25em
+    width: 100%
+        
 </style>

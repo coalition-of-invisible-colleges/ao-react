@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #newresource
-    form-box(btntxt="set time"  event='resource-booked' v-bind:data='resource')
+    form-box.centerform(btntxt="set time"  event='resource-booked' v-bind:data='resource')
         label select day
         input(v-model='ymd' type='date')
         label select hour
@@ -115,4 +115,6 @@ label
 .padd
     padding-bottom: 1.1em
 
+.centerform
+    margin: 0 auto 1em auto
 </style>

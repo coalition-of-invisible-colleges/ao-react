@@ -1,12 +1,12 @@
 <template lang='pug'>
 
 .priorityaction.clearboth
-    router-link(:to='"/task/" + taskId')
-        img.singleship(src='../../assets/images/singleship.svg')
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
-        hyper-card(:b='card')
-        h3 {{card.name}}
+        //- hyper-card(:b='card')
+        router-link.fr(:to='"/task/" + taskId')
+            img.singleship(src='../../assets/images/vinebtn.svg')
+        h3.ptr(@dblclick.stop.pre='goIn') {{card.name}}
         .row
             .six.grid
                 button.accept(@click='claim')
@@ -51,6 +51,9 @@ export default {
         }
     },
     methods: {
+        goIn(){
+            this.$router.push("/task/" + this.taskId)
+        },
         claim(){
             request
                 .post('/events')

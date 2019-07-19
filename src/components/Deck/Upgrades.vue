@@ -17,31 +17,36 @@
           template(v-if='show === 1')
             div
               div(v-if='!isDoge')
-                  img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                  label.gui(v-if='b.guild') {{ b.guild }} - guild
-                  current(v-for='n in nameList'  :memberId='n')
-                  guild-create
+                  .box
+                      h2(v-if='b.guild') {{ b.guild }} - guild
+                      h2(v-else) hodlers
+                      current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
+                      img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                      guild-create
               div(v-else)
-                  .gui current {{isDoge.name}} missions
-                  template(v-for='g in dogeGuilds')
-                    div
-                      router-link(:to='"/task/" + g.taskId')
-                          span.gui * {{ g.guild }}
-                          span - {{ g.name }}
+                  .gui.title {{isDoge.name}}'s missions
+                  ul
+                    template(v-for='g in dogeGuilds')
+                      li.spaced
+                        router-link.nl(:to='"/task/" + g.taskId')
+                            span.gui {{ g.guild }}
+                            div.description {{ g.name }}
           template(v-if='show === 2')
             .box
-              form-box(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                  label Create new invoice; choose amount
-                  input(v-model='payreqAmount')
+              form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                  h2 send points here
+                  label.adjusttop.fl choose amount:
+                  input.smallbox.fr(v-model='payreqAmount')
               pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
-              form-box(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
+              form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
               pay-address(v-else   :address='b.address')
           template(v-if='show === 3')
             div
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
-              div(v-else)
-                  .gui(v-if='calcTime') {{ calcTime.slice(0,15) }}
+              .box(v-else)
+                  h2 timecube
+                  .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
                   resource-book(:tId='b.taskId')
 </template>
 
@@ -226,9 +231,11 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 
+.nl
+    text-decoration:none
+
 .upgrades
     width: 100%
-    padding: 0.3em
 
 .selected
     background: softGrey
@@ -313,12 +320,42 @@ h3
     text-align: center;
 
 .gui
-    font-size: 1.8em
+    font-size: 1.5em
 
 .row .three
     height: 5em
 
 .dogep
     height: 3em
+    padding: 0 calc(50% - 1.5em)
+    margin-top: 1em
 
+.spaced
+    margin-bottom: 1em
+
+.title
+    padding: 0.5em 0.5em 0 0.5em
+    text-align: center
+    
+.description
+    color: white
+
+.box
+    width: 75%
+    margin: 0 auto
+
+.smallbox
+    width: 4em
+    margin-bottom: 1em
+    
+.adjusttop
+    margin-top: 0.3em
+    
+.centerform
+    margin: 0 auto 1em auto
+
+h2
+    text-align: center
+    margin-top: 0.5em
+    color: white
 </style>

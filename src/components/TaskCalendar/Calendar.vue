@@ -9,9 +9,10 @@
             span {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
             img(src='../../assets/images/right.svg')
-    .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
-    .placeholder(v-for='placeholder in firstDay')
-    day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
+    .calmonth
+        .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
+        .placeholder(v-for='placeholder in firstDay')
+        day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
 </template>
 
 <script>
@@ -89,7 +90,7 @@ export default {
       return firstDay
     },
     days(){
-      return  new Date(this.year, this.month, 0).getDate()
+      return  new Date(this.year, this.month + 1, 0).getDate()
     },
     monthName(){
         var mL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -183,4 +184,7 @@ tr, td
 
 img
     height: 30px
+        
+.calmonth
+    margin: 0 2% 2% 2%
 </style>

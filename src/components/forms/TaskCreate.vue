@@ -15,7 +15,7 @@
             button(@click='switchColor("blue")').bluewx.paperwrapper
               img.agedbackground
   transition(name="slide-fade")
-      .cc(v-if='showCreate')
+      .cc(v-show='showCreate')
           textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter='createOrFindTask').paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi Create Card
@@ -53,6 +53,9 @@ export default {
                 this.showCreate = !this.showCreate
             }
             this.task.color = color
+            setTimeout(()=>{
+                    document.getElementById('card').focus()
+            }, 1) 
         },
         resetCard(){
             this.task.name = ''
@@ -73,21 +76,22 @@ export default {
         },
         createOrFindTask(){
             let foundId = this.matchCard
+            let potentialCard = this.task.name.trim()
+            console.log("potentialCard is ", potentialCard)
             if(!foundId) {
                 request
                     .post('/events')
                     .set('Authorization', this.$store.state.loader.token)
                     .send({
                         type: 'task-created',
-                        name: this.task.name,
+                        name: potentialCard,
                         color: this.task.color,
                         deck: [this.$store.getters.member.memberId],
                     })
                     .end((err,res)=>{
                         if (err) return console.log(err);
-                        let n = this.task.name.slice()
                         this.$store.state.tasks.forEach( t => {
-                            if (t.name === n){
+                            if (t.name === potentialCard){
                                 this.subTaskTask(t.taskId)
                             }
                         })
@@ -100,7 +104,7 @@ export default {
         matchCard(){
             let foundId
             this.$store.state.tasks.filter(t => {
-                if(t.name === this.task.name) {
+                if(t.name === this.task.name.trim()) {
                     foundId = t.taskId
                 }
             })
