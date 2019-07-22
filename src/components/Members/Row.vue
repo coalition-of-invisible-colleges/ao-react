@@ -14,8 +14,10 @@
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount() {{ b.deck.length }}
-        .grid(:class='{ seven: hasAnyVouches, five: !hasAnyVouches }')
+        .grid(:class='{ six: hasAnyVouches, four: !hasAnyVouches }')
             priorities(:taskId='m.memberId')
+        .grid.one
+            preview-deck(:task='$store.getters.hashMap[m.memberId]')
             router-link.fw(:to='"/task/" + m.memberId')
                 img.viney(src='../../assets/images/vinebtn.svg')
 </template>
