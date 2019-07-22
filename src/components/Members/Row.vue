@@ -30,6 +30,48 @@ import Priorities from '../Deck/Priorities'
 export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck, Priorities},
+    methods:{
+        toggleGrab(){
+            if (this.isGrabbed) {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                        type: 'task-dropped',
+                        taskId: this.b.taskId,
+                        memberId: this.$store.getters.member.memberId,
+                    })
+                    .end((err,res)=>{
+
+                    })
+            } else {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                        type: 'task-grabbed',
+                        taskId: this.b.taskId,
+                        memberId: this.$store.getters.member.memberId,
+                    })
+                    .end((err,res)=>{
+
+                    })
+                if(!this.isDecked) {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                      type: 'task-sub-tasked',
+                      subTask: this.b.taskId,
+                      taskId: this.$store.getters.memberCard.taskId,
+                    })
+                    .end((err,res)=>{
+
+                    })
+                }
+            }
+        }
+    },
     computed:{
         isLoggedIn(){
             let isLoggedIn
@@ -64,6 +106,7 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/grid'
+@import '../../styles/spinners'
 
 img
     height: 4em
