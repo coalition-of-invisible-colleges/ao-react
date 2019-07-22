@@ -6,7 +6,7 @@ const socket = io()
 const actions = {
     loadCurrent({ commit, state, dispatch }){
         console.log('loadCurrent')
-        
+
         socket.on('unauthorized', (reason)=> {
             console.log('unauthorized event')
             commit('setConnectionError', 'Unauthorized: ' + JSON.stringify(reason))
@@ -31,7 +31,7 @@ const actions = {
                 dispatch('displayEvent', ev)
             })
         })
-        
+
         socket.on('disconnect', (reason)=> {
             console.log('disconnected from server')
             commit('setConnected', 'disconnected')
@@ -48,7 +48,7 @@ const actions = {
             console.log('general connection error')
             commit('setConnectionError', error.message)
         })
-        
+
         socket.on('connect_timeout', (timeout)=> {
             console.log('connection timed out')
             commit('setConnectionError', 'Timed out: ' + timeout + 'ms')
@@ -76,8 +76,15 @@ const actions = {
             .set("Authorization", state.token)
             .end((err, res)=>{
                 if (err || !res.body) {
-                    console.log("error from state load, load failed", err)
+                    console.log("error from state load, load failed", err, "attempt getting pubstate")
+                    request
+                        .put('/dctrl')
+                        .end((err, res2)=>{
+                            console.log("got res", res2.body, err)
+                            commit('setCurrent', res2.body)
+                        })
                 } else {
+                    console.log('got an authorized response?')
                     commit('setCurrent', res.body)
                 }
             })

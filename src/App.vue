@@ -18,8 +18,8 @@ export default {
         let session = window.localStorage.session
         if (token && session){
             this.$store.commit('setAuth', {token, session})
-            this.$store.dispatch('loadCurrent')
         }
+        this.$store.dispatch('loadCurrent')
     },
     components: {
         MainMenu, MobileHeading, EventFeed

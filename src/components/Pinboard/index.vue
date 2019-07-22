@@ -1,12 +1,10 @@
 <template lang='pug'>
 
 #wrex
-    .intro(v-if='!$store.getters.isLoggedIn')
-        home
-    .pinboard(v-else)
+    .pinboard
         .row
-            .seven.columns
-                div(@click='cycleGuilds').bluewx
+            .six.columns
+                div(v-if='$store.getters.pubguilds'  @click='cycleGuilds').bluewx
                     h1 {{ showGuild + 1 }} of {{ $store.getters.pubguilds.length }}
                         img.fr(src='../../assets/images/right.svg')
                 hypercard(:b='$store.getters.pubguilds[showGuild]')
@@ -14,7 +12,7 @@
                 row(v-for="m in $store.getters.recentMembers.slice(0,7)", :m="m")
                 router-link(to='/members/') see all
             .five.columns
-                calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
+                calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
                 img.fw(src='../../assets/images/buddadoge.svg')
     img.fw(src='../../assets/memes/Spiderman.jpg')
 </template>
@@ -61,7 +59,9 @@ export default {
   methods:{
       cycleGuilds(){
           console.log('cycling')
-          this.showGuild = (this.showGuild + 1) % this.$store.getters.pubguilds.length
+          if (this.$store.getters.pubguilds){
+            this.showGuild = (this.showGuild + 1) % this.$store.getters.pubguilds.length
+          }
       }
   }
 }

@@ -1,42 +1,41 @@
 <template lang='pug'>
 
 #wrex
-    .intro(v-if='!$store.getters.isLoggedIn')
-        .row
-            .six.columns.sidewalk
-                shared-title(title='sidewalk controls')
-                button(@click='trySidewalk("crazy")').redwx crazy
-                button(@click='trySidewalk("chill")').purplewx chill
-                button(@click='trySidewalk("dna")').greenwx dna
-                input(v-model='banner')
-                button(@click='trySidewalk("banner")').bluewx banner
-                button(@click='trySidewalk("rainbow")').yellowwx rainbow
-                .row
-                    .two.grid
-                        button(@click='trySidewalk("color", "red")').redwx
-                    .two.grid
-                        button(@click='trySidewalk("color", "purple")').purplewx
-                    .two.grid
-                        button(@click='trySidewalk("color", "blue")').bluewx
-                    .two.grid
-                        button(@click='trySidewalk("color", "green")').greenwx
-                    .two.grid
-                        button(@click='trySidewalk("color", "yellow")').yellowwx
-                    .two.grid
-                        button(@click='trySidewalk("color", "black")').blackwx
-            .six.columns
-                  img#dctrlverse(src="./../assets/images/dctrlverse.png")
-        .row
-            .six.grid
-                img#sundogepurp(src="./../assets/images/ao.svg")
-            .six.grid
-                shared-title(title='What is an Autonomous Organization?')
-                p On site server, and raspberry pis serving open source web application
-                p Attempt at fairness and reduced administration while sharing.
-                p Holographic communication, organization, and prioritization tool.
-                a(href='https://github.com/AutonomousOrganization') github.com/AutonomousOrganization
-        p Decentralization fails without accepting responsibility and striving to create. Exploring dogeconciousness is worthy.
-        img#sundogepurp(src="./../assets/images/sundogepurp.png")
+    .row
+        .six.columns.sidewalk
+            shared-title(title='sidewalk controls')
+            button(@click='trySidewalk("crazy")').redwx crazy
+            button(@click='trySidewalk("chill")').purplewx chill
+            button(@click='trySidewalk("dna")').greenwx dna
+            input(v-model='banner')
+            button(@click='trySidewalk("banner")').bluewx banner
+            button(@click='trySidewalk("rainbow")').yellowwx rainbow
+            .row
+                .two.grid
+                    button(@click='trySidewalk("color", "red")').redwx
+                .two.grid
+                    button(@click='trySidewalk("color", "purple")').purplewx
+                .two.grid
+                    button(@click='trySidewalk("color", "blue")').bluewx
+                .two.grid
+                    button(@click='trySidewalk("color", "green")').greenwx
+                .two.grid
+                    button(@click='trySidewalk("color", "yellow")').yellowwx
+                .two.grid
+                    button(@click='trySidewalk("color", "black")').blackwx
+        .six.columns
+            img#dctrlverse(src="../assets/images/dctrlverse.png")
+    .row
+        .six.grid
+            img#sundogepurp(src="../assets/images/ao.svg")
+        .six.grid
+            shared-title(title='What is an Autonomous Organization?')
+            p On site server, and raspberry pis serving open source web application
+            p Attempt at fairness and reduced administration while sharing.
+            p Holographic communication, organization, and prioritization tool.
+            a(href='https://github.com/AutonomousOrganization') github.com/AutonomousOrganization
+    p Decentralization fails without accepting responsibility and striving to create. Exploring dogeconciousness is worthy.
+    img#sundogepurp(src="./../assets/images/sundogepurp.png")
 </template>
 
 <script>

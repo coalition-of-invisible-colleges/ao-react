@@ -1,5 +1,5 @@
 import express from 'express'
-
+import _ from 'lodash'
 import state from './state'
 import events from './events'
 import utils from './spec/utils'
@@ -28,6 +28,69 @@ const white = [255,255,255]
 
 const liiloo = [magenta,blue,purple, white]
 
+const rootGuilds = [{
+    taskId: 'a1',
+    guild: "D",
+    subTasks: [ ],
+    deck: [ ],
+    name: " ",
+    book: {},
+    color: 'green'
+}, {
+    taskId: 'a2',
+    guild: "C",
+    subTasks: [ ],
+    deck: [ ],
+    name: " ",
+    book: {},
+    color: 'yellow'
+},{
+    taskId: 'a3',
+    guild: "T",
+    subTasks: [ ],
+    deck: [ ],
+    name: " ",
+    book: {},
+    color: 'red'
+},{
+    taskId: 'a4',
+    guild: "R",
+    subTasks: [ ],
+    deck: [ ],
+    name: " ",
+    book: {},
+    color: 'purple'
+},{
+    taskId: 'a5',
+    guild: "L",
+    subTasks: [ ],
+    deck: [ ],
+    name: " ",
+    book: {},
+    color: 'blue'
+}]
+
+const rootState = {
+  recent: [],
+  sessions: [],
+  members: [],
+  tasks: rootGuilds.slice(),
+  resources: [],
+  cash: {
+    currency: 'CAD',
+    cash: 0,
+    spot: 0,
+    rent: 0,
+    variable: 0,
+    cap: 75,
+    pay_index: 0,
+    usedTxIds: [],
+    outputs: [],
+    channels: [],
+    info: {},
+  },
+}
+
 function setStop(){
     stopper = setTimeout( ()=> {
       if (show){
@@ -41,6 +104,43 @@ function setStop(){
     }, 29000)
 }
 
+
+let dctrlState = _.clone(rootState)
+let pubGuilds = ["D", "C", "T", "R", "L"]
+function getDctrlState(){
+    // let
+    let dctrlState = _.clone(rootState)
+    let careAbout = []
+    
+    state.pubState.tasks.forEach(t => {
+        let index = pubGuilds.indexOf(t.guild)
+        if (index > -1){
+            t.subTasks.forEach(n => careAbout.push(n))
+            t.priorities.forEach(n => careAbout.push(n))
+            t.claimed.forEach(n => careAbout.push(n))
+            dctrlState.tasks[index] = t
+        }
+    })
+
+    console.log("now care about", careAbout.length)
+
+    state.pubState.tasks.forEach(t => {
+        if (careAbout.indexOf(t.taskId) > -1){
+            t.guild = ''
+            dctrlState.tasks.push(t)
+        }
+    })
+
+}
+
+setInterval(getDctrlState, 10000)
+
+router.put('/dctrl', (req, res) => {
+    // TODO sanitize
+    console.log('serviing pubstate from dctrl', dctrlState.tasks.length)
+    res.json(dctrlState)
+
+})
 
 router.put('/sidewalk',(req, res) => {
     if (stopper){
