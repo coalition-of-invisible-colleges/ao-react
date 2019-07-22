@@ -91,9 +91,11 @@ export default {
             })
             return g
         },
+        b(){
+            return this.$store.getters.hashMap[this.m.memberId]
+        },
         isVouched(){
-            let memberCard = this.$store.getters.hashMap[this.m.memberId]
-            return memberCard.deck.indexOf( this.$store.getters.member.memberId ) > -1
+            return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
         },
 
     },
