@@ -111,13 +111,14 @@ function getDctrlState(){
     // let
     let dctrlState = _.clone(rootState)
     let careAbout = []
-    
+
     state.pubState.tasks.forEach(t => {
         let index = pubGuilds.indexOf(t.guild)
         if (index > -1){
             t.subTasks.forEach(n => careAbout.push(n))
             t.priorities.forEach(n => careAbout.push(n))
             t.claimed.forEach(n => careAbout.push(n))
+            t.deck = []
             dctrlState.tasks[index] = t
         }
     })
@@ -127,6 +128,7 @@ function getDctrlState(){
     state.pubState.tasks.forEach(t => {
         if (careAbout.indexOf(t.taskId) > -1){
             t.guild = ''
+            t.deck = []
             dctrlState.tasks.push(t)
         }
     })
