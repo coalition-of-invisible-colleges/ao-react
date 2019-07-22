@@ -51,6 +51,15 @@ function memberDeactivated(memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function memberPurged(memberId, blame, callback) {
+  let newEvent = {
+    type: "member-purged",
+    memberId,
+    blame,
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function memberActivated(memberId, callback) {
   let newEvent = {
     type: "member-activated",
@@ -121,6 +130,7 @@ export default {
   memberPaid,
   memberCharged,
   memberDeactivated,
+  memberPurged,
   memberActivated,
   memberAddressUpdated,
   memberFieldUpdated,

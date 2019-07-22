@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .memberrow
-      .row
+        .row
         .four.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
@@ -10,9 +10,11 @@
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }}
         .one.grid
+            img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
+        .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount() {{ b.deck.length }}
-        .seven.grid
+        .six.grid
             priorities(:taskId='m.memberId')
             router-link.fw(:to='"/task/" + m.memberId')
                 img.viney(src='../../assets/images/vinebtn.svg')
@@ -26,13 +28,14 @@ import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import Priorities from '../Deck/Priorities'
+import request from 'superagent'
 
 export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck, Priorities},
     methods:{
         toggleGrab(){
-            if (this.isGrabbed) {
+            if (this.isVouched) {
                 request
                     .post('/events')
                     .set('Authorization', this.$store.state.loader.token)
@@ -70,7 +73,19 @@ export default {
                     })
                 }
             }
-        }
+        },
+        purgeAccount(){
+            request
+            .post('/events')
+            .set('Authorization', this.$store.state.loader.token)
+            .send({
+                type: 'member-purged',
+                memberId: this.m.memberId,
+            })
+            .end((err,res)=>{
+
+            })
+       }
     },
     computed:{
         isLoggedIn(){
@@ -97,7 +112,9 @@ export default {
         isVouched(){
             return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
         },
-
+        hasAnyVouches(){
+            return this.b.deck.length > 0
+        },
     },
 }
 
@@ -136,18 +153,15 @@ label
 .dogepepecoin {
   width: 35px
   height: 35px
-  position: absolute
-  left: calc(50% - 17.5px)
-  bottom: 0.75em
   cursor: pointer
+  top: 1em
+  position: relative
 }
 
 .hodlcount {
-    position: absolute
-    left: calc(50% - 17.5px)
+    top: 0
     text-align: center
     width: 35px
-    bottom: calc(0.75em + 9px)
     padding-bottom: 0
     margin-bottom: 0
     font-weight: bold
@@ -158,5 +172,11 @@ label
 .ungrabbedcoin {
     opacity: 0.3
 }
+
+.goldengun
+    cursor: pointer
+    width: 1em
+    height: auto
+    margin-top: 1em
 
 </style>

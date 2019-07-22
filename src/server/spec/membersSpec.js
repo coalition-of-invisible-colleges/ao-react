@@ -20,6 +20,9 @@ module.exports = function(req,res,next){
       case 'member-deactivated':
           specMemberDeactivated(req, res, next)
           break
+      case 'member-purged':
+          specMemberPurged(req, res, next)
+          break
       case 'member-address-updated':
           specMemberAddressUpdated(req, res, next)
           break
@@ -136,6 +139,21 @@ function specMemberDeactivated(req, res, next){
   ){
     events.membersEvs.memberDeactivated(
       req.body.memberId,
+      utils.buildResCallback(res)
+    )
+  } else {
+    res.status(400).send(errRes)
+  }
+}
+
+function specMemberPurged(req, res, next){
+  let errRes = []
+  if (
+    validators.isMemberId(req.body.memberId, errRes)
+  ){
+    events.membersEvs.memberPurged(
+      req.body.memberId,
+      req.body.blame,
       utils.buildResCallback(res)
     )
   } else {
