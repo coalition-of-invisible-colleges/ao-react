@@ -2,15 +2,17 @@
 
 .memberrow
       .row
-        .four.columns
+        .four.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
             label {{ m.name }} -
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }}
-                    span -
-        .eight.columns
+        .one.grid
+            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+            p.hodlcount() {{ b.deck.length }}
+        .seven.grid
             priorities(:taskId='m.memberId')
             router-link.fw(:to='"/task/" + m.memberId')
                 img.viney(src='../../assets/images/vinebtn.svg')
@@ -46,7 +48,12 @@ export default {
                 }
             })
             return g
-        }
+        },
+        isVouched(){
+            let memberCard = this.$store.getters.hashMap[this.m.memberId]
+            return memberCard.deck.indexOf( this.$store.getters.member.memberId ) > -1
+        },
+
     },
 }
 
@@ -80,5 +87,31 @@ label
 
 .yellowtx
     text-decoration: none
+
+.dogepepecoin {
+  width: 35px
+  height: 35px
+  position: absolute
+  left: calc(50% - 17.5px)
+  bottom: 0.75em
+  cursor: pointer
+}
+
+.hodlcount {
+    position: absolute
+    left: calc(50% - 17.5px)
+    text-align: center
+    width: 35px
+    bottom: calc(0.75em + 9px)
+    padding-bottom: 0
+    margin-bottom: 0
+    font-weight: bold
+    color: rgba(255, 255, 255, 0.75)
+    pointer-events: none
+}
+
+.ungrabbedcoin {
+    opacity: 0.3
+}
 
 </style>
