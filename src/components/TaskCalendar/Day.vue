@@ -54,6 +54,7 @@ label
 
 .upgrade
     width: 60%
+    cursor: pointer
 
 .type
     font-size: .5em

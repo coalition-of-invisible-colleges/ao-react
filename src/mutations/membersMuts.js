@@ -22,6 +22,13 @@ function membersMuts(members, ev){
               }
           })
           break
+      case "member-purged":
+          members.forEach( (member, i) => {
+              if (member.memberId === ev.memberId) {
+                      members.splice(i, 1)
+              }
+          })
+          break
       case "member-charged":
           members.forEach( member => {
               if (member.memberId === ev.memberId){

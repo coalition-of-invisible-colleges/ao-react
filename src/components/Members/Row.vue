@@ -1,16 +1,20 @@
 <template lang='pug'>
 
 .memberrow
-      .row
-        .four.columns
+        .row
+        .four.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
             label {{ m.name }} -
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }}
-                    span -
-        .eight.columns
+        .one.grid
+            img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
+        .one.grid
+            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+            p.hodlcount() {{ b.deck.length }}
+        .six.grid
             priorities(:taskId='m.memberId')
             router-link.fw(:to='"/task/" + m.memberId')
                 img.viney(src='../../assets/images/vinebtn.svg')
@@ -24,10 +28,65 @@ import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import Priorities from '../Deck/Priorities'
+import request from 'superagent'
 
 export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck, Priorities},
+    methods:{
+        toggleGrab(){
+            if (this.isVouched) {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                        type: 'task-dropped',
+                        taskId: this.b.taskId,
+                        memberId: this.$store.getters.member.memberId,
+                    })
+                    .end((err,res)=>{
+
+                    })
+            } else {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                        type: 'task-grabbed',
+                        taskId: this.b.taskId,
+                        memberId: this.$store.getters.member.memberId,
+                    })
+                    .end((err,res)=>{
+
+                    })
+                if(!this.isDecked) {
+                request
+                    .post('/events')
+                    .set('Authorization', this.$store.state.loader.token)
+                    .send({
+                      type: 'task-sub-tasked',
+                      subTask: this.b.taskId,
+                      taskId: this.$store.getters.memberCard.taskId,
+                    })
+                    .end((err,res)=>{
+
+                    })
+                }
+            }
+        },
+        purgeAccount(){
+            request
+            .post('/events')
+            .set('Authorization', this.$store.state.loader.token)
+            .send({
+                type: 'member-purged',
+                memberId: this.m.memberId,
+            })
+            .end((err,res)=>{
+
+            })
+       }
+    },
     computed:{
         isLoggedIn(){
             let isLoggedIn
@@ -46,7 +105,16 @@ export default {
                 }
             })
             return g
-        }
+        },
+        b(){
+            return this.$store.getters.hashMap[this.m.memberId]
+        },
+        isVouched(){
+            return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
+        },
+        hasAnyVouches(){
+            return this.b.deck.length > 0
+        },
     },
 }
 
@@ -57,6 +125,7 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/grid'
+@import '../../styles/spinners'
 
 img
     height: 4em
@@ -80,5 +149,34 @@ label
 
 .yellowtx
     text-decoration: none
+
+.dogepepecoin {
+  width: 35px
+  height: 35px
+  cursor: pointer
+  top: 1em
+  position: relative
+}
+
+.hodlcount {
+    top: 0
+    text-align: center
+    width: 35px
+    padding-bottom: 0
+    margin-bottom: 0
+    font-weight: bold
+    color: rgba(255, 255, 255, 0.75)
+    pointer-events: none
+}
+
+.ungrabbedcoin {
+    opacity: 0.3
+}
+
+.goldengun
+    cursor: pointer
+    width: 1em
+    height: auto
+    margin-top: 1em
 
 </style>

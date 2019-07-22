@@ -97,6 +97,18 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
+        case "member-purged":
+            tasks.forEach((task, i) => {
+                if (task.taskId === ev.memberId) {
+                        tasks.splice(i, 1)
+                }
+            })
+            tasks.forEach( t => {
+                    t.subTasks = t.subTasks.filter(st => st !== ev.memberId)
+                    t.priorities = t.priorities.filter(st => st !== ev.memberId)
+                    t.claimed = t.claimed.filter(st => st !== ev.memberId)
+            })
+            break
         case "task-removed":
             tasks.forEach((task, i) => {
                 if (task.taskId === ev.taskId) {

@@ -48,7 +48,7 @@ import Scroll from './Scroll'
 import Vine from './Vine'
 import Passed from './Passed'
 import Linky from './Linky'
-import spin from '../../styles/spinners.styl'
+//import spin from '../../styles/spinners.styl'
 import Priorities from '../Deck/Priorities'
 
 export default {
@@ -174,6 +174,7 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/grid'
 @import '../../styles/button'
+@import '../../styles/spinners'
 
 .count
     float: right
