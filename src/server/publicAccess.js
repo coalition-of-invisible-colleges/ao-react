@@ -112,7 +112,7 @@ function getDctrlState(){
     let dctrlState = _.clone(rootState)
     let careAbout = []
 
-    state.pubState.tasks.forEach(t => {
+    state.pubState.tasks.slice().forEach(t => {
         let index = pubGuilds.indexOf(t.guild)
         if (index > -1){
             t.subTasks.forEach(n => careAbout.push(n))
@@ -123,23 +123,32 @@ function getDctrlState(){
         }
     })
 
+
+    state.pubState.tasks.slice().forEach(t => {
+        if (careAbout.indexOf(t.taskId) > -1){
+            t.subTasks.forEach(n => careAbout.push(n))
+            t.priorities.forEach(n => careAbout.push(n))
+            t.claimed.forEach(n => careAbout.push(n))
+        }
+    })
     console.log("now care about", careAbout.length)
 
-    state.pubState.tasks.forEach(t => {
+    state.pubState.tasks.slice().forEach(t => {
         if (careAbout.indexOf(t.taskId) > -1){
-            t.guild = ''
             t.deck = []
             dctrlState.tasks.push(t)
         }
     })
 
+    console.log("now care about", careAbout.length)
 }
 
-setInterval(getDctrlState, 10000)
+setInterval(getDctrlState, 45000)
+
+setTimeout(getDctrlState, 5555)
 
 router.put('/dctrl', (req, res) => {
-    // TODO sanitize
-    console.log('serviing pubstate from dctrl', dctrlState.tasks.length)
+    console.log('serving pubstate from dctrl', dctrlState.tasks.length)
     res.json(dctrlState)
 
 })
