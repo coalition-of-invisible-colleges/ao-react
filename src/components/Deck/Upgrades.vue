@@ -337,7 +337,7 @@ h3
     margin-bottom: 1em
 
 .title
-    padding: 0.5em 0.5em 0 0.5em
+    padding: 0.5em 0.5em 0.5em 0.5em
     text-align: center
     
 .description

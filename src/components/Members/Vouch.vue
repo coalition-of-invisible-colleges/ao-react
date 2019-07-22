@@ -35,7 +35,7 @@ img
     float: left
 .name
     color: white
-    font-size: 1.2em
+    font-size: 1em
     margin-right: 1em
     position: relative
     top: -0.3em
