@@ -15,6 +15,7 @@
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
                 img.fw(src='../../assets/images/buddadoge.svg')
     img.fw(src='../../assets/memes/Spiderman.jpg')
+    home
 </template>
 
 <script>
