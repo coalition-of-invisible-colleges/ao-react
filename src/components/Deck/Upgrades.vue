@@ -31,6 +31,8 @@
                         router-link.nl(:to='"/task/" + g.taskId')
                             span.gui {{ g.guild }}
                             div.description {{ g.name }}
+                  .gui.title {{isDoge.name}}'s vouches
+                      vouch(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
           template(v-if='show === 2')
             .box
               form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
@@ -72,6 +74,7 @@ import PayAddress from './PayAddress'
 import FancyInput from '../slotUtils/FancyInput'
 import Current from '../Members/Current'
 import Priorities from './Priorities'
+import Vouch from '../Members/Vouch'
 
 export default {
     props: ['b'],
@@ -81,7 +84,7 @@ export default {
         BountyCreate, PreviewDeck, Actions,
         ResourceBook, FormBox, Tag, PayReq,
         PayAddress, FancyInput, Current, Priorities,
-        TaskCalendar
+        TaskCalendar, Vouch
     },
     data(){
         return {
