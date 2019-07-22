@@ -107,6 +107,7 @@ function tasksMuts(tasks, ev) {
                     t.subTasks = t.subTasks.filter(st => st !== ev.memberId)
                     t.priorities = t.priorities.filter(st => st !== ev.memberId)
                     t.claimed = t.claimed.filter(st => st !== ev.memberId)
+                    t.deck = t.deck.filter(st => st !== ev.memberId)
             })
             break
         case "task-removed":
