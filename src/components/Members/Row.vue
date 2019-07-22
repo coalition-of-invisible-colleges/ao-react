@@ -12,7 +12,7 @@
         .two.grid(v-if='!hasAnyVouches')
             img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
-            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount() {{ b.deck.length }}
         .grid(:class='{ seven: hasAnyVouches, five: !hasAnyVouches }')
             priorities(:taskId='m.memberId')
@@ -159,7 +159,7 @@ label
 }
 
 .hodlcount {
-    top: 0
+    top: calc(-1em + -15.5px)
     text-align: center
     width: 35px
     padding-bottom: 0
@@ -179,4 +179,6 @@ label
     height: auto
     margin-top: 1em
 
+.nopointer
+    cursor: auto
 </style>

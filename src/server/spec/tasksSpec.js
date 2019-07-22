@@ -408,7 +408,8 @@ function specTaskMoved(req, res, next){
   let errRes = []
   if (
     validators.isTaskId(req.body.taskId, errRes) &&
-    validators.isMemberId(req.body.memberId, errRes)
+    validators.isMemberId(req.body.memberId, errRes) &&
+    req.body.memberId !== req.body.taskId
   ){
       switch (req.body.type) {
           case 'task-grabbed':
