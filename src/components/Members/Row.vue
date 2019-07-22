@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .memberrow
-        .row
+    .row
         .four.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
@@ -9,12 +9,12 @@
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }}
-        .one.grid
+        .two.grid(v-if='!hasAnyVouches')
             img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount() {{ b.deck.length }}
-        .six.grid
+        .grid(:class='{ seven: hasAnyVouches, five: !hasAnyVouches }')
             priorities(:taskId='m.memberId')
             router-link.fw(:to='"/task/" + m.memberId')
                 img.viney(src='../../assets/images/vinebtn.svg')
@@ -175,7 +175,7 @@ label
 
 .goldengun
     cursor: pointer
-    width: 1em
+    width: 100%
     height: auto
     margin-top: 1em
 
