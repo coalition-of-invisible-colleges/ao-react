@@ -91,6 +91,8 @@ export default {
         isLoggedIn(){
             let isLoggedIn
             this.$store.state.sessions.forEach( s => {
+                console.log("this.m is", this.m)
+                console.log("and memberId is ", this.m.memberId)
                 if ( s.ownerId === this.m.memberId ){
                     isLoggedIn = true
                 }
