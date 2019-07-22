@@ -42,7 +42,7 @@ export default {
                 let cardA = this.$store.getters.hashMap[a.memberId]
                 let cardB = this.$store.getters.hashMap[b.memberId]
                 if(cardA.deck.length < cardB.deck.length) return 1
-                else if(cardA.deck.length === cardB.deck.length) return 0 
+                else if(cardA.deck.length === cardB.deck.length) return 0
                 else return -1
             })
             console.log("sortedMembers is ", sorted)
