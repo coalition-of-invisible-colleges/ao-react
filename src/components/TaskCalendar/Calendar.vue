@@ -80,7 +80,10 @@ export default {
         return this.$store.getters.hashMap[this.inId]
     },
     todaysEvents(){
-        return this.card.subTasks.map(tId => {
+        let allTasks = this.card.subTasks.concat(this.card.priorities).concat(this.card.claimed)
+        console.log("allTasks is ", allTasks)
+
+        return allTasks.map(tId => {
             return this.$store.getters.hashMap[tId]
         })
     },
