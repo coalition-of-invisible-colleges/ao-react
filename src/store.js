@@ -51,6 +51,15 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
+      sortedMembers(state, getters){
+          return getters.recentMembers.slice().sort((a, b) => {
+              let cardA = getters.hashMap[a.memberId]
+              let cardB = getters.hashMap[b.memberId]
+              if(cardA.deck.length < cardB.deck.length) return 1
+              if(cardA.deck.length === cardB.deck.length) return 0
+              return -1
+          })
+      },
       bounties(state, getters){
           return state.tasks.filter( t => {
               return calculations.calculateTaskPayout(t) > 1
