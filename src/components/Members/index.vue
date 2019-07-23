@@ -36,15 +36,15 @@ export default {
     },
     computed : {
         sortedMembers() {
-            let sorted = this.$store.getters.recentMembers.slice().sort((a, b) => {
-                console.log("a is ", a, " and b is ", b)
-                if(!a || !b) return 1
-                let cardA = this.$store.getters.hashMap[a.memberId]
-                let cardB = this.$store.getters.hashMap[b.memberId]
-                if(cardA.deck.length < cardB.deck.length) return 1
-                else if(cardA.deck.length === cardB.deck.length) return 0 
-                else return -1
-            })
+            let sorted = this.$store.getters.recentMembers.slice()//.sort((a, b) => {
+            //     console.log("a is ", a, " and b is ", b)
+            //     if(!a || !b) return 1
+            //     let cardA = this.$store.getters.hashMap[a.memberId]
+            //     let cardB = this.$store.getters.hashMap[b.memberId]
+            //     if(cardA.deck.length < cardB.deck.length) return 1
+            //     else if(cardA.deck.length === cardB.deck.length) return 0 
+            //     else return -1
+            // })
             console.log("sortedMembers is ", sorted)
             return sorted
         }
