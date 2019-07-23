@@ -1,10 +1,13 @@
 <template lang='pug'>
 
 #member
-    .list(v-if="$store.getters.isLoggedIn")
-        h2 {{ $store.getters.activeMembers.length }} active fobs
-        row(v-for="m in $store.getters.sortedMembers"  :m='m')
-    .padding(v-else)
+    .list
+        h2 {{ $store.getters.activeMembers.length }} active fobs -- showing {{showStart}} - {{showStart + 7}}
+        row(v-for="m in $store.getters.sortedMembers.slice(showStart, showStart + 7)"  :m='m')
+        button(@click='showNext') show next
+        h2 showing {{showStart}} - {{showStart + 7}}
+        input(v-model='showStart')
+    .padding
         p dctrl member
         ol
             li Believer in a transcendent future.
@@ -26,6 +29,19 @@ import Addr from './Addr'
 import Bounties from '../Bounties'
 
 export default {
+    data(){
+        return {
+            showStart: 0
+        }
+    },
+    methods: {
+        showNext(){
+            this.showStart = this.showStart + 7
+            if (this.showStart > this.$store.getters.sortedMembers.length ){
+                this.showStart = 0
+            }
+        },
+    },
     components : {
         Bounties,
         SharedTitle,
@@ -43,6 +59,7 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/input'
 @import '../../styles/skeleton'
+@import '../../styles/button'
 
 #sunexper
     width: 130%

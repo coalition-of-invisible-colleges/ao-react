@@ -9,13 +9,15 @@
                         img.fr(src='../../assets/images/right.svg')
                 hypercard(:b='$store.getters.pubguilds[showGuild]')
                 div.space
-                row(v-for="m in $store.getters.recentMembers.slice(0,7)", :m="m")
-                router-link(to='/members/') see all
+                //- row(v-for="m in $store.getters.recentMembers.slice(0,3)", :m="m")
             .five.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
-                img.fw(src='../../assets/images/buddadoge.svg')
-    img.fw(src='../../assets/memes/Spiderman.jpg')
-    home
+                img.budda(src='../../assets/images/buddadoge.svg')
+        .row
+            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+            router-link.purpletx.link(to='/members/') see all
+            img.fw(src='../../assets/memes/Spiderman.jpg')
+            home
 </template>
 
 <script>
@@ -91,8 +93,11 @@ export default {
 
 .fw
     width: 100%
-    height: auto
+
+.budda
     opacity: 0.45
+    float: left
+    height: 0
 
 #gift
     display: inline
@@ -114,7 +119,7 @@ export default {
 button
     margin: .55em
 
-p
+p, .link
     padding: 1.4em
     font-size: 1.4em
 
@@ -136,6 +141,8 @@ h2
 
 .fw
     width: 100%
+    float: left
+    opacity: 0.5
 
 .fr
     float: right
