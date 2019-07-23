@@ -135,15 +135,16 @@ function getDctrlState(){
 
     state.pubState.tasks.slice().forEach(t => {
         if (careAbout.indexOf(t.taskId) > -1){
-            t.deck = []
-            dctrlState.tasks.push(t)
+            let newT = _.clone(t)
+            newT.deck = []
+            dctrlState.tasks.push(newT)
         }
     })
 
     console.log("now care about", careAbout.length)
 }
 
-setInterval(getDctrlState, 45000)
+setInterval(getDctrlState, 450000)
 
 setTimeout(getDctrlState, 5555)
 
