@@ -62,133 +62,187 @@ Vue.use(VueRouter)
 
 const routes =[{
   path: '/',
-  component: Pinboard
+  component: Pinboard,
+  meta: { title: "DCTRL" }
 },{
   path: '/channels',
-  component: Nodes
+  component: Nodes,
+  meta: { title: "lightning" }
 },{
   path: '/auth',
-  component: Auth
+  component: Auth,
+  meta: { title: "authorize" }
 },{
   path: '/history',
-  component: List
+  component: List,
+  meta: { title: "history" }
 },{
   path: '/deck',
-  component: Deck
+  component: Deck,
+  meta: { title: "deck" }
 },{
   path: '/invoices',
-  component: Invoices
+  component: Invoices,
+  meta: { title: "invoices" }
 },{
   path: '/invoices/*',
-  component: Invoices
+  component: Invoices,
+  meta: { title: "invoices" }
 },{
   path: '/invoice_create/*',
-  component: InvoiceCreate
+  component: InvoiceCreate,
+  meta: { title: "create invoice" }
 },{
   path: '/account',
-  component: MyPage
+  component: MyPage,
+  meta: { title: "account @ DCTRL" }
 },{
   path: '/calendar/*',
-  component: MemberCalendar
+  component: MemberCalendar,
+  meta: { title: "calendar @ DCTRL" }
 },{
   path: '/member_create',
-  component: MemberCreate
+  component: MemberCreate,
+  meta: { title: "create member" }
 },{
   path: '/member_create/*',
-  component: MemberCreate
+  component: MemberCreate,
+  meta: { title: "create member" }
 },{
   path: '/member_paid/*',
-  component: MemberPaid
+  component: MemberPaid,
+  meta: { title: "member paid" }
 },{
   path: '/member_charge/*',
-  component: MemberCharge
+  component: MemberCharge,
+  meta: { title: "member charged" }
 },{
   path: '/member_badge/*',
-  component: MemberBadge
+  component: MemberBadge,
+  meta: { title: "member badge" }
 },{
   path: '/member_deactivate',
-  component: MemberDeactivate
+  component: MemberDeactivate,
+  meta: { title: "member deactivated" }
 },{
   path: '/member_activate/*',
-  component: MemberActivate
+  component: MemberActivate,
+  meta: { title: "member acvtivated" }
 },{
   path: '/member_address_update/*',
-  component: MemberAddressUpdate
+  component: MemberAddressUpdate,
+  meta: { title: "member address updated" }
 },{
   path: '/members',
-  component: Members
+  component: Members,
+  meta: { title: "members @ DCTRL" }
 },{
   path: '/member_paid_stuff/*',
-  component: MemberPaidStuff
+  component: MemberPaidStuff,
+  meta: { title: "member paid stuff" }
 },{
   path: '/fobtap',
-  component: Resources
+  component: Resources,
+  meta: { title: "door control" }
 },{
   path: '/resource_create',
-  component: ResourceCreate
+  component: ResourceCreate,
+  meta: { title: "resource @ DCTRL" }
 },{
   path: '/resource_use/*',
-  component: ResourceUse
+  component: ResourceUse,
+  meta: { title: "resource used" }
 },{
   path: '/resource_stock/*',
-  component: ResourceStock
+  component: ResourceStock,
+  meta: { title: "resource stock" }
 },{
   path: '/resource_remove/*',
-  component: ResourceRemove
+  component: ResourceRemove,
+  meta: { title: "resource removed" }
 },{
   path: '/resource_book/*',
-  component: ResourceBook
+  component: ResourceBook,
+  meta: { title: "resource booked" }
 },{
   path:'/cash_expense',
-  component: CashExpense
+  component: CashExpense,
+  meta: { title: "cash expense" }
 },{
   path: '/cash_receive',
-  component: CashReceive
+  component: CashReceive,
+  meta: { title: "cash retrieved" }
 },{
   path: '/bounty_create/*',
-  component: BountyCreate
+  component: BountyCreate,
+  meta: { title: "bounty created" }
 },{
   path: '/card',
-  component: TaskCreate
+  component: TaskCreate,
+  meta: { title: "task created" }
 },{
   path: '/task_claim/*',
-  component: TaskClaim
+  component: TaskClaim,
+  meta: { title: "task claimed" }
 },{
   path: '/task/*',
-  component: TaskCalendar
+  component: TaskCalendar,
+  meta: { title: "card" }
 },{
   path: '/task_rate_update/*',
-  component: TaskRateUpdate
+  component: TaskRateUpdate,
+  meta: { title: "task rate updated" }
 },{
   path: '/dash',
-  component: Dash
+  component: Dash,
+  meta: { title: "dashboard" }
 },{
   path: '/bounties',
-  component: Bounties
+  component: Bounties,
+  meta: { title: "bounties" }
 },{
   path: '/task_boost/*',
-  component: TaskBoost
+  component: TaskBoost,
+  meta: { title: "allocate task" }
 },{
   path: '/guild_create/*',
-  component: GuildCreate
+  component: GuildCreate,
+  meta: { title: "create guild" }
 },{
   path:'/manage',
-  component: Manage
+  component: Manage,
+  meta: { title: "manage" }
 },{
   path:'/onboarding',
-  component: Onboarding
+  component: Onboarding,
+  meta: { title: "onboarding @ DCTRL" }
 },{
   path:'/wiki',
-  component: Wiki
+  component: Wiki,
+  meta: { title: "wiki @ DCTRL" }
 },
 {
   path:'/archive',
-  component: Archive
+  component: Archive,
+  meta: { title: "sunken ship" }
 }
 ]
 
 const router = new VueRouter({
   routes
 })
+
+router.afterEach((to, from, next) => {
+  if(to.meta.title == 'card') return
+  document.title = to.meta.title ? to.meta.title : 'ao';
+  next()
+})
+
+// this one may make the browser history better
+// router.afterEach((to, from) => {
+//   Vue.nextTick( () => {
+//     document.title = to.meta.title ? to.meta.title : 'default title';
+//   });
+// })
 
 export default router

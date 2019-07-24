@@ -5,7 +5,7 @@
         h2 {{ $store.getters.activeMembers.length }} active fobs -- showing {{showStart}} - {{showStart + 7}}
         row(v-for="m in $store.getters.sortedMembers.slice(showStart, showStart + 7)"  :m='m')
         button(@click='showNext') show next
-        h2 showing {{showStart}} - {{showStart + 7}}
+        h2 showing {{ showStart }} - {{ showStart + 7 }} of {{ showTotal }}
         input(v-model='showStart')
     .padding
         p dctrl member
@@ -40,7 +40,12 @@ export default {
             if (this.showStart > this.$store.getters.sortedMembers.length ){
                 this.showStart = 0
             }
-        },
+        }
+    },
+    computed: {
+        showTotal(){
+            return this.$store.getters.sortedMembers.length
+        }
     },
     components : {
         Bounties,

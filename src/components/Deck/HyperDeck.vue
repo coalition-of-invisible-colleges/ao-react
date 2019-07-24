@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.deck.paperwrapper(v-if='parent')
+.deck.paperwrapper(v-if='parent && setPageTitle()')
     .row
         .six.columns.card()
             member-row(v-if='dogeCard', :m='dogeCard')
@@ -55,6 +55,12 @@ export default {
       toggleShowComplete(){
           this.showCompleted = !this.showCompleted
           console.log('set th', this.showCompleted)
+      },
+      setPageTitle(){
+          if(this.card.taskId === this.$store.getters.member.memberId) document.title = 'deck'
+          else if(this.card.guild) document.title = this.card.guild
+          else document.title = this.card.name
+          return true
       }
   },
   computed: {
