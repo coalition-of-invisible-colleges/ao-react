@@ -234,8 +234,9 @@ const router = new VueRouter({
 
 router.afterEach((to, from, next) => {
   if(to.meta.title == 'card') return
-  document.title = to.meta.title ? to.meta.title : 'ao';
-  next()
+  Vue.nextTick( () => {
+      document.title = to.meta.title ? to.meta.title : 'ao';
+  })
 })
 
 // this one may make the browser history better

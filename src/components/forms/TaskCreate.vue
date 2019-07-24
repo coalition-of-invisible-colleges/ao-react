@@ -16,7 +16,7 @@
               img.agedbackground
   transition(name="slide-fade")
       .cc(v-show='showCreate')
-          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter='createOrFindTask').paperwrapper
+          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi Create Card
 

@@ -19,7 +19,7 @@
         .grid.one
             preview-deck(:task='$store.getters.hashMap[m.memberId]')
             router-link.fw(:to='"/task/" + m.memberId')
-                img.viney(src='../../assets/images/vinebtn.svg')
+                img.viney.faded(src='../../assets/images/vinebtn.svg')
 </template>
 
 
@@ -150,6 +150,12 @@ label
 .viney
     float: right
     height: 1.3em
+
+.faded
+    opacity: 0.235654
+
+.faded:hover
+    opacity: 1
 
 .yellowtx
     text-decoration: none

@@ -270,8 +270,10 @@ h3
 .grid
     height: 4em
     text-align: center
-    .upgrade
-        height: 4em
+    
+.upgrade
+    height: 4em
+    cursor: pointer
 
 .mainbg
     background: softGrey
@@ -332,6 +334,7 @@ h3
     height: 3em
     padding: 0 calc(50% - 1.5em)
     margin-top: 1em
+    cursor: pointer
 
 .spaced
     margin-bottom: 1em

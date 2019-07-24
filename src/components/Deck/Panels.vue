@@ -1,19 +1,19 @@
 <template lang='pug'>
 
 .panel
-    .row
-      .four.columns(v-if='red.length > 0')
+    .row(v-if='red.length > 0 || green.length > 0 || blue.length > 0')
+      .four.grid(v-if='red.length > 0')
           card-panel(:c='red', :taskId='inId')
-      .four.columns(v-if='green.length > 0')
+      .four.grid(v-if='green.length > 0')
           card-panel(:c='green', :taskId='inId')
-      .four.columns(v-if='blue.length > 0')
+      .four.grid(v-if='blue.length > 0')
           card-panel(:c='blue', :taskId='inId')
-    .row
-      .two.columns
+    .row(v-if='yellow.length > 0 || purple.length > 0')
+      .two.grid
           p &nbsp;
-      .four.columns(v-if='yellow.length > 0')
+      .four.grid(v-if='yellow.length > 0')
           card-panel(:c='yellow', :taskId='inId')
-      .four.columns(v-if='purple.length > 0')
+      .four.grid(v-if='purple.length > 0')
           card-panel(:c='purple', :taskId='inId')
 </template>
 

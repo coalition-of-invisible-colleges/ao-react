@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#tasks(:id='uuid')
+#tasks(:id='uuid', @contextmenu.prevent='copyCardToClipboard')
     .row.ptr(v-if="topCard")
         .three.grid(@click='last')
             span &nbsp;
@@ -86,7 +86,7 @@ export default {
 
         mc.on('press', (e) => {
             e.preventDefault()
-            navigator.clipboard.writeText(this.c[0].name)
+            copyCardToClipboard()
             .then(() => {
               //console.log('card copied to clipboard');
             })
@@ -146,6 +146,9 @@ export default {
 
         })
     },
+    copyCardToClipboard(){
+        navigator.clipboard.writeText(this.c[0].name)
+    }
   },
   computed: {
     topCard(){
@@ -249,7 +252,6 @@ img
     height: 3em
 
 .ptr
-    cursor: pointer
     margin-bottom: 0
     margin: 1em 0 0.5em 0
     background-color: rgba(51, 51, 51, 0.3)
@@ -261,6 +263,7 @@ img
     margin-top: 0.5em
     //margin-bottom: 0.8em
     margin-right: 0.5em
+    cursor: pointer
 
 .fl
     float: left
@@ -268,6 +271,7 @@ img
     margin-top: 0.5em
     //margin-bottom: 0.8em
     margin-left: 0.5em
+    cursor: pointer
 
 .fadey
     opacity: 0.36
@@ -287,6 +291,7 @@ img
 
 .mandalign
     margin-top: 5px
+    cursor: pointer
 
 .center
     text-align: center
