@@ -34,6 +34,10 @@
     div.connectedstatus(v-if="$store.state.loader.connectionError")
       .dot.purplewx
       span {{ $store.state.loader.connectionError }}
+    div
+      p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} - {{ $store.state.loader.lastRes }}
+      p pendingreq- {{ $store.state.loader.pendingRequests }}
+      button(@click='makeEvent') make event
 </template>
 
 <script>
@@ -61,6 +65,14 @@ export default {
         }
     },
     methods: {
+        makeEvent(){
+            this.$store.dispatch("makeEvent", {
+                type: "member-paid",
+                memberId: this.$store.getters.member.memberId,
+                paid: 7,
+                isCash: false,
+            })
+        },
         cycle(from){
             switch(from){
                 case 'uni': return this.$router.push('/')

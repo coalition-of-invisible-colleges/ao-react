@@ -89,16 +89,68 @@ const actions = {
                 }
             })
     },
+    makeEvent({commit, state, getters, dispatch}, newEv){
+
+      console.log("make event called", newEv)
+
+      switch(state.reqStatus){
+          case "ready":
+              let startTs = Date.now()
+              commit("setReqStatus", "pending")
+              request
+                  .post('/events')
+                  .send(newEv)
+                  .set("Authorization", state.token)
+                  .end((err, res)=>{
+                      if (err || !res.body) {
+                          console.log("error from state load, load failed", err, "attempt getting pubstate")
+
+                        } else {
+
+                          console.log( res.body )
+                          commit("setPing", Date.now() - startTs)
+                          commit("popRequest")
+                          commit("setReqStatus", "ready")
+
+                          if (state.pendingRequests.length > 0){
+                              let nextEv = state.pendingRequests.slice(-1)
+                              commit("popRequest")
+                              dispatch("makeEvent", nextEv )
+                          }
+                      }
+                  })
+              break
+          case "pending":
+              commit("addRequest", newEv)
+              break
+      }
+    }
 }
 
 const state = {
     token: '',
     session: '',
     connected: 'disconnected',
-    connectionError: ''
+    connectionError: '',
+    pendingRequests: [],
+    reqStatus: 'ready',
+    lastRes: '',
+    lastPing: 1,
 }
 
 const mutations = {
+    popRequest(loader, newReq){
+        loader.pendingRequests.pop()
+    },
+    addRequest(loader, newReq){
+        loader.pendingRequests.push(newReq)
+    },
+    setPing(loader, ping){
+        loader.lastPing = ping
+    },
+    setReqStatus(loader, status){
+        loader.reqStatus = status
+    },
     setAuth(loader, auth){
         loader.token = auth.token
         loader.session = auth.session
