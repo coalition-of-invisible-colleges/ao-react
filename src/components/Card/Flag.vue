@@ -6,7 +6,7 @@
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-else  @click='deckIt')
     div(v-if='$store.getters.memberCard.subTasks.indexOf(b.taskId) === -1')
-      img.flaggy(src='../../assets/images/scroll.svg')
+      img.flaggy.faded(src='../../assets/images/scroll.svg')
 
 
 </template>

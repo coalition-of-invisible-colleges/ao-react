@@ -12,7 +12,7 @@
           flag(:b='b', :inId='inId')
   img.claimvine(v-for='n in b.claimed', v-if='n === $store.getters.member.memberId', src='../../assets/images/mark.svg')
   .row
-    .eleven.grid
+    .ten.grid
         span(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
             span.bold {{b.guild}}
@@ -23,7 +23,7 @@
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.toFixed(1) }} days
         linky(:x='b.name')
-    .one.grid
+    .two.grid
         preview-deck(:task='b')
   priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')

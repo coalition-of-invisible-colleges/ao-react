@@ -34,6 +34,7 @@
     "socketio-auth": "^0.1.0",
     "superagent": "^5.0.5",
     "vue": "^2.5.13",
+    "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "yarn": "^1.15.2",
