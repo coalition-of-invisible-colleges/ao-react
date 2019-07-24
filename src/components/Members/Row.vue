@@ -5,10 +5,10 @@
         .four.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
-            label {{ m.name }}
+            label(:class='{redtx: m.active < 0}') {{ m.name }}
                 br
                 span(v-for='g in rowsGuilds')
-                    router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }} - 
+                    router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }} -
         .two.grid(v-if='!hasAnyVouches')
             img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
