@@ -39,7 +39,6 @@ export default {
 			if (name){
 					secret = cryptoUtils.createHash(name)
 			}
-			console.log({name, secret})
 			return {
 					type: "member-created",
 					name,

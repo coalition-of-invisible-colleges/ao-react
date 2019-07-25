@@ -49,22 +49,6 @@ const routes =[{
   component: Deck,
   meta: { title: "deck" }
 },{
-  path: '/invoices',
-  component: Invoices,
-  meta: { title: "invoices" }
-},{
-  path: '/invoices/*',
-  component: Invoices,
-  meta: { title: "invoices" }
-},{
-  path: '/account',
-  component: MyPage,
-  meta: { title: "account @ DCTRL" }
-},{
-  path: '/calendar/*',
-  component: MemberCalendar,
-  meta: { title: "calendar @ DCTRL" }
-},{
   path: '/members',
   component: Members,
   meta: { title: "members @ DCTRL" }

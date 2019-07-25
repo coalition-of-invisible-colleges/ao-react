@@ -7,6 +7,8 @@ const actions = {
     loadCurrent({ commit, state, dispatch }){
         console.log('loadCurrent')
 
+        socket.connect()
+
         socket.on('unauthorized', (reason)=> {
             console.log('unauthorized event')
             commit('setConnectionError', 'Unauthorized: ' + JSON.stringify(reason))
@@ -104,9 +106,12 @@ const actions = {
                   .end((err, res)=>{
                       if (err || !res.body) {
                           console.log("error from state load, load failed", err, "attempt getting pubstate")
-
+                          commit("setReqStatus", "failed")
+                          setTimeout(()=> {
+                              dispatch("loadCurrent")
+                              dispatch("makeEvent", newEv )
+                          }, 1000)
                         } else {
-
                           console.log(res.body)
                           commit("setPing", Date.now() - startTs)
                           commit("popRequest")
@@ -163,7 +168,7 @@ const mutations = {
             loader.connectionError = ''
             return
         }
-        loader.connectionError += error + '\n'
+        loader.connectionError = error
     }
 }
 

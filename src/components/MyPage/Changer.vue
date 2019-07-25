@@ -16,7 +16,6 @@
       .check(v-if='inputType === "password"')
           img(v-if='matched', src='../../assets/images/check.svg')
           img(v-else, src='../../assets/images/warn.svg')
-
 </template>
 
 <script>
@@ -39,12 +38,14 @@ export default {
         changeReq(){
             if (this.change.field === 'secret'){
                   return {
+                      type: "member-field-updated",
                       field: this.change.field,
                       newfield: cryptoUtils.createHash( this.change.newfield),
                       memberId: this.$store.getters.member.memberId
                   }
             }
             return {
+                type: "member-field-updated",
                 field: this.change.field,
                 newfield: this.change.newfield,
                 memberId: this.$store.getters.member.memberId

@@ -35,8 +35,8 @@
       .dot.purplewx
       span {{ $store.state.loader.connectionError }}
     div
-      p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} -
-      span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending
+      p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} ms -
+      span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
 </template>
 
 <script>

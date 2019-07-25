@@ -55,7 +55,7 @@ export default {
     data(){
         return { active: false }
     },
-    components: { FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities },
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities},
     methods: {
         purge(){
           this.$store.dispatch("makeEvent", {
@@ -307,5 +307,5 @@ export default {
     clear: both
     height: 2.25em
     width: 100%
-        
+
 </style>

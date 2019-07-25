@@ -14,7 +14,6 @@
         span.purple(v-else) {{parseInt( member.balance ) }} points
       hr
       changer
-
 </template>
 
 <script>
@@ -22,7 +21,7 @@
 import SharedTitle from '../slotUtils/SharedTitle'
 import Calendar from '../MemberCalendar'
 import Payment from './Payment'
-import Changer from './Changer' 
+import Changer from './Changer'
 import Badges from '../Members/Badges'
 import TofuBadges from '../Members/TofuBadges'
 import PreviewDeck from '../Deck/PreviewDeck'
