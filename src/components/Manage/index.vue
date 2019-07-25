@@ -51,8 +51,6 @@
 <script>
 
 import SharedTitle from '../slotUtils/SharedTitle'
-import CashExpense from '../forms/CashExpense'
-import CashReceive from '../forms/CashReceive'
 import MemberPaid from '../forms/MemberPaid'
 import RentSet from '../forms/RentSet'
 import CapSet from '../forms/CapSet'
@@ -80,7 +78,7 @@ export default {
         }
     },
     components:{
-        SharedTitle, CashExpense, CashReceive,
+        SharedTitle,
         RentSet, CapSet, Resources, MemberPaid, AdminRow,
         Summaryy, ChannelCreate, MemberCreate, CardPanel
     },

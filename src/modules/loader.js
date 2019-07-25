@@ -107,7 +107,7 @@ const actions = {
 
                         } else {
 
-                          console.log( res.body )
+                          console.log(res.body)
                           commit("setPing", Date.now() - startTs)
                           commit("popRequest")
                           commit("setReqStatus", "ready")
@@ -134,7 +134,7 @@ const state = {
     connectionError: '',
     pendingRequests: [],
     reqStatus: 'ready',
-    lastRes: '',
+    // lastRes: '',
     lastPing: 1,
 }
 

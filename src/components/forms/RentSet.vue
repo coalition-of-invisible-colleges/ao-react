@@ -6,7 +6,6 @@
           input#rentInput.input-effect(v-model='details.amount' type='text')
           label(for='rentInput') Set Node Cost
           span.focus-border
-
 </template>
 
 <script>
@@ -17,6 +16,7 @@ export default {
     data(){
         return {
             details: {
+                type: 'rent-set',
                 amount: ''
             }
         }

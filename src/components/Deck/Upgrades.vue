@@ -65,7 +65,6 @@ import TaskCalendar from '../TaskCalendar/Calendar'
 import GuildCreate from '../forms/GuildCreate'
 import BountyCreate from '../forms/BountyCreate'
 import ResourceBook from '../forms/ResourceBook'
-import Actions from '../Card/Actions'
 import FormBox from '../slotUtils/FormBox'
 import Tag from '../Nodes/Tag'
 import PayReq from './PayReq'
@@ -80,7 +79,7 @@ export default {
     components:{
         SharedTitle, Current, TaskCreate,
         HyperDeck, Hypercard, GuildCreate,
-        BountyCreate, PreviewDeck, Actions,
+        BountyCreate, PreviewDeck,
         ResourceBook, FormBox, Tag, PayReq,
         PayAddress, FancyInput, Current, Priorities,
         TaskCalendar, Vouch
@@ -251,7 +250,7 @@ h3
 .grid
     height: 4em
     text-align: center
-    
+
 .upgrade
     height: 4em
     cursor: pointer
@@ -323,7 +322,7 @@ h3
 .title
     padding: 0.5em 0.5em 0.5em 0.5em
     text-align: center
-    
+
 .description
     color: white
 
@@ -334,10 +333,10 @@ h3
 .smallbox
     width: 4em
     margin-bottom: 1em
-    
+
 .adjusttop
     margin-top: 0.3em
-    
+
 .centerform
     margin: 0 auto 1em auto
 

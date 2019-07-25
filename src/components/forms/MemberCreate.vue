@@ -10,7 +10,6 @@
 			li The new accounts initial password is the name
 			li Instruct the new member to log in and change the password at the bottom of the dashboard.
 			li Also tell them all the important stuff.
-
 </template>
 
 <script>

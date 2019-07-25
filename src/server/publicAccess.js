@@ -70,26 +70,29 @@ const rootGuilds = [{
     color: 'blue'
 }]
 
-const rootState = {
-  recent: [],
-  sessions: [],
-  members: [],
-  tasks: rootGuilds.slice(),
-  resources: [],
-  cash: {
-    currency: 'CAD',
-    cash: 0,
-    spot: 0,
-    rent: 0,
-    variable: 0,
-    cap: 75,
-    pay_index: 0,
-    usedTxIds: [],
-    outputs: [],
-    channels: [],
-    info: {},
-  },
+function createRootState(){
+  return {
+    recent: [],
+    sessions: [],
+    members: [],
+    tasks: rootGuilds.slice(),
+    resources: [],
+    cash: {
+      currency: 'CAD',
+      cash: 0,
+      spot: 0,
+      rent: 0,
+      variable: 0,
+      cap: 75,
+      pay_index: 0,
+      usedTxIds: [],
+      outputs: [],
+      channels: [],
+      info: {},
+    },
+  }
 }
+
 
 function setStop(){
     stopper = setTimeout( ()=> {
@@ -105,11 +108,11 @@ function setStop(){
 }
 
 
-let dctrlState = _.clone(rootState)
+let dctrlState = createRootState()
 let pubGuilds = ["D", "C", "T", "R", "L"]
 function getDctrlState(){
     // let
-    let dctrlState = _.clone(rootState)
+    dctrlState = createRootState()
     let careAbout = []
 
     state.pubState.tasks.slice().forEach(t => {
@@ -123,7 +126,6 @@ function getDctrlState(){
         }
     })
 
-
     state.pubState.tasks.slice().forEach(t => {
         if (careAbout.indexOf(t.taskId) > -1){
             t.subTasks.forEach(n => careAbout.push(n))
@@ -131,7 +133,6 @@ function getDctrlState(){
             t.claimed.forEach(n => careAbout.push(n))
         }
     })
-    console.log("now care about", careAbout.length)
 
     state.pubState.tasks.slice().forEach(t => {
         if (careAbout.indexOf(t.taskId) > -1){
@@ -141,7 +142,7 @@ function getDctrlState(){
         }
     })
 
-    console.log("now care about", careAbout.length)
+    console.log("now care about", careAbout.length, dctrlState.tasks.length)
 }
 
 setInterval(getDctrlState, 450000)

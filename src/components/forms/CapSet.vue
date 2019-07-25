@@ -6,7 +6,6 @@
             input#capInput.input-effect(v-model='details.amount' type='text')
             label(for="capInput") Set Monthly Cap
             span.focus-borders
-
 </template>
 
 <script>
@@ -17,6 +16,7 @@ export default {
     data(){
         return {
             details: {
+                type: 'cap-set',
                 amount: ''
             }
         }
