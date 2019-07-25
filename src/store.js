@@ -238,7 +238,6 @@ export default new Vuex.Store({
           return totalRemote
       },
       recentMembers(state, getters){
-
           let recentMembers = state.members.slice()
 
           recentMembers.sort((a, b) => {
@@ -246,6 +245,23 @@ export default new Vuex.Store({
           })
           return recentMembers
       },
+      membersVouches(state, getters){
+          let members = state.members.slice()
+          let vouches = []
+
+          members.forEach(m => {
+              let memberCard = getters.hashMap[m.memberId]
+              memberCard.deck.forEach(v => {
+                  let prevCount = vouches.find(c => c.memberId === v)
+                  if(!prevCount) {
+                      vouches.push({ memberId: v, count: 0 })
+                  } else {
+                      prevCount.count++
+                  }
+              })
+          })
+          return vouches
+      }
   },
   middlewares: [],
   strict: process.env.NODE_ENV !== 'production'

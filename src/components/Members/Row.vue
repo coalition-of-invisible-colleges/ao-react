@@ -2,7 +2,7 @@
 
 .memberrow
     .row
-        .four.grid
+        .three.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
             label(:class='{redtx: m.active < 0}') {{ m.name }}
@@ -13,7 +13,10 @@
             img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-            p.hodlcount() {{ b.deck.length }}
+            p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
+        .one.grid
+            span.counts.iceblue {{ vouchCount }}
+            span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio }}
         .grid(:class='{ six: hasAnyVouches, four: !hasAnyVouches }')
             priorities(:taskId='m.memberId')
         .grid.one
@@ -94,6 +97,17 @@ export default {
         hasAnyVouches(){
             return this.b.deck.length > 0
         },
+        vouchCount(){
+            let vouchCount = this.$store.getters.membersVouches.find(c => c.memberId === this.m.memberId)
+            if(!vouchCount) return 0
+            return vouchCount.count
+        },
+        vouchRatio(){
+            let ratio = this.vouchCount / this.b.deck.length
+            if(this.b.deck.length <= 0 && this.vouchCount > 0) return '-∞'
+            else if(this.vouchCount === 0) return '0'
+            else return ratio
+        }
     },
 }
 
@@ -155,6 +169,10 @@ label
     pointer-events: none
 }
 
+.grabbedhodlcount {
+    color: white
+}
+
 .ungrabbedcoin {
     opacity: 0.3
 }
@@ -167,4 +185,15 @@ label
 
 .nopointer
     cursor: auto
+
+.counts {
+    position:relative
+    top: 23.25px
+}
+
+.iceblue
+    color: #6ff
+    text-align: center
+    font-weight: bold
+    margin-right: 2em
 </style>

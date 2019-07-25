@@ -13,7 +13,7 @@
             .five.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
                 img.budda(src='../../assets/images/buddadoge.svg')
-        .row
+        .row.clearboth
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
             router-link.purpletx.link(to='/members/') see all
             img.fw(src='../../assets/memes/Spiderman.jpg')
@@ -161,9 +161,10 @@ h2
         padding: .1em
         border-radius: 3px
 
-
 .columns p
     font-size: .99em
     color: accent2
 
+.clearboth
+    clear: both
 </style>
