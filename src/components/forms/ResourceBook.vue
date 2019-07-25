@@ -65,6 +65,7 @@ export default {
                 notes: '',
                 startTs: this.calcTime.start,
                 endTs: this.calcTime.end,
+                type:'resource-booked',
             }
         },
         calcTime(){

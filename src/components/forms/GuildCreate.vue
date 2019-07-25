@@ -4,7 +4,6 @@
   form-box.centerform(btntxt="create guild" event='task-guilded' v-bind:data="task")
     fancy-input(labelText='code name')
         input.input-effect(v-model='task.guild' type='text')
-
 </template>
 
 <script>
@@ -23,6 +22,7 @@ export default {
     data(){
         return {
             task: {
+                type: 'task-guilded',
                 taskId: '',
                 guild: '',
             }
