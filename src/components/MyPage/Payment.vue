@@ -26,7 +26,6 @@
 
 <script>
 
-import request from 'superagent'
 import FormBox from '../slotUtils/FormBox'
 import qrcode from 'qrcode-generator'
 import calcs from '../../calculations'
@@ -106,21 +105,13 @@ export default {
             this.showBtc = !this.showBtc
         },
         createPayRec(){
-          this.showInvoice = true
-          console.log('creating payment request? ')
-          request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send({
-                  type: 'invoice-created',
-                  sats: this.sats,
-                  memo: 'Payment from ' + this.$store.getters.member.name,
-                  ownerId: this.$store.getters.member.memberId
-              })
-              .end((err,res)=>{
-                  if (err) return console.log(err);
-                  console.log('createPayRec:', res.body)
-              })
+            this.showInvoice = true
+            this.$store.dispatch("makeEvent", {
+                type: 'invoice-created',
+                sats: this.sats,
+                memo: 'Payment from ' + this.$store.getters.member.name,
+                ownerId: this.$store.getters.member.memberId
+            })
         }
     },
 }

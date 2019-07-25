@@ -10,38 +10,22 @@ div Add a custom badge!
 
 <script>
 
-import request from 'superagent'
-
 export default {
     methods: {
         removeBadge(){
-            console.log("Removing badge " + this.badgename)
-             request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'badge-removed',
-                    memberId: this.$store.getters.member.memberId,
-                    badge: this.badgename
-                })
-                .end((err,res)=>{
-                    console.log(err, res);
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'badge-removed',
+                memberId: this.$store.getters.member.memberId,
+                badge: this.badgename
+            })
         },
 
         addBadge(){
-            console.log("Adding badge " + this.badgename)
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'badge-added',
-                    memberId: this.$store.getters.member.memberId,
-                    badge: this.badgename
-                })
-                .end((err,res)=>{
-                    console.log(err, res);
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'badge-added',
+                memberId: this.$store.getters.member.memberId,
+                badge: this.badgename
+            })
         }
     }
 }

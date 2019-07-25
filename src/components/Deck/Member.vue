@@ -27,7 +27,6 @@ import DctrlActive from '../Members/DctrlActive'
 import Badges from '../Members/Badges'
 import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
-import request from 'superagent'
 
 export default {
     props: ['m'],
@@ -65,30 +64,16 @@ export default {
             return name
         },
         deactivate() {
-            console.log("deactivate called")
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'member-deactivated',
-                    memberId: this.$store.getters.member.memberId,
-                })
-                .end((err,res)=>{
-                    console.log({err,res})
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'member-deactivated',
+                memberId: this.$store.getters.member.memberId,
+            })
         },
         activate() {
-            console.log("activate called")
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'member-activated',
-                    memberId: this.$store.getters.member.memberId,
-                })
-                .end((err,res)=>{
-                    console.log({err,res})
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'member-activated',
+                memberId: this.$store.getters.member.memberId,
+            })
         }
 
     }

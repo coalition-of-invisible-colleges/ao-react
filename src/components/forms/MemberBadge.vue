@@ -12,7 +12,6 @@
 
 import SharedTitle from '../slotUtils/SharedTitle'
 import FormBox from '../slotUtils/FormBox'
-import request from 'superagent'
 
 export default {
     mounted(){
@@ -27,31 +26,18 @@ export default {
     methods: {
         addBadge(){
             console.log("Adding badge " + this.badge)
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'badge-added',
-                    memberId: this.member.memberId,
-                    badge: this.badgename,
-                })
-                .end((err,res)=>{
-                    console.log(err, res);
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'badge-added',
+                memberId: this.member.memberId,
+                badge: this.badgename,
+            })
         },
         removeBadge(){
-            console.log("Adding badge " + this.badge)
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'badge-removed',
-                    memberId: this.member.memberId,
-                    badge: this.badgename,
-                })
-                .end((err,res)=>{
-                    console.log(err, res);
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'badge-removed',
+                memberId: this.member.memberId,
+                badge: this.badgename,
+            })
         }
     },
     data(){

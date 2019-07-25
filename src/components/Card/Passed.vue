@@ -46,33 +46,20 @@ export default {
               .set('Authorization', this.$store.state.loader.token)
               .send(sending)
               .end((err,res)=>{
-
-                request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                  type: 'task-grabbed',
-                  taskId: this.b.taskId,
-                  memberId: this.$store.getters.member.memberId,
-                })
-                .end((err,res)=>{
-
-                })
+                  this.$store.dispatch("makeEvent", {
+                    type: 'task-grabbed',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                  })
           })
 
         },
         refuse(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-dropped',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-dropped',
+                taskId: this.b.taskId,
+                memberId: this.$store.getters.member.memberId,
+            })
         }
     }
 }

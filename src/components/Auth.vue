@@ -76,14 +76,10 @@ export default {
       },
       killSession(){
           //XXX TODO tell server to remove session
-          request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send({
-                  type: "session-killed",
-                  session: this.$store.state.loader.session
-              })
-              .end(console.log)
+          this.$store.dispatch("makeEvent", {
+              type: "session-killed",
+              session: this.$store.state.loader.session
+          })
 
           window.localStorage.removeItem("token")
           window.localStorage.removeItem("session")

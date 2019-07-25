@@ -54,7 +54,6 @@
 
 <script>
 
-import request from 'superagent'
 import calcs from '../../calculations'
 
 import SharedTitle from '../slotUtils/SharedTitle'
@@ -102,40 +101,22 @@ export default {
         },
         toggleGrab(){
           if (this.isGrabbed) {
-            request
-            .post('/events')
-            .set('Authorization', this.$store.state.loader.token)
-            .send({
+            this.$store.dispatch("makeEvent", {
               type: 'task-dropped',
               taskId: this.b.taskId,
               memberId: this.$store.getters.member.memberId,
             })
-            .end((err,res)=>{
-
-            })
           } else {
-            request
-            .post('/events')
-            .set('Authorization', this.$store.state.loader.token)
-            .send({
+            this.$store.dispatch("makeEvent", {
               type: 'task-grabbed',
               taskId: this.b.taskId,
               memberId: this.$store.getters.member.memberId,
             })
-            .end((err,res)=>{
-
-            })
             if(!this.isDecked) {
-              request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send({
+              this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
                 taskId: this.$store.getters.memberCard.taskId,
-              })
-              .end((err,res)=>{
-
               })
             }
           }

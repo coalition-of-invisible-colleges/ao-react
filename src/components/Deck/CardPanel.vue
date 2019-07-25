@@ -47,7 +47,6 @@
 
 import Hypercard from "../Card"
 import uuidv1 from 'uuid/v1'
-import request from 'superagent'
 
 export default {
   props: ['c', 'taskId'],
@@ -132,22 +131,16 @@ export default {
       } else if (swapIndex > this.c.length - 1) {
           swapIndex = 0
       }
-      request
-        .post('/events')
-        .set('Authorization', this.$store.state.loader.token)
-        .send({
-            type: 'task-swapped',
-            taskId: this.taskId,
-            swapId1: this.topCard.taskId,
-            swapId2: this.c[swapIndex].taskId,
-            direction: 'up',
-        })
-        .end((err,res)=>{
-
-        })
+      this.$store.dispatch("makeEvent", {
+          type: 'task-swapped',
+          taskId: this.taskId,
+          swapId1: this.topCard.taskId,
+          swapId2: this.c[swapIndex].taskId,
+          direction: 'up',
+      })
     },
     copyCardToClipboard(){
-        navigator.clipboard.writeText(this.c[0].name)
+        navigator.clipboard.writeText(this.topCard.name)
     }
   },
   computed: {

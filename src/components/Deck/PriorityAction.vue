@@ -20,7 +20,6 @@
 
 <script>
 
-import request from 'superagent'
 import HyperCard from '../Card'
 
 export default {
@@ -55,32 +54,20 @@ export default {
             this.$router.push("/task/" + this.taskId)
         },
         claim(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-claimed',
-                    taskId: this.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                    inId: this.inId,
-                    notes: this.notes,
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-claimed',
+                taskId: this.taskId,
+                memberId: this.$store.getters.member.memberId,
+                inId: this.inId,
+                notes: this.notes,
+            })
         },
         refuse(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-refocused',
-                    inId: this.inId, //does not exist
-                    taskId: this.taskId,
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-refocused',
+                inId: this.inId, //does not exist
+                taskId: this.taskId,
+            })
         }
     }
 }

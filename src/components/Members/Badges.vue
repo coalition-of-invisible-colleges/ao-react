@@ -29,8 +29,6 @@
 
 <script>
 
-import request from 'superagent'
-
 export default {
     name: 'badges',
     props: ['m'],
@@ -62,20 +60,14 @@ export default {
         toggleHidden: function(badge){
             let ourId = this.$store.getters.member.memberId
             if(ourId == this.m.memberId){
-                     request
-                        .post('/events')
-                        .set('Authorization', this.$store.state.loader.token)
-                        .send({
-                            type: 'badge-hidden',
-                            memberId: this.m.memberId,
-                            badge: badge
-                        })
-                        .end((err,res)=>{
-                            console.log(err, res);
-                        })
-                } else {
-                    console.log("Hey asshole! You can't hide soomeone else's badges!")
-                }
+                this.$store.dispatch("makeEvent", {
+                    type: 'badge-hidden',
+                    memberId: this.m.memberId,
+                    badge: badge
+                })
+            } else {
+                console.log("Hey asshole! You can't hide soomeone else's badges!")
+            }
         },
         getClass: function(badge){
             if(!this.m.hiddenBadges){

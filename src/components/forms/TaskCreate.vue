@@ -96,6 +96,12 @@ export default {
                             }
                         })
                     })
+            } else {
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-grabbed',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
             }
             this.subTaskTask(foundId)
         },

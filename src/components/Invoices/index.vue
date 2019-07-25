@@ -13,7 +13,6 @@
 
 <script>
 
-import request from "superagent"
 import PayReq from "../Resources/PayReq"
 import SharedTitle from '../slotUtils/SharedTitle'
 

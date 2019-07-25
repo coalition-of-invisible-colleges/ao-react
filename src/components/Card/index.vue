@@ -38,7 +38,6 @@
 
 <script>
 
-import request from 'superagent'
 import calculations from '../../calculations'
 import FormBox from '../slotUtils/FormBox'
 import PreviewDeck from '../Deck/PreviewDeck'
@@ -59,56 +58,32 @@ export default {
     components: { FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities },
     methods: {
         purge(){
-          request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send({
-                  type: 'task-removed',
-                  taskId: this.b.taskId,
-              })
-              .end((err,res)=>{
-
-              })
+          this.$store.dispatch("makeEvent", {
+              type: 'task-removed',
+              taskId: this.b.taskId,
+          })
         },
         goIn(){
             this.$router.push("/task/" + this.b.taskId)
         },
         toggleGrab(){
             if (this.isGrabbed) {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                        type: 'task-dropped',
-                        taskId: this.b.taskId,
-                        memberId: this.$store.getters.member.memberId,
-                    })
-                    .end((err,res)=>{
-
-                    })
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-dropped',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
             } else {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
+                    this.$store.dispatch("makeEvent", {
                         type: 'task-grabbed',
                         taskId: this.b.taskId,
                         memberId: this.$store.getters.member.memberId,
                     })
-                    .end((err,res)=>{
-
-                    })
                 if(!this.isDecked) {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                      type: 'task-sub-tasked',
-                      subTask: this.b.taskId,
-                      taskId: this.$store.getters.memberCard.taskId,
-                    })
-                    .end((err,res)=>{
-
+                    this.$store.dispatch("makeEvent", {
+                        type: 'task-sub-tasked',
+                        subTask: this.b.taskId,
+                        taskId: this.$store.getters.memberCard.taskId,
                     })
                 }
             }

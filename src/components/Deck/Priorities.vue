@@ -33,7 +33,6 @@
 <script>
 
 
-import request from 'superagent'
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
@@ -74,18 +73,11 @@ export default {
         return allocatedAmount
     },
     allocate(tId, inId){
-      console.log(tId, 'allocate called')
-      request
-          .post('/events')
-          .set('Authorization', this.$store.state.loader.token)
-          .send({
-              type: 'task-allocated',
-              taskId: inId,
-              allocatedId: tId
-          })
-          .end((err,res)=>{
-              console.log({err, res, tId})
-          })
+      this.$store.dispatch("makeEvent", {
+        type: 'task-allocated',
+        taskId: inId,
+        allocatedId: tId
+      })
     },
     setAction(ii){
         console.log('set action called ', ii)

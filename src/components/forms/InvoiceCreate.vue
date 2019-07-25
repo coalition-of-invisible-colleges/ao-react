@@ -15,7 +15,6 @@
 
 <script>
 
-import request from "superagent"
 import SharedTitle from '../slotUtils/SharedTitle'
 import FormBox from '../slotUtils/FormBox'
 

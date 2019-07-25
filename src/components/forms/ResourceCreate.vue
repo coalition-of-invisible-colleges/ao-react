@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import request from "superagent"
 import SharedTitle from '../slotUtils/SharedTitle'
 import FormBox from '../slotUtils/FormBox'
 import uuidV1 from 'uuid/v1'

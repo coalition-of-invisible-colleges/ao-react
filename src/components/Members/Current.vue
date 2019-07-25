@@ -10,40 +10,24 @@
 
 <script>
 
-import request from 'superagent'
-
 export default {
   props: ['memberId', 'b', 'inId'],
   methods:{
     complete(){
-        console.log('taskId is ' + this.b.taskId + ' and memberId is ' + this.memberId)
-        request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-claimed',
-                    taskId: this.b.taskId,
-                    memberId: this.memberId,
-                    notes: 'checked by ' + this.$store.getters.member.memberId
-                })
-                .end((err,res)=>{
-
-                })
+        this.$store.dispatch("makeEvent", {
+            type: 'task-claimed',
+            taskId: this.b.taskId,
+            memberId: this.memberId,
+            notes: 'checked by ' + this.$store.getters.member.memberId
+        })
     },
     uncheck(){
-        console.log('taskId is ' + this.b.taskId + ' and memberId is ' + this.memberId)
-        request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-unclaimed',
-                    taskId: this.b.taskId,
-                    memberId: this.memberId,
-                    notes: ''
-                })
-                .end((err,res)=>{
-
-                }) 
+        this.$store.dispatch("makeEvent", {
+            type: 'task-unclaimed',
+            taskId: this.b.taskId,
+            memberId: this.memberId,
+            notes: ''
+        })
     },
     cardInputSty(c){
         console.log("color is " + c)

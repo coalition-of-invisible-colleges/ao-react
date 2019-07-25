@@ -7,7 +7,6 @@
 
 <script>
 
-import request from 'superagent'
 import FormBox from '../slotUtils/FormBox'
 
 export default {

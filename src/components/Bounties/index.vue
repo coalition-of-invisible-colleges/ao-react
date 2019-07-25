@@ -13,7 +13,6 @@
 <script>
 
 import BountyCard from "./BountyCard"
-import request from "superagent"
 import SharedTitle from '../slotUtils/SharedTitle'
 import CrazyBtn from '../slotUtils/CrazyBtn'
 import calculations from '../../calculations'

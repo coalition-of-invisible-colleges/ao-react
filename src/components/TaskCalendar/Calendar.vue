@@ -13,6 +13,7 @@
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')
         day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
+    .buffer
 </template>
 
 <script>
@@ -130,7 +131,7 @@ export default {
 .calendar-column
     float: left
     box-sizing: border-box
-    width: (96/7)%
+    width: (100/7)%
     height: 100px
     border-style:solid
     border-width: 1px
@@ -190,4 +191,8 @@ img
         
 .calmonth
     margin: 0 2% 2% 2%
+    
+.buffer
+   clear: both
+   height: 0.45em
 </style>

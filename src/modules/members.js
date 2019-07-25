@@ -1,4 +1,3 @@
-import request from 'superagent'
 import M from '../mutations'
 
 const state = [] // aka members (in this file):

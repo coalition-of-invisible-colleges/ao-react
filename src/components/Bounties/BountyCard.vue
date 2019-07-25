@@ -28,7 +28,6 @@
 
 <script>
 
-import request from 'superagent'
 import calculations from '../../calculations'
 import Current from '../Resources/Current'
 
@@ -64,94 +63,53 @@ export default {
             }
         },
         claim(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-claimed',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                    inId: this.b.taskId,
-                    notes: "",
-                })
-                .end((err,res)=>{
-                    console.log({err,res})
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-claimed',
+                taskId: this.b.taskId,
+                memberId: this.$store.getters.member.memberId,
+                inId: this.b.taskId,
+                notes: "",
+            })
         },
         submitChange(){
             console.log('submit change called')
             this.editMode = false
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
+                this.$store.dispatch("makeEvent", {
                     type: 'task-instructions-updated',
                     newInstructions: this.newInstructions,
                     taskId: this.b.taskId
                 })
-                .end((err,res)=>{
-                    if (err) return console.log(err);
-                    console.log('createPayRec:', res.body)
-                })
         },
         submitRate(){
             this.editMode = false
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    taskId: this.b.taskId,
-                    type: 'task-rate-updated',
-                    amount: this.newRate,
-                })
-                .end((err,res)=>{
-                    if (err) return console.log(err);
-                    console.log('createPayRec:', res.body)
-                })
+            this.$store.dispatch("makeEvent", {
+                taskId: this.b.taskId,
+                type: 'task-rate-updated',
+                amount: this.newRate,
+            })
         },
         submitCap(){
             this.editMode = false
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    taskId: this.b.taskId,
-                    type: 'task-cap-updated',
-                    amount: this.newCap,
-                })
-                .end((err,res)=>{
-                    if (err) return console.log(err);
-                    console.log('createPayRec:', res.body)
-                })
+            this.$store.dispatch("makeEvent", {
+                taskId: this.b.taskId,
+                type: 'task-cap-updated',
+                amount: this.newCap,
+            })
         },
         submitBoost(){
-          this.editMode = false
-          request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    taskId: this.b.taskId,
-                    type: 'task-boosted',
-                    amount: this.newBoost,
-                })
-                .end((err,res)=>{
-                    if (err) return console.log(err);
-                    console.log('createPayRec:', res.body)
-                })
+            this.editMode = false
+            this.$store.dispatch("makeEvent", {
+                taskId: this.b.taskId,
+                type: 'task-boosted',
+                amount: this.newBoost,
+            })
         },
         submitRemove(){
-          this.editMode = false
-          request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    taskId: this.b.taskId,
-                    type: 'task-removed',
-                })
-                .end((err,res)=>{
-                    if (err) return console.log(err);
-                    console.log('createPayRec:', res.body)
-                })
+            this.editMode = false
+            this.$store.dispatch("makeEvent", {
+                taskId: this.b.taskId,
+                type: 'task-removed',
+            })
         }
     },
     computed: {

@@ -21,8 +21,6 @@
 
 <script>
 
-import request from 'superagent'
-
 export default {
     data(){
         return {
@@ -44,31 +42,19 @@ export default {
     },
     methods: {
         claim(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-claimed',
-                    taskId: this.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                    notes: this.notes
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-claimed',
+                taskId: this.taskId,
+                memberId: this.$store.getters.member.memberId,
+                notes: this.notes
+            })
         },
         refuse(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-refocused',
-                    taskId: this.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-refocused',
+                taskId: this.taskId,
+                memberId: this.$store.getters.member.memberId,
+            })
         }
     }
 }

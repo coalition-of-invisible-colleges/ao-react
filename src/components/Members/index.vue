@@ -21,7 +21,6 @@
 
 import _ from "lodash"
 import Row from "./Row"
-import request from "superagent"
 import SharedTitle from '../slotUtils/SharedTitle'
 import CrazyBtn from '../slotUtils/CrazyBtn'
 import DctrlActive from './DctrlActive'

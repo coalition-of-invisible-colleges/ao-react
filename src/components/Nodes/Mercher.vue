@@ -17,7 +17,6 @@
 
 <script>
 
-import request from 'superagent'
 import LocalRemoteBar from './LocalRemoteBar'
 import FancyInput from '../slotUtils/FancyInput'
 import PayReq from '../Resources/PayReq'
@@ -56,21 +55,13 @@ export default {
     },
     methods: {
         createPayRec(){
-          this.showInvoice = true
-          console.log('creating payment request? ')
-          request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send({
-                  type: 'invoice-requested',
-                  sats: this.sats,
-                  memo: 'Payment to ' + this.r.name,
-                  ownerId: this.r.resourceId
-              })
-              .end((err,res)=>{
-                  if (err) return console.log(err);
-                  console.log('createPayRec:', res.body)
-              })
+            this.showInvoice = true
+            this.$store.dispatch("makeEvent", {
+                type: 'invoice-requested',
+                sats: this.sats,
+                memo: 'Payment to ' + this.r.name,
+                ownerId: this.r.resourceId
+            })
         }
     }
 }

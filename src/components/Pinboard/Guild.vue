@@ -15,7 +15,6 @@
 
 import Hypercard from "../Card"
 import BountyCard from "../Bounties/BountyCard"
-import request from "superagent"
 import SharedTitle from '../slotUtils/SharedTitle'
 import CrazyBtn from '../slotUtils/CrazyBtn'
 import calculations from '../../calculations'

@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import request from 'superagent'
 import Current from './Current'
 import PayReq from './PayReq'
 import calculations from '../../calculations'
@@ -66,21 +65,14 @@ export default {
     },
     methods: {
         use(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'resource-used',
-                    resourceId: this.r.resourceId,
-                    memberId: this.$store.getters.member.memberId,
-                    amount: 1,
-                    charged:this.r.charged,
-                    notes:'ao',
-                })
-                .end((err,res) => {
-                    if (err) return console.log(err);
-                    console.log('resource-used:', res.body)
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'resource-used',
+                resourceId: this.r.resourceId,
+                memberId: this.$store.getters.member.memberId,
+                amount: 1,
+                charged:this.r.charged,
+                notes:'ao',
+            })
         }
     }
 }

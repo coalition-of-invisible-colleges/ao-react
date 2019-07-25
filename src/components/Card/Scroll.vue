@@ -11,7 +11,6 @@
 
 import calculations from '../../calculations'
 import FormBox from '../slotUtils/FormBox'
-import request from 'superagent'
 
 export default {
     props: ['b', 'inId'],
@@ -22,29 +21,17 @@ export default {
     },
     methods: {
         rollsafeIt(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                  type: 'task-de-sub-tasked',
-                  taskId: this.inId,
-                  subTask: this.b.taskId,
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-de-sub-tasked',
+                taskId: this.inId,
+                subTask: this.b.taskId,
+            })
         },
         canIt(){
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-removed',
-                    taskId: this.b.taskId,
-                })
-                .end((err,res)=>{
-
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-removed',
+                taskId: this.b.taskId,
+            })
         }
     },
 }

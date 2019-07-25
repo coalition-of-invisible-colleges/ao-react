@@ -8,7 +8,6 @@
 
 <script>
 
-import request from 'superagent'
 import Calendar from './Calendar'
 import SharedTitle from '../slotUtils/SharedTitle'
 

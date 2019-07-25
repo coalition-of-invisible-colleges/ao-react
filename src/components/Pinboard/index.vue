@@ -22,7 +22,6 @@
 
 <script>
 
-import request from "superagent"
 import Hypercard from "../Card"
 import BountyCard from "../Bounties/BountyCard"
 import SharedTitle from '../slotUtils/SharedTitle'

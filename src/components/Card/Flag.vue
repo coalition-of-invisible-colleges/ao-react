@@ -13,50 +13,31 @@
 
 <script>
 
-import request from 'superagent'
 import FormBox from '../slotUtils/FormBox'
 
 export default {
     props: ['b', 'inId'],
     methods: {
         deckIt(){
-          request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send({
+            this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
                 taskId: this.$store.getters.memberCard.taskId,
-              })
-              .end((err,res)=>{
-
-              })
+            })
         },
         flagIt(){
             if (!this.isFlagged) {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                        type: 'task-prioritized',
-                        taskId: this.b.taskId,
-                        inId: this.inId,
-                    })
-                    .end((err,res)=>{
-
-                    })
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-prioritized',
+                    taskId: this.b.taskId,
+                    inId: this.inId,
+                })
             } else {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                        type: 'task-refocused',
-                        taskId: this.b.taskId,
-                        inId: this.inId,
-                    })
-                    .end((err,res)=>{
-
-                    })
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-refocused',
+                    taskId: this.b.taskId,
+                    inId: this.inId,
+                })
             }
         },
     },

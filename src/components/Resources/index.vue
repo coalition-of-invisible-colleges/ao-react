@@ -13,7 +13,6 @@
 <script>
 
 import Row from "./Row"
-import request from "superagent"
 import SharedTitle from '../slotUtils/SharedTitle'
 // import CrazyBtn from '../slotUtils/CrazyBtn'
 

@@ -33,7 +33,6 @@
 
 <script>
 
-import request from 'superagent'
 import calculations from '../../calculations'
 import Current from '../Resources/Current'
 import FormBox from '../slotUtils/FormBox'

@@ -10,7 +10,6 @@
 
 <script>
 
-import request from "superagent"
 import Hypercard from "../Card"
 import CardPanel from '../Deck/CardPanel'
 

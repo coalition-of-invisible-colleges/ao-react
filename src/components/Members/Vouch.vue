@@ -6,8 +6,6 @@
 
 <script>
 
-import request from 'superagent'
-
 export default {
   props: ['memberId', 'b', 'inId'],
   computed:{

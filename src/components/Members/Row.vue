@@ -30,7 +30,6 @@ import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import Priorities from '../Deck/Priorities'
-import request from 'superagent'
 
 export default {
     props: ['m'],
@@ -38,54 +37,30 @@ export default {
     methods:{
         toggleGrab(){
             if (this.isVouched) {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                        type: 'task-dropped',
-                        taskId: this.b.taskId,
-                        memberId: this.$store.getters.member.memberId,
-                    })
-                    .end((err,res)=>{
-
-                    })
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-dropped',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
             } else {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                        type: 'task-grabbed',
-                        taskId: this.b.taskId,
-                        memberId: this.$store.getters.member.memberId,
-                    })
-                    .end((err,res)=>{
-
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-grabbed',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
                     })
                 if(!this.isDecked) {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                      type: 'task-sub-tasked',
-                      subTask: this.b.taskId,
-                      taskId: this.$store.getters.memberCard.taskId,
-                    })
-                    .end((err,res)=>{
-
+                    this.$store.dispatch("makeEvent", {
+                        type: 'task-sub-tasked',
+                        subTask: this.b.taskId,
+                        taskId: this.$store.getters.memberCard.taskId,
                     })
                 }
             }
         },
         purgeAccount(){
-            request
-            .post('/events')
-            .set('Authorization', this.$store.state.loader.token)
-            .send({
+            this.$store.dispatch("makeEvent", {
                 type: 'member-purged',
                 memberId: this.m.memberId,
-            })
-            .end((err,res)=>{
-
             })
        }
     },
