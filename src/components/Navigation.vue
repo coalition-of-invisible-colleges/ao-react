@@ -35,9 +35,8 @@
       .dot.purplewx
       span {{ $store.state.loader.connectionError }}
     div
-      p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} - {{ $store.state.loader.lastRes }}
-      p pendingreq- {{ $store.state.loader.pendingRequests }}
-      button(@click='makeEvent') make event
+      p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} -
+      span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending
 </template>
 
 <script>
@@ -65,14 +64,6 @@ export default {
         }
     },
     methods: {
-        makeEvent(){
-            this.$store.dispatch("makeEvent", {
-                type: "member-paid",
-                memberId: this.$store.getters.member.memberId,
-                paid: 7,
-                isCash: false,
-            })
-        },
         cycle(from){
             switch(from){
                 case 'uni': return this.$router.push('/')
