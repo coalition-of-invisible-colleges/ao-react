@@ -26,13 +26,15 @@
               div(v-else)
                   .gui.title {{isDoge.name}}'s missions
                   ul
-                    template(v-for='g in dogeGuilds')
-                      li.spaced
-                        router-link.nl(:to='"/task/" + g.taskId')
-                            span.gui {{ g.guild }}
-                            div.description {{ g.name }}
+                      template(v-for='g in dogeGuilds')
+                          li.spaced
+                              router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }} 
+                              router-link.plain.checkmark(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                              div.description {{ g.name }}
                   .gui.title {{isDoge.name}}'s vouches
-                      vouch(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
+                  ul
+                      li
+                          vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
           template(v-if='show === 2')
             .box
               form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
@@ -120,7 +122,31 @@ export default {
               })
             }
           }
-        }
+        },
+        completions(guild){
+            let completions = []
+            let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.claimed)
+            allTasks.forEach(t => {
+                let task = this.$store.getters.hashMap[t]
+                if(!task || !task.claimed) return
+                if(task.claimed.indexOf(this.$store.getters.member.memberId) > -1) {
+                    if(completions.indexOf(task) === -1) {
+                        completions.push(task)
+                    }
+                }
+            })
+            return completions
+        },
+        cardInputSty(c){
+            return {
+                redtx : c === 'red',
+                bluetx : c === 'blue',
+                greentx : c === 'green',
+                yellowtx : c === 'yellow',
+                purpletx : c === 'purple',
+                blacktx : c === 'black',
+            }
+        },
     },
     computed: {
         dogeGuilds(){
@@ -183,16 +209,6 @@ export default {
         },
         id(){
             return this.$route.path.split('/')[2]
-        },
-        cardInputSty(){
-            if (this.calcTask) return {
-                redwx : this.calcTask.color == 'red',
-                bluewx : this.calcTask.color == 'blue',
-                greenwx : this.calcTask.color == 'green',
-                yellowwx : this.calcTask.color == 'yellow',
-                purplewx : this.calcTask.color == 'purple',
-                blackwx : this.calcTask.color == 'black',
-            }
         },
         calcTask(){
             let task = {}
@@ -345,4 +361,16 @@ h2
     text-align: center
     margin-top: 0.5em
     color: white
+    
+.checkwrapper
+    overflow: auto
+    width: 100%
+    
+.checkmark
+    font-size: 2em
+    margin-right: 0.25em
+    display: inline-block
+        
+.plain
+    text-decoration: none
 </style>
