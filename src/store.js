@@ -15,7 +15,9 @@ Vue.use(Vuex)
 function fullDeck(subTasks, allTasks = [], state, getters){
       subTasks.forEach(tId => {
           let task = state.tasks.filter( t => tId === t.taskId)[0]
-          if(task) {
+          let isMemberCard = state.members.some( m => m.memberId === tId)
+
+          if(task && !isMemberCard) {
               if(allTasks.indexOf(task) === -1) {
                   allTasks.push(task)
               } else {
