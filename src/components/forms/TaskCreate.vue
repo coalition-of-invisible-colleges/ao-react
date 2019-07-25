@@ -99,7 +99,7 @@ export default {
             } else {
                 this.$store.dispatch("makeEvent", {
                     type: 'task-grabbed',
-                    taskId: this.b.taskId,
+                    taskId: foundId,
                     memberId: this.$store.getters.member.memberId,
                 })
             }
