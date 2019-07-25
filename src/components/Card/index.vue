@@ -32,7 +32,7 @@
       vine.faded(:b='b')
       .spacer
       img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-      p.hodlcount() {{ b.deck.length }}
+      p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
   //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
@@ -249,6 +249,10 @@ export default {
     font-weight: bold
     color: rgba(255, 255, 255, 0.75)
     pointer-events: none
+}
+
+.grabbedhodlcount {
+    opacity: 1
 }
 
 .ungrabbedcoin {
