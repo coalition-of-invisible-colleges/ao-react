@@ -21,14 +21,6 @@ export default {
         }
         this.$store.dispatch("connectSocket")
         this.$store.dispatch('loadCurrent')
-
-        setInterval(()=>{
-            if (this.$store.state.loader.connected !== "connected"){
-                this.$store.dispatch('loadCurrent')
-            }
-        }, 1000)
-
-
     },
     components: {
         MainMenu, MobileHeading, EventFeed

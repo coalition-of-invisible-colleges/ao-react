@@ -61,7 +61,13 @@ export default {
           else if(this.card.guild) document.title = this.card.guild
           else document.title = this.card.name
           return true
+      },
+      reInitialize(){
+          this.$forceUpdate()
       }
+  },
+  watch: {
+      '$route': 'reInitialize'
   },
   computed: {
       card(){
