@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.deck.paperwrapper(v-if='parent && setPageTitle()')
+.deck.paperwrapper(v-if='parent && setPageTitle() && resetHack')
     .row
         .six.columns.card()
             member-row(v-if='dogeCard', :m='dogeCard')
@@ -41,7 +41,10 @@ import BountyCard from '../Bounties/BountyCard'
 export default {
   props: ['taskId'],
   data(){
-      return { showCompleted: false }
+      return { showCompleted: false, resetHack: true }
+  },
+  watch: {
+      '$route': 'reset'
   },
   components:{
       SharedTitle, Hypercard, TaskCreate,
@@ -49,6 +52,10 @@ export default {
       Upgrades, BountyCard, ResourceRow
   },
   methods:{
+      reset(){
+          this.resetHack=false
+          setTimeout(()=>{ this.resetHack = true }, 50)
+      },
       getTask(taskId){
           return this.$store.getters.hashMap[taskId]
       },
@@ -62,12 +69,6 @@ export default {
           else document.title = this.card.name
           return true
       },
-      reInitialize(){
-          this.$forceUpdate()
-      }
-  },
-  watch: {
-      '$route': 'reInitialize'
   },
   computed: {
       card(){

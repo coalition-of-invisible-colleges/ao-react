@@ -4,12 +4,9 @@
     .pinboard
         .row
             .six.columns
-                div(v-if='$store.getters.pubguilds'  @click='cycleGuilds').bluewx
-                    h1 {{ showGuild + 1 }} of {{ $store.getters.pubguilds.length }}
-                        img.fr(src='../../assets/images/right.svg')
+                ol
+                    li(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }} - {{ t.name }}
                 hypercard(:b='$store.getters.pubguilds[showGuild]')
-                div.space
-                //- row(v-for="m in $store.getters.recentMembers.slice(0,3)", :m="m")
             .five.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
                 img.budda(src='../../assets/images/buddadoge.svg')
@@ -64,6 +61,9 @@ export default {
           if (this.$store.getters.pubguilds){
             this.showGuild = (this.showGuild + 1) % this.$store.getters.pubguilds.length
           }
+      },
+      selectGuild(x){
+          this.showGuild = parseInt(x)
       }
   }
 }
@@ -79,6 +79,12 @@ export default {
 
 .space
     height: 1.1em
+
+
+ol
+    font-size: 1.5em
+    li
+        margin: .3em
 
  h1
   cursor: pointer

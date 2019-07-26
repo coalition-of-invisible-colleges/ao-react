@@ -5,7 +5,7 @@
         .four.columns(v-if='$store.getters.inbox.length > 0')
             gift-box
         .columns(:class='{eight: $store.getters.inbox.length > 0}')
-            hyper-deck(:taskId="membersTaskId")
+            hyper-deck(:taskId="$store.getters.member.memberId")
     .row
         router-link(to='/archive', @click='toTop')
             img.sunkenship(src='../../assets/images/sunken_ship.png')
@@ -20,16 +20,6 @@ export default {
   components:{
       HyperDeck,
       GiftBox,
-  },
-  methods: {
-      toTop(){
-            window.scrollTo(0, 0)
-      },
-  },
-  computed: {
-      membersTaskId(){
-          return this.$store.getters.member.memberId
-      }
   },
 }
 

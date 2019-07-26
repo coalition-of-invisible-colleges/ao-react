@@ -3,70 +3,75 @@ import uuidV1 from 'uuid/v1'
 import io from 'socket.io-client'
 const socket = io()
 
+var attached = false
 function attachSocket(commit, dispatch){
-  socket.on('unauthorized', (reason)=> {
-      console.log('unauthorized event')
-      commit('setConnectionError', 'Unauthorized: ' + JSON.stringify(reason))
-  })
+    if (!attached){
 
-  socket.on('connect', ()=> {
-      console.log('socket connected, emiting authentication')
-      commit('setConnected', 'connecting')
-      socket.emit('authentication', {
-          session: state.session,
-          token: state.token
-      })
-  })
+        socket.on('unauthorized', (reason)=> {
+            console.log('unauthorized event')
+            commit('setConnectionError', 'Unauthorized: ' + JSON.stringify(reason))
+        })
 
-  socket.on('authenticated', ()=> {
-      console.log('authentication rec, applying stream')
-      commit('setConnected', 'connected')
-      commit('setConnectionError', '')
-      socket.on('eventstream', ev => {
-          console.log('stream triggered c!!')
-          commit('applyEvent', ev)
-          dispatch('displayEvent', ev)
-      })
-  })
+        socket.on('connect', ()=> {
+            console.log('socket connected, emiting authentication')
+            commit('setConnected', 'connecting')
+            socket.emit('authentication', {
+                session: state.session,
+                token: state.token
+            })
+        })
 
-  socket.on('disconnect', (reason)=> {
-      console.log('disconnected from server')
-      commit('setConnected', 'disconnected')
-      commit('setConnectionError', 'disconnect: ' + reason)
-      //socket.open()
- })
+        socket.on('authenticated', ()=> {
+            console.log('authentication rec, applying stream')
+            commit('setConnected', 'connected')
+            commit('setConnectionError', '')
+            socket.on('eventstream', ev => {
+                console.log('stream triggered c!!')
+                commit('applyEvent', ev)
+                dispatch('displayEvent', ev)
+            })
+        })
 
-  socket.on('connect_error', (error)=> {
-      console.log('connection error')
-      commit('setConnectionError', error.message)
-  })
+        socket.on('disconnect', (reason)=> {
+            console.log('disconnected from server')
+            commit('setConnected', 'disconnected')
+            commit('setConnectionError', 'disconnect: ' + reason)
+            //socket.open()
+       })
 
-  socket.on('error', (error)=> {
-      console.log('general connection error')
-      commit('setConnectionError', error.message)
-  })
+        socket.on('connect_error', (error)=> {
+            console.log('connection error')
+            commit('setConnectionError', error.message)
+        })
 
-  socket.on('connect_timeout', (timeout)=> {
-      console.log('connection timed out')
-      commit('setConnectionError', 'Timed out: ' + timeout + 'ms')
-  })
+        socket.on('error', (error)=> {
+            console.log('general connection error')
+            commit('setConnectionError', error.message)
+        })
 
-  socket.on('reconnect_attempt', (timeout)=> {
-      console.log('reconnection attempt')
-      commit('setConnected', 'connecting')
-      commit('setConnectionError', 'reconnect attempt')
-  })
+        socket.on('connect_timeout', (timeout)=> {
+            console.log('connection timed out')
+            commit('setConnectionError', 'Timed out: ' + timeout + 'ms')
+        })
 
-  socket.on('reconnect', (timeout)=> {
-      console.log('reconnected to server')
-      commit('setConnected', 'connected')
-      commit('setConnectionError', '')
-  })
+        socket.on('reconnect_attempt', (timeout)=> {
+            console.log('reconnection attempt')
+            commit('setConnected', 'connecting')
+            commit('setConnectionError', 'reconnect attempt')
+        })
 
-  socket.on('reconnect_error', (error)=> {
-      console.log('reconnection error')
-      commit('setConnectionError', error.message)
-  })
+        socket.on('reconnect', (timeout)=> {
+            console.log('reconnected to server')
+            commit('setConnected', 'connected')
+            commit('setConnectionError', '')
+        })
+
+        socket.on('reconnect_error', (error)=> {
+            console.log('reconnection error')
+            commit('setConnectionError', error.message)
+        })
+        attached = true
+    }
 }
 
 const actions = {
