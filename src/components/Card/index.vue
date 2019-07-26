@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.task(v-if='b'  :class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
+.task(v-if='b && resetHack'  :class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -53,10 +53,17 @@ import Priorities from '../Deck/Priorities'
 export default {
     props: ['b', 'inId'],
     data(){
-        return { active: false }
+        return { active: false, resetHack: true }
+    },
+    watch: {
+        '$route': 'reset'
     },
     components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities},
     methods: {
+        reset(){
+            this.resetHack=false
+            setTimeout(()=>{ this.resetHack = true }, 50)
+        },
         purge(){
           this.$store.dispatch("makeEvent", {
               type: 'task-removed',

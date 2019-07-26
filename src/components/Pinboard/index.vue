@@ -6,7 +6,7 @@
             .six.columns
                 ol
                     li(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }} - {{ t.name }}
-                hypercard(:b='$store.getters.pubguilds[showGuild]')
+                hypercard(:b='$store.getters.pubguilds[showGuild]'  :key='resetKey')
             .five.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
                 img.budda(src='../../assets/images/buddadoge.svg')
@@ -52,7 +52,8 @@ export default {
   },
   data(){
       return {
-          showGuild: 0
+          showGuild: 0,
+          resetKey: 0,
       }
   },
   methods:{
@@ -64,6 +65,7 @@ export default {
       },
       selectGuild(x){
           this.showGuild = parseInt(x)
+          this.resetKey ++
       }
   }
 }
