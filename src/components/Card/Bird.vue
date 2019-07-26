@@ -40,12 +40,14 @@ export default {
     computed: {
         playInfo(){
             return {
+                type: 'task-sub-tasked',
                 taskId:  this.toGuild,
                 subTask: this.b.taskId,
             }
         },
         passInfo(){
             return {
+                type: 'task-passed',
                 taskId: this.b.taskId,
                 fromMemberId: this.$store.getters.member.memberId,
                 toMemberId: this.toMember,
@@ -103,11 +105,11 @@ label
     float: left
     height: .777em
     cursor: pointer
-    
+
 .faded
     opacity: 0.235654
 
 .faded:hover
     opacity: 1
-    
+
 </style>

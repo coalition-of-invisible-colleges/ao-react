@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#tasks(:id='uuid', @contextmenu.prevent='copyCardToClipboard')
+#tasks(:id='uuid', @contextmenu.prevent)
     .row.ptr(v-if="topCard")
         .three.grid(@click='last')
             span &nbsp;
@@ -85,14 +85,7 @@ export default {
 
         mc.on('press', (e) => {
             e.preventDefault()
-            copyCardToClipboard()
-            .then(() => {
-              //console.log('card copied to clipboard');
-            })
-            .catch(err => {
-              // This can happen if the user denies clipboard permissions:
-              console.error('could not copy text: ', err);
-            });
+            this.copyCardToClipboard()
         });
   },
   data(){

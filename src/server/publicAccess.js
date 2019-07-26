@@ -121,8 +121,9 @@ function getDctrlState(){
             t.subTasks.forEach(n => careAbout.push(n))
             t.priorities.forEach(n => careAbout.push(n))
             t.claimed.forEach(n => careAbout.push(n))
-            t.deck = []
-            dctrlState.tasks[index] = t
+            let newT = _.clone(t)
+            newT.deck = []
+            dctrlState.tasks[index] = newT
         }
     })
 

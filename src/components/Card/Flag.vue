@@ -7,8 +7,6 @@
   div(v-else  @click='deckIt')
     div(v-if='$store.getters.memberCard.subTasks.indexOf(b.taskId) === -1')
       img.flaggy.faded(src='../../assets/images/scroll.svg')
-
-
 </template>
 
 <script>
