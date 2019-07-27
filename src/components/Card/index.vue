@@ -22,7 +22,8 @@
         span(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.toFixed(1) }} days
-        linky(:x='b.name')
+        linky(:x='b.name' v-if='!dogeCard')
+        div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
   priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
@@ -81,11 +82,11 @@ export default {
                     memberId: this.$store.getters.member.memberId,
                 })
             } else {
-                    this.$store.dispatch("makeEvent", {
-                        type: 'task-grabbed',
-                        taskId: this.b.taskId,
-                        memberId: this.$store.getters.member.memberId,
-                    })
+                  this.$store.dispatch("makeEvent", {
+                      type: 'task-grabbed',
+                      taskId: this.b.taskId,
+                      memberId: this.$store.getters.member.memberId,
+                  })
                 if(!this.isDecked) {
                     this.$store.dispatch("makeEvent", {
                         type: 'task-sub-tasked',
@@ -145,6 +146,15 @@ export default {
           let days = msSince / (1000 * 60 * 60 * 24)
           return days
         },
+        dogeCard(){
+          let mc
+          this.$store.state.members.forEach( m => {
+              if (this.b.name === m.memberId ){
+                  mc = m
+              }
+          })
+          return mc
+      },
     },
 }
 

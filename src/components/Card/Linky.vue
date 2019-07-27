@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 div
-    vue-markdown {{ this.x }}
+    vue-markdown.noheight {{ this.x }}
     slot.centered
 
 </template>
@@ -41,4 +41,8 @@ export default {
     text-align: center
     width: 100%
 
+.noheight p
+    margin-top: 0
+    margin-bottom: 0
+    
 </style>

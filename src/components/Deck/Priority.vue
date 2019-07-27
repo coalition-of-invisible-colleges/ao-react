@@ -5,13 +5,16 @@
         img.singleship(v-else  src='../../assets/images/cash1.svg')
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
-        span {{ name }} !
+        linky(:x='name')
 </template>
 
 <script>
 
+import Linky from '../Card/Linky'
+
 export default {
     props: ['taskId'],
+    components: { Linky },
     computed: {
         name(){
             let name
@@ -92,5 +95,5 @@ export default {
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-
+    
 </style>

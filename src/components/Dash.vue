@@ -5,7 +5,6 @@
     manage
     changer
     img#whales(src='../assets/images/cryptowhales.jpg')
-    rollsafe
 </template>
 
 <script>
@@ -20,12 +19,11 @@ import Calendar from './MemberCalendar'
 import Nodes from './Nodes'
 import Panels from './Deck/Panels'
 import WhyLightning from './Nodes/WhyLightning'
-import Rollsafe from './Deck/Rollsafe'
 export default {
     components:{
         SharedTitle, Auth, Manage, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
-        Panels, WhyLightning, Rollsafe
+        Panels, WhyLightning
     },
 }
 

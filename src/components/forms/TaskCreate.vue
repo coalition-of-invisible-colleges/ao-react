@@ -61,18 +61,12 @@ export default {
             this.task.name = ''
         },
         subTaskTask(taskId) {
-            request
-                .post('/events')
-                .set('Authorization', this.$store.state.loader.token)
-                .send({
-                    type: 'task-sub-tasked',
-                    taskId: this.taskId,
-                    subTask: taskId,
-                })
-                .end((err,res)=>{
-                    console.log({err,res})
-                    this.resetCard()
-                })
+            this.$store.dispatch("makeEvent", {
+                type: 'task-sub-tasked',
+                taskId: this.taskId,
+                subTask: taskId,
+            })
+            this.resetCard()
         },
         createOrFindTask(){
             let foundId = this.matchCard
@@ -97,11 +91,13 @@ export default {
                         })
                     })
             } else {
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-grabbed',
-                    taskId: foundId,
-                    memberId: this.$store.getters.member.memberId,
-                })
+                if(!this.isGrabbed(foundId)) {
+                    this.$store.dispatch("makeEvent", {
+                        type: 'task-grabbed',
+                        taskId: foundId,
+                        memberId: this.$store.getters.member.memberId,
+                    })
+                }
             }
             this.subTaskTask(foundId)
         },
@@ -135,7 +131,10 @@ export default {
                 purplewx : this.task.color == 'purple',
                 blackwx : this.task.color == 'black',
             }
-        }
+        },
+        isGrabbed(taskId){
+            return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
+        },
     }
 }
 

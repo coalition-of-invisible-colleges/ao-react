@@ -47,13 +47,33 @@ export default {
               purplewx : color == 'purple',
               blackwx : color == 'black',
           }
-        }
+        },
+        isGrabbed(){
+          return this.card.deck.indexOf( this.$store.getters.member.memberId ) > -1
+        },
+        isDecked(){
+          return this.$store.getters.memberCard.subTasks.indexOf(this.taskId) > -1
+        },
     },
     methods: {
         goIn(){
             this.$router.push("/task/" + this.taskId)
         },
         claim(){
+            if(!this.isGrabbed) {
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-grabbed',
+                    taskId: this.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
+                if(!this.isDecked) {
+                    this.$store.dispatch("makeEvent", {
+                        type: 'task-sub-tasked',
+                        subTask: this.b.taskId,
+                        taskId: this.$store.getters.memberCard.taskId,
+                    })
+                }
+            }
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 taskId: this.taskId,
