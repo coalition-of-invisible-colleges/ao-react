@@ -4,11 +4,13 @@ const uuidV1 = require('uuid/v1')
 
 function tasksMuts(tasks, ev) {
     let newEv = {}
+    console.log("event ", ev.type, ' newEv.name = ', ev.name)
     switch (ev.type) {
         case "resource-created":
             newEv.taskId = ev.resourceId
             newEv.name = ev.resourceId
             newEv.claimed = []
+            newEv.completed = []
             newEv.passed = []
             newEv.guild = false
             newEv.subTasks = []
@@ -30,6 +32,7 @@ function tasksMuts(tasks, ev) {
             newEv.taskId = ev.memberId
             newEv.name = ev.memberId
             newEv.claimed = []
+            newEv.completed = []
             newEv.passed = []
             newEv.guild = false
             newEv.subTasks = []
@@ -49,6 +52,7 @@ function tasksMuts(tasks, ev) {
             break
         case "task-created":
             ev.claimed = []
+            ev.completed = []
             ev.passed = []
             ev.guild = false
             ev.subTasks = []
@@ -119,7 +123,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach( t => {
                     t.subTasks = t.subTasks.filter(st => st !== ev.taskId)
                     t.priorities = t.priorities.filter(st => st !== ev.taskId)
-                    t.claimed = t.claimed.filter(st => st !== ev.taskId)
+                    t.completed = _.filter(t.completed, st => st !== ev.taskId)
             })
             break
         case "task-prioritized":
@@ -128,7 +132,7 @@ function tasksMuts(tasks, ev) {
                   if (task.priorities.indexOf(ev.taskId) === -1){
                       task.priorities.push(ev.taskId)
                       task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
-                      task.claimed = task.claimed.filter(st => st !== ev.taskId)
+                      task.completed = _.filter(task.completed, st => st !== ev.taskId)
                   }
               }
             })
@@ -155,7 +159,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                     if (task.taskId === ev.taskId) {
                         task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
-                        task.claimed = _.filter(task.claimed, tId => tId !== ev.subTask )
+                        task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
                     }
             })
             break
@@ -186,7 +190,7 @@ function tasksMuts(tasks, ev) {
                     }
                 })
                 if(found) {
-                    task.claimed.push(ev.taskId)
+                    task.completed.push(ev.taskId)
                     let alloc = false
                     if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
                     task.allocations = task.allocations.filter(al => {

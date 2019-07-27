@@ -53,12 +53,11 @@ export default {
         return name
     },
     isCompleted(){
-        let completed = this.b.claimed
-        return completed.indexOf(this.memberId) > -1
+        return this.b.claimed.indexOf(this.memberId) > -1
     },
     completions(){
         let completions = []
-        let allTasks = this.b.subTasks.concat(this.b.priorities).concat(this.b.claimed)
+        let allTasks = this.b.subTasks.concat(this.b.priorities).concat(this.b.completed)
         allTasks.forEach(t => {
             let task = this.$store.getters.hashMap[t]
             if(!task || !task.claimed) return

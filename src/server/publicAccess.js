@@ -117,7 +117,7 @@ function getDctrlState(){
         if (index > -1){
             t.subTasks.forEach(n => careAbout.push(n))
             t.priorities.forEach(n => careAbout.push(n))
-            t.claimed.forEach(n => careAbout.push(n))
+            t.completed.forEach(n => careAbout.push(n))
             t.deck = []
             dctrlState.tasks[index] = t
         }
@@ -128,10 +128,9 @@ function getDctrlState(){
         if (careAbout.indexOf(t.taskId) > -1){
             t.subTasks.forEach(n => careAbout.push(n))
             t.priorities.forEach(n => careAbout.push(n))
-            t.claimed.forEach(n => careAbout.push(n))
+            t.completed.forEach(n => careAbout.push(n))
         }
     })
-    console.log("now care about", careAbout.length)
 
     state.pubState.tasks.slice().forEach(t => {
         if (careAbout.indexOf(t.taskId) > -1){

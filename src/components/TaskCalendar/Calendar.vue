@@ -81,7 +81,7 @@ export default {
         return this.$store.getters.hashMap[this.inId]
     },
     todaysEvents(){
-        let allTasks = this.card.subTasks.concat(this.card.priorities).concat(this.card.claimed)
+        let allTasks = this.card.subTasks.concat(this.card.priorities).concat(this.card.completed)
         console.log("allTasks is ", allTasks)
 
         return allTasks.map(tId => {

@@ -11,10 +11,10 @@
             div.upgradesbar()
                 upgrades(:b='parent')
     div.fadey(:class='cardInputSty')
-        .completed(v-if='claimed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
+        .completed(v-if='completed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
         task-create(:taskId='parent.taskId')
-        div(v-if='claimed.length > 0 && showCompleted')
-            panels(:c='claimed', :inId='parent.taskId')
+        div(v-if='completed.length > 0 && showCompleted')
+            panels(:c='completed', :inId='parent.taskId')
         div(v-else)
             panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
     img.fw(src='../../assets/images/pixeldesert.png')
@@ -111,12 +111,12 @@ export default {
           }
           return tasks
       },
-      claimed(){
+      completed(){
           let tasks = []
           if (this.taskId) {
-              this.card.claimed.forEach(subtask => tasks.push( this.getTask(subtask)))
+              this.card.completed.forEach(subtask => tasks.push( this.getTask(subtask)))
           }
-          console.log(this.card.claimed.length, 'should have ', tasks.length)
+          console.log(this.card.completed.length, 'should have ', tasks.length)
           return tasks
       },
       cardAge(){
