@@ -61,6 +61,13 @@ export default {
             this.task.name = ''
         },
         subTaskTask(taskId) {
+            if(this.matchCard && !this.isGrabbed(taskId)) {
+              this.$store.dispatch("makeEvent", {
+                  type: 'task-grabbed',
+                  taskId: taskId,
+                  memberId: this.$store.getters.member.memberId,
+              })
+            }
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 taskId: this.taskId,
@@ -91,15 +98,14 @@ export default {
                         })
                     })
             } else {
-                if(!this.isGrabbed(foundId)) {
-                    this.$store.dispatch("makeEvent", {
-                        type: 'task-grabbed',
-                        taskId: foundId,
-                        memberId: this.$store.getters.member.memberId,
-                    })
-                }
+                this.subTaskTask(foundId)
             }
-            this.subTaskTask(foundId)
+        },
+        // hasSubTask(taskId){
+        //     return this.$store.getters.hashMap[this.taskId].subTasks.indexOf(taskId) > -1
+        // },
+        isGrabbed(taskId){
+            return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
         },
     },
     computed: {
@@ -131,9 +137,6 @@ export default {
                 purplewx : this.task.color == 'purple',
                 blackwx : this.task.color == 'black',
             }
-        },
-        isGrabbed(taskId){
-            return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
         },
     }
 }

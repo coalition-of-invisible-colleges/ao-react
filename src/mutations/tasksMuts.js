@@ -264,7 +264,7 @@ function tasksMuts(tasks, ev) {
         case "task-instructions-updated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
-                        task.instructions = ev.newInstructions
+                    task.instructions = ev.newInstructions
                 }
             })
             break
@@ -278,8 +278,8 @@ function tasksMuts(tasks, ev) {
         case "invoice-created":
             tasks.forEach( task => {
                 if (task.taskId === ev.taskId) {
-                        task.payment_hash = ev.payment_hash
-                        task.bolt11 = ev.bolt11
+                    task.payment_hash = ev.payment_hash
+                    task.bolt11 = ev.bolt11
                 }
             })
             break
