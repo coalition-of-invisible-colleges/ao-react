@@ -5,7 +5,7 @@
         img.singleship()
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
-        linky(:x='name')
+        linky(:x='name'  :key='name')
 </template>
 
 <script>
@@ -17,14 +17,7 @@ export default {
     components: { Linky },
     computed: {
         name(){
-            let name
-            this.$store.state.tasks.some(t => {
-                if (this.taskId === t.taskId){
-                    name = t.name
-                    return true
-                }
-            })
-            return name
+            return this.$store.getters.hashMap[this.taskId].name
         },
         isBounty(){
             return this.$store.getters.bounties.some( t => {

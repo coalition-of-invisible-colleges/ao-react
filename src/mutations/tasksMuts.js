@@ -4,7 +4,6 @@ const uuidV1 = require('uuid/v1')
 
 function tasksMuts(tasks, ev) {
     let newEv = {}
-    console.log("event ", ev.type, ' newEv.name = ', ev.name)
     switch (ev.type) {
         case "resource-created":
             newEv.taskId = ev.resourceId
@@ -77,20 +76,28 @@ function tasksMuts(tasks, ev) {
             break
         case "task-passed":
             tasks.forEach(task => {
-                    if (task.taskId === ev.taskId) {
-                            let pass = [ev.fromMemberId, ev.toMemberId]
-                            task.passed.push(pass)
+                if (task.taskId === ev.taskId) {
+                    let pass = [ev.fromMemberId, ev.toMemberId]
+                    if(!task.passed.some(p => {
+                        if(p.fromMemberId === pass.fromMemberId && p.toMemberId === pass.toMemberId) {
+                            return true
+                        }
+                    })) {
+                        task.passed.push(pass)
                     }
+                }
             })
             break
         case "task-grabbed":
             tasks.forEach(task => {
-                    if (task.taskId === ev.taskId) {
-                        task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
-                        if(task.deck.indexOf(ev.memberId) === -1) {
-                                task.deck.push(ev.memberId)
+                if (task.taskId === ev.taskId) {
+                    task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
+                    if(task.deck.indexOf(ev.memberId) === -1) {
+                        if(ev.taskId !== ev.memberId) {
+                            task.deck.push(ev.memberId)
                         }
                     }
+                }
             })
             break
         case "task-dropped":

@@ -5,6 +5,10 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+// for using vue-perf-devtools Chrome/Firefox optimization plugin
+Vue.config.devtools = true
+Vue.config.performance = true
+
 new Vue({
   router,
   store,

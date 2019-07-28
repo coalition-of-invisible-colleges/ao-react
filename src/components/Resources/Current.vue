@@ -1,10 +1,9 @@
 <template lang='pug'>
 
-span
-    div(v-if='memberId')
-        img(src='../../assets/images/active15.svg')
-        span {{ name }}
-    img(v-else, src='../../assets/images/lightning.svg')
+span(v-if='memberId') {{ name }}
+    //img(src='../../assets/images/active15.svg')
+    //span {{ name }}
+img(v-else, src='../../assets/images/lightning.svg')
 
 </template>
 

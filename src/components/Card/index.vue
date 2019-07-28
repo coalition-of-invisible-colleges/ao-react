@@ -22,7 +22,8 @@
         span(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.toFixed(1) }} days
-        linky(:x='b.name' v-if='!dogeCard')
+        p
+          linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
