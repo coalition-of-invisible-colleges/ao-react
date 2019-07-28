@@ -2,7 +2,7 @@
 
 .priorities.clearboth
     router-link(:to='"/task/" + taskId')
-        img.singleship(v-else  src='../../assets/images/cash1.svg')
+        img.singleship()
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
         linky(:x='name')

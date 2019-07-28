@@ -13,31 +13,39 @@ import calculations from './calculations'
 Vue.use(Vuex)
 
 function fullDeck(subTasks, allTasks = [], state, getters){
+      console.log(state.members)
       subTasks.forEach(tId => {
           let task = state.tasks.filter( t => tId === t.taskId)[0]
-          let isMemberCard = state.members.some( m => m.memberId === tId)
-
-          if(task && !isMemberCard) {
+          //if(task) console.log("fullDeck ", task.name)
+          let isMemberCard = state.members.some( m => {
+              console.log("checking if it's a member card: ", tId)
+              console.log("for member: ", m.memberId)
+              return m.memberId === tId
+          })
+          if(isMemberCard) console.log("member card found: ", tId)
+          if(task) {
               if(allTasks.indexOf(task) === -1) {
                   allTasks.push(task)
               } else {
                   return allTasks
               }
 
-              let allSubTasks = []
-              if(task.subTasks && task.subTasks.length > 0) {
-                  allSubTasks = fullDeck(task.subTasks, allTasks, state, getters)
+              if(!isMemberCard) {
+                  let allSubTasks = []
+                  if(task.subTasks && task.subTasks.length > 0) {
+                      allSubTasks = fullDeck(task.subTasks, allTasks, state, getters)
+                  }
+                  let newSubTasks = []
+                  allSubTasks.forEach(st => {
+                    if(allTasks.filter(t => t.taskId === st.taskId).length === 0) {
+                        newSubTasks.push(st)
+                    }
+                  })
+                  if(newSubTasks.length === 0 && allSubTasks.length > 0) {
+                      return allTasks
+                  }
+                  allTasks = allTasks.concat(newSubTasks)
               }
-              let newSubTasks = []
-              allSubTasks.forEach(st => {
-                if(allTasks.filter(t => t.taskId === st.taskId).length === 0) {
-                    newSubTasks.push(st)
-                }
-              })
-              if(newSubTasks.length === 0 && allSubTasks.length > 0) {
-                  return allTasks
-              }
-              allTasks = allTasks.concat(newSubTasks)
           }
       })
       return allTasks
@@ -87,7 +95,7 @@ export default new Vuex.Store({
           return state.resources.map(c => c.resourceId)
       },
       recurasaurus(state, getters){
-          console.log("recursasaurus")
+          //console.log("recursasaurus")
           let tasks = getters.hodld
           let subTaskIds = getters.memberCard.subTasks
 
@@ -188,11 +196,15 @@ export default new Vuex.Store({
           state.sessions.forEach(session => {
               if (state.loader.session === session.session){
                   memberId = session.ownerId
+                  console.log("found member! ", memberId)
               }
           })
 
           state.members.forEach( m => {
-              if (m.memberId === memberId) _.assign(loggedInMember, m)
+              if (m.memberId === memberId) {
+                  _.assign(loggedInMember, m)
+                  console.log("this member is logged-in! ", memberId)
+              }
           })
           return loggedInMember
       },

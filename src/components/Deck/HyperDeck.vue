@@ -82,6 +82,7 @@ export default {
           this.$store.state.members.forEach( m => {
               if (this.parent.name === m.memberId ){
                   mc = m
+                  console.log("dogeCard found: ", mc)
               }
           })
           return mc
