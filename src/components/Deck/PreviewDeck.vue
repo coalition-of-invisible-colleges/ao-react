@@ -1,20 +1,27 @@
-.slice(5)<template lang='pug'>
+<template lang='pug'>
 
 .preview(v-if='deck.length > 0')
     .row
-      .four.grid
-          img.tinyboat(v-for="(b,i) in task.priorities", v-if="i < 5"  :b="b", @click='goto(b.taskId)', src='../../assets/images/boatbtnselected.svg')
-          .bead.redwx(v-for="(b,i) in red", v-if="i < (5 - task.priorities.length)"  :b="b", @click='goto(b.taskId)')
-      .four.grid
-          .bead.greenwx(v-for="(b,i) in green", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
-      .four.grid
-          .bead.bluewx(v-for="(b,i) in blue", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
+        .four.grid
+            .tooltip(v-for="(tId,i) in task.priorities")
+                img.tinyboat(v-if="i < 5", @click='goto(tId)', src='../../assets/images/boatbtnselected.svg')
+                .tooltiptext {{ tId? card(tId).name : "unknown card" }}
+            .bead.redwx.tooltip(v-for="(b,i) in red", v-if="i < (5 - task.priorities.length)"  :b="b", @click='goto(b.taskId)')
+                .tooltiptext {{ b? b.name : "unknown card" }}
+        .four.grid
+            .bead.greenwx.tooltip(v-for="(b,i) in green", v-if="i < 5", @click='goto(b.taskId)')
+                .tooltiptext {{ b? b.name : "unknown card" }}
+        .four.grid
+            .bead.bluewx.tooltip(v-for="(b,i) in blue", v-if="i < 5", @click='goto(b.taskId)')
+                .tooltiptext {{ b? b.name : "unknown card" }}
     .row
-      .two.grid
-      .four.grid
-          .bead.yellowwx(v-for="(b,i) in yellow", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
-      .four.grid
-          .bead.purplewx(v-for="(b,i) in purple", v-if="i < 5"  :b="b", @click='goto(b.taskId)')
+        .two.grid
+        .four.grid
+            .bead.yellowwx.tooltip(v-for="(b,i) in yellow", v-if="i < 5", @click='goto(b.taskId)')
+                .tooltiptext {{ b? b.name : "unknown card" }}
+        .four.grid
+            .bead.purplewx.tooltip(v-for="(b,i) in purple", v-if="i < 5", @click='goto(b.taskId)')
+                .tooltiptext {{ b? b.name : "unknown card" }}
 </template>
 
 <script>
@@ -30,7 +37,10 @@ export default {
     },
     goto(taskId){
         this.$router.push("/task/" + taskId)
-    }
+    },
+    card(tId){
+        return this.$store.getters.hashMap[tId]
+    },
   },
   computed: {
       deck(){
@@ -74,15 +84,17 @@ export default {
 
 @import '../../styles/colours'
 @import '../../styles/grid'
+@import '../../styles/tooltips'
 
 .preview
     width: 100%
-    opacity: 0.5
+    //opacity: 0.5
 
 .tinyboat
     height: 15px
     width: 100%
     display: inline-block;
+    cursor: pointer
 
 .bead
     padding: 0
@@ -92,8 +104,10 @@ export default {
     border-radius: 50%;
     display: inline-block;
     border-width: 2px
-    border-color: white
+    border-color: rgba(255, 255, 255, 0.68)
     border-style: solid
+    cursor: pointer
 
-
+.tooltip .tooltiptext
+    font-size: 1em
 </style>

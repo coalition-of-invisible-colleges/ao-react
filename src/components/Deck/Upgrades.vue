@@ -2,14 +2,13 @@
 
 .upgrades
     .row
-        .three.grid.boat.tooltip(@click='select(0)', :class='{selected: show === 0}')
-            .tooltiptext prioritize this card
-            img.upgrade.boat(src='../../assets/images/boatblack.svg')
+        .three.grid(@click='select(0)', :class='{selected: show === 0}')
+            img.upgrade(src='../../assets/images/boatblack.svg')
         .three.grid.guild(@click='select(1)', :class='{selected: show === 1}')
             img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
-        .three.grid.bounty(@click='select(2)', :class='{selected: show === 2}')
+        .three.grid(@click='select(2)', :class='{selected: show === 2}')
             img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-        .three.grid.timecube(@click='select(3)', :class='{selected: show === 3}')
+        .three.grid(@click='select(3)', :class='{selected: show === 3}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
@@ -30,7 +29,8 @@
                       template(v-for='g in dogeGuilds')
                           li.spaced
                               router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }} 
-                              router-link.plain.checkmark(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                              router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                                  .tooltiptext {{ c.name }}
                               div.description {{ g.name }}
                   .gui.title {{isDoge.name}}'s vouches
                   ul
@@ -125,9 +125,11 @@ export default {
         },
         completions(guild){
             let completions = []
-            let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.claimed)
-            allTasks.forEach(t => {
+            let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.completed)
+            allTasks.forEach(t => { 
                 let task = this.$store.getters.hashMap[t]
+                if(!task) console.log("task is undefined")
+                else console.log("task is " + task.name + " claimed is ", task.claimed)
                 if(!task || !task.claimed) return
                 if(task.claimed.indexOf(this.$store.getters.member.memberId) > -1) {
                     if(completions.indexOf(task) === -1) {
@@ -239,7 +241,7 @@ export default {
     width: 100%
 
 .selected
-    background: blue
+    background: softGrey
     border-radius: 40px 40px 0 0
     padding-bottom: 0.654321em
 

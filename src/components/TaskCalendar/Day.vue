@@ -1,7 +1,9 @@
 <template lang="pug">
 .day
   .date {{ day }}
-  img.upgrade(v-for='t in ev'  @click="toTask(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
+  .tooltip(v-for='t in ev')
+    img.upgrade(@click="toTask(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
+    .tooltiptext {{ t.name }}
 </template>
 
 <script>
@@ -46,6 +48,7 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../../styles/colours'
+@import '../../styles/tooltips'
 
 label
     padding: 0
