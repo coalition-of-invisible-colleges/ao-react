@@ -5,7 +5,8 @@
     img.flaggy.faded(v-if='!isFlagged', src='../../assets/images/boatbtn.svg')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-if="$store.state.upgrades.mode === 'badge'")
-    img.flaggy.faded(src='../../assets/images/guildwithwhitenobkgrnd.png')
+    span.flaggy.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
+    span.flaggy.checkmark.clickable(v-else  @click='complete') ☐
   div(v-if="$store.state.upgrades.mode === 'bounty'"  @click='togglePay')
     img.flaggy.faded(src='../../assets/images/address.svg')
     .fl(v-if='isPayOpen')
@@ -35,6 +36,23 @@ export default {
     },
     props: ['b', 'inId'],
     methods: {
+        complete(){
+            this.$store.dispatch("makeEvent", {
+                type: 'task-claimed',
+                inId: this.inId,
+                taskId: this.b.taskId,
+                memberId: this.$store.getters.member.memberId,
+                notes: 'checked by ' + this.$store.getters.member.memberId
+            })
+        },
+        uncheck(){
+            this.$store.dispatch("makeEvent", {
+                type: 'task-unclaimed',
+                taskId: this.b.taskId,
+                memberId:  this.$store.getters.member.memberId,
+                notes: ''
+            })
+        },
         togglePay(){
             this.isPayOpen = !this.isPayOpen
 
@@ -91,6 +109,9 @@ export default {
                 }
             })
             return isFlagged
+        },
+        isCompleted(){
+            return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1
         }
     },
 }
@@ -166,5 +187,16 @@ label
 .fl
     position:relative
     left: -500%
+
+.checkmark
+    font-size: 1.58em
+    float: right
+    margin-top: -.3em
+    margin-right: -.3em
+    opacity: 0.5
+
+.clickable
+    cursor: pointer
+    color: white
 
 </style>

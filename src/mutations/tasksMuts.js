@@ -188,7 +188,8 @@ function tasksMuts(tasks, ev) {
             let bounty = 0
             tasks.forEach(task => {
                 let found = false
-                task.priorities = task.priorities.filter( taskId => {
+
+                task.priorities = task.priorities.filter(taskId => {
                     if(taskId !== ev.taskId) {
                         return true
                     } else {
@@ -196,6 +197,16 @@ function tasksMuts(tasks, ev) {
                         return false
                     }
                 })
+
+                task.subTasks = task.subTasks.filter(taskId => {
+                    if(taskId !== ev.taskId) {
+                        return true
+                    } else {
+                        found = true
+                        return false
+                    }
+                })
+
                 if(found) {
                     task.completed.push(ev.taskId)
                     let alloc = false
@@ -222,8 +233,14 @@ function tasksMuts(tasks, ev) {
         case "task-unclaimed":
             tasks.forEach(task => {
                 if(task.taskId === ev.taskId){
-                    task.claimed = task.claimed.filter(mId => { mId !== ev.memberId})
+                    task.claimed = task.claimed.filter(mId => mId !== ev.memberId)
                 }
+
+                if (task.completed.indexOf(ev.taskId) > -1){
+                    task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
+                    task.subTasks.push(ev.taskId)
+                }
+
             })
             break
         case "task-cap-updated":

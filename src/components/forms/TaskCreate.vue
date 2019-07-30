@@ -55,7 +55,7 @@ export default {
             this.task.color = color
             setTimeout(()=>{
                     document.getElementById('card').focus()
-            }, 1) 
+            }, 1)
         },
         resetCard(){
             this.task.name = ''
@@ -162,7 +162,7 @@ export default {
 button
     background: green
     border-color: rgba(0, 0, 0, 0.4)
-    
+
 .onetime
     display: inline
 
@@ -213,7 +213,7 @@ button
 
 .cc
     position: relative
-    
+
 p
     font-size: 1.3em
     color: accent1
@@ -227,7 +227,7 @@ p
         min-height: 2.5em
         width: 4.045085em
         margin: 0
-        
+
 .btnwrapper
     width: 100%
     display: block
@@ -257,13 +257,13 @@ textarea
     border-color: rgba(0, 0, 0, 0.4)
     height: 12.5em
     padding-top: 5.5em
-    
+
 .centr
     text-align: center
 
 .paperwrapper
     position: relative
-    
+
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
     background-repeat: no-repeat
@@ -278,5 +278,5 @@ textarea
     height: 100%
     pointer-events: none
     opacity: 0.2
-    
+
 </style>
