@@ -1,22 +1,38 @@
 <template lang='pug'>
 
-.flag(v-if="$store.getters.memberCard"  @click='flagIt')
-  div(v-if="inId")
+.flag(v-if="$store.getters.memberCard")
+  div(v-if="$store.state.upgrades.mode === 'boat'"   @click='flagIt')
     img.flaggy.faded(v-if='!isFlagged', src='../../assets/images/boatbtn.svg')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
-  div(v-else  @click='deckIt')
-    div(v-if='$store.getters.memberCard.subTasks.indexOf(b.taskId) === -1')
-      img.flaggy.faded(src='../../assets/images/scroll.svg')
-  h1 {{ $store.state.upgrades.mode }}
+  div(v-if="$store.state.upgrades.mode === 'badge'")
+    img.flaggy.faded(src='../../assets/images/guildwithwhitenobkgrnd.png')
+  div(v-if="$store.state.upgrades.mode === 'bounty'"  @click='openPay')
+    img.flaggy.faded(src='../../assets/images/address.svg')
+    div(v-if='isPayOpen')
+        pay-req(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :bolt11='b.bolt11')
+        pay-address(v-if='$store.state.upgrades.payment === "lightning" && b.address'  :address='b.address')
+  div(v-if="$store.state.upgrades.mode === 'timecube'")
+    img.flaggy.faded(src='../../assets/images/time.svg')
 </template>
 
 <script>
 
-import FormBox from '../slotUtils/FormBox'
+import PayReq from '../Deck/PayReq'
+import PayAddress from '../Deck/PayAddress'
 
 export default {
+    components: {PayReq, PayAddress},
+    data(){
+        return {
+            isPayOpen: false
+        }
+    },
     props: ['b', 'inId'],
     methods: {
+        togglePay(){
+            this.isPayOpen = !this.isPayOpen
+            // get address / qr if not exists
+        },
         deckIt(){
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',

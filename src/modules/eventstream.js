@@ -4,6 +4,7 @@ let memes = [
     'wow',
     'much store',
 ]
+
 function bestMeme(){
   return memes[Math.floor(Math.random()*memes.length)];
 }

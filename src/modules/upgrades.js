@@ -1,14 +1,19 @@
 
-const states = ["boat", "badge", "bounty", "timecube"]
+const modes = ["boat", "badge", "bounty", "timecube"]
+const payments = ["bitcoin", "lightning"]
+
 
 const state = {
-    mode: "boat"
+    mode: "boat",
+    payment: "lightning"
 }
 
 const mutations = {
     setMode(state, index){
-        console.log("set mode called", {state, index})
-        state.mode = states[index]
+        state.mode = modes[index]
+    },
+    setPayMode(state, index){
+        state.payment = payments[index]
     },
     closeUpgrades(state){
         state.mode = false

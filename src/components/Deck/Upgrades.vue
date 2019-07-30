@@ -36,14 +36,20 @@
                       li
                           vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
           template(v-if='$store.state.upgrades.mode === "bounty"')
-            .box
-              form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                  h2 send points here
-                  label.adjusttop.fl choose amount:
-                  input.smallbox.fr(v-model='payreqAmount')
-              pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
-              form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
-              pay-address(v-else   :address='b.address')
+              .togglepayments
+                  button(@click='selectPayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }').yellowwx bitcoin
+                      //- img()
+                  button(@click='selectPayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }').purplewx lightning
+                      //- img()
+                  h2 create points here
+                  .box(v-show='$store.state.upgrades.payment === "bitcoin"')
+                      form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
+                      pay-address(:address='b.address')
+                  .box(v-show='$store.state.upgrades.payment === "lightning"')
+                      form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                          label.adjusttop.fl choose amount:
+                          input.smallbox.fr(v-model='payreqAmount')
+                      pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
           template(v-if='$store.state.upgrades.mode === "timecube"')
             div
               div(v-if='isDoge || b.guild')
@@ -93,6 +99,9 @@ export default {
         }
     },
     methods: {
+        selectPayment(x){
+            this.$store.commit("setPayMode", x)
+        },
         select(x){
             console.log("selected ", x)
 
@@ -387,4 +396,16 @@ h2
 
 .plain
     text-decoration: none
+
+.togglepayments
+    margin: 0
+    padding: 0
+    button
+        width: 50%
+
+.thickborder
+    border-style: solid
+    border-color: green
+    border-width: 4px 
+
 </style>
