@@ -3,7 +3,7 @@
 .preview(v-if='deck.length > 0')
     .row
         .four.grid
-            .tooltip(v-for="(tId,i) in task.priorities")
+            .tooltip(v-for="(tId,i) in task.priorities.slice().reverse()")
                 img.tinyboat(v-if="i < 5", @click='goto(tId)', src='../../assets/images/boatbtnselected.svg')
                 .tooltiptext {{ tId? card(tId).name : "unknown card" }}
             .bead.redwx.tooltip(v-for="(b,i) in red", v-if="i < (5 - task.priorities.length)"  :b="b", @click='goto(b.taskId)')
