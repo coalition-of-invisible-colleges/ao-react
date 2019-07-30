@@ -12,27 +12,52 @@
         tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
         tag(v-if='$store.state.upgrades.payment === "lightning" && b.address'  :d='b.address')
   div(v-if="$store.state.upgrades.mode === 'timecube'")
-    img.flaggy.faded(src='../../assets/images/time.svg')
+    img.flaggy.faded(src='../../assets/images/time.svg'  @click='toggleCube')
+    .fl(v-if='isCubeOpen')
+        resource-book(:tId='b.taskId')
 </template>
 
 <script>
-
+import calcs from '../../calculations'
 import PayReq from '../Deck/PayReq'
 import PayAddress from '../Deck/PayAddress'
 import Tag from '../Nodes/Tag'
+import ResourceBook from '../forms/ResourceBook'
+
 
 export default {
-    components: {PayReq, PayAddress, Tag},
+    components: {PayReq, PayAddress, Tag, ResourceBook},
     data(){
         return {
-            isPayOpen: false
+            isPayOpen: false,
+            isCubeOpen: false,
         }
     },
     props: ['b', 'inId'],
     methods: {
         togglePay(){
             this.isPayOpen = !this.isPayOpen
-            // get address / qr if not exists
+
+            if (this.isPayOpen && this.$store.state.upgrades.payment === "bitcoin" && !this.b.address){
+              this.$store.dispatch("makeEvent", {
+                  type: 'address-updated',
+                  taskId: this.b.taskId
+              })
+            }
+
+            if (this.isPayOpen && this.$store.state.upgrades.payment === "lightning" && !this.b.bolt11){
+                let spot = this.$store.state.cash.spot | 10000
+                let amount = calcs.cadToSats( 1 , spot)
+                this.$store.dispatch("makeEvent", {
+                    type: 'invoice-created',
+                    taskId: this.b.taskId,
+                    amount, //
+                    label: '<3'
+                })
+            }
+        },
+        toggleCube(){
+            this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
             this.$store.dispatch("makeEvent", {
