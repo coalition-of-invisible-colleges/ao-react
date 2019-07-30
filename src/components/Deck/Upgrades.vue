@@ -2,19 +2,19 @@
 
 .upgrades
     .row
-        .three.grid(@click='select(0)', :class='{selected: show === 0}')
+        .three.grid(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
             img.upgrade(src='../../assets/images/boatblack.svg')
-        .three.grid(@click='select(1)', :class='{selected: show === 1}')
+        .three.grid(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
             img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
-        .three.grid(@click='select(2)', :class='{selected: show === 2}')
+        .three.grid(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
             img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-        .three.grid(@click='select(3)', :class='{selected: show === 3}')
+        .three.grid(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
-          div(v-if='show === 0')
+          div(v-if='$store.state.upgrades.mode === "boat"')
               priorities(:taskId="b.taskId", :inId='b.taskId')
-          template(v-if='show === 1')
+          template(v-if='$store.state.upgrades.mode === "badge"')
             div
               div(v-if='!isDoge')
                   .box
@@ -28,14 +28,14 @@
                   ul
                       template(v-for='g in dogeGuilds')
                           li.spaced
-                              router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }} 
+                              router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
                               router-link.plain.checkmark(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
                               div.description {{ g.name }}
                   .gui.title {{isDoge.name}}'s vouches
                   ul
                       li
                           vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
-          template(v-if='show === 2')
+          template(v-if='$store.state.upgrades.mode === "bounty"')
             .box
               form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
                   h2 send points here
@@ -44,7 +44,7 @@
               pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
               form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
               pay-address(v-else   :address='b.address')
-          template(v-if='show === 3')
+          template(v-if='$store.state.upgrades.mode === "timecube"')
             div
               div(v-if='isDoge || b.guild')
                   task-calendar(:inId='b.taskId')
@@ -94,11 +94,26 @@ export default {
     },
     methods: {
         select(x){
-            if (this.show === x){
-                this.show = false
-            } else {
-                this.show = x
+            console.log("selected ", x)
+
+            if (this.$store.state.upgrades.mode === "boat" && x === 0){
+                return this.$store.commit("closeUpgrades")
             }
+
+            if (this.$store.state.upgrades.mode === "badge" && x === 1){
+                return this.$store.commit("closeUpgrades")
+            }
+
+
+            if (this.$store.state.upgrades.mode === "bounty" && x === 2){
+                return this.$store.commit("closeUpgrades")
+            }
+
+            if (this.$store.state.upgrades.mode === "timecube" && x === 3){
+                return this.$store.commit("closeUpgrades")
+            }
+
+            this.$store.commit("setMode", x)
         },
         toggleGrab(){
           if (this.isGrabbed) {
@@ -360,16 +375,16 @@ h2
     text-align: center
     margin-top: 0.5em
     color: white
-    
+
 .checkwrapper
     overflow: auto
     width: 100%
-    
+
 .checkmark
     font-size: 2em
     margin-right: 0.25em
     display: inline-block
-        
+
 .plain
     text-decoration: none
 </style>

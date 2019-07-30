@@ -43,7 +43,7 @@ const rootGuilds = [{
     deck: [ ],
     name: " ",
     book: {},
-    color: 'yellow'
+    color: 'blue'
 },{
     taskId: 'a3',
     guild: "T",
@@ -67,7 +67,7 @@ const rootGuilds = [{
     deck: [ ],
     name: " ",
     book: {},
-    color: 'blue'
+    color: 'yellow'
 }]
 
 function createRootState(){
@@ -142,8 +142,6 @@ function getDctrlState(){
             dctrlState.tasks.push(newT)
         }
     })
-
-    console.log("now care about", careAbout.length, dctrlState.tasks.length)
 }
 
 setInterval(getDctrlState, 450000)
@@ -151,9 +149,7 @@ setInterval(getDctrlState, 450000)
 setTimeout(getDctrlState, 5555)
 
 router.put('/dctrl', (req, res) => {
-    console.log('serving pubstate from dctrl', dctrlState.tasks.length)
     res.json(dctrlState)
-
 })
 
 router.put('/sidewalk',(req, res) => {
