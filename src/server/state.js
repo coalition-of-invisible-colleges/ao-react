@@ -86,7 +86,6 @@ function applyEvent(state, ev) {
       M.tasksMuts(state.tasks, ev)
 }
 
-
 function initialize(callback) {
     dctrlDb.recover((err, backup) => {
           let ts = 0
@@ -131,8 +130,6 @@ function removeSensitive(ev){
 
       return _.omit(ev, secretStuff)
 }
-
-
 
 module.exports = {
     serverState,

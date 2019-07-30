@@ -2,13 +2,14 @@
 
 .upgrades
     .row
-        .three.grid(@click='select(0)', :class='{selected: show === 0}')
-            img.upgrade(src='../../assets/images/boatblack.svg')
-        .three.grid(@click='select(1)', :class='{selected: show === 1}')
+        .three.grid.boat.tooltip(@click='select(0)', :class='{selected: show === 0}')
+            .tooltiptext prioritize this card
+            img.upgrade.boat(src='../../assets/images/boatblack.svg')
+        .three.grid.guild(@click='select(1)', :class='{selected: show === 1}')
             img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
-        .three.grid(@click='select(2)', :class='{selected: show === 2}')
+        .three.grid.bounty(@click='select(2)', :class='{selected: show === 2}')
             img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-        .three.grid(@click='select(3)', :class='{selected: show === 3}')
+        .three.grid.timecube(@click='select(3)', :class='{selected: show === 3}')
             img.upgrade(src='../../assets/images/timecubewithwhite.png')
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
@@ -229,6 +230,7 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/grid'
 @import '../../styles/button'
+@import '../../styles/tooltips'
 
 .nl
     text-decoration:none
@@ -237,7 +239,7 @@ export default {
     width: 100%
 
 .selected
-    background: softGrey
+    background: blue
     border-radius: 40px 40px 0 0
     padding-bottom: 0.654321em
 
