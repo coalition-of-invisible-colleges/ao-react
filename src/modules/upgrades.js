@@ -9,6 +9,11 @@ const state = {
 }
 
 const mutations = {
+    nextMode(state){
+        let currentIndex = modes.indexOf(state.mode)
+        let nextIndex = (currentIndex + 1) % modes.length
+        state.mode = modes[nextIndex]
+    },
     setMode(state, index){
         state.mode = modes[index]
     },

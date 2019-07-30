@@ -11,7 +11,7 @@ export default {
     computed: {
         tag(){
             let data = this.d
-            let typeNumber = 10
+            let typeNumber = 0
             let errorCorrectionLevel = 'L'
             let qr = qrcode(typeNumber, errorCorrectionLevel)
             qr.addData(data)

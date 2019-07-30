@@ -29,7 +29,8 @@
                       template(v-for='g in dogeGuilds')
                           li.spaced
                               router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
-                              router-link.plain.checkmark(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                              router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                                  .tooltiptext {{ c.name }}
                               div.description {{ g.name }}
                   .gui.title {{isDoge.name}}'s vouches
                   ul
@@ -38,9 +39,7 @@
           template(v-if='$store.state.upgrades.mode === "bounty"')
               .togglepayments
                   button(@click='selectPayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }').yellowwx bitcoin
-                      //- img()
                   button(@click='selectPayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }').purplewx lightning
-                      //- img()
                   h2 create points here
                   .box(v-show='$store.state.upgrades.payment === "bitcoin"')
                       form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
@@ -148,9 +147,11 @@ export default {
         },
         completions(guild){
             let completions = []
-            let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.claimed)
+            let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.completed)
             allTasks.forEach(t => {
                 let task = this.$store.getters.hashMap[t]
+                if(!task) console.log("task is undefined")
+                else console.log("task is " + task.name + " claimed is ", task.claimed)
                 if(!task || !task.claimed) return
                 if(task.claimed.indexOf(this.$store.getters.member.memberId) > -1) {
                     if(completions.indexOf(task) === -1) {
@@ -253,6 +254,7 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/grid'
 @import '../../styles/button'
+@import '../../styles/tooltips'
 
 .nl
     text-decoration:none
@@ -406,6 +408,6 @@ h2
 .thickborder
     border-style: solid
     border-color: green
-    border-width: 4px 
+    border-width: 4px
 
 </style>

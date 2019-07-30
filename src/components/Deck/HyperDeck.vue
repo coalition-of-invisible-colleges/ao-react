@@ -11,6 +11,7 @@
             div.upgradesbar()
                 upgrades(:b='parent')
     div.fadey(:class='cardInputSty')
+        .upgrademode.faded(@click='nextUpgradeMode') {{ $store.state.upgrades.mode }}
         .completed(v-if='completed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
         task-create(:taskId='parent.taskId')
         div(v-if='completed.length > 0 && showCompleted')
@@ -52,6 +53,9 @@ export default {
       Upgrades, BountyCard, ResourceRow
   },
   methods:{
+      nextUpgradeMode(){
+          this.$store.commit("nextMode")
+      },
       reset(){
           this.resetHack=false
           setTimeout(()=>{ this.resetHack = true }, 50)
@@ -265,6 +269,14 @@ export default {
 
 .completed
     float: right
+    cursor: pointer
+    font-size: 1.35em
+    font-weight: bold
+    padding: 0.5em
+    margin-right: -0.5em
+
+.upgrademode
+    float: left
     cursor: pointer
     font-size: 1.35em
     font-weight: bold

@@ -6,11 +6,11 @@
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-if="$store.state.upgrades.mode === 'badge'")
     img.flaggy.faded(src='../../assets/images/guildwithwhitenobkgrnd.png')
-  div(v-if="$store.state.upgrades.mode === 'bounty'"  @click='openPay')
+  div(v-if="$store.state.upgrades.mode === 'bounty'"  @click='togglePay')
     img.flaggy.faded(src='../../assets/images/address.svg')
-    div(v-if='isPayOpen')
-        pay-req(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :bolt11='b.bolt11')
-        pay-address(v-if='$store.state.upgrades.payment === "lightning" && b.address'  :address='b.address')
+    .fl(v-if='isPayOpen')
+        tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
+        tag(v-if='$store.state.upgrades.payment === "lightning" && b.address'  :d='b.address')
   div(v-if="$store.state.upgrades.mode === 'timecube'")
     img.flaggy.faded(src='../../assets/images/time.svg')
 </template>
@@ -19,9 +19,10 @@
 
 import PayReq from '../Deck/PayReq'
 import PayAddress from '../Deck/PayAddress'
+import Tag from '../Nodes/Tag'
 
 export default {
-    components: {PayReq, PayAddress},
+    components: {PayReq, PayAddress, Tag},
     data(){
         return {
             isPayOpen: false
@@ -136,5 +137,9 @@ label
 
 .faded:hover
     opacity: 1
+
+.fl
+    position:relative
+    left: -500%
 
 </style>
