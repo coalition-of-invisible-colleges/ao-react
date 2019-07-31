@@ -1,12 +1,12 @@
 <template lang="pug">
 
-transition(name='fade')
-    .feed(v-if='eventstream.showEvent && eventstream.type!=="task-grabbed"')
-        .bubble
-        .float {{ eventstream.type }}
-        .float {{ eventstream.meme }}
-        img(src='../../assets/images/doge_faded.png')
-    .tooltip(v-if='eventstream.showEvent && eventstream.type==="task-grabbed"')
+transition(name='fade' v-for='e in eventstream')
+    .feed(v-if='e.showEvent && e.type!=="task-grabbed"'  v-bind:style="{ left: e.randomX }")
+        img.doge(src='../../assets/images/doge_faded.png')
+        img.bubble(src='../../assets/images/bubble.png')
+        .float {{ e.type }}
+        .float {{ e.meme }}
+    .tooltip(v-if='e.showEvent && e.type==="task-grabbed"')
         p {{ hodlphrases[Math.floor(Math.random() * hodlphrases.length)] }}
 
 </template>
@@ -32,12 +32,12 @@ export default {
                         "wow such hodl",
                         "in ur holochains",
                         "hodl"]
-        return {hodlphrases}
+        return { hodlphrases }
     },
     computed:{
         eventstream(){
             return this.$store.state.eventstream
-        }
+        },
     }
 }
 </script>
@@ -64,8 +64,8 @@ label
     position: fixed
     //background: rgba(0, 0, 0, 0.4)
     color: white
-    top: 25px
-    left: 25px
+    top: -11em
+    left: 45%
     height: 10em
     width: 10em
     //border-radius: 50%
@@ -77,14 +77,18 @@ label
     
 img
     height: 170px
+    position: absolute
+    top: 0
+    left: 0
 
 .fade-enter-active
     transition: opacity 5s ease-in
     transition: top 5s
 
 .fade-leave-active
-    transition: opacity 5s ease-out
+    transition: opacity 5s
     transition: top 5s
+    top: -30em
 
 .fade-enter
     opacity: 0
@@ -92,7 +96,7 @@ img
 
 .fade-leave-to /* .fade-leave-active below version 2.1.8 */
     opacity: 0
-    top: calc(0% - 10em)
+    top: -30em
 
 .tooltip
     position: fixed
@@ -105,16 +109,16 @@ img
     z-index: 10000000
 
 .float
-    float: left
-    margin-left: 40%
-    margin-top: 0
+    position: relative
+    left: 30%
+    top: 80%
     color: white
     font-family: "Comic Sans MS"
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
     
+.doge
+    opacity: 0.8
+    
 .bubble
-    background-image: -moz-radial-gradient(55px 55px 45deg, circle cover, rgba(100, 100, 100, 0.1) 15%, rgba(00, 00, 55, 0.5) 65%, rgba(00, 33, 00, 0.75) 90%)
-    background-image: -webkit-radial-gradient(45px 45px, circle cover, rgba(100, 100, 100, 0.1) 15%, rgba(00, 00, 55, 0.5) 65%, rgba(00, 33, 00, 0.75) 90%)
-    background-image: radial-gradient(45px 45px 45deg, circle cover, rgba(100, 100, 100, 0.1) 15%, rgba(00, 00, 55, 0.5) 65%, rgba(00, 33, 00, 0.75) 90%)
-
+    opacity: 0.5
 </style>

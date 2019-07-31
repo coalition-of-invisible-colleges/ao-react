@@ -3,32 +3,40 @@ let memes = [
     'such create',
     'wow',
     'much store',
+    'wow',
+    'very happen',
 ]
 
 function bestMeme(){
   return memes[Math.floor(Math.random()*memes.length)];
 }
 
-const state = {
-    meme: bestMeme(),
-    type: "",
-    showEvent: false
-}
+const state = []
 
 const mutations = {
     show(state, ev){
-        state.meme = bestMeme()
-        state.type = ev.type
-        state.showEvent = true
+        let newBubble = {
+            meme: bestMeme(),
+            type: "",
+            showEvent: false,
+            randomX: '45%'
+        }
+
+        newBubble.meme = bestMeme()
+        newBubble.type = ev.type
+        newBubble.showEvent = true
+        newBubble.randomX = Math.random().toFixed(2) * 100 + '%'
+
+        state.push(newBubble)
     },
     hide(state){
-        state.showEvent = false
+        state[0].showEvent = false
+        state.shift()
     }
 }
 
 const actions = {
     displayEvent({commit}, ev){
-        console.log("displayEvent is firing")
         commit('show', ev)
         setTimeout(()=>{
             commit('hide')
