@@ -66,13 +66,6 @@ export default {
                     taskId: this.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
-                if(!this.isDecked) {
-                    this.$store.dispatch("makeEvent", {
-                        type: 'task-sub-tasked',
-                        subTask: this.b.taskId,
-                        taskId: this.$store.getters.memberCard.taskId,
-                    })
-                }
             }
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',

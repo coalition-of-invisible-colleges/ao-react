@@ -4,8 +4,9 @@ transition(name='fade' v-for='e in eventstream')
     .feed(v-if='e.showEvent && e.type!=="task-grabbed"'  v-bind:style="{ left: e.randomX }")
         img.doge(src='../../assets/images/doge_faded.png')
         img.bubble(src='../../assets/images/bubble.png')
-        .float {{ e.type }}
+        .float {{ e.type.replace('-', ' ') }}
         .float {{ e.meme }}
+        .float(v-if='e.type==="task-created"') {{ e.name }}
     .tooltip(v-if='e.showEvent && e.type==="task-grabbed"')
         p {{ hodlphrases[Math.floor(Math.random() * hodlphrases.length)] }}
 

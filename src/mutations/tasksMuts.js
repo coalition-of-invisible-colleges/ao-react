@@ -99,6 +99,11 @@ function tasksMuts(tasks, ev) {
                         }
                     }
                 }
+                if(task.taskId === ev.memberId) {
+                    if(task.subTasks.indexOf(ev.taskId) === -1) {
+                        task.subTasks.push(ev.taskId)
+                    }
+                }
             })
             break
         case "task-dropped":

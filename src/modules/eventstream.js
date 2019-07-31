@@ -25,7 +25,7 @@ const mutations = {
         newBubble.meme = bestMeme()
         newBubble.type = ev.type
         newBubble.showEvent = true
-        newBubble.randomX = Math.random().toFixed(2) * 100 + '%'
+        newBubble.randomX = Math.random().toFixed(2) * 92 + '%'
 
         state.push(newBubble)
     },
