@@ -4,10 +4,10 @@
 div.totop
     template(v-for='n in b.passed')
         .row.pad.centered
-            current(:memberId='n[1]')
-            img.send(src='../../assets/images/birdbtn.svg')
             current(:memberId='n[0]')
-    .row.pad(v-if='b.passed.length > 0')
+            img.send(src='../../assets/images/birdbtn.svg')
+            current(:memberId='n[1]')
+    .row.pad(v-if='toMe.length > 0')
        .six.grid
            button.accept(@click='accept')
                img.arrow.fr(src='../../assets/images/buddadoge.svg')
@@ -54,6 +54,11 @@ export default {
                 memberId: this.$store.getters.member.memberId,
             })
         }
+    },
+    computed: {
+        toMe(){
+            return this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
+        }
     }
 }
 
@@ -94,7 +99,7 @@ export default {
 .pad
     margin-top: 1em
     margin-bottom: 1em
-    
+
 .centered
     text-align: center
 </style>

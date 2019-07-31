@@ -78,8 +78,9 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
                     let pass = [ev.fromMemberId, ev.toMemberId]
-                    if(!task.passed.some(p => {
-                        if(p.fromMemberId === pass.fromMemberId && p.toMemberId === pass.toMemberId) {
+
+                    if( !task.passed.some(p => {
+                        if( p[0] === pass[0] && p[1] === pass[1]) {
                             return true
                         }
                     })) {
