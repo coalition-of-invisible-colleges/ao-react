@@ -16,7 +16,7 @@
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
         .one.grid
             span.counts.iceblue {{ vouchCount }}
-            span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio.toFixed(2) }}
+            span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio }}
         .grid(:class='{ six: hasAnyVouches, four: !hasAnyVouches }')
             priorities(:taskId='m.memberId')
         .grid.one
@@ -106,7 +106,7 @@ export default {
             let ratio = this.vouchCount / this.b.deck.length
             if(this.b.deck.length <= 0 && this.vouchCount > 0) return '-∞'
             else if(this.vouchCount === 0) return '0'
-            else return ratio
+            else return ratio.toFixed(2)
         }
     },
 }

@@ -2,6 +2,7 @@
 
 #app
   .contain
+    event-feed
     main-menu
     router-view
 </template>

@@ -26,7 +26,6 @@ function attachSocket(commit, dispatch){
             commit('setConnected', 'connected')
             commit('setConnectionError', '')
             socket.on('eventstream', ev => {
-                console.log('stream triggered c!!')
                 commit('applyEvent', ev)
                 dispatch('displayEvent', ev)
             })

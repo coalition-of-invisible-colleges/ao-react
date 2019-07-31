@@ -28,6 +28,7 @@ const mutations = {
 
 const actions = {
     displayEvent({commit}, ev){
+        console.log("displayEvent is firing")
         commit('show', ev)
         setTimeout(()=>{
             commit('hide')
