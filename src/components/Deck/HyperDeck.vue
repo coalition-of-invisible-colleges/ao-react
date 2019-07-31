@@ -6,12 +6,16 @@
             member-row(v-if='dogeCard', :m='dogeCard')
             resource-row(v-if='resourceCard'   :r='resourceCard')
             hypercard(v-if='!dogeCard && !resourceCard'  :b="parent" )
+            .faded(@click='nextUpgradeMode')
+                img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../../assets/images/boatblack.svg')
+                img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/guildwithwhitenobkgrnd.png')
+                img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+                img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../../assets/images/timecubewithwhite.png')
             .bar()
         .six.columns.buffer
             div.upgradesbar()
                 upgrades(:b='parent')
     div.fadey(:class='cardInputSty')
-        .upgrademode.faded(@click='nextUpgradeMode') {{ $store.state.upgrades.mode }}
         .completed(v-if='completed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
         task-create(:taskId='parent.taskId')
         div(v-if='completed.length > 0 && showCompleted')
@@ -186,8 +190,13 @@ export default {
     border: 4px solid rgba(0, 0, 0, 0.5)
     background-color: rgba(0, 0, 0, 0, 0.2)
 
+.upg
+    height: 4em
+    padding-top: 3em
+
 .bar
     min-height: 1em
+    margin-bottom:2em
 
 .fw
     width: 100%
