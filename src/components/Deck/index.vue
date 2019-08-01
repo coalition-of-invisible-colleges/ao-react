@@ -17,16 +17,6 @@ import HyperDeck from './HyperDeck'
 import GiftBox from './GiftBox.vue'
 
 export default {
-  watch: {
-      '$route': 'set'
-  },
-  methods: {
-      set(){
-          console.log('watch route called ', [this.$store.getters.member.memberId])
-          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
-          this.$store.commit("setParent", [])
-      },
-  },
   components:{
       HyperDeck,
       GiftBox,

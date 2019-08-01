@@ -85,6 +85,10 @@ export default {
         setImg(x){
             console.log("setting image", {x})
             this.showImg = x
+            if (x === 'uni'){
+                this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+                this.$store.commit("setParent", [])
+            }
         }
     },
     computed: {
