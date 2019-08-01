@@ -21,7 +21,9 @@
             span {{ calcVal }}
         span(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
-            span {{ cardStart.toFixed(1) }} days
+            span {{ cardStart.days }} days
+            span {{ cardStart.hours }} hours
+            span {{ cardStart.minutes }} minutes
         p
           linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
@@ -97,7 +99,11 @@ export default {
               let now = Date.now()
               let msTill = this.b.book.startTs - now
               let days = msTill / (1000 * 60 * 60 * 24)
-              return days
+              return {
+                  days,
+                  hours,
+                  minutes
+              }
             }
         },
         cardInputSty(){

@@ -3,9 +3,11 @@
 .current(v-if='memberId')
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
-    span.name {{ name }} 
-    router-link.plain(v-for='c in completions'  :to='"/task/" + c.taskId')
+    span.name {{ name }}
+    router-link.tooltip.plain(v-for='c in completions'  :to='"/task/" + c.taskId')
         span.checkmark(:class="cardInputSty(c.color)") ☑
+        .tooltiptext
+            .bigger {{ c.name }}
 </template>
 
 <script>
@@ -77,6 +79,7 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../../styles/colours'
+@import '../../styles/tooltips'
 
 img
     height: 0.7em
@@ -87,15 +90,18 @@ img
     margin-right: 1em
     position: relative
     top: -0.3em
-    
+
 .checkmark
     font-size: 2em
     margin-right: 0.25em
-    
+
 .clickable
     cursor: pointer
     color: white
-    
+
 .plain
     text-decoration: none
+
+.bigger
+    font-size: 2.02em
 </style>

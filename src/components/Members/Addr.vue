@@ -8,7 +8,6 @@ span.addr
         .qr(v-html='imgTag')
         a(:href='"bitcoin:" + this.a')
           button Open Wallet
-
 </template>
 
 
