@@ -102,8 +102,6 @@ export default {
             this.$store.commit("setPayMode", x)
         },
         select(x){
-            console.log("selected ", x)
-
             if (this.$store.state.upgrades.mode === "boat" && x === 0){
                 return this.$store.commit("closeUpgrades")
             }

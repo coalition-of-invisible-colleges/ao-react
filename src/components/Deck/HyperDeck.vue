@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 .deck.paperwrapper(v-if='card  && setPageTitle()')
+    h4 {{ $store.state.context }}
     .row
         .six.columns.card()
             member-row(v-if='dogeCard', :m='dogeCard')

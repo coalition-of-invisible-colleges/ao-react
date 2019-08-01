@@ -12,16 +12,18 @@ export default {
     components:{
         HyperDeck
     },
-    watch: {
-        '$route': 'set'
-    },
-    methods: {
-        set(){
-            console.log("route called in taskcal")
-            this.$store.commit("setParent", [])
-            this.$store.commit("setPanel", [this.$route.path.split('/')[2]])
-        },
-    },
+    mounted(){
+        this.$store.commit("setParent", [])
+        this.$store.commit("setPanel", [this.$route.path.split('/')[2]])
+    }
+    // watch: {
+    //     '$route': 'set'
+    // },
+    // methods: {
+    //     set(){
+    //         console.log("route called in taskcal")
+    //     },
+    // },
 }
 
 </script>

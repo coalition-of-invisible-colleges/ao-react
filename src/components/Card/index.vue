@@ -77,6 +77,12 @@ export default {
         goIn(){
             // route should do auto? When panel? When parent
             this.$store.commit("setPanel", [this.b.taskId])
+
+            if (this.inId){
+                console.log("addig more parent context")
+                this.$store.commit("addParent", this.inId)
+            }
+
             this.$router.push("/task/" + this.b.taskId)
 
         },

@@ -9,6 +9,15 @@ Vue.config.productionTip = false
 Vue.config.devtools = true
 Vue.config.performance = true
 
+// no work
+// router.beforeEach = (to, from, next) => {
+//     console.log("route guarded?????????!", {to, from})
+//
+//     // store.commit("")
+//     next()
+// }
+
+
 new Vue({
   router,
   store,
