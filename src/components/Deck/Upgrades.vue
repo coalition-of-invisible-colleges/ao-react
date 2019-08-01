@@ -141,8 +141,6 @@ export default {
             let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.completed)
             allTasks.forEach(t => {
                 let task = this.$store.getters.hashMap[t]
-                if(!task) console.log("task is undefined")
-                else console.log("task is " + task.name + " claimed is ", task.claimed)
                 if(!task || !task.claimed) return
                 if(task.claimed.indexOf(this.$store.getters.member.memberId) > -1) {
                     if(completions.indexOf(task) === -1) {

@@ -13,7 +13,7 @@ export default {
     props: ['b'],
     methods: {
         toTop(){
-            window.scrollTo(0, 0);
+            window.scrollTo(0, '33px');
         },
     },
 }
@@ -81,5 +81,5 @@ label
     bottom: 0.5em
     right: 0.5em
     cursor: pointer
-    
+
 </style>

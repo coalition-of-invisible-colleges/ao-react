@@ -35,7 +35,7 @@ export default {
   methods: {
       setDeck(){
           console.log("settin deckin")
-          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+          this.$store.commit("setPanel", [this.$store.getters.member.memberId], 0)
           this.$store.commit("setParent", [])
       }
   }

@@ -38,9 +38,9 @@
       .three.grid
           img.fr(src='../../assets/images/forward.svg')
     .open(v-if='open')
-        hypercard(v-for='b in c'  :b="b"  :key="componentKey"  :inId='taskId')
+        hypercard(v-for='b in c'  :b="b"  :key="componentKey"  :inId='taskId'  :c='c')
     .box(v-else  :class='panelSty')
-        hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId')
+        hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId'  :c='c')
 </template>
 
 <script>

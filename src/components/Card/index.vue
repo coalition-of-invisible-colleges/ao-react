@@ -22,10 +22,8 @@
         span(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.days.toFixed(1) }} days
-            //- span {{ cardStart.hours }} hours
-            //- span {{ cardStart.minutes }} minutes
         p
-          linky(:x='b.name' v-if='!dogeCard')
+            linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
@@ -37,7 +35,6 @@
       .spacer
       img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
       p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
-  //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
@@ -55,7 +52,7 @@ import Linky from './Linky'
 import Priorities from '../Deck/Priorities'
 
 export default {
-    props: ['b', 'inId'],
+    props: ['b', 'inId', 'c'],
     data(){
         return { active: false, resetHack: true }
     },
@@ -75,16 +72,29 @@ export default {
           })
         },
         goIn(){
-            // route should do auto? When panel? When parent
-            this.$store.commit("setPanel", [this.b.taskId])
-
             if (this.inId){
                 console.log("addig more parent context")
                 this.$store.commit("addParent", this.inId)
             }
 
-            this.$router.push("/task/" + this.b.taskId)
+            if (this.c){
+                let ix = -2
+                this.c.some((bb, i) => {
+                    if (bb.taskId === this.b.taskId){
+                        ix = i
+                        return true
+                    }
+                })
+                if (ix > -1){
+                    console.log("attempting to go in ", ix, 'of ', this.c.length)
+                    this.$store.commit("setPanel", this.c, ix)
+                }
 
+            } else {
+                this.$store.commit("setPanel", [this.b.taskId], 0)
+            }
+
+            this.$router.push("/task/" + this.b.taskId)
         },
         toggleGrab(){
             if (this.isGrabbed) {

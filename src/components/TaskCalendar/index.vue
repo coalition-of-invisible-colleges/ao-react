@@ -13,8 +13,9 @@ export default {
         HyperDeck
     },
     mounted(){
-        this.$store.commit("setParent", [])
-        this.$store.commit("setPanel", [this.$route.path.split('/')[2]])
+        console.log("mounted called on task calend, not trigging ")
+        // this.$store.commit("setParent", [])
+        // this.$store.commit("setPanel", [this.$route.path.split('/')[2]], 0)
     }
     // watch: {
     //     '$route': 'set'

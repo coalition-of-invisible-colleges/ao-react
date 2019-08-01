@@ -5,18 +5,20 @@ const payments = ["bitcoin", "lightning"]
 
 const state = {
     parent: [],
-    panel: ['f995aa70-92d7-11e9-a780-3572d50243e1'],
+    panel: [],
     top: 0
 }
 
 const mutations = {
     setParent(state, p){
         state.parent = p
-        console.log("parent set?")
+        console.log("parent set?", state)
     },
-    setPanel(state, px){
+    setPanel(state, px, i){
+        console.log("trying to set i: ", i)
         state.panel = px
-        console.log("panel set?")
+        state.top = i | 0
+        console.log("panel set?", state)
     },
     last(state){
         state.top = (this.top - 1) % state.panel.length
