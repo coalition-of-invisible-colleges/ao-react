@@ -11,7 +11,7 @@
     img.flaggy.faded(src='../../assets/images/address.svg')
     .fl(v-if='isPayOpen')
         tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
-        tag(v-if='$store.state.upgrades.payment === "lightning" && b.address'  :d='b.address')
+        tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
   div(v-if="$store.state.upgrades.mode === 'timecube'")
     img.flaggy.faded(src='../../assets/images/time.svg'  @click='toggleCube')
     .fl(v-if='isCubeOpen')
