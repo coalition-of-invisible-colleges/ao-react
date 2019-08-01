@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .expandedcard
-    hyper-deck(:taskId='id')
+    hyper-deck
 </template>
 
 <script>
@@ -12,9 +12,14 @@ export default {
     components:{
         HyperDeck
     },
-    computed: {
-        id(){
-            return this.$route.path.split('/')[2]
+    watch: {
+        '$route': 'set'
+    },
+    methods: {
+        set(){
+            console.log("route called in taskcal")
+            this.$store.commit("setParent", [])
+            this.$store.commit("setPanel", [this.$route.path.split('/')[2]])
         },
     },
 }

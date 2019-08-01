@@ -5,7 +5,7 @@
         .four.columns(v-if='$store.getters.inbox.length > 0')
             gift-box
         .columns(:class='{eight: $store.getters.inbox.length > 0}')
-            hyper-deck(:taskId="$store.getters.member.memberId")
+            hyper-deck
     .row
         router-link(to='/archive', @click='toTop')
             img.sunkenship(src='../../assets/images/sunken_ship.png')
@@ -17,6 +17,16 @@ import HyperDeck from './HyperDeck'
 import GiftBox from './GiftBox.vue'
 
 export default {
+  watch: {
+      '$route': 'set'
+  },
+  methods: {
+      set(){
+          console.log('watch route called ', [this.$store.getters.member.memberId])
+          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+          this.$store.commit("setParent", [])
+      },
+  },
   components:{
       HyperDeck,
       GiftBox,

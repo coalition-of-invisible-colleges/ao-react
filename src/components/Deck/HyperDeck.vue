@@ -1,11 +1,11 @@
 <template lang='pug'>
 
-.deck.paperwrapper(v-if='parent && setPageTitle() && resetHack')
+.deck.paperwrapper(v-if='card  && setPageTitle()')
     .row
         .six.columns.card()
             member-row(v-if='dogeCard', :m='dogeCard')
             resource-row(v-if='resourceCard'   :r='resourceCard')
-            hypercard(v-if='!dogeCard && !resourceCard'  :b="parent" )
+            hypercard(v-if='!dogeCard && !resourceCard'  :b="card" )
             .faded(@click='nextUpgradeMode')
                 img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../../assets/images/boatblack.svg')
                 img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/guildwithwhitenobkgrnd.png')
@@ -14,14 +14,14 @@
             .bar()
         .six.columns.buffer
             div.upgradesbar()
-                upgrades(:b='parent')
+                upgrades(:b='card')
     div.fadey(:class='cardInputSty')
         .completed(v-if='completed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
-        task-create(:taskId='parent.taskId')
+        task-create(:taskId='card.taskId')
         div(v-if='completed.length > 0 && showCompleted')
-            panels(:c='completed.slice().reverse()', :inId='parent.taskId')
+            panels(:c='completed.slice().reverse()', :inId='card.taskId')
         div(v-else)
-            panels(v-if='deck.length > 0', :c='deck', :inId='parent.taskId')
+            panels(v-if='deck.length > 0', :c='deck', :inId='card.taskId')
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -44,12 +44,8 @@ import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 
 export default {
-  props: ['taskId'],
   data(){
-      return { showCompleted: false, resetHack: true }
-  },
-  watch: {
-      '$route': 'reset'
+      return { showCompleted: false }
   },
   components:{
       SharedTitle, Hypercard, TaskCreate,
@@ -59,10 +55,6 @@ export default {
   methods:{
       nextUpgradeMode(){
           this.$store.commit("nextMode")
-      },
-      reset(){
-          this.resetHack=false
-          setTimeout(()=>{ this.resetHack = true }, 50)
       },
       getTask(taskId){
           return this.$store.getters.hashMap[taskId]
@@ -79,16 +71,26 @@ export default {
       },
   },
   computed: {
+      parent(){
+          console.log("ceck context state", this.$store.state.context)
+          return this.$store.getters.hashMap[this.$store.state.context.parent]
+      },
       card(){
-          return this.$store.getters.hashMap[this.taskId]
+          let topId = this.$store.state.context.panel[this.$store.state.context.top]
+          return this.$store.getters.hashMap[topId]
+      },
+      deck(){
+          let tasks = []
+          this.card.subTasks.slice().reverse().forEach(subtask => tasks.push( this.getTask(subtask)))
+          return tasks
       },
       bountyValue(){
-          return calculations.calculateTaskPayout(this.parent)
+          return calculations.calculateTaskPayout(this.card)
       },
       dogeCard(){
           let mc
           this.$store.state.members.forEach( m => {
-              if (this.parent.name === m.memberId ){
+              if (this.card.name === m.memberId ){
                   mc = m
                   console.log("dogeCard found: ", mc)
               }
@@ -98,7 +100,7 @@ export default {
       resourceCard(){
           let mc
           this.$store.state.resources.forEach( r => {
-              if (this.parent.name === r.resourceId ){
+              if (this.card.name === r.resourceId ){
                   mc = Object.assign({}, r)
               }
           })
@@ -106,38 +108,23 @@ export default {
           return mc
       },
       cardInputSty(){
-          if (this.parent) return {
-              redwx : this.parent.color == 'red',
-              bluewx : this.parent.color == 'blue',
-              greenwx : this.parent.color == 'green',
-              yellowwx : this.parent.color == 'yellow',
-              purplewx : this.parent.color == 'purple',
-              blackwx : this.parent.color == 'black',
+          if (this.card) return {
+              redwx : this.card.color == 'red',
+              bluewx : this.card.color == 'blue',
+              greenwx : this.card.color == 'green',
+              yellowwx : this.card.color == 'yellow',
+              purplewx : this.card.color == 'purple',
+              blackwx : this.card.color == 'black',
           }
-      },
-      parent(){
-          if (this.taskId) return this.getTask(this.taskId)
-          if (this.task) return this.task
-          return false
-      },
-      deck(){
-          let tasks = []
-          if (this.taskId) {
-              this.card.subTasks.slice().reverse().forEach(subtask => tasks.push( this.getTask(subtask)))
-          }
-          return tasks
       },
       completed(){
           let tasks = []
-          if (this.taskId) {
-              this.card.completed.forEach(subtask => tasks.push( this.getTask(subtask)))
-          }
-          console.log(this.card.completed.length, 'should have ', tasks.length)
+          this.card.completed.forEach(subtask => tasks.push( this.getTask(subtask)))
           return tasks
       },
       cardAge(){
           let now = Date.now()
-          let msSince = now - this.parent.timestamp
+          let msSince = now - this.card.timestamp
           let days = msSince / (1000 * 60 * 60 * 24)
           return days
       },

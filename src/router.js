@@ -33,14 +33,6 @@ const routes =[{
   component: Pinboard,
   meta: { title: "DCTRL" }
 },{
-  path: '/channels',
-  component: Nodes,
-  meta: { title: "lightning" }
-},{
-  path: '/auth',
-  component: Auth,
-  meta: { title: "authorize" }
-},{
   path: '/history',
   component: List,
   meta: { title: "history" }
@@ -53,34 +45,18 @@ const routes =[{
   component: Members,
   meta: { title: "members @ DCTRL" }
 },{
-  path: '/task/*',
-  component: TaskCalendar,
-  meta: { title: "card" }
-},{
   path: '/dash',
   component: Dash,
   meta: { title: "dashboard" }
 },{
-  path: '/bounties',
-  component: Bounties,
-  meta: { title: "bounties" }
-},{
-  path:'/manage',
-  component: Manage,
-  meta: { title: "manage" }
-},{
-  path:'/onboarding',
-  component: Onboarding,
-  meta: { title: "onboarding @ DCTRL" }
-},{
-  path:'/wiki',
-  component: Wiki,
-  meta: { title: "wiki @ DCTRL" }
-},{
   path:'/archive',
   component: Archive,
   meta: { title: "sunken ship" }
-}
+},{
+  path: '/task/*',
+  component: TaskCalendar,
+  meta: { title: "card" }
+},
 ]
 
 const router = new VueRouter({

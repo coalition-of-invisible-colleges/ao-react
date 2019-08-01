@@ -8,6 +8,7 @@ import loader from './modules/loader'
 import eventstream from './modules/eventstream'
 import recent from './modules/recent'
 import upgrades from './modules/upgrades'
+import context from './modules/context'
 
 import calculations from './calculations'
 
@@ -54,7 +55,7 @@ function fullDeck(subTasks, allTasks = [], state, getters){
 
 export default new Vuex.Store({
   modules: {
-      loader, eventstream, recent, upgrades,
+      loader, eventstream, recent, upgrades, context,
       members: modules.members,
       tasks: modules.tasks,
       resources: modules.resources,

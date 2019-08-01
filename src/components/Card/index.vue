@@ -75,7 +75,10 @@ export default {
           })
         },
         goIn(){
+            // route should do auto? When panel? When parent
+            this.$store.commit("setPanel", [this.b.taskId])
             this.$router.push("/task/" + this.b.taskId)
+
         },
         toggleGrab(){
             if (this.isGrabbed) {

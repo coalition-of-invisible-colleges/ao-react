@@ -11,7 +11,7 @@
             div(@click='setImg("sun")')
                 router-link(to='/' exact) Guilds
             div(@click='setImg("uni")')
-                router-link(to='/deck/')
+                router-link(to='/deck')
                     span(v-if='$store.getters.inbox.length > 0')
                       img.smallbird(src='../assets/images/birdbtn.svg')
                       span {{ $store.getters.inbox.length }} |
