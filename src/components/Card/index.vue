@@ -15,17 +15,16 @@
       current.tooltiptext(v-for='memberId in b.claimed', :memberId='memberId')
   .row
     .ten.grid
-        span(v-if='b.guild')
+        .cardhud(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
             span.bold {{b.guild}}
-        span(v-if='calcVal >= 1')
+        .cardhud(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
             span {{ calcVal }}
-        span(v-if='cardStart')
+        .cardhud(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.toFixed(1) }} days
-        p
-          linky(:x='b.name' v-if='!dogeCard')
+        linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
@@ -327,6 +326,9 @@ export default {
     clear: both
     height: 2.25em
     width: 100%
-    margin-top: 1em
+    margin-top: 1.5em
 
+.cardhud
+    margin-bottom: 1em
+    margin-right: 1em
 </style>

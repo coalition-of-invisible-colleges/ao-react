@@ -65,7 +65,9 @@ function tasksMuts(tasks, ev) {
             ev.monthlyValue = 0
             ev.cap = 0
             ev.allocations = []
-            tasks.push(ev)
+            if(ev.name) {
+                tasks.push(ev)
+            }
             break
         case "address-updated":
             tasks.forEach( t => {

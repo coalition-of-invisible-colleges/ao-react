@@ -11,7 +11,7 @@
                 img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/guildwithwhitenobkgrnd.png')
                 img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../../assets/images/treasurechestnobkgrndwhiteD.png')
                 img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../../assets/images/timecubewithwhite.png')
-            .bar()
+            .bar
         .six.columns.buffer
             div.upgradesbar()
                 upgrades(:b='parent')

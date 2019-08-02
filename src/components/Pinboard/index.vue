@@ -3,9 +3,8 @@
 #wrex
     .pinboard
         .row
-            .six.columns
-                ol
-                    li(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }} - {{ t.name }}
+            .six.columns.centered
+                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }} 
                 hypercard(:b='$store.getters.pubguilds[showGuild]'  :key='resetKey')
             .five.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
@@ -175,4 +174,12 @@ h2
 
 .clearboth
     clear: both
+
+.guildname
+    font-size: 1.5em
+    margin-right: 1em
+    display: inline
+    
+.centered
+    text-align: center
 </style>
