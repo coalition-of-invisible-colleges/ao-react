@@ -63,6 +63,51 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
+      contextCard(state, getters){
+          return getters.hashMap[state.context.panel[state.context.top]]
+      },
+      contextDeck(state, getters){
+          return getters.contextCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
+      },
+      contextMember(state, getters){
+          let contextMem = false
+          state.members.some(m => {
+              if (m.memberId === getters.contextCard.taskId){
+                  contextMem = m
+              }
+          })
+          return contextMem
+      },
+      contextResource(state, getters){
+        let contextRes = false
+        state.resources.some(r => {
+            if (r.resourceId === getters.contextCard.taskId){
+                contextRes = r
+            }
+        })
+        return contextRes
+      },
+      deck(state, getters){
+          return getters.memberCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
+      },
+      completed(state, getters){
+          return getters.memberCard.completed.map(t => getters.hashMap[t])
+      },
+      red(state, getters){
+          return getters.contextDeck.filter(d => d.color === 'red')
+      },
+      yellow(state, getters){
+          return getters.contextDeck.filter(d => d.color === 'yellow')
+      },
+      green(state, getters){
+          return getters.contextDeck.filter(d => d.color === 'green')
+      },
+      purple(state, getters){
+          return getters.contextDeck.filter(d => d.color === 'purple')
+      },
+      blue(state, getters){
+          return getters.contextDeck.filter(d => d.color === 'blue')
+      },
       sortedMembers(state, getters){
           return getters.recentMembers.slice().sort((a, b) => {
               let cardA = getters.hashMap[a.memberId]

@@ -4,9 +4,9 @@
     h4 {{ $store.state.context }}
     .row
         .six.columns.card()
-            member-row(v-if='dogeCard', :m='dogeCard')
-            resource-row(v-if='resourceCard'   :r='resourceCard')
-            hypercard(v-if='!dogeCard && !resourceCard'  :b="card" )
+            member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember')
+            resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource')
+            hypercard(v-if='!$store.getters.contextResource && !$store.getters.contextResource'  :b="card" )
             .faded(@click='nextUpgradeMode')
                 img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../../assets/images/boatblack.svg')
                 img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/guildwithwhitenobkgrnd.png')
@@ -19,10 +19,7 @@
     div.fadey(:class='cardInputSty')
         .completed(v-if='completed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
         task-create(:taskId='card.taskId')
-        div(v-if='completed.length > 0 && showCompleted')
-            panels(:c='completed.slice().reverse()', :inId='card.taskId')
-        div(v-else)
-            panels(v-if='deck.length > 0', :c='deck', :inId='card.taskId')
+        panels
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -87,16 +84,6 @@ export default {
       },
       bountyValue(){
           return calculations.calculateTaskPayout(this.card)
-      },
-      dogeCard(){
-          let mc
-          this.$store.state.members.forEach( m => {
-              if (this.card.name === m.memberId ){
-                  mc = m
-                  console.log("dogeCard found: ", mc)
-              }
-          })
-          return mc
       },
       resourceCard(){
           let mc

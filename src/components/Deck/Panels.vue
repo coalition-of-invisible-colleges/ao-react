@@ -1,20 +1,20 @@
 <template lang='pug'>
 
 .panel
-    .row(v-if='red.length > 0 || green.length > 0 || blue.length > 0')
-      .four.grid(v-if='red.length > 0')
-          card-panel(:c='red', :taskId='inId')
-      .four.grid(v-if='green.length > 0')
-          card-panel(:c='green', :taskId='inId')
-      .four.grid(v-if='blue.length > 0')
-          card-panel(:c='blue', :taskId='inId')
-    .row(v-if='yellow.length > 0 || purple.length > 0')
+    .row
+      .four.grid(v-if='$store.getters.red.length > 0')
+          card-panel(:c='$store.getters.red', :taskId='inId')
+      .four.grid(v-if='$store.getters.green.length > 0')
+          card-panel(:c='$store.getters.green', :taskId='inId')
+      .four.grid(v-if='$store.getters.blue.length > 0')
+          card-panel(:c='$store.getters.blue', :taskId='inId')
+    .row
       .two.grid
           p &nbsp;
-      .four.grid(v-if='yellow.length > 0')
-          card-panel(:c='yellow', :taskId='inId')
-      .four.grid(v-if='purple.length > 0')
-          card-panel(:c='purple', :taskId='inId')
+      .four.grid(v-if='$store.getters.yellow.length > 0')
+          card-panel(:c='$store.getters.yellow', :taskId='inId')
+      .four.grid(v-if='$store.getters.purple.length > 0')
+          card-panel(:c='$store.getters.purple', :taskId='inId')
 </template>
 
 <script>
@@ -26,24 +26,6 @@ export default {
   components:{
       CardPanel,
   },
-  computed: {
-      red(){
-          return this.c.filter( c => { if(!c) { return false } return c.color === 'red' } )
-      },
-      yellow(){
-          return this.c.filter( c => { if(!c) { return false } return c.color === 'yellow' } )
-      },
-      blue(){
-          return this.c.filter( c => { if(!c) { return false } return c.color === 'blue' } )
-      },
-      purple(){
-          return this.c.filter( c => { if(!c) { return false } return c.color === 'purple' } )
-      },
-      green(){
-          return this.c.filter( c => { if(!c) { return false } return c.color === 'green' } )
-      },
-  },
-
 }
 
 </script>
