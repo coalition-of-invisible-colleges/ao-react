@@ -17,7 +17,7 @@
     .ten.grid
         .cardhud(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
-            span.bold {{b.guild}}
+            span.bold {{ b.guild }}
         .cardhud(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
             span {{ calcVal }}
@@ -77,14 +77,14 @@ export default {
           })
         },
         goIn(){
-            if (this.inId){
-                console.log("addig more parent context")
 
-                
+            this.$store.dispatch("goIn", {
+                inId: this.inId,
+                top: 0,
+                panel: this.c
+            })
 
-
-                this.$store.commit("addParent", this.inId, this.$store.getters.red, 1)
-            }
+            this.$router.push("/task/" + this.b.taskId)
         },
         toggleGrab(){
             if (this.isGrabbed) {

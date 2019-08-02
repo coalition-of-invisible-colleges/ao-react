@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.deck.paperwrapper(v-if='card  && setPageTitle()')
+.deck.paperwrapper(v-if='resetHack && card  && setPageTitle()')
     h4 {{ $store.state.context }}
     .row
         .six.columns.card()
@@ -42,20 +42,23 @@ import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 
 export default {
+  data(){
+      return {resetHack: true}
+  },
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
       Upgrades, BountyCard, ResourceRow
+  },watch: {
+      '$route': 'reset'
   },
   methods:{
       nextUpgradeMode(){
           this.$store.commit("nextMode")
       },
-      getTask(taskId){
-          return this.$store.getters.hashMap[taskId]
-      },
       toggleShowComplete(){
           console.log("clcik trig call toggleCompleted")
+
           this.$store.commit("toggleCompleted")
       },
       setPageTitle(){
@@ -63,6 +66,10 @@ export default {
           else if(this.card.guild) document.title = this.card.guild
           else document.title = this.card.name
           return true
+      },
+      reset(){
+            this.resetHack=false
+            setTimeout(()=>{ this.resetHack = true }, 12)
       },
   },
   computed: {

@@ -15,7 +15,9 @@ export default {
     mounted(){
         console.log("mounted called on task calend, not trigging ")
         // this.$store.commit("setParent", [])
-        // this.$store.commit("setPanel", [this.$route.path.split('/')[2]], 0)
+        if (this.$store.state.context.panel.length === 0){
+            this.$store.commit("setPanel", [this.$route.path.split('/')[2]], 0)
+        }
     }
     // watch: {
     //     '$route': 'set'

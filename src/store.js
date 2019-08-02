@@ -97,18 +97,33 @@ export default new Vuex.Store({
           return getters.memberCard.completed.map(t => getters.hashMap[t])
       },
       red(state, getters){
+          if (state.completed){
+              return getters.contextCompleted.filter(d => d.color === 'red')
+          }
           return getters.contextDeck.filter(d => d.color === 'red')
       },
       yellow(state, getters){
+          if (state.completed){
+              return getters.contextCompleted.filter(d => d.color === 'yellow')
+          }
           return getters.contextDeck.filter(d => d.color === 'yellow')
       },
       green(state, getters){
+          if (state.completed){
+              return getters.contextCompleted.filter(d => d.color === 'green')
+          }
           return getters.contextDeck.filter(d => d.color === 'green')
       },
       purple(state, getters){
+          if (state.completed){
+              return getters.contextCompleted.filter(d => d.color === 'purple')
+          }
           return getters.contextDeck.filter(d => d.color === 'purple')
       },
       blue(state, getters){
+          if (state.completed){
+              return getters.contextCompleted.filter(d => d.color === 'blue')
+          }
           return getters.contextDeck.filter(d => d.color === 'blue')
       },
       sortedMembers(state, getters){

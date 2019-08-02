@@ -108,7 +108,7 @@ export default {
     },
     computed: {
         taskId(){
-            return $store.getters.contextCard.taskId
+            return this.$store.getters.contextCard.taskId
         },
         matchCard(){
             let foundId

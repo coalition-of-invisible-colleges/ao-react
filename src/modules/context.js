@@ -34,13 +34,20 @@ const mutations = {
     next(state){
         state.top = (state.top + 1) % state.panel.length
     },
+    addParent(state, pId){
+        state.parent.push(pId)
+    },
 }
 
 const actions = {
-      addParent({commit, state}, pId, panel, top){
-          state.parent.push(pId)
-          commit("setPanel", panel, top)
-          console.log("parent pushed", {panel, top} )
+      goIn({commit, state}, pContext ){
+          if (pContext.inId){
+              commit("addParent", pContext.inId)
+          }
+
+          commit("setPanel", pContext.panel, pContext.top)
+          
+          console.log("parent pushed", {pContext} )
       }
 }
 
