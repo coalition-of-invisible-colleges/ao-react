@@ -6,7 +6,7 @@
         .six.columns.card()
             member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember')
             resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource')
-            hypercard(v-if='!$store.getters.contextResource && !$store.getters.contextResource'  :b="card" )
+            hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card" )
             .faded(@click='nextUpgradeMode')
                 img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../../assets/images/boatblack.svg')
                 img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/guildwithwhitenobkgrnd.png')
@@ -17,8 +17,8 @@
             div.upgradesbar()
                 upgrades(:b='card')
     div.fadey(:class='cardInputSty')
-        .completed(v-if='completed.length > 0'  @click='toggleShowComplete'  :class='{faded:!showCompleted, completedtabbed: showCompleted}') completed
-        task-create(:taskId='card.taskId')
+        .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
+        task-create
         panels
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
@@ -42,9 +42,6 @@ import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 
 export default {
-  data(){
-      return { showCompleted: false }
-  },
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
@@ -58,8 +55,8 @@ export default {
           return this.$store.getters.hashMap[taskId]
       },
       toggleShowComplete(){
-          this.showCompleted = !this.showCompleted
-          console.log('set th', this.showCompleted)
+          console.log("clcik trig call toggleCompleted")
+          this.$store.commit("toggleCompleted")
       },
       setPageTitle(){
           if(this.card.taskId === this.$store.getters.member.memberId) document.title = 'deck'
@@ -69,31 +66,8 @@ export default {
       },
   },
   computed: {
-      parent(){
-          console.log("ceck context state", this.$store.state.context)
-          return this.$store.getters.hashMap[this.$store.state.context.parent]
-      },
       card(){
-          let topId = this.$store.state.context.panel[this.$store.state.context.top]
-          return this.$store.getters.hashMap[topId]
-      },
-      deck(){
-          let tasks = []
-          this.card.subTasks.slice().reverse().forEach(subtask => tasks.push( this.getTask(subtask)))
-          return tasks
-      },
-      bountyValue(){
-          return calculations.calculateTaskPayout(this.card)
-      },
-      resourceCard(){
-          let mc
-          this.$store.state.resources.forEach( r => {
-              if (this.card.name === r.resourceId ){
-                  mc = Object.assign({}, r)
-              }
-          })
-          console.log('resource card', mc)
-          return mc
+          return this.$store.getters.contextCard
       },
       cardInputSty(){
           if (this.card) return {
@@ -104,11 +78,6 @@ export default {
               purplewx : this.card.color == 'purple',
               blackwx : this.card.color == 'black',
           }
-      },
-      completed(){
-          let tasks = []
-          this.card.completed.forEach(subtask => tasks.push( this.getTask(subtask)))
-          return tasks
       },
       cardAge(){
           let now = Date.now()

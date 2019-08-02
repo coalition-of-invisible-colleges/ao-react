@@ -6,8 +6,8 @@
         //- hyper-card(:b='card')
         router-link.fr(:to='"/task/" + taskId')
             img.singleship(src='../../assets/images/vinebtn.svg')
-        h3.ptr(@dblclick.stop.pre='goIn') {{card.name}}
-        .row
+        linky.emphasize(:x='name'  :key='name')
+        .row.clearboth
             .six.grid
                 button.accept(@click='claim')
                     img.arrow.fr(src='../../assets/images/buddadoge.svg')
@@ -21,9 +21,10 @@
 <script>
 
 import HyperCard from '../Card'
+import Linky from '../Card/Linky'
 
 export default {
-    components: { HyperCard },
+    components: { HyperCard, Linky },
     data(){
         return {
             notes: ''
@@ -155,5 +156,8 @@ button
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-
+    
+.emphasize
+    font-weight: bold
+    font-size: 1.5em
 </style>

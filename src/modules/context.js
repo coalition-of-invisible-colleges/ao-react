@@ -6,10 +6,15 @@ const payments = ["bitcoin", "lightning"]
 const state = {
     parent: [],
     panel: [],
-    top: 0
+    top: 0,
+    completed: false
 }
 
 const mutations = {
+    toggleCompleted(state){
+        console.log("hit mutation?!")
+        state.completed = !state.completed
+    },
     setParent(state, p){
         state.parent = p
         console.log("parent set?", state)
@@ -29,13 +34,16 @@ const mutations = {
     next(state){
         state.top = (state.top + 1) % state.panel.length
     },
-    addParent(state, pId){
-        state.parent.push(pId)
-        console.log("parent pushed")
-    }
 }
 
-const actions = {}
+const actions = {
+      addParent({commit, state}, pId, panel, top){
+          state.parent.push(pId)
+          commit("setPanel", panel, top)
+          console.log("parent pushed", {panel, top} )
+      }
+}
+
 const getters = {}
 
 export default {

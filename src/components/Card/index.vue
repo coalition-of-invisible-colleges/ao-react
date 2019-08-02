@@ -10,20 +10,21 @@
           bird(:b='b', :inId='inId')
       .two.grid
           flag(:b='b', :inId='inId')
-  img.claimvine(v-for='n in b.claimed', v-if='n === $store.getters.member.memberId', src='../../assets/images/mark.svg')
+  .tooltip
+      img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
+      current.tooltiptext(v-for='memberId in b.claimed', :memberId='memberId')
   .row
     .ten.grid
-        span(v-if='b.guild')
+        .cardhud(v-if='b.guild')
             img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
             span.bold {{b.guild}}
-        span(v-if='calcVal >= 1')
+        .cardhud(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
             span {{ calcVal }}
-        span(v-if='cardStart')
+        .cardhud(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
-            span {{ cardStart.days.toFixed(1) }} days
-        p
-            linky(:x='b.name' v-if='!dogeCard')
+            span {{ cardStart.toFixed(1) }} days
+        linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
@@ -33,8 +34,11 @@
       scroll.faded(:b='b', :inId='inId')
       vine.faded(:b='b')
       .spacer
-      img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-      p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+      .tooltip.dogepepecoin
+          img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+          current.tooltiptext(v-for='memberId in b.deck', :memberId='memberId')
+          p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+  //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
@@ -50,6 +54,7 @@ import Passed from './Passed'
 import Linky from './Linky'
 //import spin from '../../styles/spinners.styl'
 import Priorities from '../Deck/Priorities'
+import Current from '../Resources/Current'
 
 export default {
     props: ['b', 'inId', 'c'],
@@ -59,7 +64,7 @@ export default {
     watch: {
         '$route': 'reset'
     },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities},
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities, Current},
     methods: {
         reset(){
             this.resetHack=false
@@ -74,27 +79,12 @@ export default {
         goIn(){
             if (this.inId){
                 console.log("addig more parent context")
-                this.$store.commit("addParent", this.inId)
+
+                
+
+
+                this.$store.commit("addParent", this.inId, this.$store.getters.red, 1)
             }
-
-            if (this.c){
-                let ix = -2
-                this.c.some((bb, i) => {
-                    if (bb.taskId === this.b.taskId){
-                        ix = i
-                        return true
-                    }
-                })
-                if (ix > -1){
-                    console.log("attempting to go in ", ix, 'of ', this.c.length)
-                    this.$store.commit("setPanel", this.c, ix)
-                }
-
-            } else {
-                this.$store.commit("setPanel", [this.b.taskId], 0)
-            }
-
-            this.$router.push("/task/" + this.b.taskId)
         },
         toggleGrab(){
             if (this.isGrabbed) {
@@ -188,6 +178,7 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 @import '../../styles/spinners'
+@import '../../styles/tooltips'
 
 .count
     float: right
@@ -214,10 +205,6 @@ export default {
   word-break: break-word
   hyphens: auto
 
-.btn
-    width:100%
-    margin-top: 4em
-
 .brder
     label
         text-align: center
@@ -227,6 +214,9 @@ export default {
     height: 1em
     top: 0
     left: 0
+
+.tooltip .tooltiptext
+    font-size: 1em
 
 .arrow
     height: 3.35em
@@ -349,5 +339,9 @@ export default {
     clear: both
     height: 2.25em
     width: 100%
+    margin-top: 1.5em
 
+.cardhud
+    margin-bottom: 1em
+    margin-right: 1em
 </style>

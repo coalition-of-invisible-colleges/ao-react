@@ -1,8 +1,9 @@
 <template lang="pug">
 
-transition(name='fade' v-for='e in eventstream')
-    .feed(v-if='e.showEvent && e.type!=="task-grabbed"'  v-bind:style="{ left: e.randomX }")
+transition(name='fade' v-for='(e, i) in eventstream')
+    .feed.wiggle(v-if='e.showEvent && e.type!=="task-grabbed"'  v-bind:style="{ left: e.randomX }")
         img.doge(src='../../assets/images/doge_faded.png')
+        //- <input v-model.number="randomWiggle">
         img.bubble(src='../../assets/images/bubble.png')
         .float {{ e.type.replace('-', ' ') }}
         .float {{ e.meme }}
@@ -33,13 +34,23 @@ export default {
                         "wow such hodl",
                         "in ur holochains",
                         "hodl"]
-        return { hodlphrases }
+        return { hodlphrases, }
     },
     computed:{
         eventstream(){
             return this.$store.state.eventstream
         },
-    }
+        // randomX(){
+        //     if(this.randomWiggles[])
+        //     this.randomWiggles
+        // }
+    },
+    // watch: {
+    //     number: function(e){
+    //         console.log("randomWiggle(e), e is ", e)
+    //         return Math.sin(e.time) * e.wiggleFactor
+    //     }
+    // }
 }
 </script>
 
@@ -83,21 +94,29 @@ img
     left: 0
 
 .fade-enter-active
-    transition: opacity 5s ease-in
     transition: top 5s
 
 .fade-leave-active
-    transition: opacity 5s
     transition: top 5s
     top: -30em
 
 .fade-enter
-    opacity: 0
     top: calc(100% + 10em)
 
 .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-    opacity: 0
     top: -30em
+
+@keyframes wiggle {
+    0%, 100% { transform: translate(-16px, 0) }
+    25% { transform: translate(-8px, 0) }
+    50% { transform: translate(16px, 0) }
+    75% { transform: translate(8px, 0) }
+}
+
+.wiggle {
+  animation: wiggle 1s infinite
+  transition-timing-function: ease
+}
 
 .tooltip
     position: fixed

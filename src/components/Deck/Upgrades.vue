@@ -110,7 +110,6 @@ export default {
                 return this.$store.commit("closeUpgrades")
             }
 
-
             if (this.$store.state.upgrades.mode === "bounty" && x === 2){
                 return this.$store.commit("closeUpgrades")
             }

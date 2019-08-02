@@ -19,7 +19,6 @@
           textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi Create Card
-
 </template>
 
 <script>
@@ -29,7 +28,6 @@ import FormBox from '../slotUtils/FormBox'
 import request from "superagent"
 
 export default {
-    props: ['taskId'],
     data(){
         return {
             currentColor: '',
@@ -109,6 +107,9 @@ export default {
         },
     },
     computed: {
+        taskId(){
+            return $store.getters.contextCard.taskId
+        },
         matchCard(){
             let foundId
             this.$store.state.tasks.filter(t => {

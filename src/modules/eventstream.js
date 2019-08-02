@@ -26,6 +26,7 @@ const mutations = {
         newBubble.type = ev.type
         newBubble.showEvent = true
         newBubble.randomX = Math.random().toFixed(2) * 92 + '%'
+        //newBubble.wiggleFactor = Math.random().toFixed(2) * 10
 
         state.push(newBubble)
     },

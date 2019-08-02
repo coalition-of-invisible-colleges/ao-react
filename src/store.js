@@ -69,6 +69,9 @@ export default new Vuex.Store({
       contextDeck(state, getters){
           return getters.contextCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
       },
+      contextCompleted(state, getters){
+          return getters.contextCard.completed.map(t => getters.hashMap[t])
+      },
       contextMember(state, getters){
           let contextMem = false
           state.members.some(m => {
