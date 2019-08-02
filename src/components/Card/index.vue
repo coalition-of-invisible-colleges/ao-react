@@ -10,7 +10,9 @@
           bird(:b='b', :inId='inId')
       .two.grid
           flag(:b='b', :inId='inId')
-  img.claimvine(v-for='n in b.claimed', v-if='n === $store.getters.member.memberId', src='../../assets/images/mark.svg')
+  .tooltip
+      img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
+      current.tooltiptext(v-for='memberId in b.claimed', :memberId='memberId')
   .row
     .ten.grid
         span(v-if='b.guild')
@@ -33,8 +35,10 @@
       scroll.faded(:b='b', :inId='inId')
       vine.faded(:b='b')
       .spacer
-      img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-      p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+      .tooltip.dogepepecoin
+          img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+          current.tooltiptext(v-for='memberId in b.deck', :memberId='memberId')
+          p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
   //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
@@ -51,6 +55,7 @@ import Passed from './Passed'
 import Linky from './Linky'
 //import spin from '../../styles/spinners.styl'
 import Priorities from '../Deck/Priorities'
+import Current from '../Resources/Current'
 
 export default {
     props: ['b', 'inId'],
@@ -60,7 +65,7 @@ export default {
     watch: {
         '$route': 'reset'
     },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities},
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities, Current},
     methods: {
         reset(){
             this.resetHack=false
@@ -161,6 +166,7 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 @import '../../styles/spinners'
+@import '../../styles/tooltips'
 
 .count
     float: right
@@ -187,10 +193,6 @@ export default {
   word-break: break-word
   hyphens: auto
 
-.btn
-    width:100%
-    margin-top: 4em
-
 .brder
     label
         text-align: center
@@ -201,6 +203,9 @@ export default {
     top: 0
     left: 0
 
+.tooltip .tooltiptext
+    font-size: 1em
+    
 .arrow
     height: 3.35em
 
@@ -322,5 +327,6 @@ export default {
     clear: both
     height: 2.25em
     width: 100%
+    margin-top: 1em
 
 </style>
