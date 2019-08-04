@@ -7,6 +7,22 @@
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource')
                 hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card" )
                 .bar()
+                .faded.small
+                    span.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
+                      span.dot.redwx
+                      span disconnected
+                    span.connectedstatus(v-if="$store.state.loader.connected == 'connecting'")
+                      span.dot.yellowwx
+                      span connecting
+                    span.connectedstatus(v-if="$store.state.loader.connected == 'connected'")
+                      span.dot.greenwx
+                      span connected
+                    span.connectedstatus(v-if="$store.state.loader.connectionError")
+                      span.dot.purplewx
+                      span {{ $store.state.loader.connectionError }}
+                    span
+                      span - last ping {{ $store.state.loader.lastPing }} ms pong -
+                      span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
             .six.columns.buffer
                 div.upgradesbar()
                     upgrades(:b='card')
@@ -100,7 +116,10 @@ export default {
     color: white
 
 .faded
-    opacity: 0.4
+    opacity: 0.6
+
+.small
+    font-size:0.8
 
 .deck
     width: 100%
@@ -236,6 +255,14 @@ export default {
     border-radius: 5px
     color: white
     margin-right: -0.5em
+
+.dot
+  height: 0.5em
+  width: 0.5em
+  border-radius: 50%
+  display: inline-block
+  margin-right: 0.5em
+
 
 // .bluewx
 //   background-color: rgba(255, 0, 0, 0.2)

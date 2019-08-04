@@ -1,13 +1,13 @@
 <template lang='pug'>
 
 .summary
-  p.chain mainnet ({{ $store.getters.confirmedBalance.toLocaleString() }})
-    .lim(v-if='$store.getters.limbo > 0') limbo ({{ $store.getters.limbo.toLocaleString() }})
+  p.chain mainnet &#12471; {{ $store.getters.confirmedBalance.toLocaleString() }}
+    .lim(v-if='$store.getters.limbo > 0') limbo &#12471; {{ $store.getters.limbo.toLocaleString() }}
   .row
     .six.grid
-      p.local local ({{ $store.getters.totalLocal.toLocaleString() }})
+      p.local local &#12471; {{ $store.getters.totalLocal.toLocaleString() }}
     .six.grid
-      p.remote remote ({{ $store.getters.totalRemote.toLocaleString() }})
+      p.remote remote  &#12471; {{ $store.getters.totalRemote.toLocaleString() }}
 </template>
 
 <script>

@@ -10,39 +10,11 @@
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/guildwithwhitenobkgrnd.png')
         img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/treasurechestnobkgrndwhiteD.png')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecubewithwhite.png')
-        auth(v-if='!$store.state.upgrades.mode')
-    context(v-for='(n, i) in $store.state.context.parent.slice().reverse()'  :taskId='n')
-        card-panel(v-if='i === $store.state.context.parent.length - 1')
-        //- auth
-        //- div(v-if='$store.getters.isLoggedIn')
-        //-     div(@click='setImg("sun")')
-        //-         router-link(to='/' exact) Guilds
-        //-     div(@click='setImg("uni")')
-        //-         router-link(to='/deck')
-        //-             span(v-if='$store.getters.inbox.length > 0')
-        //-               img.smallbird(src='../assets/images/birdbtn.svg')
-        //-               span {{ $store.getters.inbox.length }} |
-        //-             span Deck
-        //-               br
-        //-               span.subheading ({{$store.getters.member.name}})
-        //-     div(@click='setImg("bull")')
-        //-         router-link(to='/dash' ) Dashboard
-        //- auth(v-else)
-    //- div.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
-    //-   .dot.redwx
-    //-   span disconnected
-    //- div.connectedstatus(v-if="$store.state.loader.connected == 'connecting'")
-    //-   .dot.yellowwx
-    //-   span connecting
-    //- div.connectedstatus(v-if="$store.state.loader.connected == 'connected'")
-    //-   .dot.greenwx
-    //-   span connected
-    //- div.connectedstatus(v-if="$store.state.loader.connectionError")
-    //-   .dot.purplewx
-    //-   span {{ $store.state.loader.connectionError }}
-    //- div
-    //-   p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} ms -
-    //-   span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
+    .upg(v-if='!$store.state.upgrades.mode')
+        auth()
+    template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
+        div(@click='goToParent(n)')
+            context(:taskId='n')
 </template>
 
 <script>
@@ -70,6 +42,14 @@ export default {
         }
     },
     methods: {
+        goToParent(target){
+            console.log("go to parent called")
+            this.$store.dispatch("goUp", {
+                target,
+                panel: [target],
+                top: 0
+            })
+        },
         cycle(from){
             switch(from){
                 case 'uni': return this.$router.push('/')
@@ -138,7 +118,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
   display: flex
   flex-direction: column-reverse
   min-height: 5.8em
-  
+
 .side_bar ul
   margin-left: 10px;
 
@@ -265,10 +245,10 @@ hr
 .boat
     width: 7em
     padding: 1em 0
-    
+
 .context
     width: calc(100% - 14em)
     margin: 0 7em
     align-self: flex-end
-    
+
 </style>

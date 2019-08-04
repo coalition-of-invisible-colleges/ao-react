@@ -68,6 +68,13 @@ const mutations = {
     addParent(state, pId){
         state.parent.push(pId)
     },
+    goToParent(state, tId){
+        let popped = false
+        while (popped !== tId && state.parent.length !== 0){
+            popped = state.parent.pop()
+            console.log("looped", {popped})
+        }
+    }
 }
 
 const actions = {
@@ -76,9 +83,15 @@ const actions = {
           if (pContext.inId){
               commit("addParent", pContext.inId)
           }
-          commit("setPanel", pContext.panel, pContext.top)
+          commit("setPanel", pContext.panel)
           commit("setTop", pContext.top)
           // commit("retrieveMemory", newLocation.taskId)
+      },
+      goUp({commit, state}, pContext){
+          console.log("go up action ")
+          commit("goToParent", pContext.target)
+          commit("setPanel", pContext.panel)
+          commit("setTop", pContext.top)
       }
 }
 

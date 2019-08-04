@@ -1,8 +1,8 @@
 <template lang='pug'>
 
 .localremote
-  .local(:style='l') {{ parseFloat( c.channel_sat ).toLocaleString() }}
-  .remote(:style='r') {{ parseFloat( c.channel_total_sat - c.channel_sat ).toLocaleString() }}
+  .local(:style='l') &#12471; {{ parseFloat( c.channel_sat ).toLocaleString() }}
+  .remote(:style='r') &#12471; {{ parseFloat( c.channel_total_sat - c.channel_sat ).toLocaleString() }}
 </template>
 
 <script>
