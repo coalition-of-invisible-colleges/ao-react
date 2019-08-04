@@ -78,10 +78,26 @@ export default {
         },
         goIn(){
 
+            let panel = this.c
+            if (panel && panel.length && panel.length > 0){
+
+            } else {
+                panel = [this.b.taskId]
+            }
+
+            let top = panel.indexOf(this.b.taskId)
+
+            if (top > -1){
+
+            } else {
+                top = 0
+            }
+
+
             this.$store.dispatch("goIn", {
                 inId: this.inId,
-                top: 0,
-                panel: this.c
+                top,
+                panel
             })
 
             this.$router.push("/task/" + this.b.taskId)

@@ -38,9 +38,9 @@
       .three.grid
           img.fr(src='../../assets/images/forward.svg')
     .open(v-if='open')
-        hypercard(v-for='b in c'  :b="b"  :key="componentKey"  :inId='taskId'  :c='c')
+        hypercard(v-for='b in c'  :b="b"  :key="componentKey"  :inId='taskId'  :c='panelIds')
     .box(v-else  :class='panelSty')
-        hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId'  :c='c')
+        hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId'  :c='panelIds')
 </template>
 
 <script>
@@ -154,6 +154,9 @@ export default {
             blacktx : this.topCard.color == 'black',
         }
     },
+    panelIds(){
+        return this.c.map(g => g.taskId)
+    }
   },
   components:{
       Hypercard,

@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.deck.paperwrapper(v-if='resetHack && card  && setPageTitle()')
+.deck.paperwrapper
     h4 {{ $store.state.context }}
     .row
         .six.columns.card()

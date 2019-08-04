@@ -64,7 +64,12 @@ export default new Vuex.Store({
   },
   getters: {
       contextCard(state, getters){
-          return getters.hashMap[state.context.panel[state.context.top]]
+          console.log("calculating context card from", state.context)
+
+          let contextCard = getters.hashMap[state.context.panel[state.context.top]]
+          console.log({contextCard})
+
+          return contextCard
       },
       contextDeck(state, getters){
           return getters.contextCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )

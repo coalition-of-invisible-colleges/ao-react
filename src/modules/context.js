@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 
 const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
@@ -7,23 +9,54 @@ const state = {
     parent: [],
     panel: [],
     top: 0,
-    completed: false
+    completed: false,
+    memory: {},
+    topRed: 0,
+    topYellow: 0,
+    topGreen: 0,
+    topPurple: 0,
+    topBlue: 0,
 }
 
 const mutations = {
+    addMemory(state){
+      Vue.set(state.memory, state.panel[state.top], {
+        topRed: state.topRed,
+        topYellow: state.topYellow,
+        topGreen: state.topGreen,
+        topPurple: state.topPurple,
+        topBlue: state.topBlue,
+      })
+    },
+    retrieveMemory(state, taskId){
+        let memory = state.memory[taskId]
+        console.log({memory})
+        if (memory){
+          state.topRed = memory.topRed
+          state.topYellow = memory.topYellow
+          state.topGreen = memory.topGreen
+          state.topPurple = memory.topPurple
+          state.topBlue = memory.topBlue
+        } else {
+          state.topRed = 0
+          state.topYellow = 0
+          state.topGreen = 0
+          state.topPurple = 0
+          state.topBlue = 0
+        }
+    },
     toggleCompleted(state){
-        console.log("hit mutation?!")
         state.completed = !state.completed
     },
     setParent(state, p){
         state.parent = p
         console.log("parent set?", state)
     },
-    setPanel(state, px, i){
-        console.log("trying to set i: ", i)
-        state.panel = px
-        state.top = i | 0
-        console.log("panel set?", state)
+    setPanel(state, panel, top){
+          state.panel = panel
+    },
+    setTop(state, top){
+          state.top = top
     },
     last(state){
         state.top = (this.top - 1) % state.panel.length
@@ -41,13 +74,21 @@ const mutations = {
 
 const actions = {
       goIn({commit, state}, pContext ){
+
+          console.log("GOIN called", {pContext})
+
+          commit("addMemory")
           if (pContext.inId){
               commit("addParent", pContext.inId)
           }
 
+          let newLocation = pContext.panel[pContext.top]
+
+          console.log("trying to get to ", newLocation.taskId, pContext)
+
           commit("setPanel", pContext.panel, pContext.top)
-          
-          console.log("parent pushed", {pContext} )
+          commit("setTop", pContext.top)
+          commit("retrieveMemory", newLocation.taskId)
       }
 }
 

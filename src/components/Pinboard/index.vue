@@ -4,8 +4,8 @@
     .pinboard
         .row
             .six.columns.centered
-                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }} 
-                hypercard(:b='$store.getters.pubguilds[showGuild]'  :key='resetKey')
+                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
+                hypercard(:b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
             .five.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
                 img.budda(src='../../assets/images/buddadoge.svg')
@@ -65,6 +65,11 @@ export default {
       selectGuild(x){
           this.showGuild = parseInt(x)
           this.resetKey ++
+      }
+  },
+  computed: {
+      pubGuildIds(){
+          return this.$store.getters.pubguilds.map(g => g.taskId)
       }
   }
 }
@@ -179,7 +184,7 @@ h2
     font-size: 1.5em
     margin-right: 1em
     display: inline
-    
+
 .centered
     text-align: center
 </style>
