@@ -3,18 +3,18 @@
 .panel
     .row
       .four.grid(v-if='$store.getters.red.length > 0')
-          card-panel(:c='$store.getters.red', :taskId='inId')
+          card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
       .four.grid(v-if='$store.getters.green.length > 0')
-          card-panel(:c='$store.getters.green', :taskId='inId')
+          card-panel(:c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
       .four.grid(v-if='$store.getters.blue.length > 0')
-          card-panel(:c='$store.getters.blue', :taskId='inId')
+          card-panel(:c='$store.getters.blue', :taskId='$store.state.context.panel[$store.state.context.top]')
     .row
       .two.grid
           p &nbsp;
       .four.grid(v-if='$store.getters.yellow.length > 0')
-          card-panel(:c='$store.getters.yellow', :taskId='inId')
+          card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
       .four.grid(v-if='$store.getters.purple.length > 0')
-          card-panel(:c='$store.getters.purple', :taskId='inId')
+          card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
 </template>
 
 <script>
@@ -22,7 +22,6 @@
 import CardPanel from './CardPanel'
 
 export default {
-  props: ['c', 'inId'],
   components:{
       CardPanel,
   },

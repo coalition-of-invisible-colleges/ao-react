@@ -93,7 +93,6 @@ export default {
                 top = 0
             }
 
-
             this.$store.dispatch("goIn", {
                 inId: this.inId,
                 top,

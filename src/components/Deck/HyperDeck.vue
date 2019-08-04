@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .deck.paperwrapper
-    h4 {{ $store.state.context }}
+    priority(v-for='n in $store.state.context.parent'  :taskId='n')
     .row
         .six.columns.card()
             member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember')
@@ -36,6 +36,7 @@ import SharedTitle from '../slotUtils/SharedTitle'
 import TaskCreate from '../forms/TaskCreate'
 import Panels from './Panels'
 import Priorities from './Priorities'
+import Priority from './Priority'
 import Upgrades from './Upgrades'
 import MemberRow from './Member'
 import ResourceRow from '../Resources/Row'
@@ -48,7 +49,7 @@ export default {
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
-      Upgrades, BountyCard, ResourceRow
+      Upgrades, BountyCard, ResourceRow, Priority
   },watch: {
       '$route': 'reset'
   },

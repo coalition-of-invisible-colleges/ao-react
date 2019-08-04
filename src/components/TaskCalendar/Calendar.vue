@@ -62,12 +62,9 @@ export default {
     eventsByDay(){
         let evs = {}
         this.todaysEvents.forEach(t => {
-            console.log("inIds event 1 ", t)
             if (t && t.book && t.book.startTs){
                 let date = getDMY(t.book.startTs)
-                console.log("got date", date)
                 if (date.month === this.month && date.year === this.year){
-                    console.log("evetn matching year month")
                     if (!evs[date.day]){
                         evs[date.day] = []
                     }
@@ -82,8 +79,6 @@ export default {
     },
     todaysEvents(){
         let allTasks = this.card.subTasks.concat(this.card.priorities).concat(this.card.completed)
-        console.log("allTasks is ", allTasks)
-
         return allTasks.map(tId => {
             return this.$store.getters.hashMap[tId]
         })
@@ -188,10 +183,10 @@ tr, td
 
 img
     height: 30px
-        
+
 .calmonth
     margin: 0 2% 2% 2%
-    
+
 .buffer
    clear: both
    height: 0.45em

@@ -1,50 +1,48 @@
 import Vue from 'vue'
 
-
 const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
-
 
 const state = {
     parent: [],
     panel: [],
     top: 0,
     completed: false,
-    memory: {},
-    topRed: 0,
-    topYellow: 0,
-    topGreen: 0,
-    topPurple: 0,
-    topBlue: 0,
+    // memory: {},
+    // topRed: 0,
+    // topYellow: 0,
+    // topGreen: 0,
+    // topPurple: 0,
+    // topBlue: 0,
 }
 
 const mutations = {
-    addMemory(state){
-      Vue.set(state.memory, state.panel[state.top], {
-        topRed: state.topRed,
-        topYellow: state.topYellow,
-        topGreen: state.topGreen,
-        topPurple: state.topPurple,
-        topBlue: state.topBlue,
-      })
-    },
-    retrieveMemory(state, taskId){
-        let memory = state.memory[taskId]
-        console.log({memory})
-        if (memory){
-          state.topRed = memory.topRed
-          state.topYellow = memory.topYellow
-          state.topGreen = memory.topGreen
-          state.topPurple = memory.topPurple
-          state.topBlue = memory.topBlue
-        } else {
-          state.topRed = 0
-          state.topYellow = 0
-          state.topGreen = 0
-          state.topPurple = 0
-          state.topBlue = 0
-        }
-    },
+    // addMemory(state){
+    //   Vue.set(state.memory, state.panel[state.top], {
+    //     topRed: state.topRed,
+    //     topYellow: state.topYellow,
+    //     topGreen: state.topGreen,
+    //     topPurple: state.topPurple,
+    //     topBlue: state.topBlue,
+    //   })
+    // },
+    // retrieveMemory(state, taskId){
+    //     let memory = state.memory[taskId]
+    //     console.log({memory})
+    //     if (memory){
+    //       state.topRed = memory.topRed
+    //       state.topYellow = memory.topYellow
+    //       state.topGreen = memory.topGreen
+    //       state.topPurple = memory.topPurple
+    //       state.topBlue = memory.topBlue
+    //     } else {
+    //       state.topRed = 0
+    //       state.topYellow = 0
+    //       state.topGreen = 0
+    //       state.topPurple = 0
+    //       state.topBlue = 0
+    //     }
+    // },
     toggleCompleted(state){
         state.completed = !state.completed
     },
@@ -74,21 +72,13 @@ const mutations = {
 
 const actions = {
       goIn({commit, state}, pContext ){
-
-          console.log("GOIN called", {pContext})
-
-          commit("addMemory")
+          // commit("addMemory")
           if (pContext.inId){
               commit("addParent", pContext.inId)
           }
-
-          let newLocation = pContext.panel[pContext.top]
-
-          console.log("trying to get to ", newLocation.taskId, pContext)
-
           commit("setPanel", pContext.panel, pContext.top)
           commit("setTop", pContext.top)
-          commit("retrieveMemory", newLocation.taskId)
+          // commit("retrieveMemory", newLocation.taskId)
       }
 }
 

@@ -19,14 +19,8 @@ import GiftBox from './GiftBox.vue'
 export default {
   beforeRouteEnter(to, from, next) {
         next(vm => {
-            console.log("beforeRoute Enter ")
             vm.setDeck()
         })
-  },
-  beforeRouteUpdate(to, from, next) {
-    console.log("beforeRoute Update ")
-      this.setDeck()
-      next()
   },
   components:{
       HyperDeck,
@@ -34,7 +28,6 @@ export default {
   },
   methods: {
       setDeck(){
-          console.log("settin deckin")
           this.$store.commit("setPanel", [this.$store.getters.member.memberId], 0)
           this.$store.commit("setParent", [])
       }
