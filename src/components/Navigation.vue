@@ -6,7 +6,7 @@
     img.bullimg(v-else-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle("bull")')
     img.bullimg(v-else-if='showImg === "uni"'  src="../assets/images/bulluni.svg"  @click='cycle("uni")')
     .faded(@click='nextUpgradeMode')
-        img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
+        img.upg.boat(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/guildwithwhitenobkgrnd.png')
         img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/treasurechestnobkgrndwhiteD.png')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecubewithwhite.png')
@@ -137,7 +137,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
 .navigation
   display: flex
   flex-direction: column-reverse
-  min-height: 5.4em
+  min-height: 5.8em
   
 .side_bar ul
   margin-left: 10px;
@@ -189,7 +189,7 @@ hr
     color: lightteal
 
 .bullimg
-    height: 5.5em
+    width: 7em
     cursor: pointer
     // float: left
     flex-direction: column
@@ -254,14 +254,18 @@ hr
     opacity: 0.4
 
 .upg
-    height: 3em
-    margin: 1em
+    width: 5em
+    padding: 1em
     // float: right
     position: absolute
     top: 0
     right: 0
     cursor: pointer
 
+.boat
+    width: 7em
+    padding: 1em 0
+    
 .context
     width: calc(100% - 14em)
     margin: 0 7em
