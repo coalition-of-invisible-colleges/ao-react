@@ -19,7 +19,11 @@ export default {
     },
     methods: {
         setDeck(){
-            this.$store.commit("setPanel", [this.$route.path.split('/')[2]], 0)
+            let taskId = this.$route.path.split('/')[2]
+            console.log("routed hyperdeck ", {taskId})
+            if (!this.$store.getters.contextCard){
+                this.$store.commit("setPanel", [taskId] , 0)
+            }
         },
     },
 }

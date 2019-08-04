@@ -55,7 +55,7 @@ const routes =[{
 },{
   path: '/task/*',
   component: TaskCalendar,
-  meta: { title: "card" }
+  meta: { title: "card" },
 },
 ]
 
@@ -67,6 +67,7 @@ const router = new VueRouter({
 })
 
 router.afterEach((to, from, next) => {
+  
   if(to.meta.title == 'card') return
   Vue.nextTick( () => {
       document.title = to.meta.title ? to.meta.title : 'ao';

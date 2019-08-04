@@ -3,9 +3,15 @@
     .paperwrapper
         .row
             .six.columns.card()
-                member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember')
-                resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource')
-                hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card" )
+                member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
+                resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
+                template(v-for='(n, i) in panelSplit.before')
+                  div(@click="goWithinPanel(n)")
+                    context(:taskId='n')
+                hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
+                template(v-for='(n, i) in panelSplit.after')
+                  div(@click="goWithinPanel(n)")
+                    context(:taskId='n')
                 .bar()
                 .faded.small
                     span.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
@@ -46,6 +52,7 @@ import SharedTitle from '../slotUtils/SharedTitle'
 import TaskCreate from '../forms/TaskCreate'
 import Panels from './Panels'
 import Priorities from './Priorities'
+import Context from './Context'
 import Priority from './Priority'
 import Upgrades from './Upgrades'
 import MemberRow from './Member'
@@ -53,17 +60,30 @@ import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 
 export default {
-  data(){
-      return {resetHack: true}
+    beforeRouteUpdate (to, from, next) {
+      console.log("update called ", to.path)
+      // this.$store.
+
+    // called when the route that renders this component has changed,
+    // but this component is reused in the new route.
+    // For example, for a route with dynamic params `/foo/:id`, when we
+    // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
+    // will be reused, and this hook will be called when that happens.
+    // has access to `this` component instance.
   },
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
-      Upgrades, BountyCard, ResourceRow, Priority
-  },watch: {
-      '$route': 'reset'
+      Upgrades, BountyCard, ResourceRow, Priority, Context
   },
   methods:{
+      goWithinPanel(n){
+          let i = this.$store.state.context.panel.indexOf(n)
+          console.log("go within panel", {i, n, panel: this.$store.state.context.panel})
+          if (i > -1){
+              this.$store.commit("setTop", i)
+          }
+      },
       toggleShowComplete(){
           console.log("clcik trig call toggleCompleted")
 
@@ -75,12 +95,23 @@ export default {
           else document.title = this.card.name
           return true
       },
-      reset(){
-            this.resetHack=false
-            setTimeout(()=>{ this.resetHack = true }, 12)
-      },
   },
   computed: {
+      panelSplit(){
+          let before = []
+          let after = []
+          let top = this.$store.state.context.top
+          this.$store.state.context.panel.forEach((n, i) => {
+              if (i < top){
+                  before.push(n)
+              }
+              if (i > top){
+                after.push(n)
+              }
+          })
+
+          return {before, after}
+      },
       card(){
           return this.$store.getters.contextCard
       },

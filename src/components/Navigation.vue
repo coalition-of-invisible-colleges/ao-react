@@ -10,7 +10,7 @@
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/guildwithwhitenobkgrnd.png')
         img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/treasurechestnobkgrndwhiteD.png')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecubewithwhite.png')
-    .upg(v-if='!$store.state.upgrades.mode')
+    .topauth(v-if='!$store.state.upgrades.mode')
         auth()
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
@@ -241,6 +241,16 @@ hr
     top: 0
     right: 0
     cursor: pointer
+
+.topauth
+    max-width: 50%
+    padding: 1em
+    // float: right
+    position: absolute
+    top: 0
+    right: 0
+    cursor: pointer
+
 
 .boat
     width: 7em

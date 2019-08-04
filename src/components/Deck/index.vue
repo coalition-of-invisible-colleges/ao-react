@@ -17,21 +17,20 @@ import HyperDeck from './HyperDeck'
 import GiftBox from './GiftBox.vue'
 
 export default {
+  components:{
+      HyperDeck,
+      GiftBox,
+  },
   beforeRouteEnter(to, from, next) {
         next(vm => {
             vm.setDeck()
         })
   },
-  components:{
-      HyperDeck,
-      GiftBox,
-  },
   methods: {
       setDeck(){
           this.$store.commit("setPanel", [this.$store.getters.member.memberId], 0)
-          this.$store.commit("setParent", [])
-      }
-  }
+      },
+  },
 }
 
 </script>
