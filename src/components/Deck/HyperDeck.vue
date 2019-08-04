@@ -1,31 +1,25 @@
 <template lang='pug'>
-
-.deck.paperwrapper
-    priority(v-for='n in $store.state.context.parent'  :taskId='n')
-    .row
-        .six.columns.card()
-            member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember')
-            resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource')
-            hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card" )
-            .faded(@click='nextUpgradeMode')
-                img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../../assets/images/boatblack.svg')
-                img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/guildwithwhitenobkgrnd.png')
-                img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-                img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../../assets/images/timecubewithwhite.png')
-            .bar()
-        .six.columns.buffer
-            div.upgradesbar()
-                upgrades(:b='card')
-    div.fadey(:class='cardInputSty')
-        .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
-        task-create
-        panels
-    img.fw(src='../../assets/images/pixeldesert.png')
-    .agedbackground.translucent(:class='cardInputSty')
-    .agedbackground.freshpaperbg(v-if='cardAge < 8')
-    .agedbackground.weekoldpaperbg(v-else-if='cardAge < 30')
-    .agedbackground.montholdpaperbg(v-else-if='cardAge < 90')
-    .agedbackground.threemontholdpaperbg(v-else='cardAge >= 90')
+.deck
+    .paperwrapper
+        .row
+            .six.columns.card()
+                member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember')
+                resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource')
+                hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card" )
+                .bar()
+            .six.columns.buffer
+                div.upgradesbar()
+                    upgrades(:b='card')
+        div.fadey(:class='cardInputSty')
+            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
+            task-create
+            panels
+        img.fw(src='../../assets/images/pixeldesert.png')
+        .agedbackground.translucent(:class='cardInputSty')
+        .agedbackground.freshpaperbg(v-if='cardAge < 8')
+        .agedbackground.weekoldpaperbg(v-else-if='cardAge < 30')
+        .agedbackground.montholdpaperbg(v-else-if='cardAge < 90')
+        .agedbackground.threemontholdpaperbg(v-else='cardAge >= 90')
 </template>
 
 <script>
@@ -54,9 +48,6 @@ export default {
       '$route': 'reset'
   },
   methods:{
-      nextUpgradeMode(){
-          this.$store.commit("nextMode")
-      },
       toggleShowComplete(){
           console.log("clcik trig call toggleCompleted")
 
@@ -141,10 +132,6 @@ export default {
     height: 4em
     border: 4px solid rgba(0, 0, 0, 0.5)
     background-color: rgba(0, 0, 0, 0, 0.2)
-
-.upg
-    height: 4em
-    padding-top: 3em
 
 .bar
     min-height: 1em

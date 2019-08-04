@@ -39,10 +39,6 @@ export default {
 @import "./styles/colours"
 @import "./styles/input"
 
-.contain
-    padding-left: 1em
-    padding-right: 1em
-
 #app
     position:relative
     color: accent1

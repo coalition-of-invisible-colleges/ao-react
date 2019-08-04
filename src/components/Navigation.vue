@@ -1,55 +1,61 @@
 <template lang='pug'>
 
 .navigation
-    .pricebox
-        img.bullimg(v-if='!$store.getters.isLoggedIn' src='../assets/images/dctrl.svg')
-        div(v-else)
-            img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle("sun")')
-            img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle("bull")')
-            img.bullimg(v-if='showImg === "uni"'  src="../assets/images/bulluni.svg"  @click='cycle("uni")')
-        div(v-if='$store.getters.isLoggedIn')
-            div(@click='setImg("sun")')
-                router-link(to='/' exact) Guilds
-            div(@click='setImg("uni")')
-                router-link(to='/deck')
-                    span(v-if='$store.getters.inbox.length > 0')
-                      img.smallbird(src='../assets/images/birdbtn.svg')
-                      span {{ $store.getters.inbox.length }} |
-                    span Deck
-                      br
-                      span.subheading ({{$store.getters.member.name}})
-            div(@click='setImg("bull")')
-                router-link(to='/dash' ) Dashboard
-            auth
-        auth(v-else)
-    div.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
-      .dot.redwx
-      span disconnected
-    div.connectedstatus(v-if="$store.state.loader.connected == 'connecting'")
-      .dot.yellowwx
-      span connecting
-    div.connectedstatus(v-if="$store.state.loader.connected == 'connected'")
-      .dot.greenwx
-      span connected
-    div.connectedstatus(v-if="$store.state.loader.connectionError")
-      .dot.purplewx
-      span {{ $store.state.loader.connectionError }}
-    div
-      p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} ms -
-      span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
+    img.bullimg(v-if='!$store.getters.isLoggedIn' src='../assets/images/dctrl.svg')
+    img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle("sun")')
+    img.bullimg(v-else-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle("bull")')
+    img.bullimg(v-else-if='showImg === "uni"'  src="../assets/images/bulluni.svg"  @click='cycle("uni")')
+    .faded(@click='nextUpgradeMode')
+        img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
+        img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/guildwithwhitenobkgrnd.png')
+        img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/treasurechestnobkgrndwhiteD.png')
+        img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecubewithwhite.png')
+        auth(v-if='!$store.state.upgrades.mode')
+    context(v-for='(n, i) in $store.state.context.parent.slice().reverse()'  :taskId='n')
+        card-panel(v-if='i === $store.state.context.parent.length - 1')
+        //- auth
+        //- div(v-if='$store.getters.isLoggedIn')
+        //-     div(@click='setImg("sun")')
+        //-         router-link(to='/' exact) Guilds
+        //-     div(@click='setImg("uni")')
+        //-         router-link(to='/deck')
+        //-             span(v-if='$store.getters.inbox.length > 0')
+        //-               img.smallbird(src='../assets/images/birdbtn.svg')
+        //-               span {{ $store.getters.inbox.length }} |
+        //-             span Deck
+        //-               br
+        //-               span.subheading ({{$store.getters.member.name}})
+        //-     div(@click='setImg("bull")')
+        //-         router-link(to='/dash' ) Dashboard
+        //- auth(v-else)
+    //- div.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
+    //-   .dot.redwx
+    //-   span disconnected
+    //- div.connectedstatus(v-if="$store.state.loader.connected == 'connecting'")
+    //-   .dot.yellowwx
+    //-   span connecting
+    //- div.connectedstatus(v-if="$store.state.loader.connected == 'connected'")
+    //-   .dot.greenwx
+    //-   span connected
+    //- div.connectedstatus(v-if="$store.state.loader.connectionError")
+    //-   .dot.purplewx
+    //-   span {{ $store.state.loader.connectionError }}
+    //- div
+    //-   p {{ $store.state.loader.reqStatus }} - {{ $store.state.loader.lastPing }} ms -
+    //-   span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
 </template>
 
 <script>
 
 import Auth from './Auth'
 import calculations from '../calculations'
-
 import CardPanel from './Deck/CardPanel'
 import FancyInput from './slotUtils/FancyInput'
+import Context from './Deck/Context'
 
 export default {
     name: 'navigation',
-    components: { Auth, CardPanel, FancyInput },
+    components: { Auth, CardPanel, FancyInput, Context },
     mounted(){
         this.setToRoute()
     },
@@ -89,7 +95,10 @@ export default {
                 this.$store.commit("setPanel", [this.$store.getters.member.memberId])
                 this.$store.commit("setParent", [])
             }
-        }
+        },
+        nextUpgradeMode(){
+            this.$store.commit("nextMode")
+        },
     },
     computed: {
         sats(){
@@ -125,6 +134,11 @@ var intervalID = window.setInterval(updateTransition, 7000);
 @import '../styles/colours'
 @import '../styles/grid'
 
+.navigation
+  display: flex
+  flex-direction: column-reverse
+  min-height: 5.4em
+  
 .side_bar ul
   margin-left: 10px;
 
@@ -175,15 +189,14 @@ hr
     color: lightteal
 
 .bullimg
-    height: 11em
+    height: 5.5em
     cursor: pointer
-
-.pricebox
+    // float: left
+    flex-direction: column
     display: flex
-    justify-content: space-between
-    align-items: center
-    align-content: center
-    text-align: center
+    position: absolute
+    left: 0
+    top: 0
 
 .btc
     border: 2px purple solid
@@ -237,4 +250,21 @@ hr
   display: inline-block
   margin-right: 0.5em
 
+.faded
+    opacity: 0.4
+
+.upg
+    height: 3em
+    margin: 1em
+    // float: right
+    position: absolute
+    top: 0
+    right: 0
+    cursor: pointer
+
+.context
+    width: calc(100% - 14em)
+    margin: 0 7em
+    align-self: flex-end
+    
 </style>

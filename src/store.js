@@ -20,8 +20,8 @@ function fullDeck(subTasks, allTasks = [], state, getters){
           let task = state.tasks.filter( t => tId === t.taskId)[0]
           //if(task) console.log("fullDeck ", task.name)
           let isMemberCard = state.members.some( m => {
-              console.log("checking if it's a member card: ", tId)
-              console.log("for member: ", m.memberId)
+              //console.log("checking if it's a member card: ", tId)
+              //console.log("for member: ", m.memberId)
               return m.memberId === tId
           })
           if(isMemberCard) console.log("member card found: ", tId)

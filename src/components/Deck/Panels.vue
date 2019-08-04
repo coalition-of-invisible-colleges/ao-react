@@ -1,14 +1,14 @@
 <template lang='pug'>
 
 .panel
-    .row
+    .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
       .four.grid(v-if='$store.getters.red.length > 0')
           card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
       .four.grid(v-if='$store.getters.green.length > 0')
           card-panel(:c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
       .four.grid(v-if='$store.getters.blue.length > 0')
           card-panel(:c='$store.getters.blue', :taskId='$store.state.context.panel[$store.state.context.top]')
-    .row
+    .row(v-if='$store.getters.yellow.length + $store.getters.purple.length > 0')
       .two.grid
           p &nbsp;
       .four.grid(v-if='$store.getters.yellow.length > 0')
