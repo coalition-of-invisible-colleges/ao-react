@@ -2,7 +2,7 @@
 .deck
     .paperwrapper
         .row
-            .six.columns.card()
+            .five.columns.card()
                 member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
                 template(v-for='(n, i) in panelSplit.before')
@@ -13,7 +13,7 @@
                   div(@click="goWithinPanel(n)")
                     context(:taskId='n')
                 .bar()
-                .faded.small
+                .small
                     span.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
                       span.dot.redwx
                       span disconnected
@@ -29,9 +29,9 @@
                     span
                       span - last ping {{ $store.state.loader.lastPing }} ms pong -
                       span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
-            .six.columns.buffer
+            .seven.columns.buffer
                 div.upgradesbar()
-                    upgrades(:b='card')
+                    upgrades
         div.fadey(:class='cardInputSty')
             .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
             task-create
@@ -113,6 +113,12 @@ export default {
           return {before, after}
       },
       card(){
+          if (!this.$store.getters.contextCard){
+              return {
+                  taskId: 'test',
+                  name: 'hello, world',
+              }
+          }
           return this.$store.getters.contextCard
       },
       cardInputSty(){
@@ -151,6 +157,7 @@ export default {
 
 .small
     font-size:0.8
+    opacity: 0.5
 
 .deck
     width: 100%

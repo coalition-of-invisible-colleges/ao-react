@@ -8,6 +8,7 @@ const state = {
     panel: [],
     top: 0,
     completed: false,
+    action: false,
     // memory: {},
     // topRed: 0,
     // topYellow: 0,
@@ -55,6 +56,9 @@ const mutations = {
     },
     setTop(state, top){
           state.top = top
+    },
+    setAction(state, a){
+        this.action = a
     },
     last(state){
         state.top = (this.top - 1) % state.panel.length

@@ -49,14 +49,14 @@ export default {
 
 .local
     height: 2em
-    background: purple
+    background: wrexpurple
     float: left
     color: white
     text-align: center
 
 .remote
     height: 2em
-    background: green
+    background: wrexgreen
     float: right
     color: white
     text-align: center

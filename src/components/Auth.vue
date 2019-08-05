@@ -1,7 +1,7 @@
 <template lang='pug'>
 
-#auth.row
-  .six.columns.offset-by-three(v-if='!confirmed')
+#auth
+  div(v-if='!confirmed')
       h4 Login to AO
       fancy-input(labelText='hackername')
           input.input-effect(type='text', v-model='name', autocapitalize="none", autocomplete="off", autocorrect="off")
@@ -13,9 +13,7 @@
       br
       p.red {{ err }}
       button.primary(@click="createSession") login
-  .c(v-else)
-      button(@click="killSession") log out
-
+  button(v-else  @click="killSession") log out
 </template>
 
 <script>
@@ -70,7 +68,7 @@ export default {
                   window.localStorage.setItem("session", session)
 
                   console.log('createSession about to connect')
-                  
+
                   this.$store.dispatch('loadCurrent')
               })
       },

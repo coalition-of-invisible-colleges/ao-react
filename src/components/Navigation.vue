@@ -1,17 +1,15 @@
 <template lang='pug'>
 
 .navigation
-    img.bullimg(v-if='!$store.getters.isLoggedIn' src='../assets/images/dctrl.svg')
-    img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle("sun")')
-    img.bullimg(v-else-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle("bull")')
-    img.bullimg(v-else-if='showImg === "uni"'  src="../assets/images/bulluni.svg"  @click='cycle("uni")')
+    img.bullimgright(v-if='!$store.state.upgrades.mode'  src="../assets/images/bullsunbulluni.svg"  @click='$router.push("/dash")')
+    img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle()')
+    img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle()')
     .faded(@click='nextUpgradeMode')
         img.upg.boat(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/guildwithwhitenobkgrnd.png')
         img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/treasurechestnobkgrndwhiteD.png')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecubewithwhite.png')
-    .topauth(v-if='!$store.state.upgrades.mode')
-        auth()
+    button.topcenter(v-if='!$store.state.upgrades.mode'  @click="killSession") log out
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -42,6 +40,12 @@ export default {
         }
     },
     methods: {
+        killSession(){
+            this.$store.dispatch("makeEvent", {
+                type: "session-killed",
+                session: this.$store.state.loader.session
+            })
+        },
         goToParent(target){
             console.log("go to parent called")
             this.$store.dispatch("goUp", {
@@ -51,10 +55,16 @@ export default {
             })
         },
         cycle(from){
-            switch(from){
-                case 'uni': return this.$router.push('/')
-                case 'bull': return this.$router.push('/deck')
-                case 'sun': return this.$router.push('/dash')
+            switch (this.$router.currentRoute.path){
+              case "/": return this.$router.push('/deck')
+              case "/dash": return this.$router.push('/deck')
+            }
+
+            if (this.$store.state.context.parent.length > 0){
+                this.$router.push('/deck')
+                this.$store.commit("setParent", [])
+            } else {
+                this.$router.push('/')
             }
             this.setToRoute()
         },
@@ -113,6 +123,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
 
 @import '../styles/colours'
 @import '../styles/grid'
+// @import '../styles/button'
 
 .navigation
   display: flex
@@ -176,6 +187,16 @@ hr
     display: flex
     position: absolute
     left: 0
+    top: 0
+
+.bullimgright
+    width: 7em
+    cursor: pointer
+    // float: left
+    flex-direction: column
+    display: flex
+    position: absolute
+    right: 0
     top: 0
 
 .btc
@@ -251,6 +272,17 @@ hr
     right: 0
     cursor: pointer
 
+.topcenter
+    position: absolute
+    top: 0
+    left: 50%
+    background: wrexred
+    color: white
+    padding-left: 2em
+    padding-right: 2em
+    padding-top: .29em
+    padding-bottom: .29em
+
 
 .boat
     width: 7em
@@ -260,5 +292,13 @@ hr
     width: calc(100% - 14em)
     margin: 0 7em
     align-self: flex-end
+
+.fl
+    float: left
+
+.fr
+    float: right
+    width: 7em
+
 
 </style>

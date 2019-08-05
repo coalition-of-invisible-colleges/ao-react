@@ -3,12 +3,11 @@
 #nodes
     .row
         .six.columns
-            p {{ $store.state.cash.info.alias }} - {{ $store.state.cash.info.id }}
-            p Blocks: {{ $store.state.cash.info.blockheight }}
+            p Node Wallet Totals - {{ $store.state.cash.info.alias }}
             summaryy
         .six.columns
             p {{ $store.state.cash.info.num_active_channels }} Active Lightning Channels
-            channel(v-for='n in $store.getters.channels', :c='n')
+            local-remote-bar(v-for='n in $store.getters.channels', :c='n')
 </template>
 
 <script>
@@ -20,10 +19,11 @@ import Summaryy from './Summary'
 import Mercher from './Mercher'
 import Channel from './Channel'
 import ChannelCreate from '../forms/ChannelCreate'
+import LocalRemoteBar from './LocalRemoteBar'
 
 export default {
     components:{
-        SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate
+        SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar
     },
 }
 
@@ -70,8 +70,7 @@ a
     font-size: .68em
     word-break: break-all
 
-.columns p
-    font-size: .99em
-    color: accent2
+p
+    text-align: center
 
 </style>

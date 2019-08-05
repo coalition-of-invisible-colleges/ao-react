@@ -13,7 +13,7 @@
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
           div(v-if='$store.state.upgrades.mode === "boat"')
-              priorities(:taskId="b.taskId", :inId='b.taskId')
+              priorities
           template(v-if='$store.state.upgrades.mode === "badge"')
             div
               div(v-if='!isDoge')
@@ -82,7 +82,6 @@ import Priorities from './Priorities'
 import Vouch from '../Members/Vouch'
 
 export default {
-    props: ['b'],
     components:{
         SharedTitle, Current, TaskCreate,
         HyperDeck, Hypercard, GuildCreate,
@@ -161,6 +160,9 @@ export default {
         },
     },
     computed: {
+        b(){
+            return this.$store.getters.contextCard
+        },
         dogeGuilds(){
             let guilds = []
             this.$store.getters.guilds.forEach( g => {

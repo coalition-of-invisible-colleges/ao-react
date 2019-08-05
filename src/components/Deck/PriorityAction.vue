@@ -3,7 +3,7 @@
 .priorityaction.clearboth
     div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
-        //- hyper-card(:b='card')
+        hypercard(:b='card',  :inId='inId')
         router-link.fr(:to='"/task/" + taskId')
             img.singleship(src='../../assets/images/vinebtn.svg')
         linky.emphasize(:x='name'  :key='name')
@@ -156,7 +156,7 @@ button
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-    
+
 .emphasize
     font-weight: bold
     font-size: 1.5em

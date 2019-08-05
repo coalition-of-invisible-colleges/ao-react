@@ -38,7 +38,6 @@ import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
 
 export default {
-  props: ['taskId'],
   data(){
       return {
           action: false,
@@ -106,7 +105,7 @@ export default {
   },
   computed: {
       card(){
-          return this.$store.getters.hashMap[this.taskId]
+          return this.$store.getters.context
       },
       getPriorities(){
           if (this.card && this.card.priorities){
@@ -250,7 +249,7 @@ img
 
 .bdoge
     width: 100%
-    opacity: 0.3
+    opacity: 0.6
 .subpriority
     margin-left: 2em
     width: calc(100% - 2em)

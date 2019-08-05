@@ -12,7 +12,6 @@
                 img.budda(src='../../assets/images/buddadoge.svg')
         .row.clearboth
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-            router-link.purpletx.link(to='/members/') see all
             img.fw(src='../../assets/memes/Spiderman.jpg')
             home
 </template>
