@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 div
-    vue-markdown.noheight {{ this.x }}
+    vue-markdown.noheight(:anchorAttributes='anchorAttributes') {{ this.x }}
     slot.centered
 
 </template>
@@ -30,6 +30,14 @@ export default {
             } );
             return linkedtext
         },
+    },
+    data: function() {
+        return {
+            anchorAttributes: {
+                target: '_blank',
+                rel: 'noopener noreferrer nofollow'
+            },
+        }
     }
 }
 

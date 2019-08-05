@@ -14,13 +14,27 @@ import { watchSpot } from './exchangeRate'
 import Kefir from 'kefir'
 import cronStarter from './crons'
 import lightning from './lightning'
+//import { exec } from 'child_process' // for shell commands, see commented code below
 
 const app = express()
 applyRouter(app)
 startDctrlAo()
 
-function startDctrlAo(){
+// function doBash(command) {
+//     exec(command, (err, stdout, stderr) => { // home/anders/computer/backup/backup.sh
+//         if (err) {
+//           // node couldn't execute the command
+//           console.log(err)
+//           return
+//         }
 
+//         // the *entire* stdout and stderr (buffered)
+//         console.log(`stdout: ${stdout}`)
+//         console.log(`stderr: ${stderr}`)
+//     })
+// }
+
+function startDctrlAo(){
   console.log('starting db')
   dctrlDb.startDb( (err, conn) => {
 
@@ -32,7 +46,7 @@ function startDctrlAo(){
       watchSpot()
       cronStarter()
       lightning.recordEveryInvoice(state.pubState.cash.pay_index)
-      lightning.watchOnChain()
+      lightning.watchOnChain()  
 
       const cleanupHeartbeat = Kefir.interval(12345678, {type: 'cleanup'})
       const evStream = Kefir.merge([dctrlDb.changeFeed, cleanupHeartbeat])
