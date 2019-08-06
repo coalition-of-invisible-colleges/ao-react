@@ -1,9 +1,10 @@
 <template lang='pug'>
 
 .priorities.clearboth
-    router-link(:to='"/task/" + taskId')
-        img.singleship()
-    div.agedwrapper(:class="cardInputSty")
+  .row
+    .shipcontainer
+      img.singleship(@click='allocate(t, taskId)'  src='../../assets/images/singleship.svg')
+      div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper
         linky(:x='name'  :key='name')
 </template>
@@ -11,13 +12,17 @@
 <script>
 
 import Linky from '../Card/Linky'
+import Hypercard from '../Card'
 
 export default {
     props: ['taskId'],
-    components: { Linky },
+    components: { Linky, Hypercard },
     computed: {
+        card(){
+          return this.$store.getters.hashMap[this.taskId]
+        },
         name(){
-            return this.$store.getters.hashMap[this.taskId].name
+            return this.card.name
         },
         isBounty(){
             return this.$store.getters.bounties.some( t => {
@@ -88,5 +93,8 @@ export default {
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-    
+    padding: 1em
+    color: white
+
+
 </style>

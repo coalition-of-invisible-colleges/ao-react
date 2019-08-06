@@ -1,32 +1,20 @@
 <template lang='pug'>
 
 .priorities
-    .empty(v-if='getPriorities.length < 1')
-      img.bdoge(src='../../assets/images/buddadoge.svg')
-    template.clearboth(v-for='(t, i) of getPriorities')
-      .row
-        .shipcontainer
-          img.singleship(@click='allocate(t, taskId)'  src='../../assets/images/singleship.svg')
-          .allocated(v-if='checkAllocated(t) > 0') {{ checkAllocated(t) }}
-          span.ptr(@click='setAction(t)')
-            hyperpriority-action(v-if='action === t', :taskId='t', :inId='taskId')
-            hyperpriority(v-else  :taskId='t')
+    .empty(v-if='$store.getters.getPriorities.length < 1')
+        img.bdoge(src='../../assets/images/buddadoge.svg')
+    template.clearboth(v-for='(t, i) of $store.getters.getPriorities')
+      div
+          span hyperyes
+          span
+              hypercard(:b="getTask(t)"  :c="$store.getters.getPriorities"  :inId="$store.getters.getPriorities")
+      hyperpriority(:taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
         .clearboth
-        .shipcontainer
-          img.singleship(src='../../assets/images/singleship.svg')
-          .allocated(v-if='checkAllocated(st) > 0') {{ checkAllocated(st) }}
-          span.ptr(@click='setAction(st)')
-            hyperpriority-action(v-if='action === st',  :taskId='st', :inId='t')
-            hyperpriority(v-else  :taskId='st')
+        hyperpriority(:taskId='st')
         .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
           .clearboth
-          .shipcontainer
-            img.singleship(src='../../assets/images/singleship.svg')
-            .allocated(v-if='checkAllocated(st2) > 0') {{ checkAllocated(st2) }}
-            span.ptr(@click='setAction(st2)')
-              hyperpriority-action(v-if='action === st2', :taskId='st2', :inId='st')
-              hyperpriority(v-else  :taskId='st2')
+          hyperpriority(:taskId='st2')
     div.clearboth
 </template>
 
@@ -107,15 +95,11 @@ export default {
       card(){
           return this.$store.getters.context
       },
-      getPriorities(){
-          if (this.card && this.card.priorities){
-              return this.card.priorities.slice().reverse()
-          }
-      },
   },
   components:{
       Hyperpriority,
       HyperpriorityAction,
+      Hypercard,
   },
 }
 

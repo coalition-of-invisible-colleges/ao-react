@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.task(v-if='b && resetHack'  :class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
+.task(:class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -59,17 +59,10 @@ import Current from '../Resources/Current'
 export default {
     props: ['b', 'inId', 'c'],
     data(){
-        return { active: false, resetHack: true }
-    },
-    watch: {
-        '$route': 'reset'
+        return { active: false }
     },
     components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities, Current},
     methods: {
-        reset(){
-            this.resetHack=false
-            setTimeout(()=>{ this.resetHack = true }, 50)
-        },
         purge(){
           this.$store.dispatch("makeEvent", {
               type: 'task-removed',
