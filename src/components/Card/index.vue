@@ -1,5 +1,4 @@
 <template lang='pug'>
-
 .task(:class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
@@ -28,7 +27,7 @@
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
-  priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
+  simple-priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
   .row
       scroll.faded(:b='b', :inId='inId')
@@ -38,7 +37,6 @@
           img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
           current.tooltiptext(v-for='memberId in b.deck', :memberId='memberId')
           p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
-  //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
@@ -52,8 +50,7 @@ import Scroll from './Scroll'
 import Vine from './Vine'
 import Passed from './Passed'
 import Linky from './Linky'
-//import spin from '../../styles/spinners.styl'
-import Priorities from '../Deck/Priorities'
+import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
 
 export default {
@@ -61,7 +58,7 @@ export default {
     data(){
         return { active: false }
     },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities, Current},
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, SimplePriorities, Current},
     methods: {
         purge(){
           this.$store.dispatch("makeEvent", {

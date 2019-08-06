@@ -1,17 +1,14 @@
 <template lang='pug'>
 
 .priorities
+    .empty(v-if='$store.getters.getPriorities.length < 1')
+        img.bdoge(src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of $store.getters.getPriorities')
-      hyperpriority(:taskId='t')
-      .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
-        .clearboth
-        hyperpriority(:taskId='st')
-        .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
-          hyperpriority(:taskId='st2')
-    div.clearboth
+        hyperpriority(:taskId='t')
 </template>
 
 <script>
+
 
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'

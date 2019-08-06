@@ -1,12 +1,14 @@
 <template lang='pug'>
 
-.priorities.clearboth
+.priorities.clearboth(@click='setAction')
   .row
     .shipcontainer
-      img.singleship(@click='allocate(t, taskId)'  src='../../assets/images/singleship.svg')
-      div.agedwrapper(:class="cardInputSty")
-        .agedbackground.freshpaper
-        linky(:x='name'  :key='name')
+      img.singleship(@click='allocate()'  src='../../assets/images/singleship.svg')
+      div.agedwrapper(v-if="$store.state.context.action !== taskId"  :class="cardInputSty")
+          linky(:x='name'  :key='name')
+      div(v-else)
+          p attempt render
+          hypercard(:b="card"   :inId="$store.getters.contextCard.taskId"  :c="$store.getters.getPriorities")
 </template>
 
 <script>
@@ -17,6 +19,18 @@ import Hypercard from '../Card'
 export default {
     props: ['taskId'],
     components: { Linky, Hypercard },
+    methods: {
+        setAction(){
+            this.$store.commit("setAction", this.taskId)
+        },
+        allocate(){
+          this.$store.dispatch("makeEvent", {
+            type: 'task-allocated',
+            taskId: this.$store.getters.contextCard.taskId,
+            allocatedId: this.taskId
+          })
+        },
+    },
     computed: {
         card(){
           return this.$store.getters.hashMap[this.taskId]
