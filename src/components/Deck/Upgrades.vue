@@ -13,7 +13,7 @@
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
           div(v-if='$store.state.upgrades.mode === "boat"')
-              priorities
+              priorities(:key='$store.state.context.action')
           template(v-if='$store.state.upgrades.mode === "badge"')
             div
               div(v-if='!isDoge')

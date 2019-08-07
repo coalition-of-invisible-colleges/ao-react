@@ -2,12 +2,20 @@
 
 .priorities
     template.clearboth(v-for='(t, i) of $store.getters.getPriorities')
-      hyperpriority(:taskId='t')
+      div(v-if='$store.state.context.action === t')
+          hypercard(:b="getTask(t)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+          hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
+      hyperpriority(v-else,  :taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
-        .clearboth
-        hyperpriority(:taskId='st')
-        .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
-          hyperpriority(:taskId='st2')
+          div.clearboth(v-if='$store.state.context.action === st')
+              hypercard(:b="getTask(st)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+              hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
+          hyperpriority(v-else,  :taskId='st')
+          .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
+              div(v-if='$store.state.context.action === st2')
+                  hypercard(:b="getTask(st2)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+                  hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
+              hyperpriority(v-else,  :taskId='st2')
     div.clearboth
 </template>
 
@@ -37,26 +45,6 @@ export default {
           purplewx : color == 'purple',
           blackwx : color == 'black',
       }
-    },
-    checkAllocated(t){
-        let allocatedAmount = 0
-        if(!Array.isArray(this.card.allocations)) {
-            return -1
-        }
-        let parent = this.getTask(this.card.taskId)
-        parent.allocations.forEach(als => {
-            if (als.allocatedId === t){
-                allocatedAmount = als.amount
-            }
-        })
-        return allocatedAmount
-    },
-    allocate(tId, inId){
-      this.$store.dispatch("makeEvent", {
-        type: 'task-allocated',
-        taskId: inId,
-        allocatedId: tId
-      })
     },
     setAction(ii){
         console.log('set action called ', ii)

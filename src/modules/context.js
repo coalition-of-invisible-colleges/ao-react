@@ -8,7 +8,7 @@ const state = {
     panel: [],
     top: 0,
     completed: false,
-    action: '036f13b0-b344-11e9-84e5-87987c8a3f95',
+    action: '43eea700-b2fb-11e9-b136-f360859fc7d5',
     // memory: {},
     // topRed: 0,
     // topYellow: 0,
@@ -59,7 +59,7 @@ const mutations = {
     },
     setAction(state, a){
         console.log("set action setting action", a)
-        this.action = a
+        state.action = a
     },
     last(state){
         state.top = (this.top - 1) % state.panel.length

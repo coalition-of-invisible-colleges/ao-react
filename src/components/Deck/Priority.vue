@@ -1,24 +1,22 @@
 <template lang='pug'>
 
-.priorities.clearboth(@click='setAction')
+.p.clearboth(@click='setAction')
   .row
     .shipcontainer
       img.singleship(@click='allocate()'  src='../../assets/images/singleship.svg')
       div.agedwrapper(v-if="$store.state.context.action !== taskId"  :class="cardInputSty")
           linky(:x='name'  :key='name')
-      div(v-else)
-          p attempt render
-          hypercard(:b="card"   :inId="$store.getters.contextCard.taskId"  :c="$store.getters.getPriorities")
+      slot
 </template>
 
 <script>
 
 import Linky from '../Card/Linky'
-import Hypercard from '../Card'
+import Hypercard from '../Card/index'
 
 export default {
     props: ['taskId'],
-    components: { Linky, Hypercard },
+    components: { Hypercard, Linky },
     methods: {
         setAction(){
             this.$store.commit("setAction", this.taskId)
@@ -69,7 +67,7 @@ export default {
 
 @import '../../styles/colours'
 
-.priorities
+.p
     color: white
 
 .clearboth
@@ -108,7 +106,6 @@ export default {
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
     padding: 1em
-    color: white
 
 
 </style>
