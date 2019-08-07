@@ -8,7 +8,7 @@ const state = {
     panel: [],
     top: 0,
     completed: false,
-    action: '43eea700-b2fb-11e9-b136-f360859fc7d5',
+    action: false,
     // memory: {},
     // topRed: 0,
     // topYellow: 0,

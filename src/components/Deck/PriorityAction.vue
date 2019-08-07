@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .priorityaction.clearboth
-    img.singleship(@click="deaction"   src='../../assets/images/singleship.svg')
+    img.singleship.rotate(@click="deaction"   src='../../assets/images/singleship.svg')
     .row.clearboth
         .six.grid
             button.accept(@click='claim')
@@ -106,6 +106,9 @@ button
 .singleship
     width: 3.3724em
     margin-top: 0.5em
+    position: relative
+    top: 0em
+    left: -5.9em
 
 .arrow
     height: 3.35em
@@ -116,6 +119,8 @@ button
         background: white
         padding: .1em
 
+.rotate
+    transform: rotate(180deg);
 
 .accept, .dontaccept
     background: accent5
