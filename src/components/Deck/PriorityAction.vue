@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 .priorityaction.clearboth
+    img.singleship(@click="deaction"   src='../../assets/images/singleship.svg')
     .row.clearboth
         .six.grid
             button.accept(@click='claim')
@@ -51,6 +52,9 @@ export default {
         },
     },
     methods: {
+        deaction(){
+            this.$store.commit("setAction", false)
+        },
         goIn(){
             this.$router.push("/task/" + this.taskId)
         },

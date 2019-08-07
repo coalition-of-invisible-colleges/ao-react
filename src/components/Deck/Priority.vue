@@ -4,9 +4,8 @@
   .row
     .shipcontainer
       img.singleship(@click='allocate()'  src='../../assets/images/singleship.svg')
-      div.agedwrapper(v-if="$store.state.context.action !== taskId"  :class="cardInputSty")
+      div.agedwrapper(:class="cardInputSty")
           linky(:x='name'  :key='name')
-      slot
 </template>
 
 <script>

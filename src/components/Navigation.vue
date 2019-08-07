@@ -2,8 +2,9 @@
 
 .navigation
     img.bullimgright(v-if='!$store.state.upgrades.mode'  src="../assets/images/bullsunbulluni.svg"  @click='$router.push("/dash")')
-    img.bullimg(v-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle()')
-    img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle()')
+    img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle')
+    img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
+    img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
     .faded(@click='nextUpgradeMode')
         img.upg.boat(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/guildwithwhitenobkgrnd.png')

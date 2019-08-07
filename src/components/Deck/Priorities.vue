@@ -1,18 +1,21 @@
 <template lang='pug'>
 
 .priorities
-    template.clearboth(v-for='(t, i) of $store.getters.getPriorities')
-      div(v-if='$store.state.context.action === t')
-          hypercard(:b="getTask(t)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
-          hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
+    template.clearboth(v-for='(t, i) of $store.getters.getPriorities.slice().reverse()')
+      .redwx(v-if='$store.state.context.action === t')
+          span
+              hypercard(:b="getTask(t)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+              hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
       hyperpriority(v-else,  :taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
-          div.clearboth(v-if='$store.state.context.action === st')
+          .redwx.clearboth(v-if='$store.state.context.action === st')
+              img.singleship(@click='setAction(false)'  src='../../assets/images/singleship.svg')
               hypercard(:b="getTask(st)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
               hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
           hyperpriority(v-else,  :taskId='st')
           .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
-              div(v-if='$store.state.context.action === st2')
+              .redwx(v-if='$store.state.context.action === st2')
+                  img.singleship(@click='setAction(false)'  src='../../assets/images/singleship.svg')
                   hypercard(:b="getTask(st2)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
                   hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
               hyperpriority(v-else,  :taskId='st2')
@@ -217,4 +220,18 @@ img
 .subpriority
     margin-left: 2em
     width: calc(100% - 2em)
+
+.redwx
+    padding-top: 0.1em
+    padding-left: 2em
+    padding-right: 0.4em
+    padding-bottom: 0.4em
+    margin-bottom: 0.7em
+    margin-top: 0.7em
+
+.singleship
+    width: 1.0724em
+    position: absolute
+    margin-top: 1em
+
 </style>
