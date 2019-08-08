@@ -28,7 +28,10 @@ export default {
   },
   methods: {
       setDeck(){
-          this.$store.commit("setPanel", [this.$store.getters.member.memberId], 0)
+          console.log("deck route handle called")
+          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+          this.$store.commit("setTop", 0)
+          this.$store.commit("setParent", [])
       },
   },
 }

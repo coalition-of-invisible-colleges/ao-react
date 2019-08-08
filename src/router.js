@@ -62,7 +62,7 @@ const routes =[{
 const router = new VueRouter({
   routes,
   scrollBehavior: (to, from, savedPosition) => {
-      return { x: '25px', y: '25px' }
+      return { x: 0, y: 0 }
   }
 })
 
@@ -72,8 +72,6 @@ router.afterEach((to, from, next) => {
   Vue.nextTick( () => {
       document.title = to.meta.title ? to.meta.title : 'ao';
   })
-
-  console.log("triggered on backtick", {to, from})
 
 })
 

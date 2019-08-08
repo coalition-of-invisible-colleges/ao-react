@@ -21,9 +21,16 @@ export default {
         setDeck(){
             let taskId = this.$route.path.split('/')[2]
             console.log("routed hyperdeck ", {taskId})
-            if (!this.$store.getters.contextCard){
-                this.$store.commit("setPanel", [taskId] , 0)
+
+            if (!this.$store.state.context.panel[this.$store.state.context.top]){
+                console.log('dont have context building simple')
+                this.$store.commit("setPanel", [taskId])
+                this.$store.commit("setTop", 0)
+                this.$store.commit("setParent", [])
+            } else {
+
             }
+
         },
     },
 }

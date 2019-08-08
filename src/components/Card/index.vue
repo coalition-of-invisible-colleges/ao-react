@@ -27,7 +27,7 @@
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
-  simple-priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
+  simple-priorities(v-if='b.guild &&  $store.getters.contextCard.taskId != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
   .row
       scroll.faded(:b='b', :inId='inId')
