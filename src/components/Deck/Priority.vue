@@ -1,10 +1,11 @@
 <template lang='pug'>
 
-.p.clearboth(@click='setAction')
+.p.clearboth
   .row
     .shipcontainer
-      img.singleship(@click='allocate()'  src='../../assets/images/singleship.svg')
-      div.agedwrapper(:class="cardInputSty")
+      img.singleship(@click='allocate'  src='../../assets/images/singleship.svg')
+      .allocated(v-if='allocated > 0') {{ allocated }}
+      div.agedwrapper(@click='setAction'  :class="cardInputSty")
           linky(:x='name'  :key='name')
 </template>
 
@@ -29,6 +30,18 @@ export default {
         },
     },
     computed: {
+        allocated(){
+            let allocatedAmount = 1
+            this.$store.state.tasks.forEach(t => {
+                t.allocations.forEach(als => {
+                    if (als.allocatedId === this.taskId){
+                        allocatedAmount += als.amount
+                    }
+                })
+            })
+            return allocatedAmount
+
+        },
         card(){
           return this.$store.getters.hashMap[this.taskId]
         },
@@ -106,5 +119,16 @@ export default {
     opacity: 0.2
     padding: 1em
 
+.allocated
+    position: absolute
+    padding-left: 0.25em
+    width: 2em
+    text-align: center
+    font-size: 0.95em
+    margin-top: 0.5em
+    color: white
+    text-shadow: 2px 2px 2px rgba(0.05, 0.05, 0.05, 0.5)
+    font-size: 1.5em
+    pointer-events: none
 
 </style>

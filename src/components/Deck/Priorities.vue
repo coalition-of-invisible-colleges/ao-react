@@ -3,7 +3,7 @@
 .priorities
     template.clearboth(v-for='(t, i) of $store.getters.getPriorities.slice().reverse()')
       .redwx(v-if='$store.state.context.action === t')
-          span
+            span
               hypercard(:b="getTask(t)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
               hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
       hyperpriority(v-else,  :taskId='t')
@@ -35,20 +35,6 @@ export default {
       }
   },
   methods:{
-    goIn(tId){
-        this.$router.push("/task/" + tId)
-    },
-    cardInputSty(t) {
-      let color = this.getTask(t).color
-      return {
-          redwx : color == 'red',
-          bluewx : color == 'blue',
-          greenwx : color == 'green',
-          yellowwx : color == 'yellow',
-          purplewx : color == 'purple',
-          blackwx : color == 'black',
-      }
-    },
     setAction(ii){
         console.log('set action called ', ii)
         if (ii === this.action){
@@ -73,11 +59,6 @@ export default {
           return card.priorities.slice().reverse()
       }
     }
-  },
-  computed: {
-      card(){
-          return this.$store.getters.context
-      },
   },
   components:{
       Hyperpriority,

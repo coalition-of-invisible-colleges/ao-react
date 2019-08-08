@@ -108,7 +108,7 @@ button
     margin-top: 0.5em
     position: relative
     top: 0em
-    left: -5.9em
+    left: -2.9em
 
 .arrow
     height: 3.35em
