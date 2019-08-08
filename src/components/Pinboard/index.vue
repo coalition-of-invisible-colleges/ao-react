@@ -36,6 +36,11 @@ import Row from '../Members/Row'
 import Auth from '../Auth'
 
 export default {
+  beforeRouteEnter(to, from, next) {
+        next(vm => {
+            vm.setDeck()
+        })
+  },
   components:{
       Auth,
       Row,
@@ -59,6 +64,12 @@ export default {
       }
   },
   methods:{
+      setDeck(){
+          console.log("pinboard route handle called")
+          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+          this.$store.commit("setTop", 0)
+          this.$store.commit("setParent", [])
+      },
       cycleGuilds(){
           console.log('cycling')
           if (this.$store.getters.pubguilds){
