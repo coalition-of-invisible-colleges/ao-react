@@ -1,92 +1,27 @@
 <template lang='pug'>
 
 .priorities
-    .empty(v-if='$store.getters.getPriorities.length < 1')
+    .empty(v-if='priorities.length < 1')
         img.bdoge(src='../../assets/images/buddadoge.svg')
-    template.clearboth(v-for='(t, i) of $store.getters.getPriorities')
-        hyperpriority(:taskId='t')
+    template.clearboth(v-for='(t, i) of priorities')
+        simple-hyperpriority(:taskId='t'  :c='priorities'  :inId='taskId')
 </template>
 
 <script>
 
-
 import Hypercard from '../Card'
-import Hyperpriority from './Priority'
+import SimpleHyperpriority from './SimplePriority'
 import HyperpriorityAction from './PriorityAction'
 
 export default {
-  data(){
-      return {
-          action: false,
-      }
-  },
-  methods:{
-    goIn(tId){
-        this.$router.push("/task/" + tId)
-    },
-    cardInputSty(t) {
-      let color = this.getTask(t).color
-      return {
-          redwx : color == 'red',
-          bluewx : color == 'blue',
-          greenwx : color == 'green',
-          yellowwx : color == 'yellow',
-          purplewx : color == 'purple',
-          blackwx : color == 'black',
-      }
-    },
-    checkAllocated(t){
-        let allocatedAmount = 0
-        if(!Array.isArray(this.card.allocations)) {
-            return -1
-        }
-        let parent = this.getTask(this.card.taskId)
-        parent.allocations.forEach(als => {
-            if (als.allocatedId === t){
-                allocatedAmount = als.amount
-            }
-        })
-        return allocatedAmount
-    },
-    allocate(tId, inId){
-      this.$store.dispatch("makeEvent", {
-        type: 'task-allocated',
-        taskId: inId,
-        allocatedId: tId
-      })
-    },
-    setAction(ii){
-        console.log('set action called ', ii)
-        if (ii === this.action){
-            return this.action = false
-        }
-        this.action = ii
-    },
-    getTask(taskId){
-        return this.$store.getters.hashMap[taskId]
-    },
-    nextAction(){
-        this.action = this.getPriorities[(this.getPriorities.indexOf(this.action) + 1) % this.getPriorities.length]
-    },
-    nextSubAction(inId){
-        let context = this.getSubPriorities(inId)
-        console.log("context is ", context)
-        this.action = context.slice()[(context.slice().indexOf(this.action) + 1) % context.slice().length]
-    },
-    getSubPriorities(taskId){
-      let card = this.$store.getters.hashMap[taskId]
-      if(card && card.priorities){
-          return card.priorities.slice().reverse()
-      }
-    }
-  },
+  props: ['taskId'],
   computed: {
-      card(){
-          return this.$store.getters.context
-      },
+      priorities(){
+          return this.$store.getters.hashMap[this.taskId].priorities.slice().reverse()
+      }
   },
   components:{
-      Hyperpriority,
+      SimpleHyperpriority,
       HyperpriorityAction,
       Hypercard,
   },

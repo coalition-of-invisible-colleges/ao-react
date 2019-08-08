@@ -1,22 +1,22 @@
 <template lang='pug'>
 
 .priorities
-    template.clearboth(v-for='(t, i) of $store.getters.getPriorities.slice().reverse()')
+    template.clearboth(v-for='(t, i) of priorities')
       .redwx(v-if='$store.state.context.action === t')
             span
-              hypercard(:b="getTask(t)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+              hypercard(:b="getTask(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
               hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
       hyperpriority(v-else,  :taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
           .redwx.clearboth(v-if='$store.state.context.action === st')
               img.singleship(@click='setAction(false)'  src='../../assets/images/singleship.svg')
-              hypercard(:b="getTask(st)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+              hypercard(:b="getTask(st)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
               hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
           hyperpriority(v-else,  :taskId='st')
           .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
               .redwx(v-if='$store.state.context.action === st2')
                   img.singleship(@click='setAction(false)'  src='../../assets/images/singleship.svg')
-                  hypercard(:b="getTask(st2)", :c="$store.getters.getPriorities",  :inId="$store.getters.contextCard.taskId")
+                  hypercard(:b="getTask(st2)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
                   hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
               hyperpriority(v-else,  :taskId='st2')
     div.clearboth
@@ -59,6 +59,11 @@ export default {
           return card.priorities.slice().reverse()
       }
     }
+  },
+  computed:{
+      priorities(){
+          return this.$store.getters.getPriorities.slice().reverse()
+      }
   },
   components:{
       Hyperpriority,

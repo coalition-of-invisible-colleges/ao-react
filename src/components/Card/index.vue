@@ -112,9 +112,11 @@ export default {
             if ( this.b.book.startTs ){
               let now = Date.now()
               let msTill = this.b.book.startTs - now
+              // XXX TODO
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
+              console.log({now, msTill, days})
               return {
                   days,
                   hours,

@@ -18,7 +18,7 @@
             span.counts.iceblue {{ vouchCount }}
             span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio }}
         .grid(:class='{ six: hasAnyVouches, four: !hasAnyVouches }')
-            priorities(:taskId='m.memberId')
+            simple-priorities(:taskId='m.memberId')
         .grid.one
             preview-deck(:task='$store.getters.hashMap[m.memberId]')
             router-link.fw(:to='"/task/" + m.memberId')
@@ -32,11 +32,11 @@ import DctrlActive from './DctrlActive'
 import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
-import Priorities from '../Deck/Priorities'
+import SimplePriorities from '../Deck/SimplePriorities'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck, Priorities},
+    components: {DctrlActive, Badges, Addr, PreviewDeck, SimplePriorities},
     methods:{
         toggleGrab(){
             if (this.isVouched) {

@@ -51,6 +51,9 @@ export default {
 
 @import '../../styles/colours'
 
+.context
+    opacity: 0.6
+
 .paperwrapper
     position: relative
 
@@ -66,7 +69,7 @@ export default {
     position: absolute
     width: 100%
     opacity: 0.2
-    
+
 .popup
     top: 0
     left: 0
@@ -76,17 +79,17 @@ export default {
     width: 100%
     height: 1.5em
     cursor: pointer
-    
+
 .popup .here
     visibility: hidden
-    
+
 .popup:hover
     height: 100%
-    
+
 .popup:hover .here
     visibility: visible
     padding: 1em
-    
+
 .here
     position: inline
     color: white

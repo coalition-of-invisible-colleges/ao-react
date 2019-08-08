@@ -3,8 +3,9 @@
 #wrex
     .pinboard
         .row
-            .six.columns.centered
-                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
+            .six.columns
+                .centered
+                    .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
                 hypercard(:b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
                 auth(v-if='!$store.getters.isLoggedIn')
             .six.columns
