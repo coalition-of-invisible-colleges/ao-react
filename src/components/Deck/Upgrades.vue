@@ -18,13 +18,13 @@
             div
               div(v-if='!isDoge')
                   .box
-                      h2(v-if='b.guild') {{ b.guild }} - guild
+                      h2(v-if='b.guild') {{ b.guild }}
                       h2(v-else) hodlers
                       current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                       img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                       guild-create
               div(v-else)
-                  .gui.title {{isDoge.name}}'s missions
+                  .gui.title missions
                   ul
                       template(v-for='g in dogeGuilds')
                           li.spaced
@@ -32,7 +32,7 @@
                               router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
                                   .tooltiptext {{ c.name }}
                               div.description {{ g.name }}
-                  .gui.title {{isDoge.name}}'s vouches
+                  .gui.title vouches
                   ul
                       li
                           vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
@@ -338,6 +338,7 @@ h3
 
 .gui
     font-size: 1.5em
+    color: white
 
 .row .three
     height: 5em

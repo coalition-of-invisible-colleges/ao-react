@@ -2,8 +2,7 @@
 
 #auth
   div(v-if='!confirmed')
-      h4 Login to AO
-      fancy-input(labelText='hackername')
+      fancy-input(labelText='dogename')
           input.input-effect(type='text', v-model='name', autocapitalize="none", autocomplete="off", autocorrect="off")
       br
       div.input-container
