@@ -22,7 +22,7 @@
             span {{ calcVal }}
         .cardhud(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
-            span {{ cardStart.toFixed(1) }} days
+            span {{ cardStart.days.toFixed(1) }} days
         linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
