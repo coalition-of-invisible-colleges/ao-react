@@ -28,7 +28,14 @@ export default {
   },
   methods: {
       setDeck(){
-          console.log("deck route handle called")
+          if (!this.$store.getters.isLoggedIn){
+              console.log('setting for offline deck')
+              this.$store.commit("setPanel", this.$store.getters.pubguildIds)
+              this.$store.commit("setTop", 0)
+              this.$store.commit("setParent", [])
+              return
+          }
+
           this.$store.commit("setPanel", [this.$store.getters.member.memberId])
           this.$store.commit("setTop", 0)
           this.$store.commit("setParent", [])

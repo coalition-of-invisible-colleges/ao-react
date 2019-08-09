@@ -17,7 +17,9 @@ export default {
   props: ['taskId'],
   computed: {
       priorities(){
-          return this.$store.getters.hashMap[this.taskId].priorities.slice().reverse()
+          if (this.$store.getters.hashMap[this.taskId]){
+              return this.$store.getters.hashMap[this.taskId].priorities.slice().reverse()
+          }
       }
   },
   components:{

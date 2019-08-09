@@ -57,7 +57,7 @@ export default {
     },
     computed: {
         toMe(){
-            return this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
+            return this.b && this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
         }
     }
 }
