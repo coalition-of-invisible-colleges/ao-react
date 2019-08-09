@@ -60,7 +60,6 @@ export default {
               case "/": return this.$router.push('/deck')
               case "/dash": return this.$router.push('/deck')
             }
-
             if (this.$store.state.context.parent.length > 0){
                 this.$router.push('/deck')
                 this.$store.commit("setParent", [])
@@ -276,7 +275,7 @@ hr
 .topcenter
     position: absolute
     top: 0
-    left: 50%
+    left: 53%
     background: wrexred
     color: white
     padding-left: 2em

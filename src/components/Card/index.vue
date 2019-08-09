@@ -109,6 +109,7 @@ export default {
     },
     computed: {
         cardStart(){
+            // XXX recalc on nav 
             if ( this.b.book.startTs ){
               let now = Date.now()
               let msTill = this.b.book.startTs - now

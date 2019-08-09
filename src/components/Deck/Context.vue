@@ -3,9 +3,14 @@
 .context.paperwrapper(:class="cardInputSty")
     //router-link(:to='"/task/" + taskId')
     //div.paperwrapper
+    img(v-if='card.guild'  src="../../assets/images/badge.svg")
+    img(v-if='isMember' src="../../assets/images/loggedIn.svg")
     .hyperpaper
     .popup()
-        linky.here(:x='name'  :key='name')
+        span
+            span(v-if='isMember')  {{ isMember }}
+            span(v-else-if='card.guild')  {{ card.guild }}
+            linky.here(v-else  :x='name'  :key='name')
     slot
 </template>
 
@@ -17,22 +22,24 @@ export default {
     props: ['taskId'],
     components: { Linky },
     computed: {
+        isMember(){
+            let is = false
+            this.$store.state.members.some(m => {
+                if (m.memberId === this.taskId){
+                    is = m.name
+                    return true
+                }
+            })
+            return is
+        },
         name(){
             return this.$store.getters.hashMap[this.taskId].name
         },
-        isBounty(){
-            return this.$store.getters.bounties.some( t => {
-                return t.taskId === this.taskId
-            })
+        card(){
+            return this.$store.getters.hashMap[this.taskId]
         },
         cardInputSty() {
-          let color
-          this.$store.state.tasks.some(t => {
-              if (this.taskId === t.taskId){
-                  color = t.color
-                  return true
-              }
-          })
+          let color = this.card.color
           return {
               redwx : color == 'red',
               bluewx : color == 'blue',
@@ -51,8 +58,14 @@ export default {
 
 @import '../../styles/colours'
 
+img
+    height: 1.1em
+    float: left
+    padding-left: 1em
+
 .context
     opacity: 0.6
+    color: white
 
 .paperwrapper
     position: relative

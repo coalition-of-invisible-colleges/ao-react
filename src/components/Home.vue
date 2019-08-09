@@ -33,7 +33,7 @@
             p On site server, and raspberry pis serving open source web application
             p Attempt at fairness and reduced administration while sharing.
             p Holographic communication, organization, and prioritization tool.
-            a(href='https://github.com/AutonomousOrganization') github.com/AutonomousOrganization
+            a(target="_blank", href='https://github.com/AutonomousOrganization') github.com/AutonomousOrganization
     p Decentralization fails without accepting responsibility and striving to create. Exploring dogeconciousness is worthy.
     img#sundogepurp(src="./../assets/images/sundogepurp.png")
 </template>
