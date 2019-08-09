@@ -6,7 +6,7 @@
             .six.columns
                 .centered
                     .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
-                hypercard(:b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+                hypercard(v-if='$store.getters.pubguilds[showGuild]'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
                 auth(v-if='!$store.getters.isLoggedIn')
             .six.columns
                 calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')

@@ -116,5 +116,10 @@ p
     padding: 1.4em
     font-size: 1.4em
 
+a
+    font-size: 2em
+    text-decoration: none
+    color: purple
+    text-align: center
 
 </style>
