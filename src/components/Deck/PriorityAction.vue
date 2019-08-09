@@ -1,21 +1,16 @@
 <template lang='pug'>
 
 .priorityaction.clearboth
-    div.agedwrapper(:class="cardInputSty")
-        .agedbackground.freshpaper
-        hypercard(:b='card',  :inId='inId')
-        router-link.fr(:to='"/task/" + taskId')
-            img.singleship(src='../../assets/images/vinebtn.svg')
-        linky.emphasize(:x='name'  :key='name')
-        .row.clearboth
-            .six.grid
-                button.accept(@click='claim')
-                    img.arrow.fr(src='../../assets/images/buddadoge.svg')
-                    span complete
-            .six.grid
-                button.dontaccept(@click='refuse')
-                    img.arrow.fl(src='../../assets/images/buddadoge.svg')
-                    span refocus
+    img.singleship.rotate(@click="deaction"   src='../../assets/images/singleship.svg')
+    .row.clearboth
+        .six.grid
+            button.accept(@click='claim')
+                img.arrow.fr(src='../../assets/images/buddadoge.svg')
+                span complete
+        .six.grid
+            button.dontaccept(@click='refuse')
+                img.arrow.fl(src='../../assets/images/buddadoge.svg')
+                span refocus
 </template>
 
 <script>
@@ -30,7 +25,7 @@ export default {
             notes: ''
         }
     },
-    props: ['taskId', 'nextAction', 'inId'],
+    props: ['taskId', 'inId'],
     computed: {
         card(){
             return this.$store.getters.hashMap[this.taskId]
@@ -57,6 +52,9 @@ export default {
         },
     },
     methods: {
+        deaction(){
+            this.$store.commit("setAction", false)
+        },
         goIn(){
             this.$router.push("/task/" + this.taskId)
         },
@@ -108,6 +106,9 @@ button
 .singleship
     width: 3.3724em
     margin-top: 0.5em
+    position: relative
+    top: 0em
+    left: -2.9em
 
 .arrow
     height: 3.35em
@@ -118,6 +119,8 @@ button
         background: white
         padding: .1em
 
+.rotate
+    transform: rotate(180deg);
 
 .accept, .dontaccept
     background: accent5

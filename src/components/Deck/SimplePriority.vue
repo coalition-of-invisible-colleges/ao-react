@@ -1,11 +1,10 @@
 <template lang='pug'>
 
-.p.clearboth
+.p.clearboth(@dblclick='goIn')
   .row
     .shipcontainer
-      img.singleship(@click='allocate'  src='../../assets/images/singleship.svg')
-      .allocated(v-if='allocated > 0') {{ allocated }}
-      div.agedwrapper(@click='setAction'  :class="cardInputSty")
+      img.singleship(src='../../assets/images/singleship.svg')
+      div.agedwrapper(:class="cardInputSty")
           linky(:x='name'  :key='name')
 </template>
 
@@ -15,9 +14,33 @@ import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
 
 export default {
-    props: ['taskId'],
+    props: ['taskId', 'inId', 'c'],
     components: { Hypercard, Linky },
     methods: {
+        goIn(){
+            let panel = this.c
+            if (panel && panel.length && panel.length > 0){
+
+            } else {
+                panel = [this.taskId]
+            }
+
+            let top = panel.indexOf(this.taskId)
+
+            if (top > -1){
+
+            } else {
+                top = 0
+            }
+
+            this.$store.dispatch("goIn", {
+                inId: this.inId,
+                top,
+                panel
+            })
+
+            this.$router.push('/task/' + this.taskId)
+        },
         setAction(){
             this.$store.commit("setAction", this.taskId)
         },

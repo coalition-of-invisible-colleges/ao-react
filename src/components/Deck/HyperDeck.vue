@@ -301,20 +301,4 @@ export default {
   display: inline-block
   margin-right: 0.5em
 
-
-// .bluewx
-//   background-color: rgba(255, 0, 0, 0.2)
-
-// .greenwx
-//   background-color: rgba(255, 0, 0, 0.2)
-
-// .yellowwx
-//   background-color: rgba(255, 0, 0, 0.2)
-
-// .purplewx
-//   background-color: rgba(134, 66, 169, 0.2)
-
-// .redwx
-//   background-color: rgba(255, 0, 0, 0.2)
-
 </style>

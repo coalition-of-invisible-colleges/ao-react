@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import _ from 'lodash'
 
 const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
@@ -58,7 +59,8 @@ const mutations = {
           state.top = top
     },
     setAction(state, a){
-        this.action = a
+        console.log("set action setting action", a)
+        state.action = a
     },
     last(state){
         state.top = (this.top - 1) % state.panel.length
@@ -70,13 +72,13 @@ const mutations = {
         state.top = (state.top + 1) % state.panel.length
     },
     addParent(state, pId){
+        state.parent = _.filter(state.parent, p => p !== pId)
         state.parent.push(pId)
     },
     goToParent(state, tId){
         let popped = false
         while (popped !== tId && state.parent.length !== 0){
             popped = state.parent.pop()
-            console.log("looped", {popped})
         }
     }
 }

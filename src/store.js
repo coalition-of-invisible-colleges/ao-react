@@ -64,11 +64,9 @@ export default new Vuex.Store({
   },
   getters: {
       contextCard(state, getters){
-          console.log("calculating context card from", state.context)
-
-          let contextCard = getters.hashMap[state.context.panel[state.context.top]]
-          console.log({contextCard})
-
+          let contextCard = _.merge({
+              taskId: '1', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
+          }, getters.hashMap[state.context.panel[state.context.top]])
           return contextCard
       },
       contextDeck(state, getters){
@@ -95,6 +93,13 @@ export default new Vuex.Store({
         })
         return contextRes
       },
+      getPriorities(state, getters){
+          let p = []
+          if (getters.contextCard && getters.contextCard.priorities){
+              p =  getters.contextCard.priorities
+          }
+          return p
+      },
       deck(state, getters){
           return getters.memberCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
       },
@@ -102,31 +107,31 @@ export default new Vuex.Store({
           return getters.memberCard.completed.map(t => getters.hashMap[t])
       },
       red(state, getters){
-          if (state.completed){
+          if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'red')
           }
           return getters.contextDeck.filter(d => d.color === 'red')
       },
       yellow(state, getters){
-          if (state.completed){
+          if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'yellow')
           }
           return getters.contextDeck.filter(d => d.color === 'yellow')
       },
       green(state, getters){
-          if (state.completed){
+          if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'green')
           }
           return getters.contextDeck.filter(d => d.color === 'green')
       },
       purple(state, getters){
-          if (state.completed){
+          if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'purple')
           }
           return getters.contextDeck.filter(d => d.color === 'purple')
       },
       blue(state, getters){
-          if (state.completed){
+          if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'blue')
           }
           return getters.contextDeck.filter(d => d.color === 'blue')

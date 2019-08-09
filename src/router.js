@@ -62,23 +62,17 @@ const routes =[{
 const router = new VueRouter({
   routes,
   scrollBehavior: (to, from, savedPosition) => {
-      return savedPosition || { x: 0, y: 0 }
+      return { x: 0, y: 0 }
   }
 })
 
 router.afterEach((to, from, next) => {
-  
+
   if(to.meta.title == 'card') return
   Vue.nextTick( () => {
       document.title = to.meta.title ? to.meta.title : 'ao';
   })
-})
 
-// this one may make the browser history better
-// router.afterEach((to, from) => {
-//   Vue.nextTick( () => {
-//     document.title = to.meta.title ? to.meta.title : 'default title';
-//   });
-// })
+})
 
 export default router

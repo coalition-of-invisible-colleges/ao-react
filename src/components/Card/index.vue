@@ -1,6 +1,5 @@
 <template lang='pug'>
-
-.task(v-if='b && resetHack'  :class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
+.task(:class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -28,7 +27,7 @@
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
-  priorities(v-if='b.guild && $router.currentRoute.path.split("/")[2] != b.taskId', :taskId="b.taskId", :inId='b.taskId')
+  simple-priorities(v-if='b.guild &&  $store.getters.contextCard.taskId != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
   .row
       scroll.faded(:b='b', :inId='inId')
@@ -38,7 +37,6 @@
           img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
           current.tooltiptext(v-for='memberId in b.deck', :memberId='memberId')
           p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
-  //- button(v-if='b.deck.length === 0' @click='purge') purge
 </template>
 
 <script>
@@ -52,24 +50,16 @@ import Scroll from './Scroll'
 import Vine from './Vine'
 import Passed from './Passed'
 import Linky from './Linky'
-//import spin from '../../styles/spinners.styl'
-import Priorities from '../Deck/Priorities'
+import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
 
 export default {
     props: ['b', 'inId', 'c'],
     data(){
-        return { active: false, resetHack: true }
+        return { active: false }
     },
-    watch: {
-        '$route': 'reset'
-    },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, Priorities, Current},
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, SimplePriorities, Current},
     methods: {
-        reset(){
-            this.resetHack=false
-            setTimeout(()=>{ this.resetHack = true }, 50)
-        },
         purge(){
           this.$store.dispatch("makeEvent", {
               type: 'task-removed',
@@ -122,9 +112,11 @@ export default {
             if ( this.b.book.startTs ){
               let now = Date.now()
               let msTill = this.b.book.startTs - now
+              // XXX TODO
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
+              console.log({now, msTill, days})
               return {
                   days,
                   hours,
