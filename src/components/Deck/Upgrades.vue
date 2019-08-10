@@ -2,13 +2,13 @@
 
 .upgrades
     .row
-        .three.grid(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
+        .three.grid.tab(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
             img.upgrade(src='../../assets/images/boatblack.svg')
-        .three.grid(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
+        .three.grid.tab(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
             img.upgrade(src='../../assets/images/badge.svg')
-        .three.grid(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
+        .three.grid.tab(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
             img.upgrade(src='../../assets/images/bounty.svg')
-        .three.grid(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
+        .three.grid.tab(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
             img.upgrade(src='../../assets/images/timecube.svg')
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
@@ -252,10 +252,17 @@ export default {
 .upgrades
     width: 100%
 
+.tab
+    padding-top: .4321em
+
 .selected
-    background: lightGrey
+    background: main
     border-radius: 40px 40px 0 0
     padding-bottom: 0.654321em
+    border-style: dashed
+    border-width: 2px
+    border-color: softGrey
+
 
 .formlabel
     padding-top: 1em
@@ -284,7 +291,7 @@ h3
     text-align: center
 
 .upgrade
-    height: 4em
+    height: 3.7em
     cursor: pointer
 
 .mainbg
