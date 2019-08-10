@@ -57,7 +57,11 @@ export default {
     },
     computed: {
         toMe(){
-            return this.b && this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
+            let m = []
+            if (this.b && this.b.passed.length > 1){
+                m = this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
+            }
+            return m
         }
     }
 }

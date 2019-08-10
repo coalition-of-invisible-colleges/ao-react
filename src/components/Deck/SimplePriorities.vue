@@ -16,10 +16,15 @@ import HyperpriorityAction from './PriorityAction'
 export default {
   props: ['taskId'],
   computed: {
+      card(){
+          return this.$store.getters.hashMap[this.taskId]
+      },
       priorities(){
-          if (this.$store.getters.hashMap[this.taskId]){
-              return this.$store.getters.hashMap[this.taskId].priorities.slice().reverse()
+          let p = []
+          if ( this.card && this.card.priorities.length > 0){
+              p = this.card.priorities.slice().reverse()
           }
+          return p
       }
   },
   components:{

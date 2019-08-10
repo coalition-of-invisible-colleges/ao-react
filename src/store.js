@@ -263,7 +263,7 @@ export default new Vuex.Store({
           })
 
           if (guilds.length > 9){
-              return guild.slice(0,9)
+              return guilds.slice(0,9)
           }
 
           return guilds

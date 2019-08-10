@@ -5,7 +5,7 @@
     .shipcontainer
       img.singleship(src='../../assets/images/singleship.svg')
       div.agedwrapper(:class="cardInputSty")
-          linky(:x='name'  :key='name')
+          linky(:x='card.name'  :key='name')
 </template>
 
 <script>
@@ -41,56 +41,19 @@ export default {
 
             this.$router.push('/task/' + this.taskId)
         },
-        setAction(){
-            this.$store.commit("setAction", this.taskId)
-        },
-        allocate(){
-          this.$store.dispatch("makeEvent", {
-            type: 'task-allocated',
-            taskId: this.$store.getters.contextCard.taskId,
-            allocatedId: this.taskId
-          })
-        },
     },
     computed: {
-        allocated(){
-            let allocatedAmount = 1
-            this.$store.state.tasks.forEach(t => {
-                t.allocations.forEach(als => {
-                    if (als.allocatedId === this.taskId){
-                        allocatedAmount += als.amount
-                    }
-                })
-            })
-            return allocatedAmount
-
-        },
         card(){
-          return this.$store.getters.hashMap[this.taskId]
-        },
-        name(){
-            return this.card.name
-        },
-        isBounty(){
-            return this.$store.getters.bounties.some( t => {
-                return t.taskId === this.taskId
-            })
+            return this.$store.getters.hashMap[this.taskId]
         },
         cardInputSty() {
-          let color
-          this.$store.state.tasks.some(t => {
-              if (this.taskId === t.taskId){
-                  color = t.color
-                  return true
-              }
-          })
           return {
-              redwx : color == 'red',
-              bluewx : color == 'blue',
-              greenwx : color == 'green',
-              yellowwx : color == 'yellow',
-              purplewx : color == 'purple',
-              blackwx : color == 'black',
+              redwx : this.card.color == 'red',
+              bluewx : this.card.color == 'blue',
+              greenwx : this.card.color == 'green',
+              yellowwx : this.card.color == 'yellow',
+              purplewx : this.card.color == 'purple',
+              blackwx : this.card.color == 'black',
           }
         }
     }
