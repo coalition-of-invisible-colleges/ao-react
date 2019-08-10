@@ -261,6 +261,9 @@ export default new Vuex.Store({
           })
           return guilds
       },
+      pubguildIds(state, getters){
+          return getters.pubguilds.map(p => p.taskId)
+      },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId
           return isLoggedIn
@@ -293,14 +296,17 @@ export default new Vuex.Store({
           return  perMonth.toFixed(2)
       },
       inbox(state, getters){
+
           let passedToMe = []
-          let tasks = state.tasks.forEach(t => {
-              t.passed.forEach(p => {
-                  if (p[1] ===  getters.member.memberId){
-                      passedToMe.push(t)
-                  }
+          if (getters.isLoggedIn){
+              state.tasks.forEach(t => {
+                  t.passed.forEach(p => {
+                      if (p[1] ===  getters.member.memberId){
+                          passedToMe.push(t)
+                      }
+                  })
               })
-          })
+          }
           return passedToMe
       },
       confirmedBalance(state, getters){

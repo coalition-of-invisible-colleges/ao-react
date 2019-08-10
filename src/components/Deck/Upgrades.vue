@@ -5,11 +5,11 @@
         .three.grid(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
             img.upgrade(src='../../assets/images/boatblack.svg')
         .three.grid(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
-            img.upgrade(src='../../assets/images/guildwithwhitenobkgrnd.png')
+            img.upgrade(src='../../assets/images/badge.svg')
         .three.grid(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
-            img.upgrade(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+            img.upgrade(src='../../assets/images/bounty.svg')
         .three.grid(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
-            img.upgrade(src='../../assets/images/timecubewithwhite.png')
+            img.upgrade(src='../../assets/images/timecube.svg')
     .row.mainbg
       transition(name='slide-fade'  mode='out-in')
           div(v-if='$store.state.upgrades.mode === "boat"')
@@ -18,13 +18,13 @@
             div
               div(v-if='!isDoge')
                   .box
-                      h2(v-if='b.guild') {{ b.guild }} - guild
+                      h2(v-if='b.guild') {{ b.guild }}
                       h2(v-else) hodlers
                       current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                       img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                       guild-create
               div(v-else)
-                  .gui.title {{isDoge.name}}'s missions
+                  .gui.title missions
                   ul
                       template(v-for='g in dogeGuilds')
                           li.spaced
@@ -32,7 +32,7 @@
                               router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
                                   .tooltiptext {{ c.name }}
                               div.description {{ g.name }}
-                  .gui.title {{isDoge.name}}'s vouches
+                  .gui.title vouches
                   ul
                       li
                           vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
@@ -338,6 +338,7 @@ h3
 
 .gui
     font-size: 1.5em
+    color: white
 
 .row .three
     height: 5em
