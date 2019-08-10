@@ -79,7 +79,6 @@ export default {
   methods:{
       goWithinPanel(n){
           let i = this.$store.state.context.panel.indexOf(n)
-          console.log("go within panel", {i, n, panel: this.$store.state.context.panel})
           if (i > -1){
               this.$store.commit("setTop", i)
           }

@@ -253,7 +253,7 @@ export default {
     width: 100%
 
 .selected
-    background: softGrey
+    background: lightGrey
     border-radius: 40px 40px 0 0
     padding-bottom: 0.654321em
 
