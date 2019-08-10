@@ -37,6 +37,10 @@ export default {
     },
     goto(taskId){
         this.$router.push("/task/" + taskId)
+
+        // this.$store.dispatch("goIn", {
+        //     inId, panel, top
+        // })
     },
     card(tId){
         return this.$store.getters.hashMap[tId]

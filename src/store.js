@@ -245,13 +245,15 @@ export default new Vuex.Store({
           let guilds = []
           let uniqueG = []
           getters.guilds.forEach((c, i) => {
-              if (c.deck.length < 5 && guilds.length >= 5){
-                  return
-              }
-
-              if (uniqueG.indexOf(c.guild) === -1){
+              let l = uniqueG.indexOf(c.guild)
+              if (l === -1){
                   guilds.push(c)
                   uniqueG.push(c.guild)
+              } else {
+                  let o = guilds[l]
+                  if (o.deck.length <= c.deck.length){
+                      guilds[l] = c
+                  }
               }
           })
           guilds.sort( (a, b) => {
@@ -259,6 +261,11 @@ export default new Vuex.Store({
               let bVal = b.deck.length
               return bVal - aVal
           })
+
+          if (guilds.length > 9){
+              return guild.slice(0,9)
+          }
+
           return guilds
       },
       pubguildIds(state, getters){

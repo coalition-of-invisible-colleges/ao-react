@@ -7,10 +7,10 @@
     img(v-if='isMember' src="../../assets/images/loggedIn.svg")
     .hyperpaper
     .popup()
-        span
+        .here
             span(v-if='isMember')  {{ isMember }}
             span(v-else-if='card.guild')  {{ card.guild }}
-            linky.here(v-else  :x='name'  :key='name')
+            linky(v-else  :x='name'  :key='name')
     slot
 </template>
 

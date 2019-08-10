@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .navigation
-    img.bullimgright(v-if='!$store.state.upgrades.mode'  src="../assets/images/bullsunbulluni.svg"  @click='$router.push("/dash")')
+    img.bullimgright(v-if='!$store.state.upgrades.mode'  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
     img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle')
     img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
     img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
@@ -55,7 +55,7 @@ export default {
                 top: 0
             })
         },
-        cycle(from){
+        cycle(){
             switch (this.$router.currentRoute.path){
               case "/": return this.$router.push('/deck')
               case "/dash": return this.$router.push('/deck')
@@ -66,6 +66,13 @@ export default {
             } else {
                 this.$router.push('/')
             }
+            this.setToRoute()
+        },
+        cycleLeft(){
+            switch (this.$router.currentRoute.path){
+              case "/dash": return this.$router.push('/deck')
+            }
+            this.$router.push('/dash')
             this.setToRoute()
         },
         setToRoute(){
