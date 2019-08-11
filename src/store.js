@@ -14,6 +14,15 @@ import calculations from './calculations'
 
 Vue.use(Vuex)
 
+function subDeck(tasks, state, getters){
+    let subTasks = []
+    tasks.forEach(t => {
+        let task = getters.hashMap[t]
+        subTasks.concat(t.subTasks)
+    })
+    return subTasks
+}
+
 function fullDeck(subTasks, allTasks = [], state, getters){
       console.log(state.members)
       subTasks.forEach(tId => {
@@ -101,6 +110,10 @@ export default new Vuex.Store({
           return p
       },
       deck(state, getters){
+          return getters.memberCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
+      },
+      subDeck(state, getters){
+
           return getters.memberCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
       },
       completed(state, getters){
@@ -205,7 +218,17 @@ export default new Vuex.Store({
           return w
       },
       archive(state, getters){
-          return []
+          let archive = getters.hodld
+          let crawler = subDeck(getters.deck, state, getters)
+          let history = []
+
+          while(crawler.length > 0 && !crawler.some(t => history.indexOf(t) === -1)){
+              archive = _.filter(hodld, t => crawler.indexOf(t) === -1 )
+              history.concat[crawler]
+              crawler = subDeck(crawler, state, getters)
+          }
+
+          return archive
       },
       withinHodld(state, getters){
           let w = []

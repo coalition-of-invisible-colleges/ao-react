@@ -156,10 +156,10 @@ function tasksMuts(tasks, ev) {
         case "task-refocused":
             tasks.forEach( task => {
                 if (task.taskId === ev.inId){
-                    task.priorities = task.priorities.filter( taskId => taskId !== ev.taskId )
+                    task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
                     task.subTasks.push(ev.taskId)
-                    if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
-                    task.allocations = task.allocations.filter(al => al.allocatedId !== ev.taskId)
+                    if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
+                    task.allocations = _.filter(task.allocations, al => al.allocatedId !== ev.taskId)
                 }
             })
             break
@@ -219,8 +219,8 @@ function tasksMuts(tasks, ev) {
                 if(found) {
                     task.completed.push(ev.taskId)
                     let alloc = false
-                    if (!task.allocations || !task.allocations.filter) { task.allocations = [] }
-                    task.allocations = task.allocations.filter(al => {
+                    if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
+                    task.allocations = _.filter(task.allocations, al => {
 
                         if (al.allocatedId === ev.taskId){
 
@@ -359,6 +359,9 @@ function tasksMuts(tasks, ev) {
             //
             break
     }
+    console.log("ev.type is ", ev.type)
+    console.log("ev.allocations is ", ev.allocations)
+    console.log("newEv.allocations is ", newEv.allocations)
 }
 
 export default tasksMuts
