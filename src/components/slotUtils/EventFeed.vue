@@ -5,8 +5,8 @@ transition(name='fade' v-for='(e, i) in eventstream')
         img.doge(src='../../assets/images/doge_faded.png')
         //- <input v-model.number="randomWiggle">
         img.bubble(src='../../assets/images/bubble.png')
-        .float {{ e.type.replace('-', ' ') }}
-        .float {{ e.meme }}
+        .float(:style='{ color: e.randomColors[0], left: e.randomXs[0], top: e.randomYs[0] }') {{ e.type.replace('-', ' ') }}
+        .float(:style='{ color: e.randomColors[1], left: e.randomXs[1], top: e.randomYs[1] }') {{ e.meme }}
         .float(v-if='e.type==="task-created"') {{ e.name }}
     .tooltip(v-if='e.showEvent && e.type==="task-grabbed"')
         p {{ hodlphrases[Math.floor(Math.random() * hodlphrases.length)] }}
@@ -94,10 +94,10 @@ img
     left: 0
 
 .fade-enter-active
-    transition: top 5s
+    transition: top 7s
 
 .fade-leave-active
-    transition: top 5s
+    transition: top 7s
     top: -30em
 
 .fade-enter
