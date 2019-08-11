@@ -4,7 +4,7 @@
     .row.shipwrapper
         .shipbackground
         h3 {{$store.getters.member.name}} Archive
-        panels(:c='$store.getters.recurasaurus')
+        panels(:c='$store.getters.archive')
 </template>
 
 <script>
