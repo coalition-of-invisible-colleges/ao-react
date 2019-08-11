@@ -151,25 +151,27 @@ export default new Vuex.Store({
           return w
       },
       archive(state, getters){
+          console.log("\n\narchive function")
           let archive = getters.hodld
+          console.log("archive.length is ", archive.length, " archive is", archive)
 
           if (getters.memberCard){
-
             let starter = getters.memberCard.subTasks
-
-
-
+            console.log("starter.length is ", starter.length, " starter is", starter)
+            archive = _.filter(archive, t => starter.indexOf(t.taskId) === -1 )
+            console.log("archive.length is", archive, " and archive is ", archive)
             let crawler = subDeck(starter, state, getters)
-
-            console.log('starting from ',starter.length, archive.length, ' hodld, crawlered:', crawler.length)
+            console.log("crawler.length is ", crawler.length, " crawler is", crawler)
 
             let history = []
-
-            while(crawler.length > 0 && !crawler.some(t => history.indexOf(t) === -1)){
-              archive = _.filter(hodld, t => crawler.indexOf(t) === -1 )
+            let newCards = false
+            do{
+              newCards = crawler.some(t => history.indexOf(t) === -1)
+              archive = _.filter(archive, t => !(crawler.indexOf(t.taskId) > -1))
               history = history.concat(crawler)
               crawler = subDeck(crawler, state, getters)
-            }
+              console.log("newCards is ", newCards, ", archive.length is ", archive.length, " history.length is ", history.length, ", crawler.length is ", crawler.length)
+            }while(crawler.length > 0 && newCards)
           }
 
           return archive
