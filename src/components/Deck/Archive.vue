@@ -3,17 +3,17 @@
 #archive
     .row.shipwrapper
         .shipbackground
-        h3 {{$store.getters.member.name}} Archive
-        panels(:c='$store.getters.archive')
+        h3 {{$store.getters.member.name}} Archive 
+        gen-panels(:c='$store.getters.archive')
 </template>
 
 <script>
 
-import Panels from './Panels'
+import GenPanels from './GenPanels'
 
 export default {
   components:{
-      Panels,
+      GenPanels,
   },
 }
 
