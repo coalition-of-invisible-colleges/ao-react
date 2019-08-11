@@ -198,6 +198,7 @@ h2
     font-size: 1.5em
     margin-right: 1em
     display: inline
+    cursor: pointer
 
 .centered
     text-align: center

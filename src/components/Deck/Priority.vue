@@ -31,14 +31,14 @@ export default {
     },
     computed: {
         allocated(){
-            let allocatedAmount = 1
-            this.$store.state.tasks.forEach(t => {
-                t.allocations.forEach(als => {
-                    if (als.allocatedId === this.taskId){
-                        allocatedAmount += als.amount
-                    }
-                })
-            })
+            let allocatedAmount = 0
+            // this.$store.state.tasks.forEach(t => {
+                // t.allocations.forEach(als => {
+                //     if (als.allocatedId === this.taskId){
+                //         allocatedAmount += als.amount
+                //     }
+                // })
+            // })
             return allocatedAmount
 
         },
