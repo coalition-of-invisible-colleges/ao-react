@@ -2,19 +2,19 @@
 
 .priorities
     template.clearboth(v-for='(t, i) of priorities')
-      .redwx(v-if='$store.state.context.action === t')
+      div(v-if='$store.state.context.action === t')
             span
               hypercard(:b="getTask(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
               hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
       hyperpriority(v-else,  :taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
-          .redwx.clearboth(v-if='$store.state.context.action === st')
+          .clearboth(v-if='$store.state.context.action === st')
               img.singleship(@click='setAction(false)'  src='../../assets/images/singleship.svg')
               hypercard(:b="getTask(st)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
               hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')
           hyperpriority(v-else,  :taskId='st')
           .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
-              .redwx(v-if='$store.state.context.action === st2')
+              div(v-if='$store.state.context.action === st2')
                   img.singleship(@click='setAction(false)'  src='../../assets/images/singleship.svg')
                   hypercard(:b="getTask(st2)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
                   hyperpriority-action(:taskId='t', :inId='$store.getters.contextCard.taskId')

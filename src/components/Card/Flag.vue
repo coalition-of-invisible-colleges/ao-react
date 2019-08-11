@@ -1,19 +1,20 @@
 <template lang='pug'>
-
 .flag(v-if="$store.getters.memberCard")
-  div(v-if="$store.state.upgrades.mode === 'boat'"   @click='flagIt')
+  div(v-if='!$store.state.context.panel[$store.state.context.top]')
+    img.flaggy(@click='deckIt', src='../../assets/images/scroll.svg')
+  div(v-else-if="$store.state.upgrades.mode === 'boat'"  @click='flagIt')
     img.flaggy(v-if='!isFlagged', src='../../assets/images/boatblack.svg')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
-  div(v-if="$store.state.upgrades.mode === 'badge'")
+  div(v-else-if="$store.state.upgrades.mode === 'badge'")
     img.flaggy(src='../../assets/images/badge.svg'  @click='toggleCube')
     span.flaggy.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.flaggy.checkmark.clickable(v-else  @click='complete') ☐
-  div(v-if="$store.state.upgrades.mode === 'bounty'"  @click='togglePay')
+  div(v-else-if="$store.state.upgrades.mode === 'bounty'"  @click='togglePay')
     img.flaggy(src='../../assets/images/bounty.svg')
     .fl(v-if='isPayOpen')
         tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
         tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
-  div(v-if="$store.state.upgrades.mode === 'timecube'")
+  div(v-else-if="$store.state.upgrades.mode === 'timecube'")
     img.flaggy(src='../../assets/images/timecube.svg'  @click='toggleCube')
     .fl(v-if='isCubeOpen')
         resource-book(:tId='b.taskId')

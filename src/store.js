@@ -172,6 +172,7 @@ export default new Vuex.Store({
               crawler = subDeck(crawler, state, getters)
               console.log("newCards is ", newCards, ", archive.length is ", archive.length, " history.length is ", history.length, ", crawler.length is ", crawler.length)
             }while(crawler.length > 0 && newCards)
+            archive = _.filter(archive, st => !archive.some(t => t.subTasks.indexOf(st.taskId) > -1))
           }
 
           return archive
