@@ -18,48 +18,11 @@ function subDeck(tasks, state, getters){
     let subTasks = []
     tasks.forEach(t => {
         let task = getters.hashMap[t]
-        subTasks.concat(t.subTasks)
+        if (task){
+            subTasks = subTasks.concat(task.subTasks)
+        }
     })
     return subTasks
-}
-
-function fullDeck(subTasks, allTasks = [], state, getters){
-      console.log(state.members)
-      subTasks.forEach(tId => {
-          let task = state.tasks.filter( t => tId === t.taskId)[0]
-          //if(task) console.log("fullDeck ", task.name)
-          let isMemberCard = state.members.some( m => {
-              //console.log("checking if it's a member card: ", tId)
-              //console.log("for member: ", m.memberId)
-              return m.memberId === tId
-          })
-          if(isMemberCard) console.log("member card found: ", tId)
-          if(task) {
-              if(allTasks.indexOf(task) === -1) {
-                  allTasks.push(task)
-              } else {
-                  return allTasks
-              }
-
-              if(!isMemberCard) {
-                  let allSubTasks = []
-                  if(task.subTasks && task.subTasks.length > 0) {
-                      allSubTasks = fullDeck(task.subTasks, allTasks, state, getters)
-                  }
-                  let newSubTasks = []
-                  allSubTasks.forEach(st => {
-                    if(allTasks.filter(t => t.taskId === st.taskId).length === 0) {
-                        newSubTasks.push(st)
-                    }
-                  })
-                  if(newSubTasks.length === 0 && allSubTasks.length > 0) {
-                      return allTasks
-                  }
-                  allTasks = allTasks.concat(newSubTasks)
-              }
-          }
-      })
-      return allTasks
 }
 
 export default new Vuex.Store({
@@ -72,6 +35,12 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
+      memberCard(state, getters){
+          let memberCard = _.merge({
+              taskId: '1', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
+          }, getters.hashMap[getters.member.memberId])
+          return memberCard
+      },
       contextCard(state, getters){
           let contextCard = _.merge({
               taskId: '1', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
@@ -108,13 +77,6 @@ export default new Vuex.Store({
               p =  getters.contextCard.priorities
           }
           return p
-      },
-      deck(state, getters){
-          return getters.memberCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
-      },
-      subDeck(state, getters){
-
-          return getters.memberCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
       },
       completed(state, getters){
           return getters.memberCard.completed.map(t => getters.hashMap[t])
@@ -170,9 +132,6 @@ export default new Vuex.Store({
           })
           return hashMap
       },
-      memberCard(state, getters){
-          return getters.hashMap[getters.member.memberId]
-      },
       channels(state, getters){
           return state.cash.channels
       },
@@ -181,32 +140,6 @@ export default new Vuex.Store({
       },
       resourceIds(state, getters){
           return state.resources.map(c => c.resourceId)
-      },
-      recurasaurus(state, getters){
-          //console.log("recursasaurus")
-          let tasks = getters.hodld
-          let subTaskIds = getters.memberCard.subTasks
-
-          let fd = fullDeck(subTaskIds, [], state, getters)
-
-          let notInDeck = []
-          tasks.forEach(t => {
-            if(fd.filter(t2 => t2.taskId === t.taskId).length === 0) {
-              notInDeck.push(t)
-            }
-          })
-          let fullNotInDeck = []
-          notInDeck.forEach( t => {
-              fullNotInDeck = fullNotInDeck.concat(fullDeck(t.subTasks,[], state, getters))
-          })
-
-          let condensedNotInDeck = []
-          notInDeck.forEach(t => {
-            if(fullNotInDeck.filter(t2 => t2.taskId === t.taskId).length === 0) {
-              condensedNotInDeck.push(t)
-            }
-          })
-          return condensedNotInDeck.slice()
       },
       withinHeld(state, getters){
           let w = []
@@ -219,13 +152,24 @@ export default new Vuex.Store({
       },
       archive(state, getters){
           let archive = getters.hodld
-          let crawler = subDeck(getters.deck, state, getters)
-          let history = []
 
-          while(crawler.length > 0 && !crawler.some(t => history.indexOf(t) === -1)){
+          if (getters.memberCard){
+
+            let starter = getters.memberCard.subTasks
+
+
+
+            let crawler = subDeck(starter, state, getters)
+
+            console.log('starting from ',starter.length, archive.length, ' hodld, crawlered:', crawler.length)
+
+            let history = []
+
+            while(crawler.length > 0 && !crawler.some(t => history.indexOf(t) === -1)){
               archive = _.filter(hodld, t => crawler.indexOf(t) === -1 )
-              history.concat[crawler]
+              history = history.concat(crawler)
               crawler = subDeck(crawler, state, getters)
+            }
           }
 
           return archive
@@ -326,7 +270,6 @@ export default new Vuex.Store({
           return  perMonth.toFixed(2)
       },
       inbox(state, getters){
-
           let passedToMe = []
           if (getters.isLoggedIn){
               state.tasks.forEach(t => {
