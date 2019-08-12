@@ -2,13 +2,11 @@
 
 #calendar
     .row.menu
-        .inline(@click='prevMonth')
-            img(src='../../assets/images/left.svg')
+        img.fr(@click='nextMonth'  src='../../assets/images/right.svg')
+        img.fl(@click='prevMonth'  src='../../assets/images/left.svg')
         .inline
-            span(v-if='card.guild') {{card.guild}} -
-            span {{ monthName }} - {{year}}
-        .inline(@click='nextMonth')
-            img(src='../../assets/images/right.svg')
+            .yellowtx(v-if='card.guild') {{card.guild}}
+            .soft {{ monthName }} - {{year}}
     .calmonth
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')
@@ -111,6 +109,10 @@ export default {
 
 <style lang='stylus' scoped>
 @import '../../styles/colours';
+
+.soft
+    color: softGrey
+
 .inline
   display:inline-block
   margin:15px
@@ -190,4 +192,9 @@ img
 .buffer
    clear: both
    height: 0.45em
+
+.fl
+    float: left
+.fr
+    float: right
 </style>
