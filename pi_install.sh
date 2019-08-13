@@ -169,9 +169,9 @@ else
 	yarn install --network-timeout 10000000
 fi
 
-echo the AO is installed
-echo -e \\nnow you must set up the configuration file in ~/ao/configuration.js
-echo then, simply type \'cd ao\' then \'yarn compile\' to compile and start the AO server
-echo see README.md and pi_readme.md for further installation help
-
 # cleanup
+rm zeromq-4.3.1.tar.gz
+rm -r zeromq-4.3-1
+rm -r lightning
+
+echo the AO is installed
