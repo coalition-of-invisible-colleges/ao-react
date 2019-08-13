@@ -1,5 +1,5 @@
 # update
-sudo apt-get update
+sudo apt-get update -qq
 echo apt update complete
 
 # install sqlite3
@@ -11,6 +11,7 @@ else
 fi
 
 # install nvm
+~/.nvm/nvm.sh
 if [ $(nvm ls | grep '\->\s*v11') -eq 1 ];
 then
 	echo nvm already installed
