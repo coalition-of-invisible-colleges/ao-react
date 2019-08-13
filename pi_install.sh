@@ -20,6 +20,7 @@ cd zeromq-4.3.1
 ./configure
 make
 make install
+cd ..
 
 # install c-lightning
 # test these to see which are optional. autodev-tools might be optional.
@@ -29,11 +30,12 @@ cd lightning
 ./configure
 make
 make install
+cd ..
 
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
 # install the AO
-git clone dctrl.ca
-set up config file
+git clone https://github.com/autonomousorganization/ao
+cd ao
 yarn install --network-timeout 10000000
 yarn compile
