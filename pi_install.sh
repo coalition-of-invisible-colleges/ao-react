@@ -11,8 +11,8 @@ else
 fi
 
 # install nvm
-~/.bashrc
-if [ $(nvm ls | grep '\->\s*v11') -eq 1 ];
+~/.nvm/nvm.sh
+if [ $(nvm ls | grep -c "\->\s*v11") -eq 1 ];
 then
 	echo nvm already installed
 else
@@ -22,7 +22,7 @@ else
 fi
 
 #install yarn
-if [ $(yarn --version | grep '1.17.3') -eq 1 ];
+if [ $(yarn --version | grep -c "1.17.3") -eq 1 ];
 then
 	echo yarn already installed
 else
@@ -31,15 +31,22 @@ else
 	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 	sudo apt-get update && sudo apt-get install -y --no-install-recommends yarn
 	yarn cache clean
+fi
 
 # install 0MQ
 cd ~
 wget https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
 tar xf zeromq-4.3.1.tar.gz
 cd zeromq-4.3.1
-./configure
-make
-make install
+~/.nvm/nvm.sh
+if [ $(./version.sh | grep -c "4.3.1") -eq 1 ];
+then
+	echo nvm already installed
+else
+	./configure
+	make
+	make install
+fi
 
 # install c-lightning
 # test these to see which are optional. autodev-tools might be optional.
@@ -114,3 +121,5 @@ git clone https://github.com/autonomousorganization/ao
 cd ao
 yarn install --network-timeout 10000000
 yarn compile
+
+# cleanup
