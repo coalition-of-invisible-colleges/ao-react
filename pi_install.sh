@@ -160,13 +160,13 @@ fi
 
 # install project dependencies
 cd ao
-	if [ $(yarn check --integrity | grep -c "success") -eq 1 ];
-	then
-		echo 'yarn install' already complete
-	else
-		yarn install --network-timeout 10000000
-	fi
-	yarn compile
+if [ $(yarn check --integrity | grep -c "success") -eq 1 ];
+then
+	echo 'yarn install' already complete
+else
+	yarn install --network-timeout 10000000
 fi
+
+yarn compile
 
 # cleanup
