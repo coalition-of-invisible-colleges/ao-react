@@ -43,8 +43,11 @@ fi
 
 # install 0MQ
 cd ~
-wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
-tar xf zeromq-4.3.1.tar.gz
+if [ -n -d "$zeromq-4.3.1" ];
+then
+	wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
+	tar xf zeromq-4.3.1.tar.gz
+fi
 cd zeromq-4.3.1
 if [ $(./version.sh | grep -c "4.3.1") -eq 1 ];
 then
