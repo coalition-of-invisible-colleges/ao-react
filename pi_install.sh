@@ -148,15 +148,18 @@ fi
 
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
-# install the AO
+# clone the AO repository
 cd ~
-if [ -d "ao" ];
+if [ -d "ao" && find "ao" -mindepth 1 -print -quit 2>/dev/null | grep -q . ];
 then
-	echo the ao is already installed: the directory ~/ao already exists.\n
+	echo -e \\nthe ao repository is already cloned: the directory ~/ao already exists.\\n
 	echo if you would like to reinstall, delete your AO directory with 'rm -r ~/ao'. make sure to back up your configuration.js file first.
 else
 	git clone https://github.com/autonomousorganization/ao
-	cd ao
+fi
+
+# install project dependencies
+cd ao
 	if [ $(yarn check --integrity | grep -c "success") -eq 1 ];
 	then
 		echo 'yarn install' already complete
