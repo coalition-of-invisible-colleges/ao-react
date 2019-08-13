@@ -11,7 +11,7 @@ else
 fi
 
 # install nvm
-~/.nvm/nvm.sh
+. ~/.nvm/nvm.sh
 if [ $(nvm ls | grep -c "\->\s*v11") -eq 1 ];
 then
 	echo nvm already installed
@@ -38,7 +38,6 @@ cd ~
 wget https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
 tar xf zeromq-4.3.1.tar.gz
 cd zeromq-4.3.1
-~/.nvm/nvm.sh
 if [ $(./version.sh | grep -c "4.3.1") -eq 1 ];
 then
 	echo nvm already installed
