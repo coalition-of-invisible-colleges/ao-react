@@ -2,6 +2,14 @@
 sudo apt-get update -qq
 echo apt update complete
 
+# install git
+if [ $(dpkg-query -W -f='${Status}' git 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	echo git already installed
+else
+	sudo apt install git
+fi
+
 # install sqlite3
 if [ $(dpkg-query -W -f='${Status}' sqlite3 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
@@ -35,12 +43,12 @@ fi
 
 # install 0MQ
 cd ~
-wget https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
+wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
 tar xf zeromq-4.3.1.tar.gz
 cd zeromq-4.3.1
 if [ $(./version.sh | grep -c "4.3.1") -eq 1 ];
 then
-	echo nvm already installed
+	echo zeromq already installed
 else
 	./configure
 	make
@@ -79,7 +87,7 @@ fi
 
 if [ $(dpkg-query -W -f='${Status}' autotools-dev 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
-	autotools-dev already installed
+	echo autotools-dev already installed
 else
 	sudo apt install autotools-dev
 fi
@@ -98,6 +106,27 @@ else
 	sudo apt install libsqlite3-dev
 fi
 
+if [ $(dpkg-query -W -f='${Status}' python 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	echo python already installed
+else
+	sudo apt install python
+fi
+
+if [ $(dpkg-query -W -f='${Status}' python3 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	echo python3 already installed
+else
+	sudo apt install python3
+fi
+
+if [ $(dpkg-query -W -f='${Status}' python3-mako 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	echo python3-mako already installed
+else
+	sudo apt install python3-mako
+fi
+
 if [ $(dpkg-query -W -f='${Status}' libsodium-dev 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
 	echo libsodium-dev already installed
@@ -105,12 +134,17 @@ else
 	sudo apt install libsodium-dev
 fi
 
-cd ~
-git clone https://github.com/ElementsProject/lightning.git
-cd lightning
-./configure
-make
-make install
+if [ $(lightning-cli --version | grep -c "temp") -eq 1 ];
+then
+	echo c-lightning already installed
+else
+	cd ~
+	git clone https://github.com/ElementsProject/lightning.git
+	cd lightning
+	./configure
+	make
+	sudo make install
+fi
 
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
