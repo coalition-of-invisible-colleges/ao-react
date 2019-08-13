@@ -150,10 +150,9 @@ fi
 
 # clone the AO repository
 cd ~
-if [ -d "ao" && find "ao" -mindepth 1 -print -quit 2>/dev/null | grep -q . ];
+if find "ao" -mindepth 1 -print -quit 2>/dev/null | grep -q .;
 then
-	echo -e \\nthe ao repository is already cloned: the directory ~/ao already exists.\\n
-	echo if you would like to reinstall, delete your AO directory with 'rm -r ~/ao'. make sure to back up your configuration.js file first.
+	echo ao git repository already cloned
 else
 	git clone https://github.com/autonomousorganization/ao
 fi
@@ -167,6 +166,9 @@ else
 	yarn install --network-timeout 10000000
 fi
 
-yarn compile
+echo the AO is installed
+echo now you must set up the configuration file in ~/ao/configuration.js
+echo then, simply type 'cd ao' then 'yarn compile' to compile and start the AO server
+echo see README.md and pi_readme.md for further installation help
 
 # cleanup
