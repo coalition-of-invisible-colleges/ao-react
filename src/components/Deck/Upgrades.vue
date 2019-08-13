@@ -19,8 +19,7 @@
               div
                 div(v-if='!isDoge')
                     .box
-                        div(v-if='b.guild'  @click='goIn(g.taskId)')
-                            h2 {{ b.guild }}
+                        h2(v-if='b.guild') {{ b.guild }}
                         h2(v-else) hold
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                         img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
@@ -32,8 +31,8 @@
                             li.spaced
                                 div(@click='goIn(g.taskId)')
                                     router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
-                                div(@click='goIn(c.taskId)')
-                                    router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                                span(v-for='c in completions(g)'  @click='goIn(c.taskId)')
+                                    router-link.plain.checkmark.tooltip(:to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
                                         .tooltiptext {{ c.name }}
                                 div.description {{ g.name }}
                     .gui.title vouches

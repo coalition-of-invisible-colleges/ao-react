@@ -36,11 +36,24 @@ export default {
         return this.$store.getters.hashMap[taskId]
     },
     goto(taskId){
-        this.$router.push("/task/" + taskId)
+        // goIn(taskId){
+            console.log("goIn called")
+            let panel = [taskId]
+            let top = 0
+            let t = this.$store.getters.hashMap[taskId]
+            let panelColor = this.task.subTasks.filter( p => this.card(p).color === t.color )
+            let topColor = panelColor.indexOf(taskId)
 
-        // this.$store.dispatch("goIn", {
-        //     inId, panel, top
-        // })
+            if (topColor > -1){
+              console.log('setting topcolor', topColor)
+              panel = panelColor
+              top = topColor
+            }
+            let parents =  [this.task.taskId]
+            this.$store.dispatch("tryGoIn", {parents, panel, top})
+
+            this.$router.push("/task/" + taskId)
+
     },
     card(tId){
         return this.$store.getters.hashMap[tId]

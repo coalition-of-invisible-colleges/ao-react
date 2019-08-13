@@ -7,7 +7,7 @@
     img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
     img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
     button.topcenter()
-        .full(v-if='!$store.state.upgrades.mode'  @click='killSession') log out
+        .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
         .full(@click='nextUpgradeMode')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
@@ -283,14 +283,11 @@ hr
     left: (50% - 5em)
     width: 10em
     background: softGray
-    color: red
+    color: main
     padding-left: 2em
     padding-right: 2em
     padding-top: .29em
     padding-bottom: .29em
-
-
-
 
 .boat
     width: 7em

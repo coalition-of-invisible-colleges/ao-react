@@ -2,7 +2,7 @@
 .day
   .date {{ day }}
   .tooltip(v-for='t in ev')
-    img.upgrade(@click="toTask(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
+    img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
     .tooltiptext {{ t.name }}
 </template>
 
@@ -31,9 +31,32 @@ export default {
             blackwx : color == 'black',
         }
       },
-      toTask(tId){
-          this.$router.push("/task/" + tId)
-      }
+      goIn(){
+          window.scrollTo(0, '33px');
+
+          let panel = this.c
+          if (panel && panel.length && panel.length > 0){
+
+          } else {
+              panel = [this.b.taskId]
+          }
+
+          let top = panel.indexOf(this.b.taskId)
+
+          if (top > -1){
+
+          } else {
+              top = 0
+          }
+
+          this.$store.dispatch("goIn", {
+              inId: this.inId,
+              top,
+              panel
+          })
+
+          this.$router.push("/task/" + this.b.taskId)
+      },
   },
   computed: {
       calcDayRange(){

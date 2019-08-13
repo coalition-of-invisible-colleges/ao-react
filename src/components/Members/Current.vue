@@ -4,10 +4,12 @@
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name {{ name }}
-    router-link.tooltip.plain(v-for='c in completions'  :to='"/task/" + c.taskId'  @click='goIn(c.taskId)')
-        span.checkmark(:class="cardInputSty(c.color)") ☑
-        .tooltiptext
-            .bigger {{ c.name }}
+    template(v-for='c in completions')
+      span(@click='goIn(c.taskId)')
+        router-link.tooltip.plain(:to='"/task/" + c.taskId')
+            span.checkmark(:class="cardInputSty(c.color)") ☑
+            .tooltiptext
+                .bigger {{ c.name }}
 </template>
 
 <script>
