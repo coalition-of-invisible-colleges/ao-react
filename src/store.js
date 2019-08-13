@@ -156,7 +156,7 @@ export default new Vuex.Store({
           console.log("archive.length is ", archive.length, " archive is", archive)
 
           if (getters.memberCard){
-            let starter = getters.memberCard.subTasks
+            let starter = getters.memberCard.subTasks.concat(getters.memberCard.priorities).concat(getters.memberCard.completed)
             console.log("starter.length is ", starter.length, " starter is", starter)
             archive = _.filter(archive, t => starter.indexOf(t.taskId) === -1 )
             console.log("archive.length is", archive, " and archive is ", archive)
@@ -172,6 +172,7 @@ export default new Vuex.Store({
               crawler = subDeck(crawler, state, getters)
               console.log("newCards is ", newCards, ", archive.length is ", archive.length, " history.length is ", history.length, ", crawler.length is ", crawler.length)
             }while(crawler.length > 0 && newCards)
+            archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).indexOf(st.taskId) > -1))
           }
 
           return archive
