@@ -11,7 +11,7 @@ else
 fi
 
 # install nvm
-~/.nvm/nvm.sh
+~/.bashrc
 if [ $(nvm ls | grep '\->\s*v11') -eq 1 ];
 then
 	echo nvm already installed
