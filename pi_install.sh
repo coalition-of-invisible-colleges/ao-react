@@ -47,6 +47,7 @@ if [ ! -d "zeromq-4.3.1" ];
 then
 	wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
 	tar xf zeromq-4.3.1.tar.gz
+	zeromq=true
 fi
 cd zeromq-4.3.1
 if [ $(./version.sh | grep -c "4.3.1") -eq 1 ];
@@ -143,6 +144,7 @@ then
 else
 	cd ~
 	git clone https://github.com/ElementsProject/lightning.git
+	lightning=true
 	cd lightning
 	./configure
 	make
@@ -169,9 +171,18 @@ else
 	yarn install --network-timeout 10000000
 fi
 
-# cleanup
-rm zeromq-4.3.1.tar.gz
-rm -r zeromq-4.3-1
-rm -r lightning
+# cleanup zeromq install
+cd ~
+if [ "$zeromq" = true ];
+then
+	rm -f zeromq-4.3.1.tar.gz
+	rm -rf zeromq-4.3-1
+fi
+
+# cleanup c-lightning install
+if [ "$lightning" = true ];
+then
+	rm -rf lightning
+fi
 
 echo the AO is installed
