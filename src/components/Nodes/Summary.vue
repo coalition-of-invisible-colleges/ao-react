@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 .summary
-  .block block {{ $store.state.cash.info.blockheight }}
   p.chain
       span mainnet &#12471; {{ $store.getters.confirmedBalance.toLocaleString() }}
       .lim(v-if='$store.getters.limbo > 0') limbo &#12471; {{ $store.getters.limbo.toLocaleString() }}

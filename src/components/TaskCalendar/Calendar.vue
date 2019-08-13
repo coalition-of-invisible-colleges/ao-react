@@ -2,11 +2,13 @@
 
 #calendar
     .row.menu
-        img.fr(@click='nextMonth'  src='../../assets/images/right.svg')
-        img.fl(@click='prevMonth'  src='../../assets/images/left.svg')
+        .inline(@click='prevMonth')
+            img(src='../../assets/images/left.svg')
         .inline
             .yellowtx(v-if='card.guild') {{card.guild}}
             .soft {{ monthName }} - {{year}}
+        .inline(@click='nextMonth')
+            img(src='../../assets/images/right.svg')
     .calmonth
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')

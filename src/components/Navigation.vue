@@ -1,16 +1,16 @@
 <template lang='pug'>
 
 .navigation
-    img.bullimgright(v-if='!$store.state.upgrades.mode && this.$router.currentRoute.path === "/deck"'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
-    img.bullimgright(v-else-if='!$store.state.upgrades.mode'  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
+    img.bullimgright(v-if='this.$router.currentRoute.path === "/deck"'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
+    img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
     img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle')
     img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
     img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
-    div(@click='nextUpgradeMode')
-        img.upg.boat(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
-        img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
-        img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
-        img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+    //- div(@click='nextUpgradeMode')
+    //-     img.upg.boat(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
+    //-     img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
+    //-     img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
+    //-     img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
     button.topcenter(v-if='!$store.state.upgrades.mode'  @click="killSession") log out
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
@@ -98,15 +98,6 @@ export default {
             this.$store.commit("nextMode")
         },
     },
-    computed: {
-        sats(){
-            let sats = calculations.cadToSats( 1 , this.$store.state.cash.spot )
-            return parseInt( sats )
-        },
-        cadPrice(){
-            return parseFloat( this.$store.state.cash.spot.toFixed(2) )
-        },
-    }
 }
 
 function updateTransition() {

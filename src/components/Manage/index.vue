@@ -7,12 +7,13 @@
         button(:class='{open: showAo}' @click='toggleAo')
             span(v-if='showAo') hide ao controls
             span(v-else) open ao controls
+        .purplewx
+          ul
+            li On the first AO distributes node cost to active
+            li On the eleventh AO deactivates owing
+            li Activate account at the treasure chest on your deck
         transition(name='slide-fade')
           .purplewx(v-if='showAo')
-            ul
-              li On the first AO distributes node cost to active
-              li On the eleventh AO deactivates owing
-              li Activate account at the treasure chest on your deck
             .row
                 .seven.grid
                     p.underline.padd Node Cost
@@ -29,6 +30,7 @@
                     .equals =
                 .four.grid
                     p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
+                        span.redtx [{{ $store.state.cash.cap }} max] 
             .row
                 .six.columns
                   p.input-instructions Set Node Cost
@@ -40,6 +42,7 @@
       .six.columns
           p Add a doge!
           member-create
+          changer
     .row
       .six.columns
         h5 Recent activity at contact points where you can use your fob:
@@ -60,6 +63,7 @@ import Summaryy from '../Nodes/Summary'
 import ChannelCreate from '../forms/ChannelCreate'
 import MemberCreate from '../forms/MemberCreate'
 import CardPanel from '../Deck/CardPanel'
+import Changer from '../MyPage/Changer'
 
 export default {
     data(){
@@ -78,7 +82,7 @@ export default {
         }
     },
     components:{
-        SharedTitle,
+        SharedTitle, Changer,
         RentSet, CapSet, Resources, MemberPaid, AdminRow,
         Summaryy, ChannelCreate, MemberCreate, CardPanel
     },

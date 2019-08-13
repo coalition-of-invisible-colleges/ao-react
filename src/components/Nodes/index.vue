@@ -3,15 +3,20 @@
 #nodes
     .row
         .six.columns
-            p Node Wallet Totals - {{ $store.state.cash.info.alias }}
+            .row
+                p.fl {{ $store.state.cash.info.alias }} Wallet
+                p.fr block {{ $store.state.cash.info.blockheight.toLocaleString() }}
             summaryy
         .six.columns
-            p {{ $store.state.cash.info.num_active_channels }} Active Lightning Channels
+            p {{ $store.state.cash.info.num_active_channels }} Lightning Channels
             local-remote-bar(v-for='n in $store.getters.channels', :c='n')
+    .row
+        p 1 point is {{ sats }}  &#12471;
+        p 1 BTC is {{ cadPrice }} CAD
 </template>
 
 <script>
-
+import calculations from '../../calculations'
 import SharedTitle from '../slotUtils/SharedTitle'
 import Tag from './Tag'
 import WhyLightning from './WhyLightning'
@@ -25,6 +30,15 @@ export default {
     components:{
         SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar
     },
+    computed: {
+        sats(){
+            let sats = calculations.cadToSats( 1 , this.$store.state.cash.spot )
+            return parseInt( sats ).toLocaleString()
+        },
+        cadPrice(){
+            return parseInt( this.$store.state.cash.spot ).toLocaleString()
+        },
+    }
 }
 
 </script>
@@ -72,5 +86,11 @@ a
 
 p
     text-align: center
+
+.fl
+    float: left
+.fr
+    float: right
+
 
 </style>
