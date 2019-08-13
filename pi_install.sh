@@ -110,7 +110,7 @@ if [ $(dpkg-query -W -f='${Status}' python 2>/dev/null | grep -c "ok installed")
 then
 	echo python already installed
 else
-	sudo apt install python
+	sudo apt install -y python
 fi
 
 if [ $(dpkg-query -W -f='${Status}' python3 2>/dev/null | grep -c "ok installed") -eq 1 ];
@@ -124,7 +124,7 @@ if [ $(dpkg-query -W -f='${Status}' python3-mako 2>/dev/null | grep -c "ok insta
 then
 	echo python3-mako already installed
 else
-	sudo apt install python3-mako
+	sudo apt install -y python3-mako
 fi
 
 if [ $(dpkg-query -W -f='${Status}' libsodium-dev 2>/dev/null | grep -c "ok installed") -eq 1 ];
@@ -134,7 +134,7 @@ else
 	sudo apt install libsodium-dev
 fi
 
-if [ $(lightning-cli --version | grep -c "temp") -eq 1 ];
+if [ $(lightning-cli --version | grep -c "v0.7.2") -eq 1 ];
 then
 	echo c-lightning already installed
 else
@@ -150,9 +150,20 @@ fi
 
 # install the AO
 cd ~
-git clone https://github.com/autonomousorganization/ao
-cd ao
-yarn install --network-timeout 10000000
-yarn compile
+if [ -d "ao" ];
+then
+	echo the ao is already installed: the directory ~/ao already exists.\n
+	echo if you would like to reinstall, delete your AO directory with 'rm -r ~/ao'. make sure to back up your configuration.js file first.
+else
+	git clone https://github.com/autonomousorganization/ao
+	cd ao
+	if [ $(yarn check --integrity | grep -c "success") -eq 1 ];
+	then
+		echo 'yarn install' already complete
+	else
+		yarn install --network-timeout 10000000
+	fi
+	yarn compile
+fi
 
 # cleanup
