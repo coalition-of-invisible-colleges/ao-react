@@ -19,7 +19,8 @@
               div
                 div(v-if='!isDoge')
                     .box
-                        h2(v-if='b.guild') {{ b.guild }}
+                        div(v-if='b.guild'  @click='goIn(g.taskId)')
+                            h2 {{ b.guild }}
                         h2(v-else) hold
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                         img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
@@ -29,9 +30,11 @@
                     ul
                         template(v-for='g in dogeGuilds')
                             li.spaced
-                                router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
-                                router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
-                                    .tooltiptext {{ c.name }}
+                                div(@click='goIn(g.taskId)')
+                                    router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
+                                div(@click='goIn(c.taskId)')
+                                    router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                                        .tooltiptext {{ c.name }}
                                 div.description {{ g.name }}
                     .gui.title vouches
                     ul
@@ -101,6 +104,21 @@ export default {
         }
     },
     methods: {
+        goIn(taskId){
+            console.log("goIn called")
+            let panel = [taskId]
+            let top = 0
+
+            let t = this.$store.getters.hashMap[taskId]
+            let panelColor = this.$store.getters[t.color]
+            let topColor = panelColor.indexOf(taskId)
+            if (topColor > -1){
+                panel = panelColor
+                top = topColor
+            }
+
+            this.$store.dispatch("tryGoIn", {taskId, panel, top})
+        },
         selectPayment(x){
             this.$store.commit("setPayMode", x)
         },

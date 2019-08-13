@@ -4,7 +4,7 @@
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name {{ name }}
-    router-link.tooltip.plain(v-for='c in completions'  :to='"/task/" + c.taskId')
+    router-link.tooltip.plain(v-for='c in completions'  :to='"/task/" + c.taskId'  @click='goIn(c.taskId)')
         span.checkmark(:class="cardInputSty(c.color)") ☑
         .tooltiptext
             .bigger {{ c.name }}
@@ -15,6 +15,21 @@
 export default {
   props: ['memberId', 'b', 'inId'],
   methods:{
+    goIn(taskId){
+        console.log("goIn called")
+        let panel = [taskId]
+        let top = 0
+
+        let t = this.$store.getters.hashMap[taskId]
+        let panelColor = this.$store.getters[t.color]
+        let topColor = panelColor.indexOf(taskId)
+        if (topColor > -1){
+            panel = panelColor
+            top = topColor
+        }
+
+        this.$store.dispatch("tryGoIn", {taskId, panel, top})
+    },
     complete(){
         this.$store.dispatch("makeEvent", {
             type: 'task-claimed',

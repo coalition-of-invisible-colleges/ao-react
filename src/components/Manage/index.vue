@@ -9,8 +9,7 @@
             span(v-else) open ao controls
         .purplewx
           ul
-            li On the first AO distributes node cost to active
-            li On the eleventh AO deactivates owing
+            li Each month cost is split between active accounts
             li Activate account at the treasure chest on your deck
         transition(name='slide-fade')
           .purplewx(v-if='showAo')
@@ -30,7 +29,7 @@
                     .equals =
                 .four.grid
                     p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
-                        span.redtx [{{ $store.state.cash.cap }} max] 
+                        span.redtx [{{ $store.state.cash.cap }} max]
             .row
                 .six.columns
                   p.input-instructions Set Node Cost
