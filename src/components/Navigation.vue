@@ -1,8 +1,8 @@
 <template lang='pug'>
 
 .navigation
-    img.bullimgright(v-if='this.$router.currentRoute.path === "/deck" && !uniRight'  src="../assets/images/bulluni.svg"  @click='cycleRight')
-    img.bullimgright(v-else-if='this.$router.currentRoute.path === "/deck" && uniRight'  src="../assets/images/unibull.svg"  @click='cycleRight')
+    img.bullimgright(v-if='showImg === "uni" && !uniRight'  src="../assets/images/bulluni.svg"  @click='cycleRight')
+    img.bullimgright(v-else-if='showImg === "uni" && uniRight'  src="../assets/images/unibull.svg"  @click='cycleRight')
     img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleRight')
     img.bullimgleft(v-if='showImg === "bull"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')

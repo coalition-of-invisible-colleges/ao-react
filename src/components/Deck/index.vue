@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#deck
+#deck()
     .row
         .four.columns(v-if='$store.getters.inbox.length > 0')
             gift-box
@@ -28,17 +28,22 @@ export default {
   },
   methods: {
       setDeck(){
-          if (!this.$store.getters.isLoggedIn){
+          if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){
               console.log('setting for offline deck')
               this.$store.commit("setPanel", this.$store.getters.pubguildIds)
               this.$store.commit("setTop", 0)
               this.$store.commit("setParent", [])
               return
           }
+          if (this.$store.getters.member.memberId){
+              this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+              this.$store.commit("setTop", 0)
+              this.$store.commit("setParent", [])
+              return
+          }
 
-          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
-          this.$store.commit("setTop", 0)
-          this.$store.commit("setParent", [])
+          console.log("setdeck dnn set")
+          setTimeout( this.setDeck, 111 )
       },
   },
 }
