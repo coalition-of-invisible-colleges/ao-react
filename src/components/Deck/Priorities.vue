@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 .priorities
+    img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of priorities')
       div(v-if='$store.state.context.action === t')
             span
@@ -202,7 +203,9 @@ img
 
 .bdoge
     width: 100%
-    opacity: 0.6
+    opacity: 0.8
+    height: 17em
+
 .subpriority
     margin-left: 2em
     width: calc(100% - 2em)

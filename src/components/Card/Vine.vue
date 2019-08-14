@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.vine(@click='toTop')
+.vine(@click='goIn')
   router-link(:to='"/task/" + b.taskId')
     img.viney(src='../../assets/images/vinebtn.svg')
 </template>
@@ -12,8 +12,31 @@ import FormBox from '../slotUtils/FormBox'
 export default {
     props: ['b'],
     methods: {
-        toTop(){
+        goIn(){
             window.scrollTo(0, '33px');
+
+            let panel = this.c
+            if (panel && panel.length && panel.length > 0){
+
+            } else {
+                panel = [this.b.taskId]
+            }
+
+            let top = panel.indexOf(this.b.taskId)
+
+            if (top > -1){
+
+            } else {
+                top = 0
+            }
+
+            this.$store.dispatch("goIn", {
+                inId: this.inId,
+                top,
+                panel
+            })
+
+            this.$router.push("/task/" + this.b.taskId)
         },
     },
 }

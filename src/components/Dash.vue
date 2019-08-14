@@ -3,7 +3,6 @@
 #home
     nodes
     manage
-    changer
     img#whales(src='../assets/images/cryptowhales.jpg')
 </template>
 

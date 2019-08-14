@@ -1,17 +1,18 @@
 <template lang='pug'>
 
 .navigation
-    img.bullimgright(v-if='!$store.state.upgrades.mode && this.$router.currentRoute.path === "/deck"'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
-    img.bullimgright(v-else-if='!$store.state.upgrades.mode'  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
+    img.bullimgright(v-if='this.$router.currentRoute.path === "/deck"'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
+    img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
     img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle')
     img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
     img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
-    div(@click='nextUpgradeMode')
-        img.upg.boat(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
-        img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
-        img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
-        img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
-    button.topcenter(v-if='!$store.state.upgrades.mode'  @click="killSession") log out
+    button.topcenter()
+        .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
+        .full(@click='nextUpgradeMode')
+            img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
+            img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
+            img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
+            img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -47,6 +48,7 @@ export default {
                 type: "session-killed",
                 session: this.$store.state.loader.session
             })
+            this.$store.commit("setAuth" , {token: '', session: ''})
         },
         goToParent(target){
             console.log("go to parent called")
@@ -98,15 +100,6 @@ export default {
             this.$store.commit("nextMode")
         },
     },
-    computed: {
-        sats(){
-            let sats = calculations.cadToSats( 1 , this.$store.state.cash.spot )
-            return parseInt( sats )
-        },
-        cadPrice(){
-            return parseFloat( this.$store.state.cash.spot.toFixed(2) )
-        },
-    }
 }
 
 function updateTransition() {
@@ -132,6 +125,10 @@ var intervalID = window.setInterval(updateTransition, 7000);
 @import '../styles/colours'
 @import '../styles/grid'
 // @import '../styles/button'
+
+.full
+    width: 100%
+    height: 100%
 
 .navigation
   display: flex
@@ -263,12 +260,12 @@ hr
     opacity: 0.4
 
 .upg
-    width: 5em
-    padding: 1em
+    width: 2em
+    // padding: 1em
     // float: right
-    position: absolute
-    top: 0
-    right: 0
+    // position: absolute
+    // top: 0
+    // right: 0
     cursor: pointer
 
 .topauth
@@ -283,14 +280,14 @@ hr
 .topcenter
     position: absolute
     top: 0
-    left: 53%
-    background: wrexred
-    color: white
+    left: (50% - 5em)
+    width: 10em
+    background: softGray
+    color: main
     padding-left: 2em
     padding-right: 2em
     padding-top: .29em
     padding-bottom: .29em
-
 
 .boat
     width: 7em

@@ -5,8 +5,8 @@
         .inline(@click='prevMonth')
             img(src='../../assets/images/left.svg')
         .inline
-            span(v-if='card.guild') {{card.guild}} -
-            span {{ monthName }} - {{year}}
+            .yellowtx(v-if='card.guild') {{card.guild}}
+            .soft {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
             img(src='../../assets/images/right.svg')
     .calmonth
@@ -111,6 +111,10 @@ export default {
 
 <style lang='stylus' scoped>
 @import '../../styles/colours';
+
+.soft
+    color: softGrey
+
 .inline
   display:inline-block
   margin:15px
@@ -190,4 +194,9 @@ img
 .buffer
    clear: both
    height: 0.45em
+
+.fl
+    float: left
+.fr
+    float: right
 </style>

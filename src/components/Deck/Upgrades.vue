@@ -10,53 +10,59 @@
             img.upgrade(src='../../assets/images/bounty.svg')
         .three.grid.tab(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
             img.upgrade(src='../../assets/images/timecube.svg')
-    .row.mainbg
-      transition(name='slide-fade'  mode='out-in')
-          div(v-if='$store.state.upgrades.mode === "boat"')
-              priorities(:key='$store.state.context.action')
-          template(v-if='$store.state.upgrades.mode === "badge"')
-            div
-              div(v-if='!isDoge')
-                  .box
-                      h2(v-if='b.guild') {{ b.guild }}
-                      h2(v-else) hodlers
-                      current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
-                      img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                      guild-create
-              div(v-else)
-                  .gui.title missions
-                  ul
-                      template(v-for='g in dogeGuilds')
-                          li.spaced
-                              router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
-                              router-link.plain.checkmark.tooltip(v-for='c in completions(g)'  :to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
-                                  .tooltiptext {{ c.name }}
-                              div.description {{ g.name }}
-                  .gui.title vouches
-                  ul
-                      li
-                          vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
-          template(v-if='$store.state.upgrades.mode === "bounty"')
-              .togglepayments
-                  button(@click='selectPayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }').yellowwx bitcoin
-                  button(@click='selectPayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }').purplewx lightning
-                  h2 create points here
-                  .box(v-show='$store.state.upgrades.payment === "bitcoin"')
-                      form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
-                      pay-address(:address='b.address')
-                  .box(v-show='$store.state.upgrades.payment === "lightning"')
-                      form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                          label.adjusttop.fl choose amount:
-                          input.smallbox.fr(v-model='payreqAmount')
-                      pay-req(v-if='b.bolt11'  :bolt11='b.bolt11')
-          template(v-if='$store.state.upgrades.mode === "timecube"')
-            div
-              div(v-if='isDoge || b.guild')
-                  task-calendar(:inId='b.taskId')
-              .box(v-else)
-                  h2 timecube
-                  .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
-                  resource-book(:tId='b.taskId')
+    .row
+      .mainbg
+        transition(name='slide-fade'  mode='out-in')
+            div(v-if='$store.state.upgrades.mode === "boat"')
+                priorities(:key='$store.state.context.action')
+            template(v-if='$store.state.upgrades.mode === "badge"')
+              div
+                div(v-if='!isDoge')
+                    .box
+                        h2(v-if='b.guild') {{ b.guild }}
+                        h2(v-else) hold
+                        current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
+                        img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                        guild-create
+                div(v-else)
+                    .gui.title missions
+                    ul
+                        template(v-for='g in dogeGuilds')
+                            li.spaced
+                                div(@click='goIn(g.taskId)')
+                                    router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
+                                span(v-for='c in completions(g)'  @click='goIn(c.taskId)')
+                                    router-link.plain.checkmark.tooltip(:to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                                        .tooltiptext {{ c.name }}
+                                div.description {{ g.name }}
+                    .gui.title vouches
+                    ul
+                        li
+                            vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
+            template(v-if='$store.state.upgrades.mode === "bounty"')
+                .padded
+                    h2 fund
+                    div(v-show='$store.state.upgrades.payment === "bitcoin"')
+                        form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
+                        div(v-if='b.address')
+                            pay-address(:address='b.address')
+                    div(v-show='$store.state.upgrades.payment === "lightning"')
+                        form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                            label.adjusttop.fl choose amount:
+                            input.smallbox.fr(v-model='payreqAmount')
+                        div(v-if='b.bolt11')
+                            pay-req(:bolt11='b.bolt11')
+                    .togglepayments
+                        button(@click='selectPayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }').yellowwx bitcoin
+                        button(@click='selectPayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }').purplewx lightning
+            template(v-if='$store.state.upgrades.mode === "timecube"')
+              div
+                div(v-if='isDoge || b.guild')
+                    task-calendar(:inId='b.taskId')
+                .box(v-else)
+                    h2 cube
+                    .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}
+                    resource-book(:tId='b.taskId')
 </template>
 
 <script>
@@ -97,6 +103,21 @@ export default {
         }
     },
     methods: {
+        goIn(taskId){
+            console.log("goIn called")
+            let panel = [taskId]
+            let top = 0
+
+            let t = this.$store.getters.hashMap[taskId]
+            let panelColor = this.$store.getters[t.color]
+            let topColor = panelColor.indexOf(taskId)
+            if (topColor > -1){
+                panel = panelColor
+                top = topColor
+            }
+
+            this.$store.dispatch("tryGoIn", {taskId, panel, top})
+        },
         selectPayment(x){
             this.$store.commit("setPayMode", x)
         },
@@ -249,11 +270,19 @@ export default {
 .nl
     text-decoration:none
 
+.padded
+    padding: 1em
+
 .upgrades
     width: 100%
 
 .tab
     padding-top: .4321em
+    height: 5em
+
+.upgrade
+    height: 3.7em
+    cursor: pointer
 
 .selected
     background: main
@@ -290,9 +319,6 @@ h3
     height: 4em
     text-align: center
 
-.upgrade
-    height: 3.7em
-    cursor: pointer
 
 .mainbg
     background: softGrey
@@ -382,7 +408,6 @@ h3
 
 h2
     text-align: center
-    margin-top: 0.5em
     color: white
 
 .checkwrapper

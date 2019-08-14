@@ -84,6 +84,15 @@ const mutations = {
 }
 
 const actions = {
+      tryGoIn({commit, state}, pContext ){
+          commit("addParent", state.panel[state.top])
+          commit("setPanel", pContext.panel)
+          commit("setTop", pContext.top)
+          pContext.parents.forEach(p => {
+            console.log("adding paret ", p)
+            commit("addParent", p)
+          })
+      },
       goIn({commit, state}, pContext ){
           // commit("addMemory")
           if (pContext.inId){

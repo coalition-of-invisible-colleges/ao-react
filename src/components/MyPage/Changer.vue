@@ -2,11 +2,10 @@
 
 .changer
   form-box(event='member-field-updated', :data='changeReq', :btntxt='"change your " + change.field')
-      h2 Update:
+      h2 Update {{$store.getters.member.name}}:
           select(v-model='change.field', @change='empty')
-              option(value='secret') password
-              option(value='email') e-mail
               option(value='name') hackername
+              option(value='secret') password
               option(value='fob') fob
       fancy-input(:labelText='"new " + change.field')
           input.input-effect(:type='inputType' v-model='change.newfield')
