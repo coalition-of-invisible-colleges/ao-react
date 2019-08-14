@@ -3,7 +3,7 @@
 .navigation
     img.bullimgright(v-if='this.$router.currentRoute.path === "/deck"'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
     img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
-    img.bullimg(v-if='showImg === "bull"'  src="../assets/images/bullsunbulluni.svg"  @click='cycle')
+    img.bullimg(v-if='showImg === "bull"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
     img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
     img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
     button.topcenter()
@@ -61,7 +61,7 @@ export default {
         cycle(){
             switch (this.$router.currentRoute.path){
               case "/": return this.$router.push('/deck')
-              case "/dash": return this.$router.push('/deck')
+              case "/dash": return this.$router.push('/')
             }
             if (this.$store.state.context.parent.length > 0){
                 this.$router.push('/deck')
@@ -260,12 +260,7 @@ hr
     opacity: 0.4
 
 .upg
-    width: 2em
-    // padding: 1em
-    // float: right
-    // position: absolute
-    // top: 0
-    // right: 0
+    height: 2em
     cursor: pointer
 
 .topauth
@@ -288,6 +283,7 @@ hr
     padding-right: 2em
     padding-top: .29em
     padding-bottom: .29em
+    z-index: 77777
 
 .boat
     width: 7em

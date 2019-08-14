@@ -5,6 +5,8 @@
     //div.paperwrapper
     img(v-if='card.guild'  src="../../assets/images/badge.svg")
     img(v-if='isMember' src="../../assets/images/loggedIn.svg")
+    img(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
+    span(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
     .hyperpaper
     .popup()
         .here
@@ -37,6 +39,23 @@ export default {
         },
         card(){
             return this.$store.getters.hashMap[this.taskId]
+        },
+        cardStart(){
+            // XXX recalc on nav 
+            if ( this.card.book.startTs ){
+              let now = Date.now()
+              let msTill = this.card.book.startTs - now
+              // XXX TODO
+              let days = msTill / (1000 * 60 * 60 * 24)
+              let hours = 0
+              let minutes = 0
+              console.log({now, msTill, days})
+              return {
+                  days,
+                  hours,
+                  minutes
+              }
+            }
         },
         cardInputSty() {
           let color = this.card.color

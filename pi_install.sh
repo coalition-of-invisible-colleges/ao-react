@@ -154,7 +154,7 @@ fi
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
 # install tor
-if [ $(dpkg-query -W -f='${Status}' git 2>/dev/null | tor -c "ok installed") -eq 1 ];
+if [ $(dpkg-query -W -f='${Status}' tor 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
 	echo tor already installed
 else
@@ -174,12 +174,12 @@ fi
 
 if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir /home/$USER/.tor") -eq 0 ];
 then
-	echo "HiddenServiceDir /home/$USER/.tor" >> /etc/tor/torrc
+	echo "HiddenServiceDir /home/$USER/.tor" | sudo tee -a /etc/tor/torrc
 fi
 
 if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127.0.0.1:8003") -eq 0 ];
 then
-	echo "HiddenServicePort 80 127.0.0.1:8003" >> /etc/tor/torrc
+	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a /etc/tor/torrc
 fi
 
 # clone the AO repository

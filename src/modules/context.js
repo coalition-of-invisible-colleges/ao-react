@@ -89,7 +89,7 @@ const actions = {
           commit("setPanel", pContext.panel)
           commit("setTop", pContext.top)
           pContext.parents.forEach(p => {
-            console.log("adding paret ", p)
+            console.log("adding parent ", p)
             commit("addParent", p)
           })
       },

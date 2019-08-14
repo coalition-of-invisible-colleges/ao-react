@@ -31,31 +31,21 @@ export default {
             blackwx : color == 'black',
         }
       },
-      goIn(){
-          window.scrollTo(0, '33px');
+      goIn(taskId){
+        console.log("goIn called")
+        let panel = this.$store.getters.contextCard.subTasks.concat(this.$store.getters.contextCard.priorities).concat(this.$store.getters.contextCard.completed).reverse()
+        let top = panel.indexOf(taskId)
+        let t = this.$store.getters.hashMap[taskId]
+        panel = panel.filter(e => {
+            let card = this.$store.getters.hashMap[e]
+            return card.book.startTs > 0
+        })            
+        let topColor = panel.indexOf(taskId)
+        if (topColor > -1){
+            top = topColor
+        }
 
-          let panel = this.c
-          if (panel && panel.length && panel.length > 0){
-
-          } else {
-              panel = [this.b.taskId]
-          }
-
-          let top = panel.indexOf(this.b.taskId)
-
-          if (top > -1){
-
-          } else {
-              top = 0
-          }
-
-          this.$store.dispatch("goIn", {
-              inId: this.inId,
-              top,
-              panel
-          })
-
-          this.$router.push("/task/" + this.b.taskId)
+        this.$store.dispatch("tryGoIn", {taskId, panel, top, parents:[]})
       },
   },
   computed: {
