@@ -41,12 +41,7 @@ export default {
             let panel = [taskId]
             let top = 0
             let t = this.$store.getters.hashMap[taskId]
-            console.log("t is", t)
-            console.log("this.task is ", this.task)
-            console.log("this.task.subTasks is ", this.task.subTasks)
             let panelColor = this.task.subTasks.filter( p => {
-              console.log("p is ", p)
-              console.log("this.card(p) is", this.card(p))
               this.card(p).color === t.color
             })
             let topColor = panelColor.indexOf(taskId)

@@ -1,11 +1,13 @@
 <template lang='pug'>
 
 .navigation
-    img.bullimgright(v-if='this.$router.currentRoute.path === "/deck"'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
-    img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleLeft')
-    img.bullimg(v-if='showImg === "bull"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
-    img.bullimg(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycle')
-    img.bullimg(v-else  src="../assets/images/bulluni.svg"  @click='cycle')
+    img.bullimgright(v-if='this.$router.currentRoute.path === "/deck" && !uniRight'  src="../assets/images/bulluni.svg"  @click='cycleRight')
+    img.bullimgright(v-else-if='this.$router.currentRoute.path === "/deck" && uniRight'  src="../assets/images/unibull.svg"  @click='cycleRight')
+    img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleRight')
+    img.bullimgleft(v-if='showImg === "bull"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
+    img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
+    img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
+    img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
     button.topcenter()
         .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
         .full(@click='nextUpgradeMode')
@@ -40,6 +42,8 @@ export default {
             showBtc: false,
             search: '',
             showImg: 'uni',
+            uniLeft: false,
+            uniRight: false
         }
     },
     methods: {
@@ -58,7 +62,7 @@ export default {
                 top: 0
             })
         },
-        cycle(){
+        cycleLeft(){
             switch (this.$router.currentRoute.path){
               case "/": return this.$router.push('/deck')
               case "/dash": return this.$router.push('/')
@@ -70,13 +74,15 @@ export default {
                 this.$router.push('/')
             }
             this.setToRoute()
+            this.uniLeft = !this.uniLeft
         },
-        cycleLeft(){
+        cycleRight(){
             switch (this.$router.currentRoute.path){
               case "/dash": return this.$router.push('/deck')
             }
             this.$router.push('/dash')
             this.setToRoute()
+            this.uniRight = !this.uniRight
         },
         setToRoute(){
             switch (this.$router.currentRoute.path){
@@ -184,7 +190,7 @@ li
 hr
     color: lightteal
 
-.bullimg
+.bullimgleft
     width: 7em
     cursor: pointer
     // float: left

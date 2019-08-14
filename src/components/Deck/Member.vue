@@ -6,11 +6,12 @@
     .agedbackground.montholdpaper(v-else-if='cardAge < 90')
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
     .row
-        .eleven.grid
-            label.hackername {{ m.name }}
+        .one.grid
         .one.grid
             img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
+        .ten.grid
+            label.hackername {{ m.name }}
     .row
         .nine.grid
             label {{ m.balance.toFixed(2) }}
@@ -104,12 +105,6 @@ label
     padding: 1em
     width: auto
 
-.logindicator
-    float: right
-
-.logindicator:after
-    clear: both
-
 .agedwrapper
     position: relative
 
@@ -131,11 +126,11 @@ label
 
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
-    opacity: 0.2
+    opacity: 0.3
 
 .weekoldpaper
     background-image: url('../../assets/images/paper_aged_1.png')
-    opacity: 0.25
+    opacity: 0.3
 
 .montholdpaper
     background-image: url('../../assets/images/paper_aged_2.png')
@@ -143,7 +138,7 @@ label
 
 .threemontholdpaper
     background-image: url('../../assets/images/paper_aged_3.png')
-    opacity: 0.35
+    opacity: 0.3
    
 .smallcaps
     color: #fff

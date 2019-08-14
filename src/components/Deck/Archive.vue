@@ -15,6 +15,18 @@ export default {
   components:{
       GenPanels,
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+        vm.clearContext()
+    })
+  },
+  methods: {
+      clearContext(){
+          this.$store.commit("setPanel", [])
+          this.$store.commit("setTop", 0)
+          this.$store.commit("setParent", [])
+      },
+  }
 }
 
 </script>

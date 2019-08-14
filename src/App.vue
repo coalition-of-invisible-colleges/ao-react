@@ -60,8 +60,11 @@ hr
     color: purple
 
 h4
-  margin-bottom:35px
+    margin-bottom:35px
 
+.agedwrapper a
+    text-shadow: rgba(255, 255, 255, 0.65) 0px 0px 10px
+    
 .side_bar, .content
     display: flex;
 

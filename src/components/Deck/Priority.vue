@@ -6,6 +6,10 @@
       img.singleship(@click='allocate'  src='../../assets/images/singleship.svg')
       .allocated(v-if='allocated > 0') {{ allocated }}
       div.agedwrapper(@click='setAction'  :class="cardInputSty")
+          .agedbackground.freshpaper(v-if='cardAge < 8')
+          .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
+          .agedbackground.montholdpaper(v-else-if='cardAge < 90')
+          .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
           linky(:x='name'  :key='name')
 </template>
 
@@ -52,6 +56,12 @@ export default {
             return this.$store.getters.bounties.some( t => {
                 return t.taskId === this.taskId
             })
+        },
+        cardAge(){
+          let now = Date.now()
+          let msSince = now - this.card.timestamp
+          let days = msSince / (1000 * 60 * 60 * 24)
+          return days
         },
         cardInputSty() {
           let color
@@ -117,7 +127,18 @@ export default {
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-    padding: 1em
+
+.weekoldpaper
+    background-image: url('../../assets/images/paper_aged_1.png')
+    opacity: 0.25
+
+.montholdpaper
+    background-image: url('../../assets/images/paper_aged_2.png')
+    opacity: 0.3
+
+.threemontholdpaper
+    background-image: url('../../assets/images/paper_aged_3.png')
+    opacity: 0.35
 
 .allocated
     position: absolute

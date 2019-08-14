@@ -1,9 +1,12 @@
 <template lang='pug'>
 
-span(v-if='memberId') {{ name }}
-    //img(src='../../assets/images/active15.svg')
-    //span {{ name }}
-img(v-else, src='../../assets/images/lightning.svg')
+div
+    img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
+    img(v-else src='../../assets/images/loggedOut.svg')
+    span(v-if='memberId') {{ name }}
+        //img(src='../../assets/images/active15.svg')
+        //span {{ name }}
+    img(v-else, src='../../assets/images/lightning.svg')
 
 </template>
 
@@ -21,6 +24,15 @@ export default {
             }
         })
         return name
+    },
+    isLoggedIn(){
+        let isLoggedIn
+        this.$store.state.sessions.forEach( s => {
+            if ( s.ownerId === this.memberId ){
+                isLoggedIn = true
+            }
+        })
+        return isLoggedIn
     }
   }
 }

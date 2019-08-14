@@ -6,7 +6,6 @@
     img.flaggy(v-if='!isFlagged', src='../../assets/images/boatblack.svg')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-else-if="$store.state.upgrades.mode === 'badge'")
-    img.flaggy(src='../../assets/images/badge.svg'  @click='toggleCube')
     span.flaggy.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.flaggy.checkmark.clickable(v-else  @click='complete') ☐
   div(v-else-if="$store.state.upgrades.mode === 'bounty'"  @click='togglePay')
