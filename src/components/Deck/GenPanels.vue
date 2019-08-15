@@ -54,7 +54,7 @@ export default {
 @import '../../styles/button'
 
 .panel
-    width: 100%
+    width: (100% - 2em)
     margin: 0 1em 0 -1em
     padding: 0 2em
 

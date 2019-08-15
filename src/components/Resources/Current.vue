@@ -1,8 +1,8 @@
 <template lang='pug'>
 
-div
-    img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
-    img(v-else src='../../assets/images/loggedOut.svg')
+span.current
+    img.onlineicon(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
+    img.onlineicon(v-else src='../../assets/images/loggedOut.svg')
     span(v-if='memberId') {{ name }}
         //img(src='../../assets/images/active15.svg')
         //span {{ name }}
@@ -42,15 +42,21 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../../styles/colours'
-
-img
-    height: 1.7em
-
-span
+    
+.current
     font-size: 1em
+    margin-left: 1em
+    margin-right: 1em
+    white-space: nowrap
 
 a
     color: accent2
     text-decoration: none
+
+.onlineicon
+    margin-right: 0.5em
+    height: 1.5em
+    position: relative
+    top: 0.25em
 
 </style>

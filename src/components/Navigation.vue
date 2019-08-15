@@ -7,8 +7,8 @@
     img.bullimgleft(v-if='showImg === "bull"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
-    img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
-    button.topcenter()
+    img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
+    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }')
         .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
         .full(@click='nextUpgradeMode')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
@@ -80,7 +80,12 @@ export default {
             switch (this.$router.currentRoute.path){
               case "/dash": return this.$router.push('/deck')
             }
-            this.$router.push('/dash')
+            if (this.$store.state.context.parent.length > 0){
+                this.$router.push('/deck')
+                this.$store.commit("setParent", [])
+            } else {
+                this.$router.push('/dash')
+            }
             this.setToRoute()
             this.uniRight = !this.uniRight
         },
@@ -279,7 +284,7 @@ hr
     cursor: pointer
 
 .topcenter
-    position: absolute
+    position: fixed
     top: 0
     left: (50% - 5em)
     width: 10em
@@ -290,6 +295,16 @@ hr
     padding-top: .29em
     padding-bottom: .29em
     z-index: 77777
+    opacity: 0.71
+    border-bottom-left-radius: 50%
+    border-bottom-right-radius: 50%
+
+.logout
+    opacity: 1
+    position: absolute
+    
+.topcenter:active
+    opacity: 1
 
 .boat
     width: 7em

@@ -64,6 +64,6 @@ export default {
     z-index: -1
     width: 100%
     height: 100%
-    min-height: 99vh
+    min-height: 85vh
 
 </style>

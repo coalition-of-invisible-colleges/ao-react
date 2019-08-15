@@ -11,7 +11,8 @@
           flag(:b='b', :inId='inId')
   .tooltip
       img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
-      current.tooltiptext(v-for='memberId in b.claimed', :memberId='memberId')
+      div
+          current.tooltiptext(v-for='memberId in b.claimed', :memberId='memberId')
   .row
     .ten.grid
         .cardhud(v-if='b.guild')
