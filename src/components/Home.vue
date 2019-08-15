@@ -118,6 +118,7 @@ p
 
 a
     font-size: 2em
+    word-break: break-all
     text-decoration: none
     color: purple
     text-align: center
