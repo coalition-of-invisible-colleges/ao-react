@@ -151,7 +151,7 @@ else
 	sudo apt install -y libsodium-dev
 fi
 
-if [ $(lightning-cli --version | grep -c "v0\.\7\.2") -eq 1 ];
+if [ $(lightning-cli --version | grep -c "v0\.7\.2") -eq 1 ];
 then
 	echo c-lightning v0.7.2 already installed
 else
@@ -213,14 +213,14 @@ fi
 
 # configure tor
 cd ~
-if [ ! -d ".tor" ];
+if [ ! -d "$HOME/.tor" ];
 then
 	mkdir .tor
 fi
 
-if [ ! -d ".tor/ao" ];
+if [ ! -d "$HOME/.tor/ao" ];
 then
-	mkdir .tor/ao
+	mkdir $HOME/.tor/ao
 fi
 
 if [ ! $(stat -c "%a" ".tor") == "700" ];
@@ -270,7 +270,7 @@ else
 fi
 
 # create configuration.js
-if [ -f "$HOME/ao/configuration.js"];
+if [ -f "$HOME/ao/configuration.js" ];
 then
 	echo configuration.js already exists
 else
