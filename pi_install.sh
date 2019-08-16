@@ -46,6 +46,7 @@ else
 fi
 
 # install 0MQ
+cd ~
 MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
 MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
 PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
@@ -57,19 +58,10 @@ then
 	wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
 	tar xf zeromq-4.3.1.tar.gz
 	zeromq=true
+	cd zeromq-4.3.1
 	./configure
 	make
 	make install
-fi
-
-cd ~
-if [ ! -d "zeromq-4.3.1" ];
-then
-fi
-cd zeromq-4.3.1
-if [ $(./version.sh | grep -c "4.3.1") -eq 1 ];
-then
-else
 fi
 
 # install c-lightning
