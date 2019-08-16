@@ -25,9 +25,10 @@ fi
 
 # install nvm
 . ~/.nvm/nvm.sh
-if [ $(nvm ls | grep -c "\->\s*v11") -eq 1 ];
+NVMVERSION='nvm current'
+if [ $($NVMVERSION | grep -c "v11") -eq 1 ];
 then
-	echo nvm v11 already installed
+	echo nvm $NVMVERSION already installed
 else
 	curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 	source ~/.profile
@@ -50,12 +51,14 @@ fi
 cd ~
 if [ -d "zeromq-4.3.1" ];
 then
+	cd zeromq-4.3.1
 	MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
 	MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
 	PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
 fi
 
-if [ ! ( -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ]; then
+cd ~
+if [ ! -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ]; then
     echo zeromq install appears corrupted
 elif [ -f include/zmq.h ];
 	echo zeromq v$MAJOR.$MINOR.$PATCH already installed
