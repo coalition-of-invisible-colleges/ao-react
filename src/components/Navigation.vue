@@ -298,7 +298,7 @@ hr
     opacity: 0.71
     border-bottom-left-radius: 50%
     border-bottom-right-radius: 50%
-
+    border-top: none
 .logout
     opacity: 1
     position: absolute
