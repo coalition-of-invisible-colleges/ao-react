@@ -180,14 +180,24 @@ then
 	mkdir .tor
 fi
 
+if [ ! -d ".tor/ao" ];
+then
+	mkdir .tor/ao
+fi
+
 if [ ! $(stat -c "%a" ".tor") == "700" ];
 then
 	chmod 700 .tor
 fi
 
+if [ ! $(stat -c "%G:%U" ".tor") == "debian-tor:debian-tor" ];
+then
+	sudo chown -R debian-tor:debian-tor .tor
+fi
+
 if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/.tor") -eq 0 ];
 then
-	echo "HiddenServiceDir $HOME/.tor" | sudo tee -a /etc/tor/torrc
+	echo "HiddenServiceDir $HOME/.tor/ao" | sudo tee -a /etc/tor/torrc
 fi
 
 if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127.0.0.1:8003") -eq 0 ];
