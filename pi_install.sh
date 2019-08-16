@@ -25,8 +25,8 @@ fi
 
 # install nvm
 . ~/.nvm/nvm.sh
-NVMVERSION='nvm current'
-if [ $($NVMVERSION | grep -c "v11") -eq 1 ];
+NVMVERSION=`nvm current`
+if [ $(echo $NVMVERSION | grep -c "v11") -eq 1 ];
 then
 	echo nvm $NVMVERSION already installed
 else
@@ -47,30 +47,30 @@ else
 	yarn cache clean
 fi
 
-# install 0MQ
-cd ~
-if [ -d "zeromq-4.3.1" ];
-then
-	cd zeromq-4.3.1
-	MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
-	MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
-	PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
-fi
+# # install 0MQ
+# cd ~
+# if [ -d "zeromq-4.3.1" ];
+# then
+# 	cd zeromq-4.3.1
+# 	MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
+# 	MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
+# 	PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
+# fi
 
-cd ~
-if [ ! -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ]; then
-    echo zeromq install appears corrupted
-elif [ -f include/zmq.h ];
-	echo zeromq v$MAJOR.$MINOR.$PATCH already installed
-then
-	wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
-	tar xf zeromq-4.3.1.tar.gz
-	zeromq=true
-	cd zeromq-4.3.1
-	./configure
-	make
-	make install
-fi
+# cd ~
+# if [ ! -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ]; then
+#     echo zeromq install appears corrupted
+# elif [ -f include/zmq.h ];
+# 	echo zeromq v$MAJOR.$MINOR.$PATCH already installed
+# then
+# 	wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
+# 	tar xf zeromq-4.3.1.tar.gz
+# 	zeromq=true
+# 	cd zeromq-4.3.1
+# 	./configure
+# 	make
+# 	make install
+# fi
 
 # install c-lightning
 # test these to see which are optional. autodev-tools might be optional.
