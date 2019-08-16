@@ -285,7 +285,12 @@ else
     },
 }"
     echo "$CONFIG" > $HOME/ao/configuration.js
+    echo configuration.js file created
 fi
+
+# set up AO to autostart as a daemon via systemd
+
+# sudo systemctl enable ao
 
 # cleanup zeromq install
 cd ~

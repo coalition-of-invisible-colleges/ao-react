@@ -9,3 +9,8 @@ then
 	# now use the temporary account with su or sudo -u to rename myself
 	sudo -u tempuser #command goes here
 fi
+
+# set keyboard to pc105 us
+# change username in $HOME/ao/configuration.js
+# change username in /etc/tor/torrc
+# move home folder as part of rename command
