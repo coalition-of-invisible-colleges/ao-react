@@ -167,13 +167,51 @@ fi
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
 # install tor
-if [ $(dpkg-query -W -f='${Status}' tor 2>/dev/null | grep -c "ok installed") -eq 1 ];
+if [ $(tor --version | grep -c "0\.4\.0\.5") -eq 1 ];
 then
-	echo tor already installed
+	echo tor v0.4.0.5 already installed
 else
-	sudo apt install -y tor
+	# add sources
+	if [ $(cat /etc/apt/sources.list | grep -c "deb https://deb.torproject.org/torproject.org stretch main") -eq 0 ];
+	then
+		sudo echo "deb https://deb.torproject.org/torproject.org stretch main" >> /etc/apt/sources.list
+	fi
+
+	if [ $(cat /etc/apt/sources.list | grep -c "deb-src https://deb.torproject.org/torproject.org stretch main") -eq 0 ];
+	then
+		sudo echo "deb-src https://deb.torproject.org/torproject.org stretch main" >> /etc/apt/sources.list
+	fi
+	
+	# download and compile tor from debian package offerings
+	sudo curl https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --import
+	sudo gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+
+	if [ $(dpkg-query -W -f='${Status}' build-essential 2>/dev/null | grep -c "ok installed") -eq 0 ];
+	then
+		sudo apt install -y build-essential
+	fi
+
+	if [ $(dpkg-query -W -f='${Status}' fakeroot 2>/dev/null | grep -c "ok installed") -eq 0 ];
+	then
+		sudo apt install -y fakeroot
+	fi
+
+	if [ $(dpkg-query -W -f='${Status}' devscripts 2>/dev/null | grep -c "ok installed") -eq 0 ];
+	then
+		sudo apt install -y devscripts
+	fi
+
+	sudo apt build-dep tor deb.torproject.org-keyring
+	apt source tor
+	cd tor-*
+	debuild -rfakeroot -uc -us
+	cd ..
+
+	# install the package
+	sudo dpkg -i tor_*.deb
 fi
 
+# configure tor
 cd ~
 if [ ! -d ".tor" ];
 then
@@ -195,7 +233,7 @@ then
 	sudo chown -R debian-tor:debian-tor .tor
 fi
 
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/\.tor") -eq 0 ];
+if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/\.tor/ao") -eq 0 ];
 then
 	echo "HiddenServiceDir $HOME/.tor/ao" | sudo tee -a /etc/tor/torrc
 fi
