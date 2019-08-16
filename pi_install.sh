@@ -36,7 +36,7 @@ else
 fi
 
 #install yarn
-if [ $(yarn --version | grep -c "1.17.3") -eq 1 ];
+if [ $(yarn --version | grep -c "1\.17\.3") -eq 1 ];
 then
 	echo yarn v1.17.3 already installed
 else
@@ -151,7 +151,7 @@ else
 	sudo apt install -y libsodium-dev
 fi
 
-if [ $(lightning-cli --version | grep -c "v0.7.2") -eq 1 ];
+if [ $(lightning-cli --version | grep -c "v0\.\7\.2") -eq 1 ];
 then
 	echo c-lightning v0.7.2 already installed
 else
@@ -195,12 +195,12 @@ then
 	sudo chown -R debian-tor:debian-tor .tor
 fi
 
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/.tor") -eq 0 ];
+if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/\.tor") -eq 0 ];
 then
 	echo "HiddenServiceDir $HOME/.tor/ao" | sudo tee -a /etc/tor/torrc
 fi
 
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127.0.0.1:8003") -eq 0 ];
+if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127\.0\.0\.1:8003") -eq 0 ];
 then
 	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a /etc/tor/torrc
 fi
