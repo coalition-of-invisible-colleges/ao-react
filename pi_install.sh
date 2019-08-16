@@ -1,9 +1,10 @@
 # update
-sudo apt update -yqq
+sudo apt update -yqqq
+sudo apt autoremove -yqqq
 echo apt update complete
 
 # upgrade
-sudo apt upgrade -yqq
+sudo apt upgrade -yqqq
 echo apt upgrade complete
 
 # install git
@@ -47,10 +48,14 @@ fi
 
 # install 0MQ
 cd ~
-MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
-MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
-PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
-if [ ! ( -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ) ]; then
+if [ -d "zeromq-4.3.1" ];
+then
+	MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
+	MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
+	PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
+fi
+
+if [ ! ( -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ]; then
     echo zeromq install appears corrupted
 elif [ -f include/zmq.h ];
 	echo zeromq v$MAJOR.$MINOR.$PATCH already installed
