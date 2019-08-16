@@ -213,19 +213,14 @@ fi
 
 # configure tor
 cd ~
-if [ ! -d "$HOME/.tor" ];
-then
-	mkdir .tor
-fi
-
 if [ ! -d "$HOME/.tor/ao" ];
 then
-	mkdir $HOME/.tor/ao
+	sudo mkdir -p $HOME/.tor/ao
 fi
 
 if [ ! $(stat -c "%a" ".tor") == "700" ];
 then
-	chmod 700 .tor
+	chmod -R 700 .tor
 fi
 
 if [ ! $(stat -c "%G:%U" ".tor") == "debian-tor:debian-tor" ];
