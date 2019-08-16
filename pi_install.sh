@@ -185,14 +185,22 @@ then
 	chmod 700 .tor
 fi
 
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir /home/$USER/.tor") -eq 0 ];
+if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/.tor") -eq 0 ];
 then
-	echo "HiddenServiceDir /home/$USER/.tor" | sudo tee -a /etc/tor/torrc
+	echo "HiddenServiceDir $HOME/.tor" | sudo tee -a /etc/tor/torrc
 fi
 
 if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127.0.0.1:8003") -eq 0 ];
 then
 	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a /etc/tor/torrc
+fi
+
+# install borgbackup
+if [ $(dpkg-query -W -f='${Status}' borgbackup 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	echo borgbackup already installed
+else
+	sudo apt install -y borgbackup
 fi
 
 # clone the AO repository
@@ -211,6 +219,29 @@ then
 	echo 'yarn install' already complete
 else
 	yarn install --network-timeout 10000000
+fi
+
+# create configuration.js
+if [ -f "$HOME/ao/configuration.js"];
+then
+	echo configuration.js already exists
+else
+	CONFIG="module.exports = {
+    bitcoind: {
+        network: 'regtest'
+    },
+    bitcoinAverage: {
+        pub: '',
+        secret: ''
+    },
+    sqlite3: {
+        file: '$HOME/.ao/database.sqlite3'
+    },
+    clightning: {
+        dir: '$HOME/.lightning/'
+    },
+}"
+    echo "$CONFIG" > $HOME/ao/configuration.js
 fi
 
 # cleanup zeromq install
