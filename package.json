@@ -37,8 +37,7 @@
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "yarn": "^1.15.2",
-    "zeromq": "^5.1.0"
+    "yarn": "^1.15.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-beta.6",
