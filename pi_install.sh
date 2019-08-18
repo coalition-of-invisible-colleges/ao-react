@@ -173,6 +173,11 @@ else
 		sudo apt install -y libevent-dev
 	fi
 
+	if [ $(dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -c "ok installed") -eq 0 ];
+	then
+		sudo apt install -y libssl-dev
+	fi
+
 	cd ~
 	wget https://dist.torproject.org/tor-0.4.0.5.tar.gz
 	tor=true
