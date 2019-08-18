@@ -154,8 +154,9 @@ then
 	echo tor v0.4.0.5 already installed
 else
 	cd ~
-	git clone https://github.com/torproject/tor.git
+	wget https://dist.torproject.org/tor-0.4.0.5.tar.gz
 	tor=true
+	tar xf tor-0.4.0.5.tar.gz
 	cd tor
 	./configure
 	make
@@ -236,7 +237,8 @@ fi
 # cleanup tor install
 if [ "$tor" = true ];
 then
-	rm -rf tor
+	rm -rf tor-*
+	tor-0.4.0.5.tar.gz
 fi
 
 echo the AO is installed
