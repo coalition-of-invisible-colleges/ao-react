@@ -168,6 +168,11 @@ else
 		sudo apt install -y devscripts
 	fi
 
+	if [ $(dpkg-query -W -f='${Status}' libevent-dev 2>/dev/null | grep -c "ok installed") -eq 0 ];
+	then
+		sudo apt install -y libevent-dev
+	fi
+
 	cd ~
 	wget https://dist.torproject.org/tor-0.4.0.5.tar.gz
 	tor=true
