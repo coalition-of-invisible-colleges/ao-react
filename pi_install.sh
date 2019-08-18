@@ -1,5 +1,5 @@
 # update
-sudo apt update -yqqq
+sudo apt update -yqqq 2>/dev/null
 sudo apt autoremove -yqqq
 echo apt update complete
 
@@ -52,31 +52,6 @@ else
 	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 	sudo apt-get update && sudo apt-get install -y --no-install-recommends yarn
 	yarn cache clean
-fi
-
-# # install 0MQ
-cd ~
-if [ -d "zeromq-4.3.1" ];
-then
-	cd zeromq-4.3.1
-	MAJOR=`egrep '^#define +ZMQ_VERSION_MAJOR +[0-9]+$' include/zmq.h`
-	MINOR=`egrep '^#define +ZMQ_VERSION_MINOR +[0-9]+$' include/zmq.h`
-	PATCH=`egrep '^#define +ZMQ_VERSION_PATCH +[0-9]+$' include/zmq.h`
-fi
-
-if [ ! -z "$MAJOR" -o -z "$MINOR" -o -z "$PATCH" ]; then
-    echo zeromq install appears corrupted
-elif [ -f $HOME/zeromq-4.3.1/include/zmq.h ];
-	echo zeromq v$MAJOR.$MINOR.$PATCH already installed
-then
-	cd ~
-	wget -q https://github.com/zeromq/libzmq/releases/download/v4.3.1/zeromq-4.3.1.tar.gz
-	tar xf zeromq-4.3.1.tar.gz
-	zeromq=true
-	cd zeromq-4.3.1
-	./configure
-	make
-	make install
 fi
 
 # install c-lightning
@@ -174,24 +149,24 @@ fi
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
 # install tor
-if [ $(tor --version | grep -c "0\.4\.0\.5") -eq 1 ];
+if [ $(tor --version  2>/dev/null | grep -c "0\.4\.0\.5") -eq 1 ];
 then
 	echo tor v0.4.0.5 already installed
 else
 	# add sources
-	if [ $(cat /etc/apt/sources.list | grep -c "deb https://deb.torproject.org/torproject.org stretch main") -eq 0 ];
+	if [ $(sudo cat /etc/apt/sources.list | grep -c "deb https://deb.torproject.org/torproject.org stretch main") -eq 0 ];
 	then
-		sudo echo "deb https://deb.torproject.org/torproject.org stretch main" >> /etc/apt/sources.list
+		sudo echo "deb https://deb.torproject.org/torproject.org stretch main" | sudo tee -a /etc/apt/sources.list
 	fi
 
-	if [ $(cat /etc/apt/sources.list | grep -c "deb-src https://deb.torproject.org/torproject.org stretch main") -eq 0 ];
+	if [ $(sudo cat /etc/apt/sources.list | grep -c "deb-src https://deb.torproject.org/torproject.org stretch main") -eq 0 ];
 	then
-		sudo echo "deb-src https://deb.torproject.org/torproject.org stretch main" >> /etc/apt/sources.list
+		sudo echo "deb-src https://deb.torproject.org/torproject.org stretch main" | sudo tee -a /etc/apt/sources.list
 	fi
 	
 	# download and compile tor from debian package offerings
 	sudo curl https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --import
-	sudo gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+	sudo gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
 
 	if [ $(dpkg-query -W -f='${Status}' build-essential 2>/dev/null | grep -c "ok installed") -eq 0 ];
 	then
@@ -208,7 +183,7 @@ else
 		sudo apt install -y devscripts
 	fi
 
-	sudo apt build-dep tor deb.torproject.org-keyring
+	sudo apt -y build-dep tor deb.torproject.org-keyring
 	apt source tor
 	cd tor-*
 	debuild -rfakeroot -uc -us
@@ -219,30 +194,14 @@ else
 fi
 
 # configure tor
-cd ~
-if [ ! -d "$HOME/.tor/ao" ];
+if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
 then
-	sudo mkdir -p $HOME/.tor/ao
-fi
-
-if [ ! $(stat -c "%a" ".tor") == "700" ];
-then
-	chmod -R 700 .tor
-fi
-
-if [ ! $(stat -c "%G:%U" ".tor") == "debian-tor:debian-tor" ];
-then
-	sudo chown -R debian-tor:debian-tor .tor
-fi
-
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir $HOME/\.tor/ao") -eq 0 ];
-then
-	echo "HiddenServiceDir $HOME/.tor/ao" | sudo tee -a /etc/tor/torrc
+	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a /etc/tor/torrc 1>/dev/null
 fi
 
 if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127\.0\.0\.1:8003") -eq 0 ];
 then
-	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a /etc/tor/torrc
+	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a /etc/tor/torrc 1>/dev/null
 fi
 
 # install borgbackup
@@ -298,14 +257,6 @@ fi
 # set up AO to autostart as a daemon via systemd
 
 # sudo systemctl enable ao
-
-# cleanup zeromq install
-cd ~
-if [ "$zeromq" = true ];
-then
-	rm -f zeromq-4.3.1.tar.gz
-	rm -rf zeromq-4.3-1
-fi
 
 # cleanup c-lightning install
 if [ "$lightning" = true ];
