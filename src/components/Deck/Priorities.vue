@@ -4,13 +4,13 @@
     img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of priorities')
       .row.priority.opencard(v-if='$store.state.context.action === t')
+          .allocated.openallocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           img.singleship.open(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           div(@click.stop='deaction')
               hypercard(:b="getCard(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
       .row.priority(v-else)
-          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
           .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
+          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
           div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click='setAction(t)')
               hyperpriority(:taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
@@ -219,16 +219,20 @@ img
 
 .allocated
     position: absolute
-    padding-left: 0.25em
-    width: 2em
+    left: -3.05em
+    width: 3.3724em
     text-align: center
-    font-size: 0.95em
-    margin-top: 0.5em
     color: white
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
     font-size: 1.5em
     pointer-events: none
+    z-index: 7
+    margin-top: 0.1em
 
+.openallocated
+    top: 36%
+    margin-top: 0.3em
+    
 .onelinecard
     width: 100%
     margin-left: 3em
@@ -274,16 +278,4 @@ img
 .open
     top: 36%
     
-.allocated
-    position: absolute
-    padding-left: 0.25em
-    width: 2em
-    text-align: center
-    font-size: 0.95em
-    margin-top: 0.5em
-    color: white
-    text-shadow: 2px 2px 2px rgba(0.05, 0.05, 0.05, 0.5)
-    font-size: 1.5em
-    pointer-events: none
-
 </style>
