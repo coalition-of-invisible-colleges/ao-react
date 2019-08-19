@@ -5,7 +5,11 @@
     .shipcontainer
       img.singleship(src='../../assets/images/singleship.svg')
       div.agedwrapper(:class="cardInputSty")
-          linky(:x='card.name'  :key='name')
+        .agedbackground.freshpaper(v-if='cardAge < 8')
+        .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
+        .agedbackground.montholdpaper(v-else-if='cardAge < 90')
+        .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
+        linky(:x='card.name'  :key='name')
 </template>
 
 <script>
@@ -103,7 +107,18 @@ export default {
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
-    padding: 1em
+
+.weekoldpaper
+    background-image: url('../../assets/images/paper_aged_1.png')
+    opacity: 0.25
+
+.montholdpaper
+    background-image: url('../../assets/images/paper_aged_2.png')
+    opacity: 0.3
+
+.threemontholdpaper
+    background-image: url('../../assets/images/paper_aged_3.png')
+    opacity: 0.35
 
 .allocated
     position: absolute

@@ -28,12 +28,13 @@
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
-  simple-priorities(v-if='b.guild &&  $store.getters.contextCard.taskId != b.taskId', :taskId="b.taskId", :inId='b.taskId')
+  simple-priorities(v-if='b.guild && $store.getters.contextCard.taskId != b.taskId && $store.state.context.action != b.taskId', :taskId="b.taskId", :inId='b.taskId')
   passed(:b='b')
+  shipped(:b='b', :inId='inId')
+  .spacer
   .row
       scroll.faded(:b='b', :inId='inId')
       vine.faded(:b='b')
-      .spacer
       .tooltip.dogepepecoin
           img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
           current.tooltiptext(v-for='memberId in b.deck', :memberId='memberId')
@@ -50,6 +51,7 @@ import Flag from './Flag'
 import Scroll from './Scroll'
 import Vine from './Vine'
 import Passed from './Passed'
+import Shipped from './Shipped'
 import Linky from './Linky'
 import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
@@ -59,7 +61,7 @@ export default {
     data(){
         return { active: false }
     },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Linky, SimplePriorities, Current},
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Shipped, Linky, SimplePriorities, Current},
     methods: {
         purge(){
           this.$store.dispatch("makeEvent", {

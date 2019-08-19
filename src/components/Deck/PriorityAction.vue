@@ -1,16 +1,7 @@
 <template lang='pug'>
 
 .priorityaction.clearboth
-    img.singleship.rotate(@click="deaction"   src='../../assets/images/singleship.svg')
-    .row.clearboth
-        .six.grid
-            button.accept(@click='claim')
-                img.arrow.fr(src='../../assets/images/buddadoge.svg')
-                span complete
-        .six.grid
-            button.dontaccept(@click='refuse')
-                img.arrow.fl(src='../../assets/images/buddadoge.svg')
-                span refocus
+
 </template>
 
 <script>
@@ -58,29 +49,6 @@ export default {
         goIn(){
             this.$router.push("/task/" + this.taskId)
         },
-        claim(){
-            if(!this.isGrabbed) {
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-grabbed',
-                    taskId: this.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-            }
-            this.$store.dispatch("makeEvent", {
-                type: 'task-claimed',
-                taskId: this.taskId,
-                memberId: this.$store.getters.member.memberId,
-                inId: this.inId,
-                notes: this.notes,
-            })
-        },
-        refuse(){
-            this.$store.dispatch("makeEvent", {
-                type: 'task-refocused',
-                inId: this.inId, //does not exist
-                taskId: this.taskId,
-            })
-        }
     }
 }
 
@@ -103,13 +71,6 @@ button
 .clearboth
     clear: both
 
-.singleship
-    width: 3.3724em
-    margin-top: 0.5em
-    position: relative
-    top: 0em
-    left: -2.9em
-
 .arrow
     height: 3.35em
     border-radius: 3px
@@ -119,14 +80,6 @@ button
         background: white
         padding: .1em
 
-.rotate
-    transform: rotate(180deg);
-
-.accept, .dontaccept
-    background: accent5
-    padding: .789em
-    border-style: none
-    // img
 .fr
   float:right
 

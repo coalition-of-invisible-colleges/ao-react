@@ -1,16 +1,12 @@
 <template lang='pug'>
 
 .p.clearboth
-  .row
-    .shipcontainer
-      img.singleship(@click='allocate'  src='../../assets/images/singleship.svg')
-      .allocated(v-if='allocated > 0') {{ allocated }}
-      div.agedwrapper(@click='setAction'  :class="cardInputSty")
-          .agedbackground.freshpaper(v-if='cardAge < 8')
-          .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
-          .agedbackground.montholdpaper(v-else-if='cardAge < 90')
-          .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-          linky(:x='name'  :key='name')
+    div.agedwrapper.dont-break-out(@dblclick.stop=''  @click.capture='setAction'  :class="cardInputSty")
+        .agedbackground.freshpaper(v-if='cardAge < 8')
+        .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
+        .agedbackground.montholdpaper(v-else-if='cardAge < 90')
+        .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
+        linky(:x='name'  :key='name')
 </template>
 
 <script>
@@ -19,33 +15,38 @@ import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
 
 export default {
-    props: ['taskId'],
+    props: ['taskId', 'c'],
     components: { Hypercard, Linky },
     methods: {
         setAction(){
             this.$store.commit("setAction", this.taskId)
         },
-        allocate(){
-          this.$store.dispatch("makeEvent", {
-            type: 'task-allocated',
-            taskId: this.$store.getters.contextCard.taskId,
-            allocatedId: this.taskId
-          })
+        goIn(){
+            let panel = this.c
+            if (panel && panel.length && panel.length > 0){
+
+            } else {
+                panel = [this.taskId]
+            }
+
+            let top = panel.indexOf(this.taskId)
+
+            if (top > -1){
+
+            } else {
+                top = 0
+            }
+
+            this.$store.dispatch("goIn", {
+                inId: this.inId,
+                top,
+                panel
+            })
+
+            this.$router.push('/task/' + this.taskId)
         },
     },
     computed: {
-        allocated(){
-            let allocatedAmount = 0
-            this.$store.state.tasks.forEach(t => {
-                t.allocations.forEach(als => {
-                    if (als.allocatedId === this.taskId){
-                        allocatedAmount += als.amount
-                    }
-                })
-            })
-            return allocatedAmount
-
-        },
         card(){
           return this.$store.getters.hashMap[this.taskId]
         },
@@ -95,19 +96,12 @@ export default {
 .clearboth
     clear: both
 
-.singleship
-    width: 3.3724em
-    position: absolute
-    margin-top: 1em
-    float: right
-
 .agedwrapper
     position: relative
     margin-top: 0.5em
-    width: calc(100% - 5.5em)
-    float: right
     padding: 0.5em
     margin-right: 0.5em
+    cursor: pointer
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
@@ -140,16 +134,10 @@ export default {
     background-image: url('../../assets/images/paper_aged_3.png')
     opacity: 0.35
 
-.allocated
-    position: absolute
-    padding-left: 0.25em
-    width: 2em
-    text-align: center
-    font-size: 0.95em
-    margin-top: 0.5em
-    color: white
-    text-shadow: 2px 2px 2px rgba(0.05, 0.05, 0.05, 0.5)
-    font-size: 1.5em
-    pointer-events: none
-
+.dont-break-out
+    overflow-wrap: break-word
+    word-wrap: break-word
+    word-break: break-word
+    hyphens: auto
+  
 </style>
