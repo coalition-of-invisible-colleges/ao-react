@@ -221,8 +221,9 @@ export default {
             }
         },
         invoiceCreate(){
-            let spot = this.$store.state.cash.spot | 10000
-            let amount = calcs.cadToSats( parseInt(this.payreqAmount), spot)
+            let spot = this.$store.state.cash.spot
+            let amount = calcs.cadToSats( this.payreqAmount, spot)
+            console.log("calculated:", {spot, amount }, "from payreqAmount", this.payreqAmount,  this.$store.state.cash)
             return {
                 type: 'invoice-created',
                 taskId: this.b.taskId,

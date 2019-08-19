@@ -159,6 +159,8 @@ function getDctrlState(){
         if (careAbout.indexOf(t.taskId) > -1){
             let newT = _.assign({}, t)
             newT.deck = []
+            newT.passed = []
+            newT.completed = []
             newT.guild = false
             dctrlState.tasks.push(newT)
         }

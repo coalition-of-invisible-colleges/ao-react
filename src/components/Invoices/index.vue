@@ -8,7 +8,6 @@
         h5 dctrl invoices
         ol
             li lightning network payment requests to account or resource
-
 </template>
 
 <script>

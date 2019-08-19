@@ -3,11 +3,8 @@
 span.current
     img.onlineicon(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
     img.onlineicon(v-else src='../../assets/images/loggedOut.svg')
-    span(v-if='memberId') {{ name }}
-        //img(src='../../assets/images/active15.svg')
-        //span {{ name }}
-    img(v-else, src='../../assets/images/lightning.svg')
-
+    span(v-if='memberId && name') {{ name }}
+    img(v-if='!memberId', src='../../assets/images/lightning.svg')
 </template>
 
 <script>
@@ -42,7 +39,7 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../../styles/colours'
-    
+
 .current
     font-size: 1em
     margin-left: 1em
