@@ -39,6 +39,7 @@ then
 else
 	curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 	source ~/.profile
+	# and/or might need to source profile here; seems like nvm install not loaded on first run
 	nvm install 11
 fi
 
@@ -133,7 +134,7 @@ else
 	sudo apt install -y libsodium-dev
 fi
 
-if [ $(lightning-cli --version | grep -c "v0\.7\.2") -eq 1 ];
+if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.7\.2") -eq 1 ];
 then
 	echo c-lightning v0.7.2 already installed
 else
@@ -189,14 +190,27 @@ else
 fi
 
 # configure tor
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
+TORRCPATH='/usr/local/etc/tor/torrc'
+
+if [ ! -f $TORRCPATH ];
 then
-	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a /etc/tor/torrc 1>/dev/null
+	cp $TORRCPATH.sample $TORRCPATH
 fi
 
-if [ $(cat /etc/tor/torrc | grep -c "HiddenServicePort 80 127\.0\.0\.1:8003") -eq 0 ];
+if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
 then
-	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a /etc/tor/torrc 1>/dev/null
+	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
+fi
+
+
+if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
+then
+	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
+fi
+
+if [ $(cat $TORRCPATH | grep -c "HiddenServicePort 80 127\.0\.0\.1:8003") -eq 0 ];
+then
+	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
 fi
 
 # install borgbackup
@@ -254,6 +268,7 @@ fi
 # sudo systemctl enable ao
 
 # cleanup c-lightning install
+cd ~
 if [ "$lightning" = true ];
 then
 	rm -rf lightning
