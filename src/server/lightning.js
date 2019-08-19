@@ -72,7 +72,12 @@ function recordEveryInvoice(start){
     console.log("waiting on invoices after ", start)
     client.waitanyinvoice(start)
         .then(invoice => {
-            let cadAmt = calculations.satsToCad(invoice.msatoshi / 1000, pubState.cash.spot)
+            let satoshis = invoice.msatoshi / 1000
+            let spot = pubState.cash.spot
+            let cadAmt = calculations.satsToCad(satoshis, spot)
+
+            console.log("recording invoice: ",{cadAmt, spot, satoshis})
+
             pubState.tasks.forEach( t => {
                 if (t.payment_hash === invoice.payment_hash){
                     tasksEvs.taskBoostedLightning(t.taskId, cadAmt, invoice.payment_hash, invoice.pay_index)

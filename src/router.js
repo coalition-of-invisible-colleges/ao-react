@@ -67,6 +67,7 @@ const router = new VueRouter({
 })
 
 router.afterEach((to, from, next) => {
+  console.log("routed to path", to.path, "from  ", from.path)
 
   if(to.meta.title == 'card') return
   Vue.nextTick( () => {

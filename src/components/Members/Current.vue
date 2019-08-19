@@ -28,7 +28,7 @@ export default {
             let t = this.$store.getters.hashMap[taskId]
             let panelColor = this.$store.getters[t.color]
             let panelColorIds = panelColor.map(d => d.taskId)
-            
+
             console.log("panelColor is ", panelColor, " and taskId is ", taskId)
             let topColor = panelColorIds.indexOf(taskId)
             if (topColor > -1){
@@ -37,7 +37,7 @@ export default {
             }
 
             this.$store.dispatch("tryGoIn", {taskId, panel, top, parents:[]})
-        
+
         }, 5)
     },
     complete(){
@@ -57,7 +57,6 @@ export default {
         })
     },
     cardInputSty(c){
-        console.log("color is " + c)
         return {
             redtx : c === 'red',
             bluetx : c === 'blue',
