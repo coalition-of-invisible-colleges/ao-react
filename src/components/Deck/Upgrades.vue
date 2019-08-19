@@ -56,7 +56,7 @@
                         button(@click='selectPayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }').yellowwx bitcoin
                         button(@click='selectPayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }').purplewx lightning
             template(v-if='$store.state.upgrades.mode === "timecube"')
-              div
+              .mainbkg
                 div(v-if='isDoge || b.guild')
                     task-calendar(:inId='b.taskId')
                 .box(v-else)
@@ -433,5 +433,8 @@ h2
     border-style: solid
     border-color: green
     border-width: 4px
+
+.mainbkg
+    background: main
 
 </style>
