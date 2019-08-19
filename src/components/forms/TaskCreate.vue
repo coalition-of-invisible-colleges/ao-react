@@ -159,6 +159,8 @@ export default {
   margin: 0 auto 0 auto
   text-align: center
   padding: 0.5em
+  position: relative
+  left: 1em
 
 button
     background: green

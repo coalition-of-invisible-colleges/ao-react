@@ -5,21 +5,24 @@
     template.clearboth(v-for='(t, i) of priorities')
       .row.priority.opencard(v-if='$store.state.context.action === t')
           img.singleship.open(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          .allocated(v-if='allocated > 0') {{ allocated(t) }}
+          .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           div(@click.stop='deaction')
-              hypercard(:b="getTask(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
+              hypercard(:b="getCard(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
       .row.priority(v-else)
           img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          .allocated(v-if='allocated > 0') {{ allocated(t) }}
-          hyperpriority(:taskId='t')
+          .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
+          div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click='setAction(t)')
+              hyperpriority(:taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
-          .clearboth(v-if='$store.state.context.action === st')
-              hypercard(:b="getTask(st)", :c="priorities",  :inId="t")
-          hyperpriority(v-else,  :taskId='st'  :c='getCard(t).priorities')
+          .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='deaction')
+              hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")
+          div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click='setAction(st)')
+              hyperpriority(:taskId='st'  :c='getCard(t).priorities')
           .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
-              .clearboth(v-if='$store.state.context.action === st2')
-                  hypercard(:b="getTask(st2)", :c="priorities",  :inId="st")
-              hyperpriority(v-else,  :taskId='st2'  :c='getCard(st).priorities')
+              .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='deaction')
+                  hypercard(:b="getCard(st2)", :c="getCard(st2).priorities",  :inId="st")
+              div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click='setAction(st2)')
+                  hyperpriority(:taskId='st2'  :c='getCard(st).priorities')
     div.clearboth
 </template>
 
@@ -28,6 +31,7 @@
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
+import _ from 'lodash'
 
 export default {
   data(){
@@ -36,15 +40,8 @@ export default {
       }
   },
   methods:{
-    setAction(ii){
-        console.log('set action called ', ii)
-        if (ii === this.action){
-            return this.action = false
-        }
-        this.action = ii
-    },
-    getTask(taskId){
-        return this.$store.getters.hashMap[taskId]
+    setAction(taskId){
+        this.$store.commit("setAction", taskId)
     },
     nextAction(){
         this.action = this.getPriorities[(this.getPriorities.indexOf(this.action) + 1) % this.getPriorities.length]
@@ -73,23 +70,47 @@ export default {
     getCard(taskId){
         return this.$store.getters.hashMap[taskId]
     },
+    goIn(taskId, panel, parents){
+        if (panel && panel.length && panel.length > 0){
+
+        } else {
+            panel = [taskId]
+        }
+
+        let top = panel.indexOf(taskId)
+
+        if (top > -1){
+
+        } else {
+            top = 0
+        }
+
+        this.$store.dispatch("tryGoIn", {
+            inId: this.inId,
+            top,
+            panel,
+            parents
+        })
+
+        this.$router.push('/task/' + taskId)
+    },
+    allocated(taskId){
+      let allocatedAmount = 0
+      this.$store.state.tasks.forEach(t => {
+          if(Array.isArray(t.allocations)) {
+            t.allocations.forEach(als => {
+                if (als.allocatedId === taskId){
+                    allocatedAmount += als.amount
+                }
+            })
+          }
+      })
+      return allocatedAmount
+    },
   },
   computed:{
       priorities(){
           return this.$store.getters.getPriorities.slice().reverse()
-      },
-      allocated(taskId){
-          let allocatedAmount = 0
-          this.$store.state.tasks.forEach(t => {
-              if(Array.isArray(t.allocations)) {
-                t.allocations.forEach(als => {
-                    if (als.allocatedId === taskId){
-                        allocatedAmount += als.amount
-                    }
-                })
-              }
-          })
-          return allocatedAmount
       },
   },
   components:{
@@ -233,15 +254,7 @@ img
     
 .subpriority
     margin-left: 6em
-    width: calc(100% - 6.5em)
-
-.redwx
-    padding-top: 0.1em
-    padding-left: 2em
-    padding-right: 0.4em
-    padding-bottom: 0.4em
-    margin-bottom: 0.7em
-    margin-top: 0.7em
+    width: calc(100% - 6em)
 
 .singleship
     position: absolute
@@ -251,9 +264,13 @@ img
     top: -0.3em
 
 .opencard
-    padding-top: 0.5em
     width: calc(100% - 4.5em)
-    
+    margin-top: 0.5em
+
+.opensubcard
+    width: calc(100% - 0.5em)
+    margin-top: 0.5em
+
 .open
     top: 36%
     

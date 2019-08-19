@@ -9,6 +9,7 @@
         button.dontaccept(@click='refocus')
             img.arrow.fl(src='../../assets/images/buddadoge.svg')
             span refocus
+    .clearboth
 </template>
 
 <script>
@@ -75,7 +76,6 @@ export default {
 .totop
     z-index: 1000
     padding-top: 1em
-    padding-bottom: 1em
 
 .pad
     margin-top: 1em
@@ -83,4 +83,7 @@ export default {
 
 .centered
     text-align: center
+
+.clearboth
+    clear: both
 </style>

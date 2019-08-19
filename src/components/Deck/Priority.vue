@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .p.clearboth
-    div.agedwrapper.dont-break-out(@dblclick.stop=''  @click.capture='setAction'  :class="cardInputSty")
+    div.agedwrapper.dont-break-out(:class="cardInputSty")
         .agedbackground.freshpaper(v-if='cardAge < 8')
         .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
         .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -15,37 +15,8 @@ import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
 
 export default {
-    props: ['taskId', 'c'],
+    props: ['taskId'],
     components: { Hypercard, Linky },
-    methods: {
-        setAction(){
-            this.$store.commit("setAction", this.taskId)
-        },
-        goIn(){
-            let panel = this.c
-            if (panel && panel.length && panel.length > 0){
-
-            } else {
-                panel = [this.taskId]
-            }
-
-            let top = panel.indexOf(this.taskId)
-
-            if (top > -1){
-
-            } else {
-                top = 0
-            }
-
-            this.$store.dispatch("goIn", {
-                inId: this.inId,
-                top,
-                panel
-            })
-
-            this.$router.push('/task/' + this.taskId)
-        },
-    },
     computed: {
         card(){
           return this.$store.getters.hashMap[this.taskId]
