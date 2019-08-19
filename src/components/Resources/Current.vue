@@ -4,7 +4,7 @@ span.current
     img.onlineicon(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
     img.onlineicon(v-else src='../../assets/images/loggedOut.svg')
     span(v-if='memberId && name') {{ name }}
-    img(v-if='!memberId', src='../../assets/images/lightning.svg')
+    img.onlineicon(v-if='!memberId', src='../../assets/images/lightning.svg')
 </template>
 
 <script>
