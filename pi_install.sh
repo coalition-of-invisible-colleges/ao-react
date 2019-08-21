@@ -30,7 +30,7 @@ then
 fi
 
 
-# install nvm
+# install node
 . ~/.nvm/nvm.sh
 NVMVERSION=`nvm current`
 if [ $(echo $NVMVERSION | grep -c "v11") -eq 1 ];
@@ -39,6 +39,7 @@ then
 else
 	curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 	source ~/.profile
+	source ~/.bashrc
 	# and/or might need to source profile here; seems like nvm install not loaded on first run
 	nvm install 11
 fi
@@ -264,8 +265,35 @@ else
 fi
 
 # set up AO to autostart as a daemon via systemd
+if [ -f "$HOME/ao/configuration.js" ];
+then
+	echo systemd startup file already exists
+else
+	UNIT="[Unit]
+Description=ao-daemon
 
-# sudo systemctl enable ao
+[Service]
+ExecStart=$HOME/.nvm/versions/node/v11.15.0/bin/node $HOME/ao/production/server/app.js
+User=doge
+Type=simple
+Restart=always
+RestartSec=30
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target"
+
+	echo "$UNIT" > sudo tee -a /etc/systemd/system/ao.service 1>/dev/null 2>&1
+	sudo systemd startup file created
+fi
+
+if [ $(sudo systemctl status ao | grep -c "disabled") -eq 0 ];
+then
+	echo systemd startup already enabled
+else
+	sudo systemctl enable ao
+	echo systemd startup enabled
+fi
 
 # cleanup c-lightning install
 cd ~
