@@ -1,18 +1,15 @@
 <template lang='pug'>
 
 #manage
-    shared-title(title='Manage Autonomous Organization')
-    .row
-      .six.columns.info
-        button(:class='{open: showAo}' @click='toggleAo')
-            span(v-if='showAo') hide ao controls
-            span(v-else) open ao controls
-        .purplewx
-          ul
-            li Each month cost is split between active accounts
-            li Activate account at the treasure chest on your deck
+    div(v-if='$store.state.upgrades.mode === "boat"')
+        home
+        h5 Recent activity at contact points where you can use your fob:
+        resources
+    .row(v-if='$store.state.upgrades.mode === "timecube"')
+        ul
+          li Each month cost is split between active accounts
+          li Activate account at the treasure chest on your deck
         transition(name='slide-fade')
-          .purplewx(v-if='showAo')
             .row
                 .seven.grid
                     p.underline.padd Node Cost
@@ -37,17 +34,10 @@
                 .six.columns
                   p.input-instructions Set Cost Cap
                   cap-set
-        img#sundogepurp(src="../../assets/images/sundogepurp.png")
-      .six.columns
-          p Add a doge!
-          member-create
-          changer
-    .row
-      .six.columns
-        h5 Recent activity at contact points where you can use your fob:
-        resources
-      .six.columns
-        img#sundogepurp(src="../../assets/images/ao.svg")
+    div(v-if='$store.state.upgrades.mode === "badge"')
+        p Add a doge!
+        member-create
+        changer
 </template>
 
 <script>
@@ -63,6 +53,7 @@ import ChannelCreate from '../forms/ChannelCreate'
 import MemberCreate from '../forms/MemberCreate'
 import CardPanel from '../Deck/CardPanel'
 import Changer from '../MyPage/Changer'
+import Home from '../Home'
 
 export default {
     data(){

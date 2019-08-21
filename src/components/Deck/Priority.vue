@@ -2,11 +2,11 @@
 
 .p.clearboth
     div.agedwrapper.dont-break-out(:class="cardInputSty")
-        .agedbackground.freshpaper(v-if='cardAge < 8')
-        .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
-        .agedbackground.montholdpaper(v-else-if='cardAge < 90')
-        .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-        linky(:x='name'  :key='name')
+        .agedbackground.freshpaper.middle(v-if='cardAge < 8')
+        .agedbackground.weekoldpaper.middle(v-else-if='cardAge < 30')
+        .agedbackground.montholdpaper.middle(v-else-if='cardAge < 90')
+        .agedbackground.threemontholdpaper.middle(v-else='cardAge >= 90')
+        linky.front(:x='name'  :key='name')
 </template>
 
 <script>
@@ -73,7 +73,12 @@ export default {
     padding: 0.5em
     margin-right: 0.5em
     cursor: pointer
+    z-index: 5
 
+.front
+    position: relative
+    z-index: 100
+    
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
     background-repeat: no-repeat
@@ -87,7 +92,7 @@ export default {
     width: 100%
     height: 100%
     pointer-events: none
-    //border-radius: 12px
+    z-index: 50
 
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')

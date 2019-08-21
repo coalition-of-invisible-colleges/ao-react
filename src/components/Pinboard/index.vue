@@ -2,19 +2,12 @@
 
 #wrex
     .pinboard
-        .row
-            .six.columns
-                .centered
-                    .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
-                hypercard(v-if='$store.getters.pubguilds[showGuild]'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-                auth(v-if='!$store.getters.isLoggedIn')
-            .six.columns
-                calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
-                img.budda(src='../../assets/images/buddadoge.svg')
-        .row.clearboth
-            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-            img.fw(src='../../assets/memes/Spiderman.jpg')
-            home
+        auth(v-if='!$store.getters.isLoggedIn')
+        .centered(v-if='$store.state.upgrades.mode == "boat"')
+            .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
+            hypercard(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+        calendar(v-else-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "timecube"'  :inId='$store.getters.pubguilds[showGuild].taskId')
+        row(v-else-if='$store.state.upgrades.mode == "badge"'  v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.navigation
+.navigation(@contextmenu.prevent)
     img.bullimgright(v-if='showImg === "uni" && !uniRight'  src="../assets/images/bulluni.svg"  @click='cycleRight')
     img.bullimgright(v-else-if='showImg === "uni" && uniRight'  src="../assets/images/unibull.svg"  @click='cycleRight')
     img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleRight')
@@ -8,13 +8,13 @@
     img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
-    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }')
+    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
         .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
         .full(@click='nextUpgradeMode')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
-            img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
-            img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
-            img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -31,8 +31,46 @@ import Context from './Deck/Context'
 export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput, Context },
-    mounted(){
+    mounted() {
         this.setToRoute()
+        var el = document.getElementById('helm')
+        var mc = new Hammer.Manager(el)
+        var Swipe = new Hammer.Swipe()
+        mc.add(Swipe)
+
+        mc.on('swipeleft', (e) => {
+            this.flashHelm()
+            this.previousUpgradeMode()
+        });
+
+        mc.on('swiperight', (e) => {
+            this.flashHelm()
+            this.nextUpgradeMode()
+        });
+
+        mc.on('swipeup', (e) => {
+            this.flashHelm()
+            this.closeUpgrades()
+        });
+
+        mc.on('swipedown', (e) => {
+            this.flashHelm()
+            this.nextUpgradeMode()
+        });
+
+        var Press = new Hammer.Press({
+          time: 500
+        });
+        mc.add(Press)
+
+        mc.on('press', (e) => {
+            e.preventDefault()
+            this.flashHelm(2)
+            this.$router.push('/')
+            // navigate to one of four front pages here
+            // if we are already on the badge, chest, or timecube front page, take us to the boat frontpage
+            // if we are already on the boat frontpage, activate the jump drive
+        });
     },
     watch: {
       '$route': 'setToRoute'
@@ -89,17 +127,17 @@ export default {
             this.setToRoute()
             this.uniRight = !this.uniRight
         },
-        setToRoute(){
+        setToRoute() {
             switch (this.$router.currentRoute.path){
               case "/": return this.showImg = "sun"
               case "/dash": return this.showImg = "bull"
               default: return this.showImg = "uni"
             }
         },
-        toggleShowBtc(){
+        toggleShowBtc() {
             this.showBtc = !this.showBtc
         },
-        setImg(x){
+        setImg(x) {
             console.log("setting image", {x})
             this.showImg = x
             if (x === 'uni'){
@@ -107,9 +145,27 @@ export default {
                 this.$store.commit("setParent", [])
             }
         },
-        nextUpgradeMode(){
+        nextUpgradeMode() {
             this.$store.commit("nextMode")
         },
+        previousUpgradeMode() {
+            this.$store.commit("previousMode")
+        },
+        closeUpgrades() {
+            this.$store.commit("closeUpgrades")
+        },
+        flashHelm(flashes = 1) {
+            let ms = 350
+            let helm = document.getElementById('helm')
+            let addedClasses = ' flash'
+            if(flashes > 1) {
+                console.log('flashes is ', flashes)
+                addedClasses += ' twice'
+                ms *= flashes
+            }
+            helm.className += addedClasses
+            setTimeout( () => { helm.className = helm.className.replace(addedClasses, '')}, ms)
+        }
     },
 }
 
@@ -299,12 +355,29 @@ hr
     border-bottom-left-radius: 50%
     border-bottom-right-radius: 50%
     border-top: none
+    
+.topcenter:active
+    background: #8cffff
+    border-color: #97ffff
+    opacity: 1
+    
 .logout
     opacity: 1
     position: absolute
     
-.topcenter:active
-    opacity: 1
+@keyframes flash
+    0%, 100% { background-color: #8cffff; border-color: #97ffff }
+    50% { background-color: initial; border-color: initial }
+
+.topcenter.flash
+    animation-name: flash
+    animation-duration: 0.35s
+    animation-iteration-count: 1
+    transition-timing-function: ease
+    transition-property: background-color
+
+.topcenter.flash.twice
+    animation-iteration-count: 4
 
 .boat
     width: 7em
