@@ -5,9 +5,10 @@
         auth(v-if='!$store.getters.isLoggedIn')
         .centered(v-if='$store.state.upgrades.mode == "boat"')
             .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
-            hypercard(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-        calendar(v-else-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "timecube"'  :inId='$store.getters.pubguilds[showGuild].taskId')
+            hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
         row(v-else-if='$store.state.upgrades.mode == "badge"'  v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+        p(v-else-if='$store.state.upgrades.mode == "bounty"') <em>bounties zone coming soon</em>
+        calendar(v-else-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "timecube"'  :inId='$store.getters.pubguilds[showGuild].taskId')
 </template>
 
 <script>
@@ -195,4 +196,8 @@ h2
 
 .centered
     text-align: center
+    
+.gutter
+    margin: 0 20%
+
 </style>

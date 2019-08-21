@@ -8,13 +8,13 @@
     img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
-    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
-        .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
-        .full(@click='nextUpgradeMode')
+    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm' @click='helmClick')
+        .full(v-if='$store.state.upgrades.mode && $store.getters.isLoggedIn')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
-            img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+            img.upg(v-else='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+        .full(v-else) log out
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -153,6 +153,13 @@ export default {
         },
         closeUpgrades() {
             this.$store.commit("closeUpgrades")
+        },
+        helmClick() {
+            if(!this.$store.state.upgrades.mode && $store.getters.isLoggedIn){
+                this.killsession()
+            } else {
+                this.nextUpgradeMode()
+            }
         },
         flashHelm(flashes = 1) {
             let ms = 350
@@ -326,9 +333,11 @@ hr
 .faded
     opacity: 0.4
 
+#helm
+    cursor: pointer
+    
 .upg
     height: 2em
-    cursor: pointer
 
 .topauth
     max-width: 50%
