@@ -356,6 +356,7 @@ hr
     
 .upg
     height: 2em
+    pointer-events: none
 
 .topauth
     max-width: 50%
@@ -369,8 +370,9 @@ hr
 .topcenter
     position: fixed
     top: 0
-    left: (50% - 5em)
+    left: 50%
     width: 10em
+    margin-left: -5em
     background: softGray
     color: main
     padding-left: 2em
