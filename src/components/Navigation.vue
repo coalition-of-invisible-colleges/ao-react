@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.navigation
+.navigation(@contextmenu.prevent)
     img.bullimgright(v-if='showImg === "uni" && !uniRight'  src="../assets/images/bulluni.svg"  @click='cycleRight')
     img.bullimgright(v-else-if='showImg === "uni" && uniRight'  src="../assets/images/unibull.svg"  @click='cycleRight')
     img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleRight')
@@ -8,13 +8,13 @@
     img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
-    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }')
-        .full(v-if='!$store.state.upgrades.mode && $store.getters.isLoggedIn'  @click='killSession') log out
-        .full(@click='nextUpgradeMode')
+    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
+        .full(v-if='$store.state.upgrades.mode && $store.getters.isLoggedIn')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
-            img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
-            img.upg(v-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
-            img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
+            img.upg(v-else='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+        .full(v-else) log out
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -31,8 +31,58 @@ import Context from './Deck/Context'
 export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput, Context },
-    mounted(){
+    mounted() {
         this.setToRoute()
+        var el = document.getElementById('helm')
+        var mc = new Hammer.Manager(el)
+
+        var Swipe = new Hammer.Swipe()
+        mc.add(Swipe)
+        mc.on('swipeleft', (e) => {
+            this.flashHelm()
+            this.previousUpgradeMode()
+        });
+
+        mc.on('swiperight', (e) => {
+            this.flashHelm()
+            this.nextUpgradeMode()
+        });
+
+        mc.on('swipeup', (e) => {
+            this.flashHelm()
+            this.closeUpgrades()
+        });
+
+        mc.on('swipedown', (e) => {
+            this.flashHelm()
+            this.nextUpgradeMode()
+        });
+
+        var Press = new Hammer.Press({
+          time: 500
+        });
+        mc.add(Press)
+        mc.on('press', (e) => {
+            if(this.$router.currentRoute.path === '/'){
+                if(this.$store.state.upgrades.mode === 'boat') {
+                    this.flashHelm(5)
+                } else {
+                    this.flashHelm(2)
+                    this.$store.state.upgrades.mode = 'boat'
+                }
+            } else {
+                this.flashHelm(2)
+                this.$router.push('/')
+            }
+        });
+
+        var Tap = new Hammer.Tap({ time: 500 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            this.flashHelm(0.5)
+            this.nextUpgradeMode()
+        });
+
     },
     watch: {
       '$route': 'setToRoute'
@@ -89,17 +139,17 @@ export default {
             this.setToRoute()
             this.uniRight = !this.uniRight
         },
-        setToRoute(){
+        setToRoute() {
             switch (this.$router.currentRoute.path){
               case "/": return this.showImg = "sun"
               case "/dash": return this.showImg = "bull"
               default: return this.showImg = "uni"
             }
         },
-        toggleShowBtc(){
+        toggleShowBtc() {
             this.showBtc = !this.showBtc
         },
-        setImg(x){
+        setImg(x) {
             console.log("setting image", {x})
             this.showImg = x
             if (x === 'uni'){
@@ -107,9 +157,40 @@ export default {
                 this.$store.commit("setParent", [])
             }
         },
-        nextUpgradeMode(){
+        nextUpgradeMode() {
             this.$store.commit("nextMode")
         },
+        previousUpgradeMode() {
+            this.$store.commit("previousMode")
+        },
+        closeUpgrades() {
+            this.$store.commit("closeUpgrades")
+        },
+        helmClick() {
+            if(!this.$store.state.upgrades.mode && $store.getters.isLoggedIn){
+                this.killsession()
+            } else {
+                this.nextUpgradeMode()
+            }
+        },
+        flashHelm(flashes = 1) {
+            let ms = 350
+            let helm = document.getElementById('helm')
+            let addedClasses = ' flash'
+            if(flashes < 1) {
+                addedClasses += ' half'
+                ms *= 0.7
+            } else if(flashes === 2) {
+                addedClasses += ' twice'
+                ms *= flashes
+            } else if(flashes === 5) {
+                addedClasses += ' five'
+                ms *= flashes
+            }
+
+            helm.className += addedClasses
+            setTimeout( () => { helm.className = helm.className.replace(addedClasses, ''); }, ms)
+        }
     },
 }
 
@@ -270,9 +351,12 @@ hr
 .faded
     opacity: 0.4
 
+#helm
+    cursor: pointer
+    
 .upg
     height: 2em
-    cursor: pointer
+    pointer-events: none
 
 .topauth
     max-width: 50%
@@ -286,8 +370,9 @@ hr
 .topcenter
     position: fixed
     top: 0
-    left: (50% - 5em)
+    left: 50%
     width: 10em
+    margin-left: -5em
     background: softGray
     color: main
     padding-left: 2em
@@ -299,12 +384,38 @@ hr
     border-bottom-left-radius: 50%
     border-bottom-right-radius: 50%
     border-top: none
+        
 .logout
     opacity: 1
     position: absolute
     
-.topcenter:active
-    opacity: 1
+@keyframes flashhalf
+    0% { background-color: #9ff; border-color: #aff }
+    100% { background-color: softGray; border-color: buttonface }
+
+@keyframes flash
+    0% { background-color: softGray; border-color: buttonface }
+    50% { background-color: #9ff; border-color: #aff }
+    100% { background-color: softGray; border-color: buttonface }
+
+.topcenter.flash
+    animation-name: flash
+    animation-duration: 0.35s
+    animation-iteration-count: 1
+    transition-timing-function: ease
+    transition-property: background-color
+
+.topcenter.flash.half
+    animation-name: flashhalf
+    animation-duration: 0.245s
+
+.topcenter.flash.twice
+    animation-duration: 0.1725
+    animation-iteration-count: 2
+    
+.topcenter.flash.five
+    animation-duration: calc(0.1725 * 5)
+    animation-iteration-count: 5
 
 .boat
     width: 7em

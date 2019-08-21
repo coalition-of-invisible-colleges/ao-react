@@ -18,7 +18,7 @@
               hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")
           div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click='setAction(st)')
               hyperpriority(:taskId='st'  :c='getCard(t).priorities')
-          .row.subpriority(v-for='(st2, k) of getSubPriorities(st)')
+          .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)')
               .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='deaction')
                   hypercard(:b="getCard(st2)", :c="getCard(st2).priorities",  :inId="st")
               div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click='setAction(st2)')
@@ -257,9 +257,13 @@ img
     position: relative
     
 .subpriority
-    margin-left: 6em
-    width: calc(100% - 6em)
+    margin-left: calc(3.3724em * 2)
+    width: calc(100% - (3.3724em* 2))
 
+.subsubpriority
+    margin-left: 3.3724em
+    width: calc(100% - 3.3724em)
+  
 .singleship
     position: absolute
     width: 3.3724em

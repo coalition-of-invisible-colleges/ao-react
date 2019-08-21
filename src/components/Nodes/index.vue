@@ -1,7 +1,8 @@
 <template lang='pug'>
 
 #nodes
-    .row
+    h1 lightning
+    .row(v-if='$store.state.cash.info')
         .six.columns
             .row
                 p.fl {{ $store.state.cash.info.alias }} Wallet
@@ -10,6 +11,8 @@
         .six.columns
             p {{ $store.state.cash.info.num_active_channels }} Lightning Channels
             local-remote-bar(v-for='n in $store.getters.channels', :c='n')
+    .row(v-else)
+        p <em>unable to read info from lightning node</em>
     .row
         p 1 point is {{ sats }}  &#12471;
         p 1 BTC is {{ cadPrice }} CAD
@@ -52,6 +55,9 @@ export default {
 a
     color: purple
 
+h1
+    text-align: center
+    
 .h
     height: 2em
 

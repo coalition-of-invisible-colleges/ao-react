@@ -320,7 +320,6 @@ export default {
     width: 100%
     height: 100%
     pointer-events: none
-    //border-radius: 12px
 
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
@@ -337,7 +336,6 @@ export default {
 .threemontholdpaper
     background-image: url('../../assets/images/paper_aged_3.png')
     opacity: 0.35
-
 
 .smallguild
     height: 1.67em

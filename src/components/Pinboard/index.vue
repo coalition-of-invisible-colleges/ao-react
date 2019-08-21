@@ -2,19 +2,17 @@
 
 #wrex
     .pinboard
-        .row
-            .six.columns
-                .centered
-                    .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
-                hypercard(v-if='$store.getters.pubguilds[showGuild]'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-                auth(v-if='!$store.getters.isLoggedIn')
-            .six.columns
-                calendar(v-if='$store.getters.pubguilds[showGuild]'  :inId='$store.getters.pubguilds[showGuild].taskId')
-                img.budda(src='../../assets/images/buddadoge.svg')
-        .row.clearboth
-            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-            img.fw(src='../../assets/memes/Spiderman.jpg')
-            home
+        auth(v-if='!$store.getters.isLoggedIn')
+        div(v-if='$store.state.upgrades.mode == "boat"')
+            .centered
+                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+            hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+        row(v-else-if='$store.state.upgrades.mode == "badge"'  v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+        p(v-else-if='$store.state.upgrades.mode == "bounty"') <em>bounties zone coming soon</em>
+        calendar(v-else-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "timecube"'  :inId='$store.getters.pubguilds[showGuild].taskId')
+        div(v-else)
+          img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
+          img.buddadoge(src='../../assets/images/buddadoge.svg')
 </template>
 
 <script>
@@ -199,7 +197,52 @@ h2
     margin-right: 1em
     display: inline
     cursor: pointer
-
+    
+.gutter
+    margin: 0 20%
+    
 .centered
     text-align: center
+    
+.post
+    margin-right: 0
+
+@keyframes nlpDoge
+    0% { width: 24em; margin-left: -12em; margin-top: -6.75em; opacity: 0.68}
+    100% { width: 240em; margin-left: -55em; margin-top: -85em; opacity: 0 }
+
+.wallpaper
+    position: fixed
+    width: 240em
+    top: 29%
+    left: 50%
+    margin-left: -55em
+    margin-top: -85em
+    opacity: 0
+    animation-name: nlpDoge
+    animation-duration: 322s
+    transition-timing-function: ease-in
+    transition-property: width, margin-left, margin-top, opacity
+    z-index: -15
+    border-radius: 50px
+
+@keyframes abide
+  0% { opacity: 0 }
+  99.667% { opacity: 0 }
+  100% { opacity: 0.5 }
+  
+.buddadoge
+    position: fixed
+    width: 16em
+    top: 50%
+    left: 50%
+    margin-left: -8em
+    margin-top: -16em
+    opacity: 0.5
+    animation-name: abide
+    animation-duration: 300s
+    transition-timing-function: ease
+    transition-property: opacity
+    z-index: -15
+
 </style>
