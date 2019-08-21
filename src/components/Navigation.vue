@@ -8,7 +8,7 @@
     img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
-    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm' @click='helmClick')
+    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
         .full(v-if='$store.state.upgrades.mode && $store.getters.isLoggedIn')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
@@ -35,9 +35,9 @@ export default {
         this.setToRoute()
         var el = document.getElementById('helm')
         var mc = new Hammer.Manager(el)
+
         var Swipe = new Hammer.Swipe()
         mc.add(Swipe)
-
         mc.on('swipeleft', (e) => {
             this.flashHelm()
             this.previousUpgradeMode()
@@ -62,15 +62,27 @@ export default {
           time: 500
         });
         mc.add(Press)
-
         mc.on('press', (e) => {
-            e.preventDefault()
-            this.flashHelm(2)
-            this.$router.push('/')
-            // navigate to one of four front pages here
-            // if we are already on the badge, chest, or timecube front page, take us to the boat frontpage
-            // if we are already on the boat frontpage, activate the jump drive
+            if(this.$router.currentRoute.path === '/'){
+                if(this.$store.state.upgrades.mode === 'boat') {
+                    this.flashHelm(5)
+                } else {
+                    this.flashHelm(2)
+                    this.$store.state.upgrades.mode = 'boat'
+                }
+            } else {
+                this.flashHelm(2)
+                this.$router.push('/')
+            }
         });
+
+        var Tap = new Hammer.Tap({ time: 500 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            this.flashHelm(0.5)
+            this.nextUpgradeMode()
+        });
+
     },
     watch: {
       '$route': 'setToRoute'
@@ -165,13 +177,19 @@ export default {
             let ms = 350
             let helm = document.getElementById('helm')
             let addedClasses = ' flash'
-            if(flashes > 1) {
-                console.log('flashes is ', flashes)
+            if(flashes < 1) {
+                addedClasses += ' half'
+                ms *= 0.7
+            } else if(flashes === 2) {
                 addedClasses += ' twice'
                 ms *= flashes
+            } else if(flashes === 5) {
+                addedClasses += ' five'
+                ms *= flashes
             }
+
             helm.className += addedClasses
-            setTimeout( () => { helm.className = helm.className.replace(addedClasses, '')}, ms)
+            setTimeout( () => { helm.className = helm.className.replace(addedClasses, ''); }, ms)
         }
     },
 }
@@ -364,19 +382,19 @@ hr
     border-bottom-left-radius: 50%
     border-bottom-right-radius: 50%
     border-top: none
-    
-.topcenter:active
-    background: #8cffff
-    border-color: #97ffff
-    opacity: 1
-    
+        
 .logout
     opacity: 1
     position: absolute
     
+@keyframes flashhalf
+    0% { background-color: #9ff; border-color: #aff }
+    100% { background-color: softGray; border-color: buttonface }
+
 @keyframes flash
-    0%, 100% { background-color: #8cffff; border-color: #97ffff }
-    50% { background-color: initial; border-color: initial }
+    0% { background-color: softGray; border-color: buttonface }
+    50% { background-color: #9ff; border-color: #aff }
+    100% { background-color: softGray; border-color: buttonface }
 
 .topcenter.flash
     animation-name: flash
@@ -385,8 +403,17 @@ hr
     transition-timing-function: ease
     transition-property: background-color
 
+.topcenter.flash.half
+    animation-name: flashhalf
+    animation-duration: 0.245s
+
 .topcenter.flash.twice
-    animation-iteration-count: 4
+    animation-duration: 0.1725
+    animation-iteration-count: 2
+    
+.topcenter.flash.five
+    animation-duration: calc(0.1725 * 5)
+    animation-iteration-count: 5
 
 .boat
     width: 7em

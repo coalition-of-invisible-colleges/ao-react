@@ -3,8 +3,9 @@
 #wrex
     .pinboard
         auth(v-if='!$store.getters.isLoggedIn')
-        .centered(v-if='$store.state.upgrades.mode == "boat"')
-            .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{greentx: i === showGuild}') {{ t.guild }}
+        div(v-if='$store.state.upgrades.mode == "boat"')
+            .centered
+                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
             hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
         row(v-else-if='$store.state.upgrades.mode == "badge"'  v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
         p(v-else-if='$store.state.upgrades.mode == "bounty"') <em>bounties zone coming soon</em>
@@ -193,11 +194,14 @@ h2
     margin-right: 1em
     display: inline
     cursor: pointer
-
-.centered
-    text-align: center
     
 .gutter
     margin: 0 20%
+    
+.centered
+    text-align: center
+    
+.post
+    margin-right: 0
 
 </style>

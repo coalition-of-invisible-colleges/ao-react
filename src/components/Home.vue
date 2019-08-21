@@ -2,6 +2,8 @@
 
 #wrex
     .row
+        .six.columns
+            img#dctrlverse(src="../assets/images/dctrlverse.png")
         .six.columns.sidewalk
             shared-title(title='sidewalk controls')
             button(@click='trySidewalk("crazy")').redwx crazy
@@ -23,8 +25,6 @@
                     button(@click='trySidewalk("color", "yellow")').yellowwx
                 .two.grid
                     button(@click='trySidewalk("color", "black")').blackwx
-        .six.columns
-            img#dctrlverse(src="../assets/images/dctrlverse.png")
     .row
         .six.grid
             img#sundogepurp(src="../assets/images/ao.svg")

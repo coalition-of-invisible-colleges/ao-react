@@ -51,7 +51,6 @@
 
 import SharedTitle from './slotUtils/SharedTitle'
 import Auth from './Auth'
-import Manage from './Manage'
 import Changer from './MyPage/Changer'
 import MemberCreate from './forms/MemberCreate'
 import TaskCreate from './forms/TaskCreate'
@@ -65,7 +64,7 @@ import Home from './Home'
 
 export default {
     components:{
-        SharedTitle, Auth, Manage, Changer,
+        SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
         Panels, WhyLightning, Members, Home, MemberCreate
     },
