@@ -3,48 +3,48 @@
 #home
     div(v-if='$store.state.upgrades.mode === "boat"')
         h1 resources
-        home
-        h5 Recent activity at contact points where you can use your fob:
-        resources
-    div(v-if='$store.state.upgrades.mode === "badge"')
-        h1 doges
         .row
-            .two.columns
-            member-create.four.columns 
+            resources.six.columns
+            sidewalk.six.columns
+        h5 Recent activity at contact points where you can use your fob:
+    div(v-if='$store.state.upgrades.mode === "badge"')
+        h1 accounts
+        .row
+            .two.columns &nbsp;
+            member-create.four.columns
             changer.four.columns
             .two.columns
         members
     nodes(v-if='$store.state.upgrades.mode === "bounty"')
     .row(v-if='$store.state.upgrades.mode === "timecube"')
-        h1 timecube
+        h1 central reserve of dctrl
         ul
           li Each month cost is split between active accounts
           li Activate account at the treasure chest on your deck
-        transition(name='slide-fade')
-            .row
-                .seven.grid
-                    p.underline.padd Node Cost
-                    p Active Doges
-                .one.grid
-                    .equals =
-                .four.grid.equals2
-                    p Cost each
-            .row
-                .seven.grid
-                    p.number.underline.padd {{ parseInt($store.state.cash.rent) }}
-                    p.number {{ $store.getters.activeMembers.length }}
-                .one.grid
-                    .equals =
-                .four.grid
-                    p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
-                        span.redtx [{{ $store.state.cash.cap }} max]
-            .row
-                .six.columns
-                  p.input-instructions Set Node Cost
-                  rent-set
-                .six.columns
-                  p.input-instructions Set Cost Cap
-                  cap-set
+          .row.center
+              .seven.grid
+                  p.underline.padd Node Cost
+                  p Active Doges
+              .one.grid
+                  .equals =
+              .four.grid.equals2
+                  p Cost each
+          .row.center
+              .seven.grid
+                  p.number.underline.padd {{ parseInt($store.state.cash.rent) }}
+                  p.number {{ $store.getters.activeMembers.length }}
+              .one.grid
+                  .equals =
+              .four.grid
+                  p.redtx.equals2 [{{ $store.state.cash.cap }} max]
+                  p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
+          .row
+              .six.columns
+                p.input-instructions Set Node Cost
+                rent-set
+              .six.columns
+                p.input-instructions Set Cost Cap
+                cap-set
 </template>
 
 <script>
@@ -61,12 +61,26 @@ import Panels from './Deck/Panels'
 import WhyLightning from './Nodes/WhyLightning'
 import Members from './Members'
 import Home from './Home'
+import Sidewalk from './Sidewalk'
+import RentSet from './forms/RentSet'
+import CapSet from './forms/CapSet'
+import Resources from './Resources'
 
 export default {
+    beforeRouteEnter(to, from, next) {
+          next(vm => {
+              vm.setDeck()
+          })
+    },
+    setDeck(){
+        this.$store.commit("setPanel", [])
+        this.$store.commit("setParent", [])
+    },
     components:{
         SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
-        Panels, WhyLightning, Members, Home, MemberCreate
+        Panels, WhyLightning, Members, Home, MemberCreate, RentSet,
+        CapSet, Resources, Sidewalk
     },
 }
 
@@ -75,6 +89,9 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../styles/colours'
+
+.center
+    text-align: center
 
 .intro
     padding: 5em 0;
@@ -86,7 +103,7 @@ p
 
 h1
     text-align: center
-    
+
 h3
     text-align: center
     color:accent1

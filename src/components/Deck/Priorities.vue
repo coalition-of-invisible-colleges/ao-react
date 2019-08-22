@@ -85,7 +85,7 @@ export default {
             top = 0
         }
 
-        this.$store.dispatch("tryGoIn", {
+        this.$store.dispatch("goIn", {
             inId: this.inId,
             top,
             panel,

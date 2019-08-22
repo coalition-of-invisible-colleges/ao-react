@@ -2,7 +2,7 @@
 
 #resource
     .list(v-if='isLoggedIn')
-        row(v-for="r in resources", :r="r")
+        row(v-for="r in resources", :r="r", :c='panel')
     .padding(v-else)
         h5 dctrl fobtap points
         ol
@@ -14,7 +14,6 @@
 
 import Row from "./Row"
 import SharedTitle from '../slotUtils/SharedTitle'
-// import CrazyBtn from '../slotUtils/CrazyBtn'
 
 export default {
     computed: {
@@ -24,6 +23,9 @@ export default {
         isLoggedIn(){
             return this.$store.getters.isLoggedIn
         },
+        panel(){
+            return this.resources.map(r => r.resourceId)
+        }
     },
     components:{
         SharedTitle,

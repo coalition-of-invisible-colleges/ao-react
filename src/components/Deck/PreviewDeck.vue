@@ -51,8 +51,8 @@ export default {
               panel = panelColor
               top = topColor
             }
-            let parents =  [this.task.taskId]
-            this.$store.dispatch("tryGoIn", {parents, panel, top})
+            let parents =  [this.$store.getters.contextCard.taskId, this.task.taskId]
+            this.$store.dispatch("goIn", {parents, panel, top})
 
             this.$router.push("/task/" + taskId)
 

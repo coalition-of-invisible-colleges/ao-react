@@ -4,12 +4,19 @@
     .pinboard
         auth(v-if='!$store.getters.isLoggedIn')
         div(v-if='$store.state.upgrades.mode == "boat"')
+            h1 Top Missions
             .centered
                 .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
             hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-        row(v-else-if='$store.state.upgrades.mode == "badge"'  v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-        p(v-else-if='$store.state.upgrades.mode == "bounty"') <em>bounties zone coming soon</em>
-        calendar(v-else-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "timecube"'  :inId='$store.getters.pubguilds[showGuild].taskId')
+        div(v-else-if='$store.state.upgrades.mode == "badge"' )
+            h1 Recent People
+            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+        h1(v-else-if='$store.state.upgrades.mode == "bounty"') Bounties
+        div(v-else-if='$store.state.upgrades.mode == "timecube"')
+          h1 Calendar
+          .centered
+              .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+          calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
         div(v-else)
           img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
           img.buddadoge(src='../../assets/images/buddadoge.svg')
@@ -64,8 +71,7 @@ export default {
   methods:{
       setDeck(){
           console.log("pinboard route handle called")
-          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
-          this.$store.commit("setTop", 0)
+          this.$store.commit("setPanel", [])
           this.$store.commit("setParent", [])
       },
       cycleGuilds(){
@@ -95,6 +101,10 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 
+h1
+    text-align: center
+    color: yellow
+
 .space
     height: 1.1em
 
@@ -103,13 +113,6 @@ ol
     font-size: 1.5em
     li
         margin: .3em
-
- h1
-  cursor: pointer
-  text-align: center
-  color: main
-  img
-    height: 2em
 
 #wrex
     width: 100%
@@ -197,13 +200,13 @@ h2
     margin-right: 1em
     display: inline
     cursor: pointer
-    
+
 .gutter
     margin: 0 20%
-    
+
 .centered
     text-align: center
-    
+
 .post
     margin-right: 0
 
@@ -230,7 +233,7 @@ h2
   0% { opacity: 0 }
   99.667% { opacity: 0 }
   100% { opacity: 0.5 }
-  
+
 .buddadoge
     position: fixed
     width: 16em

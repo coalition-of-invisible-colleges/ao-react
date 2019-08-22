@@ -3,7 +3,7 @@
 .p.clearboth(@dblclick='goIn')
   .row
     .shipcontainer
-      img.singleship(src='../../assets/images/singleship.svg')
+      //- img.singleship(src='../../assets/images/singleship.svg')
       div.agedwrapper(:class="cardInputSty")
         .agedbackground.freshpaper(v-if='cardAge < 8')
         .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
@@ -22,14 +22,15 @@ export default {
     components: { Hypercard, Linky },
     methods: {
         goIn(){
+
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
             } else {
-                panel = [this.taskId]
+                panel = [this.b.taskId]
             }
 
-            let top = panel.indexOf(this.taskId)
+            let top = panel.indexOf(this.b.taskId)
 
             if (top > -1){
 
@@ -37,13 +38,29 @@ export default {
                 top = 0
             }
 
-            this.$store.dispatch("goIn", {
-                inId: this.inId,
+            let parents = [  ]
+
+            if (this.$store.getters.contextCard){
+                parents.push(this.$store.getters.contextCard.taskId)
+            }
+
+            if (this.inId && parents.indexOf(this.inId) < 0){
+                parents.push(this.inId)
+            }
+
+            console.log('dispatching goIn with', {
+                parents,
                 top,
                 panel
             })
 
-            this.$router.push('/task/' + this.taskId)
+            this.$store.dispatch("goIn", {
+                parents,
+                top,
+                panel
+            })
+
+            this.$router.push("/task/" + this.b.taskId)
         },
     },
     computed: {

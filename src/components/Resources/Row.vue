@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.resources
+.resources(@dblclick='goIn')
     h3 {{ r.name }}
         span(v-if='r.stock && r.stock >= 0').stock ({{ r.stock }} remain)
     img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
@@ -13,11 +13,11 @@
             .current
                 current(v-for='memberId in currentMembers', :memberId='memberId')
         .five.columns
-            router-link(v-if='trackStock', :to='"/resource_stock/" + r.resourceId')
-                button.refill replenish
+            //- router-link(v-if='trackStock', :to='"/resource_stock/" + r.resourceId')
+            //-   button.refill replenish
             button.use(@click='use')
                 span use
-            router-link.fw(:to='"/task/" + r.resourceId')
+            router-link.fw(:to='goIn')
                 img.viney(src='../../assets/images/vinebtn.svg')
 </template>
 
@@ -30,7 +30,7 @@ export default {
     data(){
         return { showInvoices: false }
     },
-    props: ['r'],
+    props: ['r', 'c'],
     components: { Current, PayReq },
     computed: {
         val(){
@@ -73,6 +73,19 @@ export default {
                 charged:this.r.charged,
                 notes:'ao',
             })
+        },
+        goIn(){
+            let top = this.c.indexOf(this.r.resourceId)
+            console.log("goIn called with TOP: ", top)
+            if (top > -1){
+
+                this.$router.push('/task/' + this.r.resourceId)
+                this.$store.dispatch("goIn", {
+                    parents: [],
+                    panel: this.c,
+                    top,
+                })
+            }
         }
     }
 }

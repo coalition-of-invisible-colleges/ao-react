@@ -115,8 +115,8 @@ export default {
                 panel = panelColor
                 top = topColor
             }
-
-            this.$store.dispatch("tryGoIn", {taskId, panel, top})
+            let parents = [this.$store.getters.contextCard.taskId]
+            this.$store.dispatch("goIn", {taskId, panel, top, parents})
         },
         selectPayment(x){
             this.$store.commit("setPayMode", x)

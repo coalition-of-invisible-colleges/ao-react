@@ -36,7 +36,7 @@ export default {
                 top = topColor
             }
 
-            this.$store.dispatch("tryGoIn", {taskId, panel, top, parents:[]})
+            this.$store.dispatch("goIn", {taskId, panel, top, parents:[]})
 
         }, 5)
     },

@@ -86,8 +86,25 @@ export default {
                 top = 0
             }
 
+            let parents = [  ]
+
+            if (this.$store.state.context.panel[this.$store.state.context.top]){
+                parents.push(this.$store.getters.contextCard.taskId)
+            }
+
+            if (this.inId && parents.indexOf(this.inId) < 0){
+                console.log("pushing inId: ", this.inID)
+                parents.push(this.inId)
+            }
+
+            console.log('dispatching goIn with', {
+                parents,
+                top,
+                panel
+            })
+
             this.$store.dispatch("goIn", {
-                inId: this.inId,
+                parents,
                 top,
                 panel
             })
@@ -112,7 +129,7 @@ export default {
     },
     computed: {
         cardStart(){
-            // XXX recalc on nav 
+            // XXX recalc on nav
             if ( this.b.book.startTs ){
               let now = Date.now()
               let msTill = this.b.book.startTs - now

@@ -353,7 +353,7 @@ hr
 
 #helm
     cursor: pointer
-    
+
 .upg
     height: 2em
     pointer-events: none
@@ -361,7 +361,6 @@ hr
 .topauth
     max-width: 50%
     padding: 1em
-    // float: right
     position: absolute
     top: 0
     right: 0
@@ -372,7 +371,8 @@ hr
     top: 0
     left: 50%
     width: 10em
-    margin-left: -5em
+    max-width: 33%
+    transform: translate(-50%, 0)
     background: softGray
     color: main
     padding-left: 2em
@@ -384,11 +384,11 @@ hr
     border-bottom-left-radius: 50%
     border-bottom-right-radius: 50%
     border-top: none
-        
+
 .logout
     opacity: 1
     position: absolute
-    
+
 @keyframes flashhalf
     0% { background-color: #9ff; border-color: #aff }
     100% { background-color: softGray; border-color: buttonface }
@@ -412,7 +412,7 @@ hr
 .topcenter.flash.twice
     animation-duration: 0.1725
     animation-iteration-count: 2
-    
+
 .topcenter.flash.five
     animation-duration: calc(0.1725 * 5)
     animation-iteration-count: 5
