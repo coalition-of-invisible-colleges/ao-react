@@ -2,7 +2,7 @@
 
 .priorities
     img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg')
-    template.clearboth(v-for='(t, i) of priorities')
+    template.clearboth(v-for='(t, i) of priorities'  :key='t')
       .row.priority.opencard(v-if='$store.state.context.action === t')
           .allocated.openallocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           img.singleship.open(@click='allocate(t)'  src='../../assets/images/singleship.svg')
@@ -13,12 +13,12 @@
           img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
           div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click='setAction(t)')
               hyperpriority(:taskId='t')
-      .row.subpriority(v-for='(st, j) of getSubPriorities(t)')
+      .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
           .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='deaction')
               hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")
           div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click='setAction(st)')
               hyperpriority(:taskId='st'  :c='getCard(t).priorities')
-          .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)')
+          .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)'  :key='st2')
               .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='deaction')
                   hypercard(:b="getCard(st2)", :c="getCard(st2).priorities",  :inId="st")
               div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click='setAction(st2)')
@@ -232,7 +232,7 @@ img
 .openallocated
     top: 36%
     margin-top: 0.3em
-    
+
 .onelinecard
     width: 100%
     margin-left: 3em
@@ -255,7 +255,7 @@ img
     margin-left: 4em
     width: calc(100% - 4em)
     position: relative
-    
+
 .subpriority
     margin-left: calc(3.3724em * 2)
     width: calc(100% - (3.3724em* 2))
@@ -263,7 +263,7 @@ img
 .subsubpriority
     margin-left: 3.3724em
     width: calc(100% - 3.3724em)
-  
+
 .singleship
     position: absolute
     width: 3.3724em
@@ -281,5 +281,5 @@ img
 
 .open
     top: 36%
-    
+
 </style>
