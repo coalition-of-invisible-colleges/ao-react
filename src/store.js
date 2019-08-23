@@ -121,9 +121,36 @@ export default new Vuex.Store({
           })
       },
       bounties(state, getters){
-          return state.tasks.filter( t => {
-              return calculations.calculateTaskPayout(t) > 1
+          let bountyList = []
+          let bounties = {}
+          state.tasks.forEach( t => {
+              if (t.allocations){
+                  t.allocations.forEach( al => {
+                      if ( bounties[al.allocatedId] ) {
+                          bounties[al.allocatedId] += parseInt(al.amount)
+                      } else {
+                          bounties[al.allocatedId] = parseInt(al.amount)
+                      }
+                  })
+              }
           })
+
+          console.log("got bounties: ", bounties)
+
+          Object.keys(bounties).forEach(b => {
+
+              let card = getters.hashMap[b]
+              let amount =  bounties[b]
+              console.log("setting amount", amount, card)
+              if (amount >= 1){
+                  Vue.set( card, 'currentAmount', amount )
+                  bountyList.push(card)
+              }
+          })
+
+          bountyList.sort((a, b) => a.currentAmount < b.currentAmount)
+
+          return bountyList
       },
       hashMap(state){
           let hashMap = {}

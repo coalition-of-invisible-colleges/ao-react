@@ -1,25 +1,27 @@
 <template lang='pug'>
 
 #wrex
-    .pinboard
-        auth(v-if='!$store.getters.isLoggedIn')
-        div(v-if='$store.state.upgrades.mode == "boat"')
-            h1 Top Missions
-            .centered
-                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
-            hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-        div(v-else-if='$store.state.upgrades.mode == "badge"' )
-            h1 Recent People
-            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-        h1(v-else-if='$store.state.upgrades.mode == "bounty"') Bounties
-        div(v-else-if='$store.state.upgrades.mode == "timecube"')
-          h1 Calendar
-          .centered
-              .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
-          calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
-        div(v-else)
-          img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
-          img.buddadoge(src='../../assets/images/buddadoge.svg')
+    div(v-if='$store.state.upgrades.mode == "boat"')
+        h1 Top Missions
+        .centered
+            .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+        hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+        .container
+            auth(v-if='!$store.getters.isLoggedIn')
+    div(v-else-if='$store.state.upgrades.mode == "badge"' )
+        h1 Recent People
+        row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+    div(v-else-if='$store.state.upgrades.mode == "bounty"')
+        h1 Bounties
+        card-panel.gutter(:c='$store.getters.bounties')
+    div(v-else-if='$store.state.upgrades.mode == "timecube"')
+      h1 Calendar
+      .centered
+          .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+      calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
+    div(v-else)
+      img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
+      img.buddadoge(src='../../assets/images/buddadoge.svg')
 </template>
 
 <script>
@@ -39,6 +41,7 @@ import Calendar from '../TaskCalendar/Calendar'
 import Members from '../Members'
 import Row from '../Members/Row'
 import Auth from '../Auth'
+import Bounties from '../Bounties'
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -61,6 +64,7 @@ export default {
       CardPanel,
       Calendar,
       Members,
+      Bounties,
   },
   data(){
       return {
@@ -154,9 +158,6 @@ p, .link
 
 .guilds
     color: green
-
-.titleimg
-
 
 h2
     display: inline

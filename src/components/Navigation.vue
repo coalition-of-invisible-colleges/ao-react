@@ -9,11 +9,12 @@
     img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
     img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
     button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
-        .full(v-if='$store.state.upgrades.mode && $store.getters.isLoggedIn')
+        .full(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
-            img.upg(v-else='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+            img.upg(v-else src='../assets/images/boatblack.svg')
         .full(v-else) log out
     div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/", bullcontext: $router.currentRoute.path === "/dash"}')
         .transparentright(v-if='$router.currentRoute.path === "/"')
@@ -235,7 +236,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
     background-size: 3em
     margin-left: 7em
     margin-right: 7em
-    
+
 .bullcontext
     background-position: right
     background-image: url("../assets/images/bullleg.svg")
