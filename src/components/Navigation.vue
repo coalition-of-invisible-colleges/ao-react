@@ -15,7 +15,7 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
             img.upg(v-else='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
         .full(v-else) log out
-    div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/", bullcontext: $router.currentRoute.path === "/dash"}')
+    div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentright(v-if='$router.currentRoute.path === "/"')
         .transparentleft(v-else)
         .transparentbottom
@@ -463,10 +463,13 @@ hr
     animation-duration: calc(0.1725 * 5)
     animation-iteration-count: 5
 
+.topcenter:hover
+    background-color: #d3e3e3
+    
 .boat
     width: 7em
     padding: 1em 0
-
+    
 .context
     width: calc(100% - 14em)
     margin: 0 7em
