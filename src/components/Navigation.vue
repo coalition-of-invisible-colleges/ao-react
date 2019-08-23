@@ -15,6 +15,7 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
             img.upg(v-else='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
         .full(v-else) log out
+    div.testbull
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -224,6 +225,12 @@ var intervalID = window.setInterval(updateTransition, 7000);
 @import '../styles/colours'
 @import '../styles/grid'
 // @import '../styles/button'
+
+.testbull
+    height: 3em
+    background-image: url("../assets/images/bullleg.svg")
+    background-repeat: repeat-x
+    // background-size: cover
 
 .full
     width: 100%
