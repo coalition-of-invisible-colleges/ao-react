@@ -124,7 +124,7 @@ export default new Vuex.Store({
           let bountyList = []
           let bounties = {}
           state.tasks.forEach( t => {
-              if (t.allocations){
+              if (Array.isArray(t.allocations)){
                   t.allocations.forEach( al => {
                       if ( bounties[al.allocatedId] ) {
                           bounties[al.allocatedId] += parseInt(al.amount)
