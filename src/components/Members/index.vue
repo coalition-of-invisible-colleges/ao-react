@@ -2,11 +2,11 @@
 
 #member
     .list
-        h2 {{ $store.getters.activeMembers.length }} active fobs -- showing {{showStart}} - {{showStart + 7}}
+        h2 {{ $store.getters.activeMembers.length }} active -- showing {{showStart}} - {{showStart + 7}}  of {{ showTotal }}
         row(v-for="m in $store.getters.sortedMembers.slice(showStart, showStart + 7)"  :m='m')
-        button(@click='showNext') show next
-        h2 showing {{ showStart }} - {{ showStart + 7 }} of {{ showTotal }}
-        input(v-model='showStart')
+        .buttons
+            button(@click='showBack') back
+            button(@click='showNext') next
     .padding
         p dctrl member
         ol
@@ -39,7 +39,14 @@ export default {
             if (this.showStart > this.$store.getters.sortedMembers.length ){
                 this.showStart = 0
             }
-        }
+        },
+        showBack(){
+            this.showStart = this.showStart - 6
+            if (this.showStart < 0 ){
+                this.showStart = this.$store.getters.sortedMembers.length -1
+            }
+        },
+
     },
     computed: {
         showTotal(){
@@ -64,6 +71,14 @@ export default {
 @import '../../styles/input'
 @import '../../styles/skeleton'
 @import '../../styles/button'
+
+.buttons
+    width: 100%
+    button
+        width: 50%
+
+h2
+    text-align:center
 
 #sunexper
     width: 130%

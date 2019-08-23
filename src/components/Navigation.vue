@@ -79,6 +79,9 @@ export default {
         var Tap = new Hammer.Tap({ time: 500 })
         mc.add(Tap)
         mc.on('tap', (e) => {
+            if (!this.$store.state.upgrades.mode){
+                this.killSession()
+            }
             this.flashHelm(0.5)
             this.nextUpgradeMode()
         });
@@ -98,11 +101,15 @@ export default {
     },
     methods: {
         killSession(){
+            console.log("kill Session called")
             this.$store.dispatch("makeEvent", {
                 type: "session-killed",
                 session: this.$store.state.loader.session
             })
-            this.$store.commit("setAuth" , {token: '', session: ''})
+            setTimeout(()=>{
+                this.$store.dispatch("loadCurrent")
+            }, 999)
+
         },
         goToParent(target){
             console.log("go to parent called")

@@ -3,7 +3,8 @@
     .paperwrapper
         .row
             .five.columns.card()
-                member-row(v-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
+                auth(v-if='!$store.getters.isLoggedIn')
+                member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
                 template(v-for='(n, i) in panelSplit.before')
                   div(@click="goWithinPanel(n)")
@@ -58,6 +59,7 @@ import Upgrades from './Upgrades'
 import MemberRow from './Member'
 import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
+import Auth from '../Auth'
 
 export default {
     beforeRouteUpdate (to, from, next) {
@@ -74,7 +76,7 @@ export default {
   components:{
       SharedTitle, Hypercard, TaskCreate,
       Panels, Priorities, MemberRow,
-      Upgrades, BountyCard, ResourceRow, Priority, Context
+      Upgrades, BountyCard, ResourceRow, Priority, Context, Auth
   },
   methods:{
       goWithinPanel(n){
