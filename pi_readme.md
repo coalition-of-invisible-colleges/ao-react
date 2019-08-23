@@ -233,8 +233,6 @@ set keyboard to pc105 us
 
 # add borgbackup tor line
 
-# 
-
 # still todo
 - improve tor auto-setup (required: real knowledge of how tor setup is supposed to be)
 - implement borg-backup auto-setup (or add as AO feature)
