@@ -6,7 +6,6 @@
         .row
             resources.six.columns
             sidewalk.six.columns
-        h5 Recent activity at contact points where you can use your fob:
     div(v-if='$store.state.upgrades.mode === "badge"')
         h1 accounts
         .row
