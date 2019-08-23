@@ -15,6 +15,7 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
             img.upg(v-else='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
         .full(v-else) log out
+    div.testbull
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -79,6 +80,9 @@ export default {
         var Tap = new Hammer.Tap({ time: 500 })
         mc.add(Tap)
         mc.on('tap', (e) => {
+            if (!this.$store.state.upgrades.mode){
+                this.killSession()
+            }
             this.flashHelm(0.5)
             this.nextUpgradeMode()
         });
@@ -98,11 +102,15 @@ export default {
     },
     methods: {
         killSession(){
+            console.log("kill Session called")
             this.$store.dispatch("makeEvent", {
                 type: "session-killed",
                 session: this.$store.state.loader.session
             })
-            this.$store.commit("setAuth" , {token: '', session: ''})
+            setTimeout(()=>{
+                this.$store.dispatch("loadCurrent")
+            }, 999)
+
         },
         goToParent(target){
             console.log("go to parent called")
@@ -217,6 +225,12 @@ var intervalID = window.setInterval(updateTransition, 7000);
 @import '../styles/colours'
 @import '../styles/grid'
 // @import '../styles/button'
+
+.testbull
+    height: 3em
+    background-image: url("../assets/images/bullleg.svg")
+    background-repeat: repeat-x
+    // background-size: cover
 
 .full
     width: 100%

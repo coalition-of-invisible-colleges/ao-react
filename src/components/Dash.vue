@@ -72,9 +72,11 @@ export default {
               vm.setDeck()
           })
     },
-    setDeck(){
+    methods: {
+      setDeck(){
         this.$store.commit("setPanel", [])
         this.$store.commit("setParent", [])
+      },
     },
     components:{
         SharedTitle, Auth, Changer,
