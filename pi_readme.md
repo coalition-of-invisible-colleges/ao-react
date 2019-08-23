@@ -52,7 +52,7 @@ This should do it (untested):
 		usermod -d /home/mynewname -m -g mynewname -l mynewname doge
 
 	4. Log out of root and log back into your account using your new username.
-	5. Disable root by opening a terminal and typing 'sudo passwwd --lock root'.
+	5. Disable root by opening a terminal and typing 'sudo passwd --lock root'.
 
 	Now, you must change a few places where the old username 'doge' appears in AO configuration files:
 
@@ -159,3 +159,82 @@ This should do it (untested):
 ### Any caveats?
 
 	CAUTION: It is currently still possible to access the AO without encryption using http://. For security, ALWAYS access the AO using https://. If you use http (without the s), your username and other information will be sent in plaintext, and could be read by anyone. (As long as you use https://, all traffic between you and the AO will be encrypted.) Non-https access will be disabled in a future AO pi image release.
+
+---
+
+#  How to dogefy a Raspberry Pi (steps that can't be automated in pi_install.sh yet)
+
+Instructions for creating a clean install of a Raspberry Pi with the AO on it (for cloning to other pis).
+
+## Disable autologin (Raspbian Full)
+nano /etc/systemd/system/autologin@.service
+add # to beginning of "ExecStart=-/sbin/agetty --autologin pi --noclear %I $TERM" line
+
+or
+
+comment out (#) autologin line in /etc/lightdm/lightdm.conf
+
+## Change username from pi to doge (Raspbian Lite)
+sudo passwd root
+	set a temp password
+logout
+
+login as root with your new password
+
+groupadd doge
+usermod -l doge -m -d /home/doge pi
+
+## Create doge user and delete default pi user (Raspbian Full)
+set root passwod and login as root as above
+useradd doge
+userdel -r -f pi
+usermod -aG sudo doge
+
+## Change raspi-config settings
+
+sudo raspi-config
+	set hostname to ao
+	change user password to wowsuchpassword
+	reboot when prompted (or type reboot)
+
+## Download and run the install script
+
+wget https://raw.githubusercontent.com/coalition-of-invisible-colleges/ao/panelcontext/pi_install.sh
+chmod u+x pi_install.sh
+./pi_install.sh
+
+now wait for the AO to install. the script will automatically compile and install the AO's dependencies and also runs apt update and apt upgrade. on a Raspberrpy Pi Zero W, this takes several hours.
+
+finally, use sudo raspi-config again to disable SSH
+
+now rip the microSD image and you've got a mother pi
+
+# Mount a hard drive automatically at startup
+get UUID with sudo blkid
+
+add a line to /etc/fstab:
+
+sudo mkdir /mnt/backup
+
+UUID=<UUID> /mnt/backup ext4 defaults,rw,auto,nofail 0 0
+p0wn the folders
+
+sudo mount -a
+
+# set keyboard
+
+set keyboard to pc105 us
+
+# add SSH keys
+
+# add default doge SSH key
+
+# get tor hostnames
+
+# add borgbackup tor line
+
+# 
+
+# still todo
+- improve tor auto-setup (required: real knowledge of how tor setup is supposed to be)
+- implement borg-backup auto-setup (or add as AO feature)

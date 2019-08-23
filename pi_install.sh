@@ -26,7 +26,7 @@ fi
 cd ~
 if [ ! -d "$HOME/.ao" ];
 then
-	sudo mkdir -p $HOME/.ao
+	mkdir -p $HOME/.ao
 fi
 
 
