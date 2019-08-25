@@ -32,20 +32,10 @@ export default {
         }
       },
       goIn(taskId){
-        console.log("goIn called")
-        let panel = this.$store.getters.contextCard.subTasks.concat(this.$store.getters.contextCard.priorities).concat(this.$store.getters.contextCard.completed).reverse()
-        let top = panel.indexOf(taskId)
-        let t = this.$store.getters.hashMap[taskId]
-        panel = panel.filter(e => {
-            let card = this.$store.getters.hashMap[e]
-            return card.book.startTs > 0
-        })            
-        let topColor = panel.indexOf(taskId)
-        if (topColor > -1){
-            top = topColor
-        }
-
-        this.$store.dispatch("goIn", {taskId, panel, top, parents:[]})
+        this.$store.dispatch("goIn", {
+            panel: [taskId],
+            top: 0,
+            parents:[this.$store.getters.contextCard.taskId]})
       },
   },
   computed: {

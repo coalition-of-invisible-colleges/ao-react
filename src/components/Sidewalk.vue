@@ -1,12 +1,21 @@
 <template lang='pug'>
 
 #sidewalk
-    button(@click='trySidewalk("crazy")').redwx crazy
-    button(@click='trySidewalk("chill")').purplewx chill
-    button(@click='trySidewalk("dna")').greenwx dna
-    input(v-model='banner')
-    button(@click='trySidewalk("banner")').bluewx banner
-    button(@click='trySidewalk("rainbow")').yellowwx rainbow
+    h3 sidewalk
+    .row
+        .four.grid
+            button(@click='trySidewalk("crazy")').redwx crazy
+        .four.grid
+            button(@click='trySidewalk("chill")').purplewx chill
+        .four.grid
+            button(@click='trySidewalk("dna")').greenwx dna
+    .row
+        .two.columns  &nbsp;
+        .four.columns
+            button(@click='trySidewalk("banner")').bluewx banner
+        .four.columns
+            button(@click='trySidewalk("rainbow")').yellowwx rainbow
+            input(v-model='banner')
     .row
         .two.grid
             button(@click='trySidewalk("color", "red")').redwx
@@ -74,6 +83,9 @@ export default {
 @import './../styles/grid'
 @import './../styles/button'
 
+h3
+    text-align: center
+
 #wrex
     width: 100%
     #vine
@@ -95,6 +107,7 @@ export default {
 
 button
     margin: .55em
+    min-height: 4em
 
 p
     padding: 1.4em
