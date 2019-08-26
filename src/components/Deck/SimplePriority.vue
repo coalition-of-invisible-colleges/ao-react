@@ -5,11 +5,11 @@
     //.shipcontainer
       //- img.singleship(src='../../assets/images/singleship.svg')
     div.agedwrapper(:class="cardInputSty")
+      linky.cardname(:x='card.name'  :key='name')
       .agedbackground.freshpaper(v-if='cardAge < 8')
       .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
       .agedbackground.montholdpaper(v-else-if='cardAge < 90')
       .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-      linky.cardname(:x='card.name'  :key='name')
 </template>
 
 <script>
@@ -119,7 +119,6 @@ export default {
     width: 100%
     height: 100%
     pointer-events: none
-    //border-radius: 12px
 
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
@@ -151,4 +150,5 @@ export default {
 
 .cardname
     z-index: 15
+    position: relative
 </style>

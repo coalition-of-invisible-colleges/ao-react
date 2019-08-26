@@ -25,10 +25,8 @@
         .cardhud(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.days.toFixed(1) }} days
-        .cardheader(v-if='b.currentAmount >= 1')
-            h4() {{ b.currentAmount }}
-        linky(:x='b.name' v-if='!dogeCard')
-        .cardname(v-if='dogeCard') {{ dogeCard.name }}
+        linky.cardhud(:x='b.name' v-if='!dogeCard')
+        .cardhud(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
   simple-priorities(v-if='b.guild && $store.getters.contextCard.taskId != b.taskId && $store.state.context.action != b.taskId', :taskId="b.taskId", :inId='b.taskId')
@@ -379,6 +377,8 @@ export default {
 .cardhud
     margin-bottom: 1em
     margin-right: 1em
+    position: relative
+    z-index: 14
 
 .cardheader
     margin: 0 auto
@@ -386,4 +386,5 @@ export default {
     
 .cardname
     z-index: 15
+    position: relative
 </style>
