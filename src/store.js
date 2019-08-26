@@ -148,7 +148,7 @@ export default new Vuex.Store({
               }
           })
 
-          bountyList.sort((a, b) => a.currentAmount < b.currentAmount)
+          bountyList.sort((a, b) => parseInt(a.currentAmount) < parseInt(b.currentAmount))
 
           return bountyList
       },

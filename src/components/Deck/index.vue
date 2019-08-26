@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 #deck()
+    h1.up.white(v-if='$router.currentRoute.path.trim() == "/deck"') deck
     .row
         .four.columns(v-if='$store.getters.inbox.length > 0')
             gift-box
@@ -27,7 +28,7 @@ export default {
         })
   },
   methods: {
-      setDeck(){
+      setDeck() {
           if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){
               console.log('setting for offline deck')
               this.$store.commit("setPanel", this.$store.getters.pubguildIds)
@@ -71,4 +72,12 @@ export default {
     opacity: 0.3
     margin: 16em calc(50% - 11em) 0 calc(50% - 11em)
 
+.up
+  width: fit-content
+  margin: -1.25em auto 0em auto
+  padding: 0
+  z-index: 80
+  
+.white
+  color: white
 </style>

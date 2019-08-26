@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 #nodes
-    h1 lightning
     .row(v-if='$store.state.cash.info')
         .six.columns
             .row

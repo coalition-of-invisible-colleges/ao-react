@@ -3,8 +3,10 @@
 .priorities
     .empty(v-if='priorities.length < 1')
         img.bdoge(src='../../assets/images/buddadoge.svg')
-    template.clearboth(v-for='(t, i) of priorities')
+    template.clearboth(v-for='(t, i) of priorities.slice(0, 5)')
         simple-hyperpriority(:taskId='t'  :c='priorities'  :inId='taskId')
+        .centerer
+            .more(v-if='i === 4') +{{ priorities.length - 5 }}
 </template>
 
 <script>
@@ -151,7 +153,6 @@ img
 
 .onelinecard
     width: 100%
-    margin-left: 3em
     padding: 0.5em
 
 .top
@@ -165,7 +166,26 @@ img
 .bdoge
     width: 100%
     opacity: 0.6
+    
 .subpriority
     margin-left: 2em
     width: calc(100% - 2em)
+    
+.more
+    text-align: center
+    background-color: #F8685F
+    border-radius: 50%;
+    display: inline-block;
+    border-width: 2px
+    border-color: rgba(255, 255, 255, 0.68)
+    border-style: solid
+    padding: 0.5em
+    margin: 0.5em auto 0 auto
+    font-size: 0.8em
+    opacity: 0.3
+    color: white
+    
+.centerer
+    text-align: center
+    width: 100%
 </style>
