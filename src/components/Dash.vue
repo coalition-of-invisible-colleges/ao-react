@@ -2,21 +2,23 @@
 
 #home
     div(v-if='$store.state.upgrades.mode === "boat"')
-        h1 resources
+        h1.up resources
         .row
             resources.six.columns
             sidewalk.six.columns
     div(v-if='$store.state.upgrades.mode === "badge"')
-        h1 accounts
+        h1.up accounts
         .row
             .two.columns &nbsp;
             member-create.four.columns
             changer.four.columns
             .two.columns
         members
-    nodes(v-if='$store.state.upgrades.mode === "bounty"')
+    div(v-if='$store.state.upgrades.mode === "bounty"')
+        h1.up lightning
+        nodes
     .row(v-if='$store.state.upgrades.mode === "timecube"')
-        h1 central reserve of dctrl
+        h1.up central reserve of dctrl
         ul
           li Each month cost is split between active accounts
           li Activate account at the treasure chest on your deck
@@ -199,4 +201,12 @@ select
 
 ul
     text-align: left
+    
+.up
+  width: fit-content
+  background: rgba(22, 22, 22, 0.8)
+  border-radius: 0.5em
+  margin: -1.25em auto 0.25em auto
+  padding: 0.25em
+  z-index: 80
 </style>

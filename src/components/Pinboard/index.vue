@@ -1,27 +1,36 @@
 <template lang='pug'>
 
 #wrex
-    div(v-if='$store.state.upgrades.mode == "boat"')
-        h1 Top Missions
-        .centered
-            .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
-        hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-        .container
-            auth(v-if='!$store.getters.isLoggedIn')
-    div(v-else-if='$store.state.upgrades.mode == "badge"' )
-        h1 Recent People
-        row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-    div(v-else-if='$store.state.upgrades.mode == "bounty"')
-        h1 Bounties
-        card-panel.gutter(:c='$store.getters.bounties')
-    div(v-else-if='$store.state.upgrades.mode == "timecube"')
-      h1 Calendar
-      .centered
-          .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
-      calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
-    div(v-else)
-      img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
-      img.buddadoge(src='../../assets/images/buddadoge.svg')
+    .pinboard
+        auth(v-if='!$store.getters.isLoggedIn')
+        div(v-if='$store.state.upgrades.mode == "boat"')
+            h1.up Top Missions
+            .centered
+                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+            hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+        div(v-else-if='$store.state.upgrades.mode == "badge"')
+            h1.up Recent People
+            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+        div(v-else-if='$store.state.upgrades.mode == "bounty"')
+            h1.up Bounties
+            .row.pagemargins
+                .columns
+                    .three.columns
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(0)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                    .three.columns
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                    .three.columns
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                    .three.columns
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+        div(v-else-if='$store.state.upgrades.mode == "timecube"')
+          h1.up Calendar
+          .centered
+              .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+          calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
+        div(v-else)
+          img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
+          img.buddadoge(src='../../assets/images/buddadoge.svg')
 </template>
 
 <script>
@@ -87,6 +96,9 @@ export default {
       selectGuild(x){
           this.showGuild = parseInt(x)
           this.resetKey ++
+      },
+      getBountyColumn(index, columns = 4){
+          return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
       }
   },
   computed: {
@@ -248,5 +260,23 @@ h2
     transition-timing-function: ease
     transition-property: opacity
     z-index: -15
+    
+.bounty
+    margin-bottom: 2em
+    
+.pagemargins
+    margin: 0 3% 0 1%
+    width: 96%
 
+.three.columns
+    width: 23%
+    margin-left: 2%
+    
+.up
+    width: fit-content
+    background: rgba(22, 22, 22, 0.8)
+    border-radius: 0.5em
+    margin: -1.25em auto 0.25em auto
+    padding: 0.25em
+    z-index: 80
 </style>

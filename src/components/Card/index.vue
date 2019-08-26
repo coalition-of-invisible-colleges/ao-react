@@ -11,8 +11,9 @@
           flag(:b='b', :inId='inId')
   .tooltip
       img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
-      div
-          current.tooltiptext(v-for='memberId in b.claimed', :memberId='memberId')
+      .tooltip
+          .tooltiptext
+              current.block(v-for='memberId in b.claimed', :memberId='memberId')
   .row
     .ten.grid
         .cardhud(v-if='b.guild')
@@ -24,10 +25,10 @@
         .cardhud(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.days.toFixed(1) }} days
-        .cardhud(v-if='b.currentAmount >= 1')
+        .cardheader(v-if='b.currentAmount >= 1')
             h4() {{ b.currentAmount }}
         linky(:x='b.name' v-if='!dogeCard')
-        div(v-if='dogeCard') {{ dogeCard.name }}
+        .cardname(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid
         preview-deck(:task='b')
   simple-priorities(v-if='b.guild && $store.getters.contextCard.taskId != b.taskId && $store.state.context.action != b.taskId', :taskId="b.taskId", :inId='b.taskId')
@@ -39,7 +40,8 @@
       vine.faded(:b='b')
       .tooltip.dogepepecoin
           img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-          current.tooltiptext(v-for='memberId in b.deck', :memberId='memberId')
+          .tooltiptext
+              current.block(v-for='memberId in b.deck'  :memberId='memberId')
           p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
 </template>
 
@@ -247,6 +249,11 @@ export default {
 
 .tooltip .tooltiptext
     font-size: 1em
+    padding-bottom: 1em
+    
+.block
+    display: block
+    clear: both
 
 .arrow
     height: 3.35em
@@ -372,4 +379,11 @@ export default {
 .cardhud
     margin-bottom: 1em
     margin-right: 1em
+
+.cardheader
+    margin: 0 auto
+    font-size: 1.2em
+    
+.cardname
+    z-index: 15
 </style>

@@ -19,7 +19,6 @@
     div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentright(v-if='$router.currentRoute.path === "/"')
         .transparentleft(v-else)
-        .transparentbottom
     template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
@@ -118,11 +117,18 @@ export default {
         },
         goToParent(target){
             console.log("go to parent called")
+            console.log("target is ", target)
             this.$store.dispatch("goUp", {
                 target,
                 panel: [target],
                 top: 0
             })
+            if(target === this.$store.getters.member.memberId) {
+                target = "/deck"
+            } else {
+                target = "/task/" + target
+            }
+            this.$router.push(target)
         },
         cycleLeft(){
             switch (this.$router.currentRoute.path){
@@ -236,13 +242,19 @@ var intervalID = window.setInterval(updateTransition, 7000);
     background-size: 3em
     margin-left: 7em
     margin-right: 7em
+    z-index: -1
 
 .bullcontext
     background-position: right
     background-image: url("../assets/images/bullleg.svg")
+    margin-right: calc(7em - 21px)
+    margin-left: 14em
+
 
 .suncontext
     background-image: url("../assets/images/sunbean.svg")
+    margin-left: calc(7em - 21px)
+    margin-right: 14em
 
 .transparentleft
     width: 100%
@@ -273,7 +285,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
   display: flex
   flex-direction: column-reverse
   min-height: 5.8em
-
+  
 .side_bar ul
   margin-left: 10px;
 

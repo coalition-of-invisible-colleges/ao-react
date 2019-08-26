@@ -2,14 +2,14 @@
 
 .p.clearboth(@dblclick='goIn')
   .row
-    .shipcontainer
+    //.shipcontainer
       //- img.singleship(src='../../assets/images/singleship.svg')
-      div.agedwrapper(:class="cardInputSty")
-        .agedbackground.freshpaper(v-if='cardAge < 8')
-        .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
-        .agedbackground.montholdpaper(v-else-if='cardAge < 90')
-        .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-        linky(:x='card.name'  :key='name')
+    div.agedwrapper(:class="cardInputSty")
+      .agedbackground.freshpaper(v-if='cardAge < 8')
+      .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
+      .agedbackground.montholdpaper(v-else-if='cardAge < 90')
+      .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
+      linky.cardname(:x='card.name'  :key='name')
 </template>
 
 <script>
@@ -101,10 +101,10 @@ export default {
 .agedwrapper
     position: relative
     margin-top: 0.5em
-    width: calc(100% - 5.5em)
-    float: right
+    width: calc(100% - 2em)
     padding: 0.5em
     margin-right: 0.5em
+    margin-left: 0.5em
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
@@ -149,4 +149,6 @@ export default {
     font-size: 1.5em
     pointer-events: none
 
+.cardname
+    z-index: 15
 </style>
