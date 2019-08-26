@@ -162,6 +162,11 @@ export default new Vuex.Store({
       channels(state, getters){
           return state.cash.channels
       },
+      connectionUris(state, getters){
+          return state.cash.info.address.map(a => {
+              return state.cash.info.id + "@" + a.address + ":" + a.port
+          })
+      },
       memberIds(state, getters){
           return state.members.map(c => c.memberId)
       },

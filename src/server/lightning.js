@@ -27,7 +27,7 @@ function updateAll(){
 }
 
 function watchOnChain(){
-    hashblockStream.onValue(updateAll)
+    setInterval(updateAll, 1000 * 60 * 10)
     setTimeout( () => {
         updateAll()
     }, 3456)
@@ -59,11 +59,20 @@ function getInfo(){
     return client
         .getinfo()
         .then(result => {
-            try {
-                cashEvs.getNodeInfo(result, console.log)
-            } catch (err){
-                console.log("error from cashEvs", err)
-            }
+            client.listpeers()
+                .then(peers => {
+                  try {
+                    result.peers = peers.peers.map(p => {
+                        return {
+                            id: p.id,
+                            channels: p.channels.length > 0
+                        }
+                    })
+                    cashEvs.getNodeInfo(result, console.log)
+                  } catch (err){
+                    console.log("error from cashEvs", err)
+                  }
+                })
         })
         .catch(console.log)
 }

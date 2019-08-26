@@ -2,8 +2,6 @@
 
 .p.clearboth(@dblclick='goIn')
   .row
-    //.shipcontainer
-      //- img.singleship(src='../../assets/images/singleship.svg')
     div.agedwrapper(:class="cardInputSty")
       linky.cardname(:x='card.name'  :key='name')
       .agedbackground.freshpaper(v-if='cardAge < 8')
