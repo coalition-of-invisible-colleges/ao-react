@@ -11,7 +11,7 @@
         .three.grid.tab(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
             img.upgrade(src='../../assets/images/timecube.svg')
     .row
-      .mainbg
+      .mainbg(:class='{ lightbg : $store.state.upgrades.mode === "boat" }')
         transition(name='slide-fade'  mode='out-in')
             div(v-if='$store.state.upgrades.mode === "boat"')
                 priorities(:key='$store.state.context.action')
@@ -322,8 +322,11 @@ h3
 
 
 .mainbg
-    background: softGrey
+    background: main
 
+.lightbg
+    background: softGrey
+    
 .fl
     float: left
 
