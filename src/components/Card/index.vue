@@ -24,6 +24,8 @@
         .cardhud(v-if='cardStart')
             img.smallguild(src='../../assets/images/timecubewithwhite.png')
             span {{ cardStart.days.toFixed(1) }} days
+        .cardhud(v-if='b.currentAmount >= 1')
+            h4() {{ b.currentAmount }}
         linky(:x='b.name' v-if='!dogeCard')
         div(v-if='dogeCard') {{ dogeCard.name }}
     .two.grid

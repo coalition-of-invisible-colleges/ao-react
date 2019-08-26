@@ -7,7 +7,6 @@
           bounty-card(v-for="b in tasks", :b="b")
       .six.columns
           bounty-card(v-for="b in projects", :b="b")
-
 </template>
 
 <script>

@@ -9,15 +9,15 @@
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }} -
-        .two.grid(v-if='!hasAnyVouches')
+        .two.grid(v-if='!hasAnyVouches  &&  $router.currentRoute.path === "/dash"')
             img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
-        .one.grid
-            span.counts.iceblue {{ vouchCount }}
-            span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio }}
-        .grid(:class='{ six: hasAnyVouches, four: !hasAnyVouches }')
+            span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
+        //- .one.grid
+        //-     span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio }}
+        .grid(:class='{ seven: $router.currentRoute.path === "/dash" || hasAnyVouches, five: !hasAnyVouches }')
             simple-priorities(:taskId='m.memberId')
         .grid.one
             preview-deck(:task='$store.getters.hashMap[m.memberId]')
@@ -64,8 +64,6 @@ export default {
         isLoggedIn(){
             let isLoggedIn
             this.$store.state.sessions.forEach( s => {
-                console.log("this.m is", this.m)
-                console.log("and memberId is ", this.m.memberId)
                 if ( s.ownerId === this.m.memberId ){
                     isLoggedIn = true
                 }
@@ -181,7 +179,7 @@ label
 
 .counts {
     position:relative
-    top: 23.25px
+    top: 0
 }
 
 .iceblue
