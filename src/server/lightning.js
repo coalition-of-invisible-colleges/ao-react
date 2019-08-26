@@ -1,5 +1,8 @@
 import config from '../../configuration.js'
 import uuidV1 from 'uuid/v1'
+import express from 'express'
+
+const lightningRouter = express.Router()
 
 import {hashblockStream} from './onChain/bitcoindZmq'
 
@@ -11,6 +14,20 @@ import LightningClient from 'lightning-client'
 import {serverState, pubState} from './state'
 
 const client = new LightningClient(config.clightning.dir, true);
+
+
+lightningRouter.post('/lightning/channel',(req, res) => {
+    console.log('req res in lightning', req.body)
+    client.fundchannel(req.body.id, 'all')
+        .then(channel => {
+            console.log(channel)
+        })
+})
+
+lightningRouter.post('/lightning/update',(req, res) => {
+    updateAll()
+})
+
 
 function createInvoice(amount, label, description, expiresInSec){
     return client.invoice(amount * 1000, label, description, expiresInSec)
@@ -102,4 +119,5 @@ module.exports = {
     newAddress,
     recordEveryInvoice,
     watchOnChain,
+    lightningRouter
 }

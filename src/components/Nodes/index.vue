@@ -3,26 +3,26 @@
 #nodes
   div(v-if='$store.state.cash.info')
     .row
-        .six.columns
+        .six.columns.container
             .row
                 p.fl {{ $store.state.cash.info.alias }} Wallet
                 p.fr block {{ $store.state.cash.info.blockheight.toLocaleString() }}
             summaryy
             .row
-
-                select(v-model='selectedPeer')
-                    option(v-for='p in $store.state.cash.info.peers'  val='p.id'  :class='{bluetx: p.channels, redtx: !p.channels }') {{ p.id }}
-                button Open Channel
-        .six.columns
+                h4(v-if='unchanneled.length > 0') select peer to open channel
+                div(v-for='p in unchanneled' @click='selectPeer(p.id)'  :class='{bluetx: p.id === selectedPeer}') {{ p.id }}
+                button(v-if='selectedPeer'   @click='requestChannel') Request Channel
+        .six.columns.container
             p {{ $store.state.cash.info.num_active_channels }} Lightning Channels
             local-remote-bar(v-for='n in $store.getters.channels', :c='n')
     .row
           h3 Connection Info
           template(v-for='a in $store.getters.connectionUris')
-              .container
-                  span.bluewx
+              .row.container
+                  .six.columns
                       tag(:d='a')
-                  span {{a}}
+                  .six.columns
+                      label {{a}}
   .row(v-else)
       p <em>unable to read info from lightning node</em>
 </template>
@@ -38,6 +38,8 @@ import Channel from './Channel'
 import ChannelCreate from '../forms/ChannelCreate'
 import LocalRemoteBar from './LocalRemoteBar'
 
+import request from 'superagent'
+
 export default {
     data(){
         return {
@@ -48,7 +50,26 @@ export default {
         SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar
     },
     computed: {
-
+        unchanneled(){
+            return this.$store.state.cash.info.peers.filter(p => !p.channels)
+        }
+    },
+    methods:{
+        selectPeer(pId){
+            if (pId === this.selectedPeer){
+                return this.selectedPeer = false
+            }
+            this.selectedPeer = pId
+        },
+        requestChannel(){
+            request
+                .post('/lightning/channel')
+                .send({id : this.selectedPeer})
+                .set("Authorization", this.$store.state.loader.token)
+                .end((err, res)=>{
+                    console.log("response from channel", res.body)
+                })
+        }
     }
 }
 

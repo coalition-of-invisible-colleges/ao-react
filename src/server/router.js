@@ -5,6 +5,7 @@ import state from './state'
 import spec from './spec'
 import fobtap from './fobtap'
 import { serverAuth } from './auth'
+import { lightningRouter } from './lightning'
 import publicAccess from './publicAccess'
 
 module.exports = function applyRouter(app){
@@ -25,6 +26,7 @@ module.exports = function applyRouter(app){
 
     app.use(serverAuth) // below here requires auth token
 
+    app.use(lightningRouter)
     app.use(spec)   // handles event creation
     app.use(fobtap) // handles rfid scan devices
 
