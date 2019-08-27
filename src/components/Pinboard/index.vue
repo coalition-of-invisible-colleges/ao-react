@@ -2,7 +2,6 @@
 
 #wrex
     .pinboard
-        auth(v-if='!$store.getters.isLoggedIn')
         div(v-if='$store.state.upgrades.mode == "boat"')
             h1.up Top Missions
             .centered
@@ -31,6 +30,7 @@
         div(v-else)
           img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
           img.buddadoge(src='../../assets/images/buddadoge.svg')
+        auth(v-if='!$store.getters.isLoggedIn')
 </template>
 
 <script>
@@ -260,10 +260,10 @@ h2
     transition-timing-function: ease
     transition-property: opacity
     z-index: -15
-    
+
 .bounty
     margin-bottom: 2em
-    
+
 .pagemargins
     margin: 0 3% 0 1%
     width: 96%
@@ -271,7 +271,7 @@ h2
 .three.columns
     width: 23%
     margin-left: 2%
-    
+
 .up
     width: fit-content
     background: rgba(22, 22, 22, 0.8)

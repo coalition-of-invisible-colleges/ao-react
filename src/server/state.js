@@ -4,6 +4,7 @@ import M from '../mutations'
 import modules from '../modules'
 
 const serverState = {
+  ao: [],
   recent: [],
   sessions: [],
   members: [],
@@ -25,6 +26,7 @@ const serverState = {
 }
 
 const pubState = {
+  ao: [],
   recent: [],
   sessions: [],
   members: [],
