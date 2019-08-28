@@ -38,6 +38,8 @@ export default {
 
 <style lang='stylus' scoped>
 
+@import '../../styles/skeleton'
+
 .expandedcard
     width: 100%
 

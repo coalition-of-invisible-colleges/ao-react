@@ -43,7 +43,7 @@ export default new Vuex.Store({
       },
       contextCard(state, getters){
           let contextCard = _.merge({
-              taskId: '1', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
+              taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
           }, getters.hashMap[state.context.panel[state.context.top]])
           return contextCard
       },

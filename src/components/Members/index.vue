@@ -2,19 +2,21 @@
 
 #member
     .list
-        h2 {{ $store.getters.activeMembers.length }} active -- showing {{showStart}} - {{showStart + 7}}  of {{ showTotal }}
+        h2 {{ $store.getters.activeMembers.length }} active
         row(v-for="m in $store.getters.sortedMembers.slice(showStart, showStart + 7)"  :m='m')
-        .buttons
-            button(@click='showBack') back
-            button(@click='showNext') next
-    .padding
-        p dctrl member
-        ol
-            li Believer in a transcendent future.
-            li Possess dctrl rfid tag.
-            li Possible human, magical entity, fairy, cyborg or alien.
-        p
-            strong visit a node to find out more
+        .row.menu
+            .inline(@click='showBack')
+                img(src='../../assets/images/left.svg')
+            .inline
+                p.mt {{showStart}} - {{showStart + 7}}  of {{ showTotal }}
+            .inline(@click='showNext')
+                img(src='../../assets/images/right.svg')
+        .center
+            .padding
+                p believer in a transcendent future
+                p possess rfid tag
+                p possible human, magical entity, fairy, cyborg or alien
+                strong visit a node to find out more
 </template>
 
 <script>
@@ -72,6 +74,12 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/button'
 
+.mt
+    margin-top: -1em
+
+.center
+    text-align: center
+
 .buttons
     width: 100%
     button
@@ -94,6 +102,19 @@ li
 
 .cross
     text-decoration: line-through;
+
+
+.inline
+  display:inline-block
+  margin:15px
+
+
+.menu
+    text-align: center
+    color: softGrey
+    font-size: 2em
+    img
+        height: 2em
 
 
 </style>

@@ -1,23 +1,22 @@
 <template lang='pug'>
 
 #home
-    div(v-if='$store.state.upgrades.mode === "boat"')
+    .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
-            resources.six.columns
-            sidewalk.six.columns
-    div(v-if='$store.state.upgrades.mode === "badge"')
+            resources
+            sidewalk
+    .container(v-if='$store.state.upgrades.mode === "badge"')
         h1.up accounts
         .row
+            member-create.five.columns
             .two.columns &nbsp;
-            member-create.four.columns
-            changer.four.columns
-            .two.columns
+            changer.five.columns
         members
-    div(v-if='$store.state.upgrades.mode === "bounty"')
+    .container(v-if='$store.state.upgrades.mode === "bounty"')
         h1.up lightning
         nodes
-    .row(v-if='$store.state.upgrades.mode === "timecube"')
+    .container.row(v-if='$store.state.upgrades.mode === "timecube"')
         h1.up central reserve of dctrl
         ul
           li Each month cost is split between active accounts
@@ -92,6 +91,7 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../styles/colours'
+@import '../styles/skeleton'
 
 .center
     text-align: center
@@ -201,7 +201,7 @@ select
 
 ul
     text-align: left
-    
+
 .up
   width: fit-content
   background: rgba(22, 22, 22, 0.8)

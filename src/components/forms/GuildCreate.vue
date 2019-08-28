@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .guildcreate
-  form-box.centerform(btntxt="create guild" event='task-guilded' v-bind:data="task")
+  form-box.centerform(btntxt="mission" event='task-guilded' v-bind:data="task")
     fancy-input(labelText='code name')
         input.input-effect(v-model='task.guild' type='text')
 </template>

@@ -1,6 +1,8 @@
 <template lang="pug">
 .day
   .date {{ day }}
+  router-link(to='/deck')
+      img.upgrade(v-if='isToday'  src='../../assets/images/bulluni.svg'  )
   .tooltip(v-for='t in ev')
     img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
     .tooltiptext {{ t.name }}
@@ -19,9 +21,10 @@ function getDMY(ts){
 
 export default {
   components: {},
-  props: ['day', 'month', 'year', 'inId', 'ev'],
+  props: ['day', 'month', 'year', 'inId', 'ev', 'isToday'],
   methods: {
       styl(color){
+        if (!color) return
         return {
             redwx : color == 'red',
             bluewx : color == 'blue',
@@ -32,15 +35,20 @@ export default {
         }
       },
       goIn(taskId){
+        let parents = []
+        if (this.$store.getters.contextCard.taskId){
+            parents.push(this.$store.getters.contextCard.taskId)
+        }
         this.$store.dispatch("goIn", {
             panel: [taskId],
             top: 0,
-            parents:[this.$store.getters.contextCard.taskId]})
+            parents
+        })
+        this.$router.push('/task/' + taskId)
       },
   },
   computed: {
       calcDayRange(){
-
           return
       },
 
@@ -59,7 +67,8 @@ label
     color: black
 
 .upgrade
-    width: 60%
+    position:inline
+    width: 29%
     cursor: pointer
 
 .type

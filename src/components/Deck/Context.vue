@@ -35,13 +35,13 @@ export default {
             return is
         },
         name(){
-            return this.$store.getters.hashMap[this.taskId].name
+            return this.card.name
         },
         card(){
             return this.$store.getters.hashMap[this.taskId]
         },
         cardStart(){
-            // XXX recalc on nav 
+            // XXX recalc on nav
             if ( this.card.book.startTs ){
               let now = Date.now()
               let msTill = this.card.book.startTs - now

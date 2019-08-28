@@ -7,7 +7,7 @@
             .centered
                 .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
             hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-        div(v-else-if='$store.state.upgrades.mode == "badge"')
+        .container(v-else-if='$store.state.upgrades.mode == "badge"')
             h1.up Recent Doges
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
         div(v-else-if='$store.state.upgrades.mode == "bounty"')
@@ -22,7 +22,7 @@
                         hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
                     .three.columns
                         hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
-        div(v-else-if='$store.state.upgrades.mode == "timecube"')
+        .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           .centered
               .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
@@ -30,7 +30,7 @@
         div(v-else)
           img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
           img.buddadoge(src='../../assets/images/buddadoge.svg')
-        auth(v-if='!$store.getters.isLoggedIn')
+        auth(v-if='!$store.getters.isLoggedIn').container
 </template>
 
 <script>

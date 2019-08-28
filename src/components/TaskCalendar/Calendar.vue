@@ -12,7 +12,7 @@
     .calmonth
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')
-        day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]")
+        day(v-for='day in days', :day="day", :month='month', :year='year'  :inId='inId'  :ev="eventsByDay[day]"  :isToday='checkToday(day, month, year)')
     .buffer
 </template>
 
@@ -56,9 +56,17 @@ export default {
       },
       prevYear(){
           this.year--
+      },
+      checkToday(day, month, year){
+          let isToday = day === this.today.day && month === this.today.month && year === this.today.year
+          console.log('check today:' , isToday, day, month, year, this.today)
+          return isToday
       }
   },
   computed: {
+    today(){
+        return getDMY(Date.now())
+    },
     eventsByDay(){
         let evs = {}
         this.todaysEvents.forEach(t => {
@@ -111,6 +119,7 @@ export default {
 
 <style lang='stylus' scoped>
 @import '../../styles/colours';
+@import '../../styles/skeleton';
 
 .soft
     color: softGrey

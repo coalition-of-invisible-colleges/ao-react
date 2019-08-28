@@ -95,15 +95,8 @@ export default {
             }
 
             if (this.inId && parents.indexOf(this.inId) < 0){
-                console.log("pushing inId: ", this.inID)
                 parents.push(this.inId)
             }
-
-            console.log('dispatching goIn with', {
-                parents,
-                top,
-                panel
-            })
 
             this.$store.dispatch("goIn", {
                 parents,
@@ -248,7 +241,7 @@ export default {
 .tooltip .tooltiptext
     font-size: 1em
     padding-bottom: 1em
-    
+
 .block
     display: block
     clear: both
@@ -383,7 +376,7 @@ export default {
 .cardheader
     margin: 0 auto
     font-size: 1.2em
-    
+
 .cardname
     z-index: 15
     position: relative
