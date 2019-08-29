@@ -5,23 +5,23 @@
         .four.grid
             .tooltip(v-for="(tId,i) in task.priorities.slice().reverse()")
                 img.tinyboat(v-if="i < 5", @click='goto(tId)', src='../../assets/images/boatbtnselected.svg')
-                .tooltiptext {{ tId? card(tId).name : "unknown card" }}
-            .bead.redwx.tooltip(v-for="(b,i) in red", v-if="i < (5 - task.priorities.length)"  :b="b", @click='goto(b.taskId)')
-                .tooltiptext {{ b? b.name : "unknown card" }}
+                .tooltiptext {{ tId? shortName(card(tId).name) : "unknown card" }}
+            .bead.redwx.tooltip(v-for="(b,i) in red"  :b="b", @click='goto(b.taskId)')
+                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
         .four.grid
-            .bead.greenwx.tooltip(v-for="(b,i) in green", v-if="i < 5", @click='goto(b.taskId)')
-                .tooltiptext {{ b? b.name : "unknown card" }}
+            .bead.greenwx.tooltip(v-for="(b,i) in green", @click='goto(b.taskId)')
+                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
         .four.grid
-            .bead.bluewx.tooltip(v-for="(b,i) in blue", v-if="i < 5", @click='goto(b.taskId)')
-                .tooltiptext {{ b? b.name : "unknown card" }}
+            .bead.bluewx.tooltip(v-for="(b,i) in blue", @click='goto(b.taskId)')
+                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
     .row
         .two.grid
         .four.grid
-            .bead.yellowwx.tooltip(v-for="(b,i) in yellow", v-if="i < 5", @click='goto(b.taskId)')
-                .tooltiptext {{ b? b.name : "unknown card" }}
+            .bead.yellowwx.tooltip(v-for="(b,i) in yellow", @click='goto(b.taskId)')
+                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
         .four.grid
-            .bead.purplewx.tooltip(v-for="(b,i) in purple", v-if="i < 5", @click='goto(b.taskId)')
-                .tooltiptext {{ b? b.name : "unknown card" }}
+            .bead.purplewx.tooltip(v-for="(b,i) in purple", @click='goto(b.taskId)')
+                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
 </template>
 
 <script>
@@ -57,9 +57,17 @@ export default {
             this.$router.push("/task/" + taskId)
 
     },
-    card(tId){
+    card(tId) {
         return this.$store.getters.hashMap[tId]
     },
+    shortName(name) {
+        let limit = 280
+        let shortened = name.substring(0, limit)
+        if(name.length > limit) {
+            shortened += '…'
+        }
+        return shortened
+    }
   },
   computed: {
       deck(){
@@ -76,19 +84,19 @@ export default {
           return tasks
       },
       red(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'red' } )
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'red' } ).reverse().slice(0, 4)
       },
       yellow(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'yellow' } )
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'yellow' } ).reverse().slice(0, 4)
       },
       blue(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'blue' } )
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'blue' } ).reverse().slice(0, 4)
       },
       purple(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'purple' } )
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'purple' } ).reverse().slice(0, 4)
       },
       green(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'green' } )
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'green' } ).reverse().slice(0, 4)
       },
   },
   components:{

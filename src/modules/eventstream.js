@@ -10,17 +10,11 @@ let memes = [
 let colors = [
     'white',
     'red',
-    'maroon',
     'yellow',
-    'olive',
     'lime',
-    'green',
     'aqua',
-    'teal',
     'blue',
-    'navy',
     'fuchsia',
-    'purple',
 ]
 
 function bestMeme(){

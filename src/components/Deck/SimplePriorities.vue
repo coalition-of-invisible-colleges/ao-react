@@ -6,7 +6,7 @@
     template.clearboth(v-for='(t, i) of priorities.slice(0, 5)')
         simple-hyperpriority(:taskId='t'  :c='priorities'  :inId='taskId')
         .centerer
-            .more(v-if='i === 4') +{{ priorities.length - 5 }}
+            .more(v-if='i === 4 && priorities.length > 5') +{{ priorities.length - 5 }}
 </template>
 
 <script>
