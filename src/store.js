@@ -126,22 +126,20 @@ export default new Vuex.Store({
           state.tasks.forEach( t => {
               if (Array.isArray(t.allocations)){
                   t.allocations.forEach( al => {
+                      al.taskId = t.taskId
                       if ( bounties[al.allocatedId] ) {
-                          bounties[al.allocatedId] += parseInt(al.amount)
+                          bounties[al.allocatedId] += [al]
                       } else {
-                          bounties[al.allocatedId] = parseInt(al.amount)
+                          bounties[al.allocatedId].push(al)
                       }
                   })
               }
           })
 
-          console.log("got bounties: ", bounties)
-
           Object.keys(bounties).forEach(b => {
 
               let card = getters.hashMap[b]
               let amount =  bounties[b]
-              console.log("setting amount", amount, card)
               if (amount >= 1){
                   Vue.set( card, 'currentAmount', amount )
                   bountyList.push(card)
@@ -183,18 +181,12 @@ export default new Vuex.Store({
           return w
       },
       archive(state, getters){
-          console.log("\n\narchive function")
           let archive = getters.hodld
-          console.log("archive.length is ", archive.length, " archive is", archive)
 
           if (getters.memberCard){
             let starter = getters.memberCard.subTasks.concat(getters.memberCard.priorities).concat(getters.memberCard.completed)
-            console.log("starter.length is ", starter.length, " starter is", starter)
             archive = _.filter(archive, t => starter.indexOf(t.taskId) === -1 )
-            console.log("archive.length is", archive, " and archive is ", archive)
             let crawler = subDeck(starter, state, getters)
-            console.log("crawler.length is ", crawler.length, " crawler is", crawler)
-
             let history = []
             let newCards = false
             do{
@@ -202,7 +194,6 @@ export default new Vuex.Store({
               archive = _.filter(archive, t => !(crawler.indexOf(t.taskId) > -1))
               history = history.concat(crawler)
               crawler = subDeck(crawler, state, getters)
-              console.log("newCards is ", newCards, ", archive.length is ", archive.length, " history.length is ", history.length, ", crawler.length is ", crawler.length)
             }while(crawler.length > 0 && newCards)
             archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).indexOf(st.taskId) > -1))
           }

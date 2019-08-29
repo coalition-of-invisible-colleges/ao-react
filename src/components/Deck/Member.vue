@@ -14,12 +14,12 @@
             label.hackername {{ m.name }}
     .row
         .nine.grid
-            label {{ m.balance.toFixed(2) }}
+            label bal {{ m.balance.toFixed(2) }}
+            label boost {{ this.card.boost.toFixed(2) }}
         .three.grid
             dctrl-active(:m='m')
             button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
             button.smallcaps.redwx(v-else, @click='activate') activate
-
 </template>
 
 <script>
@@ -33,6 +33,9 @@ export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck},
     computed:{
+        card(){
+            return this.$store.getters.hashMap[this.m.memberId]
+        },
         isLoggedIn(){
             let isLoggedIn
             this.$store.state.sessions.forEach( s => {
@@ -42,16 +45,6 @@ export default {
             })
             return isLoggedIn
         },
-        cardInputSty(){
-            return {
-                redwx : this.b.color == 'red',
-                bluewx : this.b.color == 'blue',
-                greenwx : this.b.color == 'green',
-                yellowwx : this.b.color == 'yellow',
-                purplewx : this.b.color == 'purple',
-                blackwx : this.b.color == 'black',
-            }
-        }
     },
     methods: {
         getName(taskId){
@@ -139,7 +132,7 @@ label
 .threemontholdpaper
     background-image: url('../../assets/images/paper_aged_3.png')
     opacity: 0.3
-   
+
 .smallcaps
     color: #fff
     width: 100%

@@ -45,6 +45,7 @@
               .six.columns
                 p.input-instructions Set Cost Cap
                 cap-set
+        p total points
 </template>
 
 <script>

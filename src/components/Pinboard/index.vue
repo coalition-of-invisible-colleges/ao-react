@@ -15,13 +15,13 @@
             .row.pagemargins
                 .columns
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(0)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(0)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
         .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           .centered
@@ -82,6 +82,41 @@ export default {
       }
   },
   methods:{
+      goIn(){
+
+          let panel = this.c
+          if (panel && panel.length && panel.length > 0){
+
+          } else {
+              panel = [this.b.taskId]
+          }
+
+          let top = panel.indexOf(this.b.taskId)
+
+          if (top > -1){
+
+          } else {
+              top = 0
+          }
+
+          let parents = [  ]
+
+          if (this.$store.state.context.panel[this.$store.state.context.top]){
+              parents.push(this.$store.getters.contextCard.taskId)
+          }
+
+          if (this.inId && parents.indexOf(this.inId) < 0){
+              parents.push(this.inId)
+          }
+
+          this.$store.dispatch("goIn", {
+              parents,
+              top,
+              panel
+          })
+
+          this.$router.push("/task/" + this.b.taskId)
+      },
       setDeck(){
           console.log("pinboard route handle called")
           this.$store.commit("setPanel", [])
@@ -116,6 +151,13 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/grid'
 @import '../../styles/button'
+
+
+
+.bounty:hover
+    border-style: dashed
+    border-width: 3px
+    border-color: yellow
 
 h1
     text-align: center

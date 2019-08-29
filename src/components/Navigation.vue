@@ -285,7 +285,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
   display: flex
   flex-direction: column-reverse
   min-height: 5.8em
-  
+
 .side_bar ul
   margin-left: 10px;
 
@@ -478,11 +478,11 @@ hr
 
 .topcenter:hover
     background-color: #d3e3e3
-    
+
 .boat
     width: 7em
     padding: 1em 0
-    
+
 .context
     width: calc(100% - 14em)
     margin: 0 7em

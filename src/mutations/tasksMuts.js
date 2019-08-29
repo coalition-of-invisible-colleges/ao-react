@@ -205,6 +205,9 @@ function tasksMuts(tasks, ev) {
             let bounty = 0
             tasks.forEach(task => {
                 let found = false
+                if (task.taskId === ev.memberId){
+                    task.boost += parseFloat(ev.paid)
+                }
 
                 task.priorities = task.priorities.filter(taskId => {
                     if(taskId !== ev.taskId) {
@@ -275,7 +278,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
                     let amount = parseFloat(ev.amount)
-                    let boost  = parseFloat(task.boost) | 0
+                    let boost  = parseFloat(task.boost)
                     task.boost = amount + boost
                     task.address = ""
                 }
@@ -285,7 +288,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.payment_hash === ev.payment_hash) {
                         let amount = parseFloat(ev.amount)
-                        let boost  = parseFloat(task.boost) | 0
+                        let boost  = parseFloat(task.boost)
                         task.boost = amount + boost
                         task.bolt11 = ""
                         task.payment_hash = ""

@@ -11,17 +11,17 @@
       .row.priority(v-else)
           .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click='setAction(t)')
+          div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click.capture.stop='setAction(t)')
               hyperpriority(:taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
           .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='deaction')
               hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")
-          div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click='setAction(st)')
+          div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click.capture.stop='setAction(st)')
               hyperpriority(:taskId='st'  :c='getCard(t).priorities')
           .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)'  :key='st2')
               .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='deaction')
                   hypercard(:b="getCard(st2)", :c="getCard(st2).priorities",  :inId="st")
-              div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click='setAction(st2)')
+              div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click.capture.stop='setAction(st2)')
                   hyperpriority(:taskId='st2'  :c='getCard(st).priorities')
     div.clearboth
 </template>

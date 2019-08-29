@@ -1,7 +1,7 @@
 <template lang='pug'>
 
-.bird
-    div(@click='toggleGive')
+.bird(@click.stop)
+    div(@click.stop='toggleGive')
         img.birdy.faded(v-if='!showGive', src='../../assets/images/birdbtn.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .give(v-if='showGive')
