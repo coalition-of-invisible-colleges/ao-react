@@ -35,7 +35,6 @@ function reactions(ev){
                         return true
                     }
                 })
-
                 break
             case 'member-field-updated':
                 if (ev.field === 'secret') { //This seems wrong - tofu

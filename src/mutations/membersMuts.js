@@ -29,42 +29,11 @@ function membersMuts(members, ev){
               }
           })
           break
-      case "member-charged":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId){
-                  member.balance -= parseFloat(ev.charged)
-              }
-          })
-          break
-      case "member-paid":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId){
-                  member.balance += parseFloat(ev.paid)
-              }
-          })
-          break
-
-      case "resource-stocked":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId){
-                  member.balance += parseFloat(ev.paid)
-              }
-          })
-          break
 
       case "resource-used":
           members.forEach( member => {
               if (member.memberId === ev.memberId){
-                  member.balance -= parseFloat(ev.charged)
                   member.lastUsed = ev.timestamp
-              }
-          })
-          break
-
-      case "task-claimed":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId){
-                  member.balance += parseFloat(ev.paid)
               }
           })
           break

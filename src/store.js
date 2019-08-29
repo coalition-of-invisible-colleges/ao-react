@@ -37,7 +37,7 @@ export default new Vuex.Store({
   getters: {
       memberCard(state, getters){
           let memberCard = _.merge({
-              taskId: '1', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
+              taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
           }, getters.hashMap[getters.member.memberId])
           return memberCard
       },
@@ -126,18 +126,16 @@ export default new Vuex.Store({
           state.tasks.forEach( t => {
               if (Array.isArray(t.allocations)){
                   t.allocations.forEach( al => {
-                      al.taskId = t.taskId
                       if ( bounties[al.allocatedId] ) {
-                          bounties[al.allocatedId] += [al]
+                          bounties[al.allocatedId] += parseInt(al.amount)
                       } else {
-                          bounties[al.allocatedId].push(al)
+                          bounties[al.allocatedId] = parseInt(al.amount)
                       }
                   })
               }
           })
 
           Object.keys(bounties).forEach(b => {
-
               let card = getters.hashMap[b]
               let amount =  bounties[b]
               if (amount >= 1){

@@ -8,20 +8,20 @@
                 .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
             hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
         .container(v-else-if='$store.state.upgrades.mode == "badge"')
-            h1.up Recent Doges
+            h1.up Much Recent
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
         div(v-else-if='$store.state.upgrades.mode == "bounty"')
             h1.up Bounties
             .row.pagemargins
                 .columns
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(0)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(0)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
                     .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn')
+                        hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
         .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           .centered
@@ -82,7 +82,7 @@ export default {
       }
   },
   methods:{
-      goIn(){
+      goIn(b){
 
           let panel = this.c
           if (panel && panel.length && panel.length > 0){

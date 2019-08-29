@@ -157,6 +157,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach( task => {
                 if (task.taskId === ev.inId){
                     task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
+                    task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId )
                     task.subTasks.push(ev.taskId)
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
 
@@ -228,6 +229,7 @@ function tasksMuts(tasks, ev) {
                 })
 
                 if(found) {
+                    task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
                     task.completed.push(ev.taskId)
                     let alloc = false
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
@@ -306,6 +308,19 @@ function tasksMuts(tasks, ev) {
             tasks.forEach( task => {
                 if (task.taskId === ev.resourceId) {
                     task.book = ev
+                }
+            })
+            break
+        case "resource-used":
+            tasks.forEach(task => {
+                let charged = parseFloat(ev.charged)
+                if (charged > 0){
+                  if (task.taskId === ev.memberId){
+                        task.boost -= charged
+                  }
+                  if (task.taskId === ev.resourceId){
+                        task.boost += charged
+                  }
                 }
             })
             break

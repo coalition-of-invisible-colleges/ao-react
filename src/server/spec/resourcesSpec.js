@@ -56,6 +56,7 @@ function specResourceUsed(req, res, next){
     validators.isAmount(req.body.charged, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
+    // check member balance
     events.resourcesEvs.resourceUsed(
       req.body.resourceId,
       req.body.memberId,
