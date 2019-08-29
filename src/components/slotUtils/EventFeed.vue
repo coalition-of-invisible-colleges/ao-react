@@ -80,10 +80,10 @@ img
     left: 0
 
 .fade-enter-active
-    transition: top 7s
+    transition: top 10s
 
 .fade-leave-active
-    transition: top 7s
+    transition: top 10s
     top: -30em
 
 .fade-enter
