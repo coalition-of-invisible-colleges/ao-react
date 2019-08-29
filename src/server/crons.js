@@ -30,6 +30,7 @@ function rent(){
     let perMonth = ( fixed + variable ) / numActiveMembers
     let charged = Math.min(perMonth, parseFloat( serverState.cash.cap ))
     let notes = ''
+
     dctrlDb.insertBackup(serverState)
     activeMembers.forEach( m => {
         events.membersEvs.memberCharged(m.memberId, charged, notes)
@@ -38,14 +39,14 @@ function rent(){
 }
 
 function deactivate(){
-    let deadbeats = serverState.members.filter(m => {
-        let isAdmin = (m.badges.indexOf('admin') !== -1)
-        return (m.active >= 0 && m.balance < 0 && !isAdmin)
-    })
-    deadbeats.forEach(m => {
-        events.membersEvs.memberDeactivated(m.memberId)
+    serverState.tasks.forEach(t => {
+        if (t.boost < 0){
+          events.membersEvs.memberDeactivated(t.taskId)
+        }
     })
 }
+
+setTimeout(deactivate, 10000)
 
 module.exports = function (){
     console.log('starting crons')

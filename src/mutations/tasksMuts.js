@@ -382,6 +382,13 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
+        case "member-charged":
+            tasks.forEach(task => {
+                if (task.taskId === ev.memberId){
+                    task.boost -= parseFloat(ev.charged)
+                }
+            })
+            break
         case "cleanup":
             //
             break
