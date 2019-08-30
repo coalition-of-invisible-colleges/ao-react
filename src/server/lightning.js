@@ -37,7 +37,6 @@ function newAddress(){
     return client.newaddr('p2sh-segwit')
 }
 
-
 function updateAll(){
     checkFunds()
     getInfo()
@@ -47,7 +46,7 @@ function watchOnChain(){
     setInterval(updateAll, 1000 * 60 * 10)
     setTimeout( () => {
         updateAll()
-    }, 3456)
+    }, 34560)
 }
 
 function checkFunds(){
@@ -96,6 +95,7 @@ function getInfo(){
 
 function recordEveryInvoice(start){
     console.log("waiting on invoices after ", start)
+
     client.waitanyinvoice(start)
         .then(invoice => {
             let satoshis = invoice.msatoshi / 1000

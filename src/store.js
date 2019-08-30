@@ -148,6 +148,26 @@ export default new Vuex.Store({
 
           return bountyList
       },
+      totalBounties(state,getters){
+          let total = 0
+          getters.bounties.forEach(t => {
+              total += parseFloat( t.currentAmount )
+          })
+          return total
+      },
+      taskByBoost(state, getters){
+          let bb  = state.tasks.filter(t => t.boost > 0)
+          bb.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          return bb
+      },
+      totalPoints(state, getters){
+          let total = 0
+          getters.taskByBoost.forEach(t => {
+              total += parseFloat( t.boost )
+          })
+          return total
+      },
+
       hashMap(state){
           let hashMap = {}
           state.tasks.forEach(t => {
@@ -326,6 +346,13 @@ export default new Vuex.Store({
               totalRemote += (c.channel_total_sat - c.channel_sat)
           })
           return totalRemote
+      },
+      totalWallet(state, getters){
+          return parseInt( getters.totalLocal ) +  parseInt( getters.confirmedBalance )
+      },
+      satPoint(state, getters){
+          let sats = getters.totalWallet / (getters.totalPoints + getters.totalBounties)
+          return parseInt(sats)
       },
       recentMembers(state, getters){
           let recentMembers = state.members.slice()

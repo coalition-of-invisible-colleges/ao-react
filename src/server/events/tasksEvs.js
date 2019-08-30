@@ -72,7 +72,6 @@ function taskGrabbed(taskId, memberId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-
 function taskSubTasked(taskId, subTask, callback){
     let newEvent = {
       type: "task-sub-tasked",
@@ -81,7 +80,6 @@ function taskSubTasked(taskId, subTask, callback){
     }
     dctrlDb.insertEvent(newEvent, callback)
 }
-
 
 function taskDeSubTasked(taskId, subTask, callback){
     let newEvent = {

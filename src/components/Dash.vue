@@ -45,7 +45,11 @@
               .six.columns
                 p.input-instructions Set Cost Cap
                 cap-set
-        p total points
+        p total store: {{ $store.getters.totalPoints }} total bounties: {{ $store.getters.totalBounties }}
+        p &#12471; {{ $store.getters.satPoint}} point
+        .center(v-for='n in $store.getters.taskByBoost')
+            h3(v-if='n.guild') {{ n.guild }} - {{ n.boost }}
+            span(v-else) {{ n.name }} - {{ n.boost }}
 </template>
 
 <script>
