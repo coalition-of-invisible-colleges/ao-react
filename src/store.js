@@ -28,6 +28,7 @@ function subDeck(tasks, state, getters){
 export default new Vuex.Store({
   modules: {
       loader, eventstream, recent, upgrades, context,
+      ao: modules.ao,
       members: modules.members,
       tasks: modules.tasks,
       resources: modules.resources,

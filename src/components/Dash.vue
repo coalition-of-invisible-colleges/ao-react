@@ -4,6 +4,7 @@
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
+            p a o s
             aos
         .row
             resources
@@ -72,7 +73,7 @@ import Sidewalk from './Sidewalk'
 import RentSet from './forms/RentSet'
 import CapSet from './forms/CapSet'
 import Resources from './Resources'
-import AOs from './AOs'
+import Aos from './Aos'
 
 export default {
     beforeRouteEnter(to, from, next) {
@@ -90,7 +91,7 @@ export default {
         SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
         Panels, WhyLightning, Members, Home, MemberCreate, RentSet,
-        CapSet, Resources, Sidewalk
+        CapSet, Resources, Sidewalk, Aos
     },
 }
 

@@ -87,9 +87,9 @@ function specCapSet(req, res, next){
 
 function specAOConnect(req, res, next){
   let errRes = []
-  if (
-    // check if it's a tor address
-  ){
+
+  if (true){
+    console.log('ao-connected', req.body.address, req.body.secret)
     events.aoEvs.aoConnected(
       req.body.address,
       req.body.secret,

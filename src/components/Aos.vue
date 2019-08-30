@@ -1,22 +1,23 @@
 <template lang='pug'>
 
 .AOs
-    p this AO: {{ address }}
-    p connection secret: {{ secret }}
-    form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
-        div.input-container
-            input#aoAddressInput(v-model='ao.address' type='text')
-            input#aoSecretInput(v-model='ao.secret' type='text')
-            label(for="aoAddressInput") tor address:
-            label(for="aoSecretInput") connection secret:
     .row
-        .row(v-for='r in $store.state.aos') {{ r.address }}
-
+        .six.columns
+            form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
+                label(for="aoAddressInput") onion address:
+                input#aoAddressInput(v-model='ao.address' type='text')
+                label(for="aoSecretInput") connection secret:
+                input#aoSecretInput(v-model='ao.secret' type='text')
+        .six.columns
+            .row
+                p {{ $store.state.ao }}
+                template.row(v-for='r in $store.state.ao')
+                    p test  {{ r.address }}
 </template>
 
 <script>
 
-import FormBox from '../slotUtils/FormBox'
+import FormBox from './slotUtils/FormBox'
 
 export default {
     props: ['b', 'inId'],
@@ -26,9 +27,9 @@ export default {
     data() {
         return {
             ao: {
-                aoId: 
-                location: 
-                secret: 
+                type: "ao-connected",
+                address: "",
+                secret: this.$store.state.loader.token,
             }
         }
     },
@@ -61,10 +62,10 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours';
-@import '../../styles/skeleton';
-@import '../../styles/grid';
-@import '../../styles/button';
+@import '../styles/colours';
+@import '../styles/skeleton';
+@import '../styles/grid';
+@import '../styles/button';
 
 .count
     float: right

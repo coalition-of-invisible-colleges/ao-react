@@ -51,12 +51,14 @@ function applyBackup(b){
     modules.cash.mutations.setCurrent(serverState.cash, b)
     modules.tasks.mutations.setCurrent(serverState.tasks, b)
     modules.sessions.mutations.setCurrent(serverState.sessions, b)
+    modules.ao.mutations.setCurrent(serverState.ao, b)
     // modules.members.mutations.setCurrent(serverState.members, b)
     // modules.resources.mutations.setCurrent(serverState.resources, b)
 
     modules.cash.mutations.setCurrent(pubState.cash, b)
     modules.tasks.mutations.setCurrent(pubState.tasks, b)
     modules.sessions.mutations.setCurrent(pubState.sessions, b)
+    modules.ao.mutations.setCurrent(pubState.ao, b)
     // modules.members.mutations.setCurrent(pubState.members, b)
     // modules.resources.mutations.setCurrent(pubState.resources, b)
 
@@ -80,6 +82,7 @@ function applyBackup(b){
 }
 
 function applyEvent(state, ev) {
+      M.aoMuts(state.ao, ev)
       M.recentMuts(state.recent, ev)
       M.cashMuts(state.cash, ev)
       M.membersMuts(state.members, ev)
