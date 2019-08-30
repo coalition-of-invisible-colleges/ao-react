@@ -14,8 +14,7 @@
             label.hackername {{ m.name }}
     .row
         .nine.grid
-            label bal {{ m.balance.toFixed(2) }}
-            label boost {{ this.card.boost.toFixed(2) }}
+            label {{ this.card.boost.toFixed(2) }}
         .three.grid
             dctrl-active(:m='m')
             button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause

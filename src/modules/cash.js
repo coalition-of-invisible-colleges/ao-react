@@ -26,6 +26,7 @@ const mutations = {
         state.outputs = current.cash.outputs
         state.channels = current.cash.channels
         state.info = current.cash.info
+        state.pay_index = current.cash.pay_index
     },
     applyEvent: M.cashMuts
 }

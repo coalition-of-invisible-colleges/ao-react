@@ -17,7 +17,7 @@
         h1.up lightning
         nodes
     .container.row(v-if='$store.state.upgrades.mode === "timecube"')
-        h1.up central reserve of dctrl
+        h1.up central reserve
         ul
           li Each month cost is split between active accounts
           li Activate account at the treasure chest on your deck

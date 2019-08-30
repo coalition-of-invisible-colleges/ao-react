@@ -19,7 +19,6 @@ const deactivateJob = new cron.CronJob({
 })
 
 function rent(){
-    console.log('charging for Rent')
     let activeMembers = serverState.members.filter(m => {
         let isAdmin = (m.badges.indexOf('admin') !== -1)
         return (m.active > 0 && !isAdmin)
@@ -45,8 +44,6 @@ function deactivate(){
         }
     })
 }
-
-setTimeout(deactivate, 10000)
 
 module.exports = function (){
     console.log('starting crons')
