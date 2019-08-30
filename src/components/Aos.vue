@@ -10,9 +10,8 @@
                 input#aoSecretInput(v-model='ao.secret' type='text')
         .six.columns
             .row
-                p {{ $store.state.ao }}
                 template.row(v-for='r in $store.state.ao')
-                    p test  {{ r.address }}
+                    p {{ r.address }}
 </template>
 
 <script>
