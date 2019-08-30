@@ -4,6 +4,7 @@ import membersEvs from './membersEvs'
 import tasksEvs from './tasksEvs'
 import resourcesEvs from './resourcesEvs'
 import sessionsEvs from './sessionsEvs'
+import aoEvs from './aoEvs'
 
 module.exports = {
     cashEvs,
@@ -11,4 +12,5 @@ module.exports = {
     tasksEvs,
     resourcesEvs,
     sessionsEvs,
+    aoEvs
 }

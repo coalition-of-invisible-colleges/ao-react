@@ -17,6 +17,9 @@ module.exports = function(req, res, next){
       case 'cap-set':
           specCapSet(req, res, next)
           break
+      case 'ao-connected':
+          specAOConnect(req, res, next)
+          break
       default:
           next()
   }
@@ -75,6 +78,21 @@ function specCapSet(req, res, next){
   ){
     events.cashEvs.capSet(
       req.body.amount,
+      utils.buildResCallback(res)
+    )
+  } else {
+    res.status(200).send(errRes)
+  }
+}
+
+function specAOConnect(req, res, next){
+  let errRes = []
+  if (
+    // check if it's a tor address
+  ){
+    events.aoEvs.aoConnected(
+      req.body.address,
+      req.body.secret,
       utils.buildResCallback(res)
     )
   } else {

@@ -4,6 +4,7 @@ import resourcesMuts from './resourcesMuts'
 import sessionsMuts from './sessionsMuts'
 import tasksMuts from './tasksMuts'
 import recentMuts from './recentMuts'
+import aoMuts from './aoMuts'
 
 let mutations = {
     recentMuts,
@@ -12,6 +13,7 @@ let mutations = {
     resourcesMuts,
     sessionsMuts,
     tasksMuts,
+    aoMuts,
 }
 
 export default mutations

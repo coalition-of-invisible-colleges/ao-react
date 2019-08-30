@@ -3,16 +3,16 @@
 .context.paperwrapper(:class="cardInputSty")
     //router-link(:to='"/task/" + taskId')
     //div.paperwrapper
-    img(v-if='card.guild'  src="../../assets/images/badge.svg")
-    img(v-if='isMember' src="../../assets/images/loggedIn.svg")
-    img(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
-    span(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
-    .hyperpaper
-    .popup()
+    .popup
         .here
-            span(v-if='isMember')  {{ isMember }}
-            span(v-else-if='card.guild')  {{ card.guild }}
-            linky(v-else  :x='name'  :key='name')
+            span.front(v-if='isMember')  {{ isMember }}
+            span.front(v-else-if='card.guild')  {{ card.guild }}
+            linky.front(v-else  :x='name'  :key='name')
+    img.front(v-if='card.guild'  src="../../assets/images/badge.svg")
+    img.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
+    img.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
+    span.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
+    .hyperpaper
     slot
 </template>
 
@@ -88,6 +88,7 @@ img
 
 .paperwrapper
     position: relative
+    z-index: 1
 
 .hyperpaper
     background-image: url('../../assets/images/paper.jpg')
@@ -101,6 +102,8 @@ img
     position: absolute
     width: 100%
     opacity: 0.2
+    z-index: 2
+    position: absolute
 
 .popup
     top: 0
@@ -111,19 +114,40 @@ img
     width: 100%
     height: 1.5em
     cursor: pointer
+    z-index: 50
 
 .popup .here
     visibility: hidden
 
 .popup:hover
     height: 100%
+    z-index: 99
 
 .popup:hover .here
     visibility: visible
     padding: 1em
+    z-index: 99
 
 .here
     position: inline
     color: white
     pointer-events: none
+    margin-left: 2.5em
+    
+img.front
+   position: absolute
+   top: 0.2em
+   left: -0.5em
+   
+.front
+    z-index: 100
+    position: relative
+    pointer-events: none
+
+.popup:hover ~ img.front
+    height: 2.2em
+    top: 0.41em
+    
+.context
+    box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5)
 </style>

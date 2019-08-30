@@ -4,6 +4,8 @@
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
+            aos
+        .row
             resources
             sidewalk
     .container(v-if='$store.state.upgrades.mode === "badge"')
@@ -70,6 +72,7 @@ import Sidewalk from './Sidewalk'
 import RentSet from './forms/RentSet'
 import CapSet from './forms/CapSet'
 import Resources from './Resources'
+import AOs from './AOs'
 
 export default {
     beforeRouteEnter(to, from, next) {
