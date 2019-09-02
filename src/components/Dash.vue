@@ -48,11 +48,7 @@
               .six.columns
                 p.input-instructions Set Cost Cap
                 cap-set
-        p total store: {{ $store.getters.totalPoints }} total bounties: {{ $store.getters.totalBounties }}
-        p &#12471; {{ $store.getters.satPoint}} point
-        .center(v-for='n in $store.getters.taskByBoost')
-            h3(v-if='n.guild') {{ n.guild }} - {{ n.boost }}
-            span(v-else) {{ n.name }} - {{ n.boost }}
+        points
 </template>
 
 <script>
@@ -74,6 +70,7 @@ import RentSet from './forms/RentSet'
 import CapSet from './forms/CapSet'
 import Resources from './Resources'
 import Aos from './Aos'
+import Points from './Points'
 
 export default {
     beforeRouteEnter(to, from, next) {
@@ -91,7 +88,7 @@ export default {
         SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
         Panels, WhyLightning, Members, Home, MemberCreate, RentSet,
-        CapSet, Resources, Sidewalk, Aos
+        CapSet, Resources, Sidewalk, Aos, Points
     },
 }
 

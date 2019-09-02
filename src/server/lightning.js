@@ -17,7 +17,6 @@ const client = new LightningClient(config.clightning.dir, true);
 
 
 lightningRouter.post('/lightning/channel',(req, res) => {
-    console.log('req res in lightning', req.body)
     client.fundchannel(req.body.id, 'all')
         .then(channel => {
             console.log(channel)
@@ -27,7 +26,6 @@ lightningRouter.post('/lightning/channel',(req, res) => {
 lightningRouter.post('/lightning/update',(req, res) => {
     updateAll()
 })
-
 
 function createInvoice(amount, label, description, expiresInSec){
     return client.invoice(amount * 1000, label, description, expiresInSec)
@@ -54,7 +52,6 @@ function checkFunds(){
         .listfunds()
         .then(result => {
             try {
-                console.log("checking ", result.outputs.length, " outputs vs ", pubState.cash.usedTxIds.length, "used")
                 cashEvs.fundsSet(result.outputs, result.channels)
                 result.outputs.forEach( o => {
                     if (o.status === 'confirmed' && pubState.cash.usedTxIds.indexOf(o.txid) === -1){
@@ -94,15 +91,11 @@ function getInfo(){
 }
 
 function recordEveryInvoice(start){
-    console.log("waiting on invoices after ", start)
-
     client.waitanyinvoice(start)
         .then(invoice => {
             let satoshis = invoice.msatoshi / 1000
             let spot = pubState.cash.spot
             let cadAmt = calculations.satsToCad(satoshis, spot)
-
-            console.log("recording invoice: ",{cadAmt, spot, satoshis})
 
             pubState.tasks.forEach( t => {
                 if (t.payment_hash === invoice.payment_hash){

@@ -157,18 +157,64 @@ export default new Vuex.Store({
           return total
       },
       taskByBoost(state, getters){
-          let bb  = state.tasks.filter(t => t.boost > 0)
-          bb.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          return bb
+          let members = []
+          let guilds = []
+          let resources = []
+          let cards = []
+
+          state.tasks.forEach(t => {
+
+              if( t.boost > 0 ){
+                  if (getters.memberIds.indexOf(t.taskId) > -1){
+                    members.push(t)
+                  } else if (getters.resourceIds.indexOf(t.taskId) > -1) {
+                    console.log("card is a resource: ", t, getters.resourceIds.length)
+
+                    resources.push(t)
+                  } else if (t.guild) {
+                    guilds.push(t)
+                  } else {
+                    cards.push(t)
+                  }
+              }
+
+          })
+
+          members.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          guilds.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          resources.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          cards.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+
+          console.log("calculated tasks by boost", members.length, guilds.length, resources.length, cards.length)
+
+          return { members, guilds, cards, resources }
       },
       totalPoints(state, getters){
-          let total = 0
-          getters.taskByBoost.forEach(t => {
-              total += parseFloat( t.boost )
+          let totalMembers = 0
+          let totalGuilds = 0
+          let totalCards = 0
+          let totalResources = 0
+          getters.taskByBoost.members.forEach(t => {
+              totalMembers += parseFloat( t.boost )
           })
-          return total
-      },
+          getters.taskByBoost.guilds.forEach(t => {
+              totalGuilds += parseFloat( t.boost )
+          })
+          getters.taskByBoost.resources.forEach(t => {
+              totalResources += parseFloat( t.boost )
+          })
+          getters.taskByBoost.cards.forEach(t => {
+              totalCards += parseFloat( t.boost )
+          })
 
+
+          return {
+              totalMembers,
+              totalGuilds,
+              totalResources,
+              totalCards,
+          }
+      },
       hashMap(state){
           let hashMap = {}
           state.tasks.forEach(t => {
@@ -188,6 +234,7 @@ export default new Vuex.Store({
           return state.members.map(c => c.memberId)
       },
       resourceIds(state, getters){
+
           return state.resources.map(c => c.resourceId)
       },
       withinHeld(state, getters){

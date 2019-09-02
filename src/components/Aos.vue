@@ -9,6 +9,7 @@
                 label(for="aoSecretInput") connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
         .six.columns
+            h4 currently connected to: 
             .row
                 template.row(v-for='r in $store.state.ao')
                     p {{ r.address }}
