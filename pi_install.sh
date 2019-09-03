@@ -29,7 +29,7 @@ then
 	mkdir -p $HOME/.ao
 fi
 
-install npm
+# install npm
 if [ $(dpkg-query -W -f='${Status}' npm 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
 	NPMVERSION=`npm -v`
