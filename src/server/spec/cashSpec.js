@@ -87,7 +87,6 @@ function specCapSet(req, res, next){
 
 function specAOConnect(req, res, next){
   let errRes = []
-
   if (true){
     console.log('ao-connected', req.body.address, req.body.secret)
     events.aoEvs.aoConnected(

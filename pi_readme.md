@@ -182,7 +182,10 @@ logout
 login as root with your new password
 
 groupadd doge
-usermod -l doge -m -d /home/doge pi
+usermod -l doge -aG doge -m -d /home/doge pi
+logout
+login as doge
+sudo passwd --lock root
 
 ## Create doge user and delete default pi user (Raspbian Full)
 set root passwod and login as root as above

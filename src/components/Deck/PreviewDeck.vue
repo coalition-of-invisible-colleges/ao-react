@@ -3,7 +3,7 @@
 .preview(v-if='deck.length > 0')
     .row
         .four.grid
-            .tooltip(v-for="(tId,i) in task.priorities.slice().reverse()")
+            .tooltip(v-for="(tId,i) in topPriorities")
                 img.tinyboat(v-if="i < 5", @click='goto(tId)', src='../../assets/images/boatbtnselected.svg')
                 .tooltiptext {{ tId? shortName(card(tId).name) : "unknown card" }}
             .bead.redwx.tooltip(v-for="(b,i) in red"  :b="b", @click='goto(b.taskId)')
@@ -98,6 +98,9 @@ export default {
       green(){
           return this.deck.filter( c => { if(!c) { return false } return c.color === 'green' } ).reverse().slice(0, 4)
       },
+      topPriorities(){
+        return this.task.priorities.slice(0, 5).reverse()
+      }
   },
   components:{
       SharedTitle,
@@ -134,6 +137,10 @@ export default {
     border-color: rgba(255, 255, 255, 0.68)
     border-style: solid
     cursor: pointer
+
+.tooltip
+    position: relative
+    z-index: 151
 
 .tooltip .tooltiptext
     font-size: 1em

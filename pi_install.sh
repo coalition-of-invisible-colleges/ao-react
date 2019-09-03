@@ -29,18 +29,40 @@ then
 	mkdir -p $HOME/.ao
 fi
 
+install npm
+if [ $(dpkg-query -W -f='${Status}' npm 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	NPMVERSION=`npm -v`
+	echo npm v$NPMVERSION already installed
+else
+	sudo apt install -y npm
+fi
+
+# install nvm
+if [ -f "$HOME/.nvm/nvm.sh" ];
+then
+	. ~/.nvm/nvm.sh
+fi
+
+if [ $(command -v nvm | grep -c "nvm") -eq 1 ];
+then
+	NVMVERSION=`nvm --version`
+	echo nvm v$NVMVERSION already installed
+else
+	git clone https://github.com/creationix/nvm.git ~/.nvm 2>/dev/null
+	sudo echo "source ~/.nvm/nvm.sh" >> ~/.bashrc
+	sudo echo "source ~/.nvm/nvm.sh" >> ~/.profile
+	source ~/.bashrc
+	source ~/.profile
+fi
+
+NODEVERSION=`nvm current`
 
 # install node
-. ~/.nvm/nvm.sh
-NVMVERSION=`nvm current`
-if [ $(echo $NVMVERSION | grep -c "v11") -eq 1 ];
+if [ $(echo $NODEVERSION | grep -c "v11") -eq 1 ];
 then
-	echo nvm $NVMVERSION already installed
+	echo node $NODEVERSION already installed
 else
-	curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-	source ~/.profile
-	source ~/.bashrc
-	# and/or might need to source profile here; seems like nvm install not loaded on first run
 	nvm install 11
 fi
 
@@ -195,14 +217,13 @@ TORRCPATH='/usr/local/etc/tor/torrc'
 
 if [ ! -f $TORRCPATH ];
 then
-	cp $TORRCPATH.sample $TORRCPATH
+	sudo cp $TORRCPATH.sample $TORRCPATH
 fi
 
 if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
 then
 	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
 fi
-
 
 if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
 then
@@ -265,7 +286,7 @@ else
 fi
 
 # set up AO to autostart as a daemon via systemd
-if [ -f "$HOME/ao/configuration.js" ];
+if [ -f "/etc/systemd/system/ao.service" ];
 then
 	echo systemd startup file already exists
 else
@@ -283,7 +304,7 @@ PrivateTmp=true
 [Install]
 WantedBy=multi-user.target"
 
-	echo "$UNIT" > sudo tee -a /etc/systemd/system/ao.service 1>/dev/null 2>&1
+	echo "$UNIT" | sudo tee -a /etc/systemd/system/ao.service 1>/dev/null 2>&1
 	sudo systemd startup file created
 fi
 
