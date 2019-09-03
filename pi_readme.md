@@ -224,9 +224,11 @@ p0wn the folders
 
 sudo mount -a
 
-# set keyboard
+# fix pipe and backslash on wireless keyboard
 
-set keyboard to pc105 us
+sudo nano /etc/default/keyboard
+	XKBMODEL="pc105"
+	XKBLAYOUT="us"
 
 # add SSH keys
 

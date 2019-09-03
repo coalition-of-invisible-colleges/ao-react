@@ -6,22 +6,22 @@
       .row.priority.opencard(v-if='$store.state.context.action === t')
           .allocated.openallocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           img.singleship.open(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          div(@click.stop='deaction')
+          div(@click.stop='debounce(deaction, 500)')
               hypercard(:b="getCard(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
       .row.priority(v-else)
           .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click.capture.stop='setAction(t)')
+          div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click.capture.stop='debounce(setAction, 500, [ t ])')
               hyperpriority(:taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
-          .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='deaction')
+          .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='debounce(deaction, 500)')
               hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")
-          div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click.capture.stop='setAction(st)')
+          div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click.capture.stop='debounce(setAction, 500, [ st ])')
               hyperpriority(:taskId='st'  :c='getCard(t).priorities')
           .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)'  :key='st2')
-              .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='deaction')
+              .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='debounce(deaction, 500)')
                   hypercard(:b="getCard(st2)", :c="getCard(st2).priorities",  :inId="st")
-              div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click.capture.stop='setAction(st2)')
+              div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click.capture.stop='debounce(setAction, 500, [ st2 ])')
                   hyperpriority(:taskId='st2'  :c='getCard(st).priorities')
     div.clearboth
 </template>
@@ -107,6 +107,15 @@ export default {
       })
       return allocatedAmount
     },
+    debounce(func, delay) {
+      let inDebounce
+      const context = this
+      const args = arguments
+      console.log("debounce")
+      console.log("context is ", context, " and args is ", args)
+      clearTimeout(inDebounce)
+      inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
+    }
   },
   computed:{
       priorities(){
