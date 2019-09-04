@@ -252,6 +252,13 @@ then
 fi
 
 sudo chown -R doge:doge /var/lib/tor
+sudo chmod -R 700 /var/lib/tor
+
+# get ao tor hostname for configuration.js
+if [ -f "$HOME/ao/configuration.js" ];
+then
+	TORHOSTNAME=`cat /var/lib/tor/ao`
+fi
 
 # install borgbackup
 if [ $(dpkg-query -W -f='${Status}' borgbackup 2>/dev/null | grep -c "ok installed") -eq 1 ];
@@ -298,6 +305,9 @@ else
     clightning: {
         dir: '$HOME/.lightning/'
     },
+    tor: {
+    	hostname: '$TORHOSTNAME'
+    }
 }"
     echo "$CONFIG" > $HOME/ao/configuration.js
     echo configuration.js file created
