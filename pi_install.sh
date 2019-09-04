@@ -255,9 +255,9 @@ sudo chown -R doge:doge /var/lib/tor
 sudo chmod -R 700 /var/lib/tor
 
 # get ao tor hostname for configuration.js
-if [ -f "$HOME/ao/configuration.js" ];
+if [ -f "/var/lib/tor/ao/hostname" ];
 then
-	TORHOSTNAME=`cat /var/lib/tor/ao`
+	TORHOSTNAME=`cat /var/lib/tor/ao/hostname`
 fi
 
 # install borgbackup
