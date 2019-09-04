@@ -7,6 +7,11 @@ echo apt update complete
 sudo apt upgrade -yqqq
 echo apt upgrade complete
 
+# more cleanup
+#sudo apt-get dist-upgrade -yqqq
+#sudo apt-get clean -yqqq
+#sudo apt-get autoclean -yqqq
+
 # install git
 if [ $(dpkg-query -W -f='${Status}' git 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then
@@ -217,7 +222,8 @@ TORRCPATH='/usr/local/etc/tor/torrc'
 
 if [ ! -f $TORRCPATH ];
 then
-	sudo cp $TORRCPATH.sample $TORRCPATH
+	wget https://raw.githubusercontent.com/torproject/tor/master/src/config/torrc.sample.in
+	sudo mv torrc.sample.in $TORRCPATH
 fi
 
 if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ];
@@ -285,10 +291,67 @@ else
     echo configuration.js file created
 fi
 
+# set up tor to autostart as a daemon via systemd
+if [ -f "/etc/systemd/system/tor.service" ];
+then
+	echo tor systemd startup file already exists
+else
+	TORUNIT="[Unit]
+Description=Anonymizing overlay network for TCP (multi-instance-master)
+After=network.target
+
+[Service]
+User=doge
+Group=doge
+Type=simple
+#Type=forking
+PrivateTmp=yes
+PermissionsStartOnly=true
+
+ExecStartPre=-/bin/mkdir /var/run/tor
+ExecStartPre=/bin/cp $TORRCPATH /var/run/tor
+ExecStartPre=/bin/chmod a-wx,go-rwx /var/run/tor/torrc
+ExecStartPre=/bin/chown -R tor:tor /var/run/tor
+
+ExecStart=/usr/bin/tor -f $TORRCPATH
+ExecReload=/bin/kill -HUP $MAINPID
+
+#LimitNPROC = 2
+#DeviceAllow = /dev/null rw
+#DeviceAllow = /dev/urandom r
+#DeviceAllow = /dev/random r
+#InaccessibleDirectories = /
+#ReadOnlyDirectories = /etc /usr
+#ReadWriteDirectories = /var/lib/tor /var/log/tor
+
+#PIDFile=/var/run/tor/tor.pid
+KillSignal=SIGINT
+LimitNOFILE=8192
+PrivateDevices=yes
+
+#Type=oneshot
+#RemainAfterExit=yes
+#ExecStart=/bin/true
+#ExecReload=/bin/true
+
+[Install]
+WantedBy=multi-user.target"
+	echo "$TORUNIT" | sudo tee /etc/systemd/system/tor.service 1>/dev/null 2>&1
+	echo tor systemd startup file created
+fi
+
+if [ $(sudo systemctl status tor | grep -c "disabled") -eq 0 ];
+then
+	echo tor systemd startup already enabled
+else
+	sudo systemctl enable tor
+	echo tor systemd startup enabled
+fi
+
 # set up AO to autostart as a daemon via systemd
 if [ -f "/etc/systemd/system/ao.service" ];
 then
-	echo systemd startup file already exists
+	echo ao systemd startup file already exists
 else
 	UNIT="[Unit]
 Description=ao-daemon
@@ -305,15 +368,15 @@ PrivateTmp=true
 WantedBy=multi-user.target"
 
 	echo "$UNIT" | sudo tee -a /etc/systemd/system/ao.service 1>/dev/null 2>&1
-	sudo systemd startup file created
+	sudo ao systemd startup file created
 fi
 
 if [ $(sudo systemctl status ao | grep -c "disabled") -eq 0 ];
 then
-	echo systemd startup already enabled
+	echo ao systemd startup already enabled
 else
 	sudo systemctl enable ao
-	echo systemd startup enabled
+	echo ao systemd startup enabled
 fi
 
 # cleanup c-lightning install
