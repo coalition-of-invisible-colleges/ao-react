@@ -333,7 +333,7 @@ PermissionsStartOnly=true
 ExecStartPre=-/bin/mkdir /var/run/tor
 ExecStartPre=/bin/cp $TORRCPATH /var/run/tor
 ExecStartPre=/bin/chmod a-wx,go-rwx /var/run/tor/torrc
-ExecStartPre=/bin/chown -R tor:tor /var/run/tor
+ExecStartPre=/bin/chown -R $USER:$USER /var/run/tor
 
 ExecStart=/usr/local/bin/tor -f $TORRCPATH
 ExecReload=/bin/kill -HUP $MAINPID
@@ -384,7 +384,7 @@ WantedBy=multi-user.target"
 
 	echo "$UNIT" | sudo tee -a /etc/systemd/system/ao.service 1>/dev/null 2>&1
 	sudo systemctl daemon-reload
-	sudo ao systemd startup file created
+	echo ao systemd startup file created
 fi
 
 if [ $(sudo systemctl status tor | grep -c "disabled") -eq 0 ];
