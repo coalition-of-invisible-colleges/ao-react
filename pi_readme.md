@@ -162,7 +162,7 @@ This should do it (untested):
 
 ---
 
-#  How to dogefy a Raspberry Pi (steps that can't be automated in pi_install.sh yet)
+#  How to dogeify a Raspberry Pi (steps that can't be automated in pi_install.sh yet)
 
 Instructions for creating a clean install of a Raspberry Pi with the AO on it (for cloning to other pis).
 
@@ -189,7 +189,7 @@ sudo passwd --lock root
 
 ## Create doge user and delete default pi user (Raspbian Full)
 set root passwod and login as root as above
-useradd doge
+useradd -m doge
 userdel -r -f pi
 usermod -aG sudo doge
 

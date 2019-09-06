@@ -251,7 +251,7 @@ then
 	sudo mkdir -p /var/lib/tor/ao
 fi
 
-sudo chown -R doge:doge /var/lib/tor
+sudo chown -R $USER:$USER /var/lib/tor
 sudo chmod -R 700 /var/lib/tor
 
 # get ao tor hostname for configuration.js
@@ -323,8 +323,8 @@ Description=Anonymizing overlay network for TCP (multi-instance-master)
 After=network.target
 
 [Service]
-User=doge
-Group=doge
+User=$USER
+Group=$USER
 Type=simple
 #Type=forking
 PrivateTmp=yes
@@ -373,7 +373,7 @@ Description=ao-daemon
 
 [Service]
 ExecStart=$HOME/.nvm/versions/node/v11.15.0/bin/node $HOME/ao/production/server/app.js
-User=doge
+User=$USER
 Type=simple
 Restart=always
 RestartSec=30
