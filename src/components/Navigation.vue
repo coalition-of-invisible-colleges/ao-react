@@ -16,10 +16,10 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else src='../assets/images/boatblack.svg')
         .full(v-else) log out
-    div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
+    div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/front", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentright(v-if='$router.currentRoute.path === "/"')
         .transparentleft(v-else)
-    template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
+    template(v-if='!($router.currentRoute.path === "/front" || $router.currentRoute.path === "/dash")'  v-for='(n, i) in $store.state.context.parent.slice().reverse()')
         div(@click='goToParent(n)')
             context(:taskId='n')
 </template>
@@ -132,34 +132,24 @@ export default {
         },
         cycleLeft(){
             switch (this.$router.currentRoute.path){
-              case "/": return this.$router.push('/deck')
-              case "/dash": return this.$router.push('/')
+              case "/front": return this.$router.push('/')
+              // case "/dash": return this.$router.push('/front')
             }
-            if (this.$store.state.context.parent.length > 0){
-                this.$router.push('/deck')
-                this.$store.commit("setParent", [])
-            } else {
-                this.$router.push('/')
-            }
+            this.$router.push('/front')
             this.setToRoute()
             this.uniLeft = !this.uniLeft
         },
         cycleRight(){
             switch (this.$router.currentRoute.path){
-              case "/dash": return this.$router.push('/deck')
+              case "/dash": return this.$router.push('/')
             }
-            if (this.$store.state.context.parent.length > 0){
-                this.$router.push('/deck')
-                this.$store.commit("setParent", [])
-            } else {
-                this.$router.push('/dash')
-            }
+            this.$router.push('/dash')
             this.setToRoute()
             this.uniRight = !this.uniRight
         },
         setToRoute() {
             switch (this.$router.currentRoute.path){
-              case "/": return this.showImg = "sun"
+              case "/front": return this.showImg = "sun"
               case "/dash": return this.showImg = "bull"
               default: return this.showImg = "uni"
             }

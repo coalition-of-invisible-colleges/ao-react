@@ -9,7 +9,7 @@
                 label(for="aoSecretInput") connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
         .six.columns
-            h4 currently connected to: 
+            h4 currently connected to:
             .row
                 template.row(v-for='r in $store.state.ao')
                     p {{ r.address }}
@@ -28,7 +28,7 @@ export default {
         return {
             ao: {
                 type: "ao-connected",
-                address: "",
+                address: "uuzwra53lwkzcp47ue5t6ilr7w2fzgkdjdcrqosrrm5mqqnloudmnxqd.onion:8003",
                 secret: this.$store.state.loader.token,
             }
         }

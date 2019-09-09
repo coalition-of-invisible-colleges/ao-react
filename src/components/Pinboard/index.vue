@@ -53,11 +53,6 @@ import Auth from '../Auth'
 import Bounties from '../Bounties'
 
 export default {
-  beforeRouteEnter(to, from, next) {
-        next(vm => {
-            vm.setDeck()
-        })
-  },
   components:{
       Auth,
       Row,
@@ -116,11 +111,6 @@ export default {
           })
 
           this.$router.push("/task/" + this.b.taskId)
-      },
-      setDeck(){
-          console.log("pinboard route handle called")
-          this.$store.commit("setPanel", [])
-          this.$store.commit("setParent", [])
       },
       cycleGuilds(){
           console.log('cycling')

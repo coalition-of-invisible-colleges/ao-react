@@ -30,6 +30,10 @@ Vue.use(VueRouter)
 
 const routes =[{
   path: '/',
+  component: TaskCalendar,
+  meta: { title: "DCTRL" }
+},{
+  path: '/front',
   component: Pinboard,
   meta: { title: "DCTRL" }
 },{

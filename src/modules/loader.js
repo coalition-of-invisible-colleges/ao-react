@@ -95,10 +95,17 @@ const actions = {
                         .end((err, res2)=>{
                             console.log("got res", res2.body, err)
                             commit('setCurrent', res2.body)
+
                         })
                 } else {
                     console.log('got an authorized response?')
                     commit('setCurrent', res.body)
+
+                    res.body.sessions.forEach(s => {
+                        if (s.session === state.session){
+                            commit("setPanel", [ s.ownerId ])
+                        }
+                    })
                 }
             })
     },

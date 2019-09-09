@@ -48,37 +48,24 @@ const pubState = {
 }
 
 function applyBackup(b){
+
     modules.cash.mutations.setCurrent(serverState.cash, b)
     modules.tasks.mutations.setCurrent(serverState.tasks, b)
     modules.sessions.mutations.setCurrent(serverState.sessions, b)
     modules.ao.mutations.setCurrent(serverState.ao, b)
-    // modules.members.mutations.setCurrent(serverState.members, b)
-    // modules.resources.mutations.setCurrent(serverState.resources, b)
+    modules.members.mutations.setCurrent(serverState.members, b)
+    modules.resources.mutations.setCurrent(serverState.resources, b)
+
+    b.resources = b.resources.map(removeSensitive)
+    b.members = b.members.map(removeSensitive)
+    b.ao = b.ao.map(removeSensitive)
 
     modules.cash.mutations.setCurrent(pubState.cash, b)
     modules.tasks.mutations.setCurrent(pubState.tasks, b)
     modules.sessions.mutations.setCurrent(pubState.sessions, b)
     modules.ao.mutations.setCurrent(pubState.ao, b)
-    // modules.members.mutations.setCurrent(pubState.members, b)
-    // modules.resources.mutations.setCurrent(pubState.resources, b)
-
-    let uniqueMembers = []
-    b.members.forEach( m => {
-        if ( uniqueMembers.indexOf(m.name) === -1 ){
-          uniqueMembers.push(m.name)
-          applyEvent(serverState, m)
-          applyEvent(pubState, removeSensitive(m))
-        }
-    })
-
-    let uniqueResources = []
-    b.resources.forEach( r => {
-        if ( uniqueResources.indexOf(r.name) === -1 ){
-          uniqueResources.push(r.name)
-          applyEvent(serverState, r)
-          applyEvent(pubState, removeSensitive(r))
-        }
-    })
+    modules.resources.mutations.setCurrent(pubState.resources, b)
+    modules.members.mutations.setCurrent(pubState.members, b)
 }
 
 function applyEvent(state, ev) {

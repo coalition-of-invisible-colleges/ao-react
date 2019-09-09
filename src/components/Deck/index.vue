@@ -77,7 +77,7 @@ export default {
   margin: -1.25em auto 0em auto
   padding: 0
   z-index: 80
-  
+
 .white
   color: white
 </style>

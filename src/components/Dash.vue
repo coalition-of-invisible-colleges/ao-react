@@ -4,7 +4,6 @@
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
-            p a o s
             aos
         .row
             resources
@@ -73,17 +72,6 @@ import Aos from './Aos'
 import Points from './Points'
 
 export default {
-    beforeRouteEnter(to, from, next) {
-          next(vm => {
-              vm.setDeck()
-          })
-    },
-    methods: {
-      setDeck(){
-        this.$store.commit("setPanel", [])
-        this.$store.commit("setParent", [])
-      },
-    },
     components:{
         SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,

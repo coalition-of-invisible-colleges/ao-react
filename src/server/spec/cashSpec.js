@@ -2,6 +2,7 @@ import utils from './utils'
 import validators from './validators'
 import events from '../events'
 import state from '../state'
+import connector from '../connector'
 
 module.exports = function(req, res, next){
   switch (req.body.type){
@@ -19,6 +20,11 @@ module.exports = function(req, res, next){
           break
       case 'ao-connected':
           specAOConnect(req, res, next)
+          break
+      case 'ao-subscribed':
+          console.log("ao subscribed hit")
+
+          // specAOConnect(req, res, next)
           break
       default:
           next()
@@ -87,14 +93,21 @@ function specCapSet(req, res, next){
 
 function specAOConnect(req, res, next){
   let errRes = []
-  if (true){
-    console.log('ao-connected', req.body.address, req.body.secret)
-    events.aoEvs.aoConnected(
-      req.body.address,
-      req.body.secret,
-      utils.buildResCallback(res)
-    )
-  } else {
-    res.status(200).send(errRes)
-  }
+  console.log('attempt post to ', req.body.address)
+  connector.postEvent(req.body.address, req.body.secret, {
+    type: "ao-subscribed"
+  }, (err, response) => {
+      console.log({response})
+      // if (true){
+      //   console.log('ao-connected', req.body.address, req.body.secret)
+      //   events.aoEvs.aoConnected(
+      //     req.body.address,
+      //     req.body.secret,
+      //     utils.buildResCallback(res)
+      //   )
+      // } else {
+      //   res.status(200).send(errRes)
+      // }
+  })
+
 }
