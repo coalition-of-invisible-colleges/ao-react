@@ -4,7 +4,7 @@
     .list
         h2 {{ $store.getters.activeMembers.length }} active
         row(v-for="m in $store.getters.sortedMembers.slice(showStart, showStart + 7)"  :m='m')
-        .row.menu
+        .row.menu(v-if='$store.getters.sortedMembers.length > 7')
             .inline(@click='showBack')
                 img(src='../../assets/images/left.svg')
             .inline
@@ -16,7 +16,6 @@
                 p believer in a transcendent future
                 p possess rfid tag
                 p possible human, magical entity, fairy, cyborg or alien
-                strong visit a node to find out more
 </template>
 
 <script>

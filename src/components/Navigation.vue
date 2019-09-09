@@ -1,13 +1,14 @@
 <template lang='pug'>
 
 .navigation(@contextmenu.prevent)
-    img.bullimgright(v-if='showImg === "uni" && !uniRight'  src="../assets/images/bulluni.svg"  @click='cycleRight')
-    img.bullimgright(v-else-if='showImg === "uni" && uniRight'  src="../assets/images/unibull.svg"  @click='cycleRight')
-    img.bullimgright(v-else  src="../assets/images/bullsunbulluni.svg"  @click='cycleRight')
-    img.bullimgleft(v-if='showImg === "bull"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
-    img.bullimgleft(v-else-if='showImg === "sun"'  src="../assets/images/sunbulluni.svg"  @click='cycleLeft')
-    img.bullimgleft(v-else-if='!uniLeft'  src="../assets/images/bulluni.svg"  @click='cycleLeft')
-    img.bullimgleft(v-else='uniLeft'  src="../assets/images/unibull.svg"  @click='cycleLeft')
+    div(@click='cycleLeft')
+        img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
+        img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")
+        img.bullimgleft(v-else  src="../assets/images/navigas/uniSunDab.svg")
+    div(@click='cycleRight')
+        img.bullimgright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg")
+        img.bullimgright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg")
+        img.bullimgright(v-else  src="../assets/images/navigas/uniBullDab.svg")
     button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
         .full(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
@@ -132,20 +133,24 @@ export default {
         },
         cycleLeft(){
             switch (this.$router.currentRoute.path){
-              case "/front": return this.$router.push('/')
+                case "/front": return this.$router.push('/')
               // case "/dash": return this.$router.push('/front')
             }
             this.$router.push('/front')
-            this.setToRoute()
-            this.uniLeft = !this.uniLeft
+            setTimeout(() => {
+                this.setToRoute()
+                this.uniLeft = !this.uniLeft
+            }, 1)
         },
         cycleRight(){
             switch (this.$router.currentRoute.path){
               case "/dash": return this.$router.push('/')
             }
             this.$router.push('/dash')
-            this.setToRoute()
-            this.uniRight = !this.uniRight
+            setTimeout(() => {
+                this.setToRoute()
+                this.uniRight = !this.uniRight
+            })
         },
         setToRoute() {
             switch (this.$router.currentRoute.path){
@@ -156,14 +161,6 @@ export default {
         },
         toggleShowBtc() {
             this.showBtc = !this.showBtc
-        },
-        setImg(x) {
-            console.log("setting image", {x})
-            this.showImg = x
-            if (x === 'uni'){
-                this.$store.commit("setPanel", [this.$store.getters.member.memberId])
-                this.$store.commit("setParent", [])
-            }
         },
         nextUpgradeMode() {
             this.$store.commit("nextMode")
