@@ -13,15 +13,16 @@
         div(v-else-if='$store.state.upgrades.mode == "bounty"')
             h1.up Bounties
             .row.pagemargins
-                .columns
-                    .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(0)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
-                    .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
-                    .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
-                    .three.columns
-                        hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                .three.columns
+                    div(v-for='(t, i) in getBountyColumn(0)')
+                        span {{ t.funders }}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                .three.columns
+                    hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                .three.columns
+                    hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                .three.columns
+                    hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
         .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           .centered
@@ -139,7 +140,7 @@ export default {
 
 @import '../../styles/colours'
 @import '../../styles/skeleton'
-@import '../../styles/grid'
+// @import '../../styles/grid'
 @import '../../styles/button'
 
 

@@ -124,13 +124,20 @@ export default new Vuex.Store({
       bounties(state, getters){
           let bountyList = []
           let bounties = {}
+          let guilds = {}
           state.tasks.forEach( t => {
               if (Array.isArray(t.allocations)){
                   t.allocations.forEach( al => {
                       if ( bounties[al.allocatedId] ) {
                           bounties[al.allocatedId] += parseInt(al.amount)
+                          if (t.guild){
+                              guilds[al.allocatedId].push(t.guild)
+                          }
                       } else {
                           bounties[al.allocatedId] = parseInt(al.amount)
+                          if (t.guild){
+                              guilds[al.allocatedId] = [t.guild]
+                          }
                       }
                   })
               }
@@ -141,6 +148,7 @@ export default new Vuex.Store({
               let amount =  bounties[b]
               if (amount >= 1){
                   Vue.set( card, 'currentAmount', amount )
+                  Vue.set( card, 'funders', guilds[b] )
                   bountyList.push(card)
               }
           })
