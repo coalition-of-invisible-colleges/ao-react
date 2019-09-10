@@ -42,5 +42,8 @@ export default {
 
 .expandedcard
     width: 100%
+    box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.4)
+    position: relative
+    z-index: 148
 
 </style>

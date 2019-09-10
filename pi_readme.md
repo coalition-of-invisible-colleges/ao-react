@@ -224,6 +224,14 @@ p0wn the folders
 
 sudo mount -a
 
+# set up a server to receive backups via borgbackup
+
+1. Set up hard drive to automatically mount at startup (above).
+2. Create a directory /var/lib/tor/backup.
+	a. chown pi:pi -R /var/lib/tor/backup
+	b. chmod 700 /var/lib/tor/backup
+3. ssh-copy-id -i /path/to/ssh/key.file doge@192.168.0.xxx
+
 # fix pipe and backslash on wireless keyboard
 
 sudo nano /etc/default/keyboard

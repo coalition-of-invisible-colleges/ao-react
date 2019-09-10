@@ -16,12 +16,13 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else src='../assets/images/boatblack.svg')
         .full(v-else) log out
+    .pushdown()
     div(v-if=''  :class='{suncontext: $router.currentRoute.path === "/", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentright(v-if='$router.currentRoute.path === "/"')
         .transparentleft(v-else)
-    template(v-for='(n, i) in $store.state.context.parent.slice().reverse()')
+    template(v-for='(n, i) in $store.state.context.parent.slice()')
         div(@click='goToParent(n)')
-            context(:taskId='n')
+            context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
 </template>
 
 <script>
@@ -283,7 +284,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
 
 .navigation
   display: flex
-  flex-direction: column-reverse
+  flex-direction: column
   min-height: 5.8em
 
 .side_bar ul
@@ -485,7 +486,7 @@ hr
 
 .context
     width: calc(100% - 14em)
-    margin: 0 7em
+    margin: 0 auto
     align-self: flex-end
 
 .fl
@@ -495,5 +496,7 @@ hr
     float: right
     width: 7em
 
+.pushdown
+    margin-top: auto
 
 </style>

@@ -2,7 +2,7 @@
 
 #deck()
     h1.up.white(v-if='$router.currentRoute.path.trim() == "/deck"') deck
-    .row
+    .row.shadow
         .four.columns(v-if='$store.getters.inbox.length > 0')
             gift-box
         .columns(:class='{eight: $store.getters.inbox.length > 0}')
@@ -59,6 +59,9 @@ export default {
 
 #deck
     width: 100%
+
+.row.shadow
+    box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5)
 
 .floater
     position: relative;

@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang='stylus'>
-
+    
 .centered
     text-align: center
     width: 100%
