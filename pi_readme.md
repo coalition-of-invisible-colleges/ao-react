@@ -162,7 +162,7 @@ This should do it (untested):
 
 ---
 
-#  How to dogefy a Raspberry Pi (steps that can't be automated in pi_install.sh yet)
+#  How to dogeify a Raspberry Pi (steps that can't be automated in pi_install.sh yet)
 
 Instructions for creating a clean install of a Raspberry Pi with the AO on it (for cloning to other pis).
 
@@ -189,7 +189,7 @@ sudo passwd --lock root
 
 ## Create doge user and delete default pi user (Raspbian Full)
 set root passwod and login as root as above
-useradd doge
+useradd -m doge
 userdel -r -f pi
 usermod -aG sudo doge
 
@@ -223,6 +223,14 @@ UUID=<UUID> /mnt/backup ext4 defaults,rw,auto,nofail 0 0
 p0wn the folders
 
 sudo mount -a
+
+# set up a server to receive backups via borgbackup
+
+1. Set up hard drive to automatically mount at startup (above).
+2. Create a directory /var/lib/tor/backup.
+	a. chown pi:pi -R /var/lib/tor/backup
+	b. chmod 700 /var/lib/tor/backup
+3. ssh-copy-id -i /path/to/ssh/key.file doge@192.168.0.xxx
 
 # fix pipe and backslash on wireless keyboard
 

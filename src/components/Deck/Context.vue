@@ -10,8 +10,9 @@
             linky.front(v-else  :x='name'  :key='name')
     img.front(v-if='card.guild'  src="../../assets/images/badge.svg")
     img.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
-    img.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
-    span.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
+    div.right.front(v-if='card.book.startTs')
+        span {{ cardStart.days.toFixed(1) }} days
+        img(src="../../assets/images/timecube.svg")
     .hyperpaper
     slot
 </template>
@@ -135,18 +136,43 @@ img
     margin-left: 2.5em
     
 img.front
-   position: absolute
-   top: 0.2em
-   left: -0.5em
-   
+    position: absolute
+    top: 0.2em
+    left: -0.5em
+
+.right.front
+    position: absolute
+    top: 0.2em
+    right: 0.5em
+
+.right.front img
+    margin-right: 0.5em
+    margin-left: 0.15em
+    
 .front
     z-index: 100
     position: relative
     pointer-events: none
 
+.right.front
+    float: right
+
+.popup:hover ~ .right.front
+    top: 0
+    right: 0
+
 .popup:hover ~ img.front
     height: 2.2em
     top: 0.41em
+
+.popup:hover ~ .right.front img
+    height: 2.2em
+    margin-top: 0.41em
+    margin-right: -0.5em
+    
+.popup:hover ~ .right.front span
+    display: inline-block
+    padding: 1em
     
 .context
     box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5)

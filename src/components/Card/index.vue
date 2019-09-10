@@ -17,7 +17,7 @@
   .row
     .ten.grid
         .cardhud(v-if='b.guild')
-            img.smallguild(src='../../assets/images/guildwithwhitenobkgrnd.png')
+            img.smallguild(src='../../assets/images/badge.svg')
             span.bold {{ b.guild }}
         .cardhud(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')

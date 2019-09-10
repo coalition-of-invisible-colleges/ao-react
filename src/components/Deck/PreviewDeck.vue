@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.preview(v-if='deck.length > 0')
+.preview(v-if='deck.length > 0 || topPriorities.length > 0')
     .row
         .four.grid
             .tooltip(v-for="(tId,i) in topPriorities")
@@ -84,22 +84,23 @@ export default {
           return tasks
       },
       red(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'red' } ).reverse().slice(0, 4)
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'red' } ).reverse().slice(0, 5)
       },
       yellow(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'yellow' } ).reverse().slice(0, 4)
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'yellow' } ).reverse().slice(0, 5)
       },
       blue(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'blue' } ).reverse().slice(0, 4)
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'blue' } ).reverse().slice(0, 5)
       },
       purple(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'purple' } ).reverse().slice(0, 4)
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'purple' } ).reverse().slice(0, 5)
       },
       green(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'green' } ).reverse().slice(0, 4)
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'green' } ).reverse().slice(0, 5)
       },
       topPriorities(){
-        return this.task.priorities.slice(0, 5).reverse()
+          console.log("number of priorities: ", this.task.priorities.length)
+          return this.task.priorities.slice(0, 5).reverse()
       }
   },
   components:{
