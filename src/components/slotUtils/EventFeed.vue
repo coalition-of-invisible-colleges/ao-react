@@ -112,7 +112,6 @@ img
     top: 50%
     padding: 0.5em 1em
     text-align: center
-    z-index: 10000000
 
 .float
     position: relative

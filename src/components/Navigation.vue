@@ -24,6 +24,7 @@
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
+    task-create.always
 </template>
 
 <script>
@@ -33,10 +34,11 @@ import calculations from '../calculations'
 import CardPanel from './Deck/CardPanel'
 import FancyInput from './slotUtils/FancyInput'
 import Context from './Deck/Context'
+import TaskCreate from './forms/TaskCreate'
 
 export default {
     name: 'navigation',
-    components: { Auth, CardPanel, FancyInput, Context },
+    components: { Auth, CardPanel, FancyInput, Context, TaskCreate },
     mounted() {
         this.setToRoute()
         var el = document.getElementById('helm')
@@ -378,9 +380,6 @@ hr
 .smallbird
     height:1em
 
-.tr
-    opacity: 0.95
-
 .subheading
     opacity: 0.9
     font-size: 85%
@@ -485,5 +484,11 @@ hr
 
 .pushdown
     margin-top: auto
-
+    
+#createtask.always
+    position: fixed
+    bottom: 0
+    left: 50%
+    transform: translateX(-50%)
+    z-index: 149
 </style>
