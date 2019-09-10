@@ -35,7 +35,6 @@
                     upgrades
         div.fadey(:class='cardInputSty')
             .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
-            task-create
             panels
         img.fw(src='../../assets/images/pixeldesert.png')
         .agedbackground.translucent(:class='cardInputSty')
@@ -50,7 +49,6 @@
 import calculations from '../../calculations'
 import Hypercard from "../Card"
 import SharedTitle from '../slotUtils/SharedTitle'
-import TaskCreate from '../forms/TaskCreate'
 import Panels from './Panels'
 import Priorities from './Priorities'
 import Context from './Context'
@@ -74,7 +72,7 @@ export default {
     // has access to `this` component instance.
   },
   components:{
-      SharedTitle, Hypercard, TaskCreate,
+      SharedTitle, Hypercard,
       Panels, Priorities, MemberRow,
       Upgrades, BountyCard, ResourceRow, Priority, Context, Auth
   },

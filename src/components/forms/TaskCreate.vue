@@ -3,16 +3,16 @@
 #createtask
   .label
       .row.btnpanel
-          .btnwrapper
-            button(@click='switchColor("red")').redwx.paperwrapper
+          div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
+            button.lit(@click='switchColor("red")').redwx.paperwrapper
               img.agedbackground
-            button(@click='switchColor("yellow")').yellowwx.paperwrapper
+            button.lit(@click='switchColor("yellow")').yellowwx.paperwrapper
               img.agedbackground
-            button(@click='switchColor("green")').greenwx.paperwrapper
+            button.lit(@click='switchColor("green")').greenwx.paperwrapper
               img.agedbackground
-            button(@click='switchColor("purple")').purplewx.paperwrapper
+            button.lit(@click='switchColor("purple")').purplewx.paperwrapper
               img.agedbackground
-            button(@click='switchColor("blue")').bluewx.paperwrapper
+            button.lit(@click='switchColor("blue")').bluewx.paperwrapper
               img.agedbackground
   transition(name="slide-fade")
       .cc(v-show='showCreate')
@@ -165,7 +165,19 @@ export default {
 button
     background: green
     border-color: rgba(0, 0, 0, 0.4)
+    
+.lit
+    opacity: 0.69
 
+.btnwrapper:hover > .lit
+    opacity: 0.83
+    
+.btnwrapper:hover > .lit:hover
+    opacity: 1
+    
+.opaque > button.lit
+    opacity: 1
+    
 .onetime
     display: inline
 
@@ -281,5 +293,4 @@ textarea
     height: 100%
     pointer-events: none
     opacity: 0.2
-
 </style>

@@ -79,7 +79,7 @@ export default {
           return tasks
       },
       red(){
-          return this.deck.filter( c => { if(!c) { return false } return c.color === 'red' } ).reverse().slice(0, 5)
+          return this.deck.filter( c => { if(!c) { return false } return c.color === 'red' } ).reverse().slice(0, 5 - this.topPriorities.length)
       },
       yellow(){
           return this.deck.filter( c => { if(!c) { return false } return c.color === 'yellow' } ).reverse().slice(0, 5)
@@ -136,8 +136,8 @@ export default {
 
 .tooltip
     position: relative
-    z-index: 151
 
 .tooltip .tooltiptext
     font-size: 1em
+    z-index: 152
 </style>
