@@ -14,15 +14,25 @@
             h1.up Bounties
             .row.pagemargins
                 .three.columns
-                    div(v-for='(t, i) in getBountyColumn(0)')
-                        span {{ t.funders }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(0)'  :key='t.taskId'  @click='goIn(t)')
+                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
+                        span.yellowtx.fr {{ t.currentAmount}}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
-                    hypercard.bounty(v-for='(t, i) in getBountyColumn(1)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(1)'  :key='t.taskId'  @click='goIn(t)')
+                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
+                        span.yellowtx.fr {{ t.currentAmount}}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
-                    hypercard.bounty(v-for='(t, i) in getBountyColumn(2)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(2)'  :key='t.taskId'  @click='goIn(t)')
+                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
+                        span.yellowtx.fr {{ t.currentAmount}}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
-                    hypercard.bounty(v-for='(t, i) in getBountyColumn(3)'  :b='t'  :key='t.taskId'  :c='pubGuildIds'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(3)'  :key='t.taskId'  @click='goIn(t)')
+                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
+                        span.yellowtx.fr {{ t.currentAmount}}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           .centered
@@ -78,32 +88,11 @@ export default {
       }
   },
   methods:{
-      goIn(b){
-
-          let panel = this.c
-          if (panel && panel.length && panel.length > 0){
-
-          } else {
-              panel = [this.b.taskId]
-          }
-
-          let top = panel.indexOf(this.b.taskId)
-
-          if (top > -1){
-
-          } else {
-              top = 0
-          }
-
-          let parents = [  ]
-
-          if (this.$store.state.context.panel[this.$store.state.context.top]){
-              parents.push(this.$store.getters.contextCard.taskId)
-          }
-
-          if (this.inId && parents.indexOf(this.inId) < 0){
-              parents.push(this.inId)
-          }
+      goIn(t){
+          let taskId = t.funders[0]
+          let panel = [taskId]
+          let top = 0
+          let parents = []
 
           this.$store.dispatch("goIn", {
               parents,
@@ -111,7 +100,11 @@ export default {
               panel
           })
 
-          this.$router.push("/task/" + this.b.taskId)
+          this.$router.push("/task/" + taskId)
+
+          this.$store.commit('setMode', 0)
+          this.$store.commit('setAction', t.taskId)
+
       },
       cycleGuilds(){
           console.log('cycling')
@@ -125,6 +118,9 @@ export default {
       },
       getBountyColumn(index, columns = 4){
           return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
+      },
+      getGuild(taskId){
+          return this.$store.getters.hashMap[taskId].guild
       }
   },
   computed: {

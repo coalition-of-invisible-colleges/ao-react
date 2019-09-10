@@ -129,14 +129,14 @@ export default new Vuex.Store({
               if (Array.isArray(t.allocations)){
                   t.allocations.forEach( al => {
                       if ( bounties[al.allocatedId] ) {
-                          bounties[al.allocatedId] += parseInt(al.amount)
                           if (t.guild){
-                              guilds[al.allocatedId].push(t.guild)
+                              bounties[al.allocatedId] += parseInt(al.amount)
+                              guilds[al.allocatedId].push(t.taskId)
                           }
                       } else {
-                          bounties[al.allocatedId] = parseInt(al.amount)
                           if (t.guild){
-                              guilds[al.allocatedId] = [t.guild]
+                              bounties[al.allocatedId] = parseInt(al.amount)
+                              guilds[al.allocatedId] = [t.taskId]
                           }
                       }
                   })

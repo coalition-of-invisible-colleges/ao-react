@@ -36,26 +36,21 @@ export default {
         return this.$store.getters.hashMap[taskId]
     },
     goto(taskId){
-        // goIn(taskId){
-            console.log("goIn called")
-            let panel = [taskId]
-            let top = 0
-            let t = this.$store.getters.hashMap[taskId]
-            let panelColor = this.task.subTasks.filter( p => {
-              this.card(p).color === t.color
-            })
-            let topColor = panelColor.indexOf(taskId)
+        let panel = [taskId]
+        let top = 0
+        let t = this.$store.getters.hashMap[taskId]
+        let panelColor = this.task.subTasks.filter( p => {
+            return this.card(p).color === t.color
+        })
+        let topColor = panelColor.indexOf(taskId)
 
-            if (topColor > -1){
-              console.log('setting topcolor', topColor)
-              panel = panelColor
-              top = topColor
-            }
-            let parents =  [this.$store.getters.contextCard.taskId, this.task.taskId]
-            this.$store.dispatch("goIn", {parents, panel, top})
-
-            this.$router.push("/task/" + taskId)
-
+        if (topColor > -1){
+          panel = panelColor
+          top = topColor
+        }
+        let parents =  [this.$store.getters.contextCard.taskId, this.task.taskId]
+        this.$store.dispatch("goIn", {parents, panel, top})
+        this.$router.push("/task/" + taskId)
     },
     card(tId) {
         return this.$store.getters.hashMap[tId]
@@ -99,7 +94,6 @@ export default {
           return this.deck.filter( c => { if(!c) { return false } return c.color === 'green' } ).reverse().slice(0, 5)
       },
       topPriorities(){
-          console.log("number of priorities: ", this.task.priorities.length)
           return this.task.priorities.slice(0, 5).reverse()
       }
   },
@@ -130,12 +124,13 @@ export default {
 .bead
     padding: 0
     margin:0
-    height: 5px
+    height:.77em
+    min-height: 6px
     width: 100%
     border-radius: 50%;
     display: inline-block;
     border-width: 2px
-    border-color: rgba(255, 255, 255, 0.68)
+    border-color: rgba(255, 255, 255, 0.5)
     border-style: solid
     cursor: pointer
 
