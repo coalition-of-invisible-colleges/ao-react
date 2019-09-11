@@ -71,7 +71,7 @@ export default {
         });
         mc.add(Press)
         mc.on('press', (e) => {
-            if(this.$router.currentRoute.path === '/'){
+            if(this.$router.currentRoute.path === '/front'){
                 if(this.$store.state.upgrades.mode === 'boat') {
                     this.flashHelm(5)
                 } else {
@@ -80,7 +80,7 @@ export default {
                 }
             } else {
                 this.flashHelm(2)
-                this.$router.push('/')
+                this.$router.push('/front')
             }
         });
 

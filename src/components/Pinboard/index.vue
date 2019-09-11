@@ -9,6 +9,7 @@
             //-     .carousel-cell.bluewx Portal Mountain
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions')
+                .transparentsides
                 .carousel-cell.agedwrapper(v-for='(t, i) in $store.getters.pubguilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
                     .guildname(:class='{ selectedguild : showGuild == i }') {{ t.guild }}
                     .agedbackground.freshpaper(v-if='cardAge(t) < 8')
@@ -92,7 +93,8 @@ export default {
             pageDots: false,
             wrapAround: true,
             selectedAttraction: 0.005,
-            friction: 0.1,
+            friction: 0.08,
+            cellSelector: '.carousel-cell'
             // asNavFor: '.guildsmenu'
           }
       }
@@ -279,6 +281,7 @@ h2
 
 .gutter
     margin: 0 20%
+    clear: both
 
 .centered
     text-align: center
@@ -341,20 +344,37 @@ h2
     z-index: 80
     
 .carousel-cell
-    padding: 0.5em
+    padding: 0.6em 0.5em 0.75em 0.5em
     font-size: 1.3em
     color: white
     text-align: center
-    width: 18%
-    
+    width: 16%
+    height: 100%
+    box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5)
+    margin-left: 0.78em
+    margin-right: 0.78em
+
 .flickity-enabled
-    width: 85%
+    width: 88%
     position: relative
     left: 50%
     transform: translateX(-50%)
-    border-radius: 0.5em
-    margin-bottom: 1.5em
-
+    margin-bottom: 2.9em
+    height: 1.2em
+    
+.transparentsides
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#202020+0,202020+100&1+0,0+10,0+90,1+100 */
+    width: 101%
+    height: 3em
+    pointer-events: none
+    background: -moz-linear-gradient(left,  rgba(32,32,32,1) 0%, rgba(32,32,32,0) 5%, rgba(32,32,32,0) 95%, rgba(32,32,32,1) 100%)
+    background: -webkit-linear-gradient(left,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 5%,rgba(32,32,32,0) 95%,rgba(32,32,32,1) 100%)
+    background: linear-gradient(to right,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 5%,rgba(32,32,32,0) 95%,rgba(32,32,32,1) 100%)
+    position: absolute
+    left: 0
+    top: 0
+    z-index: 1
+    
 .agedwrapper
     position: relative
 
