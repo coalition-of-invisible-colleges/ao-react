@@ -1,5 +1,5 @@
 <template lang='pug'>
-.deck
+.deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper
         .row
             .five.columns.card()
@@ -34,8 +34,9 @@
                 div.upgradesbar()
                     upgrades
         div.fadey(:class='cardInputSty')
-            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
             panels
+            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
+            div &nbsp;
         img.fw(src='../../assets/images/pixeldesert.png')
         .agedbackground.translucent(:class='cardInputSty')
         .agedbackground.freshpaperbg(v-if='cardAge < 8')

@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.memberrow
+.memberrow(@dblclick='goIn(m.memberId)'  :key='m.memberId')
     .row
         .three.grid
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
@@ -8,21 +8,18 @@
             label(:class='{redtx: m.active < 0}') {{ m.name }}
                 br
                 span(v-for='g in rowsGuilds')
-                    router-link.yellowtx(:to='"/task/" + g.taskId') {{ g.guild }} -
+                    router-link.yellowtx(:to='"/task/" + g.taskId'  @click='goIn(g.taskId)') {{ g.guild }} -
         .two.grid(v-if='!hasAnyVouches  &&  $router.currentRoute.path === "/dash"')
             img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
             span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
-        //- .one.grid
-        //-     span.counts(:class="{greentx: vouchRatio <= 1, yellowtx: vouchRatio > 1, redtx: vouchRatio > 2 || vouchRatio ==='-∞', purpletx: vouchRatio === '∞'}") {{ vouchRatio }}
         .grid(:class='{ seven: $router.currentRoute.path === "/dash" || hasAnyVouches, five: !hasAnyVouches }')
             simple-priorities(:taskId='m.memberId')
         .grid.one
             preview-deck(:task='$store.getters.hashMap[m.memberId]')
-            router-link.fw(:to='"/task/" + m.memberId')
-                img.viney.faded(src='../../assets/images/vinebtn.svg')
+            img.viney.faded(src='../../assets/images/vinebtn.svg'  @click='goIn(m.memberId)')
 </template>
 
 
@@ -38,6 +35,25 @@ export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck, SimplePriorities},
     methods:{
+        goIn(taskId){
+            let panel = [taskId]
+            let parents = [  ]
+            let top = 0
+
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            this.$store.dispatch("goIn", {
+                parents,
+                top,
+                panel
+            })
+
+            this.$router.push("/task/" + this.b.taskId)
+        },
         toggleGrab(){
             if (this.isVouched) {
                 this.$store.dispatch("makeEvent", {

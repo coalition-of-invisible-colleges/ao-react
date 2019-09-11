@@ -1,15 +1,15 @@
 <template lang='pug'>
 
 .upgrades
-    .row
-        .three.grid.tab(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
-            img.upgrade(src='../../assets/images/boatblack.svg')
-        .three.grid.tab(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
-            img.upgrade(src='../../assets/images/badge.svg')
-        .three.grid.tab(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
-            img.upgrade(src='../../assets/images/bounty.svg')
-        .three.grid.tab(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
-            img.upgrade(src='../../assets/images/timecube.svg')
+    //- .row
+    //-     .three.grid.tab(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
+    //-         img.upgrade(src='../../assets/images/boatblack.svg')
+    //-     .three.grid.tab(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
+    //-         img.upgrade(src='../../assets/images/badge.svg')
+    //-     .three.grid.tab(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
+    //-         img.upgrade(src='../../assets/images/bounty.svg')
+    //-     .three.grid.tab(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
+    //-         img.upgrade(src='../../assets/images/timecube.svg')
     .row
       .mainbg(:class='{ lightbg : $store.state.upgrades.mode === "boat" }')
         transition(name='slide-fade'  mode='out-in')
@@ -30,8 +30,8 @@
                         template(v-for='g in dogeGuilds')
                             li.spaced
                                 div(@click='goIn(g.taskId)')
-                                    router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
-                                span(v-for='c in completions(g)'  @click='goIn(c)')
+                                    span.nl.gui {{ g.guild }}
+                                span(v-for='c in completions(g)'  @click='goIn(c.taskId)')
                                     span.plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         .tooltiptext {{ c.name }}
                                 div.description {{ g.name }}
@@ -104,6 +104,7 @@ export default {
     },
     methods: {
         goIn(taskId){
+
 
             let parents = []
             let panel = [taskId]

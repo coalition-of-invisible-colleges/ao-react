@@ -59,7 +59,6 @@ export default {
       },
       checkToday(day, month, year){
           let isToday = day === this.today.day && month === this.today.month && year === this.today.year
-          console.log('check today:' , isToday, day, month, year, this.today)
           return isToday
       }
   },
