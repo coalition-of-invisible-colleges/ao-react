@@ -98,7 +98,7 @@ export default {
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
-            initialIndex: 1,
+            initialIndex: 0,
             prevNextButtons: false,
             pageDots: false,
             wrapAround: true,
@@ -410,4 +410,7 @@ h2
 
 .selectedguild
     color: #9ff
+    font-weight: bold
+    font-size: 1.25em
+    margin-top: -0.13em
 </style>
