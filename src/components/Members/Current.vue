@@ -19,24 +19,31 @@ export default {
   methods:{
     goIn(taskId){
         console.log("goIn called")
+        // XXX
         if (!this.$store.state.context.completed){
             this.$store.commit("toggleCompleted")
         }
         let panel = [taskId]
         let top = 0
+        let parents = []
         setTimeout(()=>{
             let t = this.$store.getters.hashMap[taskId]
             let panelColor = this.$store.getters[t.color]
             let panelColorIds = panelColor.map(d => d.taskId)
 
-            console.log("panelColor is ", panelColor, " and taskId is ", taskId)
             let topColor = panelColorIds.indexOf(taskId)
             if (topColor > -1){
                 panel = panelColorIds
                 top = topColor
             }
 
-            this.$store.dispatch("goIn", {taskId, panel, top, parents:[]})
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            this.$store.dispatch("goIn", {taskId, panel, top, parents})
 
         }, 5)
     },

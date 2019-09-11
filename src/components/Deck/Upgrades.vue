@@ -31,8 +31,8 @@
                             li.spaced
                                 div(@click='goIn(g.taskId)')
                                     router-link.nl.gui(:to='"/task/" + g.taskId') {{ g.guild }}
-                                span(v-for='c in completions(g)'  @click='goIn(c.taskId)')
-                                    router-link.plain.checkmark.tooltip(:to='"/task/" + c.taskId'  :class="cardInputSty(c.color)") ☑
+                                span(v-for='c in completions(g)'  @click='goIn(c)')
+                                    span.plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         .tooltiptext {{ c.name }}
                                 div.description {{ g.name }}
                     .gui.title vouches
@@ -104,19 +104,29 @@ export default {
     },
     methods: {
         goIn(taskId){
-            console.log("goIn called")
+
+            let parents = []
             let panel = [taskId]
             let top = 0
 
             let t = this.$store.getters.hashMap[taskId]
             let panelColor = this.$store.getters[t.color]
             let topColor = panelColor.indexOf(taskId)
+
             if (topColor > -1){
                 panel = panelColor
                 top = topColor
             }
-            let parents = [this.$store.getters.contextCard.taskId]
-            this.$store.dispatch("goIn", {taskId, panel, top, parents})
+
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            console.log('going into the:',  {panel, top, parents})
+
+            this.$store.dispatch("goIn", {panel, top, parents})
         },
         selectPayment(x){
             this.$store.commit("setPayMode", x)
@@ -326,7 +336,7 @@ h3
 
 .lightbg
     background: softGrey
-    
+
 .fl
     float: left
 
