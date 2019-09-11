@@ -111,7 +111,13 @@ export default {
               purplewx : this.card.color == 'purple',
               blackwx : this.card.color == 'black',
           }
-        }
+        },
+        cardAge(){
+          let now = Date.now()
+          let msSince = now - this.c.timestamp
+          let days = msSince / (1000 * 60 * 60 * 24)
+          return days
+        },
     }
 }
 

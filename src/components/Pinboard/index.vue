@@ -3,9 +3,19 @@
 #wrex
     .pinboard
         div(v-if='$store.state.upgrades.mode == "boat"')
+            //- flickity(:options='flickityOptions')
+            //-     .carousel-cell.greenwx home
+            //-     .carousel-cell.yellowwx DCTRL
+            //-     .carousel-cell.bluewx Portal Mountain
             h1.up Top Missions
-            .centered
-                .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
+            flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions')
+                .transparentsides
+                .carousel-cell.agedwrapper(v-for='(t, i) in $store.getters.pubguilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+                    .guildname(:class='{ selectedguild : showGuild == i }') {{ t.guild }}
+                    .agedbackground.freshpaper(v-if='cardAge(t) < 8')
+                    .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
+                    .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
+                    .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
             hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
         .container(v-else-if='$store.state.upgrades.mode == "badge"')
             h1.up Much Recent
@@ -62,6 +72,7 @@ import Members from '../Members'
 import Row from '../Members/Row'
 import Auth from '../Auth'
 import Bounties from '../Bounties'
+import Flickity from 'vue-flickity'
 
 export default {
   components:{
@@ -80,11 +91,22 @@ export default {
       Calendar,
       Members,
       Bounties,
+      Flickity,
   },
   data(){
       return {
           showGuild: 0,
           resetKey: 0,
+          flickityOptions: {
+            initialIndex: 1,
+            prevNextButtons: false,
+            pageDots: false,
+            wrapAround: true,
+            selectedAttraction: 0.005,
+            friction: 0.08,
+            cellSelector: '.carousel-cell'
+            // asNavFor: '.guildsmenu'
+          }
       }
   },
   methods:{
@@ -121,12 +143,28 @@ export default {
       },
       getGuild(taskId){
           return this.$store.getters.hashMap[taskId].guild
-      }
+      },
+      cardInputSty(c){
+          return {
+              redwx : c === 'red',
+              bluewx : c === 'blue',
+              greenwx : c === 'green',
+              yellowwx : c === 'yellow',
+              purplewx : c === 'purple',
+              blackwx : c === 'black',
+          }
+      },
+      cardAge(c){
+          let now = Date.now()
+          let msSince = now - c.timestamp
+          let days = msSince / (1000 * 60 * 60 * 24)
+          return days
+      },
   },
   computed: {
       pubGuildIds(){
           return this.$store.getters.pubguilds.map(g => g.taskId)
-      }
+      },
   }
 }
 
@@ -237,20 +275,12 @@ h2
 .clearboth
     clear: both
 
-.guildname
-    font-size: 1.5em
-    margin-right: 1em
-    display: inline
-    cursor: pointer
-
 .gutter
     margin: 0 20%
+    clear: both
 
 .centered
     text-align: center
-
-.post
-    margin-right: 0
 
 @keyframes nlpDoge
     0% { width: 24em; margin-left: -12em; margin-top: -6.75em; opacity: 0.68}
@@ -308,4 +338,76 @@ h2
     margin: -1.25em auto 0.25em auto
     padding: 0.25em
     z-index: 80
+
+.carousel-cell
+    padding: 0.6em 0.5em 0.75em 0.5em
+    font-size: 1.3em
+    color: white
+    text-align: center
+    width: 16%
+    height: 100%
+    box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5)
+    margin-left: 0.78em
+    margin-right: 0.78em
+
+.flickity-enabled
+    width: 88%
+    position: relative
+    left: 50%
+    transform: translateX(-50%)
+    margin-bottom: 2.9em
+    height: 1.2em
+
+.transparentsides
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#202020+0,202020+100&1+0,0+10,0+90,1+100 */
+    width: 101%
+    height: 3em
+    pointer-events: none
+    background: -moz-linear-gradient(left,  rgba(32,32,32,1) 0%, rgba(32,32,32,0) 5%, rgba(32,32,32,0) 95%, rgba(32,32,32,1) 100%)
+    background: -webkit-linear-gradient(left,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 5%,rgba(32,32,32,0) 95%,rgba(32,32,32,1) 100%)
+    background: linear-gradient(to right,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 5%,rgba(32,32,32,0) 95%,rgba(32,32,32,1) 100%)
+    position: absolute
+    left: 0
+    top: 0
+    z-index: 1
+
+.agedwrapper
+    position: relative
+
+.agedbackground
+    background-image: url('../../assets/images/paper.jpg')
+    background-repeat: no-repeat
+    background-position: center center
+    background-size: cover
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    position: absolute
+    width: 100%
+    height: 100%
+    pointer-events: none
+
+.freshpaper
+    background-image: url('../../assets/images/paper.jpg')
+    opacity: 0.2
+
+.weekoldpaper
+    background-image: url('../../assets/images/paper_aged_1.png')
+    opacity: 0.25
+
+.montholdpaper
+    background-image: url('../../assets/images/paper_aged_2.png')
+    opacity: 0.3
+
+.threemontholdpaper
+    background-image: url('../../assets/images/paper_aged_3.png')
+    opacity: 0.35
+
+.guildname
+    position: relative
+    z-index: 100
+
+.selectedguild
+    color: #9ff
 </style>
