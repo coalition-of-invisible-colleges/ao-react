@@ -416,9 +416,9 @@ hr
     position: fixed
     top: 0
     left: 50%
+    transform: translateX(-50%)
     width: 10em
     max-width: 33%
-    transform: translate(-50%, 0)
     background: softGray
     color: main
     padding-left: 2em

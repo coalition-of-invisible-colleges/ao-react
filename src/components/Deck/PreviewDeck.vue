@@ -16,7 +16,7 @@
                 .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
     .row
         .two.grid
-        .four.grid
+        .four.grid.addleft
             .bead.yellowwx.tooltip(v-for="(b,i) in yellow", @click='goto(b.taskId)')
                 .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
         .four.grid
@@ -145,4 +145,7 @@ export default {
 .tooltip .tooltiptext
     font-size: 1em
     z-index: 152
+    
+.addleft
+    margin-left: 15%
 </style>
