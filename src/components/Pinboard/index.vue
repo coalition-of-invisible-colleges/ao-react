@@ -10,8 +10,8 @@
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                 .transparentsides
-                .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds()'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
-                    .guildname(:class='{ selectedguild : showGuild == i }') {{ t.guild }}
+                .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+                    .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
                     .agedbackground.freshpaper(v-if='cardAge(t) < 8')
                     .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
                     .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
@@ -99,7 +99,7 @@ export default {
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
-            initialIndex: Math.floor(this.$store.getters.pubguilds.length / 2),
+            initialIndex: '.is-initial-select',
             prevNextButtons: false,
             pageDots: false,
             wrapAround: true,
@@ -143,7 +143,8 @@ export default {
           }
       },
       selectGuild(x){
-          this.showGuild = parseInt(x)
+          let length = this.$store.getters.pubguilds.length
+          this.showGuild = (parseInt(x) + Math.floor(this.$store.getters.pubguilds.length / 2)) % length
           this.resetKey ++
       },
       getBountyColumn(index, columns = 4){
@@ -167,6 +168,11 @@ export default {
           let msSince = now - c.timestamp
           let days = msSince / (1000 * 60 * 60 * 24)
           return days
+      }
+  },
+  computed: {
+      pubGuildIds(){
+          return this.$store.getters.pubguilds.map(g => g.taskId)
       },
       joggledGuilds(){
           console.log(this.$store.getters.pubguilds)
@@ -176,11 +182,6 @@ export default {
           console.log(joggled)
           return joggled
       }
-  },
-  computed: {
-      pubGuildIds(){
-          return this.$store.getters.pubguilds.map(g => g.taskId)
-      },
   }
 }
 
