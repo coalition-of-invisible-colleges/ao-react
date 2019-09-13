@@ -6,7 +6,7 @@
   .tooltip(v-for='t in ev')
     img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
     .tooltiptext {{ t.name }}
-    .guild(v-if='t.funderGuild') {{ t.funderGuild }}
+     .guild(v-if='t.funderGuild') {{ t.funderGuild }}
 </template>
 
 <script>

@@ -431,6 +431,9 @@ export default new Vuex.Store({
       totalWallet(state, getters){
           return parseInt( getters.totalLocal ) +  parseInt( getters.confirmedBalance )
       },
+      satPointSpot(state, getters){
+          return calculations.cadToSats(1, state.cash.spot)
+      },
       satPoint(state, getters){
           let sats = getters.totalWallet / (getters.totalPoints + getters.totalBounties)
           return parseInt(sats)

@@ -2,7 +2,7 @@ const satsPerBtc = 100000000 // one hundred million per btc
 
 function cadToSats(cadAmt, spot){
     let sats = parseFloat( cadAmt ) / parseFloat( spot ) * satsPerBtc
-    return sats.toFixed(0)
+    return parseInt(sats)
 }
 
 function satsToCad(sats, spot){

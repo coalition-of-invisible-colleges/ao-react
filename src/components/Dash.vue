@@ -48,6 +48,8 @@
                 p.input-instructions Set Cost Cap
                 cap-set
         points
+    .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
+    .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
 </template>
 
 <script>
@@ -86,6 +88,23 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/skeleton'
+@import '../styles/breakpoints'
+
+.btcspot , .satspot
+    position: absolute
+    top: 0
+    z-index: 11
+    padding: 1em
+
+@media (max-width: breakpoint)
+    .btcspot , .satspot
+        display: none
+
+.btcspot
+    right: 111px
+
+.satspot
+    left: 111px
 
 .center
     text-align: center
