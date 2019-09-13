@@ -2,7 +2,7 @@
 
 .bird(@click.stop)
     div(@click.stop='toggleGive')
-        img.birdy.faded(v-if='!showGive', src='../../assets/images/birdbtn.svg')
+        img.birdy.faded(v-if='!showGive', src='../../assets/images/badge.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .give(v-if='showGive')
         select(v-model='toMember')
@@ -13,11 +13,14 @@
             option(disabled, value='') to guild
             option(v-for='n in $store.getters.guilds', :value="n.taskId") {{ n.guild }}
         form-box(v-if='toGuild' btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo')
+        div(v-if='$store.getters.contextCard.taskId === b.taskId')
+            guild-create
 </template>
 
 <script>
 
 import FormBox from '../slotUtils/FormBox'
+import GuildCreate from '../forms/GuildCreate'
 
 export default {
     props: ['b', 'inId'],
@@ -31,7 +34,7 @@ export default {
             toGuild: '',
         }
     },
-    components: { FormBox },
+    components: { FormBox, GuildCreate },
     methods: {
         toggleGive(){
             this.showGive = !this.showGive

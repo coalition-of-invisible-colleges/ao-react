@@ -23,7 +23,6 @@
                         h2(v-else) hold
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                         img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                        guild-create
                 div(v-else)
                     .gui.title missions
                     ul

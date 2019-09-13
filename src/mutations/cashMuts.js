@@ -42,7 +42,6 @@ function cashMuts(cash, ev){
 				break
 			case "get-node-info":
 				cash.info = ev.info
-				console.log('setting info', ev)
 				break
 		}
 }
