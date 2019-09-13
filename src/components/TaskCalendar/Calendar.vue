@@ -1,11 +1,11 @@
 <template lang="pug">
 
-#calendar
+#calendar(:key='inId')
     .row.menu
         .inline(@click='prevMonth')
             img(src='../../assets/images/left.svg')
         .inline
-            .yellowtx(v-if='card.guild') {{card.guild}}
+            //- .yellowtx(v-if='card.guild') {{card.guild}}
             .soft {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
             img(src='../../assets/images/right.svg')
@@ -68,24 +68,45 @@ export default {
     },
     eventsByDay(){
         let evs = {}
-        this.todaysEvents.forEach(t => {
+
+        if (this.inId){
+          this.todaysEvents.forEach(t => {
             if (t && t.book && t.book.startTs){
-                let date = getDMY(t.book.startTs)
-                if (date.month === this.month && date.year === this.year){
-                    if (!evs[date.day]){
-                        evs[date.day] = []
-                    }
-                    evs[date.day].push(t)
-                  }
+              let date = getDMY(t.book.startTs)
+              if (date.month === this.month && date.year === this.year){
+                if (!evs[date.day]){
+                  evs[date.day] = []
+                }
+                evs[date.day].push(t)
+              }
+            }
+          })
+        }
+
+        this.$store.getters.pubguildEvents.forEach(t => {
+            console.log('looking through pubguildEvents')
+            let date = getDMY(t.book.startTs)
+            if (date.month === this.month && date.year === this.year){
+                if (!evs[date.day]){
+                    evs[date.day] = []
+                }
+                evs[date.day].push(t)
             }
         })
+
         return evs
     },
     card(){
         return this.$store.getters.hashMap[this.inId]
     },
     todaysEvents(){
-        let allTasks = this.card.subTasks.concat(this.card.priorities).concat(this.card.completed)
+        let allTasks
+        if (this.inId && this.card){
+            allTasks = this.card.subTasks.concat(this.card.priorities).concat(this.card.completed)
+        } else {
+            allTasks = []
+        }
+
         return allTasks.map(tId => {
             return this.$store.getters.hashMap[tId]
         })

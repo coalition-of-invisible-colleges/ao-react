@@ -214,8 +214,6 @@ export default new Vuex.Store({
           getters.taskByBoost.cards.forEach(t => {
               totalCards += parseFloat( t.boost )
           })
-
-
           return {
               totalMembers,
               totalGuilds,
@@ -329,14 +327,40 @@ export default new Vuex.Store({
               return bVal - aVal
           })
 
-          if (guilds.length > 9){
-              return guilds.slice(0,9)
+          if (guilds.length > 11){
+              return guilds.slice(0,11)
           }
 
           return guilds
       },
+      pubguildEvents(state, getters){
+          let allTasks = []
+          getters.pubguilds.forEach(p => {
+
+              allTasks = allTasks.concat(
+                  p.subTasks.concat(p.priorities).concat(p.completed)
+              )
+          })
+
+          console.log("collected ", allTasks.length, "tasks")
+
+          let fullTasks = allTasks.map(tId => {
+              return getters.hashMap[tId]
+          })
+
+          let evs = fullTasks.filter(t => {
+              return (t && t.book && t.book.startTs)
+          })
+
+          console.log("returning  ", evs.length, "tasks")
+
+          return evs
+      },
       pubguildIds(state, getters){
           return getters.pubguilds.map(p => p.taskId)
+      },
+      pubguildsSubCards(state, getters){
+          return true
       },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId

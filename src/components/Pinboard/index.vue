@@ -45,9 +45,7 @@
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
-          .centered
-              .guildname(v-for='(t, i) in $store.getters.pubguilds'  @click='selectGuild(i)'  :class='{ greentx: i === showGuild, post: i === $store.getters.pubguilds.length - 1 }') {{ t.guild }}
-          calendar(:inId='$store.getters.pubguilds[showGuild].taskId')
+          calendar(inId='g')
         div(v-else)
           img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
           img.buddadoge(src='../../assets/images/buddadoge.svg')

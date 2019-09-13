@@ -3,7 +3,6 @@
 #archive
     .row.shipwrapper
         .shipbackground
-        h3 {{$store.getters.member.name}} Archive 
         gen-panels(:c='$store.getters.archive')
 </template>
 
@@ -22,7 +21,7 @@ export default {
   },
   methods: {
       clearContext(){
-          this.$store.commit("setPanel", [])
+          this.$store.commit("setPanel", [this.$store.getters.member.memberId])
           this.$store.commit("setTop", 0)
           this.$store.commit("setParent", [])
       },

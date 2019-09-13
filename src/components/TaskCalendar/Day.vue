@@ -38,6 +38,8 @@ export default {
         let parents = []
         if (this.$store.getters.contextCard.taskId){
             parents.push(this.$store.getters.contextCard.taskId)
+        } else if (this.$store.getters.memberCard.taskId){
+            parents.push(this.$store.getters.memberCard.taskId)
         }
         this.$store.dispatch("goIn", {
             panel: [taskId],
