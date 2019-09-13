@@ -335,18 +335,19 @@ export default new Vuex.Store({
       },
       pubguildEvents(state, getters){
           let allTasks = []
+          let fullTasks = []
           getters.pubguilds.forEach(p => {
+              let guildsSubs = p.subTasks.concat(p.priorities).concat(p.completed)
 
-              allTasks = allTasks.concat(
-                  p.subTasks.concat(p.priorities).concat(p.completed)
+              fullTasks = fullTasks.concat( guildsSubs.map(tId => {
+                  let t = getters.hashMap[tId]
+                  t.funderGuild = p.guild
+                  return t
+                  })
               )
           })
 
-          console.log("collected ", allTasks.length, "tasks")
-
-          let fullTasks = allTasks.map(tId => {
-              return getters.hashMap[tId]
-          })
+          console.log("collected ", fullTasks.length, "tasks")
 
           let evs = fullTasks.filter(t => {
               return (t && t.book && t.book.startTs)

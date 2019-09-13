@@ -6,6 +6,7 @@
   .tooltip(v-for='t in ev')
     img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
     .tooltiptext {{ t.name }}
+    .guild(v-if='t.funderGuild') {{ t.funderGuild }}
 </template>
 
 <script>
@@ -63,10 +64,9 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/tooltips'
 
-label
-    padding: 0
-    margin: 0
+.guild
     color: black
+    font-size: 0.5em
 
 .upgrade
     position:inline
