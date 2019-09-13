@@ -8,9 +8,9 @@
             //-     .carousel-cell.yellowwx DCTRL
             //-     .carousel-cell.bluewx Portal Mountain
             h1.up Top Missions
-            flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions')
+            flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @click='initGuildsBar')
                 .transparentsides
-                .carousel-cell.agedwrapper(v-for='(t, i) in $store.getters.pubguilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+                .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds()'  :key='t.taskId'  :class='cardInputSty(t.color)'  @change.flickity='selectGuild(i)')
                     .guildname(:class='{ selectedguild : showGuild == i }') {{ t.guild }}
                     .agedbackground.freshpaper(v-if='cardAge(t) < 8')
                     .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
@@ -56,6 +56,7 @@
 
 <script>
 
+import Vue from 'vue'
 import Hypercard from "../Card"
 import BountyCard from "../Bounties/BountyCard"
 import SharedTitle from '../slotUtils/SharedTitle'
@@ -98,18 +99,25 @@ export default {
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
-            initialIndex: 0,
+            initialIndex: Math.floor(this.$store.getters.pubguilds.length / 2),
             prevNextButtons: false,
             pageDots: false,
             wrapAround: true,
             selectedAttraction: 0.005,
             friction: 0.08,
-            cellSelector: '.carousel-cell'
+            cellSelector: '.carousel-cell',
+            accessibility: true
             // asNavFor: '.guildsmenu'
           }
       }
   },
   methods:{
+      initGuildsBar(){
+          console.log("initGuildsBar()")
+          console.log("this.$refs is ")
+          
+          Vue.nextTick(() => { console.log(Object.keys(this.$refs)  ); console.log("this.$refs.guildsBar is ", this.$refs.guildsBar) })
+      },
       goIn(t){
           let taskId = t.funders[0]
           let panel = [taskId]
@@ -160,6 +168,14 @@ export default {
           let days = msSince / (1000 * 60 * 60 * 24)
           return days
       },
+      joggledGuilds(){
+          console.log(this.$store.getters.pubguilds)
+          let center = Math.floor(this.$store.getters.pubguilds.length / 2)
+          let joggled = this.$store.getters.pubguilds.slice(-center)
+          joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center))
+          console.log(joggled)
+          return joggled
+      }
   },
   computed: {
       pubGuildIds(){
@@ -176,8 +192,6 @@ export default {
 @import '../../styles/skeleton'
 // @import '../../styles/grid'
 @import '../../styles/button'
-
-
 
 .bounty:hover
     border-style: dashed
