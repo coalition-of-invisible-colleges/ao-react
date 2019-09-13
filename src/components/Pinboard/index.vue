@@ -99,7 +99,7 @@ export default {
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
-            initialIndex: '.is-initial-select',
+            initialIndex: Math.floor(this.$store.getters.pubguilds.length / 2),
             prevNextButtons: false,
             pageDots: false,
             wrapAround: true,
@@ -176,9 +176,10 @@ export default {
       },
       joggledGuilds(){
           console.log(this.$store.getters.pubguilds)
-          let center = Math.floor(this.$store.getters.pubguilds.length / 2)
+          let center = Math.ceil(this.$store.getters.pubguilds.length / 2)
+          let even = this.$store.getters.pubguilds.length % 2
           let joggled = this.$store.getters.pubguilds.slice(-center)
-          joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center))
+          joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center - even))
           console.log(joggled)
           return joggled
       }
