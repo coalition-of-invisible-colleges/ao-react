@@ -212,7 +212,7 @@ finally, use sudo raspi-config again to disable SSH
 
 now rip the microSD image and you've got a mother pi
 
-# Mount a hard drive automatically at startup
+## Mount a hard drive automatically at startup
 get UUID with sudo blkid
 
 add a line to /etc/fstab:
@@ -224,7 +224,7 @@ p0wn the folders
 
 sudo mount -a
 
-# set up a server to receive backups via borgbackup
+## set up a server to receive backups via borgbackup
 
 1. Set up hard drive to automatically mount at startup (above).
 2. Create a directory /var/lib/tor/backup.
@@ -232,20 +232,25 @@ sudo mount -a
 	b. chmod 700 /var/lib/tor/backup
 3. ssh-copy-id -i /path/to/ssh/key.file doge@192.168.0.xxx
 
-# fix pipe and backslash on wireless keyboard
+## fix pipe and backslash on wireless keyboard
 
 sudo nano /etc/default/keyboard
 	XKBMODEL="pc105"
 	XKBLAYOUT="us"
 
-# add SSH keys
+## add SSH keys
 
-# add default doge SSH key
+## add default doge SSH key
 
-# get tor hostnames
+## get tor hostnames
 
-# add borgbackup tor line
+## add borgbackup tor line
 
-# still todo
+## still todo
 - improve tor auto-setup (required: real knowledge of how tor setup is supposed to be)
 - implement borg-backup auto-setup (or add as AO feature)
+
+## fix laggy wifi mouse/keyboard
+
+sudo nano /boot/cmdline.txt
+	add usbhid.mousepoll=8 to end of line

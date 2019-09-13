@@ -3,7 +3,7 @@
   div(v-if='!$store.state.context.panel[$store.state.context.top]')
     img.flaggy(@click='deckIt', src='../../assets/images/scroll.svg')
   div(v-else-if="$store.state.upgrades.mode === 'boat'"  @click='flagIt')
-    img.flaggy(v-if='!isFlagged', src='../../assets/images/boatblack.svg')
+    img.flaggy.svgwhite(v-if='!isFlagged', src='../../assets/images/boatblack.svg')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-else-if="$store.state.upgrades.mode === 'badge'")
     span.flaggy.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
@@ -200,4 +200,6 @@ label
     cursor: pointer
     color: white
 
+.svgwhite
+    fill: white
 </style>

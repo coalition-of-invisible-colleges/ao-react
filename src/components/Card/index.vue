@@ -40,6 +40,7 @@
           img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
           .tooltiptext
               current.block(v-for='memberId in b.deck'  :memberId='memberId')
+              .suggest click to hodl 
           p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
 </template>
 
@@ -380,4 +381,8 @@ export default {
 .cardname
     z-index: 15
     position: relative
+    
+.suggest
+    font-style: italic
+    margin-top: 1em
 </style>

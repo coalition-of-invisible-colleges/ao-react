@@ -23,6 +23,7 @@
                         h2(v-else) hold
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                         img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                        p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
                 div(v-else)
                     .gui.title missions
                     ul
@@ -450,4 +451,21 @@ h2
 .mainbkg
     background: main
 
+.hodlcount {
+    position: relative
+    left: calc(50% - 1.5em)
+    top: -3em
+    text-align: center
+    width: 35px
+    bottom: calc(0.75em + 9px)
+    padding-bottom: 0
+    margin-bottom: 0
+    font-weight: bold
+    color: rgba(255, 255, 255, 0.75)
+    pointer-events: none
+}
+
+.grabbedhodlcount {
+    opacity: 1
+}
 </style>
