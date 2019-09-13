@@ -8,9 +8,9 @@
             //-     .carousel-cell.yellowwx DCTRL
             //-     .carousel-cell.bluewx Portal Mountain
             h1.up Top Missions
-            flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @click='initGuildsBar')
+            flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                 .transparentsides
-                .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds()'  :key='t.taskId'  :class='cardInputSty(t.color)'  @change.flickity='selectGuild(i)')
+                .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds()'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
                     .guildname(:class='{ selectedguild : showGuild == i }') {{ t.guild }}
                     .agedbackground.freshpaper(v-if='cardAge(t) < 8')
                     .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
