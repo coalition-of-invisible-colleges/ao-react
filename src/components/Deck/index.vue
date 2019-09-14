@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #deck()
-    h1.up.white(v-if='$router.currentRoute.path.trim() == "/deck"') deck
+    //h1.up.white(v-if='$router.currentRoute.path.trim() == "/deck"') deck
     .row.shadow
         .four.columns(v-if='$store.getters.inbox.length > 0')
             gift-box

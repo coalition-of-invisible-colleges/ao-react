@@ -3,7 +3,7 @@ const payments = ["bitcoin", "lightning"]
 
 const state = {
     mode: "boat",
-    payment: "lightning"
+    payment: false
 }
 
 const mutations = {
@@ -22,6 +22,9 @@ const mutations = {
     },
     setPayMode(state, index) {
         state.payment = payments[index]
+    },
+    closePayMode(state) {
+        state.payment = false
     },
     closeUpgrades(state) {
         state.mode = false

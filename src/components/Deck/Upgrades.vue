@@ -24,7 +24,7 @@
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                         img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                         p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
-                div(v-else)
+                div.endpad(v-else)
                     .gui.title missions
                     ul
                         template(v-for='g in dogeGuilds')
@@ -35,13 +35,17 @@
                                     span.plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         .tooltiptext {{ c.name }}
                                 div.description {{ g.name }}
-                    .gui.title vouches
-                    ul
+                    .gui.title(v-if='nameList.length > 0') vouches
+                    ul(v-if='nameList.length > 0')
                         li
                             vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
             template(v-if='$store.state.upgrades.mode === "bounty"')
                 .padded
-                    h2 fund
+                    .togglepayments(v-if='!$store.state.upgrades.payment')
+                        button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
+                            img.max(src='../../assets/images/bitcoin.svg')
+                        button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
+                            img.max(src='../../assets/images/lightning.svg')
                     div(v-show='$store.state.upgrades.payment === "bitcoin"')
                         form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
                         div(v-if='b.address')
@@ -52,9 +56,6 @@
                             input.smallbox.fr(v-model='payreqAmount')
                         div(v-if='b.bolt11')
                             pay-req(:bolt11='b.bolt11')
-                    .togglepayments
-                        button(@click='selectPayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }').yellowwx bitcoin
-                        button(@click='selectPayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }').purplewx lightning
             template(v-if='$store.state.upgrades.mode === "timecube"')
               .mainbkg
                 div(v-if='isDoge || b.guild')
@@ -129,7 +130,10 @@ export default {
 
             this.$store.dispatch("goIn", {panel, top, parents})
         },
-        selectPayment(x){
+        togglePayment(x){
+            if(this.$store.state.upgrades.payMode === x) {
+                this.$store.commit("closePayMode")  
+            }
             this.$store.commit("setPayMode", x)
         },
         select(x){
@@ -334,6 +338,7 @@ h3
 
 .mainbg
     background: main
+    
 
 .lightbg
     background: softGrey
@@ -440,9 +445,8 @@ h2
 .togglepayments
     margin: 0
     padding: 0
-    button
-        width: 50%
-
+    text-align: center
+    
 .thickborder
     border-style: solid
     border-color: green
@@ -468,4 +472,17 @@ h2
 .grabbedhodlcount {
     opacity: 1
 }
+
+.submode
+    height: 8em
+    width: 8em
+    margin-bottom: 1em
+    background-color: rgba(0, 0, 0, 0)
+    
+.max
+    height: 100%
+    width: 100%
+    
+.endpad
+    padding-bottom: 1em
 </style>

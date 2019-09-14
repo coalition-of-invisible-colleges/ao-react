@@ -6,13 +6,17 @@
                 auth(v-if='!$store.getters.isLoggedIn')
                 member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
-                template(v-for='(n, i) in panelSplit.before')
+                .centerer
+                    .more(v-if='panelSplit.before.length > 5') +{{ panelSplit.before.length - 5 }}
+                template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
                   div(@click="goWithinPanel(n)")
                     context(:taskId='n')
                 hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
-                template(v-for='(n, i) in panelSplit.after')
+                template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
                   div(@click="goWithinPanel(n)")
                     context(:taskId='n')
+                .centerer
+                    .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
                 .bar()
                 .small
                     span.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
@@ -300,5 +304,26 @@ export default {
   border-radius: 50%
   display: inline-block
   margin-right: 0.5em
+
+.more
+    text-align: center
+    background-color: rgba(22, 22, 22, 0.4)
+    border-radius: 50%;
+    display: inline-block;
+    border-width: 2px
+    //border-color: rgba(255, 255, 255, 0.68)
+    //border-style: solid
+    padding: 0.5em
+    margin: 0em auto 0.5em auto
+    font-size: 0.8em
+    opacity: 0.3
+    color: white
+
+.aftermore
+    margin-top: 0.5em
+    
+.centerer
+    text-align: center
+    width: 100%
 
 </style>
