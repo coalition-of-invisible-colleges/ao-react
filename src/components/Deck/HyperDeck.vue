@@ -180,7 +180,7 @@ export default {
 
 .bar
     min-height: 1em
-    margin-bottom:2em
+    margin-bottom: 0em
 
 .fw
     width: 100%
