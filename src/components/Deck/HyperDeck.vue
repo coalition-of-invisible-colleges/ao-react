@@ -11,7 +11,7 @@
                 template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
                   div(@click="goWithinPanel(n)")
                     context(:taskId='n')
-                hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
+                hypercard.fullwidth(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
                 template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
                   div(@click="goWithinPanel(n)")
                     context(:taskId='n')
@@ -312,4 +312,6 @@ export default {
     text-align: center
     width: 100%
 
+.fullwidth
+    width: calc(100% - 1em)
 </style>
