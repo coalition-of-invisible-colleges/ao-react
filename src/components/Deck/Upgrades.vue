@@ -63,12 +63,12 @@
                     div.suggest(v-else) no lightning node :(
             template(v-if='$store.state.upgrades.mode === "timecube"')
               .mainbkg
-                div(v-if='!$store.state.upgrades.dimension')
+                div(v-if='isDoge || b.guild')
+                    task-calendar(:inId='b.taskId')
+                div(v-else-if='!$store.state.upgrades.dimension')
                     .togglepayments
                         button.submode(@click='toggleDimension(0)', :class='{thickborder: $store.state.upgrades.dimension === "time" }')
                             img.max(src='../../assets/images/calendar.svg')
-                div(v-else-if='isDoge || b.guild')
-                    task-calendar(:inId='b.taskId')
                 .box(v-else)
                     h2 cube
                     .gui(v-if='calcTime') {{ calcTime.slice(0,19) }}

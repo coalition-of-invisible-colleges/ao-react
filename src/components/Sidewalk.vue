@@ -12,9 +12,9 @@
     .row
         .two.columns  &nbsp;
         .four.columns
-            button(@click='trySidewalk("banner")').bluewx banner
-        .four.columns
             button(@click='trySidewalk("rainbow")').yellowwx rainbow
+        .four.columns
+            button(@click='trySidewalk("banner")').bluewx banner
             input(v-model='banner')
     .row
         .two.grid
@@ -86,6 +86,9 @@ export default {
 h3
     text-align: center
 
+#sidewalk
+    margin-bottom: 4em
+    
 #wrex
     width: 100%
     #vine
