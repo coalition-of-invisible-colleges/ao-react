@@ -11,6 +11,30 @@ function membersMuts(members, ev){
               if (member.memberId === ev.memberId){
                   if ( member.active < 0) {
                       member.active = -1 * member.active
+                  } else {
+                      member.active ++
+                  }
+              }
+          })
+          break
+      case "task-boosted":
+          members.forEach( member => {
+              if (member.memberId === ev.taskId){
+                  if ( member.active < 0) {
+                      member.active = -1 * member.active
+                  } else {
+                      member.active ++
+                  }
+              }
+          })
+          break
+      case "task-boosted-lightning":
+          members.forEach( member => {
+              if (member.memberId === ev.taskId){
+                  if ( member.active < 0) {
+                      member.active = -1 * member.active
+                  } else {
+                      member.active ++
                   }
               }
           })

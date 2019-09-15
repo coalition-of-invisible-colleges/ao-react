@@ -138,7 +138,8 @@ export default {
             this.$store.dispatch("goIn", {panel, top, parents})
         },
         togglePayment(x){
-            if(this.$store.state.upgrades.payMode === x) {
+            let payModes = ['bitcoin', 'lightning']
+            if(this.$store.state.upgrades.payment === payModes[x]) {
                 this.$store.commit("closePayMode")
                 return
             }
@@ -362,7 +363,7 @@ h3
 
 .mainbg
     background: main
-    
+
 
 .lightbg
     background: softGrey
@@ -395,7 +396,7 @@ h3
 
 .box
     padding: 1em 0
-    
+
 .box.morepad
     padding: 2em 0
     margin-left: 2em
@@ -433,7 +434,7 @@ h3
 .dogep img
     height: 100%
     width: 100%
-    
+
 .spaced
     margin-bottom: 1em
 
@@ -478,7 +479,7 @@ h2
     margin: 0
     padding: 0
     text-align: center
-    
+
 .thickborder
     border-style: solid
     border-color: green
@@ -512,20 +513,20 @@ h2
     margin-bottom: 1em
     margin-top: 1em
     background-color: rgba(0, 0, 0, 0)
-    
+
 .max
     height: 100%
     width: 100%
-    
+
 .endpad
     padding-bottom: 1em
-    
+
 .suggest
     color: rgba(255, 255, 255, 0.4)
     font-style: italic
     font-size: 1.2em
     text-align: center
-    
+
 .tooltiptext .hodlsuggest
     font-size: 1.5em
     left: calc(50% + 2.5em)

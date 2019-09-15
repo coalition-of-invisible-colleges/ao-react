@@ -113,7 +113,7 @@ export default {
       initGuildsBar(){
           console.log("initGuildsBar()")
           console.log("this.$refs is ")
-          
+
           Vue.nextTick(() => { console.log(Object.keys(this.$refs)  ); console.log("this.$refs.guildsBar is ", this.$refs.guildsBar) })
       },
       goIn(t){
