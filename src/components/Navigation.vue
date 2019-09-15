@@ -24,6 +24,19 @@
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
+    .small.always.left
+        .connectedstatus.tooltip
+            span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
+            span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
+            span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
+            span.dot.purplewx(v-else="$store.state.loader.connectionError") 
+            .tooltiptext.right
+                p(v-if="$store.state.loader.connected == 'disconnected'") disconnected
+                p(v-if="$store.state.loader.connected == 'connecting'") connecting
+                p(v-if="$store.state.loader.connected == 'connected'") connected
+                p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
+                p last ping: {{ $store.state.loader.lastPing }} ms pong
+                p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
     task-create.always
 </template>
 
@@ -224,7 +237,7 @@ var intervalID = window.setInterval(updateTransition, 7000);
 
 @import '../styles/colours'
 @import '../styles/grid'
-// @import '../styles/button'
+@import '../styles/tooltips'
 
 .bullcontext, .suncontext
     height: 1.75em
@@ -385,15 +398,14 @@ hr
     font-size: 85%
 
 .connectedstatus
-    margin-top: 1em
 
 .dot
-  height: 0.5em
-  width: 0.5em
-  border-radius: 50%
-  display: inline-block
-  margin-right: 0.5em
-
+    height: 0.5em
+    width: 0.5em
+    border-radius: 50%
+    display: inline-block
+    margin-right: 0.5em
+    
 .faded
     opacity: 0.4
 
@@ -491,4 +503,23 @@ hr
     left: 50%
     transform: translateX(-50%)
     z-index: 149
+    
+.small.always.left
+    position: fixed
+    bottom: 0
+    left: 0
+    margin-left: 0.5em
+    margin-bottom: 0.3em
+    z-index: 151
+    
+.tooltiptext.right
+    font-size: 1.5em
+    height: fit-content
+    width: fit-content
+    position: fixed
+    bottom: 1em
+    top: initial
+    left: 1em
+    z-index: 149
+    padding: 0 1em 1em 1em
 </style>

@@ -18,22 +18,6 @@
                 .centerer
                     .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
                 .bar()
-                .small
-                    span.connectedstatus(v-if="$store.state.loader.connected == 'disconnected'")
-                      span.dot.redwx
-                      span disconnected
-                    span.connectedstatus(v-if="$store.state.loader.connected == 'connecting'")
-                      span.dot.yellowwx
-                      span connecting
-                    span.connectedstatus(v-if="$store.state.loader.connected == 'connected'")
-                      span.dot.greenwx
-                      span connected
-                    span.connectedstatus(v-if="$store.state.loader.connectionError")
-                      span.dot.purplewx
-                      span {{ $store.state.loader.connectionError }}
-                    span
-                      span - last ping {{ $store.state.loader.lastPing }} ms pong -
-                      span(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
             .seven.columns.buffer
                 div.upgradesbar()
                     upgrades
@@ -282,8 +266,9 @@ export default {
     font-size: 1.35em
     font-weight: bold
     padding: 0.5em
-    margin-right: -0.5em
-
+    margin-right: -1em
+    margin-top: -1em
+    
 .upgrademode
     float: left
     cursor: pointer
@@ -296,7 +281,8 @@ export default {
     background-color: rgba(0, 0, 0, 0.3)
     border-radius: 5px
     color: white
-    margin-right: -0.5em
+    margin-right: -1em
+    margin-top: -1em
 
 .dot
   height: 0.5em
