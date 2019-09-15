@@ -190,9 +190,8 @@ export default {
 
 @import '../../styles/colours'
 @import '../../styles/skeleton'
-// @import '../../styles/grid'
 @import '../../styles/button'
-
+    
 .bounty:hover
     border-style: dashed
     border-width: 3px
@@ -292,6 +291,7 @@ h2
 .gutter
     margin: 0 20%
     clear: both
+    width: initial
 
 .centered
     text-align: center
