@@ -22,30 +22,25 @@ export default {
       HyperDeck,
       GiftBox,
   },
-  beforeRouteEnter(to, from, next) {
-        next(vm => {
-            vm.setDeck()
-        })
-  },
   methods: {
-      setDeck() {
-          if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){
-              console.log('setting for offline deck')
-              this.$store.commit("setPanel", this.$store.getters.pubguildIds)
-              this.$store.commit("setTop", 0)
-              this.$store.commit("setParent", [])
-              return
-          }
-          if (this.$store.getters.member.memberId){
-              this.$store.commit("setPanel", [this.$store.getters.member.memberId])
-              this.$store.commit("setTop", 0)
-              this.$store.commit("setParent", [])
-              return
-          }
-
-          console.log("setdeck dnn set")
-          setTimeout( this.setDeck, 111 )
-      },
+      // setDeck() {
+      //     if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){
+      //         console.log('setting for offline deck')
+      //         this.$store.commit("setPanel", this.$store.getters.pubguildIds)
+      //         this.$store.commit("setTop", 0)
+      //         this.$store.commit("setParent", [])
+      //         return
+      //     }
+      //     if (this.$store.getters.member.memberId){
+      //         this.$store.commit("setPanel", [this.$store.getters.member.memberId])
+      //         this.$store.commit("setTop", 0)
+      //         this.$store.commit("setParent", [])
+      //         return
+      //     }
+      //
+      //     console.log("setdeck dnn set")
+      //     setTimeout( this.setDeck, 111 )
+      // },
   },
 }
 
