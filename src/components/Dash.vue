@@ -1,24 +1,24 @@
 <template lang='pug'>
 
 #home
-    .container(v-if='$store.state.upgrades.mode === "boat"')
+    .container(v-show='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
             aos
         .row
             resources
             sidewalk
-    .container(v-if='$store.state.upgrades.mode === "badge"')
+    .container(v-show='$store.state.upgrades.mode === "badge"')
         h1.up accounts
         .row
             member-create.five.columns
             .two.columns &nbsp;
             changer.five.columns
         members
-    .container(v-if='$store.state.upgrades.mode === "bounty"')
+    .container(v-show='$store.state.upgrades.mode === "bounty"')
         h1.up lightning
         nodes
-    .container.row(v-if='$store.state.upgrades.mode === "timecube"')
+    .container.row(v-show='$store.state.upgrades.mode === "timecube"')
         h1.up central reserve
         ul
           li Each month cost is split between active accounts
