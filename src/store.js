@@ -267,7 +267,7 @@ export default new Vuex.Store({
               history = history.concat(crawler)
               crawler = subDeck(crawler, state, getters)
             }while(crawler.length > 0 && newCards)
-            archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).indexOf(st.taskId) > -1))
+            archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).concat(getters.myGuilds).indexOf(st.taskId) > -1))
           }
 
           return archive
@@ -302,6 +302,14 @@ export default new Vuex.Store({
       },
       held(state, getters){
           return state.tasks.filter(t => t.deck.length > 0 || t.guild)
+      },
+      myGuilds(state, getters){
+          let my = state.tasks.filter(t => {
+              if(!t.guild) return false
+              if(t.deck.indexOf(getters.memberCard.memberId) === -1) return false
+              return true
+          })
+          return my
       },
       guilds(state, getters){
           return state.tasks.filter(t => t.guild)
