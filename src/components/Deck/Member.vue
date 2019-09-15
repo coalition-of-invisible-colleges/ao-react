@@ -1,24 +1,17 @@
 <template lang='pug'>
 
-.memberrow.membershipcard.agedwrapper
-    .agedbackground.freshpaper(v-if='cardAge < 8')
-    .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
-    .agedbackground.montholdpaper(v-else-if='cardAge < 90')
-    .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-    .row
-        .one.grid
-        .one.grid
-            img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
-            img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
-        .ten.grid
-            label.hackername {{ m.name }}
-    .row
-        .nine.grid
-            label {{ this.card.boost.toFixed(2) }}
-        .three.grid
-            dctrl-active(:m='m')
-            button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
-            button.smallcaps.redwx(v-else, @click='activate') activate
+.memberrow.membershipcard
+    .row.center
+        img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
+        img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
+        label.hackername {{ m.name }}
+    .bottomleft
+        img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+        label.stash {{ this.card.boost.toFixed(2) }}
+    .bottomright
+        button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
+        button.smallcaps.redwx(v-else, @click='activate') activate
+    .clearboth
 </template>
 
 <script>
@@ -95,8 +88,10 @@ label
 
 .membershipcard
     padding: 1em
-    width: auto
-
+    width: calc(100% - 0.5em)
+    background: rgba(22, 22, 22, 0.2)
+    text-align: center
+    
 .agedwrapper
     position: relative
 
@@ -142,4 +137,28 @@ label
     border-color: white
     border-width: 2px
 
+.smallguild
+    height: 2em
+    
+.bottomleft, .bottomright
+    width: fit-content
+    position: relative
+    bottom: 0
+    
+.bottomleft
+    float: left
+    left: 0
+        
+.bottomright
+    right: 0
+    float: right
+
+.stash
+    display: inline
+    margin-left: 0.5em
+    position: relative
+    top: -0.25em
+
+.clearboth
+    clear: both
 </style>

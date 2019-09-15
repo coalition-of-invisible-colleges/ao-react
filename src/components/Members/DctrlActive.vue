@@ -43,6 +43,6 @@ export default {
 @import '../../styles/spinners'
 
 img
-    height: 4em
+    height: 3em
 
 </style>
