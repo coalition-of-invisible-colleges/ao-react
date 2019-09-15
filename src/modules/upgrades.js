@@ -1,9 +1,11 @@
 const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
+const dimensions = ["time", "space", "replication"]
 
 const state = {
     mode: "boat",
-    payment: false
+    payment: false,
+    dimension: false
 }
 
 const mutations = {
@@ -20,15 +22,21 @@ const mutations = {
     setMode(state, index) {
         state.mode = modes[index]
     },
+    closeUpgrades(state) {
+        state.mode = false
+    },
     setPayMode(state, index) {
         state.payment = payments[index]
     },
     closePayMode(state) {
         state.payment = false
     },
-    closeUpgrades(state) {
-        state.mode = false
-    }
+    setDimension(state, index) {
+        state.dimension = dimensions[index]
+    },
+    closeDimension(state) {
+        state.dimension = false
+    },
 }
 
 const actions = {}

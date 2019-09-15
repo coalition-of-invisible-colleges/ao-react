@@ -259,6 +259,7 @@ img
     width: 100%
     opacity: 0.8
     height: 17em
+    margin-top: 1em
 
 .priority
     margin-left: 4em
