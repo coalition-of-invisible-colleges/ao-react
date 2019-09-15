@@ -169,7 +169,7 @@ export default {
 
 .upgradesbar
   height: fit-content
-  margin-bottom: 2em
+  margin-bottom: 1em
   background-color: rgba(21, 21, 21, 0.25)
   border-radius: 40px
 
