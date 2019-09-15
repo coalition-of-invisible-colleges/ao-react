@@ -341,7 +341,11 @@ export default new Vuex.Store({
 
               fullTasks = fullTasks.concat( guildsSubs.map(tId => {
                   let t = getters.hashMap[tId]
-                  t.funderGuild = p.guild
+                  if(!t) {
+                    console.log("bad tId: ", tId)
+                  } else {
+                    t.funderGuild = p.guild
+                  }
                   return t
                   })
               )

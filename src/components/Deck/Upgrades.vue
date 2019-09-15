@@ -18,12 +18,15 @@
             template(v-if='$store.state.upgrades.mode === "badge"')
               div
                 div(v-if='!isDoge')
-                    .box
+                    .box.morepad
                         h2(v-if='b.guild') {{ b.guild }}
-                        h2(v-else) hold
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
-                        img.dogep(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                        p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+                        div.dogep
+                            .tooltip
+                                img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                                .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
+                                .tooltiptext.hodlsuggest(v-else) hodled
+                            p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
                 div.endpad(v-else)
                     .gui.title missions
                     ul
@@ -41,21 +44,23 @@
                             vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
             template(v-if='$store.state.upgrades.mode === "bounty"')
                 .padded
-                    .togglepayments(v-if='!$store.state.upgrades.payment')
-                        button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
-                            img.max(src='../../assets/images/bitcoin.svg')
-                        button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
-                            img.max(src='../../assets/images/lightning.svg')
-                    div(v-show='$store.state.upgrades.payment === "bitcoin"')
-                        form-box.centerform(v-if='!b.address'   btntxt='get address'  event='address-updated'  v-bind:data='addressUpdate')
-                        div(v-if='b.address')
-                            pay-address(:address='b.address')
-                    div(v-show='$store.state.upgrades.payment === "lightning"')
-                        form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                            label.adjusttop.fl choose amount:
-                            input.smallbox.fr(v-model='payreqAmount')
-                        div(v-if='b.bolt11')
-                            pay-req(:bolt11='b.bolt11')
+                    div(v-if='$store.state.cash.info.alias')
+                        .togglepayments
+                            //- (v-if='!$store.state.upgrades.payment')
+                            button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
+                                img.max(src='../../assets/images/bitcoin.svg')
+                            button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
+                                img.max(src='../../assets/images/lightning.svg')
+                        div(v-show='$store.state.upgrades.payment === "bitcoin"')
+                            div(v-if='b.address')
+                                pay-address(:address='b.address')
+                        div(v-show='$store.state.upgrades.payment === "lightning"')
+                            form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
+                                label.adjusttop.fl choose amount:
+                                input.smallbox.fr(v-model='payreqAmount')
+                            div(v-if='b.bolt11')
+                                pay-req(:bolt11='b.bolt11')
+                    div.suggest(v-else) no lightning node :(
             template(v-if='$store.state.upgrades.mode === "timecube"')
               .mainbkg
                 div(v-if='isDoge || b.guild')
@@ -105,8 +110,6 @@ export default {
     },
     methods: {
         goIn(taskId){
-
-
             let parents = []
             let panel = [taskId]
             let top = 0
@@ -132,9 +135,19 @@ export default {
         },
         togglePayment(x){
             if(this.$store.state.upgrades.payMode === x) {
-                this.$store.commit("closePayMode")  
+                this.$store.commit("closePayMode")
+                return
             }
             this.$store.commit("setPayMode", x)
+            if(x === 0) {
+                console.log("address is ", this.$store.getters.contextCard.address)
+                if(!this.$store.getters.contextCard.address) {
+                    this.$store.dispatch('makeEvent', {
+                        type: 'address-updated',
+                        taskId: this.$store.getters.contextCard.taskId
+                    })
+                }
+            }
         },
         select(x){
             if (this.$store.state.upgrades.mode === "boat" && x === 0){
@@ -370,7 +383,11 @@ h3
 }
 
 .box
-    padding: 1em
+    padding: 1em 0
+    
+.box.morepad
+    padding: 2em 0
+    margin-left: 2em
 
 .ungrabbedcoin {
   opacity: 0.3
@@ -397,11 +414,15 @@ h3
     height: 5em
 
 .dogep
-    height: 3em
-    padding: 0 calc(50% - 1.5em)
-    margin-top: 1em
+    height: 6em
+    width: 6em
+    padding: 0 calc(50%)
     cursor: pointer
 
+.dogep img
+    height: 100%
+    width: 100%
+    
 .spaced
     margin-bottom: 1em
 
@@ -457,7 +478,7 @@ h2
 
 .hodlcount {
     position: relative
-    left: calc(50% - 1.5em)
+    left: calc(50% - 1.07em)
     top: -3em
     text-align: center
     width: 35px
@@ -467,6 +488,7 @@ h2
     font-weight: bold
     color: rgba(255, 255, 255, 0.75)
     pointer-events: none
+    font-size: 2.5em
 }
 
 .grabbedhodlcount {
@@ -485,4 +507,14 @@ h2
     
 .endpad
     padding-bottom: 1em
+    
+.suggest
+    color: rgba(255, 255, 255, 0.4)
+    font-style: italic
+    font-size: 1.2em
+    text-align: center
+    
+.tooltiptext .hodlsuggest
+    font-size: 1.5em
+    left: calc(50% + 2.5em)
 </style>

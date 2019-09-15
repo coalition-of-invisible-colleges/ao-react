@@ -215,7 +215,7 @@ tr, td
     color: green
 
 img
-    height: 30px
+    height: 0.6em
 
 .calmonth
     margin: 0 2% 2% 2%
