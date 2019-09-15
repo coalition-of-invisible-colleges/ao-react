@@ -63,7 +63,11 @@
                     div.suggest(v-else) no lightning node :(
             template(v-if='$store.state.upgrades.mode === "timecube"')
               .mainbkg
-                div(v-if='isDoge || b.guild')
+                div(v-if='!$store.state.upgrades.dimension')
+                    .togglepayments
+                        button.submode(@click='toggleDimension(0)', :class='{thickborder: $store.state.upgrades.dimension === "time" }')
+                            img.max(src='../../assets/images/calendar.svg')
+                div(v-else-if='isDoge || b.guild')
                     task-calendar(:inId='b.taskId')
                 .box(v-else)
                     h2 cube
@@ -148,6 +152,13 @@ export default {
                     })
                 }
             }
+        },
+        toggleDimension(x){
+            if(this.$store.state.upgrades.dimension === x) {
+                this.$store.commit("closeDimension")
+                return
+            }
+            this.$store.commit("setDimension", x)
         },
         select(x){
             if (this.$store.state.upgrades.mode === "boat" && x === 0){
@@ -496,9 +507,10 @@ h2
 }
 
 .submode
-    height: 8em
-    width: 8em
+    height: 6em
+    width: 6em
     margin-bottom: 1em
+    margin-top: 1em
     background-color: rgba(0, 0, 0, 0)
     
 .max
