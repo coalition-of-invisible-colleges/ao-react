@@ -30,7 +30,7 @@ Vue.use(VueRouter)
 
 const routes =[{
   path: '/',
-  component: TaskCalendar,
+  component: Deck,
   meta: { title: "DCTRL" }
 },{
   path: '/front',
@@ -58,7 +58,7 @@ const routes =[{
   meta: { title: "sunken ship" }
 },{
   path: '/task/*',
-  component: TaskCalendar,
+  component: Deck,
   meta: { title: "card" },
 },
 ]

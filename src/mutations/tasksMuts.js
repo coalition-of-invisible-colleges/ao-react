@@ -281,8 +281,10 @@ function tasksMuts(tasks, ev) {
                 if (task.taskId === ev.taskId) {
                     let amount = parseFloat(ev.amount)
                     let boost  = parseFloat(task.boost)
-                    task.boost = amount + boost
-                    task.address = ""
+                    if (amount > 0){
+                        task.boost = amount + boost
+                        task.address = ""
+                    }
                 }
             })
             break
@@ -291,9 +293,11 @@ function tasksMuts(tasks, ev) {
                 if (task.payment_hash === ev.payment_hash) {
                         let amount = parseFloat(ev.amount)
                         let boost  = parseFloat(task.boost)
-                        task.boost = amount + boost
-                        task.bolt11 = ""
-                        task.payment_hash = ""
+                        if (amount > 0){
+                          task.boost = amount + boost
+                          task.bolt11 = ""
+                          task.payment_hash = ""
+                        }
                 }
             })
             break
