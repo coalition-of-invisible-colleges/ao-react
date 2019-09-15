@@ -17,7 +17,7 @@
                     context(:taskId='n')
                 .centerer
                     .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
-                .bar()
+                .bar(v-if='panelSplit.after.length === 0')
             .seven.columns.buffer
                 div.upgradesbar()
                     upgrades
@@ -188,7 +188,7 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 1em 2em 1em 0
+    padding: 0 2em 1em 0
     margin: 0 1em
 
 .slide-fade-enter-active {

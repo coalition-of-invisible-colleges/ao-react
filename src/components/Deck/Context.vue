@@ -86,6 +86,7 @@ img
 .context
     opacity: 0.6
     color: white
+    width: calc(100% + 1em)
 
 .paperwrapper
     position: relative

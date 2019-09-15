@@ -222,6 +222,7 @@ export default {
     padding:1em
     //border-radius: 12px
     box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5)
+    width: calc(100% - 1em)
 
 .dont-break-out
   overflow-wrap: break-word
