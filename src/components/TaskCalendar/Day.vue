@@ -1,12 +1,12 @@
 <template lang="pug">
 .day
-  .date {{ day }}
-  router-link(to='/deck')
-      img.upgrade(v-if='isToday'  src='../../assets/images/bulluni.svg'  )
-  .tooltip(v-for='t in ev')
-    img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
-    .tooltiptext {{ t.name }}
-    .guild(v-if='t.funderGuild') {{ t.funderGuild }}
+    .date {{ day }}
+    router-link(to='/deck')
+        img.upgrade(v-if='isToday'  src='../../assets/images/bulluni.svg'  )
+    .tooltip.upgrade(v-for='t in ev')
+        img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
+        .tooltiptext {{ t.name }}
+        .guild(v-if='t.funderGuild') {{ t.funderGuild }}
 </template>
 
 <script>
@@ -69,7 +69,7 @@ export default {
     font-size: 0.5em
 
 .upgrade
-    position:inline
+    display: inline
     width: 29%
     cursor: pointer
 
@@ -92,6 +92,7 @@ export default {
     font-weight: bolder
     font-size: .9em
     padding: 5px 5px 5px 5px
+    float: right
 
 .amount
     font-size: .49em
