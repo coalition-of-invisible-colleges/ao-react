@@ -2,7 +2,7 @@
 
 #wrex
     .pinboard
-        div(v-show='$store.state.upgrades.mode == "boat"')
+        div(v-if='$store.state.upgrades.mode == "boat"')
             //- flickity(:options='flickityOptions')
             //-     .carousel-cell.greenwx home
             //-     .carousel-cell.yellowwx DCTRL
@@ -20,7 +20,7 @@
         .container(v-else-if='$store.state.upgrades.mode == "badge"')
             h1.up Much Recent
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-        div(v-show='$store.state.upgrades.mode == "bounty"')
+        div(v-else-if='$store.state.upgrades.mode == "bounty"')
             h1.up Bounties
             .row.pagemargins
                 .three.columns
@@ -43,13 +43,13 @@
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                         span.yellowtx.fr {{ t.currentAmount}}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-        .container(v-show='$store.state.upgrades.mode == "timecube"')
+        .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           calendar(inId='g')
-        div(v-show='!$store.state.upgrades.mode')
+        div(v-else)
           img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
           img.buddadoge(src='../../assets/images/buddadoge.svg')
-        auth(v-show='!$store.getters.isLoggedIn').container
+        auth(v-if='!$store.getters.isLoggedIn').container
 </template>
 
 <script>
