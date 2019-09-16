@@ -1,6 +1,11 @@
 <template lang='pug'>
 
 #createtask
+  transition(name="slide-fade")
+      .cc(v-show='showCreate')
+          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
+          img.specialoverlay
+          button(@click='createOrFindTask').fwi Create Card
   .label
       .row.btnpanel
           div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
@@ -14,11 +19,6 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")').bluewx.paperwrapper
               img.agedbackground
-  transition(name="slide-fade")
-      .cc(v-show='showCreate')
-          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
-          img.specialoverlay
-          button(@click='createOrFindTask').fwi Create Card
 </template>
 
 <script>
@@ -152,6 +152,9 @@ export default {
 @import '../../styles/button'
 @import '../../styles/breakpoints'
 
+#card
+    margin-bottom: 0
+    
 #createtask
   width: fit-content
   background-color: rgba(51, 51, 51, 0.3)
@@ -165,6 +168,8 @@ export default {
 button
     background: green
     border-color: rgba(0, 0, 0, 0.4)
+    margin-bottom: 0.5em
+    margin-top: 0.2em
     
 .lit
     opacity: 0.69
