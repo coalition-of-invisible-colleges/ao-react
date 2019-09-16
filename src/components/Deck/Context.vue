@@ -84,7 +84,7 @@ img
     padding-left: 1em
 
 .context
-    opacity: 0.6
+    opacity: 0.9
     color: white
     width: calc(100% + 1em)
 

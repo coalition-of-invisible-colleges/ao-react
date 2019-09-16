@@ -19,8 +19,7 @@
         .full(v-else) log out
     .pushdown()
     div(:class='{suncontext: $router.currentRoute.path === "/front", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
-        .transparentright(v-if='$router.currentRoute.path === "/"')
-        .transparentleft(v-else)
+        .transparentsides
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
@@ -248,16 +247,16 @@ var intervalID = window.setInterval(updateTransition, 7000);
     z-index: -1
 
 .bullcontext
-    background-position: right
     background-image: url("../assets/images/bullleg.svg")
-    margin-right: calc(7em - 21px)
-    margin-left: 14em
-
+    bacground-position: top center
+    margin-left: 9em
+    margin-right: 9em
 
 .suncontext
     background-image: url("../assets/images/sunbean.svg")
-    margin-left: calc(7em - 21px)
-    margin-right: 14em
+    bacground-position: top center
+    margin-left: 9em
+    margin-right: 9em
 
 .transparentleft
     width: 100%
@@ -279,6 +278,13 @@ var intervalID = window.setInterval(updateTransition, 7000);
     background: -moz-linear-gradient(top, rgba(32,32,32,0) 0%, rgba(32,32,32,0) 1%, rgba(32,32,32,0) 90%, rgba(32,32,32,1) 100%)
     background: -webkit-linear-gradient(top, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
     background: linear-gradient(to bottom, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
+
+.transparentsides
+    width: 100%
+    height: 100%
+    background: -moz-linear-gradient(left,  rgba(32,32,32,1) 0%, rgba(32,32,32,0) 10%, rgba(32,32,32,0) 90%, rgba(32,32,32,1) 100%)
+    background: -webkit-linear-gradient(left,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 10%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
+    background: linear-gradient(to right,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 10%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
 
 .full
     width: 100%
