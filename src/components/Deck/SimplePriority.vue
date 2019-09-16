@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.p.clearboth(@dblclick='goIn')
+.p.clearboth(@dblclick.capture='goIn')
   .row
     div.agedwrapper(:class="cardInputSty")
       .agedbackground.freshpaper(v-if='cardAge < 8')
@@ -25,15 +25,15 @@ export default {
     components: { Hypercard, Linky },
     methods: {
         goIn(){
-
+            console.log("goIn")
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
             } else {
-                panel = [this.b.taskId]
+                panel = [this.taskId]
             }
 
-            let top = panel.indexOf(this.b.taskId)
+            let top = panel.indexOf(this.taskId)
 
             if (top > -1){
 
@@ -63,7 +63,7 @@ export default {
                 panel
             })
 
-            this.$router.push("/task/" + this.b.taskId)
+            this.$router.push("/task/" + this.taskId)
         },
     },
     computed: {

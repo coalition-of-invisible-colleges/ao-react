@@ -1,11 +1,11 @@
 <template lang='pug'>
 
 .navigation(@contextmenu.prevent)
-    div(@click='cycleLeft')
+    div.ztop(@click='cycleLeft')
         img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
         img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")
         img.bullimgleft(v-else  src="../assets/images/navigas/uniSunDab.svg")
-    div(@click='cycleRight')
+    div.ztop(@click='cycleRight')
         img.bullimgright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg")
         img.bullimgright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg")
         img.bullimgright(v-else  src="../assets/images/navigas/uniBullDab.svg")
@@ -522,4 +522,7 @@ hr
     left: 1em
     z-index: 149
     padding: 0 1em 1em 1em
+    
+.ztop
+    z-index: 152
 </style>

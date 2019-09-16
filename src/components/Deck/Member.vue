@@ -157,7 +157,7 @@ label
     display: inline
     margin-left: 0.5em
     position: relative
-    top: -0.25em
+    top: -0.35em
 
 .clearboth
     clear: both

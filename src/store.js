@@ -19,7 +19,7 @@ function subDeck(tasks, state, getters){
     tasks.forEach(t => {
         let task = getters.hashMap[t]
         if (task){
-            subTasks = subTasks.concat(task.subTasks)
+            subTasks = subTasks.concat(task.subTasks).concat(task.priorities).concat(task.completed)
         }
     })
     return subTasks
@@ -267,7 +267,7 @@ export default new Vuex.Store({
               history = history.concat(crawler)
               crawler = subDeck(crawler, state, getters)
             }while(crawler.length > 0 && newCards)
-            archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).concat(getters.myGuilds).indexOf(st.taskId) > -1))
+            archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).concat(getters.myGuilds.map(t => t.taskId)).indexOf(st.taskId) > -1))
           }
 
           return archive
