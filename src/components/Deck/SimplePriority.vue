@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.p.clearboth(@dblclick.capture='goIn')
+.p.clearboth(@dblclick.stop='goIn')
   .row
     div.agedwrapper(:class="cardInputSty")
       .agedbackground.freshpaper(v-if='cardAge < 8')
