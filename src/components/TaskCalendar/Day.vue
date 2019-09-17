@@ -5,57 +5,67 @@
         img.upgrade(v-if='isToday'  src='../../assets/images/bulluni.svg'  )
     .tooltip.upgrade(v-for='t in ev')
         img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
-        .tooltiptext {{ t.name }}
+        .tooltiptext
+            .until {{ cardDate(t) }}
+            linky(:x='t.name')
         .guild(v-if='t.funderGuild') {{ t.funderGuild }}
 </template>
 
 <script>
 import _ from 'lodash'
+import Linky from '../Card/Linky'
 
 function getDMY(ts){
     let d = new Date(ts)
     let day =  d.getDate()
     let month = d.getMonth()
     let year = d.getFullYear()
-    return { day, month, year }
+    let hour = d.getHours()
+    let minute = d.getMinutes()
+    return { day, month, year, hour, minute }
 }
 
 export default {
-  components: {},
-  props: ['day', 'month', 'year', 'inId', 'ev', 'isToday'],
-  methods: {
-      styl(color){
-        if (!color) return
-        return {
-            redwx : color == 'red',
-            bluewx : color == 'blue',
-            greenwx : color == 'green',
-            yellowwx : color == 'yellow',
-            purplewx : color == 'purple',
-            blackwx : color == 'black',
-        }
-      },
-      goIn(taskId){
-        let parents = []
-        if (this.$store.getters.contextCard.taskId){
-            parents.push(this.$store.getters.contextCard.taskId)
-        } else if (this.$store.getters.memberCard.taskId){
-            parents.push(this.$store.getters.memberCard.taskId)
-        }
-        this.$store.dispatch("goIn", {
-            panel: [taskId],
-            top: 0,
-            parents
-        })
-        this.$router.push('/task/' + taskId)
-      },
-  },
-  computed: {
-      calcDayRange(){
+    components: { Linky },
+    props: ['day', 'month', 'year', 'inId', 'ev', 'isToday'],
+    methods: {
+        styl(color){
+            if (!color) return
+            return {
+                redwx : color == 'red',
+                bluewx : color == 'blue',
+                greenwx : color == 'green',
+                yellowwx : color == 'yellow',
+                purplewx : color == 'purple',
+                blackwx : color == 'black',
+            }
+        },
+        goIn(taskId){
+            let parents = []
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+            this.$store.dispatch("goIn", {
+                panel: [taskId],
+                top: 0,
+                parents
+            })
+            this.$router.push('/task/' + taskId)
+        },
+        cardDate(b){
+            if ( b.book.startTs ) {
+               let DMY = getDMY(b.book.startTs)
+               return DMY.hour + ":" + DMY.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})
+            }
+        },
+    },
+    computed: {
+        calcDayRange(){
           return
-      },
-
-  },
+        },
+    },
 }
 </script>
 

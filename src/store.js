@@ -262,7 +262,6 @@ export default new Vuex.Store({
             newCards = newCards.concat(task.subTasks).concat(task.priorities).concat(task.completed)
             return true
           })
-
           crawler = newCards
         } while(crawler.length > 0)
         archive = _.filter(archive, st => deck.indexOf(st.taskId) === -1)
