@@ -68,6 +68,14 @@ function tasksMuts(tasks, ev) {
             if(ev.name) {
                 tasks.push(ev)
             }
+            if (ev.inId){
+                tasks.forEach(task => {
+                    if (task.taskId === ev.inId) {
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+                        task.subTasks.push(ev.taskId)
+                    }
+                })
+            }
             break
         case "address-updated":
             tasks.forEach( t => {

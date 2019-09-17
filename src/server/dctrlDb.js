@@ -43,7 +43,7 @@ function initializeSqlite(cb) {
       name: 'dctrl',
       fob: '0000000000',
       secret: cryptoUtils.createHash('dctrl'), // init user-password is dctrl
-      memberId: '0',
+      memberId: 'xd',
       address: '2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu',
       active: 1,
       balance: 0,

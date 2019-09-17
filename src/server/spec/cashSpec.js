@@ -22,9 +22,9 @@ module.exports = function(req, res, next){
           specAOConnect(req, res, next)
           break
       case 'ao-subscribed':
-          console.log("ao subscribed hit")
+          // console.log("ao subscribed hit")
 
-          // specAOConnect(req, res, next)
+          specAOConnect(req, res, next)
           break
       default:
           next()

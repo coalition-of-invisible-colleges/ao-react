@@ -168,12 +168,14 @@ function specTaskCreated(req, res, next){
   if (
     validators.isName(req.body.name, errRes) &&
     validators.isNotes(req.body.color, errRes) &&
-    validators.isNotes(req.body.deck, errRes)
+    validators.isNotes(req.body.deck, errRes) &&
+    validators.isTaskId(req.body.inId)
   ){
     events.tasksEvs.taskCreated(
       req.body.name,
       req.body.color,
       req.body.deck,
+      req.body.inId,
       utils.buildResCallback(res)
     )
   } else {

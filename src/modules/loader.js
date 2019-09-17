@@ -95,12 +95,10 @@ const actions = {
                         .end((err, res2)=>{
                             console.log("got res", res2.body, err)
                             commit('setCurrent', res2.body)
-
                         })
                 } else {
                     console.log('got an authorized response?')
                     commit('setCurrent', res.body)
-
                     res.body.sessions.forEach(s => {
                         if (s.session === state.session){
                             commit("setPanel", [ s.ownerId ])
@@ -110,9 +108,6 @@ const actions = {
             })
     },
     makeEvent({commit, state, getters, dispatch}, newEv){
-
-      console.log("make event called", newEv)
-
       switch(state.reqStatus){
           case "ready":
               let startTs = Date.now()
@@ -125,10 +120,6 @@ const actions = {
                       if (err || !res.body) {
                           console.log("error from state load, load failed", err, "attempt getting pubstate")
                           commit("setReqStatus", "failed")
-                          setTimeout(()=> {
-                              dispatch("loadCurrent")
-                              dispatch("makeEvent", newEv )
-                          }, 1000)
                         } else {
                           console.log(res.body)
                           commit("setPing", Date.now() - startTs)

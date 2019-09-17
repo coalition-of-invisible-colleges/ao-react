@@ -59,13 +59,10 @@ function setCurrent(state, b){
 
 
 function applyBackup(b){
-
     setCurrent(serverState, b)
-
     b.resources = b.resources.map(removeSensitive)
     b.members = b.members.map(removeSensitive)
     b.ao = b.ao.map(removeSensitive)
-
     setCurrent(pubState, b)
 }
 
@@ -91,7 +88,6 @@ function initialize(callback) {
 
           dctrlDb.getAll(ts, (err, all) => {
               if (err) return callback(err)
-
 
               all.forEach( ev => {
                   applyEvent(serverState, Object.assign({}, ev) )

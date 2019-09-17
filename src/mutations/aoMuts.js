@@ -11,7 +11,7 @@ function aoMuts(aos, ev) {
             break
         case "ao-updated":
             aos.forEach(ao => {
-                if (ao.location === ev.aoId){
+                if (ao.address === ev.aoId){
                     // applyEvent(ao.state, ev)
                 }
             })
