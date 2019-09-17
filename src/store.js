@@ -14,17 +14,6 @@ import calculations from './calculations'
 
 Vue.use(Vuex)
 
-function subDeck(tasks, state, getters){
-    let subTasks = []
-    tasks.forEach(t => {
-        let task = getters.hashMap[t]
-        if (task){
-            subTasks = subTasks.concat(task.subTasks).concat(task.priorities).concat(task.completed)
-        }
-    })
-    return subTasks
-}
-
 export default new Vuex.Store({
   modules: {
       loader, eventstream, recent, upgrades, context,
@@ -253,24 +242,32 @@ export default new Vuex.Store({
           return w
       },
       archive(state, getters){
-          let archive = getters.hodld
+        let archive = getters.hodld
+        let crawler = [getters.memberCard.taskId].concat(getters.myGuilds.map(t => t.taskId))
+        let deck = []
+        let history = []
+        let newCards = []
+        do {
+          newCards = []
+          crawler = _.filter(crawler, t => {
+            if(deck.concat(history).indexOf(t) > -1) return false
+            let task = getters.hashMap[t]
+            if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
 
-          if (getters.memberCard){
-            let starter = getters.memberCard.subTasks.concat(getters.memberCard.priorities).concat(getters.memberCard.completed)
-            archive = _.filter(archive, t => starter.indexOf(t.taskId) === -1 )
-            let crawler = subDeck(starter, state, getters)
-            let history = []
-            let newCards = false
-            do{
-              newCards = crawler.some(t => history.indexOf(t) === -1)
-              archive = _.filter(archive, t => !(crawler.indexOf(t.taskId) > -1))
-              history = history.concat(crawler)
-              crawler = subDeck(crawler, state, getters)
-            }while(crawler.length > 0 && newCards)
-            archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).concat(getters.myGuilds.map(t => t.taskId)).indexOf(st.taskId) > -1))
-          }
+            if(task.deck.indexOf(getters.member.memberId) > -1) {
+              deck.push(t)
+            } else {
+              history.push(t)
+            }
+            newCards = newCards.concat(task.subTasks).concat(task.priorities).concat(task.completed)
+            return true
+          })
 
-          return archive
+          crawler = newCards
+        } while(crawler.length > 0)
+        archive = _.filter(archive, st => deck.indexOf(st.taskId) === -1)
+        archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).indexOf(st.taskId) > -1))
+        return archive
       },
       withinHodld(state, getters){
           let w = []
@@ -306,7 +303,12 @@ export default new Vuex.Store({
       myGuilds(state, getters){
           let my = state.tasks.filter(t => {
               if(!t.guild) return false
-              if(t.deck.indexOf(getters.memberCard.memberId) === -1) return false
+              console.log("guild found: ", t.guild)
+              if(t.deck.indexOf(getters.member.memberId) === -1) {
+                console.log("guild not hodled :( ", t.guild)
+                return false
+              }
+              console.log("we has it!", t.guild)
               return true
           })
           return my
