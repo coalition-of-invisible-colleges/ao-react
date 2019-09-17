@@ -1,11 +1,12 @@
 import uuidV1 from 'uuid/v1'
 import dctrlDb from '../dctrlDb'
 
-function aoConnected(address, secret, callback) {
+function aoConnected(address, secret, state, callback) {
     let newEvent = {
         type: "ao-connected",
         address,
         secret,
+        state,
     }
     dctrlDb.insertEvent(newEvent, callback)
 }
@@ -18,7 +19,18 @@ function aoDisconnected(aoId, callback) {
     dctrlDb.insertEvent(newEvent, callback)
 }
 
+function aoUpdated(aoId, ev, callback){
+    let newEvent = {
+        type: "ao-updated",
+        aoId,
+        ev,
+    }
+    dctrlDb.triggerShadow(newEvent, callback)
+}
+
+
 export default {
     aoConnected,
-    aoDisconnected
+    aoDisconnected,
+    aoUpdated,
 }
