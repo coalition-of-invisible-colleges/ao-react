@@ -4,7 +4,7 @@
     .empty(v-if='priorities.length < 1')
         img.bdoge(src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of priorities.slice(0, 5)')
-        simple-hyperpriority(:taskId='t'  :c='priorities'  :inId='taskId')
+        simple-hyperpriority.front(:taskId='t'  :c='priorities'  :inId='taskId')
         .centerer
             .more(v-if='i === 4 && priorities.length > 5') +{{ priorities.length - 5 }}
 </template>
@@ -188,4 +188,7 @@ img
 .centerer
     text-align: center
     width: 100%
+    
+.front
+    z-index: 98
 </style>
