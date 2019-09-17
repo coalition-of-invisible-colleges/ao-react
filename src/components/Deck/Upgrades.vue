@@ -21,11 +21,11 @@
                     .box.morepad
                         h2(v-if='b.guild') {{ b.guild }}
                         current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
-                        div.dogep
+                        div.dogep.spinslow
                             .tooltip
                                 img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                                 .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
-                                .tooltiptext.hodlsuggest(v-else) hodled
+                                .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
                             p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
                 div.endpad(v-else)
                     .gui.title missions
@@ -307,6 +307,7 @@ export default {
 @import '../../styles/grid'
 @import '../../styles/button'
 @import '../../styles/tooltips'
+@import '../../styles/spinners'
 
 .nl
     text-decoration:none

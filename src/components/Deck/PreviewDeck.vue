@@ -5,29 +5,30 @@
         .four.grid
             .tooltip(v-for="(tId,i) in topPriorities")
                 img.tinyboat(v-if="i < 5", @click='goto(tId)', src='../../assets/images/boatbtnselected.svg')
-                .tooltiptext {{ tId? shortName(card(tId).name) : "unknown card" }}
+                linky.tooltiptext(:x='tId? shortName(card(tId).name) : "unknown card"')
             .bead.redwx.tooltip(v-for="(b,i) in red"  :b="b", @click='goto(b.taskId)')
-                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
+                linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
         .four.grid
             .bead.greenwx.tooltip(v-for="(b,i) in green", @click='goto(b.taskId)')
-                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
+                linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
         .four.grid
             .bead.bluewx.tooltip(v-for="(b,i) in blue", @click='goto(b.taskId)')
-                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
+                linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
     .row
         .two.grid
         .four.grid.addleft
             .bead.yellowwx.tooltip(v-for="(b,i) in yellow", @click='goto(b.taskId)')
-                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
+                linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
         .four.grid
             .bead.purplewx.tooltip(v-for="(b,i) in purple", @click='goto(b.taskId)')
-                .tooltiptext {{ b? shortName(b.name) : "unknown card" }}
+                linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
 </template>
 
 <script>
 
 import SharedTitle from '../slotUtils/SharedTitle'
 import TaskCreate from '../forms/TaskCreate'
+import Linky from '../Card/Linky'
 
 export default {
   props: ['memberId', 'taskId', 'task'],
@@ -100,6 +101,7 @@ export default {
   components:{
       SharedTitle,
       TaskCreate,
+      Linky,
   },
 }
 
