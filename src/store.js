@@ -25,6 +25,17 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
+      warpAddress(state, getters){
+          return state.ao[state.upgrades.warp].address
+      },
+      warpGuilds(state, getters){
+          let warpState = state.ao[state.upgrades.warp].state
+          return warpState.tasks.filter(t => t.guild)
+      },
+      warpMembers(state, getters){
+          let warpState = state.ao[state.upgrades.warp].state
+          return warpState.members
+      },
       memberCard(state, getters){
           let memberCard = _.merge({
               taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []

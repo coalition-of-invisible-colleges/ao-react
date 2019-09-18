@@ -5,7 +5,8 @@ const dimensions = ["time", "space", "replication"]
 const state = {
     mode: "boat",
     payment: false,
-    dimension: false
+    dimension: false,
+    warp: -1,
 }
 
 const mutations = {
@@ -37,6 +38,12 @@ const mutations = {
     closeDimension(state) {
         state.dimension = false
     },
+    setWarp(state, i){
+        state.warp = i
+    },
+    closeWarp(state){
+        state.warp = -1
+    }
 }
 
 const actions = {}

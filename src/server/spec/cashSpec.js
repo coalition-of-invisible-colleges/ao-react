@@ -22,9 +22,22 @@ module.exports = function(req, res, next){
           specAOConnect(req, res, next)
           break
       case 'ao-subscribed':
-          // console.log("ao subscribed hit")
-
           specAOConnect(req, res, next)
+          break
+      case 'ao-relay':
+          let secret
+          state.serverState.ao.forEach(a => {
+              if (a.address == req.body.address){
+                  secret = a.secret
+              }
+          })
+          if (secret){
+            connector.postEvent(req.body.address, secret, req.body.ev, (err, res) => {
+              console.log('postev relay', {err, res})
+            })
+          } else {
+              console.log("no connection for ", req.body.address)
+          }
           break
       default:
           next()
