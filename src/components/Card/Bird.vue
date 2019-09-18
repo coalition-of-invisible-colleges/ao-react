@@ -2,7 +2,8 @@
 
 .bird(@click.stop)
     div(@click.stop='toggleGive')
-        img.birdy.faded(v-if='!showGive', src='../../assets/images/badge.svg')
+        div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }') 
+        img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .give(v-if='showGive')
         select(v-model='toMember')
@@ -115,4 +116,22 @@ label
 .faded:hover
     opacity: 1
 
+.smallguild
+    background-image: url('../../assets/images/badge.svg')
+    background-repeat: no-repeat
+    background-size: contain
+    background-position: top left
+    height: 1.67em
+    width: 1.7em
+    opacity: 1
+    
+.smallguild:hover, .smallguild.open
+    background-image: url('../../assets/images/badge_white.svg')
+    
+.give
+    position: relative
+    top: 1em
+    width: max-content
+    margin-bottom: 1em
+    
 </style>

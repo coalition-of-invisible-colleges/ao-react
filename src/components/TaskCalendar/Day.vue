@@ -2,7 +2,8 @@
 .day
     .date {{ day }}
     router-link(to='/deck')
-        img.upgrade(v-if='isToday'  src='../../assets/images/bulluni.svg'  )
+        img.today(v-if='isToday && day % 2 === 1'  src='../../assets/images/bulluni.svg')
+        img.today(v-else-if='isToday'  src='../../assets/images/unibull.svg')
     .tooltip.upgrade(v-for='t in ev')
         img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
         .tooltiptext
@@ -82,7 +83,16 @@ export default {
     display: inline
     width: 29%
     cursor: pointer
-
+    
+.today
+    width: 100%
+    height: 100%
+    cursor: pointer
+    opacity: 0.6
+    display: inline-block
+    position: absolute
+    top: 0
+    
 .type
     font-size: .5em
     float: left
@@ -103,6 +113,8 @@ export default {
     font-size: .9em
     padding: 5px 5px 5px 5px
     float: right
+    z-index: 5
+    position:relative
 
 .amount
     font-size: .49em

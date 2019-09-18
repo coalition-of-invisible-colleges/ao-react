@@ -74,8 +74,6 @@ label
     font-size: .9em
     padding: 5px 5px 5px 5px
 
-
-
 .amount
     font-size: .49em
     position: absolute;
@@ -87,8 +85,6 @@ label
 
 .dec
     color: red
-
-
 
 .b
 		text-align: center

@@ -32,12 +32,12 @@
                     ul
                         template(v-for='g in dogeGuilds')
                             li.spaced
-                                div(@click='goIn(g.taskId)')
+                                span(@click='goIn(g.taskId)')
                                     span.nl.gui {{ g.guild }}
                                 span(v-for='c in completions(g)'  @click='goIn(c.taskId)')
                                     span.plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
-                                        .tooltiptext {{ c.name }}
-                                div.description {{ g.name }}
+                                        linky.tooltiptext(:x='c.name')
+                                linky.description(:x='g.name')
                     .gui.title(v-if='nameList.length > 0') vouches
                     ul(v-if='nameList.length > 0')
                         li
@@ -96,6 +96,7 @@ import FancyInput from '../slotUtils/FancyInput'
 import Current from '../Members/Current'
 import Priorities from './Priorities'
 import Vouch from '../Members/Vouch'
+import Linky from '../Card/Linky'
 
 export default {
     components:{
@@ -104,7 +105,7 @@ export default {
         BountyCreate, PreviewDeck,
         ResourceBook, FormBox, Tag, PayReq,
         PayAddress, FancyInput, Current, Priorities,
-        TaskCalendar, Vouch
+        TaskCalendar, Vouch, Linky
     },
     data(){
         return {
@@ -422,6 +423,7 @@ h3
 .gui
     font-size: 1.5em
     color: white
+    cursor: pointer
 
 .row .three
     height: 5em
@@ -471,7 +473,9 @@ h2
 .checkmark
     font-size: 2em
     margin-right: 0.25em
+    margin-left: 0.25em
     display: inline-block
+    cursor: pointer
 
 .plain
     text-decoration: none

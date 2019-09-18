@@ -5,8 +5,11 @@
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
   .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
   .row
-      .ten.grid
+      .one.grid
           bird(:b='b', :inId='inId')
+      .nine.grid
+          .cardhud(v-if='b.guild')
+              .title.bold {{ b.guild }}
       .two.grid
           flag(:b='b', :inId='inId')
   .tooltip
@@ -16,9 +19,6 @@
               current.block(v-for='memberId in b.claimed', :memberId='memberId')
   .row
     .ten.grid
-        .cardhud(v-if='b.guild')
-            img.smallguild(src='../../assets/images/badge.svg')
-            span.bold {{ b.guild }}
         .cardhud(v-if='calcVal >= 1')
             img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
             span {{ calcVal }}
@@ -375,6 +375,11 @@ export default {
     position: relative
     z-index: 14
 
+.title
+    position: absolute
+    left: 0.6em
+    top: 0.3em
+
 .cardheader
     margin: 0 auto
     font-size: 1.2em
@@ -386,4 +391,8 @@ export default {
 .suggest
     font-style: italic
     margin-top: 1em
+    
+.flag
+    position: absolute
+    right: 1em
 </style>

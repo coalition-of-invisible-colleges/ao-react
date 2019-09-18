@@ -17,7 +17,7 @@
                     context(:taskId='n')
                 .centerer
                     .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
-                .bar(v-if='panelSplit.after.length === 0')
+                .bar(v-if='panelSplit.after.length < 6')
             .seven.columns.buffer
                 div.upgradesbar()
                     upgrades
