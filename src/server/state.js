@@ -47,25 +47,23 @@ const pubState = {
   },
 }
 
+
+function setCurrent(state, b){
+  modules.cash.mutations.setCurrent(state.cash, b)
+  modules.tasks.mutations.setCurrent(state.tasks, b)
+  modules.sessions.mutations.setCurrent(state.sessions, b)
+  modules.ao.mutations.setCurrent(state.ao, b)
+  modules.members.mutations.setCurrent(state.members, b)
+  modules.resources.mutations.setCurrent(state.resources, b)
+}
+
+
 function applyBackup(b){
-
-    modules.cash.mutations.setCurrent(serverState.cash, b)
-    modules.tasks.mutations.setCurrent(serverState.tasks, b)
-    modules.sessions.mutations.setCurrent(serverState.sessions, b)
-    modules.ao.mutations.setCurrent(serverState.ao, b)
-    modules.members.mutations.setCurrent(serverState.members, b)
-    modules.resources.mutations.setCurrent(serverState.resources, b)
-
+    setCurrent(serverState, b)
     b.resources = b.resources.map(removeSensitive)
     b.members = b.members.map(removeSensitive)
     b.ao = b.ao.map(removeSensitive)
-
-    modules.cash.mutations.setCurrent(pubState.cash, b)
-    modules.tasks.mutations.setCurrent(pubState.tasks, b)
-    modules.sessions.mutations.setCurrent(pubState.sessions, b)
-    modules.ao.mutations.setCurrent(pubState.ao, b)
-    modules.resources.mutations.setCurrent(pubState.resources, b)
-    modules.members.mutations.setCurrent(pubState.members, b)
+    setCurrent(pubState, b)
 }
 
 function applyEvent(state, ev) {
@@ -90,7 +88,6 @@ function initialize(callback) {
 
           dctrlDb.getAll(ts, (err, all) => {
               if (err) return callback(err)
-
 
               all.forEach( ev => {
                   applyEvent(serverState, Object.assign({}, ev) )
@@ -129,4 +126,5 @@ module.exports = {
     initialize,
     applyEvent,
     removeSensitive,
+    setCurrent,
 }

@@ -31,8 +31,6 @@ function startDctrlAo(){
       watchSpot()
       cronStarter()
 
-      console.log("state", state.pubState.cash)
-
       lightning.recordEveryInvoice(state.pubState.cash.pay_index)
       lightning.watchOnChain()
 

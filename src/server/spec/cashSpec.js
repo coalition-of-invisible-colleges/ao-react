@@ -22,9 +22,9 @@ module.exports = function(req, res, next){
           specAOConnect(req, res, next)
           break
       case 'ao-subscribed':
-          console.log("ao subscribed hit")
+          // console.log("ao subscribed hit")
 
-          // specAOConnect(req, res, next)
+          specAOConnect(req, res, next)
           break
       default:
           next()
@@ -94,20 +94,20 @@ function specCapSet(req, res, next){
 function specAOConnect(req, res, next){
   let errRes = []
   console.log('attempt post to ', req.body.address)
-  connector.postEvent(req.body.address, req.body.secret, {
-    type: "ao-subscribed"
-  }, (err, response) => {
+
+  connector.getState(req.body.address, req.body.secret, (err, response) => {
+  // connector.getState(req.body.address, req.body.secret, (err, response) => {
+      if (err) {
+          return console.log(err)
+      }
       console.log({response})
-      // if (true){
-      //   console.log('ao-connected', req.body.address, req.body.secret)
-      //   events.aoEvs.aoConnected(
-      //     req.body.address,
-      //     req.body.secret,
-      //     utils.buildResCallback(res)
-      //   )
-      // } else {
-      //   res.status(200).send(errRes)
-      // }
+      console.log('ao-connected', req.body.address, req.body.secret)
+      events.aoEvs.aoConnected(
+        req.body.address,
+        req.body.secret,
+        response,
+        utils.buildResCallback(res)
+      )
   })
 
 }

@@ -6,7 +6,7 @@ import { pubState } from '../state'
 import { newAddress } from '../lightning'
 
 
-function taskCreated(name, color, deck, callback) {
+function taskCreated(name, color, deck, inId, callback) {
   let h = crypto.createHash('sha256')
   h.update(name)
   let hash = h.digest('hex')
@@ -27,6 +27,7 @@ function taskCreated(name, color, deck, callback) {
           color,
           deck,
           hash,
+          inId,
       }
       dctrlDb.insertEvent(newEvent, callback)
   }

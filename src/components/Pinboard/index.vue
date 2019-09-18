@@ -3,10 +3,8 @@
 #wrex
     .pinboard
         div(v-if='$store.state.upgrades.mode == "boat"')
-            //- flickity(:options='flickityOptions')
-            //-     .carousel-cell.greenwx home
-            //-     .carousel-cell.yellowwx DCTRL
-            //-     .carousel-cell.bluewx Portal Mountain
+            flickity(:options='flickityOptions')
+                .carousel-cell.greenwx(v-for='a in $store.state.ao') {{ a.address.slice(0,11) }}
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                 .transparentsides
@@ -191,7 +189,8 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/button'
-    
+@import '../../styles/breakpoints'
+
 .bounty:hover
     border-style: dashed
     border-width: 3px
@@ -341,9 +340,12 @@ h2
     margin: 0 3% 0 1%
     width: 96%
 
-.three.columns
-    width: 23%
-    margin-left: 2%
+
+
+@media (min-width: breakpoint)
+    .three.columns
+        width: 23%
+        margin-left: 2%
 
 .up
     width: fit-content

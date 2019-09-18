@@ -86,14 +86,11 @@ export default {
                         name: potentialCard,
                         color: this.task.color,
                         deck: [this.$store.getters.member.memberId],
+                        inId: this.taskId,
                     })
                     .end((err,res)=>{
                         if (err) return console.log(err);
-                        this.$store.state.tasks.forEach( t => {
-                            if (t.name === potentialCard){
-                                this.subTaskTask(t.taskId)
-                            }
-                        })
+                        console.log('created and subtasked 1shot')
                     })
             } else {
                 this.subTaskTask(foundId)
@@ -154,7 +151,7 @@ export default {
 
 #card
     margin-bottom: 0
-    
+
 #createtask
   width: fit-content
   background-color: rgba(51, 51, 51, 0.3)
@@ -170,19 +167,19 @@ button
     border-color: rgba(0, 0, 0, 0.4)
     margin-bottom: 0.5em
     margin-top: 0.2em
-    
+
 .lit
     opacity: 0.69
 
 .btnwrapper:hover > .lit
     opacity: 0.83
-    
+
 .btnwrapper:hover > .lit:hover
     opacity: 1
-    
+
 .opaque > button.lit
     opacity: 1
-    
+
 .onetime
     display: inline
 
