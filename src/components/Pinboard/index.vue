@@ -3,7 +3,7 @@
 #wrex
     .pinboard
         div(v-if='$store.state.upgrades.mode == "boat"')
-            flickity(:options='flickityOptions')
+            flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
                 .carousel-cell.greenwx(v-for='a in $store.state.ao') {{ a.address.slice(0,11) }}
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')

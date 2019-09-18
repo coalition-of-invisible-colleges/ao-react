@@ -17,7 +17,8 @@
         members
     .container(v-if='$store.state.upgrades.mode === "bounty"')
         h1.up lightning
-        nodes
+        nodes(v-if='$store.state.cash.info.alias')
+        p(v-else) no lightning node :(
     .container.row(v-if='$store.state.upgrades.mode === "timecube"')
         h1.up central reserve
         ul

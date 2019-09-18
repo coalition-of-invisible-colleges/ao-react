@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.bird(@click.stop)
+.bird(@click.stop  @dblclick.prevent)
     div(@click.stop='toggleGive')
         div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }') 
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
@@ -124,6 +124,8 @@ label
     height: 1.67em
     width: 1.7em
     opacity: 1
+    position: relative
+    z-index: 10
     
 .smallguild:hover, .smallguild.open
     background-image: url('../../assets/images/badge_white.svg')

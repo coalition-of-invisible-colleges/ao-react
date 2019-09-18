@@ -11,7 +11,7 @@
           .cardhud(v-if='b.guild')
               .title.bold {{ b.guild }}
       .two.grid
-          flag(:b='b', :inId='inId')
+          flag(:b='b', :inId='inId'  @dblclick.prevent)
   .tooltip
       img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
       .tooltip
@@ -393,6 +393,6 @@ export default {
     margin-top: 1em
     
 .flag
-    position: absolute
-    right: 1em
+    position: relative
+    right: 0
 </style>

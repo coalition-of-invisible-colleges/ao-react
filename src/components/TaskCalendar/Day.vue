@@ -114,7 +114,8 @@ export default {
     padding: 5px 5px 5px 5px
     float: right
     z-index: 5
-    position:relative
+    position: relative
+    pointer-events: none
 
 .amount
     font-size: .49em

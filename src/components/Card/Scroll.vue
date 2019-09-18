@@ -2,7 +2,7 @@
 
 .scroll
     div(v-if='inId'  @click='rollsafeIt')
-        img.scrolly(src='../../assets/images/scroll.svg')
+        img.scrolly(src='../../assets/images/downboatwhite.svg')
     div(v-else @click='canIt')
         img(v-if='!isCared'  src='../../assets/images/garbage.svg').scrolly
 </template>
