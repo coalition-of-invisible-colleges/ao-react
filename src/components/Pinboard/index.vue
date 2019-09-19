@@ -95,7 +95,7 @@ export default {
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
-            initialIndex: Math.floor(this.$store.getters.pubguilds.length / 2),
+            initialIndex: 0,
             prevNextButtons: false,
             pageDots: false,
             wrapAround: true,
