@@ -186,13 +186,6 @@ export default {
         closeUpgrades() {
             this.$store.commit("closeUpgrades")
         },
-        helmClick() {
-            if(!this.$store.state.upgrades.mode && $store.getters.isLoggedIn){
-                this.killsession()
-            } else {
-                this.nextUpgradeMode()
-            }
-        },
         flashHelm(flashes = 1) {
             let ms = 350
             let helm = document.getElementById('helm')
