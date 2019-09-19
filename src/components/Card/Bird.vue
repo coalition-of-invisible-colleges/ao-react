@@ -7,17 +7,18 @@
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .give(v-if='showGive')
         select(v-model='toAo'  @change)
-            option(v-for='t in $store.state.ao'  :key='t.address'  :value='t.address'  @click='setWarp(0)') {{ t.address.slice(0,7) }}
+            option(@click='setWarp(-1)') here
+            option(v-for='t in $store.state.ao'  :key='t.address'  :value='t.address'  @click='setWarp(0)') {{ t.state.cash.info.alias }} - {{ t.address.slice(0,9) }}
         div(v-if='$store.state.upgrades.warp > -1')
-          h1 SHOWING WARP DATA
+          img.birdy(src='../../assets/images/navigas/sunUni.svg')
           select(v-model='toMember')
               option(disabled, value='') to people
               option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
-          form-box(v-if='toMember' btntxt="give"  event='task-passed' v-bind:data='passInfo')
+          form-box(v-if='toMember' btntxt="give"  event='task-passed' v-bind:data='relayInfo')
           select(v-model='toGuild')
               option(disabled, value='') to guild
               option(v-for='n in $store.getters.warpGuilds', :value="n.taskId") {{ n.guild }}
-          form-box(v-if='toGuild' btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo')
+          form-box(v-if='toGuild' btntxt="play"  event='task-sub-tasked' v-bind:data='relayInfo')
         div(v-else)
           select(v-model='toMember')
               option(disabled, value='') to people
@@ -56,24 +57,23 @@ export default {
             this.showGive = !this.showGive
         },
         setWarp(i){
-
             this.$store.commit('setWarp', i)
         }
     },
     computed: {
-        flickityOptions(){
-          return {
-            initialIndex: 0,
-            prevNextButtons: false,
-            pageDots: false,
-            wrapAround: true,
-            selectedAttraction: 0.005,
-            friction: 0.08,
-            cellSelector: '.carousel-cell',
-            accessibility: true
-            // asNavFor: '.guildsmenu'
-          }
-        },
+        // flickityOptions(){
+        //   return {
+        //     initialIndex: 0,
+        //     prevNextButtons: false,
+        //     pageDots: false,
+        //     wrapAround: true,
+        //     selectedAttraction: 0.005,
+        //     friction: 0.08,
+        //     cellSelector: '.carousel-cell',
+        //     accessibility: true
+        //     // asNavFor: '.guildsmenu'
+        //   }
+        // },
         playInfo(){
             return {
                 type: 'task-sub-tasked',
@@ -89,7 +89,19 @@ export default {
                 toMemberId: this.toMember,
             }
         },
-        relayInfo(){}
+        relayInfo(){
+            return {
+                type: "ao-relay",
+                address: this.$store.getters.warpAddress,
+                ev: {
+                    type: "task-created",
+                    name: "test cross post 123",
+                    inId: this.toMember,
+                    deck: [],
+                }
+            }
+
+        }
     },
 }
 
