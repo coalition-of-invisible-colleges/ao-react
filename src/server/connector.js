@@ -32,8 +32,8 @@ function getState(address, secret, callback){
               console.log("error res", err)
               return callback(err)
           }
-          console.log(res.body)
-          console.log(resBody)
+          console.log("state res body", res.body)
+          console.log("also state resBody", resBody)
           callback(null, resBody)
   })
 

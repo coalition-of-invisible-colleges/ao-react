@@ -22,7 +22,7 @@ module.exports = function(req, res, next){
           specAOConnect(req, res, next)
           break
       case 'ao-subscribed':
-          specAOConnect(req, res, next)
+          specAOSubscribed(req, res, next)
           break
       case 'ao-relay':
           let secret
@@ -32,6 +32,7 @@ module.exports = function(req, res, next){
               }
           })
           if (secret){
+            console.log('ao relay attempt', req.body.ev)
             connector.postEvent(req.body.address, secret, req.body.ev, (err, res) => {
               console.log('postev relay', {err, res})
             })
@@ -104,16 +105,22 @@ function specCapSet(req, res, next){
   }
 }
 
+function specAOSubscribed(req, res, next){
+  let errRes = []
+  console.log('ao subscribed', req.body.address)
+
+}
+
 function specAOConnect(req, res, next){
   let errRes = []
   console.log('attempt post to ', req.body.address)
 
   connector.getState(req.body.address, req.body.secret, (err, response) => {
-  // connector.getState(req.body.address, req.body.secret, (err, response) => {
       if (err) {
           return console.log(err)
       }
-      console.log({response})
+      console.log("got state:", {response})
+
       console.log('ao-connected', req.body.address, req.body.secret)
       events.aoEvs.aoConnected(
         req.body.address,
