@@ -5,7 +5,7 @@
       .cc(v-show='showCreate')
           textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
           img.specialoverlay
-          button(@click='createOrFindTask').fwi Create Card
+          button(@click='createOrFindTask').fwi create card
     .label
       .row.btnpanel
           div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
@@ -37,51 +37,77 @@ export default {
                 name: '',
                 color: 'green',
             },
+            swipeTimeout: 0,
         }
     },
     components: {
         SharedTitle, FormBox
     },
     mounted() {
-        // this.setToRoute()
         var el = document.getElementById('createtask')
         var mc = new Hammer.Manager(el)
 
         var Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
-            this.previousColor()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.previousColor()
+                this.swipeTimeout = Date.now()
+            }
         });
 
         mc.on('swiperight', (e) => {
-            this.nextColor()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.nextColor()
+                this.swipeTimeout = Date.now()
+            }
         });
 
         mc.on('swipedown', (e) => {
-            this.closeCreate()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.closeCreate()
+                this.swipeTimeout = Date.now()
+            }
         });
 
         mc.on('swipeup', (e) => {
-            this.openCreate()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.openCreate()
+                this.swipeTimeout = Date.now()
+            }
         });
 
+        // terrible hack--swipes are not detected on a textarea unless this specific gesture detector is added directly on the element. then, it does a double event for some reason on this element (not the parent element). a timeout prevents the double event.
         var ca = document.getElementById('card')
         var mc2 = new Hammer.Manager(ca)
-        mc2.add(Swipe)
+        var Swipe2 = new Hammer.Swipe()
+        mc2.add(Swipe2)
         mc2.on('swipeleft', (e) => {
-            this.previousColor()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.previousColor()
+                this.swipeTimeout = Date.now()
+            }
         });
 
         mc2.on('swiperight', (e) => {
-            this.nextColor()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.nextColor()
+                this.swipeTimeout = Date.now()
+            }
         });
 
         mc2.on('swipedown', (e) => {
-            this.closeCreate()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.closeCreate()
+                this.swipeTimeout = Date.now()
+            }
         });
 
         mc2.on('swipeup', (e) => {
-            this.openCreate()
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.openCreate()
+                this.swipeTimeout = Date.now()
+            }
         });
     },
     methods: {

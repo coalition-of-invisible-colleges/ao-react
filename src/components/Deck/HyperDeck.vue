@@ -2,7 +2,7 @@
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper
         .row
-            .five.columns.card()
+            .five.columns.card(:class='{ center: !$store.state.upgrades.mode }')
                 auth(v-if='!$store.getters.isLoggedIn')
                 member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
@@ -18,7 +18,7 @@
                 .centerer
                     .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
                 .bar(v-if='panelSplit.after.length < 6')
-            .seven.columns.buffer
+            .seven.columns.buffer(v-if='$store.state.upgrades.mode')
                 div.upgradesbar()
                     upgrades
         div.fadey(:class='cardInputSty')
@@ -155,6 +155,11 @@ export default {
     font-size:1.111em
     padding-left: 1em
     padding-top: 1em
+    
+.card.center
+    position: relative
+    left: calc(50% - 1.2em)
+    transform: translateX(-50%)
 
 #cyber
     width: 100%
@@ -314,4 +319,10 @@ export default {
 
 .fullwidth
     width: calc(100% - 1em)
+    
+.one.columns.half
+    width: 2.333333333333%
+    
+.columns
+    min-height: 1em
 </style>

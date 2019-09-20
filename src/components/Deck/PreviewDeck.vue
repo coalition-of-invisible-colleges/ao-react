@@ -16,7 +16,7 @@
                 linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
     .row
         .two.grid
-        .four.grid.addleft
+        .four.grid
             .bead.yellowwx.tooltip(v-for="(b,i) in yellow", @click='goto(b.taskId)')
                 linky.tooltiptext(:x='b? shortName(b.name) : "unknown card"')
         .four.grid
@@ -142,7 +142,4 @@ export default {
 .tooltip .tooltiptext
     font-size: 1em
     z-index: 152
-    
-.addleft
-    margin-left: 15%
 </style>
