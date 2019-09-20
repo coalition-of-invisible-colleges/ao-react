@@ -4,7 +4,7 @@
     .pinboard
         div(v-if='$store.state.upgrades.mode == "boat"')
             flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-                .carousel-cell.greenwx(v-for='a in $store.state.ao') {{ a.address.slice(0,11) }}
+                .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)'  :class='{redTx: i === $store.state.upgrades.warp}') {{ a.address.slice(0,11) }}
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                 .transparentsides
@@ -24,22 +24,22 @@
                 .three.columns
                     div(v-for='(t, i) in getBountyColumn(0)'  :key='t.taskId'  @click='goIn(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount}}
+                        span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
                     div(v-for='(t, i) in getBountyColumn(1)'  :key='t.taskId'  @click='goIn(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount}}
+                        span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
                     div(v-for='(t, i) in getBountyColumn(2)'  :key='t.taskId'  @click='goIn(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount}}
+                        span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
                     div(v-for='(t, i) in getBountyColumn(3)'  :key='t.taskId'  @click='goIn(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount}}
+                        span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         .container(v-else-if='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
@@ -108,6 +108,9 @@ export default {
       }
   },
   methods:{
+      setWarp(i){
+          this.$store.commit('setWarp', i)
+      },
       initGuildsBar(){
           console.log("initGuildsBar()")
           console.log("this.$refs is ")

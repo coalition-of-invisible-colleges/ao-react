@@ -3,16 +3,19 @@
 .AOs
     .row
         .six.columns
+            h4 Connect AO
             form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
-                label(for="aoAddressInput") onion address:
+                label(for="aoAddressInput") address:
                 input#aoAddressInput(v-model='ao.address' type='text')
                 label(for="aoSecretInput") connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
+            h4 Connection Secret
+            h6 {{ connectionString }}
         .six.columns
             h4 currently connected to:
             .row
                 template.row(v-for='r in $store.state.ao')
-                    p {{ r.address }}
+                    p {{ r.state.cash.info.alias }} - {{ r.address }}
 </template>
 
 <script>
@@ -28,9 +31,10 @@ export default {
         return {
             ao: {
                 type: "ao-connected",
-                address: "uuzwra53lwkzcp47ue5t6ilr7w2fzgkdjdcrqosrrm5mqqnloudmnxqd.onion:8003",
-                secret: this.$store.state.loader.token,
-            }
+                address: '',
+                secret: '',
+            },
+            connectionString: this.$store.state.loader.token
         }
     },
     components: { FormBox },
@@ -67,6 +71,9 @@ export default {
 @import '../styles/grid';
 @import '../styles/button';
 
+label
+    color: blue
+
 .count
     float: right
 
@@ -96,12 +103,6 @@ select.form-control
 
 .curs
     cursor: pointer;
-
-label
-    color: black
-    text-align: center
-    padding: 0
-    margin-bottom: -50px
 
 .birdy
     float: left

@@ -44,7 +44,7 @@ function watchOnChain(){
     setInterval(updateAll, 1000 * 60 * 10)
     setTimeout( () => {
         updateAll()
-    }, 34560)
+    }, 560)
 }
 
 function checkFunds(){
