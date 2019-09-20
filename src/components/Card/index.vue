@@ -5,9 +5,8 @@
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
   .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
   .row
-      .one.grid
+      .ten.grid
           bird(:b='b', :inId='inId')
-      .nine.grid
           .cardhud(v-if='b.guild')
               .title.bold {{ b.guild }}
       .two.grid
@@ -377,7 +376,7 @@ export default {
 
 .title
     position: absolute
-    left: 0.6em
+    left: 2.3em
     top: 0.3em
 
 .cardheader

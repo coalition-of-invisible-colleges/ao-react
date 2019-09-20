@@ -1,24 +1,25 @@
 <template lang='pug'>
 
-#createtask
-  transition(name="slide-fade")
+#createtask(ref="closeable")
+    transition(name="slide-fade")
       .cc(v-show='showCreate')
           textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
           img.specialoverlay
-          button(@click='createOrFindTask').fwi Create Card
-  .label
+          button(@click='createOrFindTask').fwi create card
+    .label
       .row.btnpanel
           div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
-            button.lit(@click='switchColor("red")').redwx.paperwrapper
+            button.lit(@click='switchColor("red")'  :class='{ currentColor : showCreate && task.color === "red" }').redwx.paperwrapper
               img.agedbackground
-            button.lit(@click='switchColor("yellow")').yellowwx.paperwrapper
+            button.lit(@click='switchColor("yellow")'  :class='{ currentColor : showCreate && task.color === "yellow" }').yellowwx.paperwrapper
               img.agedbackground
-            button.lit(@click='switchColor("green")').greenwx.paperwrapper
+            button.lit(@click='switchColor("green")'  :class='{ currentColor : showCreate && task.color === "green" }').greenwx.paperwrapper
               img.agedbackground
-            button.lit(@click='switchColor("purple")').purplewx.paperwrapper
+            button.lit(@click='switchColor("purple")'  :class='{ currentColor : showCreate && task.color === "purple" }').purplewx.paperwrapper
               img.agedbackground
-            button.lit(@click='switchColor("blue")').bluewx.paperwrapper
+            button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
+    //- .closeit(v-if='showCreate'  @click='closeCreate')
 </template>
 
 <script>
@@ -30,19 +31,87 @@ import request from "superagent"
 export default {
     data(){
         return {
-            currentColor: '',
+            // currentColor: '',
             showCreate: false,
             task: {
                 name: '',
-                color: '',
+                color: 'green',
             },
+            swipeTimeout: 0,
         }
     },
     components: {
         SharedTitle, FormBox
     },
+    mounted() {
+        var el = document.getElementById('createtask')
+        var mc = new Hammer.Manager(el)
+
+        var Swipe = new Hammer.Swipe()
+        mc.add(Swipe)
+        mc.on('swipeleft', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.previousColor()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        mc.on('swiperight', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.nextColor()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        mc.on('swipedown', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.closeCreate()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        mc.on('swipeup', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.openCreate()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        // terrible hack--swipes are not detected on a textarea unless this specific gesture detector is added directly on the element. then, it does a double event for some reason on this element (not the parent element). a timeout prevents the double event.
+        var ca = document.getElementById('card')
+        var mc2 = new Hammer.Manager(ca)
+        var Swipe2 = new Hammer.Swipe()
+        mc2.add(Swipe2)
+        mc2.on('swipeleft', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.previousColor()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        mc2.on('swiperight', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.nextColor()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        mc2.on('swipedown', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.closeCreate()
+                this.swipeTimeout = Date.now()
+            }
+        });
+
+        mc2.on('swipeup', (e) => {
+            if(Date.now() - this.swipeTimeout > 100) {
+                this.openCreate()
+                this.swipeTimeout = Date.now()
+            }
+        });
+    },
     methods: {
-        switchColor(color){
+        switchColor(color, refocus = true){
             if (this.task.color === color){
                 this.showCreate = !this.showCreate
             } else if (this.showCreate) {
@@ -51,9 +120,11 @@ export default {
                 this.showCreate = !this.showCreate
             }
             this.task.color = color
-            setTimeout(()=>{
+            if(refocus) {
+                setTimeout(()=>{
                     document.getElementById('card').focus()
-            }, 1)
+                }, 1)
+            }
         },
         resetCard(){
             this.task.name = ''
@@ -101,6 +172,24 @@ export default {
         // },
         isGrabbed(taskId){
             return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
+        },
+        nextColor() {
+            let colors = ['red', 'yellow', 'green', 'purple', 'blue']
+            let color = colors.indexOf(this.task.color)
+            color++
+            this.switchColor(colors[color > 4 ? 0 : color], false)
+        },
+        previousColor() {
+            let colors = ['red', 'yellow', 'green', 'purple', 'blue']
+            let color = colors.indexOf(this.task.color)
+            color--
+            this.switchColor(colors[color < 0 ? 4 : color], false)
+        },
+        openCreate() {
+            this.showCreate = !this.showCreate
+        },
+        closeCreate() {
+            this.showCreate = false
         },
     },
     computed: {
@@ -161,6 +250,7 @@ export default {
   padding: 0.5em
   position: relative
   left: 1em
+  z-index: 149
 
 button
     background: green
@@ -295,4 +385,18 @@ textarea
     height: 100%
     pointer-events: none
     opacity: 0.2
+    
+.currentColor
+    opacity: 1
+    
+.closeit
+    position: fixed
+    width: 100%
+    height: 100%
+    background-color: rgba(22, 22, 22, 0.2)
+    z-index: 148
+    top: 0
+    left: 0
+    margin: 0
+    padding: 0
 </style>

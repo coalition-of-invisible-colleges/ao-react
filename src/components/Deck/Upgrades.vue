@@ -17,27 +17,31 @@
                 priorities(:key='$store.state.context.action')
             template(v-if='$store.state.upgrades.mode === "badge"')
               div
-                div(v-if='!isDoge')
+                div.endpad(v-if='!isDoge')
+                    h2.yellowtx(v-if='b.guild') {{ b.guild }}
+                    current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                     .box.morepad
-                        h2(v-if='b.guild') {{ b.guild }}
-                        current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
                         div.dogep.spinslow
                             .tooltip
                                 img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
                                 .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
                                 .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
                             p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
-                div.endpad(v-else)
-                    .gui.title missions
-                    ul
-                        template(v-for='g in dogeGuilds')
+                div.endpadtwo(v-else)
+                    .gui.title.yellowtx missions
+                    ul.none
+                        template(v-for='g in (showAllGuilds ? dogeGuilds : dogeGuilds.slice(0, 5))')
                             li.spaced
                                 span(@click='goIn(g.taskId)')
-                                    span.nl.gui {{ g.guild }}
-                                span(v-for='c in completions(g)'  @click='goIn(c.taskId)')
+                                    img.floatleft(src='../../assets/images/badge.svg')
+                                span(@click='goIn(g.taskId)')
+                                    span.nl.gui.yellowtx {{ g.guild }}
+                                span.padleft(v-for='c in completions(g)'  @click='goIn(c.taskId)')
                                     span.plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         linky.tooltiptext(:x='c.name')
                                 linky.description(:x='g.name')
+                        .more(v-if='dogeGuilds.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ dogeGuilds.length - 5 }}
+                        .more(v-else-if='dogeGuilds.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
                     .gui.title(v-if='nameList.length > 0') vouches
                     ul(v-if='nameList.length > 0')
                         li
@@ -111,6 +115,7 @@ export default {
         return {
             show: 0,
             payreqAmount: '',
+            showAllGuilds: false,
         }
     },
     methods: {
@@ -219,6 +224,12 @@ export default {
                 purpletx : c === 'purple',
                 blacktx : c === 'black',
             }
+        },
+        showGuilds(){
+            this.showAllGuilds = true
+        },
+        hideGuilds(){
+            this.showAllGuilds = false
         },
     },
     computed: {
@@ -400,8 +411,8 @@ h3
     padding: 1em 0
 
 .box.morepad
-    padding: 2em 0
-    margin-left: 2em
+    //padding: 2em 0
+    //margin-left: 2em
 
 .ungrabbedcoin {
   opacity: 0.3
@@ -422,7 +433,6 @@ h3
 
 .gui
     font-size: 1.5em
-    color: white
     cursor: pointer
 
 .row .three
@@ -431,8 +441,9 @@ h3
 .dogep
     height: 6em
     width: 6em
-    padding: 0 calc(50%)
     cursor: pointer
+    position: relative
+    left: calc(50% - 3em)
 
 .dogep img
     height: 100%
@@ -440,16 +451,27 @@ h3
 
 .spaced
     margin-bottom: 1em
+    clear: both
 
+.floatleft
+    height: 100%
+    float: left
+    clear: both
+    max-height: 3.3em
+    margin-right: 1em
+    cursor: pointer
+    margin-top: 0.3em
+    
 .title
-    padding: 0.5em 0.5em 0.5em 0.5em
     text-align: center
 
 .description
     color: white
+    margin-bottom: 1em
+    margin-left: 4.3em
 
 .box
-    width: 75%
+    width: 100%
     margin: 0 auto
 
 .smallbox
@@ -465,6 +487,8 @@ h3
 h2
     text-align: center
     color: white
+    margin-top: 0
+    //font-weight: normal
 
 .checkwrapper
     overflow: auto
@@ -472,8 +496,6 @@ h2
 
 .checkmark
     font-size: 2em
-    margin-right: 0.25em
-    margin-left: 0.25em
     display: inline-block
     cursor: pointer
 
@@ -493,7 +515,7 @@ h2
 .mainbkg
     background: main
 
-.hodlcount {
+.hodlcount
     position: relative
     left: calc(50% - 1.07em)
     top: -3em
@@ -506,7 +528,6 @@ h2
     color: rgba(255, 255, 255, 0.75)
     pointer-events: none
     font-size: 2.5em
-}
 
 .grabbedhodlcount {
     opacity: 1
@@ -524,7 +545,14 @@ h2
     width: 100%
 
 .endpad
+    padding-top: 1em
     padding-bottom: 1em
+    padding-right: 0
+    padding-left: 1em
+    
+.endpadtwo
+    padding-top: 1em
+    padding-bottom: 0.5em
 
 .suggest
     color: rgba(255, 255, 255, 0.4)
@@ -532,7 +560,35 @@ h2
     font-size: 1.2em
     text-align: center
 
-.tooltiptext .hodlsuggest
-    font-size: 1.5em
-    left: calc(50% + 2.5em)
+.dogep .hodlsuggest
+    font-size: 1.15em
+    
+.none
+    list-style-type: none
+    margin-left: -1em
+    
+.gui.yellowtx
+    margin-right: 0.5em
+    
+.more
+    text-align: center
+    background-color: rgba(22, 22, 22, 0.4)
+    display: inline-block;
+    border-width: 2px
+    //border-color: rgba(255, 255, 255, 0.68)
+    //border-style: solid
+    padding: 0.5em
+    margin: 0
+    font-size: 1em
+    opacity: 0.6
+    color: white
+    text-align: center
+    width: calc(100% - 2.25em)
+    cursor: pointer
+    
+.more:hover
+    background-color: rgba(66, 66, 66, 0.4)
+
+ul
+    margin-block-end: 0
 </style>
