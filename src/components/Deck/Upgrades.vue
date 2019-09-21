@@ -526,7 +526,7 @@ h2
 .tinyboat
     height: 0.35em
     position: relative
-    top: 0.005em
+    top: 0.01em
     
 .plain
     text-decoration: none
