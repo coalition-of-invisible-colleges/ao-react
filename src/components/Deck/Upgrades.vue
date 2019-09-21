@@ -36,16 +36,16 @@
                                     img.floatleft(src='../../assets/images/badge.svg')
                                 span(@click='goIn(g.taskId)')
                                     span.nl.gui.yellowtx {{ g.guild }}
-                                span.padleft(v-for='c in completions(g)'  @click='goIn(c.taskId)')
-                                    span.plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
+                                span(v-for='b in getSubPriorities(g.taskId)'  @click='goIn(b, g.taskId)')
+                                    .tooltip.boat
+                                        img.tinyboat(src='../../assets/images/boatbtnselected.svg')
+                                        linky.tooltiptext(:x='shortName(getCard(b).name)')
+                                span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
+                                    .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         linky.tooltiptext(:x='c.name')
                                 linky.description(:x='g.name')
                         .more(v-if='dogeGuilds.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ dogeGuilds.length - 5 }}
                         .more(v-else-if='dogeGuilds.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
-                    .gui.title(v-if='nameList.length > 0') vouches
-                    ul(v-if='nameList.length > 0')
-                        li
-                            vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
             template(v-if='$store.state.upgrades.mode === "bounty"')
                 .padded
                     div(v-if='$store.state.cash.info.alias')
@@ -99,7 +99,6 @@ import PayAddress from './PayAddress'
 import FancyInput from '../slotUtils/FancyInput'
 import Current from '../Members/Current'
 import Priorities from './Priorities'
-import Vouch from '../Members/Vouch'
 import Linky from '../Card/Linky'
 
 export default {
@@ -109,7 +108,7 @@ export default {
         BountyCreate, PreviewDeck,
         ResourceBook, FormBox, Tag, PayReq,
         PayAddress, FancyInput, Current, Priorities,
-        TaskCalendar, Vouch, Linky
+        TaskCalendar, Linky
     },
     data(){
         return {
@@ -119,8 +118,9 @@ export default {
         }
     },
     methods: {
-        goIn(taskId){
+        goIn(taskId, guild = undefined){
             let parents = []
+            if(guild) parents.push(guild)
             let panel = [taskId]
             let top = 0
 
@@ -215,6 +215,18 @@ export default {
             })
             return completions
         },
+        getSubPriorities(taskId){
+            console.log("getSubPriorities")
+            let card = this.$store.getters.hashMap[taskId]
+            if(card && card.priorities){
+                console.log("length is ", card.priorities.length)
+                console.log("priorities is ", card.priorities)
+                return card.priorities.slice().reverse()
+            }
+        },
+        getCard(taskId){
+            return this.$store.getters.hashMap[taskId]
+        },
         cardInputSty(c){
             return {
                 redtx : c === 'red',
@@ -231,6 +243,14 @@ export default {
         hideGuilds(){
             this.showAllGuilds = false
         },
+        shortName(name) {
+            let limit = 280
+            let shortened = name.substring(0, limit)
+            if(name.length > limit) {
+                shortened += '…'
+            }
+            return shortened
+        }
     },
     computed: {
         b(){
@@ -494,11 +514,20 @@ h2
     overflow: auto
     width: 100%
 
-.checkmark
+.checkmark, .tinyboat
     font-size: 2em
     display: inline-block
     cursor: pointer
 
+.boat
+    display: inline-block
+    font-size: 2em
+    
+.tinyboat
+    height: 0.35em
+    position: relative
+    top: 0.005em
+    
 .plain
     text-decoration: none
 
@@ -560,7 +589,7 @@ h2
     font-size: 1.2em
     text-align: center
 
-.dogep .hodlsuggest
+.hodlsuggest, .dogep .hodlsuggest
     font-size: 1.15em
     
 .none
@@ -591,4 +620,7 @@ h2
 
 ul
     margin-block-end: 0
+    
+.padleft
+    margin-left: 0.36em
 </style>

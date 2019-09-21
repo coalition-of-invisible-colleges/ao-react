@@ -9,8 +9,14 @@
         img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
         label.stash {{ this.card.boost.toFixed(2) }}
     .bottomright
-        button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
-        button.smallcaps.redwx(v-else, @click='activate') activate
+        .tooltip
+            button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
+            button.smallcaps.redwx(v-else, @click='activate') activate
+            .tooltiptext
+                .gui.title(v-if='nameList.length > 0') vouches
+                ul(v-if='nameList.length > 0')
+                    li
+                        vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
     .clearboth
 </template>
 
@@ -20,10 +26,11 @@ import DctrlActive from '../Members/DctrlActive'
 import Badges from '../Members/Badges'
 import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
+import Vouch from '../Members/Vouch'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck},
+    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch},
     computed:{
         card(){
             return this.$store.getters.hashMap[this.m.memberId]
@@ -36,6 +43,11 @@ export default {
                 }
             })
             return isLoggedIn
+        },
+        nameList(){
+            return this.$store.getters.contextCard.deck.map(mId => {
+                return mId
+            })
         },
     },
     methods: {
@@ -72,6 +84,7 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/grid'
+@import '../../styles/tooltips'
 
 img
     height: 2em
@@ -161,4 +174,13 @@ label
 
 .clearboth
     clear: both
+    
+.gui
+    font-size: 1.7em
+    cursor: pointer
+
+.title
+    text-align: center
+    font-size: 1.75em
+    margin-top: 0.5em
 </style>
