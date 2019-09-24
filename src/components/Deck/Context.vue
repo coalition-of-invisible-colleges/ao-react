@@ -13,7 +13,10 @@
     div.right.front(v-if='card.book.startTs')
         span {{ cardStart.days.toFixed(1) }} days
         img(src="../../assets/images/timecube.svg")
-    .hyperpaper
+    .hyperpaper.freshpaper(v-if='cardAge < 8')
+    .hyperpaper.weekoldpaper(v-else-if='cardAge < 30')
+    .hyperpaper.montholdpaper(v-else-if='cardAge < 90')
+    .hyperpaper.threemontholdpaper(v-else='cardAge >= 90')
     slot
 </template>
 
@@ -68,7 +71,13 @@ export default {
               purplewx : color == 'purple',
               blackwx : color == 'black',
           }
-        }
+        },
+        cardAge(){
+            let now = Date.now()
+            let msSince = now - this.card.timestamp
+            let days = msSince / (1000 * 60 * 60 * 24)
+            return days
+        },
     }
 }
 
@@ -106,6 +115,22 @@ img
     opacity: 0.2
     z-index: 2
     position: absolute
+    
+.freshpaper
+    background-image: url('../../assets/images/paper.jpg')
+    opacity: 0.2
+
+.weekoldpaper
+    background-image: url('../../assets/images/paper_aged_1.png')
+    opacity: 0.25
+
+.montholdpaper
+    background-image: url('../../assets/images/paper_aged_2.png')
+    opacity: 0.3
+
+.threemontholdpaper
+    background-image: url('../../assets/images/paper_aged_3.png')
+    opacity: 0.35
 
 .popup
     top: 0

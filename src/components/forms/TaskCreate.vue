@@ -127,7 +127,9 @@ export default {
             }
         },
         resetCard(){
+            console.log("resetCard, task.name is ", this.task.name)
             this.task.name = ''
+            console.log("post, task.name is ", this.task.name)
         },
         subTaskTask(taskId) {
             if(this.matchCard && !this.isGrabbed(taskId)) {
@@ -144,6 +146,7 @@ export default {
             })
         },
         createOrFindTask(){
+            this.playPageTurn()
             let foundId = this.matchCard
             let potentialCard = this.task.name.trim()
             console.log("potentialCard is ", potentialCard)
@@ -166,6 +169,11 @@ export default {
                 this.subTaskTask(foundId)
             }
             this.resetCard()
+        },
+        playPageTurn(){
+            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            flip.volume = flip.volume * 0.3
+            flip.play()
         },
         // hasSubTask(taskId){
         //     return this.$store.getters.hashMap[this.taskId].subTasks.indexOf(taskId) > -1

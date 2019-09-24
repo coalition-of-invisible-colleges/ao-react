@@ -13,6 +13,7 @@ export default {
     props: ['b'],
     methods: {
         goIn(){
+            this.playPageTurn()
             window.scrollTo(0, '33px');
 
             let panel = this.c
@@ -37,6 +38,11 @@ export default {
             })
 
             this.$router.push("/task/" + this.b.taskId)
+        },
+        playPageTurn(){
+            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            flip.volume = flip.volume * 0.3
+            flip.play()
         },
     },
 }

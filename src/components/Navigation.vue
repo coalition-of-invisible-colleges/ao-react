@@ -9,6 +9,12 @@
         img.bullimgright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg")
         img.bullimgright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg")
         img.bullimgright(v-else  src="../assets/images/navigas/uniBullDab.svg")
+    button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }')
+        img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/badge.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
+        img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/timecube.svg')
+        img.upg(v-else src='../assets/images/timecube.svg')
     button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
         .full(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn')
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
@@ -17,25 +23,43 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else src='../assets/images/boatblack.svg')
         .full(v-else) log out
-    .pushdown()
+    button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright')
+        img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/boatblack.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/bounty.svg')
+        img.upg.timecube(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/timecube.svg')
+        img.upg(v-else src='../assets/images/badge.svg')
+    .pushdown
     div(:class='{suncontext: $router.currentRoute.path === "/front", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentsides
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
     .small.always.left
-        .connectedstatus.tooltip
-            span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
-            span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
-            span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
-            span.dot.purplewx(v-else="$store.state.loader.connectionError") 
+        .tooltip
+            img.doge(v-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected == "disconnected" }')
+            img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected == "disconnected" }')
             .tooltiptext.right
-                p(v-if="$store.state.loader.connected == 'disconnected'") disconnected
-                p(v-if="$store.state.loader.connected == 'connecting'") connecting
-                p(v-if="$store.state.loader.connected == 'connected'") connected
+                p
+                    span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
+                    span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
+                    span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
+                    span.dot.purplewx(v-else="$store.state.loader.connectionError") 
+                    span(v--if="$store.state.loader.connected == 'connecting'") connecting
+                    span(v-else-if="$store.state.loader.connected == 'connected'") connected
+                    span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
                 p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
-                p last ping: {{ $store.state.loader.lastPing }} ms pong
                 p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
+                p last ping: {{ $store.state.loader.lastPing }} ms pong
+        .wowdar
+            .ringbase.ring1
+            .ringbase.ring2
+            .pulse
+            .pointer
+                .div
+            .ping.pos1
+            .ping.pos2
+        .ringbase.ring3.big(:class='{ showping : pinging }')
     task-create.always
 </template>
 
@@ -51,36 +75,39 @@ import TaskCreate from './forms/TaskCreate'
 export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput, Context, TaskCreate },
+    props: ['barking', 'pinging'],
     mounted() {
         this.setToRoute()
-        var el = document.getElementById('helm')
-        var mc = new Hammer.Manager(el)
 
-        var Swipe = new Hammer.Swipe()
+        // helm gestures
+        let el = document.getElementById('helm')
+        let mc = new Hammer.Manager(el)
+
+        let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
             this.flashHelm()
             this.previousUpgradeMode()
-        });
+        })
 
         mc.on('swiperight', (e) => {
             this.flashHelm()
             this.nextUpgradeMode()
-        });
+        })
 
         mc.on('swipeup', (e) => {
             this.flashHelm()
             this.closeUpgrades()
-        });
+        })
 
         mc.on('swipedown', (e) => {
             this.flashHelm()
             this.nextUpgradeMode()
-        });
+        })
 
-        var Press = new Hammer.Press({
-          time: 500
-        });
+        let Press = new Hammer.Press({
+          time: 400
+        })
         mc.add(Press)
         mc.on('press', (e) => {
             if(this.$router.currentRoute.path === '/front'){
@@ -94,9 +121,9 @@ export default {
                 this.flashHelm(2)
                 this.$router.push('/front')
             }
-        });
+        })
 
-        var Tap = new Hammer.Tap({ time: 500 })
+        let Tap = new Hammer.Tap({ time: 500 })
         mc.add(Tap)
         mc.on('tap', (e) => {
             if (!this.$store.state.upgrades.mode){
@@ -104,8 +131,63 @@ export default {
             }
             this.flashHelm(0.5)
             this.nextUpgradeMode()
-        });
+        })
 
+        // helm left and right icon gestures
+        let lel = document.getElementById('helmright')
+        let lmc = new Hammer.Manager(lel)
+
+        let Tap2 = new Hammer.Tap({ time: 500 })
+        lmc.add(Tap2)
+        lmc.on('tap', (e) => {
+            if (!this.$store.state.upgrades.mode){
+                this.killSession()
+            }
+            this.flashHelm(0.5)
+            this.nextUpgradeMode()
+        })
+
+        let rel = document.getElementById('helmleft')
+        let rmc = new Hammer.Manager(rel)
+
+        let Tap3 = new Hammer.Tap({ time: 500 })
+        rmc.add(Tap3)
+        rmc.on('tap', (e) => {
+            if (!this.$store.state.upgrades.mode){
+                this.killSession()
+            }
+            this.flashHelm(0.5)
+            this.previousUpgradeMode()
+        })
+
+        // doge wowdar gestures
+        let dogeel = document.getElementById('dogecomm')
+        let dogemc = new Hammer.Manager(dogeel)
+
+        let Press2 = new Hammer.Press({
+          time: 800
+        })
+        dogemc.add(Press2)
+        dogemc.on('press', (e) => {
+            var ping = new Audio(require('../assets/sounds/echo.wav'))
+            ping.volume = ping.volume * 0.6
+            ping.play()
+            var bark = new Audio(require('../assets/sounds/bark3.wav'))
+            bark.volume = bark.volume * 0.3
+            bark.play()
+            console.log("pre barking is ", this.barking)
+            this.barking = true
+            this.pinging = true
+            console.log("post barking is ", this.barking)
+            setTimeout(()=> {
+                this.barking = false
+                console.log("postpost barking is ", this.barking)
+            }, 1000)
+            setTimeout(()=> {
+                this.pinging = false
+                console.log("postpost barking is ", this.barking)
+            }, 2000)
+        })
     },
     watch: {
       '$route': 'setToRoute'
@@ -147,6 +229,9 @@ export default {
             this.$router.push(target)
         },
         cycleLeft(){
+            var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
+            cachunk.volume = cachunk.volume * 0.15
+            cachunk.play()
             switch (this.$router.currentRoute.path){
                 case "/front": return this.$router.push('/')
               // case "/dash": return this.$router.push('/front')
@@ -158,6 +243,9 @@ export default {
             }, 1)
         },
         cycleRight(){
+            var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
+            cachunk.volume = cachunk.volume * 0.15
+            cachunk.play()
             switch (this.$router.currentRoute.path){
               case "/dash": return this.$router.push('/')
             }
@@ -178,9 +266,15 @@ export default {
             this.showBtc = !this.showBtc
         },
         nextUpgradeMode() {
+            var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
+            cachunk.volume = cachunk.volume * 0.15
+            cachunk.play()
             this.$store.commit("nextMode")
         },
         previousUpgradeMode() {
+            var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
+            cachunk.volume = cachunk.volume * 0.15
+            cachunk.play()
             this.$store.commit("previousMode")
         },
         closeUpgrades() {
@@ -202,14 +296,14 @@ export default {
             }
 
             helm.className += addedClasses
-            setTimeout( () => { helm.className = helm.className.replace(addedClasses, ''); }, ms)
+            setTimeout( () => { helm.className = helm.className.replace(addedClasses, '') }, ms)
         }
     },
 }
 
 function updateTransition() {
-  var btc = document.querySelector("span.btc");
-  var sat = document.querySelector("span.sat");
+  let btc = document.querySelector("span.btc")
+  let sat = document.querySelector("span.sat")
 
   if (btc) {
       btc.className = "sat"
@@ -220,8 +314,8 @@ function updateTransition() {
 
 }
 
-updateTransition();
-var intervalID = window.setInterval(updateTransition, 7000);
+updateTransition()
+let intervalID = window.setInterval(updateTransition, 7000)
 
 </script>
 
@@ -289,24 +383,24 @@ var intervalID = window.setInterval(updateTransition, 7000);
   min-height: 5.8em
 
 .side_bar ul
-  margin-left: 10px;
+  margin-left: 10px
 
 .toggle ul
-  padding-left:0;
+  padding-left:0
 
 a
-  text-decoration: none;
+  text-decoration: none
   color: accent1
-  padding: 10px 20px;
-  margin-bottom: 0;
-  margin-left:auto;
-  margin-right:auto;
-  list-style: none;
+  padding: 10px 20px
+  margin-bottom: 0
+  margin-left:auto
+  margin-right:auto
+  list-style: none
   font-family:sans-serif
-  display: block;
+  display: block
   margin-bottom:5px
   max-width:360px
-  text-align:center;
+  text-align:center
   background-color:accent5
 
 a:hover, .router-link-active
@@ -367,12 +461,12 @@ hr
     margin-right: 0.5em
     margin-top: 1.5em
     margin-bottom: 0em
-    -webkit-transition-property: background-color margin-bottom margin-top border;
-    -webkit-transition-duration: 7s;
-    -webkit-transition-timing-function: ease-in-out;
-    transition-property: background-color margin-bottom margin-top border;
-    transition-duration: 7s;
-    transition-timing-function: ease-in-out;
+    -webkit-transition-property: background-color margin-bottom margin-top border
+    -webkit-transition-duration: 7s
+    -webkit-transition-timing-function: ease-in-out
+    transition-property: background-color margin-bottom margin-top border
+    transition-duration: 7s
+    transition-timing-function: ease-in-out
 
 .sat
     border: 2px teal solid
@@ -382,12 +476,12 @@ hr
     height: 4em
     margin-top: 0em
     margin-bottom: 1.5em
-    -webkit-transition-property: background-color margin-bottom margin-top border;
-    -webkit-transition-duration: 7s;
-    -webkit-transition-timing-function: ease-in-out;
-    transition-property: background-color margin-bottom margin-top border;
-    transition-duration: 7s;
-    transition-timing-function: ease-in-out;
+    -webkit-transition-property: background-color margin-bottom margin-top border
+    -webkit-transition-duration: 7s
+    -webkit-transition-timing-function: ease-in-out
+    transition-property: background-color margin-bottom margin-top border
+    transition-duration: 7s
+    transition-timing-function: ease-in-out
 
 .smallbird
     height:1em
@@ -395,8 +489,6 @@ hr
 .subheading
     opacity: 0.9
     font-size: 85%
-
-.connectedstatus
 
 .dot
     height: 0.5em
@@ -442,6 +534,23 @@ hr
     border-bottom-right-radius: 50%
     border-top: none
 
+.modeleft, .moderight
+    position: fixed
+    top: 0
+    left: calc(50% - 10em)
+    opacity: 0.4
+    // background: white
+    // box-shadow: rgba(255, 255, 255, 0.65) 0px 0px 10px
+    background: none
+    border: none
+    
+.modeleft
+    transform: translateX(50%)
+        
+.moderight
+    left: calc(50% + 7.5em)
+    transform: translateX(-50%)
+
 .logout
     opacity: 1
     position: absolute
@@ -478,9 +587,11 @@ hr
     background-color: #d3e3e3
 
 .boat
-    width: 7em
-    padding: 1em 0
+    transform: none
 
+.timecube
+    transform: translateX(-0.2em)
+    
 .context
     width: calc(100% - 14em)
     margin: 0 auto
@@ -516,12 +627,250 @@ hr
     height: fit-content
     width: fit-content
     position: fixed
-    bottom: 1em
+    bottom: 3.85em
     top: initial
-    left: 1em
+    left: 0.5em
     z-index: 149
     padding: 0 1em 1em 1em
     
 .ztop
     z-index: 152
+    
+body {
+  background-color: #333
+  padding: 50px
+}
+
+.wowdar
+  float:left
+  position:relative
+  width:70px
+  height:70px
+  background-size: 100% 100%
+  border-radius:35px
+  box-shadow:0 1px 1px 0 rgba(0,0,0,0.4), 0 0 4px 1px rgba(0,0,0,0.2), inset 0 1px 1px 0 rgba(255,255,255,0.2), inset 0 2px 4px 1px rgba(255,255,255,0.1)
+  display: none
+
+@keyframes wow
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+
+.tooltip:hover > .tooltiptext
+    animation-name: wow
+    animation-duration: 0.5s
+    transition-timing-function: ease
+    transition-property: opacity
+
+.tooltip:hover+.wowdar
+    display: block
+    animation-name: wow
+    animation-duration: 0.2s
+    transition-timing-function: ease
+    transition-property: opacity
+
+.pulse
+  position:absolute
+  top:0
+  left:0
+  width:70px
+  height:70px
+  border-radius:35px
+  background:#dcf48a
+  -moz-animation: pulsating 2s ease-in-out
+  -moz-animation-iteration-count: infinite
+  -webkit-animation: pulsating 2s ease-in-out
+  -webkit-animation-iteration-count: infinite
+  opacity:0.0
+  z-index:5
+  
+.ringbase {
+  position:absolute
+  top:0
+  left:0
+  width:70px
+  height:70px
+  border-radius:35px
+  opacity:0.0
+  z-index:10
+}
+
+.ring1 {
+  box-shadow:0 0 2px 1px #8eb716, inset 0 0 2px 1px #00f400
+  -moz-animation: ring 2s ease-in-out
+  -moz-animation-iteration-count: infinite
+  -webkit-animation: ring 2s ease-in-out
+  -webkit-animation-iteration-count: infinite
+  animation: ring 2s ease-in-out
+  animation-iteration-count: infinite
+}
+
+.ring2 {
+  box-shadow:0 0 1px 0px #cbe572, inset 0 0 1px 0px #00f400
+  -moz-animation: ring 2s ease-in-out
+  -moz-animation-iteration-count: infinite
+  -moz-animation-delay: 0.5s
+  -webkit-animation: ring 2s ease-in-out
+  -webkit-animation-iteration-count: infinite
+  -webkit-animation-delay: 0.5s
+  animation: ring 2s ease-in-out
+  animation-iteration-count: infinite
+  animation-delay: 0.5s
+}
+
+.ring3 {
+  box-shadow:0 0 3px 0px #cbe572, inset 0 0 1px 0px #cbe572
+  -moz-animation: ring 1.5s ease-in-out
+  -moz-animation-iteration-count: infinite
+  -moz-animation-delay: 0.5s
+  -webkit-animation: ring 1.5s ease-in-out
+  -webkit-animation-iteration-count: infinite
+  -webkit-animation-delay: 0.5s
+  animation: ring 1.5s ease-in-out
+  animation-iteration-count: infinite
+  animation-delay: 0.5s
+  display: block
+}
+
+@-webkit-keyframes pulsating {
+  0% {opacity: 0.0}
+  50% {opacity: 0.2}
+  100% {opacity: 0.0}
+}
+
+@-moz-keyframes pulsating {
+  0% {opacity: 0.0}
+  50% {opacity: 0.2}
+  100% {opacity: 0.0}
+}
+
+@keyframes pulsating {
+  0% {opacity: 0.0}
+  50% {opacity: 0.2}
+  100% {opacity: 0.0}
+}
+
+@-webkit-keyframes ring {
+  0% {-webkit-transform: scale(0.4, 0.4); opacity: 0.0}
+  50% {opacity: 0.6}
+  100% {-webkit-transform: scale(1.1, 1.1); opacity: 0.0}
+}
+
+@-moz-keyframes ring {
+  0% {-moz-transform: scale(0.4, 0.4); opacity: 0.0}
+  50% {opacity: 0.6}
+  100% {-moz-transform: scale(1.1, 1.1); opacity: 0.0}
+}
+
+@keyframes ring {
+  0% {transform: scale(0.4, 0.4); opacity: 0.0}
+  50% {opacity: 0.6}
+  100% {transform: scale(1.1, 1.1); opacity: 0.0}
+}
+
+
+.pointer {
+  position: absolute
+  width: 70px
+  top: 35px
+  -webkit-animation: circling 2s linear
+  -webkit-animation-iteration-count: infinite
+  -moz-animation: circling 2s linear
+  -moz-animation-iteration-count: infinite
+  animation: circling 2s linear
+  animation-iteration-count: infinite
+  z-index: 20
+}
+
+.pointer div {
+  width: 49%
+  border-bottom:2px solid #00f400
+}
+
+.ping {
+  opacity: 0
+  border: 3px solid #e0f400
+  border-radius: 100%
+  position:absolute
+  -webkit-animation: blink 2s ease-out
+  -webkit-animation-iteration-count: infinite
+  -moz-animation: blink 2s ease-out
+  -moz-animation-iteration-count: infinite
+  animation: blink 2s ease-out
+  animation-iteration-count: infinite
+  z-index: 25
+}
+
+.ping.pos1 {
+  left:10px
+  top:38px
+}
+
+.ping.pos2 {
+  left:40px
+  top:18px
+  -webkit-animation-delay: 0.6s
+  -moz-animation-delay: 0.6s
+  animation-delay: 0.6s
+}
+
+@-webkit-keyframes circling {
+  0% {-webkit-transform: rotate(0deg)}
+  50% {-webkit-transform: rotate(180deg)}
+  100% {-webkit-transform: rotate(360deg)}
+}
+
+@-moz-keyframes circling {
+  0% {-moz-transform: rotate(0deg)}
+  50% {-moz-transform: rotate(180deg)}
+  100% {-moz-transform: rotate(360deg)}
+}
+
+@keyframes circling {
+  0% {transform: rotate(0deg)}
+  50% {transform: rotate(180deg)}
+  100% {transform: rotate(360deg)}
+}
+
+@-webkit-keyframes blink {
+  0% { opacity: 1 }
+  100% { opacity: 0 }
+}
+
+@-moz-keyframes blink {
+  0% { opacity: 1 }
+  100% { opacity: 0 }
+}
+
+@keyframes blink {
+  0% { opacity: 1 }
+  100% { opacity: 0 }
+}
+
+.doge
+    left: 25px
+    bottom: 23px
+    position: fixed
+    opacity: 0.5
+    height: 35px
+    width: 35px
+    cursor: pointer
+    z-index: 9001
+    
+.doge.red
+    filter: hue-rotate(30deg)
+    
+.big
+    position: fixed
+    left: -85%
+    bottom: 27px
+    width: 2000px
+    height: 2000px
+    border-radius: 50%
+    display: none
+
+.showping
+    display: block
+    
+.flip
+     transform: scaleX(-1)
 </style>

@@ -75,10 +75,10 @@ export default {
             })
         },
         goIn(){
+            this.playPageTurn()
             let top = this.c.indexOf(this.r.resourceId)
             console.log("goIn called with TOP: ", top)
             if (top > -1){
-
                 this.$router.push('/task/' + this.r.resourceId)
                 this.$store.dispatch("goIn", {
                     parents: [],
@@ -86,7 +86,12 @@ export default {
                     top,
                 })
             }
-        }
+        },
+         playPageTurn(){
+            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            flip.volume = flip.volume * 0.3
+            flip.play()
+        },
     }
 }
 

@@ -82,6 +82,9 @@ export default new Vuex.Store({
       completed(state, getters){
           return getters.memberCard.completed.map(t => getters.hashMap[t])
       },
+      hodlersByCompletions(state, getters){
+
+      },
       red(state, getters){
           if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'red')

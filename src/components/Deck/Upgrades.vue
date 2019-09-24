@@ -119,8 +119,8 @@ export default {
     },
     methods: {
         goIn(taskId, guild = undefined){
+            this.playPageTurn()
             let parents = []
-            if(guild) parents.push(guild)
             let panel = [taskId]
             let top = 0
 
@@ -139,9 +139,16 @@ export default {
                 parents.push(this.$store.getters.memberCard.taskId)
             }
 
+            if(guild) parents.push(guild)
+
             console.log('going into the:',  {panel, top, parents})
 
             this.$store.dispatch("goIn", {panel, top, parents})
+        },
+        playPageTurn(){
+            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            flip.volume = flip.volume * 0.3
+            flip.play()
         },
         togglePayment(x){
             let payModes = ['bitcoin', 'lightning']

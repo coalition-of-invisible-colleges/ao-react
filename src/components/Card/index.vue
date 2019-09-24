@@ -1,5 +1,5 @@
 <template lang='pug'>
-.task(:class="cardInputSty"  @dblclick='goIn').dont-break-out.agedwrapper
+.task(:class="cardInputSty"  @dblclick.stop='goIn').dont-break-out.agedwrapper
   .agedbackground.freshpaper(v-if='cardAge < 8')
   .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
   .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -73,7 +73,7 @@ export default {
           })
         },
         goIn(){
-
+            this.playPageTurn()
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -107,14 +107,26 @@ export default {
 
             this.$router.push("/task/" + this.b.taskId)
         },
+        playPageTurn(){
+            console.log("cardindex playPageTurn. why is this playing twice / twice volume?")
+            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            flip.volume = flip.volume * 0.3
+            flip.play()
+        },
         toggleGrab(){
             if (this.isGrabbed) {
+                var twinkle = new Audio(require('../../assets/sounds/chrono07.wav'))
+                twinkle.volume = twinkle.volume * 0.3
+                twinkle.play()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-dropped',
                     taskId: this.b.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
             } else {
+                var twinkle = new Audio(require('../../assets/sounds/chrono06.wav'))
+                twinkle.volume = twinkle.volume * 0.3
+                twinkle.play()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-grabbed',
                     taskId: this.b.taskId,

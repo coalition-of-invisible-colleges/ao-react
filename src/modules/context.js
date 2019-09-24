@@ -50,7 +50,6 @@ const mutations = {
     },
     setParent(state, p){
         state.parent = p
-        console.log("parent set?", state)
     },
     setPanel(state, panel, top){
           state.panel = panel
@@ -59,7 +58,6 @@ const mutations = {
           state.top = top
     },
     setAction(state, a){
-        console.log("set action setting action", a)
         state.action = a
     },
     last(state){
@@ -84,20 +82,24 @@ const mutations = {
 }
 
 const actions = {
-      goIn({commit, state}, pContext ){
-          commit("setPanel", pContext.panel)
-          commit("setTop", pContext.top)
-          pContext.parents.forEach(p => {
-            console.log("adding parent ", p)
-            commit("addParent", p)
-          })
-      },
-      goUp({commit, state}, pContext){
-          console.log("go up action ")
-          commit("goToParent", pContext.target)
-          commit("setPanel", pContext.panel)
-          commit("setTop", pContext.top)
-      }
+    goIn({commit, state}, pContext ){
+        var flip = new Audio(require('../assets/sounds/myst158.wav'))
+        flip.volume = flip.volume * 0.3
+        flip.play()
+        commit("setPanel", pContext.panel)
+        commit("setTop", pContext.top)
+        pContext.parents.forEach(p => {
+        commit("addParent", p)
+        })
+    },
+    goUp({commit, state}, pContext){
+        var flip = new Audio(require('../assets/sounds/myst158.wav'))
+        flip.volume = flip.volume * 0.3
+        flip.play()
+        commit("goToParent", pContext.target)
+        commit("setPanel", pContext.panel)
+        commit("setTop", pContext.top)
+    },
 }
 
 const getters = {}

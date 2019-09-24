@@ -118,6 +118,7 @@ export default {
           Vue.nextTick(() => { console.log(Object.keys(this.$refs)  ); console.log("this.$refs.guildsBar is ", this.$refs.guildsBar) })
       },
       goIn(t){
+          this.playPageTurn()
           let taskId = t.funders[0]
           let panel = [taskId]
           let top = 0
@@ -134,6 +135,11 @@ export default {
           this.$store.commit('setMode', 0)
           this.$store.commit('setAction', t.taskId)
 
+      },
+      playPageTurn(){
+          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+          flip.volume = flip.volume * 0.3
+          flip.play()
       },
       cycleGuilds(){
           console.log('cycling')

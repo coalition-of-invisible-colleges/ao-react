@@ -42,6 +42,7 @@ export default {
             }
         },
         goIn(taskId){
+            this.playPageTurn()
             let parents = []
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)
@@ -54,6 +55,11 @@ export default {
                 parents
             })
             this.$router.push('/task/' + taskId)
+        },
+        playPageTurn(){
+            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            flip.volume = flip.volume * 0.3
+            flip.play()
         },
         cardDate(b){
             if ( b.book.startTs ) {

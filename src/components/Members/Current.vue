@@ -18,6 +18,7 @@ export default {
   props: ['memberId', 'b', 'inId'],
   methods:{
     goIn(taskId){
+        this.playPageTurn()
         console.log("goIn called")
         // XXX
         if (!this.$store.state.context.completed){
@@ -46,6 +47,11 @@ export default {
             this.$store.dispatch("goIn", {taskId, panel, top, parents})
 
         }, 5)
+    },
+    playPageTurn(){
+        var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+        flip.volume = flip.volume * 0.3
+        flip.play()
     },
     complete(){
         this.$store.dispatch("makeEvent", {

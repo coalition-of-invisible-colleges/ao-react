@@ -78,6 +78,7 @@ function taskSubTasked(taskId, subTask, callback){
       type: "task-sub-tasked",
       taskId,
       subTask,
+      memberId,
     }
     dctrlDb.insertEvent(newEvent, callback)
 }

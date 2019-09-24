@@ -57,14 +57,18 @@ export default {
         mc.add(Swipe)
 
         mc.on('swipeleft', (e) => {
-          this.top = (this.top - 1) % this.c.length
-          if (this.top === -1) {
-            this.top = this.c.length - 1
-          }
+          // this.playPageTurn()
+          // this.top = (this.top - 1) % this.c.length
+          // if (this.top === -1) {
+          //   this.top = this.c.length - 1
+          // }
+          this.last()
         });
 
         mc.on('swiperight', (e) => {
-          this.top = (this.top + 1) % this.c.length
+          // this.playPageTurn()
+          // this.top = (this.top + 1) % this.c.length
+          this.next()
         });
 
         mc.on('swipeup', (e) => {
@@ -75,6 +79,7 @@ export default {
 
         mc.on('swipedown', (e) => {
             console.log('got swipe down')
+            this.playPageTurn()
             this.swap(1)
         });
 
@@ -98,9 +103,11 @@ export default {
   },
   methods:{
     toggleOpen(){
+        this.playPageTurn()
         this.open = !this.open
     },
     last(){
+        this.playPageTurn()
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
@@ -108,33 +115,40 @@ export default {
         this.componentKey ++
     },
     next(){
+        this.playPageTurn()
         this.top = (this.top + 1) % this.c.length
         this.componentKey ++
     },
     swap(direction){
-      let cardIndex
-      this.c.forEach((t, i) => {
-        if(t.taskId === this.topCard.taskId) {
-          cardIndex = i
+        let cardIndex
+        this.c.forEach((t, i) => {
+          if(t.taskId === this.topCard.taskId) {
+            cardIndex = i
+          }
+        })
+        let swapIndex = (cardIndex + direction) % this.c.length
+        if (swapIndex === -1) {
+            swapIndex = this.c.length - 1
+        } else if (swapIndex > this.c.length - 1) {
+            swapIndex = 0
         }
-      })
-      let swapIndex = (cardIndex + direction) % this.c.length
-      if (swapIndex === -1) {
-          swapIndex = this.c.length - 1
-      } else if (swapIndex > this.c.length - 1) {
-          swapIndex = 0
-      }
-      this.$store.dispatch("makeEvent", {
-          type: 'task-swapped',
-          taskId: this.taskId,
-          swapId1: this.topCard.taskId,
-          swapId2: this.c[swapIndex].taskId,
-          direction: 'up',
-      })
+        this.$store.dispatch("makeEvent", {
+            type: 'task-swapped',
+            taskId: this.taskId,
+            swapId1: this.topCard.taskId,
+            swapId2: this.c[swapIndex].taskId,
+            direction: 'up',
+        })
     },
     copyCardToClipboard(){
+        this.playPageTurn()
         navigator.clipboard.writeText(this.topCard.name)
-    }
+    },
+    playPageTurn(){
+        var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+        flip.volume = flip.volume * 0.3
+        flip.play()
+    },
   },
   computed: {
     topCard(){
