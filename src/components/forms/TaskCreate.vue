@@ -142,7 +142,6 @@ export default {
                 taskId: this.taskId,
                 subTask: taskId,
             })
-            this.resetCard()
         },
         createOrFindTask(){
             let foundId = this.matchCard
@@ -166,6 +165,7 @@ export default {
             } else {
                 this.subTaskTask(foundId)
             }
+            this.resetCard()
         },
         // hasSubTask(taskId){
         //     return this.$store.getters.hashMap[this.taskId].subTasks.indexOf(taskId) > -1
@@ -385,10 +385,10 @@ textarea
     height: 100%
     pointer-events: none
     opacity: 0.2
-    
+
 .currentColor
     opacity: 1
-    
+
 .closeit
     position: fixed
     width: 100%

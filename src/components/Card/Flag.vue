@@ -3,7 +3,7 @@
   div(v-if='!$store.state.context.panel[$store.state.context.top]')
     img.flaggy(@click='deckIt'  src='../../assets/images/scroll.svg')
   div(v-else-if="$store.state.upgrades.mode === 'boat'"  @click='flagIt')
-    img.flaggy.svgwhite.faded(v-if='!isFlagged', src='../../assets/images/boatwhite.svg')
+    img.flaggy.svgwhite.faded(v-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-else-if="$store.state.upgrades.mode === 'badge'")
     span.flaggy.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
@@ -25,7 +25,6 @@ import PayReq from '../Deck/PayReq'
 import PayAddress from '../Deck/PayAddress'
 import Tag from '../Nodes/Tag'
 import ResourceBook from '../forms/ResourceBook'
-
 
 export default {
     components: {PayReq, PayAddress, Tag, ResourceBook},
@@ -79,6 +78,7 @@ export default {
             this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
+            console.log("",  this.b.taskId, this.$store.getters.memberCard.taskId)
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
@@ -86,19 +86,29 @@ export default {
             })
         },
         flagIt(){
+            console.log("inId", this.inId, 'is flagged?', this.isFlagged)
             if (!this.isFlagged) {
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-prioritized',
-                    taskId: this.b.taskId,
-                    inId: this.inId,
-                })
+                if (this.inId){
+                    this.$store.dispatch("makeEvent", {
+                      type: 'task-prioritized',
+                      taskId: this.b.taskId,
+                      inId: this.inId,
+                    })
+                } else {
+                    this.deckIt()
+                }
             } else {
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-refocused',
-                    taskId: this.b.taskId,
-                    inId: this.inId,
-                })
+                if (this.inId){
+                    this.$store.dispatch("makeEvent", {
+                      type: 'task-refocused',
+                      taskId: this.b.taskId,
+                      inId: this.inId,
+                    })
+                } else {
+                    this.deckIt()
+                }
             }
+
         },
     },
     computed: {
@@ -125,6 +135,9 @@ export default {
 @import '../../styles/skeleton';
 @import '../../styles/grid';
 @import '../../styles/button';
+
+.raiseboat
+    transform: rotate(-30deg)
 
 .count
     float: right

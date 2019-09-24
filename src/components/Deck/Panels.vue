@@ -2,18 +2,18 @@
 
 .panel
     .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
-      .four.grid(v-if='$store.getters.red.length > 0')
+      .four.columns(v-if='$store.getters.red.length > 0')
           card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
-      .four.grid(v-if='$store.getters.green.length > 0')
+      .four.columns(v-if='$store.getters.green.length > 0')
           card-panel(:c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
-      .four.grid(v-if='$store.getters.blue.length > 0')
+      .four.columns(v-if='$store.getters.blue.length > 0')
           card-panel(:c='$store.getters.blue', :taskId='$store.state.context.panel[$store.state.context.top]')
     .row(v-if='$store.getters.yellow.length + $store.getters.purple.length > 0')
-      .two.grid
+      .two.columns
           p &nbsp;
-      .four.grid(v-if='$store.getters.yellow.length > 0')
+      .four.columns(v-if='$store.getters.yellow.length > 0')
           card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
-      .four.grid(v-if='$store.getters.purple.length > 0')
+      .four.columns(v-if='$store.getters.purple.length > 0')
           card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
 </template>
 

@@ -15,7 +15,7 @@
             h4 currently connected to:
             .row
                 template.row(v-for='r in $store.state.ao')
-                    p  {{ r.address }}
+                    p {{ r.address }}
 </template>
 
 <script>
