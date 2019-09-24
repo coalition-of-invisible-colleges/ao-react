@@ -23,7 +23,7 @@
                     upgrades
         div.fadey(:class='cardInputSty')
             panels
-            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') completed
+            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') ☑
             div &nbsp;
         img.fw(src='../../assets/images/pixeldesert.png')
         .agedbackground.translucent(:class='cardInputSty')
@@ -193,7 +193,7 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 0 2em 1em 0
+    padding: 0 2em 0.8em 0
     margin: 0 1em
 
 .slide-fade-enter-active {
@@ -273,6 +273,7 @@ export default {
     padding: 0.5em
     margin-right: -1em
     margin-top: -1em
+    padding-bottom: 0.3em
     
 .upgrademode
     float: left
