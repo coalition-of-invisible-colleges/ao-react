@@ -31,7 +31,7 @@
                 div.endpadtwo(v-else)
                     .gui.title.yellowtx missions
                     ul.none
-                        template(v-for='g in (showAllGuilds ? dogeGuilds : dogeGuilds.slice(0, 5))')
+                        template(v-for='g in (showAllGuilds ? $store.getters.myGuilds : $store.getters.myGuilds.slice(0, 5))')
                             li.spaced
                                 span(@click='goIn(g.taskId)')
                                     img.floatleft(src='../../assets/images/badge.svg')
@@ -45,8 +45,8 @@
                                     .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         linky.tooltiptext(:x='c.name')
                                 linky.description(:x='g.name')
-                        .more(v-if='dogeGuilds.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ dogeGuilds.length - 5 }}
-                        .more(v-else-if='dogeGuilds.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
+                        .more(v-if='$store.getters.myGuilds.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
+                        .more(v-else-if='$store.getters.myGuilds.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
             template(v-if='$store.state.upgrades.mode === "bounty"')
                 .padded
                     div(v-if='$store.state.cash.info.alias')
@@ -262,15 +262,6 @@ export default {
     computed: {
         b(){
             return this.$store.getters.contextCard
-        },
-        dogeGuilds(){
-            let guilds = []
-            this.$store.getters.guilds.forEach( g => {
-                if (g.deck.indexOf( this.isDoge.memberId ) > -1){
-                    guilds.push(g)
-                }
-            })
-            return guilds
         },
         isDoge(){
             let doge
