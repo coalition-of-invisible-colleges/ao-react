@@ -3,19 +3,28 @@
 .AOs
     .row
         .six.columns
-            h4 Connect AO
+
+            h4 {{ $store.state.cash.alias }} Connection Info:
+            h6 Address:
+                code {{ $store.state.cash.address }}
+            h6 Connection Secret:
+                code {{ connectionString }}
+            form-box(btntxt="rename"  event='ao-named'  v-bind:data='aoNamed')
+                label(for="aoAliasInput") change ao alias:
+                input#aoAliasInput(v-model='aoNamed.alias' type='text')
+        .six.columns
+            h4 Connect to AO
             form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
                 label(for="aoAddressInput") address:
                 input#aoAddressInput(v-model='ao.address' type='text')
-                label(for="aoSecretInput") connection secret:
+                label(for="aoSecretInput")  connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
-            h4 Connection Secret
-            h6 {{ connectionString }}
-        .six.columns
-            h4 currently connected to:
-            .row
-                template.row(v-for='r in $store.state.ao')
-                    p {{ r.address }}
+    h4 current active links:
+    .row
+        template.row(v-for='r in $store.state.ao')
+            // relay info / recent communications
+            //- h4 {{ r.state.cash.alias }}
+            h6 {{ r.address }}
 </template>
 
 <script>
@@ -29,6 +38,11 @@ export default {
     },
     data() {
         return {
+            // isChange: false,
+            aoNamed: {
+                type: 'ao-named',
+                alias: ''
+            },
             ao: {
                 type: "ao-connected",
                 address: '',

@@ -140,8 +140,8 @@ function specSubTasked(req, res, next){
     events.tasksEvs.taskSubTasked(
       req.body.taskId,
       req.body.subTask,
-      utils.buildResCallback(res),
-      req.body.blame
+      req.body.blame,
+      utils.buildResCallback(res)
     )
   } else {
     res.status(200).send(errRes)

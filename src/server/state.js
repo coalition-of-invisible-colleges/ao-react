@@ -2,6 +2,7 @@ import _ from 'lodash'
 import dctrlDb from './dctrlDb'
 import M from '../mutations'
 import modules from '../modules'
+import config from '../../configuration'
 
 const serverState = {
   ao: [],
@@ -11,6 +12,7 @@ const serverState = {
   tasks: [],
   resources: [],
   cash: {
+    address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
     cash: 0,
@@ -34,6 +36,7 @@ const pubState = {
   tasks: [],
   resources: [],
   cash: {
+    address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
     cash: 0,

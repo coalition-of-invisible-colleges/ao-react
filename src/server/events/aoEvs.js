@@ -28,9 +28,17 @@ function aoUpdated(aoId, ev, callback){
     dctrlDb.triggerShadow(newEvent, callback)
 }
 
+function aoNamed(alias, callback){
+    let newEvent = {
+        type: "ao-named",
+        alias,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
 
 export default {
     aoConnected,
     aoDisconnected,
     aoUpdated,
+    aoNamed,
 }

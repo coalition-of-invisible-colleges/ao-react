@@ -6,6 +6,9 @@ import connector from '../connector'
 
 module.exports = function(req, res, next){
   switch (req.body.type){
+      case 'ao-named':
+          specAoNamed(req, res, next)
+          break
       case 'cash-increased':
           specCashIncreased(req, res, next)
           break
@@ -43,6 +46,15 @@ module.exports = function(req, res, next){
       default:
           next()
   }
+}
+
+function specAoNamed(req, res, next){
+    let errRes = []
+    if (validators.isNotes(req.body.alias, errRes)){
+        events.aoEvs.aoNamed(req.body.alias, utils.buildResCallback(res))
+    } else {
+        res.status(200).send(errRes)
+    }
 }
 
 function specCashIncreased(req, res, next){

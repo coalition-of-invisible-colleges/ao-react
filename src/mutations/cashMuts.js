@@ -1,6 +1,9 @@
 
 function cashMuts(cash, ev){
 		switch (ev.type) {
+			case "ao-named":
+				cash.alias = ev.alias
+				break
 			case "cash-increased":
 				cash.cash += parseFloat(ev.amount)
 				break

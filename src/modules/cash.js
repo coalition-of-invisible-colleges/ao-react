@@ -1,6 +1,8 @@
 import M from '../mutations'
 
 const state = {
+    alias: "",
+    address: "",
     cash: 0,
     spot: 123456,
     currency: 'CAD',
@@ -16,6 +18,8 @@ const state = {
 
 const mutations = {
     setCurrent(state, current){
+        state.alias = current.cash.alias
+        state.address = current.cash.address
         state.cash = current.cash.cash
         state.spot = current.cash.spot
         state.currency = current.cash.currency
