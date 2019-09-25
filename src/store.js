@@ -338,13 +338,25 @@ export default new Vuex.Store({
       myGuilds(state, getters){
           let my = state.tasks.filter(t => {
               if(!t.guild) return false
-              console.log("guild found: ", t.guild)
               if(t.deck.indexOf(getters.member.memberId) === -1) {
-                console.log("guild not hodled :( ", t.guild)
                 return false
               }
-              console.log("we has it!", t.guild)
               return true
+          })
+          console.log("my is ", my)
+          my.forEach(g => {
+              g.tempLastClaimed = 0
+              let completions = g.completed.map(t => getters.hashMap[t])
+              completions.forEach(c => {
+                  if(c.lastClaimed > g.tempLastClaimed) {
+                      console.log("newer checkmark found")
+                      g.tempLastClaimed = c.lastClaimed
+                  }
+              })
+          })
+          my.sort((a, b) => {
+              console.log("sort is ", b.tempLastClaimed - a.tempLastClaimed)
+              return b.tempLastClaimed - a.tempLastClaimed
           })
           return my
       },
