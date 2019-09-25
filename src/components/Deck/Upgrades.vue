@@ -20,6 +20,7 @@
                 div.endpad(v-if='!isDoge')
                     h2.yellowtx(v-if='b.guild') {{ b.guild }}
                     current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :inId='ugly'  :completions='n.contextCompletions')
+                    current(v-for='n in b.deck.filter(x => !$store.getters.hodlersByCompletions.some(p => p.taskId === x))'  :memberId='n'  :b='b'  :inId='ugly')
                     .box.morepad
                         div.dogep.spinslow
                             .tooltip
@@ -50,7 +51,6 @@
                 .padded
                     div(v-if='$store.state.cash.info.alias')
                         .togglepayments
-                            //- (v-if='!$store.state.upgrades.payment')
                             button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
                                 img.max(src='../../assets/images/bitcoin.svg')
                             button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
@@ -483,7 +483,7 @@ h3
     margin-right: 1em
     cursor: pointer
     margin-top: 0.3em
-    
+
 .title
     text-align: center
 
@@ -524,12 +524,12 @@ h2
 .boat
     display: inline-block
     font-size: 2em
-    
+
 .tinyboat
     height: 0.35em
     position: relative
     top: 0.01em
-    
+
 .plain
     text-decoration: none
 
@@ -580,7 +580,7 @@ h2
     padding-bottom: 1em
     padding-right: 0
     padding-left: 1em
-    
+
 .endpadtwo
     padding-top: 1em
     padding-bottom: 0.5em
@@ -593,14 +593,14 @@ h2
 
 .hodlsuggest, .dogep .hodlsuggest
     font-size: 1.15em
-    
+
 .none
     list-style-type: none
     margin-left: -1em
-    
+
 .gui.yellowtx
     margin-right: 0.5em
-    
+
 .more
     text-align: center
     background-color: rgba(22, 22, 22, 0.4)
@@ -616,13 +616,13 @@ h2
     text-align: center
     width: calc(100% - 2.25em)
     cursor: pointer
-    
+
 .more:hover
     background-color: rgba(66, 66, 66, 0.4)
 
 ul
     margin-block-end: 0
-    
+
 .padleft
     margin-left: 0.36em
 </style>

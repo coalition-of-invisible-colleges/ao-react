@@ -11,6 +11,7 @@ const serverState = {
   tasks: [],
   resources: [],
   cash: {
+    alias: '',
     currency: 'CAD',
     cash: 0,
     spot: 0,
@@ -33,6 +34,7 @@ const pubState = {
   tasks: [],
   resources: [],
   cash: {
+    alias: '',
     currency: 'CAD',
     cash: 0,
     spot: 0,

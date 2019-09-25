@@ -19,7 +19,6 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
-    //- .closeit(v-if='showCreate'  @click='closeCreate')
 </template>
 
 <script>
