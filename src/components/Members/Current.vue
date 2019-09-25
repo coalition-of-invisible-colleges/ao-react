@@ -15,7 +15,7 @@
 <script>
 
 export default {
-  props: ['memberId', 'b', 'inId'],
+  props: ['memberId', 'b', 'inId', 'completions'],
   methods:{
     goIn(taskId){
         this.playPageTurn()
@@ -93,20 +93,6 @@ export default {
     },
     isCompleted(){
         return this.b.claimed.indexOf(this.memberId) > -1
-    },
-    completions(){
-        let completions = []
-        let allTasks = this.b.subTasks.concat(this.b.priorities).concat(this.b.completed)
-        allTasks.forEach(t => {
-            let task = this.$store.getters.hashMap[t]
-            if(!task || !task.claimed) return
-            if(task.claimed.indexOf(this.memberId) > -1) {
-                if(completions.indexOf(task) === -1) {
-                    completions.push(task)
-                }
-            }
-        })
-        return completions
     },
   }
 }

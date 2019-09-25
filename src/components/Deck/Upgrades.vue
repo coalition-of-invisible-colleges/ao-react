@@ -19,7 +19,7 @@
               div
                 div.endpad(v-if='!isDoge')
                     h2.yellowtx(v-if='b.guild') {{ b.guild }}
-                    current(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
+                    current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :inId='ugly'  :completions='n.contextCompletions')
                     .box.morepad
                         div.dogep.spinslow
                             .tooltip
@@ -287,11 +287,6 @@ export default {
         },
         isGrabbed(){
           return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
-        },
-        nameList(){
-            return this.b.deck.map(mId => {
-                return mId
-            })
         },
         addressUpdate(){
             return {

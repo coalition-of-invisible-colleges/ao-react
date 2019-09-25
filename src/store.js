@@ -83,7 +83,29 @@ export default new Vuex.Store({
           return getters.memberCard.completed.map(t => getters.hashMap[t])
       },
       hodlersByCompletions(state, getters){
-
+          let checkmarks = getters.contextCompleted
+          let hodlers = {}
+          let holds = []
+          checkmarks.forEach(c => {
+              c.claimed.forEach(mId => {
+                  if(!hodlers[mId]){
+                      hodlers[mId] = []
+                  }
+                  hodlers[mId].push(c)
+              })
+          })
+          Object.keys(hodlers).forEach(mId => {
+              let member = getters.hashMap[mId]
+              member.contextCompletions = hodlers[mId]
+              holds.push(member)
+          })
+          console.log("holds is", holds)
+          holds.sort((a, b) => {
+              console.log("a is ", a, " and b is ", b)
+              return b.contextCompletions.length - a.contextCompletions.length
+          })
+          console.log("post, holds is", holds)
+          return holds
       },
       red(state, getters){
           if (state.context.completed){
