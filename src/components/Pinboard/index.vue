@@ -2,6 +2,8 @@
 
 #wrex
     flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+        .carousel-cell.greenwx(@click='setWarp(-1)')
+            span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
         .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
             span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.state.cash.alias ? a.state.cash.alias : a.address.slice(0,11) }}
     div(v-if='$store.state.upgrades.warp > -1')
