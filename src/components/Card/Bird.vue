@@ -8,7 +8,7 @@
     .give(v-if='showGive')
         select(v-model='toAo'  @change)
             option(@click='setWarp(-1)') here
-            option(v-for='(t, i) in $store.state.ao'  :key='t.address'  :value='t.address'  @click='setWarp(i)') {{ t.address.slice(0,9) }}
+            option(v-for='(t, i) in $store.state.ao'  :key='t.address'  :value='t.address'  @click='setWarp(i)') {{ t.state.cash.alias ? t.state.cash.alias : t.address.slice(0,9) }}
         div(v-if='$store.state.upgrades.warp > -1')
           img.birdy(src='../../assets/images/navigas/sunUni.svg')
           select(v-model='toMemberWarp')

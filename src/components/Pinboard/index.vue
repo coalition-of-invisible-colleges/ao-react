@@ -1,7 +1,12 @@
 <template lang='pug'>
 
 #wrex
-    .pinboard
+    flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+        .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
+            span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.state.cash.alias ? a.state.cash.alias : a.address.slice(0,11) }}
+    div(v-if='$store.state.upgrades.warp > -1')
+        p {{ $store.state.upgrades.warp }}
+    .pinboard(v-else)
         div(v-if='$store.state.upgrades.mode === "doge"')
             h1.up {{ $store.state.cash.alias }}
             .row.pagemargins
@@ -22,8 +27,6 @@
                         span.yellowtx.fr {{ t.weight }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         div(v-if='$store.state.upgrades.mode == "boat"')
-            flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-                .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)'  :class='{redTx: i === $store.state.upgrades.warp}') {{ a.address.slice(0,11) }}
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                 .transparentsides
@@ -66,7 +69,7 @@
         div(v-else)
           img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
           img.buddadoge(src='../../assets/images/buddadoge.svg')
-        auth(v-if='!$store.getters.isLoggedIn').container
+    auth(v-if='!$store.getters.isLoggedIn').container
 </template>
 
 <script>
@@ -396,6 +399,8 @@ h2
     box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5)
     margin-left: 0.78em
     margin-right: 0.78em
+    .redTx
+        color: red
 
 .flickity-enabled
     width: 88%
