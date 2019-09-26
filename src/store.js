@@ -530,9 +530,13 @@ export default new Vuex.Store({
               let member = getters.hashMap[mId]
               member.priorities.forEach(p => {
                   let priority = getters.hashMap[p]
-                  if(news.some(sp => { return sp.taskId === p })) {
-                      news[p].weight += 1 / member.priorities.length
-                  }
+                  news.some((sp, i) => { 
+                      if(sp.taskId === p) {
+                          news[i].weight += 1 / member.priorities.length
+                          return true
+                      }
+                      return false
+                  })
                   priority.weight = 1 / member.priorities.length
                   news.push(priority)
               })
