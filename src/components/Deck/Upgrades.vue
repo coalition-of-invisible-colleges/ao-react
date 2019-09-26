@@ -1,15 +1,6 @@
 <template lang='pug'>
 
 .upgrades
-    //- .row
-    //-     .three.grid.tab(@click='select(0)', :class='{selected: $store.state.upgrades.mode === "boat"}')
-    //-         img.upgrade(src='../../assets/images/boatblack.svg')
-    //-     .three.grid.tab(@click='select(1)', :class='{selected: $store.state.upgrades.mode === "badge"}')
-    //-         img.upgrade(src='../../assets/images/badge.svg')
-    //-     .three.grid.tab(@click='select(2)', :class='{selected: $store.state.upgrades.mode === "bounty"}')
-    //-         img.upgrade(src='../../assets/images/bounty.svg')
-    //-     .three.grid.tab(@click='select(3)', :class='{selected: $store.state.upgrades.mode === "timecube"}')
-    //-         img.upgrade(src='../../assets/images/timecube.svg')
     .row
       .mainbg(:class='{ lightbg : $store.state.upgrades.mode === "boat" }')
         transition(name='slide-fade'  mode='out-in')
@@ -20,7 +11,7 @@
                 div.endpad(v-if='!isDoge')
                     h2.yellowtx(v-if='b.guild') {{ b.guild }}
                     current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :inId='ugly'  :completions='n.contextCompletions')
-                    current(v-for='n in b.deck.filter(x => !$store.getters.hodlersByCompletions.some(p => p.taskId === x))'  :memberId='n'  :b='b'  :inId='ugly')
+                    current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
                     .box.morepad
                         div.dogep.spinslow
                             .tooltip
@@ -260,6 +251,12 @@ export default {
         }
     },
     computed: {
+        holdOrSent(){
+            let deck = this.b.deck
+            let passedTo = this.b.passed.map(p => p[1])
+            let allHoldPassed = deck.concat( passedTo )
+            return allHoldPassed.filter(x => !this.$store.getters.hodlersByCompletions.some(p => p.taskId === x))
+        },
         b(){
             return this.$store.getters.contextCard
         },
