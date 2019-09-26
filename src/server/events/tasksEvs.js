@@ -73,7 +73,7 @@ function taskGrabbed(taskId, memberId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskSubTasked(taskId, subTask, callback){
+function taskSubTasked(taskId, subTask, memberId, callback){
     let newEvent = {
       type: "task-sub-tasked",
       taskId,
