@@ -2,11 +2,16 @@
 <template lang='pug'>
 
 div.totop
-    template(v-for='n in b.passed')
-        .row.pad.centered
-            current(:memberId='n[0]')
-            img.send(src='../../assets/images/birdbtn.svg')
-            current(:memberId='n[1]')
+    div(v-if='b.passed.length > 0'   @click='toggleBird')
+        .singlebird(v-if='!$store.state.upgrades.bird')
+            .row.pad.centered
+                img.send(src='../../assets/images/birdbtn.svg')
+                span {{ b.passed.length}}
+        template(v-else   v-for='n in b.passed'  @click='toggleBird')
+            .row.pad.centered
+                current(:memberId='n[0]')
+                img.send(src='../../assets/images/birdbtn.svg')
+                current(:memberId='n[1]')
     .row.pad(v-if='toMe.length > 0')
        .six.grid
            button.accept(@click='accept')
@@ -27,6 +32,10 @@ export default {
     props: ['b'],
     components: { Current },
     methods:{
+        toggleBird(){
+            console.log('toggle trig')
+            this.$store.commit('toggleBird')
+        },
         accept(){
           let sending = {
               type: 'task-sub-tasked',
@@ -58,7 +67,7 @@ export default {
     computed: {
         toMe(){
             let m = []
-            if (this.b && this.b.passed.length > 1){
+            if (this.b && this.b.passed.length > 0){
                 m = this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
             }
             return m

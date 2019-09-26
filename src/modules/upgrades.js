@@ -6,10 +6,14 @@ const state = {
     mode: modes[0],
     payment: false,
     dimension: false,
+    bird: true,
     warp: -1,
 }
 
 const mutations = {
+    toggleBird(state){
+        state.bird = !state.bird
+    },
     nextMode(state) {
         let currentIndex = modes.indexOf(state.mode)
         let nextIndex = (currentIndex + 1) % modes.length
