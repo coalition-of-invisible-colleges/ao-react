@@ -1,6 +1,10 @@
 <template lang='pug'>
 
 #home
+    .container(v-if='$store.state.upgrades.mode === "doge"')
+        h1.up {{ $store.state.cash.alias }} status
+        .row
+            p server is running
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
