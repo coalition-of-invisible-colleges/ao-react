@@ -1,9 +1,9 @@
-const modes = ["boat", "badge", "bounty", "timecube"]
+const modes = ["doge", "boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
 const dimensions = ["time", "space", "replication"]
 
 const state = {
-    mode: "boat",
+    mode: modes[0],
     payment: false,
     dimension: false,
     warp: -1,
@@ -17,14 +17,14 @@ const mutations = {
     },
     previousMode(state) {
         let currentIndex = modes.indexOf(state.mode)
-        let prevIndex = (currentIndex <= 0) ? (modes.length - 1) : (currentIndex - 1)
+        let prevIndex = (currentIndex <= 0) ? modes.length - 1 : (currentIndex - 1)
         state.mode = modes[prevIndex]
     },
     setMode(state, index) {
         state.mode = modes[index]
     },
     closeUpgrades(state) {
-        state.mode = false
+        state.mode = modes[0]
     },
     setPayMode(state, index) {
         state.payment = payments[index]

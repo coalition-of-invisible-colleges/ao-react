@@ -2,7 +2,7 @@
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper
         .row
-            .five.columns.card(:class='{ center: !$store.state.upgrades.mode }')
+            .five.columns.card(:class='{ center: $store.state.upgrades.mode === "doge" }')
                 auth(v-if='!$store.getters.isLoggedIn')
                 member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')

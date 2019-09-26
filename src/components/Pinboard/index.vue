@@ -2,6 +2,25 @@
 
 #wrex
     .pinboard
+        div(v-if='$store.state.upgrades.mode === "doge"')
+            h1.up {{ $store.state.cash.alias }}
+            .row.pagemargins
+                .three.columns
+                    div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId'  @click='goIn(t)')
+                        span.yellowtx.fr {{ t.weight }}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
+                .three.columns
+                    div(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId'  @click='goIn(t)')
+                        span.yellowtx.fr {{ t.weight }}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
+                .three.columns
+                    div(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId'  @click='goIn(t)')
+                        span.yellowtx.fr {{ t.weight }}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
+                .three.columns
+                    div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId'  @click='goIn(t)')
+                        span.yellowtx.fr {{ t.weight }}
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         div(v-if='$store.state.upgrades.mode == "boat"')
             flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
                 .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)'  :class='{redTx: i === $store.state.upgrades.warp}') {{ a.address.slice(0,11) }}
@@ -154,6 +173,9 @@ export default {
       },
       getBountyColumn(index, columns = 4){
           return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
+      },
+      getNewsColumn(index, columns = 4){
+          return this.$store.getters.memberPriorities.slice().filter( (a, i) => { return i % columns === index })
       },
       getGuild(taskId){
           return this.$store.getters.hashMap[taskId].guild

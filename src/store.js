@@ -523,6 +523,24 @@ export default new Vuex.Store({
               })
           })
           return vouches
+      },
+      memberPriorities(state, getters) {
+          let news = []
+          getters.memberIds.forEach(mId => {
+              let member = getters.hashMap[mId]
+              member.priorities.forEach(p => {
+                  let priority = getters.hashMap[p]
+                  if(news.indexOf(priority) > -1) {
+                      news[p].weight += 1 / member.priorities.length
+                  }
+                  priority.weight = 1 / member.priorities.length
+                  news.push(priority)
+              })
+          })
+          news.sort((a, b) => {
+              return b.weight - a.weight
+          })
+          return news
       }
   },
   middlewares: [],

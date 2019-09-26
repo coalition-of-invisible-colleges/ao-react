@@ -14,21 +14,18 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/timecube.svg')
-        img.upg(v-else src='../assets/images/timecube.svg')
-    button.topcenter(:class='{ logout : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
-        .full(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn')
+    button.topcenter(:class='{ closed : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
+        .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
-            img.upg(v-else src='../assets/images/boatblack.svg')
-        .full(v-else) log out
+            img.upg(v-else  src='../assets/images/buddadoge.svg')
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/timecube.svg')
-        img.upg(v-else src='../assets/images/badge.svg')
     .pushdown
     div(:class='{suncontext: $router.currentRoute.path === "/front", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentsides
@@ -111,11 +108,11 @@ export default {
         mc.add(Press)
         mc.on('press', (e) => {
             if(this.$router.currentRoute.path === '/front'){
-                if(this.$store.state.upgrades.mode === 'boat') {
+                if(!this.$store.state.upgrades.mode) {
                     this.flashHelm(5)
                 } else {
                     this.flashHelm(2)
-                    this.$store.state.upgrades.mode = 'boat'
+                    this.closeUpgrades()
                 }
             } else {
                 this.flashHelm(2)
@@ -126,11 +123,12 @@ export default {
         let Tap = new Hammer.Tap({ time: 500 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            if (!this.$store.state.upgrades.mode){
-                this.killSession()
-            }
             this.flashHelm(0.5)
-            this.nextUpgradeMode()
+            if (!this.$store.state.upgrades.mode){
+                this.setMode(0)
+            } else {
+                this.nextUpgradeMode()
+            }
         })
 
         // helm left and right icon gestures
@@ -140,9 +138,6 @@ export default {
         let Tap2 = new Hammer.Tap({ time: 500 })
         lmc.add(Tap2)
         lmc.on('tap', (e) => {
-            if (!this.$store.state.upgrades.mode){
-                this.killSession()
-            }
             this.flashHelm(0.5)
             this.nextUpgradeMode()
         })
@@ -153,9 +148,6 @@ export default {
         let Tap3 = new Hammer.Tap({ time: 500 })
         rmc.add(Tap3)
         rmc.on('tap', (e) => {
-            if (!this.$store.state.upgrades.mode){
-                this.killSession()
-            }
             this.flashHelm(0.5)
             this.previousUpgradeMode()
         })
@@ -264,6 +256,12 @@ export default {
         },
         toggleShowBtc() {
             this.showBtc = !this.showBtc
+        },
+        setMode(index) {
+            var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
+            cachunk.volume = cachunk.volume * 0.15
+            cachunk.play()
+            this.$store.commit("setMode", index)
         },
         nextUpgradeMode() {
             var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
@@ -551,7 +549,7 @@ hr
     left: calc(50% + 7.5em)
     transform: translateX(-50%)
 
-.logout
+.closed
     opacity: 1
     position: absolute
 
