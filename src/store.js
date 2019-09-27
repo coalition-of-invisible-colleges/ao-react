@@ -25,16 +25,24 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
+      warpDrive(state, getters){
+          return state.ao[state.upgrades.warp]
+      },
+      warpState(state, getters){
+          if (getters.warpDrive){
+              return getters.warpDrive.state
+          }
+      },
       warpAddress(state, getters){
-          return state.ao[state.upgrades.warp].address
+          if (getters.warpDrive){
+              return getters.warpDrive.address
+          }
       },
       warpGuilds(state, getters){
-          let warpState = state.ao[state.upgrades.warp].state
-          return warpState.tasks.filter(t => t.guild)
-      },
-      warpMembers(state, getters){
-          let warpState = state.ao[state.upgrades.warp].state
-          return warpState.members
+          if (getters.warpDrive){
+              return getters.warpState.tasks.filter(t => t.guild)
+          }
+          return []
       },
       memberCard(state, getters){
           let memberCard = _.merge({
@@ -530,7 +538,7 @@ export default new Vuex.Store({
               let member = getters.hashMap[mId]
               member.priorities.forEach(p => {
                   let priority = getters.hashMap[p]
-                  if(!news.some((sp, i) => { 
+                  if(!news.some((sp, i) => {
                       if(sp.taskId === p) {
                           news[i].weight += 1 / member.priorities.length
                           return true

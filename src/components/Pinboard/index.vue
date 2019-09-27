@@ -1,14 +1,7 @@
 <template lang='pug'>
 
 #wrex
-    flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-        .carousel-cell.greenwx(@click='setWarp(-1)')
-            span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
-        .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-            span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.state.cash.alias ? a.state.cash.alias : a.address.slice(0,11) }}
-    div(v-if='$store.state.upgrades.warp > -1')
-        p {{ $store.state.upgrades.warp }}
-    .pinboard(v-else)
+    .pinboard
         div(v-if='$store.state.upgrades.mode === "doge"')
             h1.up {{ $store.state.cash.alias }}
             .row.pagemargins
@@ -29,16 +22,27 @@
                         span.yellowtx.fr {{ t.weight }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         div(v-if='$store.state.upgrades.mode == "boat"')
-            h1.up Top Missions
-            flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
-                .transparentsides
-                .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
-                    .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
-                    .agedbackground.freshpaper(v-if='cardAge(t) < 8')
-                    .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
-                    .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
-                    .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
-            hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+            div(v-if='$store.state.upgrades.warp > -1')
+                h1.up {{ $store.getters.warpState.cash.alias }} Top Missions
+                card-panel.gutter(:c='$store.getters.warpGuilds')
+                h6.centered {{ $store.getters.warpAddress }}
+            div(v-else)
+                h1.up {{ $store.state.cash.alias }} Top Missions
+                flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
+                    .transparentsides
+                    .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+                        .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
+                        .agedbackground.freshpaper(v-if='cardAge(t) < 8')
+                        .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
+                        .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
+                        .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
+                hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+            hr
+            flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+                .carousel-cell.greenwx(@click='setWarp(-1)')
+                    span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
+                .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
+                    span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.state.cash.alias ? a.state.cash.alias : a.address.slice(0,11) }}
         .container(v-else-if='$store.state.upgrades.mode == "badge"')
             h1.up Much Recent
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
