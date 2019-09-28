@@ -3,7 +3,6 @@
 .AOs
     .row
         .six.columns
-
             h4 {{ $store.state.cash.alias }} Connection Info:
             h6 Address:
                 code {{ $store.state.cash.address }}
@@ -23,8 +22,7 @@
     .row
         template.row(v-for='r in $store.state.ao')
             // relay info / recent communications
-            //- h4 {{ r.state.cash.alias }}
-            h6 {{ r.address }}
+            h6 -- {{ r.address }} --
 </template>
 
 <script>
@@ -84,6 +82,9 @@ export default {
 @import '../styles/skeleton';
 @import '../styles/grid';
 @import '../styles/button';
+
+h6
+    text-align: center
 
 label
     color: blue

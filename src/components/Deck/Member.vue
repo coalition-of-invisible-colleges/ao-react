@@ -9,10 +9,14 @@
         img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
         label.stash {{ this.card.boost.toFixed(2) }}
     .bottomright
-        .tooltip
-            button.smallcaps.greenwx(v-if='m.active > 0', @click='deactivate') pause
-            button.smallcaps.redwx(v-else, @click='activate') activate
-            .tooltiptext
+        .tooltip(v-if='m.memberId === $store.getters.member.memberId')
+            img.dogecoin(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
+            .tooltiptext.membertooltip
+                .gui(v-if='m.active > 0') your account is active
+                .gui(v-else) your account is inactive
+                p.suggest(v-if='m.active > 0') click to deactivate
+                p.help(v-if='m.active <= 0') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
+                p.suggest(v-if='m.active <= 0') click to activate
                 .gui.title(v-if='nameList.length > 0') vouches
                 ul(v-if='nameList.length > 0')
                     li
@@ -60,6 +64,13 @@ export default {
                 }
             })
             return name
+        },
+        toggleActivated() {
+            if(this.$store.getters.member.active > 0) {
+                this.deactivate()
+            } else {
+                this.activate()
+            }
         },
         deactivate() {
             this.$store.dispatch("makeEvent", {
@@ -181,6 +192,28 @@ label
 
 .title
     text-align: center
-    font-size: 1.75em
+    font-size: 1.8em
     margin-top: 0.5em
+    font-weight: bold
+
+.help
+    font-size: 1.3em
+    
+.suggest
+    font-style: italic
+    font-size: 1.3em
+    
+.dogecoin
+    width: 3em
+    height: 3em
+    cursor: pointer
+    
+.faded
+    opacity: 0.39
+    
+.tooltiptext.membertooltip
+    width: 20em
+    z-index: 151
+    left: 7em
+    top: -11em
 </style>

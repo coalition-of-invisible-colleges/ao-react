@@ -9,8 +9,8 @@
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId'  @click='goIn(g.taskId)') {{ g.guild }} -
-        .two.grid(v-if='!hasAnyVouches  &&  $router.currentRoute.path === "/dash"')
-            img.btn.goldengun(v-if='!hasAnyVouches' src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
+        .two.grid(v-if='!hasAnyVouches  &&  $router.currentRoute.path === "/dash" || isSlayer')
+            img.btn.goldengun(src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
@@ -83,6 +83,11 @@ export default {
        }
     },
     computed:{
+        isSlayer(){
+            let routeSplit =  this.$router.currentRoute.path.split("/")
+            console.log({routeSplit})
+            return routeSplit[2] === 'slayer'
+        },
         isLoggedIn(){
             let isLoggedIn
             this.$store.state.sessions.forEach( s => {

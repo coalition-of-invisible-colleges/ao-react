@@ -5,13 +5,13 @@
         h1.up {{ $store.state.cash.alias }} status
         .row
             p server is running
+            sidewalk
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
             aos
         .row
             resources
-            sidewalk
     .container(v-if='$store.state.upgrades.mode === "badge"')
         h1.up accounts
         .row

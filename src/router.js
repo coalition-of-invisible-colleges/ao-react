@@ -53,6 +53,10 @@ const routes =[{
   component: Dash,
   meta: { title: "dashboard" }
 },{
+  path: '/dash/*',
+  component: Dash,
+  meta: { title: "dashboard" }
+},{
   path:'/archive',
   component: Archive,
   meta: { title: "sunken ship" }
