@@ -13,22 +13,22 @@
             h1.up {{ $store.state.cash.alias }}
             .row.pagemargins
                 .three.columns
-                    div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId')
                         span.yellowtx.fr {{ t.weight }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
                 .three.columns
-                    div(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId')
                         span.yellowtx.fr {{ t.weight }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
                 .three.columns
-                    div(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId')
                         span.yellowtx.fr {{ t.weight }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
                 .three.columns
-                    div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
                         span.yellowtx.fr {{ t.weight }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-        div(v-if='$store.state.upgrades.mode == "boat"')
+                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  @click.capture.stop='goInNews(t.taskId)')
+        div(v-if='$store.state.upgrades.mode == "boat"'  :inId='$store.getters.member.memberId')
             h1.up Top Missions
             flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                 .transparentsides
@@ -46,22 +46,22 @@
             h1.up Bounties
             .row.pagemargins
                 .three.columns
-                    div(v-for='(t, i) in getBountyColumn(0)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(0)'  :key='t.taskId'  @click='goInBounty(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                         span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
-                    div(v-for='(t, i) in getBountyColumn(1)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(1)'  :key='t.taskId'  @click='goInBounty(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                         span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
-                    div(v-for='(t, i) in getBountyColumn(2)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(2)'  :key='t.taskId'  @click='goInBounty(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                         span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
                 .three.columns
-                    div(v-for='(t, i) in getBountyColumn(3)'  :key='t.taskId'  @click='goIn(t)')
+                    div(v-for='(t, i) in getBountyColumn(3)'  :key='t.taskId'  @click='goInBounty(t)')
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                         span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
@@ -141,7 +141,7 @@ export default {
 
           Vue.nextTick(() => { console.log(Object.keys(this.$refs)  ); console.log("this.$refs.guildsBar is ", this.$refs.guildsBar) })
       },
-      goIn(t){
+      goInBounty(t){
           this.playPageTurn()
           let taskId = t.funders[0]
           let panel = [taskId]
@@ -156,9 +156,24 @@ export default {
 
           this.$router.push("/task/" + taskId)
 
-          this.$store.commit('setMode', 0)
+          this.$store.commit('setMode', 1)
           this.$store.commit('setAction', t.taskId)
 
+      },
+      goInNews(t){
+          this.playPageTurn()
+          let taskId = t
+          let panel = this.$store.getters.memberPriorityIds
+          let top = panel.indexOf(t)
+          let parents = [ this.$store.getters.member.memberId ]
+
+          this.$store.dispatch("goIn", {
+              parents,
+              top,
+              panel
+          })
+
+          this.$router.push("/task/" + taskId)
       },
       playPageTurn(){
           var flip = new Audio(require('../../assets/sounds/myst158.wav'))

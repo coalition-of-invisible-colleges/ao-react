@@ -2,7 +2,7 @@
 .flag(v-if="$store.getters.memberCard")
   div(v-if='!$store.state.context.panel[$store.state.context.top]')
     img.flaggy(@click='deckIt'  src='../../assets/images/scroll.svg')
-  div(v-else-if="$store.state.upgrades.mode === 'boat'"  @click='flagIt')
+  div(v-else-if="$store.state.upgrades.mode === 'boat' || $store.state.upgrades.mode === 'doge'"  @click='flagIt')
     img.flaggy.svgwhite.faded(v-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
     img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
   div(v-else-if="$store.state.upgrades.mode === 'badge'")

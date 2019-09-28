@@ -546,7 +546,10 @@ export default new Vuex.Store({
               return b.weight - a.weight
           })
           return news
-      }
+      },
+      memberPriorityIds(state, getters) {
+          return getters.memberPriorities.map( t => t.taskId )
+      },
   },
   middlewares: [],
   strict: process.env.NODE_ENV !== 'production'
