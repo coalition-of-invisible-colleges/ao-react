@@ -54,7 +54,7 @@ export default {
     margin-bottom: 1em
     
 .noheight img
-    max-width: 125%
+    max-width: 127%
 
 p:last-child
     margin-bottom: 0
