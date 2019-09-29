@@ -211,8 +211,11 @@ export default {
           return mc
         },
         fractionalReserveDoge() {
+            console.log("weight is ", this.b.weight)
+            console.log("weight remainder is ", this.b.weight % 1)
+            console.log("weight processed is ", ((this.b.weight % 1) / 10) * 16)
             console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
-            return Math.floor(((this.b.weight % 1) / 10) * 16) + 1
+            return Math.floor((this.b.weight % 1) * 16) + 1
         }
     },
 }
