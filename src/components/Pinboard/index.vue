@@ -6,24 +6,17 @@
             h1.up {{ $store.state.cash.alias }}
             .row.pagemargins
                 .three.columns
-                    .relative(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId')
+                    div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId')
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                        img.dogecoin(v-for='Math.ceil(t.weight)'  src='../../assets/images/doge_in_circle.png')
                 .three.columns
-                    .relative(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId')
-                        span.yellowtx.fr {{ t.weight }}
+                    div(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId')
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                        img.dogecoin(v-for='Math.ceil(t.weight)'  src='../../assets/images/doge_in_circle.png')
                 .three.columns
-                    .relative(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId')
-                        span.yellowtx.fr {{ t.weight }}
+                    div(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId')
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                        img.dogecoin(v-for='Math.ceil(t.weight)'  src='../../assets/images/doge_in_circle.png')
                 .three.columns
-                    .relative(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
-                        span.yellowtx.fr {{ t.weight }}
+                    div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                        img.dogecoin(v-for='Math.ceil(t.weight)'  src='../../assets/images/doge_in_circle.png')
         div(v-if='$store.state.upgrades.mode == "boat"')
             div(v-if='$store.state.upgrades.warp > -1')
                 h1.up {{ $store.getters.warpState.cash.alias }} Top Missions
@@ -489,14 +482,4 @@ h2
     font-weight: bold
     font-size: 1.25em
     margin-top: -0.13em
-    
-.relative
-    position: relative
-    
-.dogecoin
-    position: absolute
-    top: 0.5em
-    left: 50%
-    transform: translateX(-50%)
-    width: 1.3em    
 </style>

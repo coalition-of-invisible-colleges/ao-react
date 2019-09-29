@@ -1,47 +1,49 @@
 <template lang='pug'>
 .task(:class="cardInputSty"  @dblclick.stop='goIn').dont-break-out.agedwrapper
-  .agedbackground.freshpaper(v-if='cardAge < 8')
-  .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
-  .agedbackground.montholdpaper(v-else-if='cardAge < 90')
-  .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-  .row
+    .agedbackground.freshpaper(v-if='cardAge < 8')
+    .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
+    .agedbackground.montholdpaper(v-else-if='cardAge < 90')
+    .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
+    .dogecoin(v-if='b.weight && b.weight > 0')
+        img(v-for='n in parseInt(Math.ceil(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
+    .row
+        .ten.grid
+            bird(:b='b', :inId='inId')
+            .cardhud(v-if='b.guild')
+                .title.bold {{ b.guild }}
+        .two.grid
+            flag(:b='b', :inId='inId'  @dblclick.prevent)
+    .tooltip
+        img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
+        .tooltip
+            .tooltiptext
+                current.block(v-for='memberId in b.claimed', :memberId='memberId')
+    .row
       .ten.grid
-          bird(:b='b', :inId='inId')
-          .cardhud(v-if='b.guild')
-              .title.bold {{ b.guild }}
+          .cardhud(v-if='calcVal >= 1')
+              img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+              span {{ calcVal }}
+          .cardhud(v-if='cardStart')
+              img.smallguild(src='../../assets/images/timecubewithwhite.png')
+              span {{ cardStart.days.toFixed(1) }} days
+          linky.cardhud(:x='b.name' v-if='!dogeCard')
+          .cardhud(v-if='dogeCard') {{ dogeCard.name }}
       .two.grid
-          flag(:b='b', :inId='inId'  @dblclick.prevent)
-  .tooltip
-      img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
-      .tooltip
-          .tooltiptext
-              current.block(v-for='memberId in b.claimed', :memberId='memberId')
-  .row
-    .ten.grid
-        .cardhud(v-if='calcVal >= 1')
-            img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-            span {{ calcVal }}
-        .cardhud(v-if='cardStart')
-            img.smallguild(src='../../assets/images/timecubewithwhite.png')
-            span {{ cardStart.days.toFixed(1) }} days
-        linky.cardhud(:x='b.name' v-if='!dogeCard')
-        .cardhud(v-if='dogeCard') {{ dogeCard.name }}
-    .two.grid
-        preview-deck(:task='b')
-  simple-priorities(v-if='b.guild && $store.getters.contextCard.taskId != b.taskId && $store.state.context.action != b.taskId', :taskId="b.taskId", :inId='b.taskId')
-  passed(:b='b')
-  shipped(:b='b', :inId='inId')
-  .spacer
-  .row
-      scroll.faded(:b='b', :inId='inId')
-      vine.faded(:b='b')
-      .tooltip.dogepepecoin
-          img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-          .tooltiptext
-              current.block(v-for='memberId in b.deck'  :memberId='memberId')
-              .suggest(v-if='!isGrabbed') click to hodl
-              .suggest(v-if='isGrabbed') click to dump
-          p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+          preview-deck(:task='b')
+    simple-priorities(v-if='b.guild && $store.getters.contextCard.taskId != b.taskId && $store.state.context.action != b.taskId', :taskId="b.taskId", :inId='b.taskId')
+    passed(:b='b')
+    shipped(:b='b', :inId='inId')
+    .spacer
+    .row
+        scroll.faded(:b='b', :inId='inId')
+        vine.faded(:b='b')
+        .tooltip.dogepepecoin
+            img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+            .tooltiptext
+                current.block(v-for='memberId in b.deck'  :memberId='memberId')
+                .suggest(v-if='!isGrabbed') click to hodl
+                .suggest(v-if='isGrabbed') click to dump
+            p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
 </template>
 
 <script>
@@ -133,6 +135,11 @@ export default {
                     memberId: this.$store.getters.member.memberId,
                 })
             }
+        },
+        getArray(size) {
+            let array = new Array(size)
+            return array
+            // WHY WONT MY FOR LOOP WORK WITHOUT AN ARRAY???
         }
     },
     computed: {
@@ -234,6 +241,7 @@ export default {
     padding:1em
     //border-radius: 12px
     box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5)
+    position: relative
 
 .dont-break-out
   overflow-wrap: break-word
@@ -406,4 +414,13 @@ export default {
 .flag
     position: relative
     right: 0
+    
+.dogecoin
+    position: absolute
+    top: 0.5em
+    left: 50%
+    transform: translateX(-50%)
+    
+.dogecoin img
+    width: 1.3em  
 </style>
