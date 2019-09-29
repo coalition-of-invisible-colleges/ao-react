@@ -268,7 +268,7 @@ export default {
 .tooltip .tooltiptext
     font-size: 1em
     padding-bottom: 1em
-
+    
 .block
     display: block
     clear: both
@@ -426,6 +426,10 @@ export default {
     top: -0.66em
     left: 50%
     transform: translateX(-50%)
+    z-index: 100
+
+.dogecoin .tooltiptext
+    left: 3em
     
 .dogecoin img
     width: 1.3em
