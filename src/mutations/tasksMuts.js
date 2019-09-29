@@ -5,6 +5,11 @@ const uuidV1 = require('uuid/v1')
 function tasksMuts(tasks, ev) {
     let newEv = {}
     switch (ev.type) {
+        case "ao-connected":
+            ev.state.tasks.forEach(t => {
+                tasks.push(t)
+            })
+            break
         case "resource-created":
             newEv.taskId = ev.resourceId
             newEv.name = ev.resourceId

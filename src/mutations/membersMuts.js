@@ -2,6 +2,12 @@ import _ from 'lodash'
 
 function membersMuts(members, ev){
   switch (ev.type){
+      case "ao-connected":
+          ev.state.members.forEach(m => {
+              m.originAddress = ev.address
+              members.push(m)
+          })
+          break
       case "member-created":
           ev.lastUsed = ev.timestamp
           members.push(ev)
