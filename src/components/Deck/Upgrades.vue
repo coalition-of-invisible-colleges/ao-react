@@ -22,7 +22,7 @@
                 div.endpadtwo(v-else)
                     .gui.title.yellowtx missions
                     ul.none
-                        template(v-for='g in (showAllGuilds ? $store.getters.myGuilds : $store.getters.myGuilds.slice(0, 5))')
+                        template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
                             li.spaced
                                 span(@click='goIn(g.taskId)')
                                     img.floatleft(src='../../assets/images/badge.svg')
@@ -36,8 +36,8 @@
                                     .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                         linky.tooltiptext(:x='c.name')
                                 linky.description(:x='g.name')
-                        .more(v-if='$store.getters.myGuilds.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
-                        .more(v-else-if='$store.getters.myGuilds.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
+                        .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
+                        .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
             template(v-if='$store.state.upgrades.mode === "bounty"')
                 .padded
                     div(v-if='$store.state.cash.info.alias')
@@ -251,6 +251,16 @@ export default {
         }
     },
     computed: {
+        missions(){
+            let missions = []
+            if (this.isDoge){
+              if (this.isDoge.memberId === this.$store.getters.member.memberId){
+                return this.$store.getters.myGuilds
+              } else {
+                return this.$store.getters.guilds.filter(g => g.deck.indexOf(this.isDoge.memberId) > -1)
+              }
+            }
+        },
         holdOrSent(){
             let deck = this.b.deck
             let passedTo = this.b.passed.map(p => p[1])

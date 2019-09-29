@@ -9,7 +9,7 @@
         img(:class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
         .tooltiptext
             p prioritized by:
-            p(v-for='doger in b.dogers') {{ doger }}
+            current(v-for='doger in b.dogers'  :memberId='doger') 
     .row
         .ten.grid
             bird(:b='b', :inId='inId')
@@ -265,7 +265,7 @@ export default {
 .tooltip .tooltiptext
     font-size: 1em
     padding-bottom: 1em
-    
+
 .block
     display: block
     clear: both
@@ -409,15 +409,15 @@ export default {
 .cardname
     z-index: 15
     position: relative
-    
+
 .suggest
     font-style: italic
     margin-top: 1em
-    
+
 .flag
     position: relative
     right: 0
-    
+
 .dogecoin
     position: absolute
     top: -0.66em
@@ -427,37 +427,37 @@ export default {
 
 .dogecoin .tooltiptext
     left: 3em
-    
+
 .dogecoin img
     width: 1.3em
-    
+
 .sixteenth1
     clip-path: polygon(50% 50%, 50% 0, 25% 0)
-    
+
 .sixteenth2
     clip-path: polygon(50% 50%, 50% 0, 0 0)
- 
+
 .sixteenth3
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 25%)
 
 .sixteenth4
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 50%)
-    
+
 .sixteenth5
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 75%)
-    
+
 .sixteenth6
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%)
-    
+
 .sixteenth7
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 25% 100%)
-    
+
 .sixteenth8
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 50% 100%)
 
 .sixteenth9
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 75% 100%)
-    
+
 .sixteenth10
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%)
 
