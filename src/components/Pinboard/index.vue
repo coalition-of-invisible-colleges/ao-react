@@ -19,7 +19,7 @@
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
         div(v-else-if='$store.state.upgrades.mode == "boat"')
             div(v-if='$store.state.upgrades.warp > -1')
-                h1.up {{ $store.getters.warpState.cash.alias }} Top Missions
+                h1.up {{ $store.getters.warpDrive.alias }} Top Missions
                 card-panel.gutter(:c='$store.getters.warpGuilds')
                 h6.centered {{ $store.getters.warpAddress }}
             div(v-else)
@@ -38,7 +38,7 @@
                 .carousel-cell.greenwx(@click='setWarp(-1)')
                     span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
                 .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-                    span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.state.cash.alias ? a.state.cash.alias : a.address.slice(0,11) }}
+                    span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
         .container(v-else-if='$store.state.upgrades.mode == "badge"')
             h1.up Much Recent
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")

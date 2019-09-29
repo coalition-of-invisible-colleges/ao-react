@@ -52,16 +52,14 @@ const pubState = {
   },
 }
 
-
 function setCurrent(state, b){
-  modules.cash.mutations.setCurrent(state.cash, b)
-  modules.tasks.mutations.setCurrent(state.tasks, b)
-  modules.sessions.mutations.setCurrent(state.sessions, b)
-  modules.ao.mutations.setCurrent(state.ao, b)
-  modules.members.mutations.setCurrent(state.members, b)
-  modules.resources.mutations.setCurrent(state.resources, b)
+    modules.cash.mutations.setCurrent(state.cash, b)
+    modules.tasks.mutations.setCurrent(state.tasks, b)
+    modules.sessions.mutations.setCurrent(state.sessions, b)
+    modules.ao.mutations.setCurrent(state.ao, b)
+    modules.members.mutations.setCurrent(state.members, b)
+    modules.resources.mutations.setCurrent(state.resources, b)
 }
-
 
 function applyBackup(b){
     setCurrent(serverState, b)
@@ -72,13 +70,13 @@ function applyBackup(b){
 }
 
 function applyEvent(state, ev) {
-      M.aoMuts(state.ao, ev)
       M.recentMuts(state.recent, ev)
       M.cashMuts(state.cash, ev)
       M.membersMuts(state.members, ev)
       M.resourcesMuts(state.resources, ev)
       M.sessionsMuts(state.sessions, ev)
       M.tasksMuts(state.tasks, ev)
+      M.aoMuts(state.ao, ev)
 }
 
 function initialize(callback) {

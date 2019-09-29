@@ -7,14 +7,12 @@ const uuidV1 = require('uuid/v1')
 function aoMuts(aos, ev) {
     switch (ev.type) {
         case "ao-connected":
-            aos.push(ev)
-            break
-        case "ao-updated":
-            aos.forEach(ao => {
-                if (ao.address === ev.aoId){
-                    // applyEvent(ao.state, ev)
-                }
-            })
+            let newEv = {
+                address: ev.address,
+                secret: ev.secret,
+                alias: ev.state.cash.alias
+            }
+            aos.push(newEv)
             break
     }
 }

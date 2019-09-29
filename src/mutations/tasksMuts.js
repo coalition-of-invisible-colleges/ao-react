@@ -7,6 +7,7 @@ function tasksMuts(tasks, ev) {
     switch (ev.type) {
         case "ao-connected":
             ev.state.tasks.forEach(t => {
+                t.originAddress = ev.address
                 tasks.push(t)
             })
             break

@@ -28,11 +28,6 @@ export default new Vuex.Store({
       warpDrive(state, getters){
           return state.ao[state.upgrades.warp]
       },
-      warpState(state, getters){
-          if (getters.warpDrive){
-              return getters.warpDrive.state
-          }
-      },
       warpAddress(state, getters){
           if (getters.warpDrive){
               return getters.warpDrive.address
@@ -40,7 +35,7 @@ export default new Vuex.Store({
       },
       warpGuilds(state, getters){
           if (getters.warpDrive){
-              return getters.warpState.tasks.filter(t => t.guild)
+              return state.tasks.filter(t => t.originAddress === getters.warpAddress && t.guild)
           }
           return []
       },
