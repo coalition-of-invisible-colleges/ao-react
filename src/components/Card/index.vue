@@ -209,9 +209,6 @@ export default {
           return mc
         },
         fractionalReserveDoge() {
-            console.log("weight is ", this.b.weight)
-            console.log("weight remainder is ", this.b.weight % 1)
-            console.log("weight processed is ", ((this.b.weight % 1) / 10) * 16)
             console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
             return Math.floor((this.b.weight % 1) * 16) + 1
         }
@@ -465,20 +462,20 @@ export default {
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%)
 
 .sixteenth11
-    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 75% 100%)
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100 75%)
 
 .sixteenth12
-    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 50% 100%)
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 50%)
 
 .sixteenth13
-    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 25% 100%)
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 25%)
 
 .sixteenth14
-    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 0 100%)
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0)
 
 .sixteenth15
-    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 0 100%, 0 75%)
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0, 75% 0)
 
 .sixteenth16
-    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 0 100%, 0 50%)
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0, 50% 0)
 </style>
