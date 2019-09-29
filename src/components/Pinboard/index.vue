@@ -17,7 +17,7 @@
                 .three.columns
                     div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-        div(v-if='$store.state.upgrades.mode == "boat"')
+        div(v-else-if='$store.state.upgrades.mode == "boat"')
             div(v-if='$store.state.upgrades.warp > -1')
                 h1.up {{ $store.getters.warpState.cash.alias }} Top Missions
                 card-panel.gutter(:c='$store.getters.warpGuilds')

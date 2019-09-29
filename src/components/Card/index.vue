@@ -4,9 +4,12 @@
     .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
     .agedbackground.montholdpaper(v-else-if='cardAge < 90')
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
-    .dogecoin(v-if='b.weight && b.weight > 0')
+    .dogecoin.tooltip(v-if='b.weight && b.weight > 0')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
         img(:class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
+        .tooltiptext
+            p prioritized by:
+            p(v-for='doger in b.dogers') {{ doger }}
     .row
         .ten.grid
             bird(:b='b', :inId='inId')
@@ -137,11 +140,6 @@ export default {
                 })
             }
         },
-        getArray(size) {
-            let array = new Array(size)
-            return array
-            // WHY WONT MY FOR LOOP WORK WITHOUT AN ARRAY???
-        }
     },
     computed: {
         cardStart(){

@@ -546,8 +546,12 @@ export default new Vuex.Store({
                       return false
                   })) {
                     priority.weight = 1 / member.priorities.length
-                    news.push(priority)
                   }
+                  if(!priority.dogers) {
+                    priority.dogers = []
+                  }
+                  priority.dogers.push(member.name)
+                  news.push(priority)
               })
           })
           news.sort((a, b) => {
