@@ -5,7 +5,8 @@
     .agedbackground.montholdpaper(v-else-if='cardAge < 90')
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
     .dogecoin(v-if='b.weight && b.weight > 0')
-        img(v-for='n in parseInt(Math.ceil(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
+        img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
+        img(:class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
     .row
         .ten.grid
             bird(:b='b', :inId='inId')
@@ -209,6 +210,10 @@ export default {
           })
           return mc
         },
+        fractionalReserveDoge() {
+            console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
+            return Math.floor(((this.b.weight % 1) / 10) * 16) + 1
+        }
     },
 }
 
@@ -417,10 +422,58 @@ export default {
     
 .dogecoin
     position: absolute
-    top: 0.5em
+    top: -0.66em
     left: 50%
     transform: translateX(-50%)
     
 .dogecoin img
-    width: 1.3em  
+    width: 1.3em
+    
+.sixteenth1
+    clip-path: polygon(50% 50%, 50% 0, 25% 0)
+    
+.sixteenth2
+    clip-path: polygon(50% 50%, 50% 0, 0 0)
+ 
+.sixteenth3
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 25%)
+
+.sixteenth4
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 50%)
+    
+.sixteenth5
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 75%)
+    
+.sixteenth6
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%)
+    
+.sixteenth7
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 25% 100%)
+    
+.sixteenth8
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 50% 100%)
+
+.sixteenth9
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 75% 100%)
+    
+.sixteenth10
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%)
+
+.sixteenth11
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 75% 100%)
+
+.sixteenth12
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 50% 100%)
+
+.sixteenth13
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 25% 100%)
+
+.sixteenth14
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 0 100%)
+
+.sixteenth15
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 0 100%, 0 75%)
+
+.sixteenth16
+    clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 0 100%, 0 50%)
 </style>
