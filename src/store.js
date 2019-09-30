@@ -141,13 +141,15 @@ export default new Vuex.Store({
           return getters.contextDeck.filter(d => d.color === 'blue')
       },
       sortedMembers(state, getters){
-          return getters.recentMembers.slice().sort((a, b) => {
+          let sorted = getters.recentMembers.slice()
+          sorted.sort((a, b) => {
               let cardA = getters.hashMap[a.memberId]
               let cardB = getters.hashMap[b.memberId]
               if(cardA.deck.length < cardB.deck.length) return 1
               if(cardA.deck.length === cardB.deck.length) return 0
               return -1
           })
+          return sorted
       },
       bounties(state, getters){
           let bountyList = []
@@ -265,10 +267,9 @@ export default new Vuex.Store({
           })
       },
       memberIds(state, getters){
-          return state.members.map(c => c.memberId)
+          return state.members.filter(c => !c.originAddress).map(c => c.memberId)
       },
       resourceIds(state, getters){
-
           return state.resources.map(c => c.resourceId)
       },
       withinHeld(state, getters){
@@ -410,15 +411,9 @@ export default new Vuex.Store({
                   })
               )
           })
-
-          console.log("collected ", fullTasks.length, "tasks")
-
           let evs = fullTasks.filter(t => {
               return (t && t.book && t.book.startTs)
           })
-
-          console.log("returning  ", evs.length, "tasks")
-
           return evs
       },
       pubguildIds(state, getters){
@@ -437,20 +432,18 @@ export default new Vuex.Store({
           state.sessions.forEach(session => {
               if (state.loader.session === session.session){
                   memberId = session.ownerId
-                  console.log("found member! ", memberId)
               }
           })
 
           state.members.forEach( m => {
               if (m.memberId === memberId) {
                   _.assign(loggedInMember, m)
-                  console.log("this member is logged-in! ", memberId)
               }
           })
           return loggedInMember
       },
       activeMembers(state, getters){
-          return state.members.filter(m => m.active > 0 )
+          return getters.recentMembers.filter(m => m.active > 0 )
       },
       perMonth(state, getters){
           let fixed = parseFloat(state.cash.rent)
@@ -503,8 +496,8 @@ export default new Vuex.Store({
           return parseInt(sats)
       },
       recentMembers(state, getters){
-          let recentMembers = state.members.slice()
-
+          let recentMembers = state.members.filter(c => !c.originAddress)
+          console.log("only recent members amount: " , recentMembers.length)
           recentMembers.sort((a, b) => {
               return b.lastUsed - a.lastUsed
           })

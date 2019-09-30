@@ -8,6 +8,9 @@ function membersMuts(members, ev){
               members.push(m)
           })
           break
+      case "ao-disconnected":
+          members = members.filter(m => !(m.originAddress === ev.address) )
+          break
       case "member-created":
           ev.lastUsed = ev.timestamp
           members.push(ev)
@@ -59,7 +62,6 @@ function membersMuts(members, ev){
               }
           })
           break
-
       case "resource-used":
           members.forEach( member => {
               if (member.memberId === ev.memberId){

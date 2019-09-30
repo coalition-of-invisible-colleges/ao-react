@@ -14,6 +14,13 @@ function aoMuts(aos, ev) {
             }
             aos.push(newEv)
             break
+        case "ao-disconnected":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                        aos.splice(i, 1)
+                }
+            })
+            break
     }
 }
 
