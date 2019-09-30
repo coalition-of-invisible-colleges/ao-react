@@ -6,6 +6,9 @@ import connector from '../connector'
 
 module.exports = function(req, res, next){
   switch (req.body.type){
+      case 'ao-disconnected':
+          specAoDisconnected(req, res, next)
+          break
       case 'ao-named':
           specAoNamed(req, res, next)
           break
@@ -119,8 +122,22 @@ function specCapSet(req, res, next){
 
 function specAOSubscribed(req, res, next){
   let errRes = []
-  console.log('ao subscribed', req.body.address)
+  console.log('ao subscribed does nothing yet', req.body.address)
 
+}
+
+function specAoDisconnected(req, res, next){
+    let errRes = []
+    if (
+      validators.isAddress(req.body.address, errRes)
+    ){
+      events.aoEvs.aoDisconnected(
+        req.body.address,
+        utils.buildResCallback(res)
+      )
+    } else {
+      res.status(200).send(errRes)
+    }
 }
 
 function specAOConnect(req, res, next){

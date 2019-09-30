@@ -11,10 +11,10 @@ function aoConnected(address, secret, state, callback) {
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoDisconnected(aoId, callback) {
+function aoDisconnected(address, callback) {
     let newEvent = {
         type: "ao-disconnected",
-        aoId,
+        address,
     }
     dctrlDb.insertEvent(newEvent, callback)
 }

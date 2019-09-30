@@ -9,7 +9,7 @@ function membersMuts(members, ev){
           })
           break
       case "ao-disconnected":
-          members = members.filter(m => !(m.originAddress === ev.address) )
+          members = _.filter(members, m => !(m.originAddress === ev.address) )
           break
       case "member-created":
           ev.lastUsed = ev.timestamp
@@ -139,10 +139,5 @@ function membersMuts(members, ev){
           break
   }
 }
-
-
-/*function checkForOnChain(member, txid){
-
-}*/
 
 export default membersMuts

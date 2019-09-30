@@ -7,15 +7,13 @@ module.exports = {
   },
   isAmount(val, errRes){
       let parsed = parseFloat(val)
-
       if (parsed !== 0 && !parsed) {
-        errRes.push('amount must be a number')
-        return false
+          errRes.push('amount must be a number')
+          return false
       }
-
       if (parsed < 0){
-        errRes.push('amount must be positive')
-        return false
+          errRes.push('amount must be positive')
+          return false
       }
       return true
   },
@@ -48,7 +46,7 @@ module.exports = {
       return true // XXX
   },
   isAddress(val, errRes){
-      return true // XXX
+      return state.pubState.ao.some(a => a.address === val) // XXX
   },
   isMemberId(val, errRes){
       let result = false

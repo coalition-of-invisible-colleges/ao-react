@@ -22,7 +22,8 @@
     .row
         template.row(v-for='r in $store.state.ao')
             // relay info / recent communications
-            h6 -- {{ r.address }} --
+            h6 {{ r.address }} -
+                span.discon(@click='discon(r.address)') disconnect
 </template>
 
 <script>
@@ -36,7 +37,6 @@ export default {
     },
     data() {
         return {
-            // isChange: false,
             aoNamed: {
                 type: 'ao-named',
                 alias: ''
@@ -51,6 +51,12 @@ export default {
     },
     components: { FormBox },
     methods: {
+        discon(address){
+            this.$store.dispatch("makeEvent", {
+                type: 'ao-disconnected',
+                address,
+            })
+        },
         toggleGive(){
             this.showGive = !this.showGive
         },
@@ -129,5 +135,9 @@ select.form-control
 
 .faded:hover
     opacity: 1
+
+.discon
+    cursor: pointer
+    color: red
 
 </style>

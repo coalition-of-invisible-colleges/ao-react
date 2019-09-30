@@ -11,6 +11,11 @@ function tasksMuts(tasks, ev) {
                 tasks.push(t)
             })
             break
+        case "ao-disconnected":
+            console.log("start disconnected: ", tasks.length)
+            tasks = _.filter(tasks, t => !(t.originAddress === ev.address))
+            console.log("end: ", tasks.length)
+            break
         case "resource-created":
             newEv.taskId = ev.resourceId
             newEv.name = ev.resourceId
@@ -23,7 +28,7 @@ function tasksMuts(tasks, ev) {
             newEv.book = {}
             newEv.priorities = []
             newEv.deck = []
-            newEv.color = "blue"
+            newEv.color = "red"
             newEv.address = ''
             newEv.allocations = []
             newEv.bolt11 = ''
