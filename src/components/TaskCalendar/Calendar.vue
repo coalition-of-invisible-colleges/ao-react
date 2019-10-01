@@ -216,6 +216,7 @@ tr, td
 
 img
     height: 0.6em
+    cursor: pointer
 
 .calmonth
     margin: 0 2% 2% 2%

@@ -38,6 +38,9 @@ module.exports = function(req,res,next){
       case 'badge-hidden':
           specBadgeHidden(req, res, next)
           break
+      case 'doge-barked':
+          specDogeBarked(req, res, next)
+          break
       default:
           next()
   }
@@ -208,17 +211,32 @@ function specBadgeRemoved(req, res, next){
 }
 
 function specBadgeHidden(req, res, next){
-  let errRes = []
-  if (
-    validators.isMemberId(req.body.memberId, errRes) &&
-    validators.isNotes( req.body.badge )
-  ){
-    events.membersEvs.badgeHidden(
-      req.body.memberId,
-      req.body.badge,
-      utils.buildResCallback(res)
-    )
-  } else {
-    res.status(400).send(errRes)
-  }
+    let errRes = []
+    if (
+      validators.isMemberId(req.body.memberId, errRes) &&
+      validators.isNotes( req.body.badge )
+    ){
+      events.membersEvs.badgeHidden(
+        req.body.memberId,
+        req.body.badge,
+        utils.buildResCallback(res)
+      )
+    } else {
+      res.status(400).send(errRes)
+    }
+}
+
+function specDogeBarked(req, res, next) {
+    let errRes = []
+    if (
+      validators.isMemberId(req.body.memberId, errRes) &&
+    ){
+      events.membersEvs.dogeBarked(
+        req.body.memberId,
+        utils.buildResCallback(res)
+      )
+    } else {
+      res.status(400).send(errRes)
+    }
+
 }

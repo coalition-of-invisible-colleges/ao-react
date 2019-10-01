@@ -145,4 +145,5 @@ tr, td
 
 img
     height: 30px
+    cursor: pointer
 </style>

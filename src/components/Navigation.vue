@@ -37,17 +37,18 @@
             img.doge(v-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected == "disconnected" }')
             img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected == "disconnected" }')
             .tooltiptext.right
+                p {{ $store.state.cash.alias }}
                 p
                     span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
                     span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
                     span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
                     span.dot.purplewx(v-else="$store.state.loader.connectionError") 
-                    span(v--if="$store.state.loader.connected == 'connecting'") connecting
+                    span(v-if="$store.state.loader.connected == 'connecting'") connecting
                     span(v-else-if="$store.state.loader.connected == 'connected'") connected
                     span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
+                    span.pong ({{ $store.state.loader.lastPing }} ms pong)
                 p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
                 p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
-                p last ping: {{ $store.state.loader.lastPing }} ms pong
         .wowdar
             .ringbase.ring1
             .ringbase.ring2
@@ -870,5 +871,8 @@ body {
     display: block
     
 .flip
-     transform: scaleX(-1)
+    transform: scaleX(-1)
+
+.pong
+    margin-left: 0.25em
 </style>

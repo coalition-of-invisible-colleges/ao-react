@@ -6,6 +6,8 @@
         .row
             p server is running
             sidewalk
+        .row
+            ipfs-info
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up resources
         .row
@@ -77,13 +79,14 @@ import CapSet from './forms/CapSet'
 import Resources from './Resources'
 import Aos from './Aos'
 import Points from './Points'
+import IpfsInfo from "./ipfsInfo.vue"
 
 export default {
     components:{
         SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
         Panels, WhyLightning, Members, Home, MemberCreate, RentSet,
-        CapSet, Resources, Sidewalk, Aos, Points
+        CapSet, Resources, Sidewalk, Aos, Points, IpfsInfo
     },
 }
 

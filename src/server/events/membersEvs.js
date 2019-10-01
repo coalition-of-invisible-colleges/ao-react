@@ -123,7 +123,15 @@ function badgeHidden(memberId, badge, callback) {
         badge,
     }
     dctrlDb.insertEvent(newEvent, callback)
-  }
+}
+
+function dogeBarked(memberId, callback) {
+    let newEvent ={
+        type: "doge-barked",
+        memberId,
+    }
+    dctrlDb.triggerShadow(newEvent, callback)
+}
 
 export default {
   memberCreated,
@@ -136,5 +144,6 @@ export default {
   memberFieldUpdated,
   badgeAdded,
   badgeRemoved,
-  badgeHidden
+  badgeHidden,
+  dogeBarked,
 }

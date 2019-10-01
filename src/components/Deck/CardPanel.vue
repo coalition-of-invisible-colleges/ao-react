@@ -53,7 +53,7 @@ export default {
   mounted(){
         var el = document.getElementById(this.uuid)
         var mc = new Hammer.Manager(el)
-        var Swipe = new Hammer.Swipe({ threshold: 100 })
+        var Swipe = new Hammer.Swipe({ threshold: 375 })
         mc.add(Swipe)
 
         mc.on('swipeleft', (e) => {
