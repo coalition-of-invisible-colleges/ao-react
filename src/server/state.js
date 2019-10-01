@@ -12,6 +12,7 @@ const serverState = {
   tasks: [],
   resources: [],
   cash: {
+    subscribed: [],
     address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
@@ -36,6 +37,7 @@ const pubState = {
   tasks: [],
   resources: [],
   cash: {
+    subscribed: [],
     address: config.tor.hostname,
     alias: '',
     currency: 'CAD',

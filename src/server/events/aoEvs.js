@@ -1,10 +1,11 @@
 import uuidV1 from 'uuid/v1'
 import dctrlDb from '../dctrlDb'
 
-function aoSubscribed(address, callback){
+function aoSubscribed(address, secret,  callback){
     let newEvent = {
         type: "ao-subscribed",
-        address
+        address,
+        secret
     }
     dctrlDb.insertEvent(newEvent, callback)
 }

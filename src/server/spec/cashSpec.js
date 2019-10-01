@@ -122,16 +122,17 @@ function specCapSet(req, res, next){
 
 function specAOSubscribed(req, res, next){
   let errRes = []
-  console.log('ao subscribed does nothing yet', req.body.address)
   if (
-      validators.isNotes(req.body.address, errRes)
+      validators.isNotes(req.body.address, errRes) &&
+      validators.isNotes(req.body.secret, errRes)
   ){
     events.aoEvs.aoSubscribed(
       req.body.address,
+      req.body.secret,
       utils.buildResCallback(res)
     )
   } else {
-    res.status(200).send(errRes)
+      res.status(200).send(errRes)
   }
 }
 
@@ -166,6 +167,16 @@ function specAOConnect(req, res, next){
         response,
         utils.buildResCallback(res)
       )
+      connector.postEvent(req.body.address, req.body.secret, {
+          type: 'ao-subscribed',
+          address: req.body.address,
+          secret: req.body.secret,
+      }, (err, res) => {
+          console.log('subscription requested', {err, res})
+      })
+
+
+
   })
 
 }
