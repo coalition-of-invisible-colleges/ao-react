@@ -2,16 +2,14 @@
 
 #home
     .container(v-if='$store.state.upgrades.mode === "doge"')
-        h1.up {{ $store.state.cash.alias }} status
+        h1.up {{ $store.state.cash.alias }}
         .row
-            p server is running
             sidewalk
+            resources
     .container(v-if='$store.state.upgrades.mode === "boat"')
-        h1.up resources
+        h1.up connections
         .row
             aos
-        .row
-            resources
     .container(v-if='$store.state.upgrades.mode === "badge"')
         h1.up accounts
         .row

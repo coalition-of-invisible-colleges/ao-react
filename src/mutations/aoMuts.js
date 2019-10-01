@@ -10,7 +10,10 @@ function aoMuts(aos, ev) {
             let newEv = {
                 address: ev.address,
                 secret: ev.secret,
-                alias: ev.state.cash.alias
+                alias: ev.state.cash.alias,
+                attempts: 0,
+                successfuls: 0,
+                fails: 0,
             }
             aos.push(newEv)
             break
@@ -21,6 +24,7 @@ function aoMuts(aos, ev) {
                 }
             })
             break
+        // case "ao-subscribed"
     }
 }
 

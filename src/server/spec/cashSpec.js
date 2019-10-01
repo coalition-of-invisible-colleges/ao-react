@@ -123,7 +123,16 @@ function specCapSet(req, res, next){
 function specAOSubscribed(req, res, next){
   let errRes = []
   console.log('ao subscribed does nothing yet', req.body.address)
-
+  if (
+      validators.isNotes(req.body.address, errRes)
+  ){
+    events.aoEvs.aoSubscribed(
+      req.body.address,
+      utils.buildResCallback(res)
+    )
+  } else {
+    res.status(200).send(errRes)
+  }
 }
 
 function specAoDisconnected(req, res, next){
