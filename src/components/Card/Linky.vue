@@ -56,6 +56,9 @@ export default {
 .noheight img
     max-width: 127%
 
+.cardname.front .noheight img
+    max-width: 100% 
+   
 p:last-child
     margin-bottom: 0
 </style>

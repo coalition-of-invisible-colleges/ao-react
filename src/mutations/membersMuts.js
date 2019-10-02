@@ -137,6 +137,16 @@ function membersMuts(members, ev){
               _.pullAt(member.badges, indexes)
           })
           break
+
+      case "doge-barked":
+          members.forEach( member => {
+              // this should only bump up for mutual doges
+              if (member.memberId === ev.memberId){
+                  member.lastUsed = ev.timestamp
+                  // then bark
+              }
+          })
+          break
   }
 }
 

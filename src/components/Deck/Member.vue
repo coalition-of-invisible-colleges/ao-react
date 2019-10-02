@@ -19,8 +19,8 @@
                 p.suggest(v-if='m.active <= 0') click to activate
                 .gui.title(v-if='nameList.length > 0') vouches
                 ul(v-if='nameList.length > 0')
-                    li
-                        vouch.gui(v-for='n in nameList'  :memberId='n'  :b='b'  :inId='ugly')
+                    li(v-for='n in nameList')
+                        vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
     .clearboth
 </template>
 

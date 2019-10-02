@@ -229,7 +229,7 @@ function specBadgeHidden(req, res, next){
 function specDogeBarked(req, res, next) {
     let errRes = []
     if (
-      validators.isMemberId(req.body.memberId, errRes) &&
+      validators.isMemberId(req.body.memberId, errRes)
     ){
       events.membersEvs.dogeBarked(
         req.body.memberId,
