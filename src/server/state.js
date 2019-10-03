@@ -87,7 +87,6 @@ function initialize(callback) {
           if (backup.length > 0){
               console.log( backup[0].members.length, " members in backup")
               ts = backup[0].timestamp
-
               applyBackup(backup[0])
           }
 
