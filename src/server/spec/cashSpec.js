@@ -40,7 +40,20 @@ module.exports = function(req, res, next){
           if (secret){
             console.log('ao relay attempt', req.body.ev)
             connector.postEvent(req.body.address, secret, req.body.ev, (err, res) => {
-              console.log('postev relay', {err, res})
+                console.log('postev relay', {err, res})
+                if (!err){
+                    events.aoEvs.aoRelayAttempted(
+                      req.body.address,
+                      true,
+                      utils.buildResCallback(res)
+                    )
+                } else {
+                    events.aoEvs.aoRelayAttempted(
+                      req.body.amount,
+                      false,
+                      utils.buildResCallback(res)
+                    )
+                }
             })
           } else {
               console.log("no connection for ", req.body.address)

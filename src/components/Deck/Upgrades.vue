@@ -132,8 +132,6 @@ export default {
 
             if(guild) parents.push(guild)
 
-            console.log('going into the:',  {panel, top, parents})
-
             this.$store.dispatch("goIn", {panel, top, parents})
         },
         playPageTurn(){
@@ -149,7 +147,6 @@ export default {
             }
             this.$store.commit("setPayMode", x)
             if(x === 0) {
-                console.log("address is ", this.$store.getters.contextCard.address)
                 if(!this.$store.getters.contextCard.address) {
                     this.$store.dispatch('makeEvent', {
                         type: 'address-updated',
@@ -214,11 +211,8 @@ export default {
             return completions
         },
         getSubPriorities(taskId){
-            console.log("getSubPriorities")
             let card = this.$store.getters.hashMap[taskId]
             if(card && card.priorities){
-                console.log("length is ", card.priorities.length)
-                console.log("priorities is ", card.priorities)
                 return card.priorities.slice().reverse()
             }
         },

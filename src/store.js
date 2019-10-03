@@ -35,7 +35,21 @@ export default new Vuex.Store({
       },
       warpGuilds(state, getters){
           if (getters.warpDrive){
-              return state.tasks.filter(t => t.originAddress === getters.warpAddress && t.guild)
+              let warpG = state.tasks.filter(t => t.originAddress === getters.warpAddress)
+              console.log('warp drive activated:', warpG.length, "at ", getters.warpAddress)
+              return warpG.filter(t => t.guild)
+          }
+          return []
+      },
+      warpMembers(state, getters){
+          if (getters.warpDrive){
+              let warpM = state.members.filter(t => {
+                  let isMatch = t.originAddress === getters.warpAddress
+                  console.log({isMatch}, t.originAddress)
+                  return isMatch
+              })
+              console.log('warp drive activated members:', warpM.length, "at ", getters.warpAddress)
+              return warpM
           }
           return []
       },

@@ -9,7 +9,7 @@ function tasksMuts(tasks, ev) {
     switch (ev.type) {
         case "ao-connected":
             let currentTaskIds = []
-            console.log("start connect: ", tasks.length)
+            console.log("start connect ao-connected: ", tasks.length)
 
             tasks.forEach((t, i) => {
                 if (currentTaskIds.indexOf( t.taskId ) === -1){
@@ -21,9 +21,14 @@ function tasksMuts(tasks, ev) {
             })
 
             ev.state.tasks.forEach(t => {
-                if (currentTaskIds.indexOf(t.taskId) === -1 && !t.originAddress){
-                    t.originAddress = ev.address
-                    tasks.push(t)
+                if (currentTaskIds.indexOf(t.taskId) === -1){
+                    if (!t.originAddress){
+                        t.originAddress = ev.address
+                        // console.log("adding remote task")
+                        tasks.push(t)
+                    } else {
+                        // console.log("skippin hops away ", t.originAddress)
+                    }
                 } else {
                     console.log("duplicate taskID in remote BAD!")
                 }

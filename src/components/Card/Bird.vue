@@ -9,7 +9,7 @@
         select(v-model='toAo'  @change)
             option(@click='setWarp(-1)') here
             option(v-for='(a, i) in $store.state.ao'  :key='a.address'  :value='a.address'  @click='setWarp(i)') {{ a.alias ? a.alias : a.address.slice(0,9) }}
-        div(v-if='$store.state.upgrades.warp > -1')
+        div(v-if='$store.getters.warpDrive')
           img.birdy(src='../../assets/images/navigas/sunUni.svg')
           select(v-model='toMemberWarp')
               option(disabled, value='') to people
