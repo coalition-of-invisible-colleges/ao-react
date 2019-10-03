@@ -3,7 +3,12 @@ import _ from 'lodash'
 function resourcesMuts(resources, ev){
 	switch (ev.type) {
 		case "resource-created":
-			resources.push(ev)
+			let resourceIds = resources.map(r => r.resourceId)
+			if (ev.resourceId.indexOf(ev.resourceId) === -1){
+					resources.push(ev)
+			} else {
+					console.log("BAD data duplicate resource rejected in mutation, dup resource task likely created")
+			}
 			break
 		case "resource-used":
 			resources.forEach( resource => {

@@ -12,6 +12,7 @@ const serverState = {
   tasks: [],
   resources: [],
   cash: {
+    subscribed: [],
     address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
@@ -36,6 +37,7 @@ const pubState = {
   tasks: [],
   resources: [],
   cash: {
+    subscribed: [],
     address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
@@ -85,7 +87,6 @@ function initialize(callback) {
           if (backup.length > 0){
               console.log( backup[0].members.length, " members in backup")
               ts = backup[0].timestamp
-
               applyBackup(backup[0])
           }
 

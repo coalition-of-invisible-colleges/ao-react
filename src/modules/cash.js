@@ -1,6 +1,7 @@
 import M from '../mutations'
 
 const state = {
+    subscribed: [],
     alias: "",
     address: "",
     cash: 0,
@@ -18,6 +19,7 @@ const state = {
 
 const mutations = {
     setCurrent(state, current){
+        state.subscribed = current.cash.subscribed
         state.alias = current.cash.alias
         state.address = current.cash.address
         state.cash = current.cash.cash

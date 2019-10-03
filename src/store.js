@@ -347,7 +347,6 @@ export default new Vuex.Store({
               }
               return true
           })
-          console.log("my is ", my)
           my.forEach(g => {
               g.tempLastClaimed = 0
               let completions = g.completed.map(t => getters.hashMap[t])
@@ -359,7 +358,6 @@ export default new Vuex.Store({
               })
           })
           my.sort((a, b) => {
-              console.log("sort is ", b.tempLastClaimed - a.tempLastClaimed)
               return b.tempLastClaimed - a.tempLastClaimed
           })
           return my

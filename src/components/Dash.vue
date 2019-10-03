@@ -2,18 +2,15 @@
 
 #home
     .container(v-if='$store.state.upgrades.mode === "doge"')
-        h1.up {{ $store.state.cash.alias }} status
+        h1.up {{ $store.state.cash.alias }}
         .row
-            p server is running
             sidewalk
         .row
-            ipfs-info
+            resources
     .container(v-if='$store.state.upgrades.mode === "boat"')
-        h1.up resources
+        h1.up connections
         .row
             aos
-        .row
-            resources
     .container(v-if='$store.state.upgrades.mode === "badge"')
         h1.up accounts
         .row
@@ -79,14 +76,13 @@ import CapSet from './forms/CapSet'
 import Resources from './Resources'
 import Aos from './Aos'
 import Points from './Points'
-import IpfsInfo from "./ipfsInfo.vue"
 
 export default {
     components:{
         SharedTitle, Auth, Changer,
         TaskCreate, PreviewDeck, Calendar, Nodes,
         Panels, WhyLightning, Members, Home, MemberCreate, RentSet,
-        CapSet, Resources, Sidewalk, Aos, Points, IpfsInfo
+        CapSet, Resources, Sidewalk, Aos, Points
     },
 }
 

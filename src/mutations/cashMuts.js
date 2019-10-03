@@ -1,6 +1,9 @@
 
 function cashMuts(cash, ev){
 		switch (ev.type) {
+			case "ao-subscribed":
+					cash.subscribed.push(ev)
+					break
 			case "ao-named":
 				cash.alias = ev.alias
 				break

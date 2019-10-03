@@ -2,19 +2,44 @@ import _ from 'lodash'
 import crypto from 'crypto'
 const uuidV1 = require('uuid/v1')
 
+const hashMap = {}
+
 function tasksMuts(tasks, ev) {
     let newEv = {}
     switch (ev.type) {
         case "ao-connected":
-            ev.state.tasks.forEach(t => {
-                t.originAddress = ev.address
-                tasks.push(t)
+            let currentTaskIds = []
+            console.log("start connect: ", tasks.length)
+
+            tasks.forEach((t, i) => {
+                if (currentTaskIds.indexOf( t.taskId ) === -1){
+                    currentTaskIds.push(t.taskId)
+                } else {
+                    console.log("duplicate taskID in taskLIST BAD!")
+                }
+
             })
+
+            ev.state.tasks.forEach(t => {
+                if (currentTaskIds.indexOf(t.taskId) === -1 && !t.originAddress){
+                    t.originAddress = ev.address
+                    tasks.push(t)
+                } else {
+                    console.log("duplicate taskID in remote BAD!")
+                }
+            })
+            console.log("end connect: ", tasks.length)
             break
         case "ao-disconnected":
             console.log("start disconnected: ", tasks.length)
-            tasks = _.filter(tasks, t => !(t.originAddress === ev.address))
-            console.log("end: ", tasks.length)
+            let indexes = []
+            tasks.forEach((t, i) => {
+                if (t.originAddress === ev.address){
+                    indexes.push(i)
+                }
+            })
+            let removed = _.pullAt(tasks, indexes)
+            console.log("end disconnect: ", tasks.length)
             break
         case "resource-created":
             newEv.taskId = ev.resourceId

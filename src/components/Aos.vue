@@ -24,6 +24,8 @@
             // relay info / recent communications
             h6 {{ r.address }} -
                 span.discon(@click='discon(r.address)') disconnect
+        template.row(v-for='a in $store.state.cash.subscribed')
+            p {{ a }}
 </template>
 
 <script>
