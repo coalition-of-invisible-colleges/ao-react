@@ -14,6 +14,7 @@ function aoMuts(aos, ev) {
                 attempts: 0,
                 successfuls: 0,
                 fails: 0,
+                lastAttemptSuccess: true
             }
             aos.push(newEv)
             break
@@ -21,6 +22,24 @@ function aoMuts(aos, ev) {
             aos.forEach( (ao, i) => {
                 if (ao.address === ev.address) {
                     aos.splice(i, 1)
+                }
+            })
+            break
+        case "ao-relay-attempted":
+            console.log("relay attempted", ev)
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    console.log("address matched", ao)
+                    ao.attempts ++
+                    if (ev.successful){
+                        ao.successfuls ++
+                        ao.lastAttemptSuccess = true
+                    } else {
+                        ao.fails ++
+                        ao.lastAttemptSuccess = false
+                    }
+                    console.log("link updated?", ao)
+
                 }
             })
             break

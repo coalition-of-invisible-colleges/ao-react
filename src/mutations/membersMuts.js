@@ -3,13 +3,41 @@ import _ from 'lodash'
 function membersMuts(members, ev){
   switch (ev.type){
       case "ao-connected":
-          ev.state.members.forEach(m => {
-              m.originAddress = ev.address
-              members.push(m)
+          console.log("start connect ao-connected members: ", members.length)
+          let currentMemberIds = []
+          members.forEach((t, i) => {
+              if (currentMemberIds.indexOf( t.memberId ) === -1){
+                  currentMemberIds.push(t.memberId)
+              } else {
+                  console.log("duplicate memberId BAD!")
+              }
           })
+
+          ev.state.members.forEach(t => {
+              if (currentMemberIds.indexOf(t.memberId) === -1){
+                  if (!t.originAddress){
+                      let tt = Object.assign({}, t)
+                      tt.originAddress = ev.address
+                      members.push(tt)
+                  } else {
+                      console.log("skippin member hops away ", t.originAddress)
+                  }
+              } else {
+                  console.log("duplicate taskID in remote BAD!")
+              }
+          })
+          console.log("end connect members: ", members.length)
           break
       case "ao-disconnected":
-          members = _.filter(members, m => !(m.originAddress === ev.address) )
+          console.log("start disconnected: ", members.length)
+          let indexes = []
+          members.forEach((t, i) => {
+              if (t.originAddress === ev.address){
+                  indexes.push(i)
+              }
+          })
+          let removed = _.pullAt(members, indexes)
+          console.log("end disconnect: ", members.length)
           break
       case "member-created":
           ev.lastUsed = ev.timestamp
