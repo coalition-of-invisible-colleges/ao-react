@@ -26,8 +26,10 @@ function aoMuts(aos, ev) {
             })
             break
         case "ao-relay-attempted":
+            console.log("relay attempted", ev)
             aos.forEach( (ao, i) => {
                 if (ao.address === ev.address) {
+                    console.log("address matched", ao)
                     ao.attempts ++
                     if (ev.successful){
                         ao.successfuls ++
@@ -36,6 +38,8 @@ function aoMuts(aos, ev) {
                         ao.fails ++
                         ao.lastAttemptSuccess = false
                     }
+                    console.log("link updated?", ao)
+
                 }
             })
             break
