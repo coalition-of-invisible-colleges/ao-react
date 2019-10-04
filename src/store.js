@@ -169,7 +169,7 @@ export default new Vuex.Store({
           let bountyList = []
           let bounties = {}
           let guilds = {}
-          state.tasks.forEach( t => {
+          getters.localTasks.forEach( t => {
               if (Array.isArray(t.allocations)){
                   t.allocations.forEach( al => {
                       if ( bounties[al.allocatedId] ) {
@@ -214,7 +214,7 @@ export default new Vuex.Store({
           let resources = []
           let cards = []
 
-          state.tasks.forEach(t => {
+          getters.localTasks.forEach(t => {
 
               if( t.boost > 0 ){
                   if (getters.memberIds.indexOf(t.taskId) > -1){
@@ -331,7 +331,7 @@ export default new Vuex.Store({
       },
       hodld(state, getters){
           let hodld = []
-          state.tasks.forEach( t => {
+          getters.localTasks.forEach( t => {
               if(t.deck.indexOf(getters.member.memberId) > -1){
                 hodld.push(t)
               }
@@ -348,10 +348,10 @@ export default new Vuex.Store({
           return void_orphans
       },
       unheld(state, getters){
-          return state.tasks.filter(t => t.deck.length === 0)
+          return getters.localTasks.filter(t => t.deck.length === 0)
       },
       held(state, getters){
-          return state.tasks.filter(t => t.deck.length > 0 || t.guild)
+          return getters.localTasks.filter(t => t.deck.length > 0 || t.guild)
       },
       myGuilds(state, getters){
           let my = state.tasks.filter(t => {
@@ -376,8 +376,11 @@ export default new Vuex.Store({
           })
           return my
       },
+      localTasks(state, getters){
+          return state.tasks.filter(t => !t.originAddress)
+      },
       guilds(state, getters){
-          return state.tasks.filter(t => t.guild)
+          return getters.localTasks.filter(t => t.guild)
       },
       pubguilds(state, getters){
           let guilds = []
@@ -539,7 +542,7 @@ export default new Vuex.Store({
               member.priorities.forEach(p => {
                   let priority = getters.hashMap[p]
                   if(!priority.dogers) {
-                    priority.dogers = []
+                      priority.dogers = []
                   }
                   priority.dogers.push(member.name)
                   if(!news.some((sp, i) => {

@@ -16,11 +16,11 @@ function membersMuts(members, ev){
           ev.state.members.forEach(t => {
               if (currentMemberIds.indexOf(t.memberId) === -1){
                   if (!t.originAddress){
-                      t.originAddress = ev.address
-                      console.log("adding remote member", t)
-                      members.push(t)
+                      let tt = Object.assign({}, t)
+                      tt.originAddress = ev.address
+                      members.push(tt)
                   } else {
-                      // console.log("skippin member hops away ", t.originAddress)
+                      console.log("skippin member hops away ", t.originAddress)
                   }
               } else {
                   console.log("duplicate taskID in remote BAD!")

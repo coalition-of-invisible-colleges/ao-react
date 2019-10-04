@@ -23,9 +23,9 @@ function tasksMuts(tasks, ev) {
             ev.state.tasks.forEach(t => {
                 if (currentTaskIds.indexOf(t.taskId) === -1){
                     if (!t.originAddress){
-                        t.originAddress = ev.address
-                        // console.log("adding remote task")
-                        tasks.push(t)
+                        let tt = Object.assign({}, t)
+                        tt.originAddress = ev.address
+                        tasks.push(tt)
                     } else {
                         // console.log("skippin hops away ", t.originAddress)
                     }
