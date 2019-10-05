@@ -265,6 +265,9 @@ export default new Vuex.Store({
               totalCards,
           }
       },
+      totalPointsSum(state, getters){
+          return getters.totalPoints.totalMembers + getters.totalPoints.totalGuilds + getters.totalPoints.totalResources + getters.totalPoints.totalCards
+      },
       hashMap(state){
           let hashMap = {}
           state.tasks.forEach(t => {
@@ -507,7 +510,7 @@ export default new Vuex.Store({
           return calculations.cadToSats(1, state.cash.spot)
       },
       satPoint(state, getters){
-          let sats = getters.totalWallet / (getters.totalPoints + getters.totalBounties)
+          let sats = getters.totalWallet / (getters.totalPointsSum + getters.totalBounties)
           return parseInt(sats)
       },
       recentMembers(state, getters){
