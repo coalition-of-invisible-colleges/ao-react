@@ -6,7 +6,7 @@
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
-        img(:class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
+        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
         .tooltiptext
             p prioritized by:
             current(v-for='doger in b.dogers'  :memberId='doger') 
@@ -209,8 +209,8 @@ export default {
           return mc
         },
         fractionalReserveDoge() {
-            console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
-            return Math.floor((this.b.weight % 1) * 16) + 1
+            // console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
+            return Math.max(Math.floor((this.b.weight % 1) * 16), 1)
         }
     },
 }
