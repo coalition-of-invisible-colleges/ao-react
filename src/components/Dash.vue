@@ -24,6 +24,7 @@
         p(v-else) no lightning node :(
     .container.row(v-if='$store.state.upgrades.mode === "timecube"')
         h1.up central reserve
+        points
         ul
           li Each month cost is split between active accounts
           li Activate account at the treasure chest on your deck
@@ -51,7 +52,6 @@
               .six.columns
                 p.input-instructions Set Cost Cap
                 cap-set
-        points
     .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
     .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
 </template>

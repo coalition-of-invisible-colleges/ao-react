@@ -439,6 +439,9 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.memberId){
                     task.boost -= parseFloat(ev.charged)
+                    if (task.boost < 0){
+                        task.boost = 0
+                    }
                 }
             })
             break
