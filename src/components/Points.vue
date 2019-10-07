@@ -22,9 +22,8 @@
             template(v-for='n in $store.getters.taskByBoost.cards')
                 p {{ n.boost }} -- {{ n.name }}
     .center
-        p points: {{ $store.getters.totalPointsSum }}
-        p wallet:  {{ ($store.getters.confirmedBalance + $store.getters.totalLocal).toLocaleString() }} &#12471;
-        p backing: {{ $store.getters.satPoint }} &#12471;
+        p total points: {{ $store.getters.totalPointsSum }}
+        p wallet backing: {{ $store.getters.satPoint }} &#12471;
 </template>
 
 <script>
@@ -45,6 +44,9 @@ export default {
 img
     width: 100%
 
+
+.center
+    text-align: center
 
 
 </style>
