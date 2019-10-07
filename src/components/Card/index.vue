@@ -9,7 +9,7 @@
         img(:class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
         .tooltiptext
             p prioritized by:
-            current(v-for='doger in b.dogers'  :memberId='doger') 
+            current(v-for='doger in b.dogers'  :memberId='doger')
     .row
         .ten.grid
             bird(:b='b', :inId='inId')
@@ -151,7 +151,6 @@ export default {
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
-              console.log({now, msTill, days})
               return {
                   days,
                   hours,
@@ -209,7 +208,6 @@ export default {
           return mc
         },
         fractionalReserveDoge() {
-            console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
             return Math.floor((this.b.weight % 1) * 16) + 1
         }
     },
