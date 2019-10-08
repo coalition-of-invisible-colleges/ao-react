@@ -17,7 +17,7 @@
                 .three.columns
                     div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-        div(v-else-if='$store.state.upgrades.mode == "boat"')
+        div(v-show='$store.state.upgrades.mode == "boat"')
             div(v-if='$store.state.upgrades.warp > -1')
                 h1.up {{ $store.getters.warpDrive.alias }} Top Missions
                 card-panel.gutter(:c='$store.getters.warpGuilds')
@@ -39,10 +39,10 @@
                     span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
                 .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
                     span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
-        .container(v-else-if='$store.state.upgrades.mode == "badge"')
+        .container(v-show='$store.state.upgrades.mode == "badge"')
             h1.up Much Recent
             row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-        div(v-else-if='$store.state.upgrades.mode == "bounty"')
+        div(v-show='$store.state.upgrades.mode == "bounty"')
             h1.up Bounties
             .row.pagemargins
                 .three.columns
@@ -65,12 +65,12 @@
                         span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                         span.yellowtx.fr {{ t.currentAmount }}
                         hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-        .container(v-else-if='$store.state.upgrades.mode == "timecube"')
+        .container(v-show='$store.state.upgrades.mode == "timecube"')
           h1.up Calendar
           calendar(inId='g')
-        div(v-else)
-          img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
-          img.buddadoge(src='../../assets/images/buddadoge.svg')
+        //- div(v-else)
+        //-   img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
+        //-   img.buddadoge(src='../../assets/images/buddadoge.svg')
     auth(v-if='!$store.getters.isLoggedIn').container
 </template>
 
