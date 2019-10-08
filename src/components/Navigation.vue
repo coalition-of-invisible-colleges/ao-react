@@ -542,6 +542,7 @@ hr
     // box-shadow: rgba(255, 255, 255, 0.65) 0px 0px 10px
     background: none
     border: none
+    z-index: 153
     
 .modeleft
     transform: translateX(50%)
