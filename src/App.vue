@@ -23,6 +23,19 @@ export default {
         this.$store.dispatch("connectSocket")
         this.$store.dispatch('loadCurrent')
     },
+    computed: {
+        loadAllState() {
+            this.$store.getters.memberPriorities
+            this.$store.getters.recentMembers
+            this.$store.getters.myGuilds
+            this.$store.getters.archive
+            this.$store.getters.hashMap
+            this.$store.getters.bounties
+            this.$store.getters.sortedMembers
+            this.$store.getters.membersVouches
+            this.$store.getters.hodlersByCompletions
+        }
+    },
     components: {
         MainMenu, MobileHeading, EventFeed
     },
