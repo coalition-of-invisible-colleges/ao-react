@@ -5,6 +5,7 @@
     event-feed
     main-menu
     router-view
+    div(:id='loadAllState')
 </template>
 
 <script>
@@ -34,6 +35,7 @@ export default {
             this.$store.getters.sortedMembers
             this.$store.getters.membersVouches
             this.$store.getters.hodlersByCompletions
+            return "loaded"
         }
     },
     components: {

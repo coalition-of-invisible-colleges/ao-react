@@ -2,7 +2,7 @@
 
 #wrex
     .pinboard
-        div(v-if='$store.state.upgrades.mode === "doge"')
+        div(v-show='$store.state.upgrades.mode === "doge"')
             h1.up {{ $store.state.cash.alias }}
             .row.pagemargins
                 .three.columns
