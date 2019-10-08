@@ -91,7 +91,7 @@ export default {
             })
         },
         cardStart(){
-            // XXX recalc on nav 
+            // XXX recalc on nav
             if ( this.card.book.startTs ){
               let now = Date.now()
               let msTill = this.card.book.startTs - now
@@ -99,7 +99,6 @@ export default {
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
-              console.log({now, msTill, days})
               return {
                   days,
                   hours,
@@ -197,23 +196,23 @@ export default {
 .cardname
     z-index: 15
     position: relative
-    
+
 img
     height: 1.1em
     padding-right: 0.5em
 
 .left
     float: left
-    
+
 .right
     float: right
-    
+
 .nopad
     padding-right: 0.15em
 
 .nudge
     top: -0.2em
-    
+
 .front
     position: relative
     z-index: 100

@@ -7,24 +7,23 @@
                 img.four.grid(src='../assets/images/loggedIn.svg')
                 .eight.grid {{ $store.getters.totalPoints.totalMembers.toFixed(0) }}
             .center(v-for='n in $store.getters.taskByBoost.members')
-                span {{ n.boost }}
+                span {{ n.boost.toFixed(0) }}
                 current(:memberId='n.taskId')
         .four.grid
             .row
                 img.six.grid(src='../assets/images/badge.svg')
                 .six.grid {{ $store.getters.totalPoints.totalGuilds.toFixed(0) }}
-            .center(v-for='n in $store.getters.taskByBoost.guilds')
-                h3 {{ n.guild }} - {{ n.boost }}
+            h3.center(v-for='n in $store.getters.taskByBoost.guilds') {{ n.guild }} - {{ n.boost.toFixed(0) }}
         .four.grid
             .row
                 img.six.grid(src='../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
                 .six.grid {{ $store.getters.totalPoints.totalResources.toFixed(0) }}
-            //- .center(v-for='n in $store.getters.taskByBoost.resources') {{ n.boost }}
-    p points: {{ $store.getters.totalPointsSum }}
-    p wallet:  {{ ($store.getters.confirmedBalance + $store.getters.totalLocal).toLocaleString() }} &#12471;
-    p backing: {{ $store.getters.satPoint }} &#12471;
-    template(v-for='n in $store.getters.taskByBoost.cards')
-        p {{ n.boost }} -- {{ n.name }}
+            .center(v-for='n in $store.getters.taskByBoost.resources') {{ n.boost.toFixed(0) }}
+            template(v-for='n in $store.getters.taskByBoost.cards')
+                p {{ n.boost }} -- {{ n.name }}
+    .center
+        p total points: {{ $store.getters.totalPointsSum }}
+        p wallet backing: {{ $store.getters.satPoint }} &#12471;
 </template>
 
 <script>
@@ -45,6 +44,9 @@ export default {
 img
     width: 100%
 
+
+.center
+    text-align: center
 
 
 </style>

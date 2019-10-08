@@ -51,7 +51,7 @@ export default {
           return days
         },
         cardStart(){
-            // XXX recalc on nav 
+            // XXX recalc on nav
             if ( this.card.book.startTs ){
               let now = Date.now()
               let msTill = this.card.book.startTs - now
@@ -59,7 +59,6 @@ export default {
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
-              console.log({now, msTill, days})
               return {
                   days,
                   hours,
@@ -99,10 +98,10 @@ img
 
 .left
     float: left
-    
+
 .right
     float: right
-    
+
 .p
     color: white
 
@@ -111,7 +110,7 @@ img
 
 .nudge
     top: -0.2em
-    
+
 .clearboth
     clear: both
 
@@ -126,7 +125,7 @@ img
 .front
     position: relative
     z-index: 100
-    
+
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
     background-repeat: no-repeat
@@ -163,5 +162,5 @@ img
     word-wrap: break-word
     word-break: break-word
     hyphens: auto
-  
+
 </style>

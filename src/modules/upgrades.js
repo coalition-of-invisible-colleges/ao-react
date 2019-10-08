@@ -6,7 +6,7 @@ const state = {
     mode: modes[0],
     payment: false,
     dimension: false,
-    bird: true,
+    bird: false,
     warp: -1,
 }
 

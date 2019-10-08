@@ -64,11 +64,13 @@ function setCurrent(state, b){
 }
 
 function applyBackup(b){
-    setCurrent(serverState, b)
-    b.resources = b.resources.map(removeSensitive)
-    b.members = b.members.map(removeSensitive)
-    b.ao = b.ao.map(removeSensitive)
-    setCurrent(pubState, b)
+    let b1 = Object.assign({}, b)
+    let b2 = Object.assign({}, b)
+    setCurrent(serverState, b1)
+    b.resources = b2.resources.map(removeSensitive)
+    b.members = b2.members.map(removeSensitive)
+    b.ao = b2.ao.map(removeSensitive)
+    setCurrent(pubState, b2)
 }
 
 function applyEvent(state, ev) {
@@ -85,10 +87,42 @@ function initialize(callback) {
     dctrlDb.recover((err, backup) => {
           let ts = 0
           if (backup.length > 0){
+
               console.log( backup[0].members.length, " members in backup")
+              console.log( backup[0].tasks.length, " task in backup")
+              console.log( backup[0].resources.length, " resources in backup")
               ts = backup[0].timestamp
+              let knownMIds = []
+              let knownTIds = []
+              let knownRIds = []
+              backup[0].members = backup[0].members.filter(m => {
+                  if (knownMIds.indexOf(m.memberId) === -1){
+                      knownMIds.push(m.memberId)
+                      return true
+                  }
+              })
+              backup[0].tasks = backup[0].tasks.filter(t => {
+                  if (knownTIds.indexOf(t.taskId) === -1){
+                      knownTIds.push(t.taskId)
+                      return true
+                  }
+              })
+              backup[0].resources = backup[0].resources.filter(r => {
+                  if (knownRIds.indexOf(r.resourceId) === -1){
+                      knownRIds.push(r.resourceId)
+                      return true
+                  }
+              })
+
+              console.log( backup[0].members.length, " members in backup after dedup")
+              console.log( backup[0].tasks.length, " tasks in backup after dedup")
+              console.log( backup[0].resources.length, " resources in backup after dedup")
+
               applyBackup(backup[0])
           }
+
+
+
 
           dctrlDb.getAll(ts, (err, all) => {
               if (err) return callback(err)

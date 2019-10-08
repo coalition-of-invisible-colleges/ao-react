@@ -53,7 +53,6 @@ export default {
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
-              console.log({now, msTill, days})
               return {
                   days,
                   hours,
@@ -115,7 +114,7 @@ img
     opacity: 0.2
     z-index: 2
     position: absolute
-    
+
 .freshpaper
     background-image: url('../../assets/images/paper.jpg')
     opacity: 0.2
@@ -160,7 +159,7 @@ img
     color: white
     pointer-events: none
     margin-left: 2.5em
-    
+
 img.front
     position: absolute
     top: 0.2em
@@ -174,7 +173,7 @@ img.front
 .right.front img
     margin-right: 0.5em
     margin-left: 0.15em
-    
+
 .front
     z-index: 100
     position: relative
@@ -195,11 +194,11 @@ img.front
     height: 2.2em
     margin-top: 0.41em
     margin-right: -0.5em
-    
+
 .popup:hover ~ .right.front span
     display: inline-block
     padding: 1em
-    
+
 .context
     box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5)
 </style>
