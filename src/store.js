@@ -36,7 +36,6 @@ export default new Vuex.Store({
       warpGuilds(state, getters){
           if (getters.warpDrive){
               let warpG = state.tasks.filter(t => t.originAddress === getters.warpAddress)
-              console.log('warp drive activated:', warpG.length, "at ", getters.warpAddress)
               return warpG.filter(t => t.guild)
           }
           return []
@@ -116,12 +115,9 @@ export default new Vuex.Store({
               member.contextCompletions = hodlers[mId]
               holds.push(member)
           })
-          console.log("holds is", holds)
           holds.sort((a, b) => {
-              console.log("a is ", a, " and b is ", b)
               return b.contextCompletions.length - a.contextCompletions.length
           })
-          console.log("post, holds is", holds)
           return holds
       },
       red(state, getters){

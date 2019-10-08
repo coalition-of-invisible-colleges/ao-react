@@ -4,9 +4,9 @@
     .row
       .mainbg(:class='{ lightbg : $store.state.upgrades.mode === "boat" }')
         transition(name='slide-fade'  mode='out-in')
-            div(v-if='$store.state.upgrades.mode === "boat"')
+            div(v-show='$store.state.upgrades.mode === "boat"')
                 priorities(:key='$store.state.context.action')
-            template(v-if='$store.state.upgrades.mode === "badge"')
+            template(v-show='$store.state.upgrades.mode === "badge"')
               div
                 div.endpad(v-if='!isDoge')
                     h2.yellowtx(v-if='b.guild') {{ b.guild }}
@@ -38,7 +38,7 @@
                                 linky.description(:x='g.name')
                         .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
                         .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
-            template(v-if='$store.state.upgrades.mode === "bounty"')
+            template(v-show='$store.state.upgrades.mode === "bounty"')
                 .padded
                     div(v-if='$store.state.cash.info.alias')
                         .togglepayments
@@ -56,7 +56,7 @@
                             div(v-if='b.bolt11')
                                 pay-req(:bolt11='b.bolt11')
                     div.suggest(v-else) no lightning node :(
-            template(v-if='$store.state.upgrades.mode === "timecube"')
+            template(v-show='$store.state.upgrades.mode === "timecube"')
               .mainbkg
                 div(v-if='isDoge || b.guild')
                     task-calendar(:inId='b.taskId')
@@ -289,7 +289,6 @@ export default {
         invoiceCreate(){
             let spot = this.$store.state.cash.spot
             let amount = calcs.cadToSats( this.payreqAmount, spot)
-            console.log("calculated:", {spot, amount }, "from payreqAmount", this.payreqAmount,  this.$store.state.cash)
             return {
                 type: 'invoice-created',
                 taskId: this.b.taskId,
@@ -359,7 +358,6 @@ export default {
     border-style: dashed
     border-width: 2px
     border-color: softGrey
-
 
 .formlabel
     padding-top: 1em
