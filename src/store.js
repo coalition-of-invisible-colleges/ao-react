@@ -418,6 +418,7 @@ export default new Vuex.Store({
           getters.pubguilds.forEach(p => {
               let guildsSubs = p.subTasks.concat(p.priorities).concat(p.completed)
 
+              fullTasks.push(p)
               fullTasks = fullTasks.concat( guildsSubs.map(tId => {
                   let t = getters.hashMap[tId]
                   if(!t) {

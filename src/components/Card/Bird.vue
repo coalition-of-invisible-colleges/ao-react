@@ -36,12 +36,11 @@
 
 import FormBox from '../slotUtils/FormBox'
 import GuildCreate from '../forms/GuildCreate'
-import Flickity from 'vue-flickity'
 
 export default {
     props: ['b', 'inId'],
     components: {
-        FormBox, Flickity
+        FormBox, GuildCreate
     },
     data() {
         return {
@@ -53,7 +52,6 @@ export default {
             toAo:'',
         }
     },
-    components: { FormBox, GuildCreate },
     methods: {
         toggleGive(){
             this.showGive = !this.showGive

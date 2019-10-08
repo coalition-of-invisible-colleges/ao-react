@@ -24,7 +24,7 @@
                 h6.centered {{ $store.getters.warpAddress }}
             div(v-else)
                 h1.up {{ $store.state.cash.alias }} Top Missions
-                flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  :ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
+                flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
                     .transparentsides
                     .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
                         .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
@@ -32,10 +32,10 @@
                         .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
                         .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
                         .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
-                hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+                hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds'  ref='testRef')
             hr
             flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-                .carousel-cell.greenwx(@click='setWarp(-1)')
+                .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
                     span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
                 .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
                     span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
@@ -115,6 +115,9 @@ export default {
       Flickity,
   },
   data(){
+      console.log("data. this.$refs is ", this.$refs)
+      console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
+      console.log("this.$refs.warp is ", this.$refs.warp)
       return {
           showGuild: 0,
           resetKey: 0,
@@ -131,15 +134,36 @@ export default {
           }
       }
   },
+  mounted(){
+      console.log("mounted. this.$refs is ", this.$refs)
+      console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
+      console.log("this.$refs.warp is ", this.$refs.warp)
+      Vue.nextTick(() => {
+          console.log("mounted2. this.$refs list is", Object.keys(this.$refs))
+          console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
+          console.log("this.$refs.warp is ", this.$refs.warp)
+      })
+  },
   methods:{
       setWarp(i){
           this.$store.commit('setWarp', i)
       },
       initGuildsBar(){
           console.log("initGuildsBar()")
-          console.log("this.$refs is ")
+          console.log("this.$refs is ", this.$refs)
+          console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
+          console.log("this.$refs.warp is ", this.$refs.warp)
 
-          Vue.nextTick(() => { console.log(Object.keys(this.$refs)  ); console.log("this.$refs.guildsBar is ", this.$refs.guildsBar) })
+          Vue.nextTick(() => {
+              console.log("this.$refs list is", Object.keys(this.$refs)  )
+              console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
+              console.log("this.$refs.warp is ", this.$refs.warp)
+              Vue.nextTick(() => {
+                  console.log("this.$refs list is", Object.keys(this.$refs))
+                  console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
+                  console.log("this.$refs.warp is ", this.$refs.warp)
+              })
+          })
       },
       goInBounty(t){
           this.playPageTurn()
@@ -222,12 +246,12 @@ export default {
           return this.$store.getters.pubguilds.map(g => g.taskId)
       },
       joggledGuilds(){
-          console.log(this.$store.getters.pubguilds)
+          //console.log(this.$store.getters.pubguilds)
           let center = Math.ceil(this.$store.getters.pubguilds.length / 2)
           let even = this.$store.getters.pubguilds.length % 2
           let joggled = this.$store.getters.pubguilds.slice(-center)
           joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center - even))
-          console.log(joggled)
+          //console.log(joggled)
           return joggled
       }
   }

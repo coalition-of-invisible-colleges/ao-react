@@ -142,4 +142,6 @@ export default {
 .tooltip .tooltiptext
     font-size: 1em
     z-index: 152
+    width: max-content
+    max-width: 24em
 </style>

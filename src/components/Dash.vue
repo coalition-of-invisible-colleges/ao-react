@@ -5,6 +5,7 @@
         h1.up {{ $store.state.cash.alias }}
         .row
             sidewalk
+        .row
             resources
     .container(v-if='$store.state.upgrades.mode === "boat"')
         h1.up connections

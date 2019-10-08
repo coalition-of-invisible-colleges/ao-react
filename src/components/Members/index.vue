@@ -112,8 +112,10 @@ li
     text-align: center
     color: softGrey
     font-size: 2em
-    img
-        height: 2em
+
+img
+    height: 2em
+    cursor: pointer
 
 
 </style>
