@@ -135,6 +135,7 @@ export default {
       }
   },
   mounted(){
+      this.$store.commit('stopLoading')
       console.log("mounted. this.$refs is ", this.$refs)
       console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
       console.log("this.$refs.warp is ", this.$refs.warp)

@@ -84,6 +84,9 @@ export default {
         Panels, WhyLightning, Members, Home, MemberCreate, RentSet,
         CapSet, Resources, Sidewalk, Aos, Points
     },
+    mounted() {
+        this.$store.commit('stopLoading')
+    }
 }
 
 </script>

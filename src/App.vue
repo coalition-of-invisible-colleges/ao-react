@@ -35,6 +35,7 @@ export default {
             this.$store.getters.sortedMembers
             this.$store.getters.membersVouches
             this.$store.getters.hodlersByCompletions
+            this.$store.getters.contextPriorities
             return "loaded"
         }
     },

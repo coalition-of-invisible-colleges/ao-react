@@ -22,6 +22,9 @@ export default {
       HyperDeck,
       GiftBox,
   },
+  mounted() {
+        this.$store.commit('stopLoading')
+  },
   methods: {
       // setDeck() {
       //     if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){

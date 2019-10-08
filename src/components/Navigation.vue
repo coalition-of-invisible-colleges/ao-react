@@ -1,6 +1,8 @@
 <template lang='pug'>
 
 .navigation(@contextmenu.prevent)
+    .loadingscreen(v-if='$store.state.context.loading')
+        h1 loading the {{ $store.state.context.loading }} dimension
     div.ztop(@click='cycleLeft')
         img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
         img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")
@@ -225,28 +227,39 @@ export default {
             var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
-            switch (this.$router.currentRoute.path){
-                case "/front": return this.$router.push('/')
-              // case "/dash": return this.$router.push('/front')
+            if(this.$router.currentRoute.path === '/front'){
+                this.$store.commit('startLoading', 'unicorn')
+                return setTimeout(() => {
+                    return this.$router.push('/')
+                }, 10)
             }
-            this.$router.push('/front')
+            this.$store.commit('startLoading', 'sun')
+            setTimeout(() => {
+                this.$router.push('/front')
+            }, 10)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniLeft = !this.uniLeft
-            }, 1)
+            }, 20)
         },
         cycleRight(){
             var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
-            switch (this.$router.currentRoute.path){
-              case "/dash": return this.$router.push('/')
+            if(this.$router.currentRoute.path === '/dash') {
+                this.$store.commit('startLoading', 'unicorn')
+                return setTimeout(() => {
+                    return this.$router.push('/')
+                }, 10)
             }
-            this.$router.push('/dash')
+            this.$store.commit('startLoading', 'bull')
+            setTimeout(() => {
+                this.$router.push('/dash')
+            }, 10)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniRight = !this.uniRight
-            })
+            }, 20)
         },
         setToRoute() {
             switch (this.$router.currentRoute.path){
@@ -877,4 +890,13 @@ body {
 
 .pong
     margin-left: 0.25em
+    
+.loadingscreen
+    position: fixed
+    left: 0
+    top: 0
+    width: 100vw
+    height: 100vh
+    background-color: rgba(22, 22, 22, 0.5)
+    z-index: 9002
 </style>

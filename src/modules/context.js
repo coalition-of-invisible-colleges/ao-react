@@ -10,6 +10,7 @@ const state = {
     top: 0,
     completed: false,
     action: false,
+    loading: false,
     // memory: {},
     // topRed: 0,
     // topYellow: 0,
@@ -78,7 +79,13 @@ const mutations = {
         while (popped !== tId && state.parent.length !== 0){
             popped = state.parent.pop()
         }
-    }
+    },
+    startLoading(state, dimension){
+        state.loading = dimension
+    },
+    stopLoading(state){
+        state.loading = false
+    },
 }
 
 const actions = {
