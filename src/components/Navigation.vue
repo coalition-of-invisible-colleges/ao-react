@@ -560,7 +560,8 @@ hr
     100% { background-color: softGray; border-color: buttonface }
 
 @keyframes flash
-    0% { background-color: softGray; border-color: buttonface }
+    // 0% { background-color: softGray; border-color: buttonface }  // this makes the flash start late when there is GUI lag. but looks better.
+    0% { background-color: #9ff; border-color: #aff }
     50% { background-color: #9ff; border-color: #aff }
     100% { background-color: softGray; border-color: buttonface }
 
