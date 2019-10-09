@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#wrex
+#frontnews
       h1.up {{ $store.state.cash.alias }}
       .row.pagemargins
           .three.columns
@@ -24,13 +24,14 @@ export default {
   components:{
       Hypercard,
   },
-  data(){ },
   mounted(){
       this.$store.commit('stopLoading')
   },
   methods:{
       getNewsColumn(index, columns = 4){
-          return this.$store.getters.memberPriorities.slice().filter( (a, i) => { return i % columns === index })
+          let rownews = this.$store.getters.memberPriorities.slice().filter( (a, i) => { return i % columns === index })
+          console.log('trying to load news ', index, rownews.length)
+          return rownews
       },
       goInNews(t){
           this.playPageTurn()
@@ -47,21 +48,12 @@ export default {
 
           this.$router.push("/task/" + taskId)
       },
-  },
-  computed: {
-      pubGuildIds(){
-          return this.$store.getters.pubguilds.map(g => g.taskId)
+      playPageTurn(){
+          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+          flip.volume = flip.volume * 0.3
+          flip.play()
       },
-      joggledGuilds(){
-          //console.log(this.$store.getters.pubguilds)
-          let center = Math.ceil(this.$store.getters.pubguilds.length / 2)
-          let even = this.$store.getters.pubguilds.length % 2
-          let joggled = this.$store.getters.pubguilds.slice(-center)
-          joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center - even))
-          //console.log(joggled)
-          return joggled
-      }
-  }
+  },
 }
 
 </script>

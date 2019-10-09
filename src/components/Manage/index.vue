@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 #manage
-    
 </template>
 
 <script>
@@ -27,7 +26,7 @@ export default {
         }
     },
     methods: {
-        
+
     },
     components:{
         SharedTitle, Changer,

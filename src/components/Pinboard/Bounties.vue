@@ -26,97 +26,18 @@
 </template>
 
 <script>
-
 import Vue from 'vue'
-import Hypercard from "../Card"
-import BountyCard from "../Bounties/BountyCard"
-import SharedTitle from '../slotUtils/SharedTitle'
-import CrazyBtn from '../slotUtils/CrazyBtn'
 import calculations from '../../calculations'
-import Guild from './Guild'
-import TaskCreate from '../forms/TaskCreate'
-import WhyLightning from '../Nodes/WhyLightning'
-import PreviewDeck from '../Deck/PreviewDeck'
-import Home from '../Home'
-import CardPanel from '../Deck/CardPanel'
-import Calendar from '../TaskCalendar/Calendar'
-import Members from '../Members'
-import Row from '../Members/Row'
-import Auth from '../Auth'
-import Bounties from '../Bounties'
-import Flickity from 'vue-flickity'
+import Hypercard from "../Card"
 
 export default {
   components:{
-      Auth,
-      Row,
-      SharedTitle,
       Hypercard,
-      CrazyBtn,
-      BountyCard,
-      Guild,
-      TaskCreate,
-      WhyLightning,
-      PreviewDeck,
-      Home,
-      CardPanel,
-      Calendar,
-      Members,
-      Bounties,
-      Flickity,
-  },
-  data(){
-      console.log("data. this.$refs is ", this.$refs)
-      console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-      console.log("this.$refs.warp is ", this.$refs.warp)
-      return {
-          showGuild: 0,
-          resetKey: 0,
-          flickityOptions: {
-            initialIndex: 0,
-            prevNextButtons: false,
-            pageDots: false,
-            wrapAround: true,
-            selectedAttraction: 0.005,
-            friction: 0.08,
-            cellSelector: '.carousel-cell',
-            accessibility: true
-            // asNavFor: '.guildsmenu'
-          }
-      }
   },
   mounted(){
       this.$store.commit('stopLoading')
-      console.log("mounted. this.$refs is ", this.$refs)
-      console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-      console.log("this.$refs.warp is ", this.$refs.warp)
-      Vue.nextTick(() => {
-          console.log("mounted2. this.$refs list is", Object.keys(this.$refs))
-          console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-          console.log("this.$refs.warp is ", this.$refs.warp)
-      })
   },
   methods:{
-      setWarp(i){
-          this.$store.commit('setWarp', i)
-      },
-      initGuildsBar(){
-          console.log("initGuildsBar()")
-          console.log("this.$refs is ", this.$refs)
-          console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-          console.log("this.$refs.warp is ", this.$refs.warp)
-
-          Vue.nextTick(() => {
-              console.log("this.$refs list is", Object.keys(this.$refs)  )
-              console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-              console.log("this.$refs.warp is ", this.$refs.warp)
-              Vue.nextTick(() => {
-                  console.log("this.$refs list is", Object.keys(this.$refs))
-                  console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-                  console.log("this.$refs.warp is ", this.$refs.warp)
-              })
-          })
-      },
       goInBounty(t){
           this.playPageTurn()
           let taskId = t.funders[0]
@@ -129,84 +50,24 @@ export default {
               top,
               panel
           })
-
-          this.$router.push("/task/" + taskId)
-
           this.$store.commit('setMode', 1)
           this.$store.commit('setAction', t.taskId)
+          this.$store.commit('startLoading', 'unicorn')
+          this.$router.push("/task/" + taskId)
 
       },
-      goInNews(t){
-          this.playPageTurn()
-          let taskId = t
-          let panel = this.$store.getters.memberPriorityIds
-          let top = panel.indexOf(t)
-          let parents = [ this.$store.getters.member.memberId ]
-
-          this.$store.dispatch("goIn", {
-              parents,
-              top,
-              panel
-          })
-
-          this.$router.push("/task/" + taskId)
+      getBountyColumn(index, columns = 4){
+          return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
+      },
+      getGuild(taskId){
+          return this.$store.getters.hashMap[taskId].guild
       },
       playPageTurn(){
           var flip = new Audio(require('../../assets/sounds/myst158.wav'))
           flip.volume = flip.volume * 0.3
           flip.play()
       },
-      cycleGuilds(){
-          console.log('cycling')
-          if (this.$store.getters.pubguilds){
-            this.showGuild = (this.showGuild + 1) % this.$store.getters.pubguilds.length
-          }
-      },
-      selectGuild(x){
-          let length = this.$store.getters.pubguilds.length
-          this.showGuild = (parseInt(x) + Math.floor(this.$store.getters.pubguilds.length / 2)) % length
-          this.resetKey ++
-      },
-      getBountyColumn(index, columns = 4){
-          return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
-      },
-      getNewsColumn(index, columns = 4){
-          return this.$store.getters.memberPriorities.slice().filter( (a, i) => { return i % columns === index })
-      },
-      getGuild(taskId){
-          return this.$store.getters.hashMap[taskId].guild
-      },
-      cardInputSty(c){
-          return {
-              redwx : c === 'red',
-              bluewx : c === 'blue',
-              greenwx : c === 'green',
-              yellowwx : c === 'yellow',
-              purplewx : c === 'purple',
-              blackwx : c === 'black',
-          }
-      },
-      cardAge(c){
-          let now = Date.now()
-          let msSince = now - c.timestamp
-          let days = msSince / (1000 * 60 * 60 * 24)
-          return days
-      }
   },
-  computed: {
-      pubGuildIds(){
-          return this.$store.getters.pubguilds.map(g => g.taskId)
-      },
-      joggledGuilds(){
-          //console.log(this.$store.getters.pubguilds)
-          let center = Math.ceil(this.$store.getters.pubguilds.length / 2)
-          let even = this.$store.getters.pubguilds.length % 2
-          let joggled = this.$store.getters.pubguilds.slice(-center)
-          joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center - even))
-          //console.log(joggled)
-          return joggled
-      }
-  }
 }
 
 </script>

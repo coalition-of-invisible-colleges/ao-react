@@ -29,7 +29,7 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/timecube.svg')
     .pushdown
-    div(:class='{suncontext: $router.currentRoute.path === "/front", bullcontext: $router.currentRoute.path === "/dash"}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
+    div(:class='{suncontext: isSun(), bullcontext: isBull()}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentsides
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
@@ -76,6 +76,9 @@ export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput, Context, TaskCreate },
     props: ['barking', 'pinging'],
+    computed: {
+
+    },
     mounted() {
         this.setToRoute()
 
@@ -197,6 +200,14 @@ export default {
         }
     },
     methods: {
+        isSun(){
+            let mainroute = this.$router.currentRoute.path.split('/')[1]
+            return mainroute === "front"
+        },
+        isBull(){
+            let mainroute = this.$router.currentRoute.path.split('/')[1]
+            return mainroute === "dash"
+        },
         killSession(){
             console.log("kill Session called")
             this.$store.dispatch("makeEvent", {
@@ -227,16 +238,13 @@ export default {
             var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
-            if(this.$router.currentRoute.path === '/front'){
+
+            if(this.isSun()){
                 this.$store.commit('startLoading', 'unicorn')
-                return setTimeout(() => {
-                    return this.$router.push('/')
-                }, 10)
+                return this.$router.push('/')
             }
             this.$store.commit('startLoading', 'sun')
-            setTimeout(() => {
-                this.$router.push('/front')
-            }, 10)
+            this.$router.push('/front/' + this.$store.state.upgrades.mode)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniLeft = !this.uniLeft
@@ -246,25 +254,23 @@ export default {
             var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
-            if(this.$router.currentRoute.path === '/dash') {
+            if(this.isBull()) {
                 this.$store.commit('startLoading', 'unicorn')
-                return setTimeout(() => {
-                    return this.$router.push('/')
-                }, 10)
+                return this.$router.push('/')
             }
             this.$store.commit('startLoading', 'bull')
-            setTimeout(() => {
-                this.$router.push('/dash')
-            }, 10)
+            this.$router.push('/dash/ '  + this.$store.state.upgrades.mode)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniRight = !this.uniRight
             }, 20)
         },
         setToRoute() {
-            switch (this.$router.currentRoute.path){
-              case "/front": return this.showImg = "sun"
-              case "/dash": return this.showImg = "bull"
+            let mainroute = this.$router.currentRoute.path.split('/')[1]
+            console.log({mainroute})
+            switch (mainroute){
+              case "front": return this.showImg = "sun"
+              case "dash": return this.showImg = "bull"
               default: return this.showImg = "uni"
             }
         },
@@ -282,12 +288,19 @@ export default {
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
             this.$store.commit("nextMode")
+            //  only on sun
+            if (this.isSun){
+                this.$router.push('/front/' + this.$store.state.upgrades.mode)
+            }
         },
         previousUpgradeMode() {
             var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
             this.$store.commit("previousMode")
+            if (this.isSun){
+                this.$router.push('/front/' + this.$store.state.upgrades.mode)
+            }
         },
         closeUpgrades() {
             this.$store.commit("closeUpgrades")

@@ -165,9 +165,6 @@ export default {
       getBountyColumn(index, columns = 4){
           return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
       },
-      getNewsColumn(index, columns = 4){
-          return this.$store.getters.memberPriorities.slice().filter( (a, i) => { return i % columns === index })
-      },
       getGuild(taskId){
           return this.$store.getters.hashMap[taskId].guild
       },

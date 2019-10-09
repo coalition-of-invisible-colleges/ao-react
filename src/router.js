@@ -6,7 +6,7 @@ import Dash from './components/Dash'
 // Member components
 import Members from './components/Members'
 import Wiki from './components/Wiki'
-import Bounties from './components/Bounties'
+// import Bounties from './components/Bounties'
 import Onboarding from './components/Onboarding'
 
 // Invoice components
@@ -32,7 +32,6 @@ import Recent from './components/Pinboard/Recent'
 import Bounties from './components/Pinboard/Bounties'
 import Calendar from './components/Pinboard/Calendar'
 
-
 Vue.use(VueRouter)
 
 const routes =[{
@@ -50,19 +49,19 @@ const routes =[{
 },{
   path: '/front/boat',
   component: Missions,
-  meta: { title: "newspaper" }
+  meta: { title: "top cards" }
 },{
   path: '/front/badge',
   component: Recent,
-  meta: { title: "newspaper" }
+  meta: { title: "recent" }
 },{
   path: '/front/chest',
   component: Bounties,
-  meta: { title: "newspaper" }
+  meta: { title: "bounties" }
 },{
   path: '/front/timecube',
   component: Calendar,
-  meta: { title: "newspaper" }
+  meta: { title: "calendar" }
 },{
   path: '/history',
   component: List,
