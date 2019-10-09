@@ -47,6 +47,7 @@ import MemberRow from './Member'
 import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 import Auth from '../Auth'
+import SoundFX from '../../modules/sounds'
 
 export default {
     beforeRouteUpdate (to, from, next) {
@@ -67,20 +68,14 @@ export default {
   },
   methods:{
       goWithinPanel(n){
-          this.playPageTurn()
+          SoundFX.playPageTurn()
           let i = this.$store.state.context.panel.indexOf(n)
           if (i > -1){
               this.$store.commit("setTop", i)
           }
       },
-      playPageTurn(){
-          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-          flip.volume = flip.volume * 0.3
-          flip.play()
-      },
       toggleShowComplete(){
-          console.log("clcik trig call toggleCompleted")
-
+          SoundFX.playTickMark()
           this.$store.commit("toggleCompleted")
       },
       setPageTitle(){

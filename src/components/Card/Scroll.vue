@@ -1,9 +1,9 @@
 <template lang='pug'>
 
 .scroll
-    div(v-if='inId'  @click='rollsafeIt')
-        img.scrolly(src='../../assets/images/downboatwhite.svg')
-    div(v-else @click='canIt')
+    div(v-if='inId'  :id='uuid')
+        img.scrolly(src='../../assets/images/downboatwhite.svg'  class='upboat')
+    div(v-else)
         img(v-if='!isCared'  src='../../assets/images/garbage.svg').scrolly
 </template>
 
@@ -11,9 +11,47 @@
 
 import calculations from '../../calculations'
 import FormBox from '../slotUtils/FormBox'
+import SoundFX from '../../modules/sounds'
+import uuidv1 from 'uuid/v1'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
 
 export default {
     props: ['b', 'inId'],
+    data(){
+        return {
+            uuid: uuidv1(),
+        }
+    },
+    mounted() {
+        console.log("this.uuid is", this.uuid)
+        let el = document.getElementById(this.uuid)
+        if(!el) return
+        console.log("el is", el)
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let Tap = new Hammer.Tap({ time: 400 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            if(this.inId) {
+                this.canIt()
+            } else {
+                rollsafeIt()
+            }
+            e.stopPropagation()
+        })
+
+        let Press = new Hammer.Press({ time: 400 })
+        mc.add(Press)
+        mc.on('press', (e) => {
+            SoundFX.playBoatCapsize()
+            this.$router.push('/archive')
+            window.scrollTo(0, 0)
+            e.stopPropagation()
+        })
+
+        console.log("refs is", this.$refs)
+    },
     computed: {
         isCared(){
             return this.b.deck.length > 0 || this.b.guild || calculations.calculateTaskPayout(this.b) > 0.1
@@ -21,6 +59,7 @@ export default {
     },
     methods: {
         rollsafeIt(){
+            SoundFX.playBoatCapsize()
             this.$store.dispatch("makeEvent", {
                 type: 'task-de-sub-tasked',
                 taskId: this.inId,
@@ -28,6 +67,7 @@ export default {
             })
         },
         canIt(){
+            SoundFX.playBoatCapsize()
             this.$store.dispatch("makeEvent", {
                 type: 'task-removed',
                 taskId: this.b.taskId,

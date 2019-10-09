@@ -47,27 +47,23 @@
 
 import Hypercard from "../Card"
 import uuidv1 from 'uuid/v1'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
+import SoundFX from '../../modules/sounds'
 
 export default {
   props: ['c', 'taskId'],
   mounted(){
         var el = document.getElementById(this.uuid)
-        var mc = new Hammer.Manager(el)
-        var Swipe = new Hammer.Swipe({ threshold: 375 })
+        var mc = Propagating(new Hammer.Manager(el))
+        var Swipe = new Hammer.Swipe({ threshold: 200 })
         mc.add(Swipe)
 
         mc.on('swipeleft', (e) => {
-          // this.playPageTurn()
-          // this.top = (this.top - 1) % this.c.length
-          // if (this.top === -1) {
-          //   this.top = this.c.length - 1
-          // }
           this.last()
         });
 
         mc.on('swiperight', (e) => {
-          // this.playPageTurn()
-          // this.top = (this.top + 1) % this.c.length
           this.next()
         });
 
@@ -79,19 +75,24 @@ export default {
 
         mc.on('swipedown', (e) => {
             console.log('got swipe down')
-            this.playPageTurn()
             this.swap(1)
         });
 
         var Press = new Hammer.Press({
-          time: 500
+          time: 400
         });
         mc.add(Press)
 
         mc.on('press', (e) => {
-            e.preventDefault()
+            console.log(e.target)
+            // console.log(document.getElementsByClassName('upboat'))
+            // if(e.target in document.getElementsByClassName('upboat')){
+            //     return
+            // }
+            console.log("cardPanel press")
+            // e.preventDefault()
             this.copyCardToClipboard()
-        });
+        })
   },
   data(){
       return {
@@ -103,11 +104,15 @@ export default {
   },
   methods:{
     toggleOpen(){
-        this.playPageTurn()
+        if(!this.open) {
+            SoundFX.playScrollOpen()
+        } else {
+            SoundFX.playBookClose()
+        }
         this.open = !this.open
     },
     last(){
-        this.playPageTurn()
+        SoundFX.playPageTurn()
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
@@ -115,7 +120,7 @@ export default {
         this.componentKey ++
     },
     next(){
-        this.playPageTurn()
+        SoundFX.playPageTurn()
         this.top = (this.top + 1) % this.c.length
         this.componentKey ++
     },
@@ -132,6 +137,7 @@ export default {
         } else if (swapIndex > this.c.length - 1) {
             swapIndex = 0
         }
+        SoundFX.playChunkSwap()
         this.$store.dispatch("makeEvent", {
             type: 'task-swapped',
             taskId: this.taskId,
@@ -141,13 +147,8 @@ export default {
         })
     },
     copyCardToClipboard(){
-        this.playPageTurn()
+        SoundFX.playPageTurn()
         navigator.clipboard.writeText(this.topCard.name)
-    },
-    playPageTurn(){
-        var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-        flip.volume = flip.volume * 0.3
-        flip.play()
     },
   },
   computed: {

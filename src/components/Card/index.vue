@@ -64,6 +64,7 @@ import Shipped from './Shipped'
 import Linky from './Linky'
 import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
+import SoundFX from '../../modules/sounds'
 
 export default {
     props: ['b', 'inId', 'c'],
@@ -79,7 +80,7 @@ export default {
           })
         },
         goIn(){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -113,26 +114,16 @@ export default {
 
             this.$router.push("/task/" + this.b.taskId)
         },
-        playPageTurn(){
-            console.log("cardindex playPageTurn. why is this playing twice / twice volume?")
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
-        },
         toggleGrab(){
             if (this.isGrabbed) {
-                var twinkle = new Audio(require('../../assets/sounds/chrono07.wav'))
-                twinkle.volume = twinkle.volume * 0.3
-                twinkle.play()
+                SoundFX.playTwinkleDown()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-dropped',
                     taskId: this.b.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
             } else {
-                var twinkle = new Audio(require('../../assets/sounds/chrono06.wav'))
-                twinkle.volume = twinkle.volume * 0.3
-                twinkle.play()
+                SoundFX.playTwinkleUp()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-grabbed',
                     taskId: this.b.taskId,

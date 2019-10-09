@@ -94,6 +94,7 @@ import Row from '../Members/Row'
 import Auth from '../Auth'
 import Bounties from '../Bounties'
 import Flickity from 'vue-flickity'
+import SoundFX from '../../modules/sounds'
 
 export default {
   components:{
@@ -167,7 +168,7 @@ export default {
           })
       },
       goInBounty(t){
-          this.playPageTurn()
+          SoundFX.playPageTurn()
           let taskId = t.funders[0]
           let panel = [taskId]
           let top = 0
@@ -186,7 +187,7 @@ export default {
 
       },
       goInNews(t){
-          this.playPageTurn()
+          SoundFX.playPageTurn()
           let taskId = t
           let panel = this.$store.getters.memberPriorityIds
           let top = panel.indexOf(t)
@@ -199,11 +200,6 @@ export default {
           })
 
           this.$router.push("/task/" + taskId)
-      },
-      playPageTurn(){
-          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-          flip.volume = flip.volume * 0.3
-          flip.play()
       },
       cycleGuilds(){
           console.log('cycling')

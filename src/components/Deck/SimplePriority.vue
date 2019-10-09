@@ -19,13 +19,14 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
+import SoundFX from '../../modules/sounds'
 
 export default {
     props: ['taskId', 'inId', 'c'],
     components: { Hypercard, Linky },
     methods: {
         goIn(){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -64,11 +65,6 @@ export default {
             })
 
             this.$router.push("/task/" + this.taskId)
-        },
-        playPageTurn(){
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
         },
     },
     computed: {

@@ -25,6 +25,7 @@
 import Current from './Current'
 import PayReq from './PayReq'
 import calculations from '../../calculations'
+import SoundFX from '../../modules/sounds'
 
 export default {
     data(){
@@ -75,7 +76,7 @@ export default {
             })
         },
         goIn(){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let top = this.c.indexOf(this.r.resourceId)
             console.log("goIn called with TOP: ", top)
             if (top > -1){
@@ -86,11 +87,6 @@ export default {
                     top,
                 })
             }
-        },
-         playPageTurn(){
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
         },
     }
 }

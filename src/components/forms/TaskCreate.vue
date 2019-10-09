@@ -26,6 +26,7 @@
 import SharedTitle from '../slotUtils/SharedTitle'
 import FormBox from '../slotUtils/FormBox'
 import request from "superagent"
+import SoundFX from '../../modules/sounds'
 
 export default {
     data(){
@@ -145,7 +146,7 @@ export default {
             })
         },
         createOrFindTask(){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let foundId = this.matchCard
             let potentialCard = this.task.name.trim()
             console.log("potentialCard is ", potentialCard)
@@ -168,11 +169,6 @@ export default {
                 this.subTaskTask(foundId)
             }
             this.resetCard()
-        },
-        playPageTurn(){
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
         },
         // hasSubTask(taskId){
         //     return this.$store.getters.hashMap[this.taskId].subTasks.indexOf(taskId) > -1
