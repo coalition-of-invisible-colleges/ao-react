@@ -38,7 +38,7 @@
                                 linky.description(:x='g.name')
                         .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
                         .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
-            template(v-show='$store.state.upgrades.mode === "bounty"')
+            template(v-show='$store.state.upgrades.mode === "chest"')
                 .padded
                     div(v-if='$store.state.cash.info.alias')
                         .togglepayments

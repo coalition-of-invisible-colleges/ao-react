@@ -1,4 +1,4 @@
-const modes = ["doge", "boat", "badge", "bounty", "timecube"]
+const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
 const dimensions = ["time", "space", "replication"]
 

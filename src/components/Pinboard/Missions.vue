@@ -7,7 +7,7 @@
           h6.centered {{ $store.getters.warpAddress }}
       div(v-else)
           h1.up {{ $store.state.cash.alias }} Top Missions
-          flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
+          flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  ref='guildsBar'  v-model='guildsBar')
               .transparentsides
               .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
                   .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
@@ -25,44 +25,15 @@
 </template>
 
 <script>
-
-import Vue from 'vue'
-import Hypercard from "../Card"
-import BountyCard from "../Bounties/BountyCard"
-import SharedTitle from '../slotUtils/SharedTitle'
-import CrazyBtn from '../slotUtils/CrazyBtn'
-import calculations from '../../calculations'
-import Guild from './Guild'
-import TaskCreate from '../forms/TaskCreate'
-import WhyLightning from '../Nodes/WhyLightning'
-import PreviewDeck from '../Deck/PreviewDeck'
-import Home from '../Home'
-import CardPanel from '../Deck/CardPanel'
-import Calendar from '../TaskCalendar/Calendar'
-import Members from '../Members'
-import Row from '../Members/Row'
-import Auth from '../Auth'
-import Bounties from '../Bounties'
 import Flickity from 'vue-flickity'
+import CardPanel from '../Deck/CardPanel'
+import Hypercard from "../Card"
 
 export default {
   components:{
-      Auth,
-      Row,
-      SharedTitle,
-      Hypercard,
-      CrazyBtn,
-      BountyCard,
-      Guild,
-      TaskCreate,
-      WhyLightning,
-      PreviewDeck,
-      Home,
-      CardPanel,
-      Calendar,
-      Members,
-      Bounties,
       Flickity,
+      CardPanel,
+      Hypercard,
   },
   data(){
       return {
@@ -82,35 +53,10 @@ export default {
   },
   mounted(){
       this.$store.commit('stopLoading')
-      console.log("mounted. this.$refs is ", this.$refs)
-      console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-      console.log("this.$refs.warp is ", this.$refs.warp)
-      Vue.nextTick(() => {
-          console.log("mounted2. this.$refs list is", Object.keys(this.$refs))
-          console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-          console.log("this.$refs.warp is ", this.$refs.warp)
-      })
   },
   methods:{
       setWarp(i){
           this.$store.commit('setWarp', i)
-      },
-      initGuildsBar(){
-          console.log("initGuildsBar()")
-          console.log("this.$refs is ", this.$refs)
-          console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-          console.log("this.$refs.warp is ", this.$refs.warp)
-
-          Vue.nextTick(() => {
-              console.log("this.$refs list is", Object.keys(this.$refs)  )
-              console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-              console.log("this.$refs.warp is ", this.$refs.warp)
-              Vue.nextTick(() => {
-                  console.log("this.$refs list is", Object.keys(this.$refs))
-                  console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-                  console.log("this.$refs.warp is ", this.$refs.warp)
-              })
-          })
       },
       goInBounty(t){
           this.playPageTurn()
@@ -125,6 +71,7 @@ export default {
               panel
           })
 
+          this.$store.commit("startLoading", "unicorn")
           this.$router.push("/task/" + taskId)
 
           this.$store.commit('setMode', 1)

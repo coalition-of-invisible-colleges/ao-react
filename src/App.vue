@@ -5,7 +5,6 @@
     event-feed
     main-menu
     router-view
-    div(:id='loadAllState')
 </template>
 
 <script>
@@ -23,21 +22,6 @@ export default {
         }
         this.$store.dispatch("connectSocket")
         this.$store.dispatch('loadCurrent')
-    },
-    computed: {
-        loadAllState() {
-            this.$store.getters.memberPriorities
-            this.$store.getters.recentMembers
-            this.$store.getters.myGuilds
-            this.$store.getters.archive
-            this.$store.getters.hashMap
-            this.$store.getters.bounties
-            this.$store.getters.sortedMembers
-            this.$store.getters.membersVouches
-            this.$store.getters.hodlersByCompletions
-            this.$store.getters.contextPriorities
-            return "loaded"
-        }
     },
     components: {
         MainMenu, MobileHeading, EventFeed
@@ -80,7 +64,7 @@ h4
 
 .agedwrapper a
     text-shadow: rgba(255, 255, 255, 0.65) 0px 0px 10px
-    
+
 .side_bar, .content
     display: flex;
 

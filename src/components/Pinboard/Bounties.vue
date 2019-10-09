@@ -1,5 +1,4 @@
 <template lang='pug'>
-
 #frontbounties
     h1.up Bounties
     .row.pagemargins
@@ -54,7 +53,6 @@ export default {
           this.$store.commit('setAction', t.taskId)
           this.$store.commit('startLoading', 'unicorn')
           this.$router.push("/task/" + taskId)
-
       },
       getBountyColumn(index, columns = 4){
           return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })

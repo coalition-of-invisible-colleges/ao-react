@@ -13,21 +13,21 @@
         img.bullimgright(v-else  src="../assets/images/navigas/uniBullDab.svg")
     button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
-        img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/badge.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
     button.topcenter(:class='{ closed : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
         .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
-            img.upg(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/bounty.svg')
+            img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/bounty.svg')
-        img.upg.timecube(v-else-if='$store.state.upgrades.mode === "bounty"'  src='../assets/images/timecube.svg')
+        img.upg.timecube(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/timecube.svg')
     .pushdown
     div(:class='{suncontext: isSun(), bullcontext: isBull()}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentsides
@@ -122,6 +122,7 @@ export default {
                 }
             } else {
                 this.flashHelm(2)
+
                 this.$router.push('/front/doge')
             }
         })
@@ -289,7 +290,7 @@ export default {
             cachunk.play()
             this.$store.commit("nextMode")
             //  only on sun
-            if (this.isSun){
+            if (this.isSun()){
                 this.$router.push('/front/' + this.$store.state.upgrades.mode)
             }
         },
@@ -298,7 +299,7 @@ export default {
             cachunk.volume = cachunk.volume * 0.15
             cachunk.play()
             this.$store.commit("previousMode")
-            if (this.isSun){
+            if (this.isSun()){
                 this.$router.push('/front/' + this.$store.state.upgrades.mode)
             }
         },

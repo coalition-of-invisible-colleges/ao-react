@@ -10,6 +10,9 @@
 import Calendar from '../TaskCalendar/Calendar'
 
 export default {
+  mounted(){
+      this.$store.commit('stopLoading')
+  },
   components:{
       Calendar,
   }
