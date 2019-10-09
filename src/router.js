@@ -26,6 +26,13 @@ import Deck from './components/Deck'
 
 import Archive from './components/Deck/Archive'
 
+import News from './components/Pinboard/News'
+import Missions from './components/Pinboard/Missions'
+import Recent from './components/Pinboard/Recent'
+import Bounties from './components/Pinboard/Bounties'
+import Calendar from './components/Pinboard/Calendar'
+
+
 Vue.use(VueRouter)
 
 const routes =[{
@@ -36,6 +43,26 @@ const routes =[{
   path: '/front',
   component: Pinboard,
   meta: { title: "DCTRL" }
+},{
+  path: '/front/doge',
+  component: News,
+  meta: { title: "newspaper" }
+},{
+  path: '/front/boat',
+  component: Missions,
+  meta: { title: "newspaper" }
+},{
+  path: '/front/badge',
+  component: Recent,
+  meta: { title: "newspaper" }
+},{
+  path: '/front/chest',
+  component: Bounties,
+  meta: { title: "newspaper" }
+},{
+  path: '/front/timecube',
+  component: Calendar,
+  meta: { title: "newspaper" }
 },{
   path: '/history',
   component: List,

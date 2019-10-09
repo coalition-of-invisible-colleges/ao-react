@@ -44,7 +44,7 @@
                     span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
                     span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
                     span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
-                    span.dot.purplewx(v-else="$store.state.loader.connectionError") 
+                    span.dot.purplewx(v-else="$store.state.loader.connectionError")
                     span(v-if="$store.state.loader.connected == 'connecting'") connecting
                     span(v-else-if="$store.state.loader.connected == 'connected'") connected
                     span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
@@ -119,7 +119,7 @@ export default {
                 }
             } else {
                 this.flashHelm(2)
-                this.$router.push('/front')
+                this.$router.push('/front/doge')
             }
         })
 
@@ -508,7 +508,7 @@ hr
     border-radius: 50%
     display: inline-block
     margin-right: 0.5em
-    
+
 .faded
     opacity: 0.4
 
@@ -556,10 +556,10 @@ hr
     background: none
     border: none
     z-index: 153
-    
+
 .modeleft
     transform: translateX(50%)
-        
+
 .moderight
     left: calc(50% + 7.5em)
     transform: translateX(-50%)
@@ -605,7 +605,7 @@ hr
 
 .timecube
     transform: translateX(-0.2em)
-    
+
 .context
     width: calc(100% - 14em)
     margin: 0 auto
@@ -620,14 +620,14 @@ hr
 
 .pushdown
     margin-top: auto
-    
+
 #createtask.always
     position: fixed
     bottom: 0
     left: 50%
     transform: translateX(-50%)
     z-index: 149
-    
+
 .small.always.left
     position: fixed
     bottom: 0
@@ -635,7 +635,7 @@ hr
     margin-left: 0.5em
     margin-bottom: 0.3em
     z-index: 151
-    
+
 .tooltiptext.right
     font-size: 1.5em
     height: fit-content
@@ -646,10 +646,10 @@ hr
     left: 0.5em
     z-index: 149
     padding: 0 1em 1em 1em
-    
+
 .ztop
     z-index: 152
-    
+
 body {
   background-color: #333
   padding: 50px
@@ -696,7 +696,7 @@ body {
   -webkit-animation-iteration-count: infinite
   opacity:0.0
   z-index:5
-  
+
 .ringbase {
   position:absolute
   top:0
@@ -869,10 +869,10 @@ body {
     width: 35px
     cursor: pointer
     z-index: 9001
-    
+
 .doge.red
     filter: hue-rotate(30deg)
-    
+
 .big
     position: fixed
     left: -85%
@@ -884,13 +884,13 @@ body {
 
 .showping
     display: block
-    
+
 .flip
     transform: scaleX(-1)
 
 .pong
     margin-left: 0.25em
-    
+
 .loadingscreen
     position: fixed
     left: 0

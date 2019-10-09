@@ -1,77 +1,27 @@
 <template lang='pug'>
 
 #wrex
-    .pinboard
-        div(v-show='$store.state.upgrades.mode === "doge"')
-            h1.up {{ $store.state.cash.alias }}
-            .row.pagemargins
-                .three.columns
-                    div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId')
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                .three.columns
-                    div(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId')
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                .three.columns
-                    div(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId')
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-                .three.columns
-                    div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-        div(v-show='$store.state.upgrades.mode == "boat"')
-            div(v-if='$store.state.upgrades.warp > -1')
-                h1.up {{ $store.getters.warpDrive.alias }} Top Missions
-                card-panel.gutter(:c='$store.getters.warpGuilds')
-                h6.centered {{ $store.getters.warpAddress }}
-            div(v-else)
-                h1.up {{ $store.state.cash.alias }} Top Missions
-                flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
-                    .transparentsides
-                    .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
-                        .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
-                        .agedbackground.freshpaper(v-if='cardAge(t) < 8')
-                        .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
-                        .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
-                        .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
-                hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds'  ref='testRef')
-            hr
-            flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-                .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
-                    span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
-                .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-                    span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
-        .container(v-show='$store.state.upgrades.mode == "badge"')
-            h1.up Much Recent
-            row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
-        div(v-show='$store.state.upgrades.mode == "bounty"')
-            h1.up Bounties
-            .row.pagemargins
-                .three.columns
-                    div(v-for='(t, i) in getBountyColumn(0)'  :key='t.taskId'  @click='goInBounty(t)')
-                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-                .three.columns
-                    div(v-for='(t, i) in getBountyColumn(1)'  :key='t.taskId'  @click='goInBounty(t)')
-                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-                .three.columns
-                    div(v-for='(t, i) in getBountyColumn(2)'  :key='t.taskId'  @click='goInBounty(t)')
-                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-                .three.columns
-                    div(v-for='(t, i) in getBountyColumn(3)'  :key='t.taskId'  @click='goInBounty(t)')
-                        span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
-                        span.yellowtx.fr {{ t.currentAmount }}
-                        hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
-        .container(v-show='$store.state.upgrades.mode == "timecube"')
-          h1.up Calendar
-          calendar(inId='g')
-        //- div(v-else)
-        //-   img.wallpaper(src='../../assets/images/wow_much_wallpaper.jpg')
-        //-   img.buddadoge(src='../../assets/images/buddadoge.svg')
-    auth(v-if='!$store.getters.isLoggedIn').container
+      div(v-if='$store.state.upgrades.warp > -1')
+          h1.up {{ $store.getters.warpDrive.alias }} Top Missions
+          card-panel.gutter(:c='$store.getters.warpGuilds')
+          h6.centered {{ $store.getters.warpAddress }}
+      div(v-else)
+          h1.up {{ $store.state.cash.alias }} Top Missions
+          flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  ref='guildsBar'  v-model='guildsBar'  @focus.native='initGuildsBar')
+              .transparentsides
+              .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+                  .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
+                  .agedbackground.freshpaper(v-if='cardAge(t) < 8')
+                  .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
+                  .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
+                  .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
+          hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds'  ref='testRef')
+      hr
+      flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+          .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
+              span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
+          .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
+              span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
 </template>
 
 <script>
@@ -115,22 +65,18 @@ export default {
       Flickity,
   },
   data(){
-      console.log("data. this.$refs is ", this.$refs)
-      console.log("this.$refs.guildsBar is ", this.$refs.guildsBar)
-      console.log("this.$refs.warp is ", this.$refs.warp)
       return {
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
-            initialIndex: 0,
-            prevNextButtons: false,
-            pageDots: false,
-            wrapAround: true,
-            selectedAttraction: 0.005,
-            friction: 0.08,
-            cellSelector: '.carousel-cell',
-            accessibility: true
-            // asNavFor: '.guildsmenu'
+              initialIndex: 0,
+              prevNextButtons: false,
+              pageDots: false,
+              wrapAround: true,
+              selectedAttraction: 0.005,
+              friction: 0.08,
+              cellSelector: '.carousel-cell',
+              accessibility: true
           }
       }
   },
