@@ -35,6 +35,9 @@ import SoundFX from '../../modules/sounds'
 import _ from 'lodash'
 
 export default {
+  mounted() {
+      this.$store.commit('stopLoading')
+  },
   data(){
       return {
           action: false,

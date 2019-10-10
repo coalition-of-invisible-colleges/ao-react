@@ -218,21 +218,13 @@ export default {
                 panel: [target],
                 top: 0
             })
-            if(target === this.$store.getters.member.memberId) {
-                target = "/deck"
-            } else {
-                target = "/task/" + target
-            }
-            this.$router.push(target)
         },
         cycleLeft(){
             SoundFX.playSqaWink()
-
             if(this.isSun()){
                 this.$store.commit('startLoading', 'unicorn')
                 return this.$router.push('/' + this.$store.state.upgrades.mode)
             }
-
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + this.$store.state.upgrades.mode)
             setTimeout(() => {
@@ -246,7 +238,7 @@ export default {
                 this.$store.commit('startLoading', 'unicorn')
                 return this.$router.push('/'  + this.$store.state.upgrades.mode)
             }
-            this.$store.commit('startLoading', 'bullish')
+            this.$store.commit('startLoading', 'bull')
             this.$router.push('/dash/'  + this.$store.state.upgrades.mode)
             setTimeout(() => {
                 this.setToRoute()
@@ -271,7 +263,10 @@ export default {
         },
         nextUpgradeMode() {
             SoundFX.playCaChunk()
+
             this.$store.commit("nextMode")
+            this.$store.commit('startLoading', this.$store.state.upgrades.mode)
+
             //  only on sun
             if (this.isSun()){
                 return this.$router.push('/front/' + this.$store.state.upgrades.mode)
@@ -284,6 +279,8 @@ export default {
         previousUpgradeMode() {
             SoundFX.playCaChunk()
             this.$store.commit("previousMode")
+            this.$store.commit('startLoading', this.$store.state.upgrades.mode)
+
             if (this.isSun()){
                 return this.$router.push('/front/' + this.$store.state.upgrades.mode)
             }
@@ -902,7 +899,7 @@ body {
     height: 100vh
     background-color: rgba(22, 22, 22, 0.5)
     z-index: 9002
-    h1
+.loadingscreen  h1
         text-align: center
-        margin-top: 10em
+        margin-top: 7em
 </style>

@@ -42,7 +42,7 @@ export default {
           let taskId = t.funders[0]
           let panel = [taskId]
           let top = 0
-          let parents = []
+          let parents = [this.$store.getters.member.memberId]
 
           this.$store.dispatch("goIn", {
               parents,

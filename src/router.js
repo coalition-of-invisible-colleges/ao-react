@@ -39,6 +39,7 @@ import Calendar from './components/Pinboard/Calendar'
 import Checkmarks from './components/Upgrades/Checkmarks'
 import Payments from './components/Upgrades/Payments'
 import Planning from './components/Upgrades/Planning'
+import Zen from './components/Upgrades/Zen'
 import Priorities from './components/Deck/Priorities'
 
 Vue.use(VueRouter)
@@ -50,6 +51,7 @@ const routes =[{
   children: [
     {
       path: 'doge',
+      component: Zen
     },
     {
       path: 'boat',

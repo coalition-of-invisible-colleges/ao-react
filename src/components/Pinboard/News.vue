@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #frontnews
-      h1.up {{ $store.state.cash.alias }}
+      h1.up {{ $store.state.cash.alias }} newspaper
       .row.pagemargins
           .three.columns
               div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId')
@@ -34,6 +34,7 @@ export default {
           return rownews
       },
       goInNews(t){
+          console.log('gin news called')
           this.playPageTurn()
           let taskId = t
           let panel = this.$store.getters.memberPriorityIds
@@ -46,6 +47,7 @@ export default {
               panel
           })
 
+          this.$store.commit('startLoading', 'unicorn')
           this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       playPageTurn(){

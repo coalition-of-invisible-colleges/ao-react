@@ -31,6 +31,9 @@ export default {
     components:{
       FormBox, PayReq, PayAddress,
     },
+    mounted() {
+        this.$store.commit('stopLoading')
+    },
     data(){
         return {
             payreqAmount: '',

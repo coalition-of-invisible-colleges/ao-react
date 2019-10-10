@@ -1,78 +1,13 @@
 <template lang='pug'>
 
-.upgrades
-    div(v-if='isDoge || b.guild')
-        task-calendar(:inId='b.taskId')
-    div(v-else-if='!$store.state.upgrades.dimension')
-        .togglepayments
-            button.submode(@click='toggleDimension(0)', :class='{thickborder: $store.state.upgrades.dimension === "time" }')
-                img.max(src='../../assets/images/calendar.svg')
-    .box(v-else)
-        h2 cube
-        .gui(v-if='calcTime') {{ calcTime.slice(0,24) }}
-          resource-book(:tId='b.taskId')
+.zen
 </template>
 
 <script>
 
-import calcs from '../../calculations'
-import TaskCalendar from '../TaskCalendar/Calendar'
-import ResourceBook from '../forms/ResourceBook'
-
 export default {
     mounted() {
         this.$store.commit('stopLoading')
-    },
-    components:{
-        ResourceBook, TaskCalendar,
-    },
-    methods: {
-        toggleDimension(x){
-            if(this.$store.state.upgrades.dimension === x) {
-                this.$store.commit("closeDimension")
-                return
-            }
-            this.$store.commit("setDimension", x)
-        },
-    },
-    computed: {
-        b(){
-            return this.$store.getters.contextCard
-        },
-        isDoge(){
-            let doge
-            this.$store.state.members.some( m => {
-                if (m.memberId ==  this.b.taskId){
-                    doge = m
-                    return true
-                }
-            })
-            return doge
-        },
-        calcTime(){
-            if (this.b.book.startTs){
-                let now = new Date(this.b.book.startTs)
-                return now.toString()
-            }
-        },
-        calcVal(){
-            if (this.calcTask){
-                let v = calcs.calculateTaskPayout(this.b)
-                return parseInt(v)
-            }
-        },
-        id(){
-            return this.$route.path.split('/')[2]
-        },
-        calcTask(){
-            let task = {}
-            this.$store.state.tasks.forEach( t => {
-                if (this.id === t.taskId){// XXX:
-                    task = t
-                }
-            })
-            return task
-        },
     },
 }
 

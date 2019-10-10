@@ -1,4 +1,4 @@
-<template lang='pug'>
+``<template lang='pug'>
 .task(:class="cardInputSty"  ref='wholeCard').dont-break-out.agedwrapper
     .agedbackground.freshpaper(v-if='cardAge < 8')
     .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
@@ -81,7 +81,7 @@ export default {
             this.goIn()
             e.stopPropagation()
         })
-        
+
         var Press = new Hammer.Press({ time: 500 })
         mc.add(Press)
         mc.on('press', (e) => {
@@ -131,7 +131,7 @@ export default {
                 panel
             })
 
-            // this.$router.push("/task/" + this.b.taskId)
+            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         toggleGrab(){
             if (this.isGrabbed) {
@@ -487,7 +487,7 @@ export default {
 
 .sixteenth16
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0, 50% 0)
-    
+
 .row.buffertop
     margin-top: 1em
     clear: both

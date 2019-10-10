@@ -2,7 +2,7 @@
 
 #frontrecent
     h1.up Much Recent
-    row(v-for="m in $store.getters.recentMembers.slice(0, 7)", :m="m")
+    row(v-for="m in $store.getters.recentMembers.slice(0, 11)", :m="m")
 </template>
 
 <script>

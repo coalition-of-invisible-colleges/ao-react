@@ -42,6 +42,9 @@ export default {
     components:{
         Linky,  Current,
     },
+    mounted() {
+        this.$store.commit('stopLoading')
+    },
     data(){
         return {
             showAllGuilds: false,
