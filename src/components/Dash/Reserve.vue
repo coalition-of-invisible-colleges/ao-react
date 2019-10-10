@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 #home
+  .container
     h1.up central reserve
     points
     ul

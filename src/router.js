@@ -78,7 +78,7 @@ const routes =[{
   meta: { title: "card" },
 },{
   path: '/front',
-  component: Pinboard,
+  component: News,
   meta: { title: "DCTRL" }
 },{
   path: '/front/doge',
@@ -115,29 +115,29 @@ const routes =[{
 },{
   path: '/dash/doge',
   component: Access,
-  meta: { title: "dashboard" }
+  meta: { title: "resources" }
 },
 {
   path: '/dash/boat',
   component: Connect,
-  meta: { title: "dashboard" }
+  meta: { title: "networking" }
 },
 {
   path: '/dash/badge',
   component: Accounts ,
-  meta: { title: "dashboard" }
+  meta: { title: "manage accounts" }
 },{
   path: '/dash/chest',
   component: Lightning,
-  meta: { title: "dashboard" }
+  meta: { title: "lightning wallet" }
 },{
   path: '/dash/timecube',
   component: Reserve,
-  meta: { title: "dashboard" }
+  meta: { title: "central reserve" }
 },
 {
-  path: '/dash/*',
-  component: Dash,
+  path: '/dash/slayer',
+  component: Accounts,
   meta: { title: "dashboard" }
 },{
   path:'/archive',

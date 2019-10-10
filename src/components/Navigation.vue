@@ -65,8 +65,8 @@
 
 <script>
 
-import Auth from './Auth'
 import calculations from '../calculations'
+import Auth from './Auth'
 import CardPanel from './Deck/CardPanel'
 import FancyInput from './slotUtils/FancyInput'
 import Context from './Deck/Context'
@@ -78,8 +78,6 @@ export default {
     components: { Auth, CardPanel, FancyInput, Context, TaskCreate },
     mounted() {
         this.setToRoute()
-
-        // helm gestures
         let el = document.getElementById('helm')
         let mc = new Hammer.Manager(el)
 
@@ -155,8 +153,6 @@ export default {
             this.flashHelm(0.5)
             this.previousUpgradeMode()
         })
-
-        // doge wowdar gestures
         let dogeel = document.getElementById('dogecomm')
         let dogemc = new Hammer.Manager(dogeel)
 
@@ -199,7 +195,9 @@ export default {
         },
         isBull(){
             let mainroute = this.$router.currentRoute.path.split('/')[1]
-            return mainroute === "dash"
+            let isBull = mainroute === "dash"
+            console.log({isBull})
+            return isBull
         },
         killSession(){
             console.log("kill Session called")
@@ -228,13 +226,13 @@ export default {
             this.$router.push(target)
         },
         cycleLeft(){
-
             SoundFX.playSqaWink()
 
             if(this.isSun()){
                 this.$store.commit('startLoading', 'unicorn')
                 return this.$router.push('/' + this.$store.state.upgrades.mode)
             }
+
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + this.$store.state.upgrades.mode)
             setTimeout(() => {
@@ -248,8 +246,8 @@ export default {
                 this.$store.commit('startLoading', 'unicorn')
                 return this.$router.push('/'  + this.$store.state.upgrades.mode)
             }
-            this.$store.commit('startLoading', 'bull')
-            this.$router.push('/dash/ '  + this.$store.state.upgrades.mode)
+            this.$store.commit('startLoading', 'bullish')
+            this.$router.push('/dash/'  + this.$store.state.upgrades.mode)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniRight = !this.uniRight
@@ -278,6 +276,9 @@ export default {
             if (this.isSun()){
                 return this.$router.push('/front/' + this.$store.state.upgrades.mode)
             }
+            if (this.isBull()){
+                return this.$router.push('/dash/' + this.$store.state.upgrades.mode)
+            }
             this.$router.push('/' + this.$store.state.upgrades.mode)
         },
         previousUpgradeMode() {
@@ -285,6 +286,9 @@ export default {
             this.$store.commit("previousMode")
             if (this.isSun()){
                 return this.$router.push('/front/' + this.$store.state.upgrades.mode)
+            }
+            if (this.isBull()){
+                return this.$router.push('/dash/' + this.$store.state.upgrades.mode)
             }
             this.$router.push('/' + this.$store.state.upgrades.mode)
         },
@@ -898,4 +902,7 @@ body {
     height: 100vh
     background-color: rgba(22, 22, 22, 0.5)
     z-index: 9002
+    h1
+        text-align: center
+        margin-top: 10em
 </style>

@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 #home
+  .container
     h1.up lightning
     nodes(v-if='$store.state.cash.info.alias')
     p(v-else) no lightning node :(

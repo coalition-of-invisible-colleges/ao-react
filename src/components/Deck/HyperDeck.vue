@@ -56,9 +56,9 @@ export default {
     // has access to `this` component instance.
   },
   components:{
-      SharedTitle, Hypercard,
+      Hypercard,
       Panels, MemberRow,
-      Upgrades, ResourceRow, Context, Auth
+      ResourceRow, Context, Auth
   },
   methods:{
       goWithinPanel(n){
