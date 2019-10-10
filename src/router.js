@@ -2,7 +2,12 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import Home from './components/Home'
-import Dash from './components/Dash'
+
+import Access from './components/Dash/Access'
+import Connect from './components/Dash/Connect'
+import Accounts from './components/Dash/Accounts'
+import Lightning from './components/Dash/Lightning'
+import Reserve from './components/Dash/Reserve'
 // Member components
 import Members from './components/Members'
 import Wiki from './components/Wiki'
@@ -21,7 +26,6 @@ import List from './components/EventsList'
 
 import MyPage from './components/MyPage'
 import Nodes from './components/Nodes'
-import Pinboard from './components/Pinboard'
 import Deck from './components/Deck'
 
 import Archive from './components/Deck/Archive'
@@ -106,9 +110,32 @@ const routes =[{
   meta: { title: "members @ DCTRL" }
 },{
   path: '/dash',
-  component: Dash,
+  component: Access,
   meta: { title: "dashboard" }
 },{
+  path: '/dash/doge',
+  component: Access,
+  meta: { title: "dashboard" }
+},
+{
+  path: '/dash/boat',
+  component: Connect,
+  meta: { title: "dashboard" }
+},
+{
+  path: '/dash/badge',
+  component: Accounts ,
+  meta: { title: "dashboard" }
+},{
+  path: '/dash/chest',
+  component: Lightning,
+  meta: { title: "dashboard" }
+},{
+  path: '/dash/timecube',
+  component: Reserve,
+  meta: { title: "dashboard" }
+},
+{
   path: '/dash/*',
   component: Dash,
   meta: { title: "dashboard" }

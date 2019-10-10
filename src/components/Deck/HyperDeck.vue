@@ -34,18 +34,12 @@
 </template>
 
 <script>
-
 import calculations from '../../calculations'
-import Hypercard from "../Card"
-import SharedTitle from '../slotUtils/SharedTitle'
-import Panels from './Panels'
-import Priorities from './Priorities'
-import Context from './Context'
-import Priority from './Priority'
-import Upgrades from './Upgrades'
 import MemberRow from './Member'
 import ResourceRow from '../Resources/Row'
-import BountyCard from '../Bounties/BountyCard'
+import Context from './Context'
+import Hypercard from "../Card"
+import Panels from './Panels'
 import Auth from '../Auth'
 import SoundFX from '../../modules/sounds'
 
@@ -63,8 +57,8 @@ export default {
   },
   components:{
       SharedTitle, Hypercard,
-      Panels, Priorities, MemberRow,
-      Upgrades, BountyCard, ResourceRow, Priority, Context, Auth
+      Panels, MemberRow,
+      Upgrades, ResourceRow, Context, Auth
   },
   methods:{
       goWithinPanel(n){
@@ -328,7 +322,7 @@ export default {
 
 .columns
     min-height: 1em
-    
+
 .normaltopmargin
     margin-top: 0
 </style>

@@ -76,10 +76,6 @@ import SoundFX from '../modules/sounds'
 export default {
     name: 'navigation',
     components: { Auth, CardPanel, FancyInput, Context, TaskCreate },
-    props: ['barking', 'pinging'],
-    computed: {
-
-    },
     mounted() {
         this.setToRoute()
 
@@ -140,8 +136,6 @@ export default {
                 this.nextUpgradeMode()
             }
         })
-
-        // helm left and right icon gestures
         let lel = document.getElementById('helmright')
         let lmc = new Hammer.Manager(lel)
 
