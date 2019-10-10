@@ -1,20 +1,21 @@
 <template lang='pug'>
-.flag(v-if="$store.getters.memberCard")
+.flag(v-if="$store.getters.memberCard"  :id='uuid'  class='upboat')
   div(v-if='!$store.state.context.panel[$store.state.context.top]')
     img.flaggy(@click='deckIt'  src='../../assets/images/scroll.svg')
-  div(v-else-if="$store.state.upgrades.mode === 'boat' || $store.state.upgrades.mode === 'doge'"  @click='flagIt')
-    img.flaggy.svgwhite.faded(v-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
-    img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg')
+  div(v-else-if="$store.state.upgrades.mode === 'boat' || $store.state.upgrades.mode === 'doge'"  id='upboat')
+    img.flaggy.doge(v-if='isDoged'  src='../../assets/images/doge_faded.png')
+    img.flaggy.svgwhite.faded(v-else-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}'  class='upboat')
+    img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg'  class='upboat')
   div(v-else-if="$store.state.upgrades.mode === 'badge'")
-    span.flaggy.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
-    span.flaggy.checkmark.clickable(v-else  @click='complete') ☐
-  div(v-else-if="$store.state.upgrades.mode === 'bounty' && $store.state.cash.info.alias"  @click='togglePay')
+    span.flaggy.checkmark.clickable(v-if='isCompleted') ☑
+    span.flaggy.checkmark.clickable(v-else) ☐
+  div(v-else-if="$store.state.upgrades.mode === 'bounty' && $store.state.cash.info.alias")
     img.flaggy(src='../../assets/images/bounty.svg')
     .fl(v-if='isPayOpen')
         tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
         tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
   div(v-else-if="$store.state.upgrades.mode === 'timecube'")
-    img.flaggy(src='../../assets/images/timecube.svg'  @click='toggleCube')
+    img.flaggy(src='../../assets/images/timecube.svg')
     .fl(v-if='isCubeOpen')
         resource-book(:tId='b.taskId')
 </template>
@@ -25,18 +26,88 @@ import PayReq from '../Deck/PayReq'
 import PayAddress from '../Deck/PayAddress'
 import Tag from '../Nodes/Tag'
 import ResourceBook from '../forms/ResourceBook'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
+import SoundFX from '../../modules/sounds'
+import uuidv1 from 'uuid/v1'
 
 export default {
-    components: {PayReq, PayAddress, Tag, ResourceBook},
+    components: { PayReq, PayAddress, Tag, ResourceBook },
     data(){
         return {
             isPayOpen: false,
             isCubeOpen: false,
+            uuid: uuidv1(),
         }
     },
     props: ['b', 'inId'],
+    mounted() {
+        console.log("this.uuid is", this.uuid)
+        let el = document.getElementById(this.uuid)
+        if(!el) return
+        console.log("el is", el)
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let Tap = new Hammer.Tap({ time: 400 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            // if(e.target !== this.uuid) {
+            //     return
+            // }
+            switch(this.$store.state.upgrades.mode) {
+                case false:
+                    return
+                case 'doge':
+                case 'boat':
+                    this.flagIt()
+                    break
+                case 'badge':
+                    if(!this.isFlagged) {
+                        this.complete()
+                    } else {
+                        this.uncheck()
+                    }
+                    break
+                case 'bounty':
+                    if($store.state.cash.info.alias) {
+                        this.togglePay()
+                    }
+                    break
+                case 'timecube':
+                    this.toggleCube()
+                    break
+            }
+            e.stopPropagation()
+        })
+
+        let Press = new Hammer.Press({ time: 400 })
+        mc.add(Press)
+        mc.on('press', (e) => {
+            // if(e.target !== this.uuid) {
+            //     return
+            // }
+            switch(this.$store.state.upgrades.mode) {
+                case false:
+                    return
+                case 'doge':
+                case 'boat':
+                    this.dogeIt()
+                    break
+                case 'badge':
+                    return
+                case 'bounty':
+                    return
+                case 'timecube':
+                    return
+            }
+            e.stopPropagation()
+        })
+
+        console.log("refs is", this.$refs)
+    },
     methods: {
         complete(){
+            SoundFX.playTickMark()
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 inId: this.inId,
@@ -46,6 +117,7 @@ export default {
             })
         },
         uncheck(){
+            SoundFX.playTickMark()
             this.$store.dispatch("makeEvent", {
                 type: 'task-unclaimed',
                 taskId: this.b.taskId,
@@ -89,41 +161,61 @@ export default {
             console.log("inId", this.inId, 'is flagged?', this.isFlagged)
             if (!this.isFlagged) {
                 if (this.inId){
+                    SoundFX.playSailUnfurl()
                     this.$store.dispatch("makeEvent", {
                       type: 'task-prioritized',
                       taskId: this.b.taskId,
                       inId: this.inId,
                     })
                 } else {
+                    SoundFX.playSailUnfurl()
                     this.deckIt()
                 }
             } else {
                 if (this.inId){
+                    SoundFX.playBoatCapsize()
                     this.$store.dispatch("makeEvent", {
                       type: 'task-refocused',
                       taskId: this.b.taskId,
                       inId: this.inId,
                     })
                 } else {
+                    SoundFX.playSailUnfurl()
                     this.deckIt()
                 }
             }
-
+        },
+        dogeIt(){
+            if(this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) === -1) {
+                SoundFX.playDogeBark()
+                this.$store.dispatch("makeEvent", {
+                  type: 'task-prioritized',
+                  taskId: this.b.taskId,
+                  inId: this.$store.getters.memberCard.taskId,
+                })
+            } else {
+                SoundFX.playBoatCapsize()
+                this.$store.dispatch("makeEvent", {
+                  type: 'task-refocused',
+                  taskId: this.b.taskId,
+                  inId: this.$store.getters.memberCard.taskId,
+                })
+            }
         },
     },
     computed: {
         isFlagged(){
-            let isFlagged = false
-            this.$store.state.tasks.forEach( t => {
-                if (t.taskId === this.inId){
-                    isFlagged = t.priorities.indexOf(this.b.taskId) > -1
-                }
-            })
-            return isFlagged
+            if(!this.inId) {
+                return false
+            }
+            return this.$store.getters.hashMap[this.inId].priorities.indexOf(this.b.taskId) > -1
         },
         isCompleted(){
             return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1
-        }
+        },
+        isDoged() {
+            return this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) > -1
+        },
     },
 }
 
@@ -217,4 +309,10 @@ label
 
 .svgwhite
     fill: white
+    
+.svgwhite.hover
+    transform: rotate(-30deg)
+    
+.doge
+    height: 1.2em
 </style>

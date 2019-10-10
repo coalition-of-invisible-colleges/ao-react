@@ -73,7 +73,6 @@
 <script>
 
 import calcs from '../../calculations'
-
 import SharedTitle from '../slotUtils/SharedTitle'
 import TaskCreate from '../forms/TaskCreate'
 import HyperDeck from '../Deck/HyperDeck'
@@ -91,6 +90,7 @@ import FancyInput from '../slotUtils/FancyInput'
 import Current from '../Members/Current'
 import Priorities from './Priorities'
 import Linky from '../Card/Linky'
+import SoundFX from '../../modules/sounds'
 
 export default {
     components:{
@@ -110,7 +110,7 @@ export default {
     },
     methods: {
         goIn(taskId, guild = undefined){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let parents = []
             let panel = [taskId]
             let top = 0
@@ -133,11 +133,6 @@ export default {
             if(guild) parents.push(guild)
 
             this.$store.dispatch("goIn", {panel, top, parents})
-        },
-        playPageTurn(){
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
         },
         togglePayment(x){
             let payModes = ['bitcoin', 'lightning']

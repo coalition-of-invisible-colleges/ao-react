@@ -5,9 +5,10 @@
         img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
         label.hackername {{ m.name }}
-    .bottomleft
+    .bottomleft(v-if='card.boost')
         img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
-        label.stash {{ this.card.boost.toFixed(2) }}
+        label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
+        label.stash(v-else) 0
     .bottomright
         .tooltip(v-if='m.memberId === $store.getters.member.memberId')
             img.dogecoin(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
@@ -18,7 +19,7 @@
                 p.help(v-if='m.active <= 0') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
                 p.suggest(v-if='m.active <= 0') click to activate
                 .gui.title(v-if='nameList.length > 0') vouches
-                ul(v-if='nameList.length > 0')
+                ul.left(v-if='nameList.length > 0')
                     li(v-for='n in nameList')
                         vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
     .clearboth
@@ -216,4 +217,7 @@ label
     z-index: 151
     left: 7em
     top: -11em
+
+ul.left
+    text-align: left
 </style>

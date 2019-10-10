@@ -1,42 +1,62 @@
 <template lang='pug'>
 
-.guildcreate
-  form-box.centerform(btntxt="mission" event='task-guilded' v-bind:data="taskGuilded")
-    fancy-input(labelText='code name')
-        input.input-effect(v-model='task.guild' type='text')
+.guildcreate(:class='{ bumpup : editing }')
+    span(v-if='b.guild && !editing') {{ b.guild }}
+    input#titlebox(v-if='editing'  v-model='task.guild'  type='text'  placeholder='code name'  @keypress.enter='titleIt(false)')
+    button(v-if='editing'  @click='titleIt') {{ detectRename }}
+
 </template>
 
 <script>
 
 import SharedTitle from '../slotUtils/SharedTitle'
 import FormBox from '../slotUtils/FormBox'
-import FancyInput from '../slotUtils/FancyInput'
+import SoundFX from '../../modules/sounds'
 
 export default {
-    mounted(){
-        let taskId = this.$router.currentRoute.path.split('/')[2]
-        if (taskId){
-            this.task.taskId = taskId
-        }
-    },
-    data(){
+    props: ['b', 'editing'],
+    data() {
         return {
             task: {
-                guild: '',
+                guild: this.b.guild? this.b.guild : '',
             }
+        }
+    },
+    methods: {
+        titleIt(clear = true) {
+            if(this.b.guild === this.task.guild) {
+                if(!clear) {
+                    this.$emit('closeit')
+                    return
+                }
+                this.task.guild = ''
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-guilded',
+                    taskId: this.b.taskId,
+                    guild: false,
+                })
+            }
+            this.$emit('closeit')
+            SoundFX.playBattleCry()
+            this.$store.dispatch("makeEvent", {
+                type: 'task-guilded',
+                taskId: this.b.taskId,
+                guild: this.task.guild,
+            })
         }
     },
     computed: {
-        taskGuilded(){
-            return {
-                type: 'task-guilded',
-                taskId: this.$store.getters.contextCard.taskId,
-                guild: this.task.guild,
+        detectRename(){
+            if(this.b.guild === this.task.guild) {
+                return "clear"
+            } else if(this.b.guild && this.task.guild) {
+                return "rename"
             }
+            return "mission"
         }
     },
     components: {
-        SharedTitle, FormBox, FancyInput
+        SharedTitle, FormBox
     },
 }
 
@@ -44,37 +64,28 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/grid'
 @import '../../styles/button'
 
 .guildcreate
-  background: transparent
-  padding: 0em 2.5em
-  color: white
+    background: transparent
+    padding: 0
+    color: white
+    margin: 0 2em 0 0
 
-.choose
-  button
-    width: 250px
-    height: 3em
-    margin-left: 11px
-    img
-      float: right
-      height: 2.5em
-      margin-right: 1em
+.guildcreate button
+    width: 40%
+    height: 2.2em
+    padding: 0
+    position: relative
+    top: -0.16em
+    
+.guildcreate input
+    border-color: rgba(22, 22, 22, 1)
+    border-width: 1px
+    background-color: rgba(22, 22, 22, 0.3)
+    width: 60%
 
-.g
-    background: green
-
-.p
-    background: purple
-
-.onetime
-    display: inline
-
-.cashup
-    height: 9em
-
-.centerform
-    margin: 0 auto 1em auto
+.guildcreate.bumpup
+    top: 0.6em
+    width: calc(100% - 7em)
 </style>

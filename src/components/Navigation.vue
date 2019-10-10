@@ -71,6 +71,7 @@ import CardPanel from './Deck/CardPanel'
 import FancyInput from './slotUtils/FancyInput'
 import Context from './Deck/Context'
 import TaskCreate from './forms/TaskCreate'
+import SoundFX from '../modules/sounds'
 
 export default {
     name: 'navigation',
@@ -115,9 +116,11 @@ export default {
         mc.on('press', (e) => {
             if(this.$router.currentRoute.path === '/front'){
                 if(!this.$store.state.upgrades.mode) {
+                    SoundFX.playPortalBlocked()
                     this.flashHelm(5)
                 } else {
                     this.flashHelm(2)
+                    SoundFX.playPortalTransit()
                     this.closeUpgrades()
                 }
             } else {
@@ -127,7 +130,7 @@ export default {
             }
         })
 
-        let Tap = new Hammer.Tap({ time: 500 })
+        let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
             this.flashHelm(0.5)
@@ -142,7 +145,7 @@ export default {
         let lel = document.getElementById('helmright')
         let lmc = new Hammer.Manager(lel)
 
-        let Tap2 = new Hammer.Tap({ time: 500 })
+        let Tap2 = new Hammer.Tap({ time: 400 })
         lmc.add(Tap2)
         lmc.on('tap', (e) => {
             this.flashHelm(0.5)
@@ -152,7 +155,7 @@ export default {
         let rel = document.getElementById('helmleft')
         let rmc = new Hammer.Manager(rel)
 
-        let Tap3 = new Hammer.Tap({ time: 500 })
+        let Tap3 = new Hammer.Tap({ time: 400 })
         rmc.add(Tap3)
         rmc.on('tap', (e) => {
             this.flashHelm(0.5)
@@ -168,12 +171,7 @@ export default {
         })
         dogemc.add(Press2)
         dogemc.on('press', (e) => {
-            var ping = new Audio(require('../assets/sounds/echo.wav'))
-            ping.volume = ping.volume * 0.6
-            ping.play()
-            var bark = new Audio(require('../assets/sounds/bark3.wav'))
-            bark.volume = bark.volume * 0.3
-            bark.play()
+            SoundFX.playBarkPing()
             console.log("pre barking is ", this.barking)
             this.barking = true
             this.pinging = true
@@ -236,9 +234,8 @@ export default {
             this.$router.push(target)
         },
         cycleLeft(){
-            var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
-            cachunk.volume = cachunk.volume * 0.15
-            cachunk.play()
+
+            SoundFX.playSqaWink()
 
             if(this.isSun()){
                 this.$store.commit('startLoading', 'unicorn')
@@ -252,9 +249,7 @@ export default {
             }, 20)
         },
         cycleRight(){
-            var cachunk = new Audio(require('../assets/sounds/myst186.wav'))
-            cachunk.volume = cachunk.volume * 0.15
-            cachunk.play()
+            SoundFX.playSqaWink()
             if(this.isBull()) {
                 this.$store.commit('startLoading', 'unicorn')
                 return this.$router.push('/'  + this.$store.state.upgrades.mode)
@@ -279,15 +274,11 @@ export default {
             this.showBtc = !this.showBtc
         },
         setMode(index) {
-            var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
-            cachunk.volume = cachunk.volume * 0.15
-            cachunk.play()
+            SoundFX.playCaChunk()
             this.$store.commit("setMode", index)
         },
         nextUpgradeMode() {
-            var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
-            cachunk.volume = cachunk.volume * 0.15
-            cachunk.play()
+            SoundFX.playCaChunk()
             this.$store.commit("nextMode")
             //  only on sun
             if (this.isSun()){
@@ -296,9 +287,7 @@ export default {
             this.$router.push('/' + this.$store.state.upgrades.mode)
         },
         previousUpgradeMode() {
-            var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
-            cachunk.volume = cachunk.volume * 0.15
-            cachunk.play()
+            SoundFX.playCaChunk()
             this.$store.commit("previousMode")
             if (this.isSun()){
                 return this.$router.push('/front/' + this.$store.state.upgrades.mode)

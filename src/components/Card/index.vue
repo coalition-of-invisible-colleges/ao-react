@@ -1,28 +1,23 @@
 <template lang='pug'>
-.task(:class="cardInputSty"  @dblclick.stop='goIn').dont-break-out.agedwrapper
+.task(:class="cardInputSty"  ref='wholeCard').dont-break-out.agedwrapper
     .agedbackground.freshpaper(v-if='cardAge < 8')
     .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
     .agedbackground.montholdpaper(v-else-if='cardAge < 90')
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
+    bird(:b='b', :inId='inId')
+    flag(:b='b', :inId='inId')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
         img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
         .tooltiptext
             p prioritized by:
             current(v-for='doger in b.dogers'  :memberId='doger')
-    .row
-        .ten.grid
-            bird(:b='b', :inId='inId')
-            .cardhud(v-if='b.guild')
-                .title.bold {{ b.guild }}
-        .two.grid
-            flag(:b='b', :inId='inId'  @dblclick.prevent)
     .tooltip
         img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
         .tooltip
             .tooltiptext
                 current.block(v-for='memberId in b.claimed', :memberId='memberId')
-    .row
+    .row.buffertop
       .ten.grid
           .cardhud(v-if='calcVal >= 1')
               img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
@@ -64,6 +59,9 @@ import Shipped from './Shipped'
 import Linky from './Linky'
 import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
+import SoundFX from '../../modules/sounds'
 
 export default {
     props: ['b', 'inId', 'c'],
@@ -71,6 +69,28 @@ export default {
         return { active: false }
     },
     components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Shipped, Linky, SimplePriorities, Current},
+    mounted() {
+        let el = this.$refs.wholeCard
+        if(!el) return
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let Tap = new Hammer.Tap({ taps: 2, time: 400 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            console.log("card double tap")
+            this.goIn()
+            e.stopPropagation()
+        })
+        
+        var Press = new Hammer.Press({ time: 500 })
+        mc.add(Press)
+        mc.on('press', (e) => {
+            console.log("card press")
+            this.copyCardToClipboard()
+        })
+
+        console.log("refs is", this.$refs)
+    },
     methods: {
         purge(){
           this.$store.dispatch("makeEvent", {
@@ -79,7 +99,7 @@ export default {
           })
         },
         goIn(){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -113,32 +133,26 @@ export default {
 
             // this.$router.push("/task/" + this.b.taskId)
         },
-        playPageTurn(){
-            console.log("cardindex playPageTurn. why is this playing twice / twice volume?")
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
-        },
         toggleGrab(){
             if (this.isGrabbed) {
-                var twinkle = new Audio(require('../../assets/sounds/chrono07.wav'))
-                twinkle.volume = twinkle.volume * 0.3
-                twinkle.play()
+                SoundFX.playTwinkleDown()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-dropped',
                     taskId: this.b.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
             } else {
-                var twinkle = new Audio(require('../../assets/sounds/chrono06.wav'))
-                twinkle.volume = twinkle.volume * 0.3
-                twinkle.play()
+                SoundFX.playTwinkleUp()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-grabbed',
                     taskId: this.b.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
             }
+        },
+        copyCardToClipboard(){
+            SoundFX.playChunkSwap()
+            navigator.clipboard.writeText(this.b.name)
         },
     },
     computed: {
@@ -396,11 +410,6 @@ export default {
     position: relative
     z-index: 14
 
-.title
-    position: absolute
-    left: 2.3em
-    top: 0.3em
-
 .cardheader
     margin: 0 auto
     font-size: 1.2em
@@ -414,8 +423,9 @@ export default {
     margin-top: 1em
 
 .flag
-    position: relative
-    right: 0
+    position: absolute
+    right: 1em
+    top: 1em
 
 .dogecoin
     position: absolute
@@ -477,4 +487,8 @@ export default {
 
 .sixteenth16
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0, 50% 0)
+    
+.row.buffertop
+    margin-top: 1em
+    clear: both
 </style>

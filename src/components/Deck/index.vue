@@ -9,7 +9,7 @@
             hyper-deck
                 router-view
     .row
-        router-link(to='/archive', @click='toTop')
+        router-link(to='/archive', @click='sink')
             img.sunkenship(src='../../assets/images/sunken_ship.png')
 </template>
 
@@ -17,6 +17,7 @@
 
 import HyperDeck from './HyperDeck'
 import GiftBox from './GiftBox.vue'
+import SoundFX from '../../modules/sounds'
 
 export default {
   components:{
@@ -24,9 +25,13 @@ export default {
       GiftBox,
   },
   mounted() {
-        this.$store.commit('stopLoading')
+      this.$store.commit('stopLoading')
   },
   methods: {
+      sink() {
+          window.scrollTo(0, 0)
+          SoundFX.playBoatCapsize()
+      }
       // setDeck() {
       //     if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){
       //         console.log('setting for offline deck')

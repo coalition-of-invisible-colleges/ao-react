@@ -1,7 +1,8 @@
 import Vue from 'vue'
+import SoundFX from './sounds'
 import _ from 'lodash'
 
-const modes = ["boat", "badge", "bounty", "timecube"]
+// const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
 
 const state = {
@@ -90,9 +91,7 @@ const mutations = {
 
 const actions = {
     goIn({commit, state}, pContext ){
-        var flip = new Audio(require('../assets/sounds/myst158.wav'))
-        flip.volume = flip.volume * 0.3
-        flip.play()
+        SoundFX.playPageTurn()
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
         pContext.parents.forEach(p => {
@@ -100,9 +99,7 @@ const actions = {
         })
     },
     goUp({commit, state}, pContext){
-        var flip = new Audio(require('../assets/sounds/myst158.wav'))
-        flip.volume = flip.volume * 0.3
-        flip.play()
+        SoundFX.playPageTurn()
         commit("goToParent", pContext.target)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)

@@ -30,13 +30,14 @@ import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import SimplePriorities from '../Deck/SimplePriorities'
+import SoundFX from '../../modules/sounds'
 
 export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck, SimplePriorities},
     methods:{
         goIn(taskId){
-            this.playPageTurn()
+            SoundFX.playPageTurn()
             let panel = [taskId]
             let parents = [  ]
             let top = 0
@@ -54,11 +55,6 @@ export default {
             })
 
             // this.$router.push("/task/" + this.b.taskId)
-        },
-        playPageTurn(){
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
         },
         toggleGrab(){
             if (this.isVouched) {

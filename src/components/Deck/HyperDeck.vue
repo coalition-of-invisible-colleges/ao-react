@@ -23,7 +23,7 @@
                     slot
         div.fadey(:class='cardInputSty')
             panels
-            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') ☑
+            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
             div &nbsp;
         img.fw(src='../../assets/images/pixeldesert.png')
         .agedbackground.translucent(:class='cardInputSty')
@@ -47,6 +47,7 @@ import MemberRow from './Member'
 import ResourceRow from '../Resources/Row'
 import BountyCard from '../Bounties/BountyCard'
 import Auth from '../Auth'
+import SoundFX from '../../modules/sounds'
 
 export default {
     beforeRouteUpdate (to, from, next) {
@@ -67,20 +68,14 @@ export default {
   },
   methods:{
       goWithinPanel(n){
-          this.playPageTurn()
+          SoundFX.playPageTurn()
           let i = this.$store.state.context.panel.indexOf(n)
           if (i > -1){
               this.$store.commit("setTop", i)
           }
       },
-      playPageTurn(){
-          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-          flip.volume = flip.volume * 0.3
-          flip.play()
-      },
       toggleShowComplete(){
-          console.log("clcik trig call toggleCompleted")
-
+          SoundFX.playTickMark()
           this.$store.commit("toggleCompleted")
       },
       setPageTitle(){
@@ -201,6 +196,7 @@ export default {
     background-color: rgba(255,255,255,0.1)
     padding: 0 2em 0.8em 0
     margin: 0 1em
+    min-height: 2em
 
 .slide-fade-enter-active {
   transition: all .6s ease;
@@ -332,4 +328,7 @@ export default {
 
 .columns
     min-height: 1em
+    
+.normaltopmargin
+    margin-top: 0
 </style>

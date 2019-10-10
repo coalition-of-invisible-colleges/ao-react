@@ -31,6 +31,7 @@
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
+import SoundFX from '../../modules/sounds'
 import _ from 'lodash'
 
 export default {
@@ -41,13 +42,7 @@ export default {
   },
   methods:{
     setAction(taskId){
-        this.playPageTurn()
         this.$store.commit("setAction", taskId)
-    },
-    playPageTurn(){
-        var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-        flip.volume = flip.volume * 0.3
-        flip.play()
     },
     nextAction(){
         this.action = this.getPriorities[(this.getPriorities.indexOf(this.action) + 1) % this.getPriorities.length]
@@ -71,14 +66,14 @@ export default {
       })
     },
     deaction(){
-      this.playPageTurn()
+      SoundFX.playPageTurn()
       this.$store.commit("setAction", false)
     },
     getCard(taskId){
         return this.$store.getters.hashMap[taskId]
     },
     goIn(taskId, panel, parents){
-        this.playPageTurn()
+        SoundFX.playPageTurn()
         if (panel && panel.length && panel.length > 0){
 
         } else {
@@ -101,11 +96,6 @@ export default {
         })
 
         this.$router.push('/task/' + taskId)
-    },
-    playPageTurn(){
-        var flip = new Audio(require('../../assets/sounds/myst158.wav'))
-        flip.volume = flip.volume * 0.3
-        flip.play()
     },
     allocated(taskId){
       let allocatedAmount = 0
