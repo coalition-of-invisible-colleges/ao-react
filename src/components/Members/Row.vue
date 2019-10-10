@@ -54,7 +54,7 @@ export default {
                 panel
             })
 
-            // this.$router.push("/task/" + this.b.taskId)
+            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         toggleGrab(){
             if (this.isVouched) {
