@@ -1,11 +1,11 @@
 <template lang='pug'>
 
 #home
-    h1.up {{ $store.state.cash.alias }}
-    .row
-        sidewalk
+    h1.up {{ $store.state.cash.alias }} controls
     .row
         resources
+    .row
+        sidewalk
     .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
     .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
 </template>

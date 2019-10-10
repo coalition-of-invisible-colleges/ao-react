@@ -54,6 +54,7 @@ export default {
                 panel
             })
 
+            this.$store.commit("startLoading", 'unicorn')
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         toggleGrab(){
