@@ -111,7 +111,7 @@ export default {
                 panel
             })
 
-            this.$router.push("/task/" + this.b.taskId)
+            // this.$router.push("/task/" + this.b.taskId)
         },
         playPageTurn(){
             console.log("cardindex playPageTurn. why is this playing twice / twice volume?")

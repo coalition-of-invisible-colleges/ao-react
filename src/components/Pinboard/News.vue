@@ -46,7 +46,7 @@ export default {
               panel
           })
 
-          this.$router.push("/task/" + taskId)
+          this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       playPageTurn(){
           var flip = new Audio(require('../../assets/sounds/myst158.wav'))

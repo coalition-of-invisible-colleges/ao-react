@@ -32,12 +32,46 @@ import Recent from './components/Pinboard/Recent'
 import Bounties from './components/Pinboard/Bounties'
 import Calendar from './components/Pinboard/Calendar'
 
+import Checkmarks from './components/Upgrades/Checkmarks'
+import Payments from './components/Upgrades/Payments'
+import Planning from './components/Upgrades/Planning'
+import Priorities from './components/Deck/Priorities'
+
 Vue.use(VueRouter)
 
 const routes =[{
   path: '/',
   component: Deck,
-  meta: { title: "DCTRL" }
+  meta: { title: "DCTRL" },
+  children: [
+    {
+      path: 'doge',
+    },
+    {
+      path: 'boat',
+      component: Priorities,
+      meta: { title: "priorities" },
+    },
+    {
+      path: 'badge',
+      component: Checkmarks,
+      meta: { title: "checkmarks" },
+    },
+    {
+      path: 'chest',
+      component: Payments,
+      meta: { title: "checkmarks" },
+    },
+    {
+      path: 'timecube',
+      component: Planning,
+      meta: { title: "planning" },
+    },
+  ]
+},{
+  path: '/task/*',
+  component: Deck,
+  meta: { title: "card" },
 },{
   path: '/front',
   component: Pinboard,
@@ -67,10 +101,6 @@ const routes =[{
   component: List,
   meta: { title: "history" }
 },{
-  path: '/deck',
-  component: Deck,
-  meta: { title: "deck" }
-},{
   path: '/members',
   component: Members,
   meta: { title: "members @ DCTRL" }
@@ -86,10 +116,6 @@ const routes =[{
   path:'/archive',
   component: Archive,
   meta: { title: "sunken ship" }
-},{
-  path: '/task/*',
-  component: Deck,
-  meta: { title: "card" },
 },
 ]
 

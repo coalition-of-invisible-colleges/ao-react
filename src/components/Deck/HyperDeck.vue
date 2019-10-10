@@ -20,7 +20,7 @@
                 .bar(v-if='panelSplit.after.length < 6')
             .seven.columns.buffer(v-if='$store.state.upgrades.mode')
                 div.upgradesbar()
-                    upgrades
+                    slot
         div.fadey(:class='cardInputSty')
             panels
             .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded:!$store.state.context.completed, completedtabbed: $store.state.context.completed}') ☑
@@ -161,7 +161,7 @@ export default {
     font-size:1.111em
     padding-left: 1em
     padding-top: 1em
-    
+
 .card.center
     position: relative
     left: calc(50% - 1.2em)
@@ -280,7 +280,7 @@ export default {
     margin-right: -1em
     margin-top: -1em
     padding-bottom: 0.3em
-    
+
 .upgrademode
     float: left
     cursor: pointer
@@ -319,17 +319,17 @@ export default {
 
 .aftermore
     margin-top: 0.5em
-    
+
 .centerer
     text-align: center
     width: 100%
 
 .fullwidth
     width: calc(100% - 1em)
-    
+
 .one.columns.half
     width: 2.333333333333%
-    
+
 .columns
     min-height: 1em
 </style>

@@ -53,7 +53,7 @@ export default {
                 panel
             })
 
-            this.$router.push("/task/" + this.b.taskId)
+            // this.$router.push("/task/" + this.b.taskId)
         },
         playPageTurn(){
             var flip = new Audio(require('../../assets/sounds/myst158.wav'))

@@ -52,7 +52,7 @@ export default {
           this.$store.commit('setMode', 1)
           this.$store.commit('setAction', t.taskId)
           this.$store.commit('startLoading', 'unicorn')
-          this.$router.push("/task/" + taskId)
+          this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       getBountyColumn(index, columns = 4){
           return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })

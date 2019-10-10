@@ -242,7 +242,7 @@ export default {
 
             if(this.isSun()){
                 this.$store.commit('startLoading', 'unicorn')
-                return this.$router.push('/')
+                return this.$router.push('/' + this.$store.state.upgrades.mode)
             }
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + this.$store.state.upgrades.mode)
@@ -257,7 +257,7 @@ export default {
             cachunk.play()
             if(this.isBull()) {
                 this.$store.commit('startLoading', 'unicorn')
-                return this.$router.push('/')
+                return this.$router.push('/'  + this.$store.state.upgrades.mode)
             }
             this.$store.commit('startLoading', 'bull')
             this.$router.push('/dash/ '  + this.$store.state.upgrades.mode)
@@ -291,8 +291,9 @@ export default {
             this.$store.commit("nextMode")
             //  only on sun
             if (this.isSun()){
-                this.$router.push('/front/' + this.$store.state.upgrades.mode)
+                return this.$router.push('/front/' + this.$store.state.upgrades.mode)
             }
+            this.$router.push('/' + this.$store.state.upgrades.mode)
         },
         previousUpgradeMode() {
             var cachunk = new Audio(require('../assets/sounds/myst59.wav'))
@@ -300,8 +301,9 @@ export default {
             cachunk.play()
             this.$store.commit("previousMode")
             if (this.isSun()){
-                this.$router.push('/front/' + this.$store.state.upgrades.mode)
+                return this.$router.push('/front/' + this.$store.state.upgrades.mode)
             }
+            this.$router.push('/' + this.$store.state.upgrades.mode)
         },
         closeUpgrades() {
             this.$store.commit("closeUpgrades")

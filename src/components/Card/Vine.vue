@@ -14,8 +14,6 @@ export default {
     methods: {
         goIn(){
             this.playPageTurn()
-            window.scrollTo(0, '33px');
-
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -31,13 +29,23 @@ export default {
                 top = 0
             }
 
+            let parents = [  ]
+
+            if (this.$store.state.context.panel[this.$store.state.context.top]){
+                parents.push(this.$store.getters.contextCard.taskId)
+            }
+
+            if (this.inId && parents.indexOf(this.inId) < 0){
+                parents.push(this.inId)
+            }
+
             this.$store.dispatch("goIn", {
-                inId: this.inId,
+                parents,
                 top,
                 panel
             })
 
-            this.$router.push("/task/" + this.b.taskId)
+            // this.$router.push("/task/" + this.b.taskId)
         },
         playPageTurn(){
             var flip = new Audio(require('../../assets/sounds/myst158.wav'))

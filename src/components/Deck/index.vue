@@ -7,6 +7,7 @@
             gift-box
         .columns(:class='{eight: $store.getters.inbox.length > 0}')
             hyper-deck
+                router-view
     .row
         router-link(to='/archive', @click='toTop')
             img.sunkenship(src='../../assets/images/sunken_ship.png')

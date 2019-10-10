@@ -72,7 +72,7 @@ export default {
           })
 
           this.$store.commit("startLoading", "unicorn")
-          this.$router.push("/task/" + taskId)
+          this.$router.push("/" + this.$store.state.upgrades.mode)
 
           this.$store.commit('setMode', 1)
           this.$store.commit('setAction', t.taskId)
@@ -91,7 +91,7 @@ export default {
               panel
           })
 
-          this.$router.push("/task/" + taskId)
+          this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       playPageTurn(){
           var flip = new Audio(require('../../assets/sounds/myst158.wav'))
