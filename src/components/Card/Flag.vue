@@ -310,6 +310,9 @@ label
 .svgwhite
     fill: white
     
+.svgwhite.hover
+    transform: rotate(-30deg)
+    
 .doge
     height: 1.2em
 </style>

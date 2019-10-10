@@ -507,7 +507,7 @@ hr
 .upg
     height: 2em
     pointer-events: none
-
+    
 .topauth
     max-width: 50%
     padding: 1em

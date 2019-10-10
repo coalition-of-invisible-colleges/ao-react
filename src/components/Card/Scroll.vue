@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.scroll
+.scroll(v-if='!($store.state.upgrades.mode === "doge" && this.$router.currentRoute.path === "/front")')
     div(v-if='inId'  :id='uuid')
         img.scrolly(src='../../assets/images/downboatwhite.svg'  class='upboat')
     div(v-else)

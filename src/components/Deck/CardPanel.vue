@@ -56,43 +56,27 @@ export default {
   mounted(){
         var el = document.getElementById(this.uuid)
         var mc = Propagating(new Hammer.Manager(el))
-        var Swipe = new Hammer.Swipe({ threshold: 200 })
+        var Swipe = new Hammer.Swipe({ threshold: 144 })
         mc.add(Swipe)
 
         mc.on('swipeleft', (e) => {
           this.last()
-        });
+        })
 
         mc.on('swiperight', (e) => {
           this.next()
-        });
+        })
 
         mc.on('swipeup', (e) => {
             console.log('got swipe up')
             this.swap(-1)
             this.last()
-        });
+        })
 
         mc.on('swipedown', (e) => {
             console.log('got swipe down')
             this.swap(1)
         });
-
-        var Press = new Hammer.Press({
-          time: 400
-        });
-        mc.add(Press)
-
-        mc.on('press', (e) => {
-            console.log(e.target)
-            // console.log(document.getElementsByClassName('upboat'))
-            // if(e.target in document.getElementsByClassName('upboat')){
-            //     return
-            // }
-            console.log("cardPanel press")
-            // e.preventDefault()
-            this.copyCardToClipboard()
-        })
   },
   data(){
       return {
@@ -145,10 +129,6 @@ export default {
             swapId2: this.c[swapIndex].taskId,
             direction: 'up',
         })
-    },
-    copyCardToClipboard(){
-        SoundFX.playPageTurn()
-        navigator.clipboard.writeText(this.topCard.name)
     },
   },
   computed: {
