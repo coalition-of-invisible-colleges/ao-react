@@ -539,7 +539,7 @@ export default new Vuex.Store({
           let news = []
           getters.memberIds.forEach(mId => {
               let member = getters.hashMap[mId]
-              if(member) {
+              if(member.priorities) {
                   member.priorities.forEach(p => {
                       let priority = getters.hashMap[p]
                       if(!priority.dogers) {
