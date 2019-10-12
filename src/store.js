@@ -280,7 +280,7 @@ export default new Vuex.Store({
           })
       },
       memberIds(state, getters){
-          return state.members.filter(c => !c.originAddress).map(c => c.memberId)
+          return state.members.filter(c => !c.originAddress && c.memberId).map(c => c.memberId)
       },
       resourceIds(state, getters){
           return state.resources.map(c => c.resourceId)
