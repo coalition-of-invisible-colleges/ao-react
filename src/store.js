@@ -280,7 +280,7 @@ export default new Vuex.Store({
           })
       },
       memberIds(state, getters){
-          return state.members.filter(c => !c.originAddress && c.memberId).map(c => c.memberId)
+          return state.members.filter(c => !c.originAddress).map(c => c.memberId)
       },
       resourceIds(state, getters){
           return state.resources.map(c => c.resourceId)
@@ -538,24 +538,26 @@ export default new Vuex.Store({
       memberPriorities(state, getters) {
           let news = []
           getters.memberIds.forEach(mId => {
-              let member = getters.hashMap[mId]
-              member.priorities.forEach(p => {
-                  let priority = getters.hashMap[p]
-                  if(!priority.dogers) {
-                      priority.dogers = []
-                  }
-                  priority.dogers.push(member.name)
-                  if(!news.some((sp, i) => {
-                      if(sp.taskId === p) {
-                          news[i].weight += 1 / member.priorities.length
-                          return true
-                      }
-                      return false
-                  })) {
-                      priority.weight = 1 / member.priorities.length
-                      news.push(priority)
-                  }
-              })
+              if(mId) {
+                let member = getters.hashMap[mId]
+                member.priorities.forEach(p => {
+                    let priority = getters.hashMap[p]
+                    if(!priority.dogers) {
+                        priority.dogers = []
+                    }
+                    priority.dogers.push(member.name)
+                    if(!news.some((sp, i) => {
+                        if(sp.taskId === p) {
+                            news[i].weight += 1 / member.priorities.length
+                            return true
+                        }
+                        return false
+                    })) {
+                        priority.weight = 1 / member.priorities.length
+                        news.push(priority)
+                    }
+                })
+              }
           })
           news.sort((a, b) => {
               return b.weight - a.weight
