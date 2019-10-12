@@ -82,10 +82,14 @@ const mutations = {
         }
     },
     startLoading(state, dimension){
+        console.log("startLoading ", dimension)
+        this.ts = Date.now()
         state.loading = dimension
     },
     stopLoading(state){
-        state.loading = false
+       let time = this.ts - Date.now()
+       console.log("stopLoading t = ", time)
+       state.loading = false
     },
 }
 

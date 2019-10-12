@@ -119,7 +119,6 @@ export default {
                 }
             } else {
                 this.flashHelm(2)
-
                 this.$router.push('/front/doge')
             }
         })
@@ -899,6 +898,7 @@ body {
     height: 100vh
     background-color: rgba(22, 22, 22, 0.5)
     z-index: 9002
+
 .loadingscreen  h1
         text-align: center
         margin-top: 7em

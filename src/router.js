@@ -165,4 +165,34 @@ router.afterEach((to, from, next) => {
 
 })
 
+// import Store from './store.js'
+
+// init ({ dispatch }) {       // Could also be async and use await instead of return
+//   return Promise.all([
+//     dispatch('getUserSession'), // Using another action
+//     dispatch('auth/init'),      // In another module
+//     fetch('tehKittenz')         // With the native fetch API
+//     // ...
+//   ])
+// }
+// const loadingLoaded = store.dispatch('loadingLoaded')
+
+// router.beforeEach((to, from, next) => {
+//   storeInit.then(next)
+//     .catch(e => {
+//       // Handle error
+//     })
+// })
+
+// router.beforeRouteLeave((to, from, next) => {
+//   console.log("beforeRouteLeave routed to path", to.path, "from  ", from.path)
+
+//   switch(from.meta.title) {
+//     case 'card':
+//     break
+//   }
+
+//   Store.dispatch('startLoading', 'unicorn').then()
+// })
+
 export default router

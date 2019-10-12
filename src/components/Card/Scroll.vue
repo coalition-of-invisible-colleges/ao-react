@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.scroll(v-if='!($store.state.upgrades.mode === "doge" && this.$router.currentRoute.path === "/front")')
+.scroll(v-if='!($store.state.upgrades.mode === "doge" && $router.currentRoute.path.split("/")[1] === "front")')
     div(v-if='inId'  :id='uuid')
         img.scrolly(src='../../assets/images/downboatwhite.svg'  class='upboat')
     div(v-else)
@@ -33,15 +33,15 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            if(this.inId) {
+            if(!this.inId) {
                 this.canIt()
             } else {
-                rollsafeIt()
+                this.rollsafeIt()
             }
             e.stopPropagation()
         })
 
-        let Press = new Hammer.Press({ time: 400 })
+        let Press = new Hammer.Press({ time: 500 })
         mc.add(Press)
         mc.on('press', (e) => {
             SoundFX.playBoatCapsize()

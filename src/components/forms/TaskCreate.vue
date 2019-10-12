@@ -3,7 +3,7 @@
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
-          textarea#card.fwi(v-model='task.name' type='text', :class='cardInputSty', placeholder="idea here", @keyup.enter.exact='createOrFindTask', @keydown.enter.exact.prevent).paperwrapper
+          textarea#card.fwi(v-model='task.name' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate').paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi create card
     .label
