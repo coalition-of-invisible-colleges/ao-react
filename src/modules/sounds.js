@@ -63,7 +63,7 @@ function playPortalTransit() {
 
 function playPortalBlocked() {
     let bzz = new Audio(require('../assets/sounds/myst89.wav'))
-    bzz.volume = bzz.volume * 0.15
+    bzz.volume = bzz.volume * 0.05
     bzz.play()
 }
 
@@ -71,7 +71,6 @@ function playTickMark() {
     let tchk = new Audio(require('../assets/sounds/tickmark.wav'))
     tchk.volume = tchk.volume * 0.45
     tchk.play()
-
 }
 
 function playSailUnfurl() {
@@ -121,6 +120,7 @@ export default {
     playTwinkleDown,
     playTwinkleUp,
     playPortalTransit,
+    playPortalBlocked,
     playTickMark,
     playSailUnfurl,
     playBoatCapsize,

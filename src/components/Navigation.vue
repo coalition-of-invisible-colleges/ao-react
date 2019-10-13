@@ -16,7 +16,7 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
-    button.topcenter(:class='{ closed : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm')
+    button.topcenter(:class='{ closed : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm'  @mousedown='flashHelm(0.5)')
         .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
@@ -86,22 +86,22 @@ export default {
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
             this.flashHelm()
-            Vue.nextTick(this.previousUpgradeMode())
+            this.previousUpgradeMode()
         })
 
         mc.on('swiperight', (e) => {
             this.flashHelm()
-            Vue.nextTick(this.nextUpgradeMode())
+            this.nextUpgradeMode()
         })
 
         mc.on('swipeup', (e) => {
             this.flashHelm()
-            Vue.nextTick(this.closeUpgrades())
+            this.closeUpgrades()
         })
 
         mc.on('swipedown', (e) => {
             this.flashHelm()
-            Vue.nextTick(this.nextUpgradeMode())
+            this.nextUpgradeMode()
         })
 
         let Press = new Hammer.Press({
@@ -110,32 +110,32 @@ export default {
         mc.add(Press)
         mc.on('press', (e) => {
             if(this.$router.currentRoute.path.split("/")[1] === 'front'){
-                if(!this.$store.state.upgrades.mode) {
+                if(this.$store.state.upgrades.mode === 'doge') {
                     SoundFX.playPortalBlocked()
-                    Vue.nextTick(this.flashHelm(5))
+                    this.flashHelm(5)
                 } else {
                     this.flashHelm(2)
                     SoundFX.playPortalTransit()
-                    Vue.nextTick(this.closeUpgrades())
+                    this.closeUpgrades()
                 }
             } else {
                 this.flashHelm(2)
                 SoundFX.playPortalTransit()
                 switch(this.$store.state.upgrades.mode) {
                 case 'doge':
-                    Vue.nextTick(this.$router.push('/front/doge'))
+                    this.$router.push('/front/doge')
                     break
                 case 'boat':
-                    Vue.nextTick(this.$router.push('/front/boat'))
+                    this.$router.push('/front/boat')
                     break
                 case 'badge':
-                    Vue.nextTick(this.$router.push('/front/badge'))
+                    this.$router.push('/front/badge')
                     break
                 case 'chest':
-                    Vue.nextTick(this.$router.push('/front/chest'))
+                    this.$router.push('/front/chest')
                     break
                 case 'timecube':
-                    Vue.nextTick(this.$router.push('/front/timecube'))
+                    this.$router.push('/front/timecube')
                     break
                 }
             }
@@ -146,9 +146,9 @@ export default {
         mc.on('tap', (e) => {
             this.flashHelm(0.5)
             if (!this.$store.state.upgrades.mode){
-                Vue.nextTick(this.setMode(0))
+                this.setMode(0)
             } else {
-                Vue.nextTick(this.nextUpgradeMode())
+                this.nextUpgradeMode()
             }
         })
         let lel = document.getElementById('helmright')
@@ -158,7 +158,7 @@ export default {
         lmc.add(Tap2)
         lmc.on('tap', (e) => {
             this.flashHelm(0.5)
-            Vue.nextTick(this.nextUpgradeMode())
+            this.nextUpgradeMode()
         })
 
         let rel = document.getElementById('helmleft')
@@ -168,7 +168,7 @@ export default {
         rmc.add(Tap3)
         rmc.on('tap', (e) => {
             this.flashHelm(0.5)
-            Vue.nextTick(this.previousUpgradeMode())
+            this.previousUpgradeMode()
         })
         let dogeel = document.getElementById('dogecomm')
         let dogemc = new Hammer.Manager(dogeel)
