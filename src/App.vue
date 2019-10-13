@@ -14,7 +14,7 @@ import MobileHeading from './components/MobileHeading'
 import EventFeed from './components/slotUtils/EventFeed'
 
 export default {
-    mounted(){
+    mounted() {
         let token = window.localStorage.token
         let session = window.localStorage.session
         if (token && session){
