@@ -212,4 +212,6 @@ img
 .front
     position: relative
     z-index: 100
+    max-width: 100%
+    max-height: 17em
 </style>

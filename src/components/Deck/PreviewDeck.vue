@@ -136,6 +136,7 @@ export default {
     border-color: rgba(255, 255, 255, 0.5)
     border-style: solid
     cursor: pointer
+    z-index: 98
 
 .tooltip
     position: relative

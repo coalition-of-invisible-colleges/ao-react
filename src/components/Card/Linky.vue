@@ -54,11 +54,28 @@ export default {
     margin-bottom: 1em
     
 .noheight img
-    max-width: 127%
+    max-width: 127.5%
 
 .cardname.front .noheight img
     max-width: 100% 
    
 p:last-child
     margin-bottom: 0
+
+.noheight h1, .noheight h2, .noheight h3, .noheight h4, .noheight h5, .noheight h6
+    margin-top: 0
+    
+.noheight h1
+    font-size: 1.675em
+    margin-bottom: 0.5em
+
+.noheight h2
+    font-size: 1.4em
+    margin-bottom: 0.625em
+    
+.noheight h3
+    margin-bottom: 0.9em
+    
+.noheight h4
+    margin-bottom: 1.33em
 </style>

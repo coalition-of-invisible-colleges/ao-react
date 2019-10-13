@@ -1,8 +1,8 @@
 
 <template lang='pug'>
 
-div.totop
-    div(v-if='b.passed.length > 0'   @click='toggleBird')
+div.totop(v-if='b.passed.length > 0')
+    div(@click='toggleBird')
         .singlebird(v-if='!$store.state.upgrades.bird')
             .row.pad.centered
                 img.send(src='../../assets/images/birdbtn.svg')

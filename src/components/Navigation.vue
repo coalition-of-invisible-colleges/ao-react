@@ -97,6 +97,13 @@ export default {
         mc.on('swipeup', (e) => {
             this.flashHelm()
             this.closeUpgrades()
+            if(this.$router.currentRoute.path.split("/")[1] === 'front') {
+                this.$router.push('/front/doge')
+            } else if(this.$router.currentRoute.path.split("/")[1] === 'dash') {
+                this.$router.push('/dash/doge')
+            } else {
+                this.$router.push('/doge')
+            }
         })
 
         mc.on('swipedown', (e) => {
@@ -116,6 +123,7 @@ export default {
                 } else {
                     this.flashHelm(2)
                     SoundFX.playPortalTransit()
+                    this.$router.push('/front/doge')
                     this.closeUpgrades()
                 }
             } else {
