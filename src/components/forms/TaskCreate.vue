@@ -233,7 +233,7 @@ export default {
             // if(!this.task.name) return []
             if(this.task.name.length < 1) return []
             if(this.exploring) return this.searchResults
-            let regex = new RegExp(this.task.name)
+            let regex = new RegExp(this.task.name, 'i')
             let matches = []
             this.$store.getters.localTasks.forEach(t => {
                 if(t.name === this.task.name) {
