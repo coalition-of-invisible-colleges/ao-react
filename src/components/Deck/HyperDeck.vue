@@ -171,7 +171,7 @@ export default {
   height: fit-content
   margin-bottom: 1em
   background-color: rgba(21, 21, 21, 0.25)
-  border-radius: 40px
+  border-radius: 30px
 
 .upgrade
     height: 4em

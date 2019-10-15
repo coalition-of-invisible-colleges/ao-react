@@ -3,7 +3,7 @@
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
-          textarea#card.fwi(v-model='task.name' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate').paperwrapper
+          textarea#card.fwi(v-model='task.name' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false').paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi create card
     .label
@@ -19,6 +19,9 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
+    .scrollbarwrapper(v-show='showCreate && task.name.length >= 1')
+        .searchresults
+            .result(v-for='t in matchCards'  @click='loadResult(t)'  :class='resultInputSty(t)') {{ t.name }}
 </template>
 
 <script>
@@ -38,6 +41,8 @@ export default {
                 color: 'green',
             },
             swipeTimeout: 0,
+            searchResults: [],
+            exploring: false,
         }
     },
     components: {
@@ -194,6 +199,21 @@ export default {
         closeCreate() {
             this.showCreate = false
         },
+        resultInputSty(card) {
+          return {
+              redtx : card.color == 'red',
+              bluetx : card.color == 'blue',
+              greentx : card.color == 'green',
+              yellowtx : card.color == 'yellow',
+              purpletx : card.color == 'purple',
+              blacktx : card.color == 'black',
+          }
+        },
+        loadResult(t) {
+            this.exploring = true
+            this.task.name = t.name.trim()
+            this.task.color = t.color
+        }
     },
     computed: {
         taskId(){
@@ -207,6 +227,24 @@ export default {
                 }
             })
             return foundId
+        },
+        matchCards() {
+            // if(!this.task) return []
+            // if(!this.task.name) return []
+            if(this.task.name.length < 1) return []
+            if(this.exploring) return this.searchResults
+            let regex = new RegExp(this.task.name)
+            let matches = []
+            this.$store.getters.localTasks.forEach(t => {
+                if(t.name === this.task.name) {
+                } else if(regex.test(t.name)) {
+                    matches.push(t)
+                } else if(t.guild && regex.test(t.guild)) {
+                    matches.push(t)
+                }
+            })
+            this.searchResults = matches
+            return matches
         },
         colorWord(){
             switch (this.task.color) {
@@ -395,11 +433,42 @@ textarea
 .closeit
     position: fixed
     width: 100%
-    height: 100%
+    height: 90%
     background-color: rgba(22, 22, 22, 0.2)
     z-index: 148
     top: 0
     left: 0
     margin: 0
     padding: 0
+
+.scrollbarwrapper
+    width: 20em
+    height: calc(100% - 2em)
+    position: fixed
+    top: 0
+    left: 22em
+    background: rgba(22, 22, 22, 0.8)
+    padding: 1em 0
+    border-radius: 20px
+
+.searchresults
+    overflow: auto
+    color: white
+    font-size: 1.1em
+    height: 100%
+    padding: 0 1em
+    word-wrap: break-word
+
+::-webkit-scrollbar
+    background-color: rgba(22, 22, 22, 0.4)
+
+::-webkit-scrollbar-thumb
+    background-color: rgba(89, 89, 89, 0.4)
+
+::-webkit-scrollbar-thumb:hover
+    background-color: rgba(255, 255, 255, 0.75)
+
+.result
+    margin-bottom: 0.15em
+    cursor: pointer
 </style>
