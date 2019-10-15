@@ -19,7 +19,7 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
-    .scrollbarwrapper(v-show='showCreate && task.name.length >= 1')
+    .scrollbarwrapper(v-show='showCreate && task.name.length >= 1 && matchCards.length > 0')
         .searchresults
             .result(v-for='t in matchCards'  @click='loadResult(t)'  :class='resultInputSty(t)') {{ t.name }}
 </template>
