@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.panel
+.panel(v-if='$store.state.upgrades.stacks === 5')
     .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
       .four.columns(v-if='$store.getters.red.length > 0')
           card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
@@ -15,6 +15,12 @@
           card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
       .four.columns(v-if='$store.getters.purple.length > 0')
           card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
+.panel(v-else-if='$store.state.upgrades.stacks === 1')
+      .row(v-if='$store.getters.all.length > 0')
+        .four.columns.minheight
+        .four.columns
+            card-panel(:c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
+        .four.columns.minheight
 </template>
 
 <script>
@@ -37,8 +43,9 @@ export default {
 
 .panel
     width: 100%
-    margin: 0 1em 0 -1em
+    margin: -1em 1em 0 -1em
     padding: 0 2em
+    clear: both
 
 .card
     padding: 2em
@@ -50,4 +57,7 @@ export default {
 #cyber
     width: 100%
     opacity: 0.5
+    
+.minheight
+    min-height: 0.5em
 </style>

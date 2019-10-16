@@ -191,6 +191,7 @@ export default {
     padding: 0 2em 0.8em 0
     margin: 0 1em
     min-height: 2em
+    position: relative
 
 .slide-fade-enter-active {
   transition: all .6s ease;

@@ -2,7 +2,7 @@
 
 #tasks(:id='uuid', @contextmenu.prevent)
     .row.ptr(v-if="topCard")
-        .three.grid(@click='last')
+        .three.grid(@click='previous')
             span &nbsp;
             img.fl(v-if='!open && topCard.color === "red"', src='../../assets/images/backRed.svg')
             img.fl(v-if='!open && topCard.color === "yellow"', src='../../assets/images/backYellow.svg')
@@ -13,9 +13,11 @@
             .box.verticalcenter
                 h3(v-if='!open') {{ top + 1 }}
         .four.grid.horizcenter(:class='panelSty')
-            .toglr.mandalign(@click='toggleOpen')
-                img(v-if='open', src='../../assets/images/openRed.svg')
-                img(v-else, src='../../assets/images/open.svg')
+            .toglr.mandalign(:id='orbuuid')
+                img(v-if='open && $store.state.upgrades.stacks === 5', src='../../assets/images/openRed.svg'  draggable='false')
+                img(v-else-if='$store.state.upgrades.stacks === 5'  src='../../assets/images/open.svg'  draggable='false')
+                img.iris(v-else-if='open && $store.state.upgrades.stacks === 1'  src='../../assets/images/mandelorb_sequential.svg'  draggable='false')
+                img.iris(v-else  src='../../assets/images/mandelorb_linear.svg'  draggable='false')
         .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
@@ -54,35 +56,78 @@ import SoundFX from '../../modules/sounds'
 export default {
   props: ['c', 'taskId'],
   mounted(){
-        var el = document.getElementById(this.uuid)
-        var mc = Propagating(new Hammer.Manager(el))
-        var Swipe = new Hammer.Swipe({ threshold: 144 })
+        let el = document.getElementById(this.uuid)
+        let mc = Propagating(new Hammer.Manager(el))
+        let Swipe = new Hammer.Swipe({ threshold: 144 })
         mc.add(Swipe)
 
         mc.on('swipeleft', (e) => {
-          this.last()
+          this.previous()
+          e.stopPropagation()
         })
 
         mc.on('swiperight', (e) => {
           this.next()
+          e.stopPropagation()
         })
 
         mc.on('swipeup', (e) => {
             console.log('got swipe up')
             this.swap(-1)
-            this.last()
+            this.previous()
+            e.stopPropagation()
         })
 
         mc.on('swipedown', (e) => {
             console.log('got swipe down')
             this.swap(1)
+            e.stopPropagation()
         });
+
+        var orbel = document.getElementById(this.orbuuid)
+        var orbmc = Propagating(new Hammer.Manager(orbel))
+        
+        let orbTap = new Hammer.Tap({ time: 400 })
+        orbmc.add(orbTap)
+        orbmc.on('tap', (e) => {
+            this.toggleOpen()
+            e.stopPropagation()
+        })
+
+        var orbSwipe = new Hammer.Swipe({ threshold: 144 })
+        orbmc.add(orbSwipe)
+
+        orbmc.on('swipeleft', (e) => {
+          // this should navigate all five stacks at once
+        })
+
+        orbmc.on('swiperight', (e) => {
+          // this should navigate all five stacks at once
+        })
+
+        orbmc.on('swipeup', (e) => {
+            this.first()
+            e.stopPropagation()
+        })
+
+        orbmc.on('swipedown', (e) => {
+            this.last()
+            e.stopPropagation()
+        })
+
+        let orbPress = new Hammer.Press({ time: 400 })
+        orbmc.add(orbPress)
+        orbmc.on('press', (e) => {
+            this.toggleStacks()
+            e.stopPropagation()
+        })
   },
   data(){
       return {
           open: false,
           top: 0,
           uuid: uuidv1(),
+          orbuuid: uuidv1(),
           componentKey: 0,
       }
   },
@@ -95,7 +140,10 @@ export default {
         }
         this.open = !this.open
     },
-    last(){
+    first() {
+        this.top = 0
+    },
+    previous(){
         SoundFX.playPageTurn()
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
@@ -107,6 +155,9 @@ export default {
         SoundFX.playPageTurn()
         this.top = (this.top + 1) % this.c.length
         this.componentKey ++
+    },
+    last() {
+        this.top = this.c.length - 1
     },
     swap(direction){
         let cardIndex
@@ -129,6 +180,9 @@ export default {
             swapId2: this.c[swapIndex].taskId,
             direction: 'up',
         })
+    },
+    toggleStacks(){
+      this.$store.commit('toggleStacks')
     },
   },
   computed: {

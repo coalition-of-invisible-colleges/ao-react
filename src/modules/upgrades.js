@@ -7,12 +7,20 @@ const state = {
     payment: false,
     dimension: false,
     bird: false,
+    stacks: 5,
     warp: -1,
 }
 
 const mutations = {
     toggleBird(state){
         state.bird = !state.bird
+    },
+    toggleStacks(state){
+        if(state.stacks === 5) {
+            state.stacks = 1
+        } else {
+            state.stacks = 5
+        }
     },
     nextMode(state) {
         let currentIndex = modes.indexOf(state.mode)

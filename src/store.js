@@ -120,6 +120,12 @@ export default new Vuex.Store({
           })
           return holds
       },
+      all(state, getters){
+          if (state.context.completed){
+              return getters.contextCompleted
+          }
+          return getters.contextDeck
+      },
       red(state, getters){
           if (state.context.completed){
               return getters.contextCompleted.filter(d => d.color === 'red')
