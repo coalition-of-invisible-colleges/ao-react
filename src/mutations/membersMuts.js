@@ -41,6 +41,7 @@ function membersMuts(members, ev){
           break
       case "member-created":
           ev.lastUsed = ev.timestamp
+          ev.muted = false
           members.push(ev)
           break
       case "member-activated":
@@ -175,6 +176,22 @@ function membersMuts(members, ev){
               }
           })
           break
+
+      case "doge-muted":
+        members.forEach( member => {
+            if (member.memberId === ev.memberId){
+                member.muted = true
+            }
+        })
+        break
+
+      case "doge-unmuted":
+        members.forEach( member => {
+            if (member.memberId === ev.memberId){
+                member.muted = false
+            }
+        })
+        break
   }
 }
 

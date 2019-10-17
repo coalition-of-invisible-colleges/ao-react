@@ -21,7 +21,9 @@ export default {
             this.$store.commit('setAuth', {token, session})
         }
         this.$store.dispatch("connectSocket")
-        this.$store.dispatch('loadCurrent')
+        if(this.$store.getters.member) {
+            this.$store.dispatch('loadCurrent')
+        }
     },
     components: {
         MainMenu, MobileHeading, EventFeed

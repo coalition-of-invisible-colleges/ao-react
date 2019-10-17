@@ -36,8 +36,9 @@
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
     .small.always.left
         .tooltip
-            img.doge(v-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected == "disconnected" }')
-            img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected == "disconnected" }')
+            img.doge(v-if='$store.getters.member.muted'  src='../assets/images/bread_corgi.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+            img.doge(v-else-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+            img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
             .tooltiptext.right
                 p {{ $store.state.cash.alias }}
                 p
@@ -51,7 +52,7 @@
                     span.pong ({{ $store.state.loader.lastPing }} ms pong)
                 p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
                 p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
-        .wowdar
+        .wowdar(v-if='!$store.getters.member.muted')
             .ringbase.ring1
             .ringbase.ring2
             .pulse
@@ -189,6 +190,9 @@ export default {
         })
         dogemc.add(Press2)
         dogemc.on('press', (e) => {
+            if(this.$store.getters.member.muted) {
+                return
+            }
             SoundFX.playBarkPing()
             console.log("pre barking is ", this.barking)
             this.barking = true
@@ -202,6 +206,12 @@ export default {
                 this.pinging = false
                 console.log("postpost barking is ", this.barking)
             }, 2000)
+        })
+
+        let Tap4 = new Hammer.Tap({ taps: 2, time: 400 })
+        dogemc.add(Tap4)
+        dogemc.on('tap', (e) => {
+            this.toggleMute()
         })
     },
     watch: {
@@ -336,7 +346,22 @@ export default {
 
             helm.className += addedClasses
             setTimeout( () => { helm.className = helm.className.replace(addedClasses, '') }, ms)
-        }
+        },
+        toggleMute() {
+            console.log("muted is ", this.$store.getters.member.muted)
+            console.log("memberId is", this.$store.getters.member.memberId)
+            if(this.$store.getters.member.muted) {
+                this.$store.dispatch("makeEvent", {
+                    type: "doge-unmuted",
+                    memberId: this.$store.getters.member.memberId
+                })
+            } else {
+                this.$store.dispatch("makeEvent", {
+                    type: "doge-muted",
+                    memberId: this.$store.getters.member.memberId
+                })
+            }
+        },
     },
 }
 
@@ -898,7 +923,8 @@ body {
     z-index: 9001
 
 .doge.red
-    filter: hue-rotate(30deg)
+    filter: hue-rotate(-38deg)
+    transform: scaleX(-1)
 
 .big
     position: fixed

@@ -6,7 +6,7 @@
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .give(v-if='showGive')
-        select(v-model='toAo'  @change)
+        select(v-model='toAo')
             option(@click='setWarp(-1)') here
             option(v-for='(a, i) in $store.state.ao'  :key='a.address'  :value='a.address'  @click='setWarp(i)') {{ a.alias ? a.alias : a.address.slice(0,9) }}
         div(v-if='$store.getters.warpDrive')

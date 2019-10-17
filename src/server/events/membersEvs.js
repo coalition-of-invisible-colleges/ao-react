@@ -133,6 +133,22 @@ function dogeBarked(memberId, callback) {
     dctrlDb.triggerShadow(newEvent, callback)
 }
 
+function dogeMuted(memberId, callback) {
+    let newEvent ={
+        type: "doge-muted",
+        memberId,
+    }
+    dctrlDb.triggerShadow(newEvent, callback)
+}
+
+function dogeUnmuted(memberId, callback) {
+    let newEvent ={
+        type: "doge-unmuted",
+        memberId,
+    }
+    dctrlDb.triggerShadow(newEvent, callback)
+}
+
 export default {
   memberCreated,
   memberPaid,
@@ -146,4 +162,6 @@ export default {
   badgeRemoved,
   badgeHidden,
   dogeBarked,
+  dogeMuted,
+  dogeUnmuted,
 }

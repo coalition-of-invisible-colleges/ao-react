@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#tasks(:id='uuid', @contextmenu.prevent)
+#tasks(:id='uuid'  @contextmenu.prevent)
     .row.ptr(v-if="topCard")
         .three.grid(@click='previous')
             span &nbsp;
@@ -105,6 +105,14 @@ export default {
           // this should navigate all five stacks at once
         })
 
+        let orbPress = new Hammer.Press({ time: 400 })
+        orbmc.add(orbPress)
+        orbmc.on('press', (e) => {
+            this.toggleStacks()
+            e.stopPropagation()
+        })
+
+        // put these on the left an right arrows as long presses
         orbmc.on('swipeup', (e) => {
             this.first()
             e.stopPropagation()
@@ -115,12 +123,6 @@ export default {
             e.stopPropagation()
         })
 
-        let orbPress = new Hammer.Press({ time: 400 })
-        orbmc.add(orbPress)
-        orbmc.on('press', (e) => {
-            this.toggleStacks()
-            e.stopPropagation()
-        })
   },
   data(){
       return {
@@ -182,13 +184,21 @@ export default {
         })
     },
     toggleStacks(){
-      this.$store.commit('toggleStacks')
+        if(this.$store.state.upgrades.stacks === 1) {
+            SoundFX.playScrollOpen()
+        } else {
+            SoundFX.playBookClose()
+        }
+        this.$store.commit('toggleStacks')
     },
   },
   computed: {
     topCard(){
         this.componentKey ++
-        if (this.c.length > 0){
+        if(this.top >= this.c.length) {
+            this.top = 0
+        }
+        if (this.c.length > 0) {
             return this.c[this.top]
         }
         return false
@@ -203,7 +213,8 @@ export default {
             blacktx : this.topCard.color == 'black',
         }
     },
-    panelIds(){
+    panelIds() {
+        this.top = 0
         return this.c.map(g => g.taskId)
     }
   },

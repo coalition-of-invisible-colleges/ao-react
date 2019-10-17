@@ -41,6 +41,12 @@ module.exports = function(req,res,next){
       case 'doge-barked':
           specDogeBarked(req, res, next)
           break
+      case 'doge-muted':
+          specDogeMuted(req, res, next)
+          break
+      case 'doge-unmuted':
+          specDogeUnmuted(req, res, next)
+          break
       default:
           next()
   }
@@ -232,6 +238,34 @@ function specDogeBarked(req, res, next) {
       validators.isMemberId(req.body.memberId, errRes)
     ){
       events.membersEvs.dogeBarked(
+        req.body.memberId,
+        utils.buildResCallback(res)
+      )
+    } else {
+      res.status(400).send(errRes)
+    }
+
+}
+
+function specDogeMuted(req, res, next) {
+    let errRes = []
+    console.log("specDogeMuted memberId is", req.body.memberId)
+    if (validators.isMemberId(req.body.memberId, errRes)){
+      events.membersEvs.dogeMuted(
+        req.body.memberId,
+        utils.buildResCallback(res)
+      )
+    } else {
+      res.status(400).send(errRes)
+    }
+
+}
+
+function specDogeUnmuted(req, res, next) {
+    let errRes = []
+    console.log("specDogeUnmuted memberId is", req.body.memberId)
+    if (validators.isMemberId(req.body.memberId, errRes)){
+      events.membersEvs.dogeUnmuted(
         req.body.memberId,
         utils.buildResCallback(res)
       )
