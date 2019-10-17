@@ -5,8 +5,6 @@
     h1.up lightning
     nodes(v-if='$store.state.cash.info.alias')
     p(v-else) no lightning node :(
-    .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
-    .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
 </template>
 
 <script>

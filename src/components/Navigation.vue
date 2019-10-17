@@ -61,6 +61,9 @@
             .ping.pos2
         .ringbase.ring3.big(:class='{ showping : pinging }')
     task-create.always
+    div(v-if='isBull()')
+        .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
+        .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
 </template>
 
 <script>
@@ -221,7 +224,6 @@ export default {
         isBull(){
             let mainroute = this.$router.currentRoute.path.split('/')[1]
             let isBull = mainroute === "dash"
-            console.log({isBull})
             return isBull
         },
         killSession(){
@@ -928,4 +930,22 @@ body {
 .loadingscreen  h1
         text-align: center
         margin-top: 7em
+
+
+.btcspot , .satspot
+    position: absolute
+    top: 0
+    z-index: 11
+    padding: 1em
+
+@media (max-width: breakpoint)
+    .btcspot , .satspot
+        display: none
+
+.btcspot
+    right: 111px
+
+.satspot
+    left: 111px
+
 </style>

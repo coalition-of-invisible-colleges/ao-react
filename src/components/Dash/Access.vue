@@ -6,8 +6,6 @@
         resources
     .row
         sidewalk
-    .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
-    .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
 </template>
 
 <script>
