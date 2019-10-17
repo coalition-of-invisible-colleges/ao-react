@@ -24,10 +24,8 @@ export default {
         }
     },
     mounted() {
-        console.log("this.uuid is", this.uuid)
         let el = document.getElementById(this.uuid)
         if(!el) return
-        console.log("el is", el)
         let mc = Propagating(new Hammer.Manager(el))
 
         let Tap = new Hammer.Tap({ time: 400 })
@@ -49,8 +47,6 @@ export default {
             window.scrollTo(0, 0)
             e.stopPropagation()
         })
-
-        console.log("refs is", this.$refs)
     },
     computed: {
         isCared(){

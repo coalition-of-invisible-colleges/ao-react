@@ -2,7 +2,7 @@
 
 .memberrow(@dblclick='goIn(m.memberId)'  :key='m.memberId')
     .row
-        .three.grid
+        .three.grid.ptr(@click='goIn(m.memberId)')
             img(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
             img(v-else, src='../../assets/images/loggedOut.svg')
             label(:class='{redtx: m.active < 0}') {{ m.name }}
@@ -191,6 +191,9 @@ label
 .ungrabbedcoin {
     opacity: 0.3
 }
+
+.ptr
+    cursor: pointer
 
 .goldengun
     cursor: pointer

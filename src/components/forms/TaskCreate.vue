@@ -21,7 +21,7 @@
               img.agedbackground
     .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && matchCards.length > 0')
         .searchresults
-            .result(v-for='t in matchCards'  @click='loadResult(t)'  :class='resultInputSty(t)') {{ t.name }}
+            .result(v-for='t in matchCards'  @click='loadResult(t)'  :class='resultInputSty(t)'  @dblclick='goIn(t.taskId)') {{ t.name }}
 </template>
 
 <script>
@@ -116,6 +116,27 @@ export default {
         });
     },
     methods: {
+        goIn(taskId){
+            SoundFX.playPageTurn()
+            let panel = [taskId]
+            let parents = [  ]
+            let top = 0
+
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            this.$store.dispatch("goIn", {
+                parents,
+                top,
+                panel
+            })
+
+            this.$store.commit("startLoading", 'unicorn')
+            this.$router.push("/" + this.$store.state.upgrades.mode)
+        },
         switchColor(color, refocus = true){
             if (this.task.color === color){
                 this.showCreate = !this.showCreate

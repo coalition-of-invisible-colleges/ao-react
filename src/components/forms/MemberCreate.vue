@@ -29,10 +29,6 @@ export default {
       }
     }
   },
-	mounted(){
-		let name = this.$router.currentRoute.path.split('/')[2]
-		this.member.name = name
-	},
 	computed: {
 		memberReq(){
 			let name, secret
