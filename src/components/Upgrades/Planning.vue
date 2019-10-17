@@ -10,7 +10,7 @@
     .box(v-else)
         h2 cube
         .gui(v-if='calcTime') {{ calcTime.slice(0,24) }}
-          resource-book(:tId='b.taskId')
+        resource-book(:tId='b.taskId')
 </template>
 
 <script>

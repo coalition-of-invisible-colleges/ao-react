@@ -1,5 +1,4 @@
 <template lang='pug'>
-
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
@@ -34,7 +33,6 @@ import SoundFX from '../../modules/sounds'
 export default {
     data(){
         return {
-            // currentColor: '',
             showCreate: false,
             task: {
                 name: '',

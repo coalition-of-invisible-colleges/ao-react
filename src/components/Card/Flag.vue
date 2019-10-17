@@ -16,8 +16,8 @@
         tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
   div(v-else-if="$store.state.upgrades.mode === 'timecube'")
     img.flaggy(src='../../assets/images/timecube.svg')
-    .fl(v-if='isCubeOpen')
-        resource-book(:tId='b.taskId')
+  //- hr(v-if='isCubeOpen' )
+  //- resource-book(v-if='isCubeOpen'  :tId='b.taskId')
 </template>
 
 <script>
@@ -51,9 +51,6 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            // if(e.target !== this.uuid) {
-            //     return
-            // }
             switch(this.$store.state.upgrades.mode) {
                 case false:
                     return
@@ -83,9 +80,6 @@ export default {
         let Press = new Hammer.Press({ time: 400 })
         mc.add(Press)
         mc.on('press', (e) => {
-            // if(e.target !== this.uuid) {
-            //     return
-            // }
             switch(this.$store.state.upgrades.mode) {
                 case false:
                     return
@@ -102,8 +96,6 @@ export default {
             }
             e.stopPropagation()
         })
-
-        console.log("refs is", this.$refs)
     },
     methods: {
         complete(){
@@ -309,10 +301,14 @@ label
 
 .svgwhite
     fill: white
-    
+
 .svgwhite.hover
     transform: rotate(-30deg)
-    
+
 .doge
     height: 1.2em
+
+.front
+    z-index: 3000000
+    background: wrexblue
 </style>
