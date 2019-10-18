@@ -2,7 +2,7 @@
 
 .navigation(@contextmenu.prevent)
     .loadingscreen(v-if='$store.state.context.loading')
-        h1 loading the {{ $store.state.context.loading }} dimension
+        h1 loading {{ $store.state.context.loading }}
     div.ztop(@click='cycleLeft')
         img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
         img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")

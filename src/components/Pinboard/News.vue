@@ -4,16 +4,16 @@
       h1.up {{ $store.state.cash.alias }} newspaper
       .row.pagemargins
           .three.columns
-              div(v-for='(t, i) in getNewsColumn(0)'  :key='t.taskId')
+              div(v-for='(t, i) in $store.getters.getNewsColumn.row1'  :key='t.taskId')
                   hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
           .three.columns
-              div(v-for='(t, i) in getNewsColumn(1)'  :key='t.taskId')
+              div(v-for='(t, i) in $store.getters.getNewsColumn.row2'  :key='t.taskId')
                   hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
           .three.columns
-              div(v-for='(t, i) in getNewsColumn(2)'  :key='t.taskId')
+              div(v-for='(t, i) in $store.getters.getNewsColumn.row3'  :key='t.taskId')
                   hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
           .three.columns
-              div(v-for='(t, i) in getNewsColumn(3)'  :key='t.taskId')
+              div(v-for='(t, i) in $store.getters.getNewsColumn.row4'  :key='t.taskId')
                   hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
 </template>
 
@@ -28,13 +28,7 @@ export default {
       this.$store.commit('stopLoading')
   },
   methods:{
-      getNewsColumn(index, columns = 4){
-          let rownews = this.$store.getters.memberPriorities.slice().filter( (a, i) => { return i % columns === index })
-          console.log('trying to load news ', index, rownews.length)
-          return rownews
-      },
       goInNews(t){
-          console.log('gin news called')
           this.playPageTurn()
           let taskId = t
           let panel = this.$store.getters.memberPriorityIds

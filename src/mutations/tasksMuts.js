@@ -386,29 +386,37 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "task-swapped":
-            console.log("task-swapped")
-            let task, original, swap
+            let task
             tasks.forEach((t) => {
                 if (t.taskId === ev.taskId) {
                     task = t
                 }
-                if (t.taskId === ev.swapId1) {
-                    original = t
-                }
-                if (t.taskId === ev.swapId2) {
-                    swap = t
-                }
             })
 
-            if(!task || !original || !swap) break
+            if(task){
+                let originalIndex = task.subTasks.indexOf(ev.swapId1)
+                let swapIndex = task.subTasks.indexOf(ev.swapId2)
 
-            let originalIndex = task.subTasks.indexOf(swap.taskId)
-            let swapIndex = task.subTasks.indexOf(original.taskId)
+                let originalIndexCompleted = task.completed.indexOf(ev.swapId1)
+                let swapIndexCompleted = task.completed.indexOf(ev.swapId2)
 
-            let newSubTasks = task.subTasks.slice()
-            newSubTasks[originalIndex] = original.taskId
-            newSubTasks[swapIndex] = swap.taskId
-            task.subTasks = newSubTasks
+                if ( originalIndex > -1 && swapIndex > -1 ){
+                    console.log('swapping')
+                    let newST = task.subTasks.slice()
+                    newST[originalIndex] = ev.swapId2
+                    newST[swapIndex] = ev.swapId1
+                    task.subTasks = newST
+                }
+
+                if ( originalIndexCompleted > -1 && swapIndexCompleted > -1 ){
+                    console.log('swapping complted')
+                    let newCompleted = task.completed.slice()
+                    newCompleted[originalIndexCompleted] = ev.swapId2
+                    newCompleted[swapIndexCompleted] = ev.swapId1
+                    task.completed = newCompleted
+                }
+            }
+
             break
         case "task-allocated":
             tasks.forEach(task => {

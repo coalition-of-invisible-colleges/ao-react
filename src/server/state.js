@@ -87,7 +87,6 @@ function initialize(callback) {
     dctrlDb.recover((err, backup) => {
           let ts = 0
           if (backup.length > 0){
-
               console.log( backup[0].members.length, " members in backup")
               console.log( backup[0].tasks.length, " task in backup")
               console.log( backup[0].resources.length, " resources in backup")
@@ -113,17 +112,11 @@ function initialize(callback) {
                       return true
                   }
               })
-
               console.log( backup[0].members.length, " members in backup after dedup")
               console.log( backup[0].tasks.length, " tasks in backup after dedup")
               console.log( backup[0].resources.length, " resources in backup after dedup")
-
               applyBackup(backup[0])
           }
-
-
-
-
           dctrlDb.getAll(ts, (err, all) => {
               if (err) return callback(err)
 

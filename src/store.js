@@ -367,7 +367,6 @@ export default new Vuex.Store({
               let completions = g.completed.map(t => getters.hashMap[t])
               completions.forEach(c => {
                   if(c.lastClaimed > g.tempLastClaimed) {
-                      console.log("newer checkmark found")
                       g.tempLastClaimed = c.lastClaimed
                   }
               })
@@ -420,7 +419,6 @@ export default new Vuex.Store({
               fullTasks = fullTasks.concat( guildsSubs.map(tId => {
                   let t = getters.hashMap[tId]
                   if(!t) {
-                    console.log("bad tId: ", tId)
                   } else {
                     t.funderGuild = p.guild
                   }
@@ -564,6 +562,29 @@ export default new Vuex.Store({
               return b.weight - a.weight
           })
           return news
+      },
+      getNewsColumn(state, getters){
+          let row1 = []
+          let row2 = []
+          let row3 = []
+          let row4 = []
+
+          getters.memberPriorities.forEach( (a, i) => {
+              switch (i % 4) {
+                  case 0:
+                      row1.push(a)
+                      break
+                  case 1:
+                      row2.push(a)
+                      break
+                  case 2:
+                      row3.push(a)
+                      break
+                  case 3:
+                      row4.push(a)
+              }
+          })
+          return {row1, row2, row3, row4}
       },
       memberPriorityIds(state, getters) {
           return getters.memberPriorities.map( t => t.taskId )
