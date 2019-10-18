@@ -72,21 +72,19 @@ export default {
         })
 
         mc.on('swipeup', (e) => {
-            console.log('got swipe up')
             this.swap(-1)
             this.previous()
             e.stopPropagation()
         })
 
         mc.on('swipedown', (e) => {
-            console.log('got swipe down')
             this.swap(1)
             e.stopPropagation()
         });
 
         var orbel = document.getElementById(this.orbuuid)
         var orbmc = Propagating(new Hammer.Manager(orbel))
-        
+
         let orbTap = new Hammer.Tap({ time: 400 })
         orbmc.add(orbTap)
         orbmc.on('tap', (e) => {
@@ -98,11 +96,9 @@ export default {
         orbmc.add(orbSwipe)
 
         orbmc.on('swipeleft', (e) => {
-          // this should navigate all five stacks at once
         })
 
         orbmc.on('swiperight', (e) => {
-          // this should navigate all five stacks at once
         })
 
         let orbPress = new Hammer.Press({ time: 400 })

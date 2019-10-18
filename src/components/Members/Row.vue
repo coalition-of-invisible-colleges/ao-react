@@ -15,13 +15,12 @@
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
             span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
-        .grid(:class='{ seven: $router.currentRoute.path === "/dash" || hasAnyVouches, five: !hasAnyVouches }')
+        .grid(:class='{ seven: hasAnyVouches, five: !hasAnyVouches }')
             simple-priorities(:taskId='m.memberId')
         .grid.one
             preview-deck(:task='$store.getters.hashMap[m.memberId]')
             img.viney.faded(src='../../assets/images/vinebtn.svg'  @click='goIn(m.memberId)')
 </template>
-
 
 <script>
 
@@ -36,6 +35,11 @@ export default {
     props: ['m'],
     components: {DctrlActive, Badges, Addr, PreviewDeck, SimplePriorities},
     methods:{
+        isBull(){
+            let mainroute = this.$router.currentRoute.path.split('/')[1]
+            let isBull = mainroute === "dash"
+            return isBull
+        },
         goIn(taskId){
             SoundFX.playPageTurn()
             let panel = [taskId]
@@ -80,11 +84,6 @@ export default {
        }
     },
     computed:{
-        isSlayer(){
-            let routeSplit =  this.$router.currentRoute.path.split("/")
-            console.log({routeSplit})
-            return routeSplit[2] === 'slayer'
-        },
         isLoggedIn(){
             let isLoggedIn
             this.$store.state.sessions.forEach( s => {

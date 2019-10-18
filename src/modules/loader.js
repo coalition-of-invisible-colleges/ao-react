@@ -8,12 +8,10 @@ function attachSocket(commit, dispatch){
     if (!attached){
 
         socket.on('unauthorized', (reason)=> {
-            console.log('unauthorized event')
             commit('setConnectionError', 'Unauthorized: ' + JSON.stringify(reason))
         })
 
         socket.on('connect', ()=> {
-            console.log('socket connected, emiting authentication')
             commit('setConnected', 'connecting')
             socket.emit('authentication', {
                 session: state.session,
@@ -22,7 +20,6 @@ function attachSocket(commit, dispatch){
         })
 
         socket.on('authenticated', ()=> {
-            console.log('authentication rec, applying stream')
             commit('setConnected', 'connected')
             commit('setConnectionError', '')
             socket.on('eventstream', ev => {
@@ -32,41 +29,34 @@ function attachSocket(commit, dispatch){
         })
 
         socket.on('disconnect', (reason)=> {
-            console.log('disconnected from server')
             commit('setConnected', 'disconnected')
             commit('setConnectionError', 'disconnect: ' + reason)
             //socket.open()
        })
 
         socket.on('connect_error', (error)=> {
-            console.log('connection error')
             commit('setConnectionError', error.message)
         })
 
         socket.on('error', (error)=> {
-            console.log('general connection error')
             commit('setConnectionError', error.message)
         })
 
         socket.on('connect_timeout', (timeout)=> {
-            console.log('connection timed out')
             commit('setConnectionError', 'Timed out: ' + timeout + 'ms')
         })
 
         socket.on('reconnect_attempt', (timeout)=> {
-            console.log('reconnection attempt')
             commit('setConnected', 'connecting')
             commit('setConnectionError', 'reconnect attempt')
         })
 
         socket.on('reconnect', (timeout)=> {
-            console.log('reconnected to server')
             commit('setConnected', 'connected')
             commit('setConnectionError', '')
         })
 
         socket.on('reconnect_error', (error)=> {
-            console.log('reconnection error')
             commit('setConnectionError', error.message)
         })
         attached = true
@@ -78,8 +68,6 @@ const actions = {
         attachSocket(commit, dispatch)
     },
     loadCurrent({ commit, state, dispatch }){
-        console.log('loadCurrent')
-
         if (state.connected !== "connected"){
             socket.connect()
         }
@@ -89,15 +77,8 @@ const actions = {
             .set("Authorization", state.token)
             .end((err, res)=>{
                 if (err || !res.body) {
-                    console.log("error from state load, load failed", err, "attempt getting pubstate")
-                    request
-                        .put('/dctrl')
-                        .end((err, res2)=>{
-                            console.log("got res", res2.body, err)
-                            commit('setCurrent', res2.body)
-                        })
+
                 } else {
-                    console.log('got an authorized response?')
                     commit('setCurrent', res.body)
                     res.body.sessions.forEach(s => {
                         if (s.session === state.session){
@@ -118,12 +99,9 @@ const actions = {
                   .set("Authorization", state.token)
                   .end((err, res)=>{
                       if (err || !res.body) {
-                          console.log("error from state load, load failed", err, "attempt getting pubstate")
                           commit("setReqStatus", "failed")
                         } else {
-                          console.log(res.body)
                           commit("setPing", Date.now() - startTs)
-                          commit("popRequest")
                           commit("setReqStatus", "ready")
 
                           if (state.pendingRequests.length > 0){
@@ -148,7 +126,6 @@ const state = {
     connectionError: '',
     pendingRequests: [],
     reqStatus: 'ready',
-    // lastRes: '',
     lastPing: 1,
 }
 

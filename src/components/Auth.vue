@@ -51,12 +51,10 @@ export default {
               .set('name', this.name)
               .end((err,res)=>{
                   if (err) {
-                      console.log(err)
                       this.pass = ''
                       return this.err = err.message
                   }
 
-                  console.log('Authentication creation response', res.body)
                   this.pass = ""
                   this.$store.commit('setAuth', {
                       token,
@@ -65,8 +63,6 @@ export default {
 
                   window.localStorage.setItem("token", token)
                   window.localStorage.setItem("session", session)
-
-                  console.log('createSession about to connect')
 
                   this.$store.dispatch('loadCurrent')
               })

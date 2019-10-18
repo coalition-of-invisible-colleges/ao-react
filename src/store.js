@@ -222,8 +222,6 @@ export default new Vuex.Store({
                   if (getters.memberIds.indexOf(t.taskId) > -1){
                     members.push(t)
                   } else if (getters.resourceIds.indexOf(t.taskId) > -1) {
-                    console.log("card is a resource: ", t, getters.resourceIds.length)
-
                     resources.push(t)
                   } else if (t.guild) {
                     guilds.push(t)
@@ -234,12 +232,10 @@ export default new Vuex.Store({
 
           })
 
-          members.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          guilds.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          resources.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          cards.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-
-          console.log("calculated tasks by boost", members.length, guilds.length, resources.length, cards.length)
+          // members.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          // guilds.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          // resources.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          // cards.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
 
           return { members, guilds, cards, resources }
       },
@@ -518,7 +514,6 @@ export default new Vuex.Store({
       },
       recentMembers(state, getters){
           let recentMembers = state.members.filter(c => !c.originAddress)
-          console.log("only recent members amount: " , recentMembers.length)
           recentMembers.sort((a, b) => {
               return b.lastUsed - a.lastUsed
           })

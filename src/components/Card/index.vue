@@ -77,7 +77,6 @@ export default {
         let Tap = new Hammer.Tap({ taps: 2, time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            console.log("card double tap")
             this.goIn()
             e.stopPropagation()
         })
@@ -85,11 +84,8 @@ export default {
         var Press = new Hammer.Press({ time: 500 })
         mc.add(Press)
         mc.on('press', (e) => {
-            console.log("card press")
             this.copyCardToClipboard()
         })
-
-        console.log("refs is", this.$refs)
     },
     methods: {
         purge(){
