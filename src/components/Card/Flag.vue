@@ -42,10 +42,8 @@ export default {
     },
     props: ['b', 'inId'],
     mounted() {
-        console.log("this.uuid is", this.uuid)
         let el = document.getElementById(this.uuid)
         if(!el) return
-        console.log("el is", el)
         let mc = Propagating(new Hammer.Manager(el))
 
         let Tap = new Hammer.Tap({ time: 400 })
@@ -142,7 +140,6 @@ export default {
             this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
-            console.log("",  this.b.taskId, this.$store.getters.memberCard.taskId)
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
@@ -150,7 +147,6 @@ export default {
             })
         },
         flagIt(){
-            console.log("inId", this.inId, 'is flagged?', this.isFlagged)
             if (!this.isFlagged) {
                 if (this.inId){
                     SoundFX.playSailUnfurl()

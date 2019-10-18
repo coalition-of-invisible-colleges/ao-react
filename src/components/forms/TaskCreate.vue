@@ -151,9 +151,7 @@ export default {
             }
         },
         resetCard(){
-            console.log("resetCard, task.name is ", this.task.name)
             this.task.name = ''
-            console.log("post, task.name is ", this.task.name)
         },
         subTaskTask(taskId) {
             if(this.matchCard && !this.isGrabbed(taskId)) {
@@ -173,7 +171,6 @@ export default {
             SoundFX.playPageTurn()
             let foundId = this.matchCard
             let potentialCard = this.task.name.trim()
-            console.log("potentialCard is ", potentialCard)
             if(!foundId) {
                 request
                     .post('/events')
@@ -187,7 +184,6 @@ export default {
                     })
                     .end((err,res)=>{
                         if (err) return console.log(err);
-                        console.log('created and subtasked 1shot')
                     })
             } else {
                 this.subTaskTask(foundId)

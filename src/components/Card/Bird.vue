@@ -63,7 +63,6 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            console.log("bird tap")
             this.toggleGive()
             e.stopPropagation()
         })
@@ -75,8 +74,6 @@ export default {
             this.toggleGuildCreate()
             e.stopPropagation()
         })
-
-        console.log("refs is", this.$refs)
     },
     methods: {
         toggleGive(){
@@ -101,11 +98,9 @@ export default {
             }
         },
         setWarp(i){
-            console.log('setwarp' , i)
             this.$store.commit('setWarp', i)
         },
         makeSound(){
-            console.log("makeSound")
             SoundFX.playBirdFlap()
         }
     },
@@ -227,7 +222,7 @@ label
 .give
     position: relative
     top: 1em
-    margin-bottom: 1em    
+    margin-bottom: 1em
 
 .theTitle
     position: absolute

@@ -227,19 +227,13 @@ export default {
             return isBull
         },
         killSession(){
-            console.log("kill Session called")
             this.$store.dispatch("makeEvent", {
                 type: "session-killed",
                 session: this.$store.state.loader.session
             })
-            setTimeout(()=>{
-                this.$store.dispatch("loadCurrent")
-            }, 999)
 
         },
         goToParent(target){
-            console.log("go to parent called")
-            console.log("target is ", target)
             this.$store.dispatch("goUp", {
                 target,
                 panel: [target],
@@ -274,7 +268,6 @@ export default {
         },
         setToRoute() {
             let mainroute = this.$router.currentRoute.path.split('/')[1]
-            console.log({mainroute})
             switch (mainroute){
               case "front": return this.showImg = "sun"
               case "dash": return this.showImg = "bull"
