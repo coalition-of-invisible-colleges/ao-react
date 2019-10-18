@@ -52,7 +52,6 @@ export default {
     },
     nextSubAction(inId){
         let context = this.getSubPriorities(inId)
-        console.log("context is ", context)
         this.action = context.slice()[(context.slice().indexOf(this.action) + 1) % context.slice().length]
     },
     getSubPriorities(taskId){
@@ -75,30 +74,26 @@ export default {
     getCard(taskId){
         return this.$store.getters.hashMap[taskId]
     },
-    goIn(taskId, panel, parents){
+    goIn(taskId){
         SoundFX.playPageTurn()
-        if (panel && panel.length && panel.length > 0){
+        let panel = [taskId]
+        let parents = []
+        let top = 0
 
-        } else {
-            panel = [taskId]
-        }
-
-        let top = panel.indexOf(taskId)
-
-        if (top > -1){
-
-        } else {
-            top = 0
+        if (this.$store.getters.contextCard.taskId){
+            parents.push(this.$store.getters.contextCard.taskId)
+        } else if (this.$store.getters.memberCard.taskId){
+            parents.push(this.$store.getters.memberCard.taskId)
         }
 
         this.$store.dispatch("goIn", {
-            inId: this.inId,
+            parents,
             top,
             panel,
-            parents
         })
 
-        this.$router.push('/task/' + taskId)
+        this.$store.commit("startLoading", 'unicorn')
+        this.$router.push("/" + this.$store.state.upgrades.mode)
     },
     allocated(taskId){
       let allocatedAmount = 0
@@ -117,8 +112,6 @@ export default {
       let inDebounce
       const context = this
       const args = arguments
-      console.log("debounce")
-      console.log("context is ", context, " and args is ", args)
       clearTimeout(inDebounce)
       inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
     }

@@ -401,7 +401,6 @@ function tasksMuts(tasks, ev) {
                 let swapIndexCompleted = task.completed.indexOf(ev.swapId2)
 
                 if ( originalIndex > -1 && swapIndex > -1 ){
-                    console.log('swapping')
                     let newST = task.subTasks.slice()
                     newST[originalIndex] = ev.swapId2
                     newST[swapIndex] = ev.swapId1
@@ -409,7 +408,6 @@ function tasksMuts(tasks, ev) {
                 }
 
                 if ( originalIndexCompleted > -1 && swapIndexCompleted > -1 ){
-                    console.log('swapping complted')
                     let newCompleted = task.completed.slice()
                     newCompleted[originalIndexCompleted] = ev.swapId2
                     newCompleted[swapIndexCompleted] = ev.swapId1

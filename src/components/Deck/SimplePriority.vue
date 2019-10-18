@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.p.clearboth(@dblclick.stop='goIn')
+.p.clearboth(@dblclick.stop='goIn(taskId)')
   .row
     div.agedwrapper(:class="cardInputSty")
       .agedbackground.freshpaper(v-if='cardAge < 8')
@@ -25,47 +25,27 @@ export default {
     props: ['taskId', 'inId', 'c'],
     components: { Hypercard, Linky },
     methods: {
-        goIn(){
-            SoundFX.playPageTurn()
-            let panel = this.c
-            if (panel && panel.length && panel.length > 0){
+      goIn(taskId){
+          SoundFX.playPageTurn()
+          let panel = [taskId]
+          let parents = [  ]
+          let top = 0
 
-            } else {
-                panel = [this.taskId]
-            }
+          if (this.$store.getters.contextCard.taskId){
+              parents.push(this.$store.getters.contextCard.taskId)
+          } else if (this.$store.getters.memberCard.taskId){
+              parents.push(this.$store.getters.memberCard.taskId)
+          }
 
-            let top = panel.indexOf(this.taskId)
+          this.$store.dispatch("goIn", {
+              parents,
+              top,
+              panel
+          })
 
-            if (top > -1){
-
-            } else {
-                top = 0
-            }
-
-            let parents = [  ]
-
-            if (this.$store.getters.contextCard){
-                parents.push(this.$store.getters.contextCard.taskId)
-            }
-
-            if (this.inId && parents.indexOf(this.inId) < 0){
-                parents.push(this.inId)
-            }
-
-            console.log('dispatching goIn with', {
-                parents,
-                top,
-                panel
-            })
-
-            this.$store.dispatch("goIn", {
-                parents,
-                top,
-                panel
-            })
-
-            // this.$router.push("/task/" + this.taskId)
-        },
+          this.$store.commit("startLoading", 'unicorn')
+          this.$router.push("/" + this.$store.state.upgrades.mode)
+      },
     },
     computed: {
         card(){
