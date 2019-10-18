@@ -3,7 +3,7 @@
 #mobileheading
     a.hamburger(href="#", @click.prevent='toggleHeaderNav')
         img(src='../assets/images/hamburger.svg')
-    nav.wrapper
+    .wrapper
         router-link(to="/")
             img(src='../assets/images/dctrl.svg')
         .toggle(v-if="showHeaderNav")
