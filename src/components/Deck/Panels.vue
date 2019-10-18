@@ -1,26 +1,27 @@
 <template lang='pug'>
 
-.panel(v-if='$store.state.upgrades.stacks === 5')
-    .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
-      .four.columns(v-if='$store.getters.red.length > 0')
-          card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
-      .four.columns(v-if='$store.getters.green.length > 0')
-          card-panel(:c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
-      .four.columns(v-if='$store.getters.blue.length > 0')
-          card-panel(:c='$store.getters.blue', :taskId='$store.state.context.panel[$store.state.context.top]')
-    .row(v-if='$store.getters.yellow.length + $store.getters.purple.length > 0')
-      .two.columns
-          p &nbsp;
-      .four.columns(v-if='$store.getters.yellow.length > 0')
-          card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
-      .four.columns(v-if='$store.getters.purple.length > 0')
-          card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
-.panel(v-else-if='$store.state.upgrades.stacks === 1')
-      .row(v-if='$store.getters.all.length > 0')
-        .four.columns.minheight
-        .four.columns
-            card-panel(:c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
-        .four.columns.minheight
+.panel
+    div(v-if='$store.state.upgrades.stacks === 5')
+        .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
+          .four.columns(v-if='$store.getters.red.length > 0')
+              card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
+          .four.columns(v-if='$store.getters.green.length > 0')
+              card-panel(:c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
+          .four.columns(v-if='$store.getters.blue.length > 0')
+              card-panel(:c='$store.getters.blue', :taskId='$store.state.context.panel[$store.state.context.top]')
+        .row(v-if='$store.getters.yellow.length + $store.getters.purple.length > 0')
+          .two.columns
+              p &nbsp;
+          .four.columns(v-if='$store.getters.yellow.length > 0')
+              card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
+          .four.columns(v-if='$store.getters.purple.length > 0')
+              card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
+    div(v-else-if='$store.state.upgrades.stacks === 1')
+          .row(v-if='$store.getters.all.length > 0')
+            .four.columns.minheight
+            .four.columns
+                card-panel(:c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
+            .four.columns.minheight
 </template>
 
 <script>

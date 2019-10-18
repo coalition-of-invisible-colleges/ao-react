@@ -249,7 +249,6 @@ function specDogeBarked(req, res, next) {
 
 function specDogeMuted(req, res, next) {
     let errRes = []
-    console.log("specDogeMuted memberId is", req.body.memberId)
     if (validators.isMemberId(req.body.memberId, errRes)){
       events.membersEvs.dogeMuted(
         req.body.memberId,
@@ -263,7 +262,6 @@ function specDogeMuted(req, res, next) {
 
 function specDogeUnmuted(req, res, next) {
     let errRes = []
-    console.log("specDogeUnmuted memberId is", req.body.memberId)
     if (validators.isMemberId(req.body.memberId, errRes)){
       events.membersEvs.dogeUnmuted(
         req.body.memberId,

@@ -386,6 +386,7 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "task-swapped":
+            console.log("task-swapped")
             let task, original, swap
             tasks.forEach((t) => {
                 if (t.taskId === ev.taskId) {

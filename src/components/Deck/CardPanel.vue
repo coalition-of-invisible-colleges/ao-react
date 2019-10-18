@@ -158,6 +158,7 @@ export default {
         this.top = this.c.length - 1
     },
     swap(direction){
+        console.log("swap. direction is", direction)
         let cardIndex
         this.c.forEach((t, i) => {
           if(t.taskId === this.topCard.taskId) {
