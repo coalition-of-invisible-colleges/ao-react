@@ -570,18 +570,18 @@ export default new Vuex.Store({
           let row4 = []
 
           getters.memberPriorities.forEach( (a, i) => {
-              switch (i % 4) {
-                  case 0:
-                      row1.push(a)
-                      break
-                  case 1:
-                      row2.push(a)
-                      break
-                  case 2:
-                      row3.push(a)
-                      break
-                  case 3:
-                      row4.push(a)
+              let row = i % 4
+              if (row === 0){
+                  row1.push(a)
+              }
+              if (row === 1){
+                  row2.push(a)
+              }
+              if (row === 2){
+                  row3.push(a)
+              }
+              if (row === 3){
+                  row4.push(a)
               }
           })
           return {row1, row2, row3, row4}
