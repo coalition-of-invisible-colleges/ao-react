@@ -9,7 +9,7 @@
   div(v-else-if="$store.state.upgrades.mode === 'badge'")
     span.flaggy.checkmark.clickable(v-if='isCompleted') ☑
     span.flaggy.checkmark.clickable(v-else) ☐
-  div(v-else-if="$store.state.upgrades.mode === 'bounty' && $store.state.cash.info.alias")
+  div(v-else-if="$store.state.upgrades.mode === 'chest' && $store.state.cash.info.alias")
     img.flaggy(src='../../assets/images/bounty.svg')
     .fl(v-if='isPayOpen')
         tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
@@ -57,13 +57,13 @@ export default {
                     this.flagIt()
                     break
                 case 'badge':
-                    if(!this.isFlagged) {
+                    if(!this.isCompleted) {
                         this.complete()
                     } else {
                         this.uncheck()
                     }
                     break
-                case 'bounty':
+                case 'chest':
                     if($store.state.cash.info.alias) {
                         this.togglePay()
                     }
@@ -87,7 +87,7 @@ export default {
                     break
                 case 'badge':
                     return
-                case 'bounty':
+                case 'chest':
                     return
                 case 'timecube':
                     return

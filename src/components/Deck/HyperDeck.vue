@@ -18,12 +18,12 @@
                 .centerer
                     .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
                 .bar(v-if='panelSplit.after.length < 6')
-            .seven.columns.buffer(v-if='$store.state.upgrades.mode')
+            .seven.columns.buffer(v-if='$store.state.upgrades.mode !== "doge"')
                 div.upgradesbar()
                     slot
         div.fadey(:class='cardInputSty')
             panels
-            .completed(v-if='$store.getters.contextCompleted.length > 0'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
+            .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
             div &nbsp;
         img.fw(src='../../assets/images/pixeldesert.png')
         .agedbackground.translucent(:class='cardInputSty')
