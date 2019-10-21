@@ -61,7 +61,7 @@
             .ping.pos1
             .ping.pos2
         .ringbase.ring3.big(:class='{ showping : pinging }')
-    task-create.always
+    task-create.always(v-if='!isSun() && !isBull()')
     div(v-if='isBull()')
         .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;

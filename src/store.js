@@ -232,10 +232,10 @@ export default new Vuex.Store({
 
           })
 
-          // members.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          // guilds.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          // resources.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          // cards.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          members.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          guilds.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          resources.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
+          cards.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
 
           return { members, guilds, cards, resources }
       },
