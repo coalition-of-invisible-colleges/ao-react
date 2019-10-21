@@ -128,7 +128,24 @@ export default {
                 shortened += '…'
             }
             return shortened
-        }
+        },
+        toggleGrab() {
+            if (this.isGrabbed) {
+                SoundFX.playTwinkleDown()
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-dropped',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
+            } else {
+                SoundFX.playTwinkleUp()
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-grabbed',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
+            }
+        },
     },
     computed: {
         missions(){
