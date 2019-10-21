@@ -18,7 +18,7 @@
                 .centerer
                     .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
                 .bar(v-if='panelSplit.after.length < 6')
-            .seven.columns.buffer(v-if='$store.state.upgrades.mode !== "doge"')
+            .seven.columns.buffer(v-show='$store.state.upgrades.mode !== "doge"')
                 div.upgradesbar()
                     slot
         div.fadey(:class='cardInputSty')

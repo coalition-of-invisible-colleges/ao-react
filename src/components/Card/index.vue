@@ -6,6 +6,8 @@
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
     bird(:b='b', :inId='inId')
     flag(:b='b', :inId='inId')
+    .row
+        img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
         img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
@@ -13,7 +15,6 @@
             p prioritized by:
             current(v-for='doger in b.dogers'  :memberId='doger')
     .tooltip
-        img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
         .tooltip
             .tooltiptext
                 current.block(v-for='memberId in b.claimed', :memberId='memberId')
@@ -111,7 +112,7 @@ export default {
                 top = 0
             }
 
-            let parents = [  ]
+            let parents = []
 
             if (this.$store.state.context.panel[this.$store.state.context.top]){
                 parents.push(this.$store.getters.contextCard.taskId)
@@ -268,8 +269,8 @@ export default {
 .claimvine
     position: relative
     height: 1em
-    top: 0
-    left: 0
+    bottom: 0
+    right: 0
 
 .tooltip .tooltiptext
     font-size: 1em
