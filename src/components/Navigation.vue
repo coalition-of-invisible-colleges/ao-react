@@ -65,6 +65,7 @@
     div(v-if='isBull()')
         .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
+    .logout(v-if='isBull() && $store.getters.isLoggedIn'  @click="killSession") log out
 </template>
 
 <script>
@@ -354,6 +355,19 @@ export default {
                     memberId: this.$store.getters.member.memberId
                 })
             }
+        },
+        killSession(){
+          //XXX TODO tell server to remove session
+          this.$store.dispatch("makeEvent", {
+              type: "session-killed",
+              session: this.$store.state.loader.session
+          })
+
+          window.localStorage.removeItem("token")
+          window.localStorage.removeItem("session")
+          this.$store.commit('setAuth', {
+              token: '', session: ''
+          })
         },
     },
 }
@@ -967,4 +981,12 @@ body {
 .satspot
     left: 111px
 
+.logout
+    position: fixed
+    right: 1em
+    bottom: 1em
+    color: teal
+    font-size: 1.3em
+    font-weight: bold
+    cursor: pointer
 </style>

@@ -2,8 +2,6 @@ import _ from 'lodash'
 import crypto from 'crypto'
 const uuidV1 = require('uuid/v1')
 
-const hashMap = {}
-
 function tasksMuts(tasks, ev) {
     let newEv = {}
     switch (ev.type) {

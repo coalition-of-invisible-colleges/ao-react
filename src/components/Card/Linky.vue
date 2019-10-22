@@ -54,11 +54,16 @@ export default {
     margin-bottom: 1em
     
 .noheight img
-    max-width: 127.5%
+    max-width: 100%
 
 .cardname.front .noheight img
     max-width: 100% 
-   
+
+.priority .closedcard img, .priority.closedcard img
+    max-height: 12em
+    margin-left: 50%
+    transform: translateX(-50%)
+
 p:last-child
     margin-bottom: 0
 

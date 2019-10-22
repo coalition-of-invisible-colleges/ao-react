@@ -1,8 +1,7 @@
 <template lang='pug'>
 
-.p.clearboth(@dblclick.stop='goIn(taskId)')
-  .row
-    div.agedwrapper(:class="cardInputSty")
+.priority.closedcard(@dblclick.stop='goIn(taskId)')
+  .row.agedwrapper(:class="cardInputSty")
       .agedbackground.freshpaper(v-if='cardAge < 8')
       .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
       .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -107,10 +106,8 @@ export default {
 
 @import '../../styles/colours'
 
-.p
+.priority
     color: white
-
-.clearboth
     clear: both
 
 .singleship
@@ -193,5 +190,4 @@ img
     position: relative
     z-index: 100
     max-width: 100%
-    max-height: 17em
 </style>

@@ -12,7 +12,7 @@
           .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
           img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
           div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click.capture.stop='debounce(setAction, 500, [ t ])')
-              hyperpriority(:taskId='t')
+              hyperpriority.closedcard(:taskId='t')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
           .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='debounce(deaction, 500)')
               hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")

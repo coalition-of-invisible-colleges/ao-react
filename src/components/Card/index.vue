@@ -17,8 +17,9 @@
         .tooltip
             .tooltiptext
                 current.block(v-for='memberId in b.claimed', :memberId='memberId')
-    .row.buffertop
-      .ten.grid
+    .buffertop
+      preview-deck(:task='b')
+      .cardbody
           .cardhud(v-if='calcVal >= 1')
               img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
               span {{ calcVal }}
@@ -27,13 +28,11 @@
               span {{ cardStart.days.toFixed(1) }} days
           linky.cardhud(:x='b.name' v-if='!dogeCard')
           .cardhud(v-if='dogeCard') {{ dogeCard.name }}
-      .two.grid
-          preview-deck(:task='b')
     simple-priorities(v-if='b.guild && $store.getters.contextCard.taskId != b.taskId && $store.state.context.action != b.taskId', :taskId="b.taskId", :inId='b.taskId')
     passed(:b='b')
     shipped(:b='b', :inId='inId')
     .spacer
-    .row
+    div
         scroll.faded(:b='b', :inId='inId')
         vine.faded(:b='b')
         .tooltip.dogepepecoin
@@ -402,7 +401,6 @@ export default {
 
 .cardhud
     margin-bottom: 1em
-    margin-right: 1em
     position: relative
     z-index: 14
 
@@ -484,7 +482,17 @@ export default {
 .sixteenth16
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0, 50% 0)
 
-.row.buffertop
+.buffertop
     margin-top: 1em
     clear: both
+    width: 100%
+    
+.cardbody
+    width: 100%
+  
+.preview
+    width: 15%
+    float: right
+    margin-left: 0.5em
+    margin-bottom: 0.5em
 </style>
