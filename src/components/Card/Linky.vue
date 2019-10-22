@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-div
+.linky
     vue-markdown.noheight(:anchorAttributes='anchorAttributes') {{ this.x }}
     slot.centered
 
@@ -53,13 +53,13 @@ export default {
     margin-top: 0
     margin-bottom: 1em
     
-.noheight img
+.linky .noheight img
     max-width: 100%
 
-.cardname.front .noheight img
+.cardname.front .linky .noheight img
     max-width: 100% 
 
-.priority .closedcard img, .priority.closedcard img
+.priority .closedcard .linky img, .priority.closedcard .linky img
     max-height: 12em
     margin-left: 50%
     transform: translateX(-50%)

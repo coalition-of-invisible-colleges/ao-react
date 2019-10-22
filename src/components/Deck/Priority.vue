@@ -1,16 +1,16 @@
 <template lang='pug'>
 
-.p.clearboth
+.p.clearboth(:id='uuid')
     div.agedwrapper.dont-break-out(:class="cardInputSty")
         .agedbackground.freshpaper.middle(v-if='cardAge < 8')
         .agedbackground.weekoldpaper.middle(v-else-if='cardAge < 30')
         .agedbackground.montholdpaper.middle(v-else-if='cardAge < 90')
         .agedbackground.threemontholdpaper.middle(v-else='cardAge >= 90')
-        img.front.nopad(v-if='card.guild'  src="../../assets/images/badge.svg")
+        img.front.nopad.cancel(v-if='card.guild'  src="../../assets/images/badge.svg")
         span.front.nudge(v-if='card.guild')  {{ card.guild }}
-        img.left.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
+        img.left.front.cancel(v-if='isMember' src="../../assets/images/loggedIn.svg")
         span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
-        img.right.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
+        img.right.front.cancel(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
         linky.front(:x='name'  :key='name')
 </template>
 
@@ -18,10 +18,39 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
+import uuidv1 from 'uuid/v1'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
 
 export default {
     props: ['taskId'],
     components: { Hypercard, Linky },
+    data(){
+      return {
+          uuid: uuidv1(),
+      }
+    },
+    mounted() {
+        let el = document.getElementById(this.uuid)
+        if(!el) return
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let Tap = new Hammer.Tap({ time: 400 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            console.log("tap on priority")
+            this.debounce(this.setAction, 500, [ this.taskId ])
+            e.stopPropagation()
+        })
+        // need to move goIn here too i think
+        // let Tap = new Hammer.Tap({ taps: 2, time: 400 })
+        // mc.add(Tap)
+        // mc.on('tap', (e) => {
+        //     this.goIn()
+        //     e.stopPropagation()
+        // })
+
+    },
     computed: {
         card(){
           return this.$store.getters.hashMap[this.taskId]
@@ -83,6 +112,22 @@ export default {
               blackwx : color == 'black',
           }
         }
+    },
+    methods: {
+        debounce(func, delay) {
+          let inDebounce
+          const context = this
+          const args = arguments
+          clearTimeout(inDebounce)
+          inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
+        },
+        deaction(){
+          SoundFX.playPageTurn()
+          this.$store.commit("setAction", false)
+        },
+        setAction(taskId){
+            this.$store.commit("setAction", taskId)
+        },
     }
 }
 
@@ -113,6 +158,10 @@ img
 
 .clearboth
     clear: both
+
+.cancel .priority .closedcard img
+    margin-left: 0
+    transform: none
 
 .agedwrapper
     position: relative

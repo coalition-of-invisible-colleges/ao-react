@@ -73,9 +73,21 @@ export default {
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
-        let Tap = new Hammer.Tap({ taps: 2, time: 400 })
+        let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
+            console.log("tap on card")
+            if(this.$store.state.context.action === this.b.taskId) {
+                console.log("tap caught")
+                this.deaction()
+                e.stopPropagation()
+            }
+        })
+
+        let Tap2 = new Hammer.Tap({ taps: 2, time: 400 })
+        mc.add(Tap2)
+        mc.on('tap', (e) => {
+            console.log("two taps goIn on card")
             this.goIn()
             e.stopPropagation()
         })
@@ -148,6 +160,17 @@ export default {
         copyCardToClipboard(){
             SoundFX.playChunkSwap()
             navigator.clipboard.writeText(this.b.name)
+        },
+        debounce(func, delay) {
+          let inDebounce
+          const context = this
+          const args = arguments
+          clearTimeout(inDebounce)
+          inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
+        },
+        deaction(){
+          SoundFX.playPageTurn()
+          this.$store.commit("setAction", false)
         },
     },
     computed: {

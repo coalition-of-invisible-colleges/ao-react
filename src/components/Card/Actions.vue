@@ -35,8 +35,6 @@
 import calculations from '../../calculations'
 import Current from '../Resources/Current'
 import FormBox from '../slotUtils/FormBox'
-import uuidv1 from 'uuid/v1'
-import Hammer from 'hammerjs'
 import PreviewDeck from '../Deck/PreviewDeck'
 
 export default {

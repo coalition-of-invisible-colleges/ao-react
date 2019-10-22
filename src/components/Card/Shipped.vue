@@ -75,8 +75,8 @@ export default {
 
 .totop
     z-index: 1000
-    padding-top: 1em
-
+    clear: both
+    
 .pad
     margin-top: 1em
     margin-bottom: 1em
