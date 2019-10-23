@@ -60,9 +60,9 @@ export default {
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
-        let Tap = new Hammer.Tap({ time: 400 })
-        mc.add(Tap)
-        mc.on('tap', (e) => {
+        let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
+        mc.add(singleTap)
+        mc.on('singletap', (e) => {
             this.toggleGive()
             e.stopPropagation()
         })

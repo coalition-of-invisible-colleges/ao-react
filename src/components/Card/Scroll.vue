@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.scroll(v-if='!($store.state.upgrades.mode === "doge" && $router.currentRoute.path.split("/")[1] === "front")')
+.scroll(v-if='!($store.state.upgrades.mode === "doge" && $router.currentRoute.path.split("/")[1] === "front") && $store.state.context.action !== b.taskId')
     div(v-if='inId'  :id='uuid')
         img.scrolly(src='../../assets/images/downboatwhite.svg'  class='upboat')
     div(v-else)

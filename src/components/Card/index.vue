@@ -74,29 +74,24 @@ export default {
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
-        let Tap = new Hammer.Tap({ time: 400 })
-        mc.add(Tap)
-        mc.on('tap', (e) => {
-            console.log("tap on card")
-            if(this.$store.state.context.action === this.b.taskId) {
-                console.log("tap caught")
-                this.deaction()
-                e.stopPropagation()
-            }
-        })
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400 })
+        let longPress = new Hammer.Press({ time: 500 })
 
-        let Tap2 = new Hammer.Tap({ taps: 2, time: 400 })
-        mc.add(Tap2)
-        mc.on('tap', (e) => {
+        mc.add([doubleTap, longPress])
+
+        longPress.recognizeWith([doubleTap]);
+        longPress.requireFailure([doubleTap]);
+        
+        mc.on('doubletap', (e) => {
             console.log("two taps goIn on card")
             this.goIn()
             e.stopPropagation()
-        })
+        })  
 
-        var Press = new Hammer.Press({ time: 500 })
-        mc.add(Press)
         mc.on('press', (e) => {
+            console.log("long press for some fucking reason")
             this.copyCardToClipboard()
+            e.stopPropagation()
         })
     },
     methods: {

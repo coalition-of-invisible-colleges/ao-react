@@ -1,7 +1,9 @@
 <template lang='pug'>
 
 .p.clearboth(:id='uuid')
-    div.agedwrapper.dont-break-out(:class="cardInputSty")
+    .opencard(v-if='$store.state.context.action === taskId')
+        hypercard(:b="card", :c="parent.priorities",  :inId="inId")
+    .closedcard.agedwrapper.dont-break-out(v-else  :class="cardInputSty")
         .agedbackground.freshpaper.middle(v-if='cardAge < 8')
         .agedbackground.weekoldpaper.middle(v-else-if='cardAge < 30')
         .agedbackground.montholdpaper.middle(v-else-if='cardAge < 90')
@@ -21,9 +23,10 @@ import Hypercard from '../Card/index'
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
+import SoundFX from '../../modules/sounds'
 
 export default {
-    props: ['taskId'],
+    props: ['taskId', 'inId'],
     components: { Hypercard, Linky },
     data(){
       return {
@@ -35,25 +38,55 @@ export default {
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
-        let Tap = new Hammer.Tap({ time: 400 })
-        mc.add(Tap)
-        mc.on('tap', (e) => {
-            console.log("tap on priority")
-            this.debounce(this.setAction, 500, [ this.taskId ])
+        let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400 })
+        let longPress = new Hammer.Press({ time: 500 })
+        let swipe = new Hammer.Swipe({ threshold: 20 })
+
+        mc.add([doubleTap, singleTap, swipe, longPress])
+
+        doubleTap.recognizeWith(singleTap);
+        singleTap.requireFailure(doubleTap);
+
+        mc.on('singletap', (e) => {
+            console.log("singleTap on priority")
+            if(this.$store.state.context.action === this.taskId) {
+                this.deaction()
+            } else {
+                this.setAction()
+            }
             e.stopPropagation()
         })
-        // need to move goIn here too i think
-        // let Tap = new Hammer.Tap({ taps: 2, time: 400 })
-        // mc.add(Tap)
-        // mc.on('tap', (e) => {
-        //     this.goIn()
-        //     e.stopPropagation()
-        // })
 
+        mc.on('doubletap', (e) => {
+            this.goIn()
+            e.stopPropagation()
+        })
+
+        mc.on('press', (e) => {
+            console.log("higher long press for some fucking reason")
+            this.copyCardToClipboard()
+            e.stopPropagation()
+        })
+
+        mc.on('swipeup', (e) => {
+            console.log('swipeup on priority')
+            this.allocate()
+            e.stopPropagation()
+        })
+
+        mc.on('swipedown', (e) => {
+            console.log('swipedown on priority')
+            this.refocus()
+            e.stopPropagation()
+        });
     },
     computed: {
         card(){
           return this.$store.getters.hashMap[this.taskId]
+        },
+        parent(){
+          return this.$store.getters.hashMap[this.inId]
         },
         name(){
             return this.card.name
@@ -115,18 +148,61 @@ export default {
     },
     methods: {
         debounce(func, delay) {
-          let inDebounce
-          const context = this
-          const args = arguments
-          clearTimeout(inDebounce)
-          inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
+            let inDebounce
+            const context = this
+            const args = arguments
+            clearTimeout(inDebounce)
+            inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
         },
         deaction(){
-          SoundFX.playPageTurn()
-          this.$store.commit("setAction", false)
+            SoundFX.playPageTurn()
+            this.$store.commit("setAction", false)
         },
-        setAction(taskId){
-            this.$store.commit("setAction", taskId)
+        setAction(){
+            SoundFX.playPageTurn()
+            this.$store.commit("setAction", this.taskId)
+        },
+        goIn(){
+            SoundFX.playPageTurn()
+            let panel = this.parent.priorities
+            let parents = []
+            let top = this.parent.priorities.indexOf(this.taskId)
+
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            this.$store.dispatch("goIn", {
+                parents,
+                top,
+                panel,
+            })
+
+            this.$store.commit("startLoading", 'unicorn')
+            this.$router.push("/" + this.$store.state.upgrades.mode)
+        },
+        copyCardToClipboard(){
+            SoundFX.playChunkSwap()
+            navigator.clipboard.writeText(this.name)
+        },
+        allocate(){
+          SoundFX.playSailUnfurl()
+          this.$store.dispatch("makeEvent", {
+            type: 'task-allocated',
+            taskId: this.$store.getters.contextCard.taskId,
+            allocatedId: this.taskId,
+          })
+        },
+        refocus(){
+            SoundFX.playBoatCapsize()
+            this.$store.dispatch("makeEvent", {
+                type: 'task-refocused',
+                inId: this.inId,
+                taskId: this.taskId,
+            })
+            this.$store.commit('setAction', false)
         },
     }
 }
@@ -163,7 +239,7 @@ img
     margin-left: 0
     transform: none
 
-.agedwrapper
+.closedcard.agedwrapper
     position: relative
     margin-top: 0.5em
     padding: 0.5em
