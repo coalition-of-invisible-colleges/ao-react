@@ -5,7 +5,7 @@
     template.clearboth(v-for='(t, i) of priorities'  :key='t')
       .row.priority
           .allocated(v-if='allocated(t) > 0'  :class='{ openallocated : $store.state.context.action }') {{ allocated(t) }}
-          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
+          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')
           hyperpriority.closedcard(:taskId='t'  :inId='$store.getters.contextCard.taskId')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
           .clearboth.opensubcard(v-if='$store.state.context.action === st')
@@ -229,6 +229,10 @@ img
     cursor: pointer
     top: -0.3em
 
+.openboat
+    top: 50%
+    transform: translateY(-50%)
+    
 .opencard
     width: calc(100% - 4.5em)
     margin-top: 0.5em

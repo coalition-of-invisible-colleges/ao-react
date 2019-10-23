@@ -147,13 +147,6 @@ export default {
         }
     },
     methods: {
-        debounce(func, delay) {
-            let inDebounce
-            const context = this
-            const args = arguments
-            clearTimeout(inDebounce)
-            inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
-        },
         deaction(){
             SoundFX.playPageTurn()
             this.$store.commit("setAction", false)
@@ -247,6 +240,10 @@ img
     cursor: pointer
     z-index: 5
 
+.agedwrapper
+    margin-top: 0.5em
+    margin-right: 0.5em
+    
 .front
     position: relative
     z-index: 100

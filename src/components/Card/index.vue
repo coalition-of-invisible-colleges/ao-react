@@ -157,13 +157,6 @@ export default {
             SoundFX.playChunkSwap()
             navigator.clipboard.writeText(this.b.name)
         },
-        debounce(func, delay) {
-          let inDebounce
-          const context = this
-          const args = arguments
-          clearTimeout(inDebounce)
-          inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
-        },
         deaction(){
           SoundFX.playPageTurn()
           this.$store.commit("setAction", false)
