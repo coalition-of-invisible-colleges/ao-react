@@ -1,16 +1,18 @@
 <template lang='pug'>
 
-.p.clearboth
-    div.agedwrapper.dont-break-out(:class="cardInputSty")
+.p.clearboth(:id='uuid')
+    .opencard(v-if='$store.state.context.action === taskId')
+        hypercard(:b="card", :c="parent.priorities",  :inId="inId")
+    .closedcard.agedwrapper.dont-break-out(v-else  :class="cardInputSty")
         .agedbackground.freshpaper.middle(v-if='cardAge < 8')
         .agedbackground.weekoldpaper.middle(v-else-if='cardAge < 30')
         .agedbackground.montholdpaper.middle(v-else-if='cardAge < 90')
         .agedbackground.threemontholdpaper.middle(v-else='cardAge >= 90')
-        img.front.nopad(v-if='card.guild'  src="../../assets/images/badge.svg")
+        img.front.nopad.cancel(v-if='card.guild'  src="../../assets/images/badge.svg")
         span.front.nudge(v-if='card.guild')  {{ card.guild }}
-        img.left.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
+        img.left.front.cancel(v-if='isMember' src="../../assets/images/loggedIn.svg")
         span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
-        img.right.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
+        img.right.front.cancel(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
         linky.front(:x='name'  :key='name')
 </template>
 
@@ -18,13 +20,69 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
+import uuidv1 from 'uuid/v1'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
+import SoundFX from '../../modules/sounds'
 
 export default {
-    props: ['taskId'],
+    props: ['taskId', 'inId'],
     components: { Hypercard, Linky },
+    data(){
+      return {
+          uuid: uuidv1(),
+      }
+    },
+    mounted() {
+        let el = document.getElementById(this.uuid)
+        if(!el) return
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400 })
+        let longPress = new Hammer.Press({ time: 500 })
+        let swipe = new Hammer.Swipe({ threshold: 20 })
+
+        mc.add([doubleTap, singleTap, swipe, longPress])
+
+        doubleTap.recognizeWith(singleTap);
+        singleTap.requireFailure(doubleTap);
+
+        mc.on('singletap', (e) => {
+            if(this.$store.state.context.action === this.taskId) {
+                this.deaction()
+            } else {
+                this.setAction()
+            }
+            e.stopPropagation()
+        })
+
+        mc.on('doubletap', (e) => {
+            this.goIn()
+            e.stopPropagation()
+        })
+
+        mc.on('press', (e) => {
+            this.copyCardToClipboard()
+            e.stopPropagation()
+        })
+
+        mc.on('swipeup', (e) => {
+            this.allocate()
+            e.stopPropagation()
+        })
+
+        mc.on('swipedown', (e) => {
+            this.refocus()
+            e.stopPropagation()
+        });
+    },
     computed: {
         card(){
           return this.$store.getters.hashMap[this.taskId]
+        },
+        parent(){
+          return this.$store.getters.hashMap[this.inId]
         },
         name(){
             return this.card.name
@@ -83,6 +141,58 @@ export default {
               blackwx : color == 'black',
           }
         }
+    },
+    methods: {
+        deaction(){
+            SoundFX.playPageTurn()
+            this.$store.commit("setAction", false)
+        },
+        setAction(){
+            SoundFX.playPageTurn()
+            this.$store.commit("setAction", this.taskId)
+        },
+        goIn(){
+            SoundFX.playPageTurn()
+            let panel = this.parent.priorities
+            let parents = []
+            let top = this.parent.priorities.indexOf(this.taskId)
+
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            } else if (this.$store.getters.memberCard.taskId){
+                parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            this.$store.dispatch("goIn", {
+                parents,
+                top,
+                panel,
+            })
+
+            this.$store.commit("startLoading", 'unicorn')
+            this.$router.push("/" + this.$store.state.upgrades.mode)
+        },
+        copyCardToClipboard(){
+            SoundFX.playChunkSwap()
+            navigator.clipboard.writeText(this.name)
+        },
+        allocate(){
+          SoundFX.playSailUnfurl()
+          this.$store.dispatch("makeEvent", {
+            type: 'task-allocated',
+            taskId: this.$store.getters.contextCard.taskId,
+            allocatedId: this.taskId,
+          })
+        },
+        refocus(){
+            SoundFX.playBoatCapsize()
+            this.$store.dispatch("makeEvent", {
+                type: 'task-refocused',
+                inId: this.inId,
+                taskId: this.taskId,
+            })
+            this.$store.commit('setAction', false)
+        },
     }
 }
 
@@ -114,7 +224,11 @@ img
 .clearboth
     clear: both
 
-.agedwrapper
+.cancel .priority .closedcard img
+    margin-left: 0
+    transform: none
+
+.closedcard.agedwrapper
     position: relative
     margin-top: 0.5em
     padding: 0.5em
@@ -122,6 +236,10 @@ img
     cursor: pointer
     z-index: 5
 
+.agedwrapper
+    margin-top: 0.5em
+    margin-right: 0.5em
+    
 .front
     position: relative
     z-index: 100

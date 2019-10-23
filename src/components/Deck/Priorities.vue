@@ -3,26 +3,16 @@
 .priorities
     img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg')
     template.clearboth(v-for='(t, i) of priorities'  :key='t')
-      .row.priority.opencard(v-if='$store.state.context.action === t')
-          .allocated.openallocated(v-if='allocated(t) > 0') {{ allocated(t) }}
-          img.singleship.open(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          div(@click.stop='debounce(deaction, 500)')
-              hypercard(:b="getCard(t)", :c="priorities",  :inId="$store.getters.contextCard.taskId")
-      .row.priority(v-else)
-          .allocated(v-if='allocated(t) > 0') {{ allocated(t) }}
-          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg')
-          div(@dblclick.stop='goIn($store.getters.contextCard.priorities)'  @click.capture.stop='debounce(setAction, 500, [ t ])')
-              hyperpriority(:taskId='t')
+      .row.priority
+          .allocated(v-if='allocated(t) > 0'  :class='{ openallocated : $store.state.context.action }') {{ allocated(t) }}
+          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')
+          hyperpriority.closedcard(:taskId='t'  :inId='$store.getters.contextCard.taskId')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
-          .clearboth.opensubcard(v-if='$store.state.context.action === st'  @click='debounce(deaction, 500)')
-              hypercard(:b="getCard(st)", :c="getCard(st).priorities",  :inId="t")
-          div(v-else  @dblclick.stop='goIn(st, getcard(st).priorities, [ t ])'  @click.capture.stop='debounce(setAction, 500, [ st ])')
-              hyperpriority(:taskId='st'  :c='getCard(t).priorities')
+          .clearboth.opensubcard(v-if='$store.state.context.action === st')
+              hyperpriority(:taskId='st'  :inId="t")
           .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)'  :key='st2')
-              .clearboth.opensubcard(v-if='$store.state.context.action === st2'  @click='debounce(deaction, 500)')
-                  hypercard(:b="getCard(st2)", :c="getCard(st2).priorities",  :inId="st")
-              div(v-else  @dblclick.stop='goIn(st2, getCard(st).priorities, [ t, st ])'  @click.capture.stop='debounce(setAction, 500, [ st2 ])')
-                  hyperpriority(:taskId='st2'  :c='getCard(st).priorities')
+              .clearboth.opensubcard(v-if='$store.state.context.action === st2')
+                  hyperpriority(:taskId='st2'  :inId="st")
     div.clearboth
 </template>
 
@@ -31,8 +21,8 @@
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import HyperpriorityAction from './PriorityAction'
-import SoundFX from '../../modules/sounds'
 import _ from 'lodash'
+import SoundFX from '../../modules/sounds'
 
 export default {
   mounted() {
@@ -44,16 +34,6 @@ export default {
       }
   },
   methods:{
-    setAction(taskId){
-        this.$store.commit("setAction", taskId)
-    },
-    nextAction(){
-        this.action = this.getPriorities[(this.getPriorities.indexOf(this.action) + 1) % this.getPriorities.length]
-    },
-    nextSubAction(inId){
-        let context = this.getSubPriorities(inId)
-        this.action = context.slice()[(context.slice().indexOf(this.action) + 1) % context.slice().length]
-    },
     getSubPriorities(taskId){
       let card = this.$store.getters.hashMap[taskId]
       if(card && card.priorities){
@@ -61,39 +41,15 @@ export default {
       }
     },
     allocate(taskId){
+      SoundFX.playSailUnfurl()
       this.$store.dispatch("makeEvent", {
         type: 'task-allocated',
         taskId: this.$store.getters.contextCard.taskId,
         allocatedId: taskId
       })
     },
-    deaction(){
-      SoundFX.playPageTurn()
-      this.$store.commit("setAction", false)
-    },
     getCard(taskId){
         return this.$store.getters.hashMap[taskId]
-    },
-    goIn(taskId){
-        SoundFX.playPageTurn()
-        let panel = [taskId]
-        let parents = []
-        let top = 0
-
-        if (this.$store.getters.contextCard.taskId){
-            parents.push(this.$store.getters.contextCard.taskId)
-        } else if (this.$store.getters.memberCard.taskId){
-            parents.push(this.$store.getters.memberCard.taskId)
-        }
-
-        this.$store.dispatch("goIn", {
-            parents,
-            top,
-            panel,
-        })
-
-        this.$store.commit("startLoading", 'unicorn')
-        this.$router.push("/" + this.$store.state.upgrades.mode)
     },
     allocated(taskId){
       let allocatedAmount = 0
@@ -108,13 +64,6 @@ export default {
       })
       return allocatedAmount
     },
-    debounce(func, delay) {
-      let inDebounce
-      const context = this
-      const args = arguments
-      clearTimeout(inDebounce)
-      inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
-    }
   },
   computed:{
       priorities(){
@@ -280,6 +229,10 @@ img
     cursor: pointer
     top: -0.3em
 
+.openboat
+    top: 50%
+    transform: translateY(-50%)
+    
 .opencard
     width: calc(100% - 4.5em)
     margin-top: 0.5em

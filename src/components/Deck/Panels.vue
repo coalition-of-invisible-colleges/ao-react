@@ -16,12 +16,8 @@
               card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
           .four.columns(v-if='$store.getters.purple.length > 0')
               card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
-    div(v-else-if='$store.state.upgrades.stacks === 1')
-          .row(v-if='$store.getters.all.length > 0')
-            .four.columns.minheight
-            .four.columns
-                card-panel(:c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
-            .four.columns.minheight
+    .padonestack(v-else-if='$store.state.upgrades.stacks === 1')
+        card-panel(:c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
 </template>
 
 <script>
@@ -61,4 +57,10 @@ export default {
     
 .minheight
     min-height: 0.5em
+    
+.padonestack
+    padding-top: 0.001em
+    width: 27em
+    margin-left: 50%
+    transform: translateX(-50%)
 </style>

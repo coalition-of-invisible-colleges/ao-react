@@ -2,7 +2,7 @@
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper
         .row
-            .five.columns.card(:class='{ center: $store.state.upgrades.mode === "doge" }')
+            .five.columns.card(:class='{ center: $store.state.upgrades.mode === "doge", adjustwidth : !$store.getters.contextMember }')
                 auth(v-if='!$store.getters.isLoggedIn')
                 member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
                 resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
@@ -21,7 +21,7 @@
             .seven.columns.buffer(v-show='$store.state.upgrades.mode !== "doge"')
                 div.upgradesbar()
                     slot
-        div.fadey(:class='cardInputSty')
+        div.fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1 }')
             panels
             .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
             div &nbsp;
@@ -192,7 +192,12 @@ export default {
     margin: 0 1em
     min-height: 2em
     position: relative
-
+    
+.onestack
+    width: 32em
+    margin-left: 50%
+    transform: translateX(-50%)
+    
 .slide-fade-enter-active {
   transition: all .6s ease;
 }
@@ -263,6 +268,7 @@ export default {
     // z-index: -3
 
 .completed
+    color: white
     float: right
     cursor: pointer
     font-size: 1.35em
@@ -326,4 +332,13 @@ export default {
 
 .normaltopmargin
     margin-top: 0
+    
+.five.columns.card
+    width: 30.2em
+    margin-left: -0.04em
+    
+.five.columns.card.adjustwidth
+    width: 30.8em
+    margin-left: 0.18em
+
 </style>
