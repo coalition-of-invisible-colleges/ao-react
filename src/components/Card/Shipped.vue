@@ -31,7 +31,6 @@ export default {
             this.$store.commit('setAction', false)
         },
         refocus(){
-            console.log('b is ', this.b)
             this.$store.dispatch("makeEvent", {
                 type: 'task-refocused',
                 inId: this.inId,
