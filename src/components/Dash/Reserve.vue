@@ -18,7 +18,7 @@
       .row.center
           .seven.grid
               p.number.underline.padd {{ parseInt($store.state.cash.rent) }}
-              p.number {{ $store.getters.activeMembers.length }}
+              p.number {{ activeMembers }}
           .one.grid
               .equals =
           .four.grid
@@ -40,6 +40,17 @@ import RentSet from '../forms/RentSet'
 import CapSet from '../forms/CapSet'
 
 export default {
+    data(){
+
+      // let fixed = parseFloat(state.cash.rent)
+      // let numActiveMembers = getters.activeMembers.length
+      // let perMonth = fixed / numActiveMembers
+      // return  perMonth.toFixed(2)
+      return {
+          activeMembers: 0,
+          perMonth: 0
+      }
+    },
     components:{
         Points, RentSet, CapSet,
     },

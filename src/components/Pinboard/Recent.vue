@@ -2,7 +2,7 @@
 
 #frontrecent
     h1.up Much Recent
-    row(v-for="m in $store.getters.recentMembers.slice(0, 11)", :m="m")
+    row(v-for="m in recentMembers", :m="m")
 </template>
 
 <script>
@@ -13,7 +13,12 @@ export default {
       Row,
   },
   data(){
-      return {}
+      let recentMembers = this.$store.state.members.filter(c => !c.originAddress)
+
+      recentMembers.sort((a, b) => {
+          return b.lastUsed - a.lastUsed
+      })
+      return {recentMembers : recentMembers.slice(0,11)}
   },
   mounted(){
       this.$store.commit('stopLoading')

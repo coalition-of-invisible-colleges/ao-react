@@ -95,11 +95,11 @@ export default {
         },
         rowsGuilds(){
             let g = []
-            this.$store.getters.pubguilds.forEach(t => {
-                if (t.deck.indexOf(this.m.memberId) > -1){
-                    g.push(t)
-                }
-            })
+            // this.$store.getters.pubguilds.forEach(t => {
+            //     if (t.deck.indexOf(this.m.memberId) > -1){
+            //         g.push(t)
+            //     }
+            // })
             return g
         },
         b(){

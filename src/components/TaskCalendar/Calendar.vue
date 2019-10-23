@@ -28,6 +28,9 @@ function getDMY(ts){
 }
 
 export default {
+  data(){
+
+  },
   props: ['inId'],
   components: {
     Day

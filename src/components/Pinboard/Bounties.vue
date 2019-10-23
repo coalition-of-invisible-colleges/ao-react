@@ -3,22 +3,22 @@
     h1.up Bounties
     .row.pagemargins
         .three.columns
-            div(v-for='(t, i) in getBountyColumn(0)'  :key='t.taskId'  @click='goInBounty(t)')
+            div(v-for='(t, i) in row1'  :key='t.taskId'  @click='goInBounty(t)')
                 span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                 span.yellowtx.fr {{ t.currentAmount }}
                 hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         .three.columns
-            div(v-for='(t, i) in getBountyColumn(1)'  :key='t.taskId'  @click='goInBounty(t)')
+            div(v-for='(t, i) in row2'  :key='t.taskId'  @click='goInBounty(t)')
                 span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                 span.yellowtx.fr {{ t.currentAmount }}
                 hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         .three.columns
-            div(v-for='(t, i) in getBountyColumn(2)'  :key='t.taskId'  @click='goInBounty(t)')
+            div(v-for='(t, i) in row3'  :key='t.taskId'  @click='goInBounty(t)')
                 span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                 span.yellowtx.fr {{ t.currentAmount }}
                 hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
         .three.columns
-            div(v-for='(t, i) in getBountyColumn(3)'  :key='t.taskId'  @click='goInBounty(t)')
+            div(v-for='(t, i) in row4'  :key='t.taskId'  @click='goInBounty(t)')
                 span(v-for='f in t.funders').yellowtx {{ getGuild(f) }}
                 span.yellowtx.fr {{ t.currentAmount }}
                 hypercard.bounty(:b='t'  :key='t.taskId'  :c='pubGuildIds')
@@ -30,6 +30,60 @@ import calculations from '../../calculations'
 import Hypercard from "../Card"
 
 export default {
+  data(){
+      let bountyList = []
+      let bounties = {}
+      let guilds = {}
+      this.$store.getters.localTasks.forEach( t => {
+          if (Array.isArray(t.allocations)){
+              t.allocations.forEach( al => {
+                  if ( bounties[al.allocatedId] ) {
+                      if (t.guild){
+                          bounties[al.allocatedId] += parseInt(al.amount)
+                          guilds[al.allocatedId].push(t.taskId)
+                      }
+                  } else {
+                      if (t.guild){
+                          bounties[al.allocatedId] = parseInt(al.amount)
+                          guilds[al.allocatedId] = [t.taskId]
+                      }
+                  }
+              })
+          }
+      })
+
+      Object.keys(bounties).forEach(b => {
+          let card = this.$store.getters.hashMap[b]
+          let amount =  bounties[b]
+          if (amount >= 1){
+              Vue.set( card, 'currentAmount', amount )
+              Vue.set( card, 'funders', guilds[b] )
+              bountyList.push(card)
+          }
+      })
+      bountyList.sort((a, b) => parseInt(a.currentAmount) < parseInt(b.currentAmount))
+
+      let row1 = []
+      let row2 = []
+      let row3 = []
+      let row4 = []
+      bountyList.forEach( (a, i) => {
+          let row = i % 4
+          if (row === 0){
+              row1.push(a)
+          }
+          if (row === 1){
+              row2.push(a)
+          }
+          if (row === 2){
+              row3.push(a)
+          }
+          if (row === 3){
+              row4.push(a)
+          }
+      })
+      return { row1, row2, row3, row4 }
+  },
   components:{
       Hypercard,
   },
@@ -53,9 +107,6 @@ export default {
           this.$store.commit('setAction', t.taskId)
           this.$store.commit('startLoading', 'unicorn')
           this.$router.push("/" + this.$store.state.upgrades.mode)
-      },
-      getBountyColumn(index, columns = 4){
-          return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
       },
       getGuild(taskId){
           return this.$store.getters.hashMap[taskId].guild

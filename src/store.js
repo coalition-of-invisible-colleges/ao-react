@@ -156,115 +156,13 @@ export default new Vuex.Store({
           }
           return getters.contextDeck.filter(d => d.color === 'blue')
       },
-      sortedMembers(state, getters){
-          let sorted = getters.recentMembers.slice()
-          sorted.sort((a, b) => {
-              let cardA = getters.hashMap[a.memberId]
-              let cardB = getters.hashMap[b.memberId]
-              if(cardA.deck.length < cardB.deck.length) return 1
-              if(cardA.deck.length === cardB.deck.length) return 0
-              return -1
-          })
-          return sorted
-      },
-      bounties(state, getters){
-          let bountyList = []
-          let bounties = {}
-          let guilds = {}
-          getters.localTasks.forEach( t => {
-              if (Array.isArray(t.allocations)){
-                  t.allocations.forEach( al => {
-                      if ( bounties[al.allocatedId] ) {
-                          if (t.guild){
-                              bounties[al.allocatedId] += parseInt(al.amount)
-                              guilds[al.allocatedId].push(t.taskId)
-                          }
-                      } else {
-                          if (t.guild){
-                              bounties[al.allocatedId] = parseInt(al.amount)
-                              guilds[al.allocatedId] = [t.taskId]
-                          }
-                      }
-                  })
-              }
-          })
 
-          Object.keys(bounties).forEach(b => {
-              let card = getters.hashMap[b]
-              let amount =  bounties[b]
-              if (amount >= 1){
-                  Vue.set( card, 'currentAmount', amount )
-                  Vue.set( card, 'funders', guilds[b] )
-                  bountyList.push(card)
-              }
-          })
-
-          bountyList.sort((a, b) => parseInt(a.currentAmount) < parseInt(b.currentAmount))
-
-          return bountyList
-      },
       totalBounties(state,getters){
           let total = 0
           getters.bounties.forEach(t => {
               total += parseFloat( t.currentAmount )
           })
           return total
-      },
-      taskByBoost(state, getters){
-          let members = []
-          let guilds = []
-          let resources = []
-          let cards = []
-
-          getters.localTasks.forEach(t => {
-
-              if( t.boost > 0 ){
-                  if (getters.memberIds.indexOf(t.taskId) > -1){
-                    members.push(t)
-                  } else if (getters.resourceIds.indexOf(t.taskId) > -1) {
-                    resources.push(t)
-                  } else if (t.guild) {
-                    guilds.push(t)
-                  } else {
-                    cards.push(t)
-                  }
-              }
-
-          })
-
-          members.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          guilds.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          resources.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-          cards.sort((a, b) => parseInt(a.boost) < parseInt(b.boost))
-
-          return { members, guilds, cards, resources }
-      },
-      totalPoints(state, getters){
-          let totalMembers = 0
-          let totalGuilds = 0
-          let totalCards = 0
-          let totalResources = 0
-          getters.taskByBoost.members.forEach(t => {
-              totalMembers += parseFloat( t.boost )
-          })
-          getters.taskByBoost.guilds.forEach(t => {
-              totalGuilds += parseFloat( t.boost )
-          })
-          getters.taskByBoost.resources.forEach(t => {
-              totalResources += parseFloat( t.boost )
-          })
-          getters.taskByBoost.cards.forEach(t => {
-              totalCards += parseFloat( t.boost )
-          })
-          return {
-              totalMembers,
-              totalGuilds,
-              totalResources,
-              totalCards,
-          }
-      },
-      totalPointsSum(state, getters){
-          return getters.totalPoints.totalMembers + getters.totalPoints.totalGuilds + getters.totalPoints.totalResources + getters.totalPoints.totalCards
       },
       hashMap(state){
           let hashMap = {}
@@ -379,21 +277,20 @@ export default new Vuex.Store({
       localTasks(state, getters){
           return state.tasks.filter(t => !t.originAddress)
       },
-      guilds(state, getters){
-          return getters.localTasks.filter(t => t.guild)
-      },
       pubguilds(state, getters){
           let guilds = []
           let uniqueG = []
-          getters.guilds.forEach((c, i) => {
-              let l = uniqueG.indexOf(c.guild)
-              if (l === -1){
-                  guilds.push(c)
-                  uniqueG.push(c.guild)
-              } else {
-                  let o = guilds[l]
-                  if (o.deck.length <= c.deck.length){
+          state.tasks.forEach((c, i) => {
+              if (c.guild){
+                  let l = uniqueG.indexOf(c.guild)
+                  if (l === -1){
+                    guilds.push(c)
+                    uniqueG.push(c.guild)
+                  } else {
+                    let o = guilds[l]
+                    if (o.deck.length <= c.deck.length){
                       guilds[l] = c
+                    }
                   }
               }
           })
@@ -431,12 +328,6 @@ export default new Vuex.Store({
           })
           return evs
       },
-      pubguildIds(state, getters){
-          return getters.pubguilds.map(p => p.taskId)
-      },
-      pubguildsSubCards(state, getters){
-          return true
-      },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId
           return isLoggedIn
@@ -457,15 +348,7 @@ export default new Vuex.Store({
           })
           return loggedInMember
       },
-      activeMembers(state, getters){
-          return getters.recentMembers.filter(m => m.active > 0 )
-      },
-      perMonth(state, getters){
-          let fixed = parseFloat(state.cash.rent)
-          let numActiveMembers = getters.activeMembers.length
-          let perMonth = fixed / numActiveMembers
-          return  perMonth.toFixed(2)
-      },
+
       inbox(state, getters){
           let passedToMe = []
           if (getters.isLoggedIn){
@@ -506,17 +389,6 @@ export default new Vuex.Store({
       satPointSpot(state, getters){
           return calculations.cadToSats(1, state.cash.spot)
       },
-      satPoint(state, getters){
-          let sats = getters.totalWallet / (getters.totalPointsSum + getters.totalBounties)
-          return parseInt(sats)
-      },
-      recentMembers(state, getters){
-          let recentMembers = state.members.filter(c => !c.originAddress)
-          recentMembers.sort((a, b) => {
-              return b.lastUsed - a.lastUsed
-          })
-          return recentMembers
-      },
       membersVouches(state, getters){
           let members = state.members.slice()
           let vouches = []
@@ -533,61 +405,6 @@ export default new Vuex.Store({
               })
           })
           return vouches
-      },
-      memberPriorities(state, getters) {
-          let news = []
-          getters.memberIds.forEach(mId => {
-              let member = getters.hashMap[mId]
-              if(member && member.priorities) {
-                  member.priorities.forEach(p => {
-                      let priority = getters.hashMap[p]
-                      if(!priority.dogers) {
-                          priority.dogers = []
-                      }
-                      priority.dogers.push(member.name)
-                      if(!news.some((sp, i) => {
-                          if(sp.taskId === p) {
-                              news[i].weight += 1 / member.priorities.length
-                              return true
-                          }
-                          return false
-                      })) {
-                          priority.weight = 1 / member.priorities.length
-                          news.push(priority)
-                      }
-                  })
-              }
-          })
-          news.sort((a, b) => {
-              return b.weight - a.weight
-          })
-          return news
-      },
-      getNewsColumn(state, getters){
-          let row1 = []
-          let row2 = []
-          let row3 = []
-          let row4 = []
-
-          getters.memberPriorities.forEach( (a, i) => {
-              let row = i % 4
-              if (row === 0){
-                  row1.push(a)
-              }
-              if (row === 1){
-                  row2.push(a)
-              }
-              if (row === 2){
-                  row3.push(a)
-              }
-              if (row === 3){
-                  row4.push(a)
-              }
-          })
-          return {row1, row2, row3, row4}
-      },
-      memberPriorityIds(state, getters) {
-          return getters.memberPriorities.map( t => t.taskId )
       },
   },
   middlewares: [],

@@ -7,16 +7,15 @@
           h6.centered {{ $store.getters.warpAddress }}
       div(v-else)
           h1.up {{ $store.state.cash.alias }} Top Missions
-          flickity(v-if='$store.getters.pubguilds.length > 0'  :options='flickityOptions'  ref='guildsBar'  v-model='guildsBar')
+          flickity(:options='flickityOptions'  ref='guildsBar'  v-model='guildsBar')
               .transparentsides
-              .carousel-cell.agedwrapper(v-for='(t, i) in joggledGuilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
-                  .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor($store.getters.pubguilds.length / 2)) % $store.getters.pubguilds.length) }') {{ t.guild }}
+              .carousel-cell.agedwrapper(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+                  .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor(guilds.length / 2)) % guilds.length) }') {{ t.guild }}
                   .agedbackground.freshpaper(v-if='cardAge(t) < 8')
                   .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
                   .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
                   .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
-          hypercard.gutter(v-if='$store.getters.pubguilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='$store.getters.pubguilds[showGuild]'  :key='resetKey'  :c='pubGuildIds'  ref='testRef')
-      hr
+          hypercard.gutter(v-if='guilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='guilds[showGuild]'  :key='resetKey'  :c='pubGuildIds'  ref='testRef')
       flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
           .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
               span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
@@ -36,7 +35,31 @@ export default {
       Hypercard,
   },
   data(){
+      let guilds = []
+      let uniqueG = []
+      this.$store.state.tasks.forEach((c, i) => {
+          if (c.guild){
+              let l = uniqueG.indexOf(c.guild)
+              if (l === -1){
+                guilds.push(c)
+                uniqueG.push(c.guild)
+              } else {
+                let o = guilds[l]
+                if (o.deck.length <= c.deck.length){
+                  guilds[l] = c
+                }
+              }
+          }
+      })
+
+      guilds.sort( (a, b) => {
+          let aVal = a.deck.length
+          let bVal = b.deck.length
+          return bVal - aVal
+      })
+
       return {
+          guilds: guilds.slice(0,11),
           showGuild: 0,
           resetKey: 0,
           flickityOptions: {
@@ -58,41 +81,6 @@ export default {
       setWarp(i){
           this.$store.commit('setWarp', i)
       },
-      goInBounty(t){
-          this.playPageTurn()
-          let taskId = t.funders[0]
-          let panel = [taskId]
-          let top = 0
-          let parents = []
-
-          this.$store.dispatch("goIn", {
-              parents,
-              top,
-              panel
-          })
-
-          this.$store.commit("startLoading", "unicorn")
-          this.$router.push("/" + this.$store.state.upgrades.mode)
-
-          this.$store.commit('setMode', 1)
-          this.$store.commit('setAction', t.taskId)
-
-      },
-      goInNews(t){
-          this.playPageTurn()
-          let taskId = t
-          let panel = this.$store.getters.memberPriorityIds
-          let top = panel.indexOf(t)
-          let parents = [ this.$store.getters.member.memberId ]
-
-          this.$store.dispatch("goIn", {
-              parents,
-              top,
-              panel
-          })
-
-          this.$router.push("/" + this.$store.state.upgrades.mode)
-      },
       playPageTurn(){
           var flip = new Audio(require('../../assets/sounds/myst158.wav'))
           flip.volume = flip.volume * 0.3
@@ -100,20 +88,12 @@ export default {
       },
       cycleGuilds(){
           console.log('cycling')
-          if (this.$store.getters.pubguilds){
-            this.showGuild = (this.showGuild + 1) % this.$store.getters.pubguilds.length
-          }
+          this.showGuild = (this.showGuild + 1) % this.guilds.length
       },
       selectGuild(x){
-          let length = this.$store.getters.pubguilds.length
-          this.showGuild = (parseInt(x) + Math.floor(this.$store.getters.pubguilds.length / 2)) % length
+          let length = this.guilds.length
+          this.showGuild = (parseInt(x) + Math.floor(length/ 2)) % length
           this.resetKey ++
-      },
-      getBountyColumn(index, columns = 4){
-          return this.$store.getters.bounties.slice().filter( (a, i) => { return i % columns === index })
-      },
-      getGuild(taskId){
-          return this.$store.getters.hashMap[taskId].guild
       },
       cardInputSty(c){
           return {
@@ -132,20 +112,6 @@ export default {
           return days
       }
   },
-  computed: {
-      pubGuildIds(){
-          return this.$store.getters.pubguilds.map(g => g.taskId)
-      },
-      joggledGuilds(){
-          //console.log(this.$store.getters.pubguilds)
-          let center = Math.ceil(this.$store.getters.pubguilds.length / 2)
-          let even = this.$store.getters.pubguilds.length % 2
-          let joggled = this.$store.getters.pubguilds.slice(-center)
-          joggled = joggled.concat(this.$store.getters.pubguilds.slice(0, center - even))
-          //console.log(joggled)
-          return joggled
-      }
-  }
 }
 
 </script>

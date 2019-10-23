@@ -32,24 +32,6 @@ export default {
           window.scrollTo(0, 0)
           SoundFX.playBoatCapsize()
       }
-      // setDeck() {
-      //     if (!this.$store.getters.isLoggedIn && this.$store.getters.pubguildIds.length > 0){
-      //         console.log('setting for offline deck')
-      //         this.$store.commit("setPanel", this.$store.getters.pubguildIds)
-      //         this.$store.commit("setTop", 0)
-      //         this.$store.commit("setParent", [])
-      //         return
-      //     }
-      //     if (this.$store.getters.member.memberId){
-      //         this.$store.commit("setPanel", [this.$store.getters.member.memberId])
-      //         this.$store.commit("setTop", 0)
-      //         this.$store.commit("setParent", [])
-      //         return
-      //     }
-      //
-      //     console.log("setdeck dnn set")
-      //     setTimeout( this.setDeck, 111 )
-      // },
   },
 }
 

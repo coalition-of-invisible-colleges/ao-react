@@ -4,34 +4,89 @@
       h1.up {{ $store.state.cash.alias }} newspaper
       .row.pagemargins
           .three.columns
-              div(v-for='(t, i) in $store.getters.getNewsColumn.row1'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+              div(v-for='(t, i) in row1'  :key='t.taskId')
+                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
           .three.columns
-              div(v-for='(t, i) in $store.getters.getNewsColumn.row2'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+              div(v-for='(t, i) in row2'  :key='t.taskId')
+                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
           .three.columns
-              div(v-for='(t, i) in $store.getters.getNewsColumn.row3'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+              div(v-for='(t, i) in row3'  :key='t.taskId')
+                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
           .three.columns
-              div(v-for='(t, i) in $store.getters.getNewsColumn.row4'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='$store.getters.memberPriorityIds'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+              div(v-for='(t, i) in row4'  :key='t.taskId')
+                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
 </template>
 
 <script>
 import Hypercard from "../Card"
 
 export default {
+  data(){
+      let news = []
+      this.$store.getters.memberIds.forEach(mId => {
+          let member = this.$store.getters.hashMap[mId]
+          if(member && member.priorities) {
+              member.priorities.forEach(p => {
+                  let priority = this.$store.getters.hashMap[p]
+                  if(!priority.dogers) {
+                      priority.dogers = []
+                  }
+                  priority.dogers.push(member.name)
+                  if(!news.some((sp, i) => {
+                      if(sp.taskId === p) {
+                          news[i].weight += 1 / member.priorities.length
+                          return true
+                      }
+                      return false
+                  })) {
+                      priority.weight = 1 / member.priorities.length
+                      news.push(priority)
+                  }
+              })
+          }
+      })
+      news.sort((a, b) => {
+          return b.weight - a.weight
+      })
+
+      let row1 = []
+      let row2 = []
+      let row3 = []
+      let row4 = []
+
+      news.forEach( (a, i) => {
+          let row = i % 4
+          if (row === 0){
+              row1.push(a)
+          }
+          if (row === 1){
+              row2.push(a)
+          }
+          if (row === 2){
+              row3.push(a)
+          }
+          if (row === 3){
+              row4.push(a)
+          }
+      })
+
+      console.log("news sorted")
+      return {
+          row1, row2, row3, row4
+      }
+  },
   components:{
       Hypercard,
   },
   mounted(){
       this.$store.commit('stopLoading')
+      console.log("stop loading")
   },
   methods:{
       goInNews(t){
           this.playPageTurn()
           let taskId = t
-          let panel = this.$store.getters.memberPriorityIds
+          let panel = [ taskId ]
           let top = panel.indexOf(t)
           let parents = [ this.$store.getters.member.memberId ]
 

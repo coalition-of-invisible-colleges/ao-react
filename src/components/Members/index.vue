@@ -2,9 +2,8 @@
 
 #member
     .list
-        h2 {{ $store.getters.activeMembers.length }} active
-        row(v-for="m in $store.getters.sortedMembers.slice(showStart, showStart + 7)"  :m='m')
-        .row.menu(v-if='$store.getters.sortedMembers.length > 7')
+        row(v-for="m in $store.state.members.slice(showStart, showStart + 7)"  :m='m')
+        .row.menu(v-if='$store.state.members.length > 7')
             .inline(@click='showBack')
                 img(src='../../assets/images/left.svg')
             .inline
