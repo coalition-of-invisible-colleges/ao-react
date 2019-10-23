@@ -83,13 +83,11 @@ export default {
         longPress.requireFailure([doubleTap]);
         
         mc.on('doubletap', (e) => {
-            console.log("two taps goIn on card")
             this.goIn()
             e.stopPropagation()
         })  
 
         mc.on('press', (e) => {
-            console.log("long press for some fucking reason")
             this.copyCardToClipboard()
             e.stopPropagation()
         })
@@ -180,6 +178,10 @@ export default {
             }
         },
         cardInputSty(){
+          if(!this.b) {
+            console.log("bad card data in card index")
+            return
+          }
           return {
               redwx : this.b.color == 'red',
               bluewx : this.b.color == 'blue',
@@ -229,7 +231,6 @@ export default {
           return mc
         },
         fractionalReserveDoge() {
-            // console.log(Math.floor(((this.b.weight % 1) / 10) * 16))
             return Math.max(Math.floor((this.b.weight % 1) * 16), 1)
         }
     },

@@ -57,6 +57,7 @@ export default {
   props: ['c', 'taskId'],
   mounted(){
         let el = document.getElementById(this.uuid)
+        if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
         let Swipe = new Hammer.Swipe({ threshold: 144 })
         mc.add(Swipe)
@@ -83,6 +84,7 @@ export default {
         });
 
         var orbel = document.getElementById(this.orbuuid)
+        if(!orbel) return
         var orbmc = Propagating(new Hammer.Manager(orbel))
 
         let orbTap = new Hammer.Tap({ time: 400 })
@@ -158,7 +160,6 @@ export default {
         this.top = this.c.length - 1
     },
     swap(direction){
-        console.log("swap. direction is", direction)
         let cardIndex
         this.c.forEach((t, i) => {
           if(t.taskId === this.topCard.taskId) {

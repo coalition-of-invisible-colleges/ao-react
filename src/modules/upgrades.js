@@ -7,7 +7,7 @@ const state = {
     payment: false,
     dimension: false,
     bird: false,
-    stacks: 5,
+    stacks: 1,
     warp: -1,
 }
 

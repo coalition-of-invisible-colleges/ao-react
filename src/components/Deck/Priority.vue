@@ -49,7 +49,6 @@ export default {
         singleTap.requireFailure(doubleTap);
 
         mc.on('singletap', (e) => {
-            console.log("singleTap on priority")
             if(this.$store.state.context.action === this.taskId) {
                 this.deaction()
             } else {
@@ -64,19 +63,16 @@ export default {
         })
 
         mc.on('press', (e) => {
-            console.log("higher long press for some fucking reason")
             this.copyCardToClipboard()
             e.stopPropagation()
         })
 
         mc.on('swipeup', (e) => {
-            console.log('swipeup on priority')
             this.allocate()
             e.stopPropagation()
         })
 
         mc.on('swipedown', (e) => {
-            console.log('swipedown on priority')
             this.refocus()
             e.stopPropagation()
         });
