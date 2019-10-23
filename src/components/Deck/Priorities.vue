@@ -92,9 +92,6 @@ export default {
 button
     background: darkteal
 
-.deck
-    width: 100%
-
 tr
     border-color: accent4
     border-top-style: solid

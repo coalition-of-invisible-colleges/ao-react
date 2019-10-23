@@ -113,7 +113,6 @@ label
 
 .membershipcard
     padding: 1em
-    width: calc(100% - 0.5em)
     background: rgba(22, 22, 22, 0.2)
     text-align: center
     

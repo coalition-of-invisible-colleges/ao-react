@@ -180,6 +180,9 @@ export default {
         cardInputSty(){
           if(!this.b) {
             console.log("bad card data in card index")
+            console.log("b is ", this.b)
+            console.log("inId is ", this.inId)
+            console.log("c is ", this.c)
             return
           }
           return {
