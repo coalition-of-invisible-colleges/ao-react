@@ -37,6 +37,7 @@
 <script>
 import Current from '../Members/Current'
 import Linky from '../Card/Linky'
+import SoundFX from '../../modules/sounds'
 
 export default {
     components:{
