@@ -16,7 +16,7 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
-    button.topcenter(:class='{ closed : !$store.state.upgrades.mode && $store.getters.isLoggedIn }' id='helm'  @mousedown='flashHelm(0.5)')
+    button.topcenter(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='flashHelm(0.5)')
         .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')

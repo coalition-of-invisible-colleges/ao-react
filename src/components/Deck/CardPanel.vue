@@ -74,6 +74,7 @@ export default {
 
         mc.on('swipeup', (e) => {
             this.swap(-1)
+            console.log("swapped up")
             this.previous()
             e.stopPropagation()
         })
@@ -106,21 +107,21 @@ export default {
         let orbPress = new Hammer.Press({ time: 400 })
         orbmc.add(orbPress)
         orbmc.on('press', (e) => {
+
             this.toggleStacks()
             e.stopPropagation()
         })
 
         // put these on the left an right arrows as long presses
-        orbmc.on('swipeup', (e) => {
-            this.first()
-            e.stopPropagation()
-        })
+        // orbmc.on('swipeup', (e) => {
+        //     this.first()
+        //     e.stopPropagation()
+        // })
 
-        orbmc.on('swipedown', (e) => {
-            this.last()
-            e.stopPropagation()
-        })
-
+        // orbmc.on('swipedown', (e) => {
+        //     this.last()
+        //     e.stopPropagation()
+        // })
   },
   data(){
       return {
@@ -141,14 +142,20 @@ export default {
         this.open = !this.open
     },
     first() {
+        SoundFX.playPageTurn()
         this.top = 0
     },
     previous(){
+        console.log("previous() function")
         SoundFX.playPageTurn()
+        console.log("this.top is ", this.top)
+        console.log("this.c.length is ", this.c.length)
+        console.log("this.c is ", this.c)
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
         }
+        console.log("post: this.top is ", this.top)
         this.componentKey ++
     },
     next(){
@@ -157,6 +164,7 @@ export default {
         this.componentKey ++
     },
     last() {
+        SoundFX.playPageTurn()
         this.top = this.c.length - 1
     },
     swap(direction){
@@ -194,6 +202,7 @@ export default {
     topCard(){
         this.componentKey ++
         if(this.top >= this.c.length) {
+            console.log("top set to 0 because this.c.length is ", this.c.length, " and top is ", this.top)
             this.top = 0
         }
         if (this.c.length > 0) {

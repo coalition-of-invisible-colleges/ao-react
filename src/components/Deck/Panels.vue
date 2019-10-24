@@ -17,7 +17,7 @@
           .four.columns(v-if='$store.getters.purple.length > 0')
               card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
     .padonestack(v-else-if='$store.state.upgrades.stacks === 1')
-        card-panel(:c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
+        card-panel(v-if='$store.getters.all.length > 0'  :c='$store.getters.all', :taskId='$store.state.context.panel[$store.state.context.top]')
 </template>
 
 <script>

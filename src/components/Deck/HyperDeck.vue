@@ -1,36 +1,34 @@
 <template lang='pug'>
 .deck(:key='$store.getters.contextCard.taskId')
-    .paperwrapper
-        .row
-            .five.columns.card(:class='{ center: $store.state.upgrades.mode === "doge", adjustwidth : !$store.getters.contextMember }')
-                auth(v-if='!$store.getters.isLoggedIn')
-                member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
-                resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
-                .centerer
-                    .more(v-if='panelSplit.before.length > 5') +{{ panelSplit.before.length - 5 }}
-                template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
-                  div(@click="goWithinPanel(n)")
-                    context(:taskId='n')
-                hypercard.fullwidth(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
-                template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
-                  div(@click="goWithinPanel(n)")
-                    context(:taskId='n')
-                .centerer
-                    .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
-                .bar(v-if='panelSplit.after.length < 6')
-            .seven.columns.buffer(v-show='$store.state.upgrades.mode !== "doge"')
-                div.upgradesbar()
-                    slot
-        div.fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1 }')
-            panels
-            .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
-            div &nbsp;
-        img.fw(src='../../assets/images/pixeldesert.png')
-        .agedbackground.translucent(:class='cardInputSty')
-        .agedbackground.freshpaperbg(v-if='cardAge < 8')
-        .agedbackground.weekoldpaperbg(v-else-if='cardAge < 30')
-        .agedbackground.montholdpaperbg(v-else-if='cardAge < 90')
-        .agedbackground.threemontholdpaperbg(v-else='cardAge >= 90')
+    .paperwrapper.padsides
+        .card(:class='{ center: $store.state.upgrades.mode === "doge", adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge" }')
+            auth(v-if='!$store.getters.isLoggedIn')
+            member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
+            resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
+            .centerer
+                .more(v-if='panelSplit.before.length > 5') +{{ panelSplit.before.length - 5 }}
+            template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
+              div(@click="goWithinPanel(n)")
+                context(:taskId='n')
+            hypercard.fullwidth(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
+            template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
+              div(@click="goWithinPanel(n)")
+                context(:taskId='n')
+            .centerer
+                .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
+            .bar(v-if='panelSplit.after.length < 6')
+        .upgradesbar(v-show='$store.state.upgrades.mode !== "doge"')
+            slot
+    .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1 }')
+        panels
+        .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
+        div &nbsp;
+    img.fw(src='../../assets/images/pixeldesert.png')
+    .agedbackground.translucent(:class='cardInputSty')
+    .agedbackground.freshpaperbg(v-if='cardAge < 8')
+    .agedbackground.weekoldpaperbg(v-else-if='cardAge < 30')
+    .agedbackground.montholdpaperbg(v-else-if='cardAge < 90')
+    .agedbackground.threemontholdpaperbg(v-else='cardAge >= 90')
 </template>
 
 <script>
@@ -148,12 +146,13 @@ export default {
 .card
     color: white
     font-size:1.111em
-    padding-left: 1em
-    padding-top: 1em
+    margin-top: 1em
+    width: 39.3333333333%
+    display: inline-block
 
 .card.center
     position: relative
-    left: calc(50% - 1.2em)
+    left: 50%
     transform: translateX(-50%)
 
 #cyber
@@ -172,6 +171,10 @@ export default {
   margin-bottom: 1em
   background-color: rgba(21, 21, 21, 0.25)
   border-radius: 30px
+  margin-left: 1em
+  width: 58%
+  float: right
+  margin-top: 1em
 
 .upgrade
     height: 4em
@@ -192,11 +195,13 @@ export default {
     margin: 0 1em
     min-height: 2em
     position: relative
+    clear: both
     
 .onestack
     width: 32em
     margin-left: 50%
     transform: translateX(-50%)
+    margin-top: 1em
     
 .slide-fade-enter-active {
   transition: all .6s ease;
@@ -215,6 +220,10 @@ export default {
 
 .paperwrapper
     position: relative
+    
+.paperwrapper.padsides
+    padding-left: 1em
+    padding-right: 1em
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
@@ -316,6 +325,8 @@ export default {
 
 .aftermore
     margin-top: 0.5em
+    margin-left: 1.5em
+    margin-bottom: 1.7em
 
 .centerer
     text-align: center
@@ -332,13 +343,12 @@ export default {
 
 .normaltopmargin
     margin-top: 0
+
+.closedwidth
+    width: 30.65em
     
-.five.columns.card
-    width: 30.2em
-    margin-left: -0.04em
-    
-.five.columns.card.adjustwidth
-    width: 30.8em
-    margin-left: 0.18em
+.card.adjustwidth
+    width: 29.8em
+    margin-left: -0.4em
 
 </style>
