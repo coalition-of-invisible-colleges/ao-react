@@ -6,28 +6,28 @@
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .give(v-if='showGive')
-        select(v-model='toAo')
-            option(@click='setWarp(-1)') here
-            option(v-for='(a, i) in $store.state.ao'  :key='a.address'  :value='a.address'  @click='setWarp(i)') {{ a.alias ? a.alias : a.address.slice(0,9) }}
-        div(v-if='$store.getters.warpDrive')
-            img.birdy(src='../../assets/images/navigas/sunUni.svg')
-            select(v-model='toMemberWarp')
-                option(disabled, value='') to people
-                option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
-            form-box(v-if='toMemberWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
-            select(v-model='toGuildWarp')
-                option(disabled, value='') to guild
-                option(v-for='n in $store.getters.warpGuilds', :value="n.taskId") {{ n.guild }}
-            form-box(v-if='toGuildWarp' btntxt="play"  event='task-sub-tasked' v-bind:data='relayInfoG'  @click='makeSound')
-        div(v-else)
-            select(v-model='toMember')
-                option(disabled, value='') to people
-                option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-            form-box(v-if='toMember' btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
-            select(v-model='toGuild')
-                option(disabled, value='') to guild
-                option(v-for='n in $store.getters.guilds', :value="n.taskId") {{ n.guild }}
-            form-box(v-if='toGuild' btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
+        //- select(v-model='toAo')
+        //-     option(@click='setWarp(-1)') here
+        //-     option(v-for='(a, i) in $store.state.ao'  :key='a.address'  :value='a.address'  @click='setWarp(i)') {{ a.alias ? a.alias : a.address.slice(0,9) }}
+        //- div(v-if='$store.getters.warpDrive')
+        //-     img.birdy(src='../../assets/images/navigas/sunUni.svg')
+        //-     select(v-model='toMemberWarp')
+        //-         option(disabled, value='') to people
+        //-         option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
+        //-     form-box(v-if='toMemberWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+        //-     select(v-model='toGuildWarp')
+        //-         option(disabled, value='') to guild
+        //-         option(v-for='n in $store.getters.warpGuilds', :value="n.taskId") {{ n.guild }}
+        //-     form-box(v-if='toGuildWarp' btntxt="play"  event='task-sub-tasked' v-bind:data='relayInfoG'  @click='makeSound')
+        //- div(v-else)
+        select(v-model='toMember')
+            option(disabled, value='') to people
+            option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
+        form-box(v-if='toMember' btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+        //- select(v-model='toGuild')
+        //-     option(disabled, value='') to guild
+        //-     option(v-for='n in $store.getters.guilds', :value="n.taskId") {{ n.guild }}
+        //- form-box(v-if='toGuild' btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 

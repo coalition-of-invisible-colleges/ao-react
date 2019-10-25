@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 .priorityaction.clearboth
-
 </template>
 
 <script>

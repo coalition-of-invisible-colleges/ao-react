@@ -1,8 +1,7 @@
 <template lang='pug'>
 
 .vine(@click='goIn')
-  router-link(:to='"/task/" + b.taskId')
-    img.viney(src='../../assets/images/vinebtn.svg')
+    img.viney(src='../../assets/images/open.svg')
 </template>
 
 <script>
@@ -50,8 +49,7 @@ export default {
                 top,
                 panel
             })
-
-            // this.$router.push("/task/" + this.b.taskId)
+            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
     },
 }
@@ -119,5 +117,6 @@ label
     bottom: 0.5em
     right: 0.5em
     cursor: pointer
+    opacity: 0.8321
 
 </style>

@@ -55,7 +55,7 @@ export default {
                 top: 0,
                 parents
             })
-            this.$router.push('/task/' + taskId)
+            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         cardDate(b){
             if ( b.book.startTs ) {
@@ -85,7 +85,7 @@ export default {
     display: inline
     width: 29%
     cursor: pointer
-    
+
 .today
     width: 100%
     height: 100%
@@ -94,7 +94,7 @@ export default {
     display: inline-block
     position: absolute
     top: 0
-    
+
 .type
     font-size: .5em
     float: left

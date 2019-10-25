@@ -42,6 +42,8 @@ export default {
 @import "./styles/input"
 
 #app
+    width: 100vw
+    overflow: hidden
     position:relative
     color: accent1
     font-weight: lighter
