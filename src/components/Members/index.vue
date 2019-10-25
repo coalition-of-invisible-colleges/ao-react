@@ -1,19 +1,19 @@
 <template lang='pug'>
 
 #member
+    .activelabel {{activeMembers}} Active
     .list
-        row(v-for="m in $store.state.members.slice(showStart, showStart + 7)"  :m='m')
-        .row.menu(v-if='$store.state.members.length > 7')
+        row(v-for="m in showingPanel"  :m='m')
+        .row.menu(v-if='sortedMembers.length > 5')
             .inline(@click='showBack')
                 img(src='../../assets/images/left.svg')
             .inline
-                p.mt {{showStart}} - {{showStart + 7}}  of {{ showTotal }}
+                p.mt {{showStart}} - {{showStart + 5}}  of {{ showTotal }}
             .inline(@click='showNext')
                 img(src='../../assets/images/right.svg')
         .center
             .padding
                 p believer in a transcendent future
-                p possess rfid tag
                 p possible human, magical entity, fairy, cyborg or alien
 </template>
 
@@ -35,22 +35,45 @@ export default {
     },
     methods: {
         showNext(){
-            this.showStart = this.showStart + 7
-            if (this.showStart > this.$store.getters.sortedMembers.length ){
+            this.showStart = this.showStart + 5
+            if (this.showStart > this.sortedMembers.length ){
                 this.showStart = 0
             }
         },
         showBack(){
-            this.showStart = this.showStart - 6
+            this.showStart = this.showStart - 4
             if (this.showStart < 0 ){
-                this.showStart = this.$store.getters.sortedMembers.length -1
+                this.showStart = this.sortedMembers.length -1
             }
         },
-
     },
     computed: {
+        showingPanel(){
+            return this.sortedMembers.slice(this.showStart, this.showStart + 5)
+        },
         showTotal(){
-            return this.$store.getters.sortedMembers.length
+            return this.sortedMembers.length
+        },
+        sortedMembers(){
+          let sortedMembers = this.$store.state.members.slice()
+
+          sortedMembers.sort((a, b) => {
+              let cardA = this.$store.getters.hashMap[a.memberId]
+              let cardB = this.$store.getters.hashMap[b.memberId]
+              if(cardA.deck.length < cardB.deck.length) return 1
+              if(cardA.deck.length === cardB.deck.length) return 0
+              return -1
+          })
+          return sortedMembers
+        },
+        activeMembers(){
+            let a = 0
+            this.sortedMembers.forEach(m => {
+                if (m.active > 0){
+                    a ++
+                }
+            })
+            return a
         }
     },
     components : {
@@ -71,6 +94,15 @@ export default {
 @import '../../styles/input'
 @import '../../styles/skeleton'
 @import '../../styles/button'
+
+.activelabel
+    font-size: 1.2em
+    text-align: center
+    margin-bottom: 1em
+    clear: both
+
+.fl
+    float: left
 
 .mt
     margin-top: -1em

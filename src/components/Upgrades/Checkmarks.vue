@@ -82,7 +82,6 @@ export default {
             flip.volume = flip.volume * 0.3
             flip.play()
         },
-        // STORE XXX
         completions(guild){
             let completions = []
             let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.completed)
@@ -361,7 +360,6 @@ h2
     text-align: center
     color: white
     margin-top: 0
-    //font-weight: normal
 
 .checkwrapper
     overflow: auto
@@ -457,8 +455,6 @@ h2
     background-color: rgba(22, 22, 22, 0.4)
     display: inline-block;
     border-width: 2px
-    //border-color: rgba(255, 255, 255, 0.68)
-    //border-style: solid
     padding: 0.5em
     margin: 0
     font-size: 1em

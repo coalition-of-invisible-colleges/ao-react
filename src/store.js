@@ -115,9 +115,6 @@ export default new Vuex.Store({
               member.contextCompletions = hodlers[mId]
               holds.push(member)
           })
-          // holds.sort((a, b) => {
-          //     return b.contextCompletions.length - a.contextCompletions.length
-          // })
           return holds
       },
       all(state, getters){

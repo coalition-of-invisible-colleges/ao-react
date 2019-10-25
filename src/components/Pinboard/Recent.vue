@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 #frontrecent
+  .container
     h1.up Much Recent
     row(v-for="m in recentMembers", :m="m")
 </template>
