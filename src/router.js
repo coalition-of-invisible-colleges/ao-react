@@ -155,6 +155,15 @@ const router = new VueRouter({
   }
 })
 
+import Store from './store.js'
+
+router.beforeEach((to, from, next) => {
+
+  Store.commit("startLoading", to.path)
+  next()
+
+})
+
 router.afterEach((to, from, next) => {
 
   if(to.meta.title == 'card') return
@@ -164,7 +173,6 @@ router.afterEach((to, from, next) => {
 
 })
 
-// import Store from './store.js'
 
 // init ({ dispatch }) {       // Could also be async and use await instead of return
 //   return Promise.all([

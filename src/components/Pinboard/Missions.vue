@@ -10,7 +10,7 @@
           flickity(:options='flickityOptions'  ref='guildsBar'  v-model='guildsBar')
               .transparentsides
               .carousel-cell.agedwrapper(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
-                  .guildname(:class='{ selectedguild : showGuild == ((i + Math.floor(guilds.length / 2)) % guilds.length) }') {{ t.guild }}
+                  .guildname(:class='{ selectedguild : showGuild === i }') {{ t.guild }}
                   .agedbackground.freshpaper(v-if='cardAge(t) < 8')
                   .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
                   .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
@@ -92,7 +92,7 @@ export default {
       },
       selectGuild(x){
           let length = this.guilds.length
-          this.showGuild = (parseInt(x) + Math.floor(length/ 2)) % length
+          this.showGuild = x % length
           this.resetKey ++
       },
       cardInputSty(c){

@@ -56,7 +56,6 @@ export default {
         },
         sortedMembers(){
           let sortedMembers = this.$store.state.members.slice()
-
           sortedMembers.sort((a, b) => {
               let cardA = this.$store.getters.hashMap[a.memberId]
               let cardB = this.$store.getters.hashMap[b.memberId]

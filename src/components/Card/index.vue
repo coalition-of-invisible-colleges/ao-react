@@ -81,11 +81,11 @@ export default {
 
         longPress.recognizeWith([doubleTap]);
         longPress.requireFailure([doubleTap]);
-        
+
         mc.on('doubletap', (e) => {
             this.goIn()
             e.stopPropagation()
-        })  
+        })
 
         mc.on('press', (e) => {
             this.copyCardToClipboard()
@@ -280,10 +280,11 @@ export default {
         text-align: center
 
 .claimvine
-    position: relative
     height: 1em
-    bottom: 0
-    right: 0
+    img
+        position: relative
+        bottom: 0
+        right: 0
 
 .tooltip .tooltiptext
     font-size: 1em
@@ -501,10 +502,10 @@ export default {
     margin-top: 1em
     clear: both
     width: 100%
-    
+
 .cardbody
     width: 100%
-  
+
 .preview
     width: 15%
     float: right
