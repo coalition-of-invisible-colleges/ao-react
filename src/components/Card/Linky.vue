@@ -3,7 +3,6 @@
 .linky
     vue-markdown.noheight(:anchorAttributes='anchorAttributes') {{ this.x }}
     slot.centered
-
 </template>
 
 <script>
@@ -44,7 +43,7 @@ export default {
 </script>
 
 <style lang='stylus'>
-    
+
 .centered
     text-align: center
     width: 100%
@@ -52,12 +51,12 @@ export default {
 .noheight p
     margin-top: 0
     margin-bottom: 1em
-    
+
 .linky .noheight img
     max-width: 100%
 
 .cardname.front .linky .noheight img
-    max-width: 100% 
+    max-width: 100%
 
 .priority .closedcard .linky img, .priority.closedcard .linky img
     max-height: 12em
@@ -69,7 +68,7 @@ p:last-child
 
 .noheight h1, .noheight h2, .noheight h3, .noheight h4, .noheight h5, .noheight h6
     margin-top: 0
-    
+
 .noheight h1
     font-size: 1.675em
     margin-bottom: 0.5em
@@ -77,10 +76,10 @@ p:last-child
 .noheight h2
     font-size: 1.4em
     margin-bottom: 0.625em
-    
+
 .noheight h3
     margin-bottom: 0.9em
-    
+
 .noheight h4
     margin-bottom: 1.33em
 </style>

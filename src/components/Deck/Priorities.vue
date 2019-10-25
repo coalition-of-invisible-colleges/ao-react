@@ -8,10 +8,10 @@
           img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')
           hyperpriority.closedcard(:taskId='t'  :inId='$store.getters.contextCard.taskId')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
-          .clearboth.opensubcard(v-if='$store.state.context.action === st')
+          .clearboth.opensubcard
               hyperpriority(:taskId='st'  :inId="t")
           .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)'  :key='st2')
-              .clearboth.opensubcard(v-if='$store.state.context.action === st2')
+              .clearboth.opensubcard
                   hyperpriority(:taskId='st2'  :inId="st")
     div.clearboth
 </template>
@@ -229,7 +229,7 @@ img
 .openboat
     top: 50%
     transform: translateY(-50%)
-    
+
 .opencard
     width: calc(100% - 4.5em)
     margin-top: 0.5em

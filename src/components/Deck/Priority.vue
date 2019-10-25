@@ -239,7 +239,7 @@ img
 .agedwrapper
     margin-top: 0.5em
     margin-right: 0.5em
-    
+
 .front
     position: relative
     z-index: 100
