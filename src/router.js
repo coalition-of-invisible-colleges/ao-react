@@ -160,6 +160,28 @@ import Store from './store.js'
 router.beforeEach((to, from, next) => {
 
   Store.commit("startLoading", to.path)
+
+  console.log(to.path)
+
+  if (/doge/.test(to.path)){
+      Store.commit("setMode", 0)
+  }
+
+  if (/boat/.test(to.path)){
+      Store.commit("setMode", 1)
+  }
+
+  if (/badge/.test(to.path)){
+      Store.commit("setMode", 2)
+  }
+
+  if (/chest/.test(to.path)){
+      Store.commit("setMode", 3)
+  }
+
+  if (/timecube/.test(to.path)){
+      Store.commit("setMode", 4)
+  }
   next()
 
 })
