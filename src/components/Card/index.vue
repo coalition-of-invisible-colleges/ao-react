@@ -75,7 +75,7 @@ export default {
         let mc = Propagating(new Hammer.Manager(el))
 
         let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400 })
-        let longPress = new Hammer.Press({ time: 500 })
+        let longPress = new Hammer.Press({ time: 600 })
 
         mc.add([doubleTap, longPress])
 

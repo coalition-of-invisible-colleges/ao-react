@@ -184,7 +184,6 @@ img
     margin-top: 0.1em
 
 .openallocated
-    top: 36%
     margin-top: 0.3em
 
 .onelinecard

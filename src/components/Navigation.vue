@@ -396,6 +396,9 @@ let intervalID = window.setInterval(updateTransition, 7000)
 @import '../styles/grid'
 @import '../styles/tooltips'
 
+.bullimg
+    height: 10em
+
 .bullcontext, .suncontext
     height: 1.75em
     background-repeat: repeat-x

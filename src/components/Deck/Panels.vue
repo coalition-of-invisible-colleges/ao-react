@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.panel
+.panel(:class='{ fullwidth : $store.state.upgrades.stacks === 1 }')
     div(v-if='$store.state.upgrades.stacks === 5')
         .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
           .four.columns(v-if='$store.getters.red.length > 0')
@@ -39,10 +39,9 @@ export default {
 @import '../../styles/button'
 
 .panel
-    width: 100%
-    margin: -1em 1em 0 -1em
-    padding: 0 2em
+    margin: 0 1em 1em 1em
     clear: both
+    padding-bottom: 1em
 
 .card
     padding: 2em
@@ -60,7 +59,8 @@ export default {
     
 .padonestack
     padding-top: 0.001em
-    width: 27em
-    margin-left: 50%
-    transform: translateX(-50%)
+    max-width: calc(100vw - 4em)
+    
+.fullwidth
+    width: 100%
 </style>

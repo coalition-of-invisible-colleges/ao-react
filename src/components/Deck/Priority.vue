@@ -40,7 +40,7 @@ export default {
 
         let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
         let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400 })
-        let longPress = new Hammer.Press({ time: 500 })
+        let longPress = new Hammer.Press({ time: 600 })
         let swipe = new Hammer.Swipe({ threshold: 20 })
 
         mc.add([doubleTap, singleTap, swipe, longPress])

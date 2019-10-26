@@ -3,13 +3,13 @@
 #app
   .contain
     event-feed
-    main-menu
+    navigation
     router-view
 </template>
 
 <script>
 
-import MainMenu from './components/MainMenu'
+import Navigation from './components/Navigation'
 import MobileHeading from './components/MobileHeading'
 import EventFeed from './components/slotUtils/EventFeed'
 
@@ -26,7 +26,7 @@ export default {
         }
     },
     components: {
-        MainMenu, MobileHeading, EventFeed
+        Navigation, MobileHeading, EventFeed
     },
 }
 
@@ -42,21 +42,20 @@ export default {
 @import "./styles/input"
 
 #app
-    width: 100vw
-    overflow: hidden
     position:relative
     color: accent1
     font-weight: lighter
 
 body
     background: main
+    overflow-x: hidden
 
 main
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
+    height: 100%
+    width: 100%
+    margin: 0
+    padding: 0
+    display: flex
 
 hr
     background-color: purple

@@ -14,6 +14,9 @@ export default {
   components:{
       GenPanels,
   },
+  mounted() {
+      this.$store.commit('stopLoading')
+  },
   beforeRouteEnter(to, from, next) {
     next(vm => {
         vm.clearContext()

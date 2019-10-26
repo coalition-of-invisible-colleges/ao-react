@@ -457,7 +457,7 @@ textarea
     padding: 0
 
 .scrollbarwrapper
-    width: 20em
+    width: 30vw
     height: calc(100% - 2em)
     position: fixed
     top: 0
@@ -484,6 +484,6 @@ textarea
     background-color: rgba(255, 255, 255, 0.75)
 
 .result
-    margin-bottom: 0.15em
+    margin-bottom: 0.25em
     cursor: pointer
 </style>

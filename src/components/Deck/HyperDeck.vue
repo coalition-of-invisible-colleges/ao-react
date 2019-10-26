@@ -8,11 +8,11 @@
             .centerer
                 .more(v-if='panelSplit.before.length > 5') +{{ panelSplit.before.length - 5 }}
             template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
-              div(@click="goWithinPanel(n)")
+              div(@click="goWithinPanel(n)"  :style='{ marginLeft : 2.5 - (i * 0.25) + "em", marginRight: 2.5 - (i * 0.25) + "em" }')
                 context(:taskId='n')
             hypercard.fullwidth(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
             template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
-              div(@click="goWithinPanel(n)")
+              div(@click="goWithinPanel(n)"  :style='{ marginLeft: ((i + 1) * 0.25) + "em", marginRight: ((i + 1) * 0.25) + "em" }')
                 context(:taskId='n')
             .centerer
                 .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
@@ -147,13 +147,11 @@ export default {
     color: white
     font-size:1.111em
     margin-top: 1em
-    width: 39.3333333333%
     display: inline-block
+    width: 39.3333333333%
 
 .card.center
-    position: relative
-    left: 50%
-    transform: translateX(-50%)
+    transform: translateX(calc(50% - 1em))
 
 #cyber
     width: 100%
@@ -172,9 +170,10 @@ export default {
   background-color: rgba(21, 21, 21, 0.25)
   border-radius: 30px
   margin-left: 1em
-  width: 58%
   float: right
   margin-top: 1em
+  flex-grow: 1
+  width: 58%
 
 .upgrade
     height: 4em
@@ -191,17 +190,19 @@ export default {
 
 .fadey
     background-color: rgba(255,255,255,0.1)
-    padding: 0 2em 0.8em 0
-    margin: 0 1em
+    margin: 0 1em 0 1em
     min-height: 2em
     position: relative
     clear: both
     
 .onestack
-    width: 32em
-    margin-left: 50%
-    transform: translateX(-50%)
-    margin-top: 1em
+    // margin-top: 1em
+    display: flex
+    flex-wrap: wrap
+    max-width: 34em
+    position: relative
+    left: 50%
+    transform: translateX(calc(-50% - 1em))
     
 .slide-fade-enter-active {
   transition: all .6s ease;
@@ -224,6 +225,8 @@ export default {
 .paperwrapper.padsides
     padding-left: 1em
     padding-right: 1em
+    display: flex
+    flex-wrap: wrap
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
@@ -282,10 +285,10 @@ export default {
     cursor: pointer
     font-size: 1.35em
     font-weight: bold
-    padding: 0.5em
-    margin-right: -1em
-    margin-top: -1em
-    padding-bottom: 0.3em
+    position: absolute
+    right: 0.5em
+    bottom: 0.5em
+    
 
 .upgrademode
     float: left
@@ -335,12 +338,6 @@ export default {
 .fullwidth
     width: calc(100% - 1em)
 
-.one.columns.half
-    width: 2.333333333333%
-
-.columns
-    min-height: 1em
-
 .normaltopmargin
     margin-top: 0
 
@@ -348,7 +345,8 @@ export default {
     width: 30.65em
     
 .card.adjustwidth
-    width: 29.8em
+    width: 100%
+    max-width: 29.8em
     margin-left: -0.4em
 
 </style>
