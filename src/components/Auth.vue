@@ -2,17 +2,11 @@
 
 #auth
   div(v-if='!confirmed')
-      fancy-input(labelText='dogename')
-          input.input-effect(type='text', v-model='name', autocapitalize="none", autocomplete="off", autocorrect="off")
-      br
-      div.input-container
-        input#password.input-effect(type='password', v-model='pass', autocapitalize="none", autocomplete="off", autocorrect="off", @keyup.enter='createSession')
-        label(for='password',) password
-        span.focus-border
-      br
+      input(type='text', v-model='name', autocapitalize="none", autocomplete="off", autocorrect="off", placeholder='dogename')
+      input#password(type='password', v-model='pass', autocapitalize="none", autocomplete="off", autocorrect="off", @keyup.enter='createSession', placeholder='password')
       p.red {{ err }}
       button.primary(@click="createSession") login
-  button(v-else  @click="killSession") log out
+  //- button(v-else  @click="killSession") log out
 </template>
 
 <script>
@@ -20,13 +14,9 @@
 import request from 'superagent'
 import uuidV1 from 'uuid/v1'
 import cryptoUtils from '../crypto'
-import FancyInput from './slotUtils/FancyInput'
 
 export default {
   name: 'Auth',
-  components: {
-    FancyInput
-  },
   data(){
       return {
           name: '',
@@ -89,7 +79,6 @@ export default {
 @import '../styles/colours'
 @import '../styles/button'
 
-
 #auth
     background-color:accent5
 
@@ -98,10 +87,15 @@ main #auth
     padding: 20px 20px 20px 20px;
     width:calc(100% - 90px)
 
+input
+    border: 2px solid wrexyellow
+    margin-bottom: 0.5em
+    border-radius: 0.25em
+
 #mobileheading #auth
-  margin: 50px auto 50px auto
-  padding: 20px 50px 50px 50px;
-  width:300px
+    margin: 50px auto 50px auto
+    padding: 20px 50px 50px 50px;
+    width:300px
 
 .secret
     -webkit-text-fill-color: transparent; /* sets just the text color */
@@ -111,5 +105,4 @@ main #auth
 
 .red
     color: accent2
-
 </style>

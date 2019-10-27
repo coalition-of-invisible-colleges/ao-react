@@ -16,7 +16,7 @@
    version="1.1"
    id="svg843"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="holochain_sequential.svg">
+   sodipodi:docname="mandelorb_sequential.svg">
   <defs
      id="defs837">
     <linearGradient
@@ -27,15 +27,15 @@
          id="stop905" />
       <stop
          id="stop921"
-         offset="0.5"
+         offset="0.25"
          style="stop-color:#9e8600;stop-opacity:1" />
       <stop
          style="stop-color:#276b16;stop-opacity:1"
-         offset="0.75"
+         offset="0.5"
          id="stop923" />
       <stop
          id="stop925"
-         offset="0.875"
+         offset="0.75"
          style="stop-color:#8642a9;stop-opacity:1" />
       <stop
          id="stop913"
@@ -60,7 +60,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="1155.3645"
+     inkscape:cx="323.93593"
      inkscape:cy="1182.4167"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -82,7 +82,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>

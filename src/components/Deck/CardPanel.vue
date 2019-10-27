@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#tasks(:id='uuid'  @contextmenu.prevent)
+#tasks(:id='uuid'  @contextmenu.capture.prevent)
     .row.ptr(v-if="topCard")
         .three.grid(@click='previous')
             span &nbsp;

@@ -45,6 +45,7 @@ export default {
     position:relative
     color: accent1
     font-weight: lighter
+    overflow-x: hidden
 
 body
     background: main

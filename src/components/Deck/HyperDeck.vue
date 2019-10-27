@@ -1,28 +1,26 @@
 <template lang='pug'>
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper.padsides
-        .card(:class='{ center: $store.state.upgrades.mode === "doge", adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge" }')
+        .card(:class='{ adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge" }')
             auth(v-if='!$store.getters.isLoggedIn')
             member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
             resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
             .centerer
                 .more(v-if='panelSplit.before.length > 5') +{{ panelSplit.before.length - 5 }}
             template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
-              div(@click="goWithinPanel(n)"  :style='{ marginLeft : 2.5 - (i * 0.25) + "em", marginRight: 2.5 - (i * 0.25) + "em" }')
+              div(@click="goWithinPanel(n)"  :style='{ marginLeft : 0.5 + ((Math.min(panelSplit.before.length, 5) - i) * 0.25) + "em", marginRight: 1.5 + ((Math.min(panelSplit.before.length, 5) - i) * 0.25) + "em" }')
                 context(:taskId='n')
             hypercard.fullwidth(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
             template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
-              div(@click="goWithinPanel(n)"  :style='{ marginLeft: ((i + 1) * 0.25) + "em", marginRight: ((i + 1) * 0.25) + "em" }')
+              div(@click="goWithinPanel(n)"  :style='{ marginLeft: 0.25 + (i * 0.25) + "em", marginRight: 1.25 + (i * 0.25) + "em" }')
                 context(:taskId='n')
             .centerer
                 .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
-            .bar(v-if='panelSplit.after.length < 6')
         .upgradesbar(v-show='$store.state.upgrades.mode !== "doge"')
             slot
-    .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1 }')
+    .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         panels
-        .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
-        div &nbsp;
+        .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -148,10 +146,10 @@ export default {
     font-size:1.111em
     margin-top: 1em
     display: inline-block
-    width: 39.3333333333%
-
-.card.center
-    transform: translateX(calc(50% - 1em))
+    // width: 39.3333333333%
+    margin-left: 1em
+    margin-right: 1em
+    flex-grow: 1
 
 #cyber
     width: 100%
@@ -165,24 +163,21 @@ export default {
     margin-bottom: 2em
 
 .upgradesbar
-  height: fit-content
-  margin-bottom: 1em
-  background-color: rgba(21, 21, 21, 0.25)
-  border-radius: 30px
-  margin-left: 1em
-  float: right
-  margin-top: 1em
-  flex-grow: 1
-  width: 58%
+    height: fit-content
+    background-color: rgba(21, 21, 21, 0.25)
+    border-radius: 30px
+    margin-left: 1em
+    float: right
+    margin-top: 1em
+    margin-right: 1em
+    flex-grow: 1
+    // width: 58%
+    flex-basis: 54%
 
 .upgrade
     height: 4em
     border: 4px solid rgba(0, 0, 0, 0.5)
     background-color: rgba(0, 0, 0, 0, 0.2)
-
-.bar
-    min-height: 1em
-    margin-bottom: 0em
 
 .fw
     width: 100%
@@ -193,8 +188,19 @@ export default {
     margin: 0 1em 0 1em
     min-height: 2em
     position: relative
+    margin-top: 1em
+    margin-bottom: 1em
     clear: both
-    
+  
+.completedfadey
+    background: repeating-radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.2) 10px,
+      rgba(0, 0, 0, 0.3) 10px,
+      rgba(0, 0, 0, 0.3) 20px
+    )
+
 .onestack
     // margin-top: 1em
     display: flex
@@ -223,10 +229,9 @@ export default {
     position: relative
     
 .paperwrapper.padsides
-    padding-left: 1em
-    padding-right: 1em
     display: flex
     flex-wrap: wrap
+    justify-content: center
 
 .agedbackground
     background-image: url('../../assets/images/paper.jpg')
@@ -287,7 +292,7 @@ export default {
     font-weight: bold
     position: absolute
     right: 0.5em
-    bottom: 0.5em
+    bottom: 0.25em
     
 
 .upgrademode
@@ -302,8 +307,9 @@ export default {
     background-color: rgba(0, 0, 0, 0.3)
     border-radius: 5px
     color: white
-    margin-right: -1em
-    margin-top: -1em
+    right: 0
+    bottom: 0
+    padding: 0.25em 0.5em 0.25em 0.5em
 
 .dot
   height: 0.5em
@@ -329,24 +335,25 @@ export default {
 .aftermore
     margin-top: 0.5em
     margin-left: 1.5em
-    margin-bottom: 1.7em
+    margin-bottom: 0
 
 .centerer
     text-align: center
     width: 100%
 
-.fullwidth
-    width: calc(100% - 1em)
+// .fullwidth
+    // width: calc(100% - 1em)
 
 .normaltopmargin
     margin-top: 0
 
 .closedwidth
     width: 30.65em
+    // transform: translateX(calc(50% - 1em))
+    flex-grow: 0
     
-.card.adjustwidth
-    width: 100%
-    max-width: 29.8em
-    margin-left: -0.4em
-
+ // .card.adjustwidth
+    // max-width: 100%
+    // max-width: 29.8em
+    // max-width: 39.333333333333%
 </style>

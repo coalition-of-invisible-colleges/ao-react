@@ -252,9 +252,9 @@ export default {
             let matches = []
             this.$store.getters.localTasks.forEach(t => {
                 if(t.name === this.task.name) {
-                } else if(regex.test(t.name)) {
+                } else if(regex.test(t.name) && t.deck.length > 0) {
                     matches.push(t)
-                } else if(t.guild && regex.test(t.guild)) {
+                } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
                     matches.push(t)
                 }
             })

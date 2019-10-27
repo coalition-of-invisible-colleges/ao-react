@@ -6,7 +6,7 @@
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
     bird(:b='b', :inId='inId')
     flag(:b='b', :inId='inId')
-    .row
+    .tickmarks
         img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
@@ -74,7 +74,7 @@ export default {
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
-        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400 })
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
         let longPress = new Hammer.Press({ time: 600 })
 
         mc.add([doubleTap, longPress])
@@ -511,4 +511,9 @@ export default {
     float: right
     margin-left: 0.5em
     margin-bottom: 0.5em
+    
+.tickmarks
+    position: absolute
+    right: 3em
+    top: 0.85em
 </style>

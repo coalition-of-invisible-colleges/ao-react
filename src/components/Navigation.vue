@@ -209,7 +209,7 @@ export default {
             }, 2000)
         })
 
-        let Tap4 = new Hammer.Tap({ taps: 2, time: 400 })
+        let Tap4 = new Hammer.Tap({ taps: 2, time: 400, interval: 400 })
         dogemc.add(Tap4)
         dogemc.on('tap', (e) => {
             this.toggleMute()
@@ -524,6 +524,12 @@ hr
     position: absolute
     right: 0
     top: 0
+
+@media only screen and (max-width: 550px) {
+  .modeleft, .moderight {
+    display: none
+  }
+}
 
 .btc
     border: 2px purple solid

@@ -58,7 +58,7 @@ export default {
 
 .sunkenship
     width: 22em
-    opacity: 0.3
+    opacity: 0.5
     margin: 16em calc(50% - 11em) 4em calc(50% - 11em)
 
 .up

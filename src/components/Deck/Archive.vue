@@ -51,6 +51,7 @@ export default {
 
 .shipwrapper
     position: relative
+    min-height: 76vh
 
 .shipbackground
     background-image: url('../../assets/images/sunken_ship.png')
@@ -65,7 +66,6 @@ export default {
     position: absolute
     z-index: -1
     width: 100%
-    height: 110%
-    min-height: 76vh
+    height: 100%
 
 </style>

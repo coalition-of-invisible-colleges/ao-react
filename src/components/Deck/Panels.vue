@@ -3,16 +3,15 @@
 .panel(:class='{ fullwidth : $store.state.upgrades.stacks === 1 }')
     div(v-if='$store.state.upgrades.stacks === 5')
         .row(v-if='$store.getters.red.length + $store.getters.green.length + $store.getters.blue.length > 0')
-          .four.columns(v-if='$store.getters.red.length > 0')
-              card-panel(:c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
-          .four.columns(v-if='$store.getters.green.length > 0')
-              card-panel(:c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
+          .four.columns.minheight
+              card-panel(v-if='$store.getters.red.length > 0'  :c='$store.getters.red', :taskId='$store.state.context.panel[$store.state.context.top]')
+          .four.columns.minheight
+              card-panel(v-if='$store.getters.green.length > 0'  :c='$store.getters.green', :taskId='$store.state.context.panel[$store.state.context.top]')
           .four.columns(v-if='$store.getters.blue.length > 0')
               card-panel(:c='$store.getters.blue', :taskId='$store.state.context.panel[$store.state.context.top]')
         .row(v-if='$store.getters.yellow.length + $store.getters.purple.length > 0')
-          .two.columns
-              p &nbsp;
-          .four.columns(v-if='$store.getters.yellow.length > 0')
+          .two.columns.minheight
+          .four.columns.minheight(v-if='$store.getters.yellow.length > 0')
               card-panel(:c='$store.getters.yellow', :taskId='$store.state.context.panel[$store.state.context.top]')
           .four.columns(v-if='$store.getters.purple.length > 0')
               card-panel(:c='$store.getters.purple', :taskId='$store.state.context.panel[$store.state.context.top]')
@@ -41,7 +40,7 @@ export default {
 .panel
     margin: 0 1em 1em 1em
     clear: both
-    padding-bottom: 1em
+    padding-bottom: 1.5em
 
 .card
     padding: 2em
@@ -63,4 +62,7 @@ export default {
     
 .fullwidth
     width: 100%
+    
+.minheight
+    min-height: 0.001em
 </style>
