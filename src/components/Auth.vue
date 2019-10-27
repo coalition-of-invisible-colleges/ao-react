@@ -2,7 +2,7 @@
 
 #auth
   div(v-if='!confirmed')
-      input(type='text', v-model='name', autocapitalize="none", autocomplete="off", autocorrect="off", placeholder='dogename')
+      input(type='text', v-model='name', autocapitalize="none", autocomplete="off", autocorrect="off", @keyup.enter='createSession', placeholder='dogename')
       input#password(type='password', v-model='pass', autocapitalize="none", autocomplete="off", autocorrect="off", @keyup.enter='createSession', placeholder='password')
       p.red {{ err }}
       button.primary(@click="createSession") login

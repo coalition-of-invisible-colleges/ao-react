@@ -1,7 +1,7 @@
 <template lang='pug'>
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper.padsides
-        .card(:class='{ adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge" }')
+        .card(:class='{ adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge", openwidth : $store.state.upgrades.mode !== "doge" }')
             auth(v-if='!$store.getters.isLoggedIn')
             member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
             resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
@@ -10,7 +10,7 @@
             template(v-for='(n, i) in (panelSplit.before.length > 5 ? panelSplit.before.slice(-6, panelSplit.before.length - 1) : panelSplit.before)')
               div(@click="goWithinPanel(n)"  :style='{ marginLeft : 0.5 + ((Math.min(panelSplit.before.length, 5) - i) * 0.25) + "em", marginRight: 1.5 + ((Math.min(panelSplit.before.length, 5) - i) * 0.25) + "em" }')
                 context(:taskId='n')
-            hypercard.fullwidth(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
+            hypercard(v-if='!$store.getters.contextMember && !$store.getters.contextResource'  :b="card"   :key='card.taskId')
             template(v-for='(n, i) in panelSplit.after.slice(0, 5)')
               div(@click="goWithinPanel(n)"  :style='{ marginLeft: 0.25 + (i * 0.25) + "em", marginRight: 1.25 + (i * 0.25) + "em" }')
                 context(:taskId='n')
@@ -341,8 +341,8 @@ export default {
     text-align: center
     width: 100%
 
-// .fullwidth
-    // width: calc(100% - 1em)
+.openwidth
+    max-width: 26em
 
 .normaltopmargin
     margin-top: 0
