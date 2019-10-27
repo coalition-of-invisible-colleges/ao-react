@@ -18,15 +18,15 @@
                 input#aoAddressInput(v-model='ao.address' type='text')
                 label(for="aoSecretInput")  connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
-    h4 current active links:
-    .row
-        template.row(v-for='r in $store.state.ao')
-            // relay info / recent communications
-            h6 {{ r.address }} -
-                span.discon(@click='discon(r.address)') disconnect
-            h6 attempts: {{ r.attempts }} -- successes: {{ r.successfuls }}, fails: {{ r.fails }} 
-        template.row(v-for='a in $store.state.cash.subscribed')
-            p {{ a }}
+    //- h4 current active links:
+    //- .row
+    //-     template.row(v-for='r in $store.state.ao')
+    //-         // relay info / recent communications
+    //-         h6 {{ r.address }} -
+    //-             span.discon(@click='discon(r.address)') disconnect
+    //-         h6 attempts: {{ r.attempts }} -- successes: {{ r.successfuls }}, fails: {{ r.fails }}
+    //-     template.row(v-for='a in $store.state.cash.subscribed')
+    //-         p {{ a }}
 </template>
 
 <script>

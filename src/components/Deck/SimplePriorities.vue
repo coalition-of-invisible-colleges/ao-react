@@ -13,7 +13,6 @@
 
 import Hypercard from '../Card'
 import SimpleHyperpriority from './SimplePriority'
-import HyperpriorityAction from './PriorityAction'
 
 export default {
   props: ['taskId'],
@@ -31,7 +30,6 @@ export default {
   },
   components:{
       SimpleHyperpriority,
-      HyperpriorityAction,
       Hypercard,
   },
 }
@@ -166,11 +164,11 @@ img
 .bdoge
     width: 100%
     opacity: 0.6
-    
+
 .subpriority
     margin-left: 2em
     width: calc(100% - 2em)
-    
+
 .more
     text-align: center
     background-color: #F8685F
@@ -184,11 +182,11 @@ img
     font-size: 0.8em
     opacity: 0.3
     color: white
-    
+
 .centerer
     text-align: center
     width: 100%
-    
+
 .front
     z-index: 98
 </style>

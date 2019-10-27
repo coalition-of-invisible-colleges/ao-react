@@ -13,7 +13,7 @@
 <script>
 
 import MemberCreate from '../forms/MemberCreate'
-import Changer from '../MyPage/Changer'
+import Changer from './Changer'
 import Members from '../Members'
 
 export default {

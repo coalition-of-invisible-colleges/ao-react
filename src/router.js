@@ -8,26 +8,15 @@ import Connect from './components/Dash/Connect'
 import Accounts from './components/Dash/Accounts'
 import Lightning from './components/Dash/Lightning'
 import Reserve from './components/Dash/Reserve'
-// Member components
 import Members from './components/Members'
-import Wiki from './components/Wiki'
-// import Bounties from './components/Bounties'
-import Onboarding from './components/Onboarding'
 
-// Invoice components
-import Invoices from './components/Invoices'
-
-import Manage from './components/Manage'
 import Auth from './components/Auth'
 
 import MemberCalendar from './components/MemberCalendar'
 import TaskCalendar from './components/TaskCalendar'
 import List from './components/EventsList'
 
-import MyPage from './components/MyPage'
-import Nodes from './components/Nodes'
 import Deck from './components/Deck'
-
 import Archive from './components/Deck/Archive'
 
 import News from './components/Pinboard/News'
@@ -75,10 +64,6 @@ const routes =[{
     },
   ]
 },{
-  path: '/task/*',
-  component: Deck,
-  meta: { title: "card" },
-},{
   path: '/front',
   component: News,
   meta: { title: "DCTRL" }
@@ -106,10 +91,6 @@ const routes =[{
   path: '/history',
   component: List,
   meta: { title: "history" }
-},{
-  path: '/members',
-  component: Members,
-  meta: { title: "members @ DCTRL" }
 },{
   path: '/dash',
   component: Access,

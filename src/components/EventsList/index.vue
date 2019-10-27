@@ -5,7 +5,6 @@
     .row
         ev(v-for='a in recent', :e='a')
     button(@click='buildAll') Load All
-
 </template>
 
 <script>
@@ -14,6 +13,9 @@ import SharedTitle from '../slotUtils/SharedTitle'
 import Ev from './Ev'
 
 export default {
+    mounted(){
+        this.$store.commit('stopLoading')
+    },
     data(){
         return {
             loadAll: false
