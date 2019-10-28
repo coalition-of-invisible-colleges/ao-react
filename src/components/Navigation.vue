@@ -1,9 +1,7 @@
 <template lang='pug'>
 
 .navigation(@contextmenu.prevent)
-    .loadingscreen(v-if='$store.state.context.loading')
-        h1
-          span loading {{ $store.state.context.loading }}
+    h1.loadingscreen(v-if='$store.state.context.loading') loading {{ $store.state.context.loading }}
     div.ztop(@click='cycleLeft')
         img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
         img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")
@@ -963,16 +961,14 @@ body {
 
 .loadingscreen
     position: fixed
-    left: 0
-    top: 0
-    width: 100vw
+    left: 50%
+    top: 32%
+    transform: translateX(-50%)
     z-index: 9002
-
-.loadingscreen  h1
+    padding: 0.5em
+    background-color: rgba(22, 22, 22, 0.8)
     text-align: center
-    margin-top: 3.9em
-    span
-        background-color: rgba(22, 22, 22, 0.5)
+    border-radius: 0.5em
 
 .btcspot , .satspot
     position: absolute
