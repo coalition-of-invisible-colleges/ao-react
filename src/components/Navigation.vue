@@ -2,7 +2,8 @@
 
 .navigation(@contextmenu.prevent)
     .loadingscreen(v-if='$store.state.context.loading')
-        h1 loading {{ $store.state.context.loading }}
+        h1
+          span loading {{ $store.state.context.loading }}
     div.ztop(@click='cycleLeft')
         img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
         img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")
@@ -965,14 +966,13 @@ body {
     left: 0
     top: 0
     width: 100vw
-    height: 100vh
-    background-color: rgba(22, 22, 22, 0.5)
     z-index: 9002
 
 .loadingscreen  h1
-        text-align: center
-        margin-top: 7em
-
+    text-align: center
+    margin-top: 3.9em
+    span
+        background-color: rgba(22, 22, 22, 0.5)
 
 .btcspot , .satspot
     position: absolute

@@ -14,7 +14,6 @@
 <script>
 
 import Hypercard from "../Card"
-import BountyCard from "../Bounties/BountyCard"
 import SharedTitle from '../slotUtils/SharedTitle'
 import CrazyBtn from '../slotUtils/CrazyBtn'
 import calculations from '../../calculations'
@@ -29,7 +28,6 @@ export default {
       Hypercard,
       SharedTitle,
       CrazyBtn,
-      BountyCard,
       FormBox,
       PreviewDeck,
       HyperDeck,

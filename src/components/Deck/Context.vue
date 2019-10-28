@@ -1,8 +1,6 @@
 <template lang='pug'>
 
 .context.paperwrapper(:class="cardInputSty")
-    //router-link(:to='"/task/" + taskId')
-    //div.paperwrapper
     .popup
         .here
             span.front(v-if='isMember')  {{ isMember }}

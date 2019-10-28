@@ -34,7 +34,6 @@
 <script>
 
 import Hypercard from "./Card"
-import BountyCard from "./Bounties/BountyCard"
 import request from "superagent"
 import SharedTitle from './slotUtils/SharedTitle'
 import CrazyBtn from './slotUtils/CrazyBtn'
@@ -68,7 +67,6 @@ export default {
       SharedTitle,
       Hypercard,
       CrazyBtn,
-      BountyCard,
       TaskCreate,
       WhyLightning,
   },
@@ -88,7 +86,7 @@ h3
 
 #sidewalk
     margin-bottom: 4em
-    
+
 #wrex
     width: 100%
     #vine

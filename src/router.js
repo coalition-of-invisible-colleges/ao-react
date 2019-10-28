@@ -8,26 +8,9 @@ import Connect from './components/Dash/Connect'
 import Accounts from './components/Dash/Accounts'
 import Lightning from './components/Dash/Lightning'
 import Reserve from './components/Dash/Reserve'
-// Member components
 import Members from './components/Members'
-import Wiki from './components/Wiki'
-// import Bounties from './components/Bounties'
-import Onboarding from './components/Onboarding'
 
-// Invoice components
-import Invoices from './components/Invoices'
-
-import Manage from './components/Manage'
-import Auth from './components/Auth'
-
-import MemberCalendar from './components/MemberCalendar'
-import TaskCalendar from './components/TaskCalendar'
-import List from './components/EventsList'
-
-import MyPage from './components/MyPage'
-import Nodes from './components/Nodes'
 import Deck from './components/Deck'
-
 import Archive from './components/Deck/Archive'
 
 import News from './components/Pinboard/News'
@@ -75,10 +58,6 @@ const routes =[{
     },
   ]
 },{
-  path: '/task/*',
-  component: Deck,
-  meta: { title: "card" },
-},{
   path: '/front',
   component: News,
   meta: { title: "DCTRL" }
@@ -102,14 +81,6 @@ const routes =[{
   path: '/front/timecube',
   component: Calendar,
   meta: { title: "calendar" }
-},{
-  path: '/history',
-  component: List,
-  meta: { title: "history" }
-},{
-  path: '/members',
-  component: Members,
-  meta: { title: "members @ DCTRL" }
 },{
   path: '/dash',
   component: Access,
@@ -161,8 +132,6 @@ router.beforeEach((to, from, next) => {
 
   Store.commit("startLoading", to.path)
 
-  console.log(to.path)
-
   if (/doge/.test(to.path)){
       Store.commit("setMode", 0)
   }
@@ -182,46 +151,11 @@ router.beforeEach((to, from, next) => {
   if (/timecube/.test(to.path)){
       Store.commit("setMode", 4)
   }
-  next()
+
+  setTimeout(()=>{
+    next()
+  }, 3)
 
 })
-
-router.afterEach((to, from, next) => {
-
-  if(to.meta.title == 'card') return
-  Vue.nextTick( () => {
-      document.title = to.meta.title ? to.meta.title : 'ao';
-  })
-
-})
-
-
-// init ({ dispatch }) {       // Could also be async and use await instead of return
-//   return Promise.all([
-//     dispatch('getUserSession'), // Using another action
-//     dispatch('auth/init'),      // In another module
-//     fetch('tehKittenz')         // With the native fetch API
-//     // ...
-//   ])
-// }
-// const loadingLoaded = store.dispatch('loadingLoaded')
-
-// router.beforeEach((to, from, next) => {
-//   storeInit.then(next)
-//     .catch(e => {
-//       // Handle error
-//     })
-// })
-
-// router.beforeRouteLeave((to, from, next) => {
-//   console.log("beforeRouteLeave routed to path", to.path, "from  ", from.path)
-
-//   switch(from.meta.title) {
-//     case 'card':
-//     break
-//   }
-
-//   Store.dispatch('startLoading', 'unicorn').then()
-// })
 
 export default router

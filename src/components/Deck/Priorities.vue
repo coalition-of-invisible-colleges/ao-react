@@ -20,7 +20,6 @@
 
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
-import HyperpriorityAction from './PriorityAction'
 import _ from 'lodash'
 import SoundFX from '../../modules/sounds'
 
@@ -72,7 +71,6 @@ export default {
   },
   components:{
       Hyperpriority,
-      HyperpriorityAction,
       Hypercard,
   },
 }

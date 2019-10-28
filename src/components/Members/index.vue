@@ -25,7 +25,6 @@ import SharedTitle from '../slotUtils/SharedTitle'
 import CrazyBtn from '../slotUtils/CrazyBtn'
 import DctrlActive from './DctrlActive'
 import Addr from './Addr'
-import Bounties from '../Bounties'
 
 export default {
     data(){
@@ -76,7 +75,6 @@ export default {
         }
     },
     components : {
-        Bounties,
         SharedTitle,
         Row,
         CrazyBtn,
