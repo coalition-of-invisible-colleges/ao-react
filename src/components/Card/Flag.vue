@@ -1,23 +1,24 @@
 <template lang='pug'>
 .flag(v-if="$store.getters.memberCard"  :id='uuid'  class='upboat')
-  div(v-if='!$store.state.context.panel[$store.state.context.top]')
-    img.flaggy(@click='deckIt'  src='../../assets/images/scroll.svg')
-  div(v-else-if="$store.state.upgrades.mode === 'boat' || $store.state.upgrades.mode === 'doge'"  id='upboat')
-    img.flaggy.doge(v-if='isDoged'  src='../../assets/images/doge_faded.png')
-    img.flaggy.svgwhite.faded(v-else-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}'  class='upboat')
-    img.flaggy.prioritized(v-else, src='../../assets/images/boatbtnselected.svg'  class='upboat')
-  div(v-else-if="$store.state.upgrades.mode === 'badge'")
-    span.flaggy.checkmark.clickable(v-if='isCompleted') ☑
-    span.flaggy.checkmark.clickable(v-else) ☐
-  div(v-else-if="$store.state.upgrades.mode === 'chest' && $store.state.cash.info.alias")
-    img.flaggy(src='../../assets/images/bounty.svg')
-    .fl(v-if='isPayOpen')
-        tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
-        tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
-  div(v-else-if="$store.state.upgrades.mode === 'timecube'")
-    img.flaggy(src='../../assets/images/timecube.svg')
-  //- hr(v-if='isCubeOpen' )
-  //- resource-book(v-if='isCubeOpen'  :tId='b.taskId')
+    .flaggy
+      div(v-if='!$store.state.context.panel[$store.state.context.top]')
+        img(@click='deckIt'  src='../../assets/images/scroll.svg')
+      div(v-else-if="$store.state.upgrades.mode === 'boat' || $store.state.upgrades.mode === 'doge'"  id='upboat')
+        img.doge(v-if='isDoged'  src='../../assets/images/doge_faded.png')
+        img.svgwhite.faded(v-else-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}'  class='upboat')
+        img.prioritized(v-else, src='../../assets/images/boatbtnselected.svg'  class='upboat')
+      div(v-else-if="$store.state.upgrades.mode === 'badge'")
+        span.checkmark.clickable(v-if='isCompleted') ☑
+        span.checkmark.clickable(v-else) ☐
+      div(v-else-if="$store.state.upgrades.mode === 'chest' && $store.state.cash.info.alias")
+        img(src='../../assets/images/bounty.svg')
+      div(v-else-if="$store.state.upgrades.mode === 'timecube'")
+        img(src='../../assets/images/timecube.svg')
+    .opened
+      resource-book(v-if='isCubeOpen'  :tId='b.taskId')
+      .fl(v-if='isPayOpen')
+          tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
+          tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
 </template>
 
 <script>
@@ -265,7 +266,11 @@ label
     margin-bottom: -50px
 
 .flaggy
-    float: right
+    position: absolute
+    right: 1em
+    top: 1em
+
+.flaggy img
     height: .777em
     cursor: pointer
 
@@ -307,4 +312,8 @@ label
 .front
     z-index: 3000000
     background: wrexblue
+
+.opened
+    display: block
+    position: relative
 </style>

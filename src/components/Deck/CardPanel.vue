@@ -1,8 +1,8 @@
 <template lang='pug'>
 
-#tasks(:id='uuid'  @contextmenu.capture.prevent)
-    .row.ptr(v-if="topCard")
-        .three.grid(@click='previous')
+#tasks(@contextmenu.capture.prevent)
+    .row.ptr(v-if="topCard"  ref='swipebar')
+        .three.grid(ref='previous')
             span &nbsp;
             img.fl(v-if='!open && topCard.color === "red"', src='../../assets/images/backRed.svg')
             img.fl(v-if='!open && topCard.color === "yellow"', src='../../assets/images/backYellow.svg')
@@ -13,7 +13,7 @@
             .box.verticalcenter
                 h3(v-if='!open') {{ top + 1 }}
         .four.grid.horizcenter(:class='panelSty')
-            .toglr.mandalign(:id='orbuuid')
+            .mandalign(ref='mandelorb')
                 img(v-if='open && $store.state.upgrades.stacks === 5', src='../../assets/images/openRed.svg'  draggable='false')
                 img(v-else-if='$store.state.upgrades.stacks === 5'  src='../../assets/images/open.svg'  draggable='false')
                 img.iris(v-else-if='open && $store.state.upgrades.stacks === 1'  src='../../assets/images/mandelorb_sequential.svg'  draggable='false')
@@ -22,7 +22,7 @@
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
                 h3(v-else) all
-        .three.grid(@click='next')
+        .three.grid(ref='next')
             span &nbsp;
             img.fr(v-if='!open && topCard.color === "red"', , src='../../assets/images/forwardRed.svg')
             img.fr(v-if='!open && topCard.color === "yellow"', src='../../assets/images/forwardYellow.svg')
@@ -33,7 +33,7 @@
       .three.grid
           img.fl(src='../../assets/images/back.svg')
       .six.grid
-          .toglr.fr
+          .fr
               img(src='../../assets/images/open.svg')
           .box
               h3 0 / 0
@@ -56,37 +56,10 @@ import SoundFX from '../../modules/sounds'
 export default {
   props: ['c', 'taskId'],
   mounted(){
-        let el = document.getElementById(this.uuid)
-        if(!el) return
-        let mc = Propagating(new Hammer.Manager(el))
-        let Swipe = new Hammer.Swipe({ threshold: 144 })
-        mc.add(Swipe)
-
-        mc.on('swipeleft', (e) => {
-          this.previous()
-          e.stopPropagation()
-        })
-
-        mc.on('swiperight', (e) => {
-          this.next()
-          e.stopPropagation()
-        })
-
-        mc.on('swipeup', (e) => {
-            this.swap(-1)
-            console.log("swapped up")
-            this.previous()
-            e.stopPropagation()
-        })
-
-        mc.on('swipedown', (e) => {
-            this.swap(1)
-            e.stopPropagation()
-        });
-
-        var orbel = document.getElementById(this.orbuuid)
+        let orbel = this.$refs.mandelorb
+        console.log("orbel = ", orbel)
         if(!orbel) return
-        var orbmc = Propagating(new Hammer.Manager(orbel))
+        let orbmc = Propagating(new Hammer.Manager(orbel))
 
         let orbTap = new Hammer.Tap({ time: 400 })
         orbmc.add(orbTap)
@@ -95,14 +68,40 @@ export default {
             e.stopPropagation()
         })
 
-        var orbSwipe = new Hammer.Swipe({ threshold: 144 })
+        let barel = this.$refs.swipebar
+        console.log("barel = ", barel)
+        if(!barel) return
+        let barmc = Propagating(new Hammer.Manager(barel))
+
+        let barSwipe = new Hammer.Swipe({ threshold: 50 })
+        barmc.add(barSwipe)
+
+        barmc.on('swipeleft', (e) => {
+          console.log("swipeleft on swipebar")
+          this.previous()
+          e.stopPropagation()
+        })
+
+        barmc.on('swiperight', (e) => {
+          console.log("swiperight on swipebar")
+          this.next()
+          e.stopPropagation()
+        })
+        
+        let orbSwipe = new Hammer.Swipe({ threshold: 50 })
         orbmc.add(orbSwipe)
 
-        orbmc.on('swipeleft', (e) => {
+        orbmc.on('swipeup', (e) => {
+            this.swap(-1)
+            console.log("swapped up")
+            this.previous()
+            e.stopPropagation()
         })
 
-        orbmc.on('swiperight', (e) => {
-        })
+        orbmc.on('swipedown', (e) => {
+            this.swap(1)
+            e.stopPropagation()
+        });
 
         let orbPress = new Hammer.Press({ time: 400 })
         orbmc.add(orbPress)
@@ -112,22 +111,50 @@ export default {
             e.stopPropagation()
         })
 
-        // put these on the left an right arrows as long presses
-        // orbmc.on('swipeup', (e) => {
-        //     this.first()
-        //     e.stopPropagation()
-        // })
+        let prevel = this.$refs.previous
+        console.log("previous = ", orbel)
+        if(!prevel) return
+        let prevmc = Propagating(new Hammer.Manager(prevel))
 
-        // orbmc.on('swipedown', (e) => {
-        //     this.last()
-        //     e.stopPropagation()
-        // })
+        let prevTap = new Hammer.Tap({ time: 400 })
+        prevmc.add(prevTap)
+        prevmc.on('tap', (e) => {
+            this.previous()
+            e.stopPropagation()
+        })
+
+        let prevPress = new Hammer.Press({ time: 400 })
+        prevmc.add(prevPress)
+        prevmc.on('press', (e) => {
+
+            this.first()
+            e.stopPropagation()
+        })
+
+        let nextel = this.$refs.next
+        console.log("nextious = ", nextel)
+        if(!nextel) return
+        let nextmc = Propagating(new Hammer.Manager(nextel))
+
+        let nextTap = new Hammer.Tap({ time: 400 })
+        nextmc.add(nextTap)
+        nextmc.on('tap', (e) => {
+            this.next()
+            e.stopPropagation()
+        })
+
+        let nextPress = new Hammer.Press({ time: 400 })
+        nextmc.add(nextPress)
+        nextmc.on('press', (e) => {
+
+            this.last()
+            e.stopPropagation()
+        })
   },
   data(){
       return {
           open: false,
           top: 0,
-          uuid: uuidv1(),
           orbuuid: uuidv1(),
           componentKey: 0,
       }

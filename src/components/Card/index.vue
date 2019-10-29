@@ -432,11 +432,6 @@ export default {
     font-style: italic
     margin-top: 1em
 
-.flag
-    position: absolute
-    right: 1em
-    top: 1em
-
 .dogecoin
     position: absolute
     top: -0.66em

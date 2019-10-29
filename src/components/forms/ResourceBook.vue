@@ -105,6 +105,11 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/grid'
 
+#newresource
+    position: relative
+    top: 2em
+    margin-bottom: 1em
+    
 .br
   padding-top: 1.9em
 
