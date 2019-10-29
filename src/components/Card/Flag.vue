@@ -98,7 +98,6 @@ export default {
             HelmControl.previousUpgradeMode(this.$router)
             e.stopPropagation()
         })
-        console.log("swipe1 added")
 
         mc.on('swiperight', (e) => {
             HelmControl.flashHelm()
@@ -106,7 +105,6 @@ export default {
             HelmControl.nextUpgradeMode(this.$router)
             e.stopPropagation()
         })
-        console.log("mounted flaggy")
     },
     methods: {
         complete(){

@@ -79,8 +79,8 @@ export default {
 
         mc.add([doubleTap, longPress])
 
-        longPress.recognizeWith([doubleTap]);
-        longPress.requireFailure([doubleTap]);
+        longPress.recognizeWith([doubleTap])
+        longPress.requireFailure([doubleTap])
 
         mc.on('doubletap', (e) => {
             this.goIn()

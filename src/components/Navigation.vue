@@ -2,14 +2,12 @@
 
 .navigation(@contextmenu.prevent)
     h1.loadingscreen(v-if='$store.state.context.loading') loading {{ $store.state.context.loading }}
-    div.ztop(@click='cycleLeft')
-        img.bullimgleft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg")
-        img.bullimgleft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg")
-        img.bullimgleft(v-else  src="../assets/images/navigas/uniSunDab.svg")
-    div.ztop(@click='cycleRight')
-        img.bullimgright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg")
-        img.bullimgright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg")
-        img.bullimgright(v-else  src="../assets/images/navigas/uniBullDab.svg")
+    img.dableft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg"  ref='sun')
+    img.dableft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
+    img.dableft(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
+    img.dabright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
+    img.dabright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
+    img.dabright(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
     button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
@@ -127,8 +125,9 @@ export default {
         mc.on('press', (e) => {
             if(this.$router.currentRoute.path.split("/")[1] === 'front'){
                 if(this.$store.state.upgrades.mode === 'doge') {
-                    SoundFX.playPortalBlocked()
                     HelmControl.flashHelm(5)
+                    SoundFX.playPortalTransit()
+                    this.$router.push('/doge')
                 } else {
                     HelmControl.flashHelm(2)
                     SoundFX.playPortalTransit()
@@ -222,6 +221,42 @@ export default {
         dogemc.on('tap', (e) => {
             this.toggleMute()
         })
+
+        let sunel = this.$refs.sun
+        let sunmc = new Hammer.Manager(sunel)
+        let sunTap = new Hammer.Tap({ time: 400 })
+        let sunPress = new Hammer.Press({ time: 600 })
+        sunmc.add([sunTap, sunPress])
+        sunPress.recognizeWith(sunTap);
+        // sunPress.requireFailure(sunTap);
+
+        sunmc.on('tap', (e) => {
+            console.log("suntap")
+            this.cycleLeft()
+        })
+
+        sunmc.on('press', (e) => {
+            console.log("sunpress")
+            this.goNewspaper()
+        })
+
+        let bullel = this.$refs.bull
+        let bullmc = new Hammer.Manager(bullel)
+        let bullTap = new Hammer.Tap({ time: 400 })
+        let bullPress = new Hammer.Press({ time: 600 })
+        bullmc.add([bullTap, bullPress])
+        bullPress.recognizeWith(bullTap);
+        // bullPress.requireFailure(bullTap);
+
+        bullmc.on('tap', (e) => {
+            console.log("bulltap")
+            this.cycleRight()
+        })
+
+        bullmc.on('press', (e) => {
+            console.log("bullpress")
+            this.goFrontDash()
+        })
     },
     watch: {
       '$route': 'setToRoute'
@@ -275,6 +310,32 @@ export default {
                 this.uniRight = !this.uniRight
             }, 20)
         },
+        goNewspaper() {
+            if(Dimensions.isNewspaper(this.$router)) {
+                SoundFX.playPortalBlocked()
+                return
+            }
+            SoundFX.playDogeBark()
+            this.$store.commit('startLoading', 'sun')
+            this.$router.push('/front/doge')
+            setTimeout(() => {
+                this.setToRoute()
+                this.uniLeft = !this.uniLeft
+            }, 20)
+        },
+        goFrontDash() {
+            if(Dimensions.isFrontDash(this.$router)) {
+                SoundFX.playPortalBlocked()
+                return
+            }
+            SoundFX.playPortalTransit()
+            this.$store.commit('startLoading', 'bull')
+            this.$router.push('/dash/doge')
+            setTimeout(() => {
+                this.setToRoute()
+                this.uniRight = !this.uniRight
+            }, 20)
+        },
         setToRoute() {
             let mainroute = this.$router.currentRoute.path.split('/')[1]
             switch (mainroute){
@@ -287,8 +348,6 @@ export default {
             this.showBtc = !this.showBtc
         },
         toggleMute() {
-            console.log("muted is ", this.$store.getters.member.muted)
-            console.log("memberId is", this.$store.getters.member.memberId)
             if(this.$store.getters.member.muted) {
                 this.$store.dispatch("makeEvent", {
                     type: "doge-unmuted",
@@ -353,9 +412,6 @@ let intervalID = window.setInterval(updateTransition, 7000)
 @import '../styles/colours'
 @import '../styles/grid'
 @import '../styles/tooltips'
-
-.bullimg
-    height: 10em
 
 .bullcontext, .suncontext
     height: 1.75em
@@ -463,25 +519,20 @@ li
 hr
     color: lightteal
 
-.bullimgleft
+.dableft, .dabright
+    position: absolute
+    top: 0
+    display: flex
+    flex-direction: column
     width: 7em
     cursor: pointer
-    // float: left
-    flex-direction: column
-    display: flex
-    position: absolute
-    left: 0
-    top: 0
+    z-index: 152
 
-.bullimgright
-    width: 7em
-    cursor: pointer
-    // float: left
-    flex-direction: column
-    display: flex
-    position: absolute
+.dableft
+    left: 0
+
+.dabright
     right: 0
-    top: 0
 
 @media only screen and (max-width: 550px) {
   .modeleft, .moderight {
@@ -672,9 +723,6 @@ hr
     left: 0.5em
     z-index: 149
     padding: 0 1em 1em 1em
-
-.ztop
-    z-index: 152
 
 body {
   background-color: #333

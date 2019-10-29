@@ -45,8 +45,8 @@ export default {
 
         mc.add([doubleTap, singleTap, swipe, longPress])
 
-        doubleTap.recognizeWith(singleTap);
-        singleTap.requireFailure(doubleTap);
+        doubleTap.recognizeWith(singleTap)
+        singleTap.requireFailure(doubleTap)
 
         mc.on('singletap', (e) => {
             if(this.$store.state.context.action === this.taskId) {

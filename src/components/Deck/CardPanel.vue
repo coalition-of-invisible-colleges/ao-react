@@ -57,7 +57,6 @@ export default {
   props: ['c', 'taskId'],
   mounted(){
         let orbel = this.$refs.mandelorb
-        console.log("orbel = ", orbel)
         if(!orbel) return
         let orbmc = Propagating(new Hammer.Manager(orbel))
 
@@ -69,7 +68,6 @@ export default {
         })
 
         let barel = this.$refs.swipebar
-        console.log("barel = ", barel)
         if(!barel) return
         let barmc = Propagating(new Hammer.Manager(barel))
 
@@ -77,13 +75,11 @@ export default {
         barmc.add(barSwipe)
 
         barmc.on('swipeleft', (e) => {
-          console.log("swipeleft on swipebar")
           this.previous()
           e.stopPropagation()
         })
 
         barmc.on('swiperight', (e) => {
-          console.log("swiperight on swipebar")
           this.next()
           e.stopPropagation()
         })
@@ -93,7 +89,6 @@ export default {
 
         orbmc.on('swipeup', (e) => {
             this.swap(-1)
-            console.log("swapped up")
             this.previous()
             e.stopPropagation()
         })
@@ -112,7 +107,6 @@ export default {
         })
 
         let prevel = this.$refs.previous
-        console.log("previous = ", orbel)
         if(!prevel) return
         let prevmc = Propagating(new Hammer.Manager(prevel))
 
@@ -132,7 +126,6 @@ export default {
         })
 
         let nextel = this.$refs.next
-        console.log("nextious = ", nextel)
         if(!nextel) return
         let nextmc = Propagating(new Hammer.Manager(nextel))
 
@@ -173,16 +166,11 @@ export default {
         this.top = 0
     },
     previous(){
-        console.log("previous() function")
         SoundFX.playPageTurn()
-        console.log("this.top is ", this.top)
-        console.log("this.c.length is ", this.c.length)
-        console.log("this.c is ", this.c)
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
         }
-        console.log("post: this.top is ", this.top)
         this.componentKey ++
     },
     next(){
@@ -229,7 +217,6 @@ export default {
     topCard(){
         this.componentKey ++
         if(this.top >= this.c.length) {
-            console.log("top set to 0 because this.c.length is ", this.c.length, " and top is ", this.top)
             this.top = 0
         }
         if (this.c.length > 0) {
