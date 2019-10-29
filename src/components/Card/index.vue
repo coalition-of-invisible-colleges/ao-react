@@ -1,4 +1,4 @@
-``<template lang='pug'>
+<template lang='pug'>
 .task(:class="cardInputSty"  ref='wholeCard').dont-break-out.agedwrapper
     .agedbackground.freshpaper(v-if='cardAge < 8')
     .agedbackground.weekoldpaper(v-else-if='cardAge < 30')

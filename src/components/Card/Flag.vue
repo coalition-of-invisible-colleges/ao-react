@@ -1,22 +1,17 @@
 <template lang='pug'>
-.flag(v-if="$store.getters.memberCard"  :id='uuid'  class='upboat')
-    .flaggy
-      div(v-if='!$store.state.context.panel[$store.state.context.top]')
-        img(@click='deckIt'  src='../../assets/images/scroll.svg')
-      div(v-else-if="$store.state.upgrades.mode === 'boat' || $store.state.upgrades.mode === 'doge'"  id='upboat')
-        img.doge(v-if='isDoged'  src='../../assets/images/doge_faded.png')
-        img.svgwhite.faded(v-else-if='!isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}'  class='upboat')
-        img.prioritized(v-else, src='../../assets/images/boatbtnselected.svg'  class='upboat')
-      div(v-else-if="$store.state.upgrades.mode === 'badge'")
-        span.checkmark.clickable(v-if='isCompleted') ☑
-        span.checkmark.clickable(v-else) ☐
-      div(v-else-if="$store.state.upgrades.mode === 'chest' && $store.state.cash.info.alias")
-        img(src='../../assets/images/bounty.svg')
-      div(v-else-if="$store.state.upgrades.mode === 'timecube'")
-        img(src='../../assets/images/timecube.svg')
+.flag(v-if="$store.getters.memberCard")
+    .flaggy(:id='uuid'  :class='{ boat : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isDoged, doge : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged, chest : $store.state.upgrades.mode === "chest", timecube : $store.state.upgrades.mode === "timecube", nolightning : $store.state.upgrades.mode === "chest" && !$store.state.cash.info.alias  }')
+        img(v-if='!$store.state.context.panel[$store.state.context.top]'  src='../../assets/images/scroll.svg')
+        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../../assets/images/doge_faded.png')
+        img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
+        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../../assets/images/boatbtnselected.svg')
+        span.checkmark.clickable(v-else-if='$store.state.upgrades.mode === "badge" && isCompleted') ☑
+        span.checkmark.clickable(v-else-if='$store.state.upgrades.mode === "badge" && !isCompleted') ☐
+        img(v-else-if='$store.state.upgrades.mode === "chest"'  src='../../assets/images/bounty.svg')
+        img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../../assets/images/timecube.svg')
     .opened
-      resource-book(v-if='isCubeOpen'  :tId='b.taskId')
-      .fl(v-if='isPayOpen')
+        resource-book(v-if='isCubeOpen'  :tId='b.taskId')
+        div(v-if='isPayOpen')
           tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
           tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
 </template>
@@ -29,6 +24,7 @@ import Tag from '../Nodes/Tag'
 import ResourceBook from '../forms/ResourceBook'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
+import HelmControl from '../../modules/helm'
 import SoundFX from '../../modules/sounds'
 import uuidv1 from 'uuid/v1'
 
@@ -51,8 +47,6 @@ export default {
         mc.add(Tap)
         mc.on('tap', (e) => {
             switch(this.$store.state.upgrades.mode) {
-                case false:
-                    return
                 case 'doge':
                 case 'boat':
                     this.flagIt()
@@ -65,7 +59,7 @@ export default {
                     }
                     break
                 case 'chest':
-                    if($store.state.cash.info.alias) {
+                    if(this.$store.state.cash.info.alias) {
                         this.togglePay()
                     }
                     break
@@ -95,6 +89,24 @@ export default {
             }
             e.stopPropagation()
         })
+
+        let Swipe = new Hammer.Swipe()
+        mc.add(Swipe)
+        mc.on('swipeleft', (e) => {
+            HelmControl.flashHelm()
+            SoundFX.playCaChunk()
+            HelmControl.previousUpgradeMode(this.$router)
+            e.stopPropagation()
+        })
+        console.log("swipe1 added")
+
+        mc.on('swiperight', (e) => {
+            HelmControl.flashHelm()
+            SoundFX.playCaChunk()
+            HelmControl.nextUpgradeMode(this.$router)
+            e.stopPropagation()
+        })
+        console.log("mounted flaggy")
     },
     methods: {
         complete(){
@@ -141,6 +153,7 @@ export default {
             this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
+            SoundFX.playTwinkleUp()
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
@@ -157,7 +170,6 @@ export default {
                       inId: this.inId,
                     })
                 } else {
-                    SoundFX.playSailUnfurl()
                     this.deckIt()
                 }
             } else {
@@ -169,7 +181,6 @@ export default {
                       inId: this.inId,
                     })
                 } else {
-                    SoundFX.playSailUnfurl()
                     this.deckIt()
                 }
             }
@@ -236,58 +247,38 @@ export default {
     margin:10px 0
     padding:20px
 
-.row
-    width: 100%
-    .mainColumn
-      width:calc(100% - 75px - 4%)
-    .secondaryColumn
-      width:75px
-      button
-        height:75px
-
-.btn
-    width:100%
-    margin-top: 2em
-    max-height: 3em
-
-select
-    background-color: lightteal
-
-select.form-control
-    color: black
-
-.curs
-    cursor: pointer;
-
-label
-    color: black
-    text-align: center
-    padding: 0
-    margin-bottom: -50px
-
 .flaggy
     position: absolute
     right: 1em
     top: 1em
-
-.flaggy img
-    height: .777em
+    height: 1em
     cursor: pointer
+    z-index: 99
+    
+.flaggy img
+    pointer-events: none
+    height: 100%
 
-.prioritized
+.doge
     height: 1.3em
+    margin-top: -0.1em
+    margin-right: -0.1em
 
+.chest, .timecube
+    height: 1.1em
+    margin-top: -0.2em
+    margin-right: -0.2em
+    
+.boat
+    height: 1em
+    margin-top: -0.2em
+    margin-right: -0.4em
+    
 .faded
     opacity: 0.235654
 
 .faded:hover
     opacity: 1
-
-.fl
-    position: relative
-    left: -640%
-    top: 1em
-    width: 730%
 
 .checkmark
     font-size: 1.58em
@@ -295,8 +286,6 @@ label
     margin-top: -.3em
     margin-right: -.3em
     opacity: 0.5
-
-.clickable
     cursor: pointer
     color: white
 
@@ -306,14 +295,11 @@ label
 .svgwhite.hover
     transform: rotate(-30deg)
 
-.doge
-    height: 1.2em
-
-.front
-    z-index: 3000000
-    background: wrexblue
-
 .opened
     display: block
     position: relative
+    
+.nolightning
+    opacity: 0.15
+    cursor: default
 </style>

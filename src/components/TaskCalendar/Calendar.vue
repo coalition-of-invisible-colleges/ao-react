@@ -73,17 +73,19 @@ export default {
         let evs = {}
 
         if (this.inId){
-          this.todaysEvents.forEach(t => {
-            if (t && t.book && t.book.startTs){
-              let date = getDMY(t.book.startTs)
-              if (date.month === this.month && date.year === this.year){
-                if (!evs[date.day]){
-                  evs[date.day] = []
+            this.todaysEvents.forEach(t => {
+                if (t && t.book && t.book.startTs){
+                    let date = getDMY(t.book.startTs)
+                    if (date.month === this.month && date.year === this.year){
+                        if (!evs[date.day]){
+                            evs[date.day] = []
+                        }
+                        if(evs[date.day].indexOf(t) === -1) {
+                            evs[date.day].push(t)
+                        }
+                    }
                 }
-                evs[date.day].push(t)
-              }
-            }
-          })
+            })
         }
 
         this.$store.getters.pubguildEvents.forEach(t => {
@@ -93,7 +95,9 @@ export default {
                 if (!evs[date.day]){
                     evs[date.day] = []
                 }
-                evs[date.day].push(t)
+                if(evs[date.day].indexOf(t) === -1) {
+                    evs[date.day].push(t)
+                }
             }
         })
 

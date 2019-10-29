@@ -15,7 +15,7 @@
               .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
               .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
               .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
-      hypercard.gutter(v-if='guilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='guilds[showGuild]'  :key='resetKey'  :c='pubGuildIds'  ref='testRef')
+      hypercard.gutter(v-if='guilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='guilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
       //- flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
       //-     .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
       //-         span(:class='{redTx: -1 === $store.state.upgrades.warp}') here

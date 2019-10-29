@@ -9,7 +9,7 @@
         .tooltiptext
             .until {{ cardDate(t) }}
             linky(:x='t.name')
-        .guild(v-if='t.funderGuild') {{ t.funderGuild }}
+        .guild(v-if='t.funderGuild !== "test"') {{ t.funderGuild }}
 </template>
 
 <script>

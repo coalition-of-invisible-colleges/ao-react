@@ -10,25 +10,25 @@
         img.bullimgright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg")
         img.bullimgright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg")
         img.bullimgright(v-else  src="../assets/images/navigas/uniBullDab.svg")
-    button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='flashHelm(0.5)')
+    button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
-    button.topcenter(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='flashHelm(0.5)')
+    button.topcenter(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='shortFlash')
         .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
-    button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='flashHelm(0.5)')
+    button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/timecube.svg')
     .pushdown
-    div(:class='{suncontext: isSun(), bullcontext: isBull()}' @keydown.tab='nextUpgradeMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
+    div(:class='{suncontext: isSun(), bullcontext: isBull()}' @keydown.tab='nextMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
         .transparentsides
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
@@ -76,6 +76,8 @@ import CardPanel from './Deck/CardPanel'
 import FancyInput from './slotUtils/FancyInput'
 import Context from './Deck/Context'
 import TaskCreate from './forms/TaskCreate'
+import Dimensions from '../modules/dimensions'
+import HelmControl from '../modules/helm'
 import SoundFX from '../modules/sounds'
 
 export default {
@@ -89,18 +91,20 @@ export default {
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
-            this.flashHelm()
-            this.previousUpgradeMode()
+            HelmControl.flashHelm()
+            SoundFX.playCaChunk()
+            HelmControl.previousUpgradeMode(this.$router)
         })
 
         mc.on('swiperight', (e) => {
-            this.flashHelm()
-            this.nextUpgradeMode()
+            HelmControl.flashHelm()
+            SoundFX.playCaChunk()
+            HelmControl.nextUpgradeMode(this.$router)
         })
 
         mc.on('swipeup', (e) => {
-            this.flashHelm()
-            this.closeUpgrades()
+            HelmControl.flashHelm()
+            HelmControl.closeUpgrades()
             if(this.$router.currentRoute.path.split("/")[1] === 'front') {
                 this.$router.push('/front/doge')
             } else if(this.$router.currentRoute.path.split("/")[1] === 'dash') {
@@ -111,8 +115,9 @@ export default {
         })
 
         mc.on('swipedown', (e) => {
-            this.flashHelm()
-            this.nextUpgradeMode()
+            HelmControl.flashHelm()
+            SoundFX.playCaChunk()
+            HelmControl.nextUpgradeMode(this.$router)
         })
 
         let Press = new Hammer.Press({
@@ -123,15 +128,15 @@ export default {
             if(this.$router.currentRoute.path.split("/")[1] === 'front'){
                 if(this.$store.state.upgrades.mode === 'doge') {
                     SoundFX.playPortalBlocked()
-                    this.flashHelm(5)
+                    HelmControl.flashHelm(5)
                 } else {
-                    this.flashHelm(2)
+                    HelmControl.flashHelm(2)
                     SoundFX.playPortalTransit()
                     this.$router.push('/front/doge')
-                    this.closeUpgrades()
+                    HelmControl.closeUpgrades()
                 }
             } else {
-                this.flashHelm(2)
+                HelmControl.flashHelm(2)
                 SoundFX.playPortalTransit()
                 switch(this.$store.state.upgrades.mode) {
                 case 'doge':
@@ -156,11 +161,13 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            this.flashHelm(0.5)
+            HelmControl.flashHelm(0.5)
             if (!this.$store.state.upgrades.mode){
-                this.setMode(0)
+                SoundFX.playCaChunk()
+                HelmControl.setUpgradeMode(0)
             } else {
-                this.nextUpgradeMode()
+                SoundFX.playCaChunk()
+                HelmControl.nextUpgradeMode(this.$router)
             }
         })
         let lel = document.getElementById('helmright')
@@ -169,8 +176,9 @@ export default {
         let Tap2 = new Hammer.Tap({ time: 400 })
         lmc.add(Tap2)
         lmc.on('tap', (e) => {
-            this.flashHelm(0.5)
-            this.nextUpgradeMode()
+            HelmControl.flashHelm(0.5)
+            SoundFX.playCaChunk()
+            HelmControl.nextUpgradeMode(this.$router)
         })
 
         let rel = document.getElementById('helmleft')
@@ -179,8 +187,9 @@ export default {
         let Tap3 = new Hammer.Tap({ time: 400 })
         rmc.add(Tap3)
         rmc.on('tap', (e) => {
-            this.flashHelm(0.5)
-            this.previousUpgradeMode()
+            HelmControl.flashHelm(0.5)
+            SoundFX.playCaChunk()
+            HelmControl.previousUpgradeMode(this.$router)
         })
         let dogeel = document.getElementById('dogecomm')
         let dogemc = new Hammer.Manager(dogeel)
@@ -227,21 +236,11 @@ export default {
         }
     },
     methods: {
-        isSun(){
-            let mainroute = this.$router.currentRoute.path.split('/')[1]
-            return mainroute === "front"
-        },
-        isBull(){
-            let mainroute = this.$router.currentRoute.path.split('/')[1]
-            let isBull = mainroute === "dash"
-            return isBull
-        },
         killSession(){
             this.$store.dispatch("makeEvent", {
                 type: "session-killed",
                 session: this.$store.state.loader.session
             })
-
         },
         goToParent(target){
             this.$store.dispatch("goUp", {
@@ -287,59 +286,6 @@ export default {
         toggleShowBtc() {
             this.showBtc = !this.showBtc
         },
-        setMode(index) {
-            SoundFX.playCaChunk()
-            this.$store.commit("setMode", index)
-        },
-        nextUpgradeMode() {
-            SoundFX.playCaChunk()
-
-            this.$store.commit("nextMode")
-            this.$store.commit('startLoading', this.$store.state.upgrades.mode)
-
-            //  only on sun
-            if (this.isSun()){
-                return this.$router.push('/front/' + this.$store.state.upgrades.mode)
-            }
-            if (this.isBull()){
-                return this.$router.push('/dash/' + this.$store.state.upgrades.mode)
-            }
-            this.$router.push('/' + this.$store.state.upgrades.mode)
-        },
-        previousUpgradeMode() {
-            SoundFX.playCaChunk()
-            this.$store.commit("previousMode")
-            this.$store.commit('startLoading', this.$store.state.upgrades.mode)
-
-            if (this.isSun()){
-                return this.$router.push('/front/' + this.$store.state.upgrades.mode)
-            }
-            if (this.isBull()){
-                return this.$router.push('/dash/' + this.$store.state.upgrades.mode)
-            }
-            this.$router.push('/' + this.$store.state.upgrades.mode)
-        },
-        closeUpgrades() {
-            this.$store.commit("closeUpgrades")
-        },
-        flashHelm(flashes = 1) {
-            let ms = 350
-            let helm = document.getElementById('helm')
-            let addedClasses = ' flash'
-            if(flashes < 1) {
-                addedClasses += ' half'
-                ms *= 0.7
-            } else if(flashes === 2) {
-                addedClasses += ' twice'
-                ms *= flashes
-            } else if(flashes === 5) {
-                addedClasses += ' five'
-                ms *= flashes
-            }
-
-            helm.className += addedClasses
-            setTimeout( () => { helm.className = helm.className.replace(addedClasses, '') }, ms)
-        },
         toggleMute() {
             console.log("muted is ", this.$store.getters.member.muted)
             console.log("memberId is", this.$store.getters.member.memberId)
@@ -367,6 +313,19 @@ export default {
           this.$store.commit('setAuth', {
               token: '', session: ''
           })
+        },
+        isSun() {
+            return Dimensions.isSun(this.$router)
+        },
+        isBull() {
+            return Dimensions.isBull(this.$router)
+        },
+        shortFlash() {
+            HelmControl.flashHelm(0.5)
+        },
+        nextMode() {
+            SoundFX.playCaChunk()
+            HelmControl.nextUpgradeMode(this.$router)
         },
     },
 }
