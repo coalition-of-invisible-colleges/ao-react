@@ -138,7 +138,7 @@ function dogeMuted(memberId, callback) {
         type: "doge-muted",
         memberId,
     }
-    dctrlDb.triggerShadow(newEvent, callback)
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeUnmuted(memberId, callback) {
@@ -146,7 +146,7 @@ function dogeUnmuted(memberId, callback) {
         type: "doge-unmuted",
         memberId,
     }
-    dctrlDb.triggerShadow(newEvent, callback)
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 export default {

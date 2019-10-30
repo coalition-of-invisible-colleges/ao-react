@@ -10,14 +10,14 @@
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
     .bottomright
-        .tooltip(v-if='m.memberId === $store.getters.member.memberId')
+        .tooltip
             img.dogecoin(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
             .tooltiptext.membertooltip
-                .gui(v-if='m.active > 0') your account is active
-                .gui(v-else) your account is inactive
-                p.suggest(v-if='m.active > 0') click to deactivate
-                p.help(v-if='m.active <= 0') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
-                p.suggest(v-if='m.active <= 0') click to activate
+                .gui(v-if='m.active > 0') account is active
+                .gui(v-else) account is inactive
+                p.suggest(v-if='m.active > 0 && m.memberId === $store.getters.member.memberId') click to deactivate
+                p.help(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
+                p.suggest(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') click to activate
                 .gui.title(v-if='nameList.length > 0') vouches
                 ul.left(v-if='nameList.length > 0')
                     li(v-for='n in nameList')
@@ -67,6 +67,9 @@ export default {
             return name
         },
         toggleActivated() {
+            if(this.m.memberId !== $store.getters.member.memberId) {
+                return
+            }
             if(this.$store.getters.member.active > 0) {
                 this.deactivate()
             } else {

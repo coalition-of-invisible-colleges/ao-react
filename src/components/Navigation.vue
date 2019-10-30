@@ -2,24 +2,84 @@
 
 .navigation(@contextmenu.prevent)
     h1.loadingscreen(v-if='$store.state.context.loading') loading {{ $store.state.context.loading }}
-    img.dableft(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg"  ref='sun')
-    img.dableft(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
-    img.dableft(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
-    img.dabright(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
-    img.dabright(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
-    img.dabright(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
+    img.dableft.adjtooltip(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg"  ref='sun')
+    img.dableft.adjtooltip(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
+    img.dableft.adjtooltip(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
+    .tooltiptext.left()
+        .bold(v-if='!isSun()') Dab to Sun
+        .bold(v-if='isSun()') Dab to Deck (unicorn)
+        p.leftalign Sun Pages:
+        ul
+            li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+                img.lil(src='../assets/images/buddadoge.svg')
+                span Newspaper (tap-and-hodl)
+            li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+                img.lil(src='../assets/images/boatblack.svg')
+                span Top Missions
+            li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+                img.lil(src='../assets/images/badge.svg')
+                span Much Recent
+            li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+                img.lil(src='../assets/images/bounty.svg')
+                span Bounties
+            li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+                img.lil(src='../assets/images/timecube.svg')
+                span Calendar
+    img.dabright.adjtooltip(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
+    img.dabright.adjtooltip(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
+    img.dabright.adjtooltip(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
+    .tooltiptext.right()
+        .bold(v-if='!isBull()') Dab to Bull
+        .bold(v-if='isBull()') Dab to Deck (unicorn)
+        p.leftalign Bull Pages:
+        ul
+            li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+                img.lil(src='../assets/images/buddadoge.svg')
+                span Controls (tap-and-hodl)
+            li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+                img.lil(src='../assets/images/boatblack.svg')
+                span Connections
+            li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+                img.lil(src='../assets/images/badge.svg')
+                span Accounts
+            li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+                img.lil(src='../assets/images/bounty.svg')
+                span Lightning
+            li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+                img.lil(src='../assets/images/timecube.svg')
+                span Central Reserve
     button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
-    button.topcenter(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='shortFlash')
+    button.topcenter.tooltip(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='shortFlash')
         .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
+        .tooltiptext.center()
+            .bold Helm
+            p Tap or swipe to change mode
+            p.leftalign Card Upgrades:
+            ul
+                li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+                    img.lil(src='../assets/images/buddadoge.svg')
+                    span &mdash;
+                li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+                    img.lil(src='../assets/images/boatblack.svg')
+                    span Priorities
+                li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+                    img.lil(src='../assets/images/badge.svg')
+                    span Missions &amp; Checkmarks
+                li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+                    img.lil(src='../assets/images/bounty.svg')
+                    span Send Points
+                li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+                    img.lil(src='../assets/images/timecube.svg')
+                    span Book Event
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -169,27 +229,29 @@ export default {
                 HelmControl.nextUpgradeMode(this.$router)
             }
         })
-        let lel = document.getElementById('helmright')
-        let lmc = new Hammer.Manager(lel)
+
+        let rel = document.getElementById('helmright')
+        let rmc = new Hammer.Manager(rel)
 
         let Tap2 = new Hammer.Tap({ time: 400 })
-        lmc.add(Tap2)
-        lmc.on('tap', (e) => {
+        rmc.add(Tap2)
+        rmc.on('tap', (e) => {
             HelmControl.flashHelm(0.5)
             SoundFX.playCaChunk()
             HelmControl.nextUpgradeMode(this.$router)
         })
 
-        let rel = document.getElementById('helmleft')
-        let rmc = new Hammer.Manager(rel)
+        let lel = document.getElementById('helmleft')
+        let lmc = new Hammer.Manager(lel)
 
         let Tap3 = new Hammer.Tap({ time: 400 })
-        rmc.add(Tap3)
-        rmc.on('tap', (e) => {
+        lmc.add(Tap3)
+        lmc.on('tap', (e) => {
             HelmControl.flashHelm(0.5)
             SoundFX.playCaChunk()
             HelmControl.previousUpgradeMode(this.$router)
         })
+
         let dogeel = document.getElementById('dogecomm')
         let dogemc = new Hammer.Manager(dogeel)
 
@@ -202,17 +264,13 @@ export default {
                 return
             }
             SoundFX.playBarkPing()
-            console.log("pre barking is ", this.barking)
             this.barking = true
             this.pinging = true
-            console.log("post barking is ", this.barking)
             setTimeout(()=> {
                 this.barking = false
-                console.log("postpost barking is ", this.barking)
             }, 1000)
             setTimeout(()=> {
                 this.pinging = false
-                console.log("postpost barking is ", this.barking)
             }, 2000)
         })
 
@@ -228,15 +286,12 @@ export default {
         let sunPress = new Hammer.Press({ time: 600 })
         sunmc.add([sunTap, sunPress])
         sunPress.recognizeWith(sunTap);
-        // sunPress.requireFailure(sunTap);
 
         sunmc.on('tap', (e) => {
-            console.log("suntap")
             this.cycleLeft()
         })
 
         sunmc.on('press', (e) => {
-            console.log("sunpress")
             this.goNewspaper()
         })
 
@@ -246,15 +301,12 @@ export default {
         let bullPress = new Hammer.Press({ time: 600 })
         bullmc.add([bullTap, bullPress])
         bullPress.recognizeWith(bullTap);
-        // bullPress.requireFailure(bullTap);
 
         bullmc.on('tap', (e) => {
-            console.log("bulltap")
             this.cycleRight()
         })
 
         bullmc.on('press', (e) => {
-            console.log("bullpress")
             this.goFrontDash()
         })
     },
@@ -508,9 +560,6 @@ a.router-link-active
   border-radius: .6em
   padding: .5em
 
-li
-    color: accent2
-
 .p
     color: white
     text-align: center
@@ -596,6 +645,12 @@ hr
     height: 2em
     pointer-events: none
 
+.lil
+    height: 1em
+    position: absolute
+    left: -1em
+    transform: translateX(-50%)
+    
 .topauth
     max-width: 50%
     padding: 1em
@@ -713,21 +768,9 @@ hr
     margin-bottom: 0.3em
     z-index: 151
 
-.tooltiptext.right
-    font-size: 1.5em
-    height: fit-content
-    width: fit-content
-    position: fixed
-    bottom: 3.85em
-    top: initial
-    left: 0.5em
-    z-index: 149
-    padding: 0 1em 1em 1em
-
-body {
+body
   background-color: #333
   padding: 50px
-}
 
 .wowdar
   float:left
@@ -1001,4 +1044,51 @@ body {
     font-size: 1.3em
     font-weight: bold
     cursor: pointer
+
+.dabstination:before
+    content: ""
+    border: 1px solid white
+    border-width: 2px 2px 0 0
+    display: block
+    height: 0
+    width: 0
+    position: absolute
+    top: 0.42em
+    left: -2.5em
+    height: 5px
+    width: 5px
+    transform: rotate(45deg)
+    
+.dabstination
+    font-weight: bold
+    
+.tooltiptext.left, .tooltiptext.right, .tooltiptext.center
+    position: absolute
+    font-size: 1.3em
+    width: 20em
+    z-index: 88888
+    top: 0.5em
+    
+.tooltiptext.left
+    left: 6em
+
+.tooltiptext.right
+    right: 6em
+
+.tooltiptext.center
+    left: 50%
+    top: 3em
+    transform: translateX(-50%)
+
+.tooltiptext .leftalign
+    text-align: left
+    
+.tooltiptext ul, .tooltiptext li
+    text-align: left
+    list-style-type: none
+    position: relative
+    
+.tooltiptext li
+    padding-left: 0.5em
+    margin-left: 1em
 </style>
