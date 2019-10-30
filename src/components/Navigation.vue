@@ -6,8 +6,8 @@
     img.dableft.adjtooltip(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
     img.dableft.adjtooltip(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
     .tooltiptext.left()
-        .bold(v-if='!isSun()') Dab to Sun
-        .bold(v-if='isSun()') Dab to Deck (unicorn)
+        h1(v-if='!isSun()') Dab to Sun
+        h1(v-if='isSun()') Dab to Deck (unicorn)
         p.leftalign Sun Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
@@ -29,8 +29,8 @@
     img.dabright.adjtooltip(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
     img.dabright.adjtooltip(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
     .tooltiptext.right()
-        .bold(v-if='!isBull()') Dab to Bull
-        .bold(v-if='isBull()') Dab to Deck (unicorn)
+        h1(v-if='!isBull()') Dab to Bull
+        h1(v-if='isBull()') Dab to Deck (unicorn)
         p.leftalign Bull Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
@@ -53,33 +53,33 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
-    button.topcenter.tooltip(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='shortFlash')
+    button.topcenter.adjtooltip(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='shortFlash')
         .full
             img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
-        .tooltiptext.center()
-            .bold Helm
-            p Tap or swipe to change mode
-            p.leftalign Card Upgrades:
-            ul
-                li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-                    img.lil(src='../assets/images/buddadoge.svg')
-                    span &mdash;
-                li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-                    img.lil(src='../assets/images/boatblack.svg')
-                    span Priorities
-                li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-                    img.lil(src='../assets/images/badge.svg')
-                    span Missions &amp; Checkmarks
-                li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-                    img.lil(src='../assets/images/bounty.svg')
-                    span Send Points
-                li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-                    img.lil(src='../assets/images/timecube.svg')
-                    span Book Event
+    .tooltiptext.center(:class='{ fix : $store.state.upgrades.mode !== "doge" }')
+        h1 Helm
+        p Tap or swipe to change mode
+        p.leftalign Card Upgrades:
+        ul
+            li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+                img.lil(src='../assets/images/buddadoge.svg')
+                span &mdash;
+            li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+                img.lil(src='../assets/images/boatblack.svg')
+                span Priorities
+            li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+                img.lil(src='../assets/images/badge.svg')
+                span Missions &amp; Checkmarks
+            li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+                img.lil(src='../assets/images/bounty.svg')
+                span Send Points
+            li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+                img.lil(src='../assets/images/timecube.svg')
+                span Book Event
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -1091,4 +1091,13 @@ body
 .tooltiptext li
     padding-left: 0.5em
     margin-left: 1em
+
+.tooltiptext h1
+    margin-top: 0
+    margin-bottom: 0
+    font-size: 1.1em
+    font-weight: bold
+    
+.tooltiptext.center.fix
+    position: fixed
 </style>
