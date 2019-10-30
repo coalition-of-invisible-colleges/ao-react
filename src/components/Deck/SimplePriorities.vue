@@ -44,6 +44,7 @@ export default {
 
 .priorities
     padding-bottom: 0.5em
+    clear: both
 
 button
     background: darkteal
