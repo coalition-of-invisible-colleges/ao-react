@@ -6,7 +6,6 @@ import config from '../../configuration'
 
 const serverState = {
   ao: [],
-  recent: [],
   sessions: [],
   members: [],
   tasks: [],
@@ -31,7 +30,6 @@ const serverState = {
 
 const pubState = {
   ao: [],
-  recent: [],
   sessions: [],
   members: [],
   tasks: [],
@@ -74,7 +72,6 @@ function applyBackup(b){
 }
 
 function applyEvent(state, ev) {
-      M.recentMuts(state.recent, ev)
       M.cashMuts(state.cash, ev)
       M.membersMuts(state.members, ev)
       M.resourcesMuts(state.resources, ev)

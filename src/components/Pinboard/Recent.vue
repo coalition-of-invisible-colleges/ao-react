@@ -3,7 +3,8 @@
 #frontrecent
   .container
     h1.up Much Recent
-    row(v-for="m in recentMembers", :m="m")
+    row(v-for="(m, i) in recentMembers", :m="m"  v-if="showTotal > i")
+    img(@click='andThen'  src='../../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
 </template>
 
 <script>
@@ -14,15 +15,21 @@ export default {
       Row,
   },
   data(){
-      let recentMembers = this.$store.state.members.filter(c => !c.originAddress)
+      let recentMembers = this.$store.state.members.slice()
 
       recentMembers.sort((a, b) => {
           return b.lastUsed - a.lastUsed
       })
-      return {recentMembers : recentMembers.slice(0,11)}
+
+      return {recentMembers, showTotal: 11}
   },
   mounted(){
       this.$store.commit('stopLoading')
+  },
+  methods: {
+      andThen(){
+          this.showTotal ++
+      }
   }
 }
 
@@ -34,6 +41,13 @@ export default {
 @import '../../styles/skeleton'
 @import '../../styles/button'
 @import '../../styles/breakpoints'
+
+img
+    height: 3em
+    position: relative
+    left: 50%
+    transform: translateX(-50%)
+    cursor: pointer
 
 .bounty:hover
     border-style: dashed

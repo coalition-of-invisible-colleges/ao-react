@@ -27,28 +27,6 @@ function sessionsMuts(sessions, ev){
 								}
 						})
 						break
-				case "ao-subscribed":
-						let hasSession = sessions.some(session => {
-								// replace that sessions creds,
-								let match = false
-								if (session.ownerId === ev.address){
-										match = true
-										_.merge(session, ev)
-								}
-								return match // true terminates the some loop & idHasSession->true too
-						})
-
-						if (hasSession){
-							 // edited in session
-						} else {
-								// id didn't previously have session
-								sessions.push({
-										ownerId: ev.address,
-										session: ev.address,
-										secret: ev.secret,
-								})
-						}
-						break
 	}
 }
 

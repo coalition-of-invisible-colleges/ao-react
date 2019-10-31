@@ -39,7 +39,6 @@ function aoMuts(aos, ev) {
                         ao.lastAttemptSuccess = false
                     }
                     console.log("link updated?", ao)
-
                 }
             })
             break

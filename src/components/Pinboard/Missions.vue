@@ -1,26 +1,25 @@
 <template lang='pug'>
-
 #wrex
       //- div(v-if='$store.state.upgrades.warp > -1')
       //-     h1.up {{ $store.getters.warpDrive.alias }} Top Missions
       //-     card-panel.gutter(:c='$store.getters.warpGuilds')
       //-     h6.centered {{ $store.getters.warpAddress }}
       //- div(v-else)
-      h1.up {{ $store.state.cash.alias }} Top Missions
-      flickity(:options='flickityOptions'  ref='guildsBar'  v-model='guildsBar')
-          .transparentsides
-          .carousel-cell.agedwrapper(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
-              .guildname(:class='{ selectedguild : showGuild === i }') {{ t.guild }}
-              .agedbackground.freshpaper(v-if='cardAge(t) < 8')
-              .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
-              .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
-              .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
-      hypercard.gutter(v-if='guilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='guilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-      //- flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-      //-     .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
-      //-         span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
-      //-     .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-      //-         span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
+      //- h1.up {{ $store.state.cash.alias }} Top Missions
+      //- flickity(:options='flickityOptions'  ref='guildsBar'  v-model='guildsBar')
+      //-     .transparentsides
+      //-     .carousel-cell.agedwrapper(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)'  @click='selectGuild(i)')
+      //-         .guildname(:class='{ selectedguild : showGuild === i }') {{ t.guild }}
+      //-         .agedbackground.freshpaper(v-if='cardAge(t) < 8')
+      //-         .agedbackground.weekoldpaper(v-else-if='cardAge(t) < 30')
+      //-         .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
+      //-         .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
+      //- hypercard.gutter(v-if='guilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='guilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
+      flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+          .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
+              span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
+          .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
+              span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
 </template>
 
 <script>

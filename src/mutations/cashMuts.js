@@ -28,7 +28,7 @@ function cashMuts(cash, ev){
 				cash.currency = ev.currency
 				break
 			case "rent-set":
-				cash.rent = parseFloat( ev.amount )
+				cash.rent = parseFloat(ev.amount)
 				break
 			case "cap-set":
 				cash.cap = ev.amount

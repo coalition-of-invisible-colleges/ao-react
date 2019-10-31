@@ -39,8 +39,8 @@ function rent(){
 
 function deactivate(){
     serverState.tasks.forEach(t => {
-        if (t.boost < 0){
-          events.membersEvs.memberDeactivated(t.taskId)
+        if (t.boost <= 0){
+            events.membersEvs.memberDeactivated(t.taskId)
         }
     })
 }

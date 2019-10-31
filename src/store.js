@@ -6,7 +6,6 @@ import modules from './modules'
 
 import loader from './modules/loader'
 import eventstream from './modules/eventstream'
-import recent from './modules/recent'
 import upgrades from './modules/upgrades'
 import context from './modules/context'
 
@@ -16,7 +15,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
-      loader, eventstream, recent, upgrades, context,
+      loader, eventstream, upgrades, context,
       ao: modules.ao,
       members: modules.members,
       tasks: modules.tasks,
