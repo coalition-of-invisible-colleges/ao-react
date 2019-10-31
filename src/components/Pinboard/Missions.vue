@@ -37,6 +37,8 @@ export default {
   data(){
       let guilds = []
       let uniqueG = []
+
+      //XXX this calc is tooooooo slooooooow
       this.$store.state.tasks.forEach((c, i) => {
           if (c.guild){
               let l = uniqueG.indexOf(c.guild)

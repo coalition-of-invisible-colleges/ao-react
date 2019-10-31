@@ -154,7 +154,7 @@ export default {
               if (this.isDoge.memberId === this.$store.getters.member.memberId){
                 return this.$store.getters.myGuilds
               } else {
-                return this.$store.getters.guilds.filter(g => g.deck.indexOf(this.isDoge.memberId) > -1)
+                return this.$store.state.tasks.filter(g => g.guild && g.deck.indexOf(this.isDoge.memberId) > -1)
               }
             }
         },
