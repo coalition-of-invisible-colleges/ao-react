@@ -250,14 +250,18 @@ export default {
             if(this.exploring) return this.searchResults
             let regex = new RegExp(this.task.name, 'i')
             let matches = []
-            this.$store.getters.localTasks.forEach(t => {
-                if(t.name === this.task.name) {
-                } else if(regex.test(t.name) && t.deck.length > 0) {
+            try {
+                this.$store.state.tasks.forEach(t => {
+                  if(t.name === this.task.name) {
+                  } else if(regex.test(t.name) && t.deck.length > 0) {
                     matches.push(t)
-                } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
+                  } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
                     matches.push(t)
-                }
-            })
+                  }
+                })
+            } catch (err){
+                console.log("regex search terminated in error: ", err)
+            }
             this.searchResults = matches
             return matches
         },

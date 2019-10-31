@@ -34,7 +34,7 @@ export default {
       let bountyList = []
       let bounties = {}
       let guilds = {}
-      this.$store.getters.localTasks.forEach( t => {
+      this.$store.state.tasks.forEach( t => {
           if (Array.isArray(t.allocations)){
               t.allocations.forEach( al => {
                   if ( bounties[al.allocatedId] ) {
