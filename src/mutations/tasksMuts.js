@@ -8,15 +8,6 @@ function tasksMuts(tasks, ev) {
         case "ao-connected":
             break
         case "ao-disconnected":
-            console.log("start disconnected: ", tasks.length)
-            let indexes = []
-            tasks.forEach((t, i) => {
-                if (t.originAddress === ev.address){
-                    indexes.push(i)
-                }
-            })
-            let removed = _.pullAt(tasks, indexes)
-            console.log("end disconnect: ", tasks.length)
             break
         case "resource-created":
             newEv.taskId = ev.resourceId

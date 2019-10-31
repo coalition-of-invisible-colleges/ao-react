@@ -14,7 +14,7 @@
                 button(v-if='selectedPeer'   @click='requestChannel') Request Channel
         .six.columns.container
             p {{ $store.state.cash.info.num_active_channels }} Lightning Channels
-            local-remote-bar(v-for='n in $store.getters.channels', :c='n')
+            local-remote-bar(v-for='n in $store.state.cash.channels', :c='n')
     .row
           h3 Connection Info
           template(v-for='a in $store.getters.connectionUris')

@@ -27,30 +27,6 @@ export default new Vuex.Store({
       warpDrive(state, getters){
           return state.ao[state.upgrades.warp]
       },
-      warpAddress(state, getters){
-          if (getters.warpDrive){
-              return getters.warpDrive.address
-          }
-      },
-      warpGuilds(state, getters){
-          if (getters.warpDrive){
-              let warpG = state.tasks.filter(t => t.originAddress === getters.warpAddress)
-              return warpG.filter(t => t.guild)
-          }
-          return []
-      },
-      warpMembers(state, getters){
-          if (getters.warpDrive){
-              let warpM = state.members.filter(t => {
-                  let isMatch = t.originAddress === getters.warpAddress
-                  console.log({isMatch}, t.originAddress)
-                  return isMatch
-              })
-              console.log('warp drive activated members:', warpM.length, "at ", getters.warpAddress)
-              return warpM
-          }
-          return []
-      },
       memberCard(state, getters){
           let memberCard = _.merge({
               taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
@@ -93,9 +69,6 @@ export default new Vuex.Store({
               p =  getters.contextCard.priorities
           }
           return p
-      },
-      completed(state, getters){
-          return getters.memberCard.completed.map(t => getters.hashMap[t])
       },
       hodlersByCompletions(state, getters){
           let checkmarks = getters.contextCompleted
@@ -152,7 +125,6 @@ export default new Vuex.Store({
           }
           return getters.contextDeck.filter(d => d.color === 'blue')
       },
-
       totalBounties(state,getters){
           let total = 0
           getters.bounties.forEach(t => {
@@ -167,86 +139,16 @@ export default new Vuex.Store({
           })
           return hashMap
       },
-      channels(state, getters){
-          return state.cash.channels
-      },
       connectionUris(state, getters){
           return state.cash.info.address.map(a => {
               return state.cash.info.id + "@" + a.address + ":" + a.port
           })
       },
       memberIds(state, getters){
-          return state.members.filter(c => !c.originAddress).map(c => c.memberId)
+          return state.members.map(c => c.memberId)
       },
       resourceIds(state, getters){
           return state.resources.map(c => c.resourceId)
-      },
-      withinHeld(state, getters){
-          let w = []
-          getters.held.forEach( t => {
-              t.subTasks.forEach( st => {
-                  w.push(st)
-              })
-          })
-          return w
-      },
-      archive(state, getters){
-        let archive = getters.hodld
-        let crawler = [getters.memberCard.taskId].concat(getters.myGuilds.map(t => t.taskId))
-        let deck = []
-        let history = []
-        let newCards = []
-        do {
-          newCards = []
-          crawler = _.filter(crawler, t => {
-            if(deck.concat(history).indexOf(t) > -1) return false
-            let task = getters.hashMap[t]
-            if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
-
-            if(task.deck.indexOf(getters.member.memberId) > -1) {
-              deck.push(t)
-            } else {
-              history.push(t)
-            }
-            newCards = newCards.concat(task.subTasks).concat(task.priorities).concat(task.completed)
-            return true
-          })
-          crawler = newCards
-        } while(crawler.length > 0)
-        archive = _.filter(archive, st => deck.indexOf(st.taskId) === -1)
-        archive = _.filter(archive, st => !archive.some(t => t.subTasks.concat(t.priorities).concat(t.completed).indexOf(st.taskId) > -1))
-        return archive
-      },
-      withinHodld(state, getters){
-          let w = []
-          getters.hodld.forEach(t => {
-              w = w.concat(t.subTasks)
-          })
-          return w
-      },
-      hodld(state, getters){
-          let hodld = []
-          getters.localTasks.forEach( t => {
-              if(t.deck.indexOf(getters.member.memberId) > -1){
-                hodld.push(t)
-              }
-          })
-          return hodld
-      },
-      eternalVoid(state, getters){
-          let void_orphans = getters.unheld.filter( t => {
-              let notHeld = getters.withinHeld.indexOf(t.taskId) === -1
-              let notMember = !state.members.some(m => m.memberId === t.taskId)
-              let notResource = !state.resources.some(r => r.resourceId === t.taskId)
-              return notHeld && notMember && notResource
-          })
-          return void_orphans
-      },
-      unheld(state, getters){
-          return getters.localTasks.filter(t => t.deck.length === 0)
-      },
-      held(state, getters){
-          return getters.localTasks.filter(t => t.deck.length > 0 || t.guild)
       },
       myGuilds(state, getters){
           let my = state.tasks.filter(t => {
@@ -269,9 +171,6 @@ export default new Vuex.Store({
               return b.tempLastClaimed - a.tempLastClaimed
           })
           return my
-      },
-      localTasks(state, getters){
-          return state.tasks.filter(t => !t.originAddress)
       },
       pubguilds(state, getters){
           let guilds = []
@@ -344,7 +243,6 @@ export default new Vuex.Store({
           })
           return loggedInMember
       },
-
       inbox(state, getters){
           let passedToMe = []
           if (getters.isLoggedIn){
@@ -388,7 +286,6 @@ export default new Vuex.Store({
       membersVouches(state, getters){
           let members = state.members.slice()
           let vouches = []
-
           members.forEach(m => {
               let memberCard = getters.hashMap[m.memberId]
               memberCard.deck.forEach(v => {
