@@ -1,13 +1,13 @@
 <template lang='pug'>
 
 #home
+  h1.up {{ activeAccounts }} accounts
   .container
-    h1.up accounts
+    members
     .row
-        member-create.five.columns
+      member-create.five.columns
         .two.columns &nbsp;
         changer.five.columns
-    members
 </template>
 
 <script>
@@ -22,9 +22,19 @@ export default {
     },
     mounted() {
         this.$store.commit('stopLoading')
+    },
+    computed:{
+        activeAccounts(){
+            let a = 0
+            this.$store.state.members.forEach(m => {
+                if (m.active > 0) {
+                    a ++
+                }
+            })
+            return a
+        }
     }
 }
-
 </script>
 
 <style lang='stylus' scoped>

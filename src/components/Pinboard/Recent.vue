@@ -1,9 +1,9 @@
 <template lang='pug'>
 
 #frontrecent
-  .container
+  .container(v-if='recentMembers')
     h1.up Much Recent
-    row(v-for="(m, i) in recentMembers", :m="m"  v-if="showTotal > i")
+    row(v-for="(m, i) in recentMembers", :m="m"  v-if="showTotal > i"  :key="m.memberId")
     img(@click='andThen'  src='../../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
 </template>
 
@@ -27,10 +27,15 @@ export default {
   },
   computed: {
       recentMembers(){
-          let recentMembers = this.$store.state.members.slice()
-          recentMembers.sort((a, b) => {
+          let recentMembers = []
+          try {
+            recentMembers = this.$store.state.members.slice()
+            recentMembers.sort((a, b) => {
               return b.lastUsed - a.lastUsed
-          })
+            })
+          } catch (err){
+              console.log("ddnn wrrk: ", err)
+          }
           return recentMembers
       }
   }

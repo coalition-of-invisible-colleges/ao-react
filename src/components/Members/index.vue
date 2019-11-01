@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 #member
-    .activelabel {{activeMembers}} Active
     .list
         row(v-for="m in showingPanel"  :m='m')
         .row.menu(v-if='sortedMembers.length > 5')
@@ -64,15 +63,6 @@ export default {
           })
           return sortedMembers
         },
-        activeMembers(){
-            let a = 0
-            this.sortedMembers.forEach(m => {
-                if (m.active > 0){
-                    a ++
-                }
-            })
-            return a
-        }
     },
     components : {
         SharedTitle,
