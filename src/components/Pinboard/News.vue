@@ -26,7 +26,6 @@ export default {
   },
   mounted(){
       this.$store.commit('stopLoading')
-      console.log("stop loading")
   },
   methods:{
       goInNews(t){
@@ -101,7 +100,6 @@ export default {
               }
           })
 
-          console.log("news sorted")
           return {
               row1, row2, row3, row4
           }

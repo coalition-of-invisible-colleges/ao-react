@@ -1,5 +1,6 @@
 <template lang='pug'>
 #wrex
+  h1 ao peer nodes coming soon
       //- div(v-if='$store.state.upgrades.warp > -1')
       //-     h1.up {{ $store.getters.warpDrive.alias }} Top Missions
       //-     card-panel.gutter(:c='$store.getters.warpGuilds')
@@ -15,12 +16,11 @@
       //-         .agedbackground.montholdpaper(v-else-if='cardAge(t) < 90')
       //-         .agedbackground.threemontholdpaper(v-else='cardAge(t) >= 90')
       //- hypercard.gutter(v-if='guilds[showGuild] && $store.state.upgrades.mode == "boat"'  :b='guilds[showGuild]'  :key='resetKey'  :c='pubGuildIds')
-      h1 ao peer nodes coming soon
-      flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-          .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
-              span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
-          .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-              span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
+      //- flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+      //-     .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
+      //-         span(:class='{redTx: -1 === $store.state.upgrades.warp}') here
+      //-     .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
+      //-         span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
 </template>
 
 <script>
@@ -34,48 +34,6 @@ export default {
       CardPanel,
       Hypercard,
   },
-  data(){
-      // let guilds = []
-      // let uniqueG = []
-      //
-      // // XXX this calc is tooooooo slooooooow
-      // this.$store.state.tasks.forEach((c, i) => {
-      //     if (c.guild){
-      //         let l = uniqueG.indexOf(c.guild)
-      //         if (l === -1){
-      //           guilds.push(c)
-      //           uniqueG.push(c.guild)
-      //         } else {
-      //           let o = guilds[l]
-      //           if (o.deck.length <= c.deck.length){
-      //             guilds[l] = c
-      //           }
-      //         }
-      //     }
-      // })
-      //
-      // guilds.sort( (a, b) => {
-      //     let aVal = a.deck.length
-      //     let bVal = b.deck.length
-      //     return bVal - aVal
-      // })
-      //
-      // return {
-      //     guilds: guilds.slice(0,11),
-      //     showGuild: 0,
-      //     resetKey: 0,
-      //     flickityOptions: {
-      //         initialIndex: 0,
-      //         prevNextButtons: false,
-      //         pageDots: false,
-      //         wrapAround: true,
-      //         selectedAttraction: 0.005,
-      //         friction: 0.08,
-      //         cellSelector: '.carousel-cell',
-      //         accessibility: true
-      //     }
-      // }
-  },
   mounted(){
       this.$store.commit('stopLoading')
   },
@@ -88,31 +46,6 @@ export default {
           flip.volume = flip.volume * 0.3
           flip.play()
       },
-      cycleGuilds(){
-          console.log('cycling')
-          this.showGuild = (this.showGuild + 1) % this.guilds.length
-      },
-      selectGuild(x){
-          let length = this.guilds.length
-          this.showGuild = x % length
-          this.resetKey ++
-      },
-      cardInputSty(c){
-          return {
-              redwx : c === 'red',
-              bluewx : c === 'blue',
-              greenwx : c === 'green',
-              yellowwx : c === 'yellow',
-              purplewx : c === 'purple',
-              blackwx : c === 'black',
-          }
-      },
-      cardAge(c){
-          let now = Date.now()
-          let msSince = now - c.timestamp
-          let days = msSince / (1000 * 60 * 60 * 24)
-          return days
-      }
   },
 }
 
