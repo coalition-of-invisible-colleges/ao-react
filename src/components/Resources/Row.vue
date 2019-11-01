@@ -45,18 +45,7 @@ export default {
         },
         currentMembers(){
             let currentMembers = []
-            let now = Date.now()
-            this.$store.state.recent.forEach(ev => {
-                let msSince = now - ev.timestamp
-                if (
-                    ev.type == 'resource-used' &&
-                    ev.resourceId == this.r.resourceId &&
-                    currentMembers.indexOf(ev.memberId) === -1 &&
-                    msSince < 1000 * 60 * 60 * 2
-                ){
-                    currentMembers.push(ev.memberId)
-                }
-            })
+
             return currentMembers
         },
         sats(){

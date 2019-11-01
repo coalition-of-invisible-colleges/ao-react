@@ -4,7 +4,6 @@
     span(v-if='b.guild && !editing') {{ b.guild }}
     input#titlebox(v-if='editing'  v-model='task.guild'  type='text'  placeholder='code name'  @keypress.enter='titleIt(false)')
     button(v-if='editing'  @click='titleIt') {{ detectRename }}
-
 </template>
 
 <script>
@@ -78,7 +77,7 @@ export default {
     padding: 0
     position: relative
     top: -0.16em
-    
+
 .guildcreate input
     border-color: rgba(22, 22, 22, 1)
     border-width: 1px

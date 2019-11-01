@@ -14,8 +14,8 @@
         select(v-model='toMember')
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-        form-box(v-if='toMember' btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
-            guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
+        form-box( btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+    guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
 <script>
