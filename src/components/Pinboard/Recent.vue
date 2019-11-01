@@ -15,13 +15,7 @@ export default {
       Row,
   },
   data(){
-      let recentMembers = this.$store.state.members.slice()
-
-      recentMembers.sort((a, b) => {
-          return b.lastUsed - a.lastUsed
-      })
-
-      return {recentMembers, showTotal: 11}
+      return {showTotal: 11}
   },
   mounted(){
       this.$store.commit('stopLoading')
@@ -29,6 +23,15 @@ export default {
   methods: {
       andThen(){
           this.showTotal ++
+      }
+  },
+  computed: {
+      recentMembers(){
+          let recentMembers = this.$store.state.members.slice()
+          recentMembers.sort((a, b) => {
+              return b.lastUsed - a.lastUsed
+          })
+          return recentMembers
       }
   }
 }

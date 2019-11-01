@@ -13,7 +13,6 @@
                 router-link.purgcal(:to='\'/calendar/\' + m.memberId')
                     img(src='../../assets/images/calendar.svg')
     button(@click='buildAll') Load Inactive
-
 </template>
 
 <script>

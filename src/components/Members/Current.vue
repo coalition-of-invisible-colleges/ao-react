@@ -5,11 +5,10 @@
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name {{ name }}
     template(v-for='c in completions')
-      span(@click='goIn(c.taskId)')
-        router-link.tooltip.plain(:to='"/task/" + c.taskId')
-            span.checkmark(:class="cardInputSty(c.color)") ☑
-            .tooltiptext
-                .bigger {{ c.name }}
+      span.tooltip.plain(@click='goIn(c.taskId)')
+        span.checkmark(:class="cardInputSty(c.color)") ☑
+          .tooltiptext
+            .bigger {{ c.name }}
 </template>
 
 <script>
@@ -21,8 +20,6 @@ export default {
   methods:{
     goIn(taskId){
         SoundFX.playPageTurn()
-        console.log("goIn called")
-        // XXX
         if (!this.$store.state.context.completed){
             this.$store.commit("toggleCompleted")
         }

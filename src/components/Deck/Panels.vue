@@ -27,6 +27,9 @@ export default {
   components:{
       CardPanel,
   },
+  computed: {
+    
+  }
 }
 
 </script>
@@ -52,17 +55,17 @@ export default {
 #cyber
     width: 100%
     opacity: 0.5
-    
+
 .minheight
     min-height: 0.5em
-    
+
 .padonestack
     padding-top: 0.001em
     max-width: calc(100vw - 4em)
-    
+
 .fullwidth
     width: 100%
-    
+
 .minheight
     min-height: 0.001em
 </style>
