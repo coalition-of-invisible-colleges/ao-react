@@ -6,8 +6,8 @@
     members
     .row
       member-create.five.columns
-        .two.columns &nbsp;
-        changer.five.columns
+      .two.columns &nbsp;
+      changer.five.columns
 </template>
 
 <script>

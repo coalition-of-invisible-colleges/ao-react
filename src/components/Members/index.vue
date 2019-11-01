@@ -7,7 +7,7 @@
             .inline(@click='showBack')
                 img(src='../../assets/images/left.svg')
             .inline
-                p.mt {{showStart}} - {{showStart + 5}}  of {{ showTotal }}
+                p.mt {{showStart + 1}} - {{showStart + 5}}  of {{ showTotal }}
             .inline(@click='showNext')
                 img(src='../../assets/images/right.svg')
         .center
