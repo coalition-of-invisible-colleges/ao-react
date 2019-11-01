@@ -9,9 +9,9 @@
         pay-req(v-if='invoice', :i='invoice')
     .row
         .seven.columns.recent
-            label recently used by:
-            .current
-                current(v-for='memberId in currentMembers', :memberId='memberId')
+            label recently used broken, see sun-badge
+        //-     .current
+        //-         current(v-for='memberId in currentMembers', :memberId='memberId')
         .five.columns
             //- router-link(v-if='trackStock', :to='"/resource_stock/" + r.resourceId')
             //-   button.refill replenish
@@ -69,7 +69,7 @@ export default {
             let top = this.c.indexOf(this.r.resourceId)
             console.log("goIn called with TOP: ", top)
             if (top > -1){
-                this.$router.push('/task/' + this.r.resourceId)
+                this.$router.push('/' + this.$store.state.upgrades.mode)
                 this.$store.dispatch("goIn", {
                     parents: [],
                     panel: this.c,

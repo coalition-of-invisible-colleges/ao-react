@@ -35,46 +35,46 @@ export default {
       Hypercard,
   },
   data(){
-      let guilds = []
-      let uniqueG = []
-
-      // XXX this calc is tooooooo slooooooow
-      this.$store.state.tasks.forEach((c, i) => {
-          if (c.guild){
-              let l = uniqueG.indexOf(c.guild)
-              if (l === -1){
-                guilds.push(c)
-                uniqueG.push(c.guild)
-              } else {
-                let o = guilds[l]
-                if (o.deck.length <= c.deck.length){
-                  guilds[l] = c
-                }
-              }
-          }
-      })
-
-      guilds.sort( (a, b) => {
-          let aVal = a.deck.length
-          let bVal = b.deck.length
-          return bVal - aVal
-      })
-
-      return {
-          guilds: guilds.slice(0,11),
-          showGuild: 0,
-          resetKey: 0,
-          flickityOptions: {
-              initialIndex: 0,
-              prevNextButtons: false,
-              pageDots: false,
-              wrapAround: true,
-              selectedAttraction: 0.005,
-              friction: 0.08,
-              cellSelector: '.carousel-cell',
-              accessibility: true
-          }
-      }
+      // let guilds = []
+      // let uniqueG = []
+      //
+      // // XXX this calc is tooooooo slooooooow
+      // this.$store.state.tasks.forEach((c, i) => {
+      //     if (c.guild){
+      //         let l = uniqueG.indexOf(c.guild)
+      //         if (l === -1){
+      //           guilds.push(c)
+      //           uniqueG.push(c.guild)
+      //         } else {
+      //           let o = guilds[l]
+      //           if (o.deck.length <= c.deck.length){
+      //             guilds[l] = c
+      //           }
+      //         }
+      //     }
+      // })
+      //
+      // guilds.sort( (a, b) => {
+      //     let aVal = a.deck.length
+      //     let bVal = b.deck.length
+      //     return bVal - aVal
+      // })
+      //
+      // return {
+      //     guilds: guilds.slice(0,11),
+      //     showGuild: 0,
+      //     resetKey: 0,
+      //     flickityOptions: {
+      //         initialIndex: 0,
+      //         prevNextButtons: false,
+      //         pageDots: false,
+      //         wrapAround: true,
+      //         selectedAttraction: 0.005,
+      //         friction: 0.08,
+      //         cellSelector: '.carousel-cell',
+      //         accessibility: true
+      //     }
+      // }
   },
   mounted(){
       this.$store.commit('stopLoading')

@@ -63,13 +63,6 @@ export default new Vuex.Store({
         })
         return contextRes
       },
-      getPriorities(state, getters){
-          let p = []
-          if (getters.contextCard && getters.contextCard.priorities){
-              p =  getters.contextCard.priorities
-          }
-          return p
-      },
       hodlersByCompletions(state, getters){
           let checkmarks = getters.contextCompleted
           let hodlers = {}

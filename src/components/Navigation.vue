@@ -650,7 +650,7 @@ hr
     position: absolute
     left: -1em
     transform: translateX(-50%)
-    
+
 .topauth
     max-width: 50%
     padding: 1em
@@ -1058,17 +1058,17 @@ body
     height: 5px
     width: 5px
     transform: rotate(45deg)
-    
+
 .dabstination
     font-weight: bold
-    
+
 .tooltiptext.left, .tooltiptext.right, .tooltiptext.center
     position: absolute
     font-size: 1.3em
     width: 20em
     z-index: 88888
     top: 0.5em
-    
+
 .tooltiptext.left
     left: 6em
 
@@ -1082,12 +1082,12 @@ body
 
 .tooltiptext .leftalign
     text-align: left
-    
+
 .tooltiptext ul, .tooltiptext li
     text-align: left
     list-style-type: none
     position: relative
-    
+
 .tooltiptext li
     padding-left: 0.5em
     margin-left: 1em
@@ -1097,7 +1097,7 @@ body
     margin-bottom: 0
     font-size: 1.1em
     font-weight: bold
-    
+
 .tooltiptext.center.fix
     position: fixed
 </style>
