@@ -410,7 +410,6 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.memberId){
                     task.boost -= parseFloat(ev.charged)
-                    console.log("task deboosted: ", task.boost)
                     if (task.boost < 0){
                         task.boost = 0
                     }

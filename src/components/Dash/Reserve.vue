@@ -4,33 +4,25 @@
   .container
     h1.up central reserve
     points
+    .row.center
+        .seven.grid
+            p.underline.padd Node Cost - {{ parseInt($store.state.cash.rent) }}
+            p  {{ activeMembers }} Active Doges
+        .one.grid
+            .equals =
+        .four.grid.equals2
+            p {{ parseInt(perMonth) }} each
+            p.redtx.equals2 [{{ $store.state.cash.cap }} max]
+    .row
+        .six.columns
+          p.input-instructions Set Node Cost
+          rent-set
+        .six.columns
+          p.input-instructions Set Maximum
+          cap-set
     ul
-      li Each month cost is split between active accounts
+      li Each month the node cost is split between accounts
       li Activate account at the treasure chest on your deck
-      .row.center
-          .seven.grid
-              p.underline.padd Node Cost
-              p Active Doges
-          .one.grid
-              .equals =
-          .four.grid.equals2
-              p Cost each
-      .row.center
-          .seven.grid
-              p.number.underline.padd {{ parseInt($store.state.cash.rent) }}
-              p.number {{ activeMembers }}
-          .one.grid
-              .equals =
-          .four.grid
-              p.redtx.equals2 [{{ $store.state.cash.cap }} max]
-              p.number.equals2 {{ parseInt( $store.getters.perMonth )}}
-      .row
-          .six.columns
-            p.input-instructions Set Node Cost
-            rent-set
-          .six.columns
-            p.input-instructions Set Cost Cap
-            cap-set
 </template>
 
 <script>
@@ -40,19 +32,24 @@ import RentSet from '../forms/RentSet'
 import CapSet from '../forms/CapSet'
 
 export default {
-    data(){
-
-      // let fixed = parseFloat(state.cash.rent)
-      // let numActiveMembers = getters.activeMembers.length
-      // let perMonth = fixed / numActiveMembers
-      // return  perMonth.toFixed(2)
-      return {
-          activeMembers: 0,
-          perMonth: 0
-      }
-    },
+    // data(){
+    // },
     components:{
         Points, RentSet, CapSet,
+    },
+    computed: {
+        activeMembers(){
+            let a = 0
+            this.$store.state.members.forEach(m => {
+                if (m.active > 0){
+                    a ++
+                }
+            })
+            return a
+        },
+        perMonth(){
+            return this.$store.state.cash.rent / this.activeMembers
+        }
     },
     mounted() {
         this.$store.commit('stopLoading')

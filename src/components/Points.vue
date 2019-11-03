@@ -1,30 +1,28 @@
 <template lang='pug'>
 
 #points
+    .center
+        h4 {{ totalPointsSum.toFixed(0) }} total points ({{ satPoint.toFixed(0) }} &#12471;)
     .row
-        .four.grid
-            .row
-                img.four.grid(src='../assets/images/loggedIn.svg')
-                .eight.grid {{ totalMembers.toFixed(0) }}
-            .center(v-for='n in members')
+        .five.grid
+            img(src='../assets/images/loggedIn.svg')
+            span
+                h4 {{ totalMembers.toFixed(0) }} in accounts
+            div(v-for='n in members')
                 span {{ n.boost.toFixed(0) }}
                 current(:memberId='n.taskId')
-        .four.grid
-            .row
-                img.six.grid(src='../assets/images/badge.svg')
-                .six.grid {{ totalGuilds.toFixed(0) }}
-            h3.center(v-for='n in guilds') {{ n.guild }} - {{ n.boost.toFixed(0) }}
+            img(src='../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
+            h4 {{ totalResources.toFixed(0) }} in resources
+            div(v-for='n in resources')
+                span {{ n.boost.toFixed(0) }}
+        .seven.grid
+            img(src='../assets/images/badge.svg')
+            h4 {{ totalGuilds.toFixed(0) }} on missions
+            h3(v-for='n in guilds') {{ n.boost.toFixed(0) }} - {{ n.guild }}
+            img(src='../assets/images/kisspng-coconut-asian-palmyra-palm-tree-coconut-tree-5a84ba1cec05d9.1551759415186478369668.png')
+            h4 {{ totalCards.toFixed(0) }} on cards
             template(v-for='n in cards')
-                p {{ n.boost }} -- {{ n.name }}
-        .four.grid
-            .row
-                img.six.grid(src='../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
-                .six.grid {{ totalResources.toFixed(0) }}
-            .center(v-for='n in resources') {{ n.boost.toFixed(0) }}
-
-    .center
-        p total points: {{ totalPointsSum }}
-        p wallet backing: {{ satPoint }} &#12471;
+                p {{ n.boost }} - {{ n.name }}
 </template>
 
 <script>
@@ -99,8 +97,10 @@ export default {
 @import '../styles/grid'
 
 img
-    width: 100%
+    height: 3em
 
+.fr
+    float: right
 
 .center
     text-align: center
