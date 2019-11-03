@@ -63,12 +63,12 @@ function setCurrent(state, b){
 
 function applyBackup(b){
     let b1 = Object.assign({}, b)
-    let b2 = Object.assign({}, b)
     setCurrent(serverState, b1)
-    b.resources = b2.resources.map(removeSensitive)
-    b.members = b2.members.map(removeSensitive)
-    b.ao = b2.ao.map(removeSensitive)
-    setCurrent(pubState, b2)
+    b.resources = b.resources.map(removeSensitive)
+    b.members = b.members.map(removeSensitive)
+    b.ao = b.ao.map(removeSensitive)
+    b.tasks = b.tasks.map(removeSensitive)
+    setCurrent(pubState, b)
 }
 
 function applyEvent(state, ev) {

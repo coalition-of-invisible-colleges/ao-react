@@ -54,29 +54,30 @@ function tasksMuts(tasks, ev) {
             tasks.push(newEv)
             break
         case "task-created":
-            ev.claimed = []
-            ev.completed = []
-            ev.passed = []
-            ev.guild = false
-            ev.subTasks = []
-            ev.lastClaimed = 0
-            ev.book = {}
-            ev.priorities = []
-            ev.address = ''
-            ev.bolt11 = ''
-            ev.payment_hash = ''
-            ev.boost = 0
-            ev.monthlyValue = 0
-            ev.cap = 0
-            ev.allocations = []
-            if(ev.name) {
-                tasks.push(ev)
+            newEv = Object.assign({}, ev)
+            newEv.claimed = []
+            newEv.completed = []
+            newEv.passed = []
+            newEv.guild = false
+            newEv.subTasks = []
+            newEv.lastClaimed = 0
+            newEv.book = {}
+            newEv.priorities = []
+            newEv.address = ''
+            newEv.bolt11 = ''
+            newEv.payment_hash = ''
+            newEv.boost = 0
+            newEv.monthlyValue = 0
+            newEv.cap = 0
+            newEv.allocations = []
+            if(newEv.name) {
+                tasks.push(newEv)
             }
-            if (ev.inId){
+            if (newEv.inId){
                 tasks.forEach(task => {
-                    if (task.taskId === ev.inId) {
-                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
-                        task.subTasks.push(ev.taskId)
+                    if (task.taskId === newEv.inId) {
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== newEv.taskId)
+                        task.subTasks.push(newEv.taskId)
                     }
                 })
             }
@@ -409,6 +410,7 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.memberId){
                     task.boost -= parseFloat(ev.charged)
+                    console.log("task deboosted: ", task.boost)
                     if (task.boost < 0){
                         task.boost = 0
                     }
