@@ -49,11 +49,6 @@ function deactivate(){
     })
 }
 
-
-setTimeout(rent, 10000)
-setTimeout(deactivate, 20000)
-
-
 module.exports = function (){
     console.log('starting crons')
     rentJob.start()
