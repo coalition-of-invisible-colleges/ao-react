@@ -23,6 +23,9 @@
     ul
       li Each month the node cost is split between accounts
       li Activate account at the treasure chest on your deck
+    div(v-if='pendingDeactivations.length > 0')
+        h4 Pending Deactivation:
+        current(v-for='mId in pendingDeactivations'  :memberId='mId')
 </template>
 
 <script>
@@ -30,14 +33,18 @@
 import Points from '../Points'
 import RentSet from '../forms/RentSet'
 import CapSet from '../forms/CapSet'
+import Current from '../Resources/Current'
 
 export default {
-    // data(){
-    // },
     components:{
-        Points, RentSet, CapSet,
+        Points, RentSet, CapSet, Current
     },
     computed: {
+        pendingDeactivations(){
+            return this.$store.state.members
+              .filter(m => m.active > 0 && this.$store.getters.hashMap[m.memberId].boost <= 0)
+              .map(m => m.memberId)
+        },
         activeMembers(){
             let a = 0
             this.$store.state.members.forEach(m => {

@@ -15,6 +15,7 @@
             h4 {{ totalResources.toFixed(0) }} in resources
             div(v-for='n in resources')
                 span {{ n.boost.toFixed(0) }}
+                currentr(:resourceId='n.taskId')
         .seven.grid
             img(src='../assets/images/badge.svg')
             h4 {{ totalGuilds.toFixed(0) }} on missions
@@ -28,9 +29,10 @@
 <script>
 
 import Current from './Resources/Current'
+import Currentr from './Resources/Currentr'
 
 export default {
-    components: { Current },
+    components: { Current, Currentr },
     data(){
         let members = []
         let guilds = []
