@@ -72,7 +72,7 @@ else
 fi
 
 #install yarn
-if [ $(yarn --version | grep -c "1\.17\.3") -eq 1 ];
+if [ $(yarn --version | grep -c "1\.19\.1") -eq 1 ];
 then
 	echo yarn v1.17.3 already installed
 else
@@ -219,6 +219,10 @@ fi
 
 # configure tor
 TORRCPATH='/usr/local/etc/tor/torrc'
+if [ ! -d "/usr/local/etc/tor" ];
+then
+	sudo mkdir -p /usr/local/etc/tor
+fi
 
 if [ ! -f $TORRCPATH ];
 then

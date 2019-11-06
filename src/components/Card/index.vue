@@ -152,8 +152,16 @@ export default {
             }
         },
         copyCardToClipboard(){
-            SoundFX.playChunkSwap()
-            navigator.clipboard.writeText(this.b.name)
+            //navigator.clipboard.writeText(this.b.name)
+            // navigator.permissions.query({name: "clipboard-write"}).then(result => {
+                // if (result.state == "granted" || result.state == "prompt") {
+                    navigator.clipboard.writeText(this.b.name).then(function() {
+                        SoundFX.playChunkSwap()
+                    }, function() {
+                        console.log("copy failed")
+                    })
+                // }
+            // })
         },
         deaction(){
           SoundFX.playPageTurn()
