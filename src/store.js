@@ -166,33 +166,7 @@ export default new Vuex.Store({
           return my
       },
       pubguilds(state, getters){
-          let guilds = []
-          let uniqueG = []
-          state.tasks.forEach((c, i) => {
-              if (c.guild){
-                  let l = uniqueG.indexOf(c.guild)
-                  if (l === -1){
-                    guilds.push(c)
-                    uniqueG.push(c.guild)
-                  } else {
-                    let o = guilds[l]
-                    if (o.deck.length <= c.deck.length){
-                      guilds[l] = c
-                    }
-                  }
-              }
-          })
-          guilds.sort( (a, b) => {
-              let aVal = a.deck.length
-              let bVal = b.deck.length
-              return bVal - aVal
-          })
-
-          if (guilds.length > 11){
-              return guilds.slice(0,11)
-          }
-
-          return guilds
+          return
       },
       pubguildEvents(state, getters){
           let allTasks = []
