@@ -332,6 +332,7 @@ h3
 
 .title
     text-align: center
+    font-size: 1.5em
 
 .description
     color: white
