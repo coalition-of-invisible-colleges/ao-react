@@ -14,7 +14,7 @@
                       .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
                   p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
       div.endpadtwo(v-else)
-          .gui.title.yellowtx missions
+          .title.yellowtx missions
           ul.none
               template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
                   li.spaced

@@ -18,16 +18,20 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
-    .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && matchCards.length > 0')
+    .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0')
         .searchresults
-            .result(v-for='t in matchCards'  @click='loadResult(t)'  :class='resultInputSty(t)'  @dblclick='goIn(t.taskId)') {{ t.name }}
+            .result(v-for='t in matchCards.guilds'  @click='loadResult(t)'  :class='resultInputSty(t)'  @dblclick='goIn(t.taskId)')
+                img.smallguild(src='../../assets/images/badge_white.svg')
+                span {{ t.guild }}
+                div {{ t.name }}
+            current.result(v-for='t in matchCards.doges'  @click='loadResult(t)'  :class='resultInputSty(t)'  @dblclick='goIn(t.taskId)'  :memberId='t.taskId')
+            .result(v-for='t in matchCards.cards'  @click='loadResult(t)'  :class='resultInputSty(t)'  @dblclick='goIn(t.taskId)') {{ t.name }}
 </template>
 
 <script>
 
-import SharedTitle from '../slotUtils/SharedTitle'
-import FormBox from '../slotUtils/FormBox'
 import request from "superagent"
+import Current from '../Resources/Current'
 import SoundFX from '../../modules/sounds'
 
 export default {
@@ -44,7 +48,7 @@ export default {
         }
     },
     components: {
-        SharedTitle, FormBox
+        Current
     },
     mounted() {
         var el = document.getElementById('createtask')
@@ -131,9 +135,6 @@ export default {
                 top,
                 panel
             })
-
-            this.$store.commit("startLoading", 'unicorn')
-            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         switchColor(color, refocus = true){
             if (this.task.color === color){
@@ -250,20 +251,31 @@ export default {
             if(this.exploring) return this.searchResults
             let regex = new RegExp(this.task.name, 'i')
             let matches = []
+            let guildmatches = []
+            let dogematches = []
             try {
                 this.$store.state.tasks.forEach(t => {
-                  if(t.name === this.task.name) {
-                  } else if(regex.test(t.name) && t.deck.length > 0) {
-                    matches.push(t)
-                  } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
-                    matches.push(t)
-                  }
+                    if(t.name === this.task.name || t.memberId == t.taskId) {
+                        // do not display exact matches and filter out doges
+                    } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
+                        guildmatches.push(t)
+                    } else if(regex.test(t.name) && t.deck.length > 0) {
+                        matches.push(t)
+                    }
+                })
+                this.$store.state.members.forEach(member => {
+                    if(regex.test(member.name)) {
+                        console.log("member found: ", member.name)
+                        let result = this.$store.getters.hashMap[member.memberId]
+                        result.name = member.name
+                        dogematches.push(result)
+                    }
                 })
             } catch (err){
                 console.log("regex search terminated in error: ", err)
             }
-            this.searchResults = matches
-            return matches
+            this.searchResults = { guilds: guildmatches, doges: dogematches, cards: matches } 
+            return this.searchResults
         },
         colorWord(){
             switch (this.task.color) {
@@ -488,6 +500,16 @@ textarea
     background-color: rgba(255, 255, 255, 0.75)
 
 .result
-    margin-bottom: 0.25em
+    margin-bottom: 0.3em
     cursor: pointer
+
+.smallguild
+    height: 1em
+    margin-right: 0.3em
+    
+.guildname
+    font-weight: bold
+
+.current.result
+    display: block
 </style>
