@@ -19,6 +19,7 @@ const state = {
 
 const mutations = {
     setCurrent(state, current){
+        if(!current.cash.subscribed) current.cash.subscribed = []
         state.subscribed = current.cash.subscribed
         state.alias = current.cash.alias
         state.address = current.cash.address

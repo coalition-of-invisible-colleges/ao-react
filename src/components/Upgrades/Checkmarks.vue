@@ -14,7 +14,7 @@
                       .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
                   p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
       div.endpadtwo(v-else)
-          .gui.title.yellowtx missions
+          .title.yellowtx missions
           ul.none
               template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
                   li.spaced
@@ -22,10 +22,6 @@
                           img.floatleft(src='../../assets/images/badge.svg')
                       span(@click='goIn(g.taskId)')
                           span.nl.gui.yellowtx {{ g.guild }}
-                      span(v-for='b in getSubPriorities(g.taskId)'  @click='goIn(b, g.taskId)')
-                          .tooltip.boat
-                              img.tinyboat(src='../../assets/images/boatbtnselected.svg')
-                              linky.tooltiptext(:x='shortName(getCard(b).name)')
                       span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
                           .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                               linky.tooltiptext(:x='c.name')
@@ -336,6 +332,7 @@ h3
 
 .title
     text-align: center
+    font-size: 1.5em
 
 .description
     color: white
@@ -365,19 +362,10 @@ h2
     overflow: auto
     width: 100%
 
-.checkmark, .tinyboat
+.checkmark
     font-size: 2em
     display: inline-block
     cursor: pointer
-
-.boat
-    display: inline-block
-    font-size: 2em
-
-.tinyboat
-    height: 0.35em
-    position: relative
-    top: 0.01em
 
 .plain
     text-decoration: none

@@ -18,16 +18,21 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
-    .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && matchCards.length > 0')
+    .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0')
         .searchresults
-            .result(v-for='t in matchCards'  @click='loadResult(t)'  :class='resultInputSty(t)'  @dblclick='goIn(t.taskId)') {{ t.name }}
+            .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+                img.smallguild(src='../../assets/images/badge_white.svg')
+                span {{ t.guild }}
+                div {{ t.name }}
+            .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+                current(:memberId='t.taskId')
+            .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ t.name }}
 </template>
 
 <script>
 
-import SharedTitle from '../slotUtils/SharedTitle'
-import FormBox from '../slotUtils/FormBox'
 import request from "superagent"
+import Current from '../Resources/Current'
 import SoundFX from '../../modules/sounds'
 
 export default {
@@ -41,10 +46,11 @@ export default {
             swipeTimeout: 0,
             searchResults: [],
             exploring: false,
+            inDebounce: false,
         }
     },
     components: {
-        SharedTitle, FormBox
+        Current
     },
     mounted() {
         var el = document.getElementById('createtask')
@@ -115,6 +121,8 @@ export default {
     },
     methods: {
         goIn(taskId){
+            clearTimeout(this.inDebounce)
+            console.log("goIn")
             SoundFX.playPageTurn()
             let panel = [taskId]
             let parents = [  ]
@@ -131,9 +139,6 @@ export default {
                 top,
                 panel
             })
-
-            this.$store.commit("startLoading", 'unicorn')
-            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         switchColor(color, refocus = true){
             if (this.task.color === color){
@@ -225,9 +230,19 @@ export default {
           }
         },
         loadResult(t) {
+            console.log("loadResult")
             this.exploring = true
             this.task.name = t.name.trim()
             this.task.color = t.color
+        },
+        debounce(func, delay) {
+            console.log("debounce")
+            const context = this
+            const args = arguments
+            console.log("debounce")
+            console.log("context is ", context, " and args is ", args)
+            clearTimeout(this.inDebounce)
+            this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
         }
     },
     computed: {
@@ -250,20 +265,30 @@ export default {
             if(this.exploring) return this.searchResults
             let regex = new RegExp(this.task.name, 'i')
             let matches = []
+            let guildmatches = []
+            let dogematches = []
             try {
                 this.$store.state.tasks.forEach(t => {
-                  if(t.name === this.task.name) {
-                  } else if(regex.test(t.name) && t.deck.length > 0) {
-                    matches.push(t)
-                  } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
-                    matches.push(t)
-                  }
+                    if(t.name === this.task.name || t.memberId == t.taskId) {
+                        // do not display exact matches and filter out doges
+                    } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
+                        guildmatches.push(t)
+                    } else if(regex.test(t.name) && t.deck.length > 0) {
+                        matches.push(t)
+                    }
+                })
+                this.$store.state.members.forEach(member => {
+                    if(regex.test(member.name)) {
+                        let result = this.$store.getters.hashMap[member.memberId]
+                        result.name = member.name
+                        dogematches.push(result)
+                    }
                 })
             } catch (err){
                 console.log("regex search terminated in error: ", err)
             }
-            this.searchResults = matches
-            return matches
+            this.searchResults = { guilds: guildmatches, doges: dogematches, cards: matches } 
+            return this.searchResults
         },
         colorWord(){
             switch (this.task.color) {
@@ -461,7 +486,7 @@ textarea
     padding: 0
 
 .scrollbarwrapper
-    width: 30vw
+    width: 37vw
     height: calc(100% - 2em)
     position: fixed
     top: 0
@@ -469,6 +494,13 @@ textarea
     background: rgba(22, 22, 22, 0.8)
     padding: 1em 0
     border-radius: 20px
+
+@media only screen and (max-width: 68em)
+    .scrollbarwrapper
+        width: 100%
+        position: absolute
+        top: calc(-100% - 0.5em)
+        left: 0
 
 .searchresults
     overflow: auto
@@ -488,6 +520,18 @@ textarea
     background-color: rgba(255, 255, 255, 0.75)
 
 .result
-    margin-bottom: 0.25em
+    margin-bottom: 0.3em
     cursor: pointer
+
+.smallguild
+    height: 1em
+    margin-right: 0.3em
+    position: relative
+    top: 0.16em
+    
+.guildname
+    font-weight: bold
+
+.current.result
+    display: block
 </style>

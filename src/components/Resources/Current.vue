@@ -56,4 +56,8 @@ a
     position: relative
     top: 0.25em
 
+.result .onlineicon
+    top: 0.1em
+    height: 1em
+    
 </style>
