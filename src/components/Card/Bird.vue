@@ -5,16 +5,31 @@
         div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
+    .play(v-if='showPlay')
+        div(v-if='$store.getters.warpDrive > -1')
+            select(v-model='toGuildWarp')
+                option(disabled, value='') to mission
+                option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
+            form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+        select(v-model='toGuild')
+            option(disabled, value='') to mission
+            template(v-for='g in $store.getters.sendableGuilds')
+                option(:value="g.taskId") {{ g.guild }}
+                template(v-for='p in g.guilds')
+                    option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
+                    template(v-for='sp in p.guilds')
+                        option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
+        form-box.small( btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
     .give(v-if='showGive')
         div(v-if='$store.getters.warpDrive > -1')
             select(v-model='toMemberWarp')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
-            form-box(v-if='toMemberWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+            form-box.small(v-if='toMemberWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
         select(v-model='toMember')
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-        form-box( btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+        form-box.small( btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
@@ -37,6 +52,7 @@ export default {
             toGuildWarp: '',
             showGive: false,
             showGuildCreate: false,
+            showPlay: false,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -48,16 +64,36 @@ export default {
         let mc = Propagating(new Hammer.Manager(el))
 
         let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
-        mc.add(singleTap)
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        let tripleTap = new Hammer.Tap({ event: 'tripletap', taps: 3, time: 400, interval: 400 })
+        let longPress = new Hammer.Press({ time: 400 })
+
+        mc.add([tripleTap, doubleTap, singleTap, longPress])
+
+        tripleTap.recognizeWith([doubleTap, singleTap])
+        doubleTap.recognizeWith(singleTap)
+        singleTap.requireFailure([doubleTap, tripleTap])
+        doubleTap.requireFailure(tripleTap)
+
         mc.on('singletap', (e) => {
+            SoundFX.playTickMark()
             this.toggleGive()
             e.stopPropagation()
         })
 
-        let Press = new Hammer.Press({ time: 400 })
-        mc.add(Press)
+        mc.on('doubletap', (e) => {
+            SoundFX.playTickMark()
+            this.togglePlay()
+            e.stopPropagation()
+        })
+
+        mc.on('tripletap', (e) => {
+            // catch for possible later addition. triple click to send to node?
+            e.stopPropagation()
+        })
+
         mc.on('press', (e) => {
-            console.log("bird press")
+            SoundFX.playTickMark()
             this.toggleGuildCreate()
             e.stopPropagation()
         })
@@ -68,21 +104,28 @@ export default {
                 this.toggleGuildCreate()
                 return
             }
-            SoundFX.playTickMark()
-            if(!this.showGive) {
-                this.showGuildCreate = false
+            if(this.showPlay) {
+                this.togglePlay()
+                return
             }
             this.showGive = !this.showGive
         },
         toggleGuildCreate(){
-            SoundFX.playTickMark()
             if(!this.showGuildCreate) {
                 this.showGive = false
+                this.showPlay = false
             }
             this.showGuildCreate = !this.showGuildCreate
             if(this.showGuildCreate) {
                 setTimeout(()=>{ document.getElementById('titlebox').focus() }, 1)
             }
+        },
+        togglePlay(){
+            if(!this.showPlay) {
+                this.showGive = false
+                this.showGuildCreate = false
+            }
+            this.showPlay = !this.showPlay
         },
         setWarp(i){
             this.$store.commit('setWarp', i)
@@ -132,7 +175,7 @@ export default {
                     deck: [],
                 }
             }
-        }
+        },
     },
 }
 
@@ -168,6 +211,8 @@ export default {
 
 select
     background-color: lightteal
+    width: 80%
+    margin-left: -1.5em
 
 select.form-control
     color: black
@@ -206,13 +251,19 @@ label
 .smallguild:hover, .smallguild.open
     background-image: url('../../assets/images/badge_white.svg')
 
-.give
+.give, .play
     position: relative
-    top: 1em
+    top: 2.5em
     margin-bottom: 1em
+    width: 100%
 
 .theTitle
     position: absolute
     left: 3.3em
     top: 1.3em
+        
+.small
+    width: 19%
+    display: inline-block
+    
 </style>

@@ -151,6 +151,7 @@ export default new Vuex.Store({
               }
               return true
           })
+          my = _.filter(my, st => !my.some(t => t.subTasks.concat(t.priorities, t.completed).indexOf(st.taskId) > -1))
           my.forEach(g => {
               g.tempLastClaimed = 0
               let completions = g.completed.map(t => getters.hashMap[t])
@@ -166,7 +167,63 @@ export default new Vuex.Store({
           return my
       },
       pubguilds(state, getters){
-          return
+          let guilds = []
+          let uniqueG = []
+          state.tasks.forEach((c, i) => {
+              if (c.guild){
+                  let l = uniqueG.indexOf(c.guild)
+                  if (l === -1){
+                    guilds.push(c)
+                    uniqueG.push(c.guild)
+                  } else {
+                    let o = guilds[l]
+                    if (o.deck.length <= c.deck.length){
+                      guilds[l] = c
+                    }
+                  }
+              }
+          })
+          guilds = _.filter(guilds, st => !guilds.some(t => t.subTasks.concat(t.priorities, t.completed).indexOf(st.taskId) > -1))
+          guilds.sort( (a, b) => {
+              let aVal = a.deck.length
+              let bVal = b.deck.length
+              return bVal - aVal
+          })
+
+          if (guilds.length > 11){
+              return guilds.slice(0,11)
+          }
+
+          return guilds
+      },
+      sendableGuilds(state, getters) {
+          let guilds = _.filter(getters.myGuilds, st => getters.pubguilds.indexOf(st.taskId) === -1)
+          guilds = getters.pubguilds.concat(guilds)
+          guilds.forEach(g => {
+              g.subTasks.concat(g.priorities, g.completed).forEach(p => {
+                  let task = getters.hashMap[p]
+                  if(!task) {
+                      console.log("null taskId found, this means cleanup is not happening elsewhere and is very bad")
+                  } else if(task.guild) {
+                      task.subTasks.concat(task.priorities, task.completed).forEach(sp => {
+                          let subtask = getters.hashMap[sp]
+                          if(!subtask) {
+                              console.log("null subtaskId found, this means cleanup is not happening elsewhere and is very bad")
+                          } else if(subtask.guild) {
+                              if(!task.guilds) {
+                                  task.guilds = []
+                              }
+                              task.guilds.push(subtask)
+                          }
+                      })
+                      if(!g.guilds) {
+                          g.guilds = []
+                      }
+                      g.guilds.push(task)
+                  }
+              })
+          })
+          return guilds
       },
       pubguildEvents(state, getters){
           let allTasks = []

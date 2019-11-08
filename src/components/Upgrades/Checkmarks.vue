@@ -2,32 +2,44 @@
 
 .upgrades
     div
-      div.endpad(v-if='!isDoge')
-          h2.yellowtx(v-if='b.guild') {{ b.guild }}
-          current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :inId='ugly'  :completions='n.contextCompletions')
-          current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
-          .box.morepad
-              div.dogep.spinslow
-                  .tooltip
-                      img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-                      .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
-                      .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
-                  p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
-      div.endpadtwo(v-else)
-          .title.yellowtx missions
-          ul.none
-              template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
-                  li.spaced
-                      span(@click='goIn(g.taskId)')
-                          img.floatleft(src='../../assets/images/badge.svg')
-                      span(@click='goIn(g.taskId)')
-                          span.nl.gui.yellowtx {{ g.guild }}
-                      span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
-                          .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
-                              linky.tooltiptext(:x='c.name')
-                      linky.description(:x='g.name')
-              .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
-              .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
+        div.endpad(v-if='!isDoge')
+            h2.yellowtx(v-if='b.guild') {{ b.guild }}
+            .projects(v-if='subguilds.length > 0')
+                h3.bluetx projects
+                ul.none
+                    li.spaced(v-for='p in subguilds')
+                        span(@click='goIn(p.taskId)')
+                            img.floatleft(src='../../assets/images/badge.svg')
+                        span(@click='goIn(p.taskId)')
+                            span.nl.gui.bluetx {{ p.guild }}
+                        //- span(v-for='c in completions(p)'  @click='goIn(c.taskId, p.taskId)'    :class=  '  { padleft : getSubPriorities(p.taskId).length > 0 }')
+                        //-     .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
+                        //-         linky.tooltiptext(:x='c.name')
+                        //- linky.description(:x='p.name')
+            current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions')
+            current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
+            .box.morepad
+                div.dogep.spinslow
+                    .tooltip
+                        img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                        .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
+                        .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
+                    p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+        div.endpadtwo(v-else)
+            .title.yellowtx missions
+            ul.none
+                template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
+                    li.spaced
+                        span(@click='goIn(g.taskId)')
+                            img.floatleft(src='../../assets/images/badge.svg')
+                        span(@click='goIn(g.taskId)')
+                            span.nl.gui.yellowtx {{ g.guild }}
+                        span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'    :class=  '  { padleft : getSubPriorities(g.taskId).length > 0 }')
+                            .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
+                                linky.tooltiptext(:x='c.name')
+                        linky.description(:x='g.name')
+                .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{       $store.getters.myGuilds.length - 5 }}
+                .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
 </template>
 
 <script>
@@ -175,6 +187,9 @@ export default {
         },
         isGrabbed(){
           return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
+        },
+        subguilds() {
+            return this.$store.state.tasks.filter(p => p.guild && this.b.subTasks.concat(this.b.priorities, this.b.completed).indexOf(p.taskId) > -1)
         },
     },
 }
@@ -460,4 +475,25 @@ ul
 
 .padleft
     margin-left: 0.36em
+    
+.projects
+    float: right
+    max-width: 33%
+    border: solid 1px wrexblue
+    border-radius: 0.5em
+    margin-top: -0.5em
+    margin-right: 1em
+    padding: 0 0.5em
+    
+.projects h3
+    text-align: center
+    margin-top: 0.5em
+    
+.projects .floatleft
+    max-height: 1.3em
+    margin-top: 0
+    margin-right: 0.5em
+    
+.projects ul
+    margin-left: -2em
 </style>

@@ -43,13 +43,16 @@ export default {
 @import '../../styles/button';
 
 .response
-  color: red
+    color: red
 
 form
-  padding: 0em
-  max-width:400px
-  // color: accent1
-  //margin: 1em
+    padding: 0em
+    max-width:400px
+    // color: accent1
+    //margin: 1em
 
-
+.small button
+    height: 2.4em
+    position: relative
+    top: -0.1em
 </style>
