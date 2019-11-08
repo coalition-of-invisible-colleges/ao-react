@@ -318,6 +318,9 @@ h3
     font-size: 1.5em
     cursor: pointer
 
+.gui.bluetx
+    font-size: 1.3em
+    
 .row .three
     height: 5em
 

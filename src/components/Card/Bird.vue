@@ -253,7 +253,7 @@ label
 
 .give, .play
     position: relative
-    top: 2.5em
+    top: 2em
     margin-bottom: 1em
     width: 100%
 

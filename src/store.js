@@ -200,6 +200,11 @@ export default new Vuex.Store({
           let guilds = _.filter(getters.myGuilds, st => getters.pubguilds.indexOf(st.taskId) === -1)
           guilds = getters.pubguilds.concat(guilds)
           guilds.forEach(g => {
+              console.log("for guild ", g.guild)
+              console.log("subTasks is ", g.subTasks)
+              console.log("priorities is ", g.priorities)
+              console.log("completed is ", g.completed)
+              console.log("concat is ", g.subTasks.concat(g.priorities, g.completed))
               g.subTasks.concat(g.priorities, g.completed).forEach(p => {
                   let task = getters.hashMap[p]
                   if(!task) {
@@ -213,13 +218,19 @@ export default new Vuex.Store({
                               if(!task.guilds) {
                                   task.guilds = []
                               }
-                              task.guilds.push(subtask)
+                              if(task.guilds.indexOf(subtask) === -1) {
+                                  task.guilds.push(subtask)
+                                  console.log("subproject added: ", subtask.name)
+                              }
                           }
                       })
                       if(!g.guilds) {
                           g.guilds = []
                       }
-                      g.guilds.push(task)
+                      if(g.guilds.indexOf(task) === -1) {
+                          g.guilds.push(task)
+                          console.log("project added: ", task.name)
+                      }
                   }
               })
           })
