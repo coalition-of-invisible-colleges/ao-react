@@ -60,6 +60,7 @@ function startDctrlAo(){
         fullEvStream.onValue( ev => {
               state.applyEvent(state.pubState, ev)
               io.emit('eventstream', ev)
+              console.log("emitting:", ev)
         })
       })
     })

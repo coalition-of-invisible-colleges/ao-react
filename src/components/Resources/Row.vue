@@ -10,15 +10,13 @@
     .row
         .seven.columns.recent
             label recently used broken, see sun-badge
-        //-     .current
-        //-         current(v-for='memberId in currentMembers', :memberId='memberId')
         .five.columns
-            //- router-link(v-if='trackStock', :to='"/resource_stock/" + r.resourceId')
-            //-   button.refill replenish
-            button.use(@click='use')
-                span use
-            router-link.fw(:to='goIn')
-                img.viney(src='../../assets/images/vinebtn.svg')
+            button.use()
+                button(@click='use("A")') A
+                button(@click='use("B")') B
+                button(@click='use("C")') C
+                button(@click='use("D")') D
+                button(@click='use("E")') E
 </template>
 
 <script>
@@ -29,7 +27,7 @@ import SoundFX from '../../modules/sounds'
 
 export default {
     data(){
-        return { showInvoices: false }
+        return { showInvoices: false, notes: 'A'  }
     },
     props: ['r', 'c'],
     components: { Current, PayReq },
@@ -45,7 +43,6 @@ export default {
         },
         currentMembers(){
             let currentMembers = []
-
             return currentMembers
         },
         sats(){
@@ -54,15 +51,17 @@ export default {
         },
     },
     methods: {
-        use(){
-            this.$store.dispatch("makeEvent", {
+        use(letter){
+            let newEv = {
                 type: 'resource-used',
                 resourceId: this.r.resourceId,
                 memberId: this.$store.getters.member.memberId,
                 amount: 1,
                 charged:this.r.charged,
-                notes:'ao',
-            })
+                notes:letter,
+            }
+            console.log('use triggered:', newEv)
+            this.$store.dispatch("makeEvent", newEv)
         },
         goIn(){
             SoundFX.playPageTurn()
@@ -95,7 +94,8 @@ img
 
 button
     color: white
-
+    button
+        width: 20%
 .resources
     color: accent1
     background-color: darkteal

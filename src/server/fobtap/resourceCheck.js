@@ -20,8 +20,7 @@ function access(member, resource){
 module.exports = function(req, res, next){
     let member = utils.memberFromFob(req.body.fob)
     let resource = utils.getResource(req.body.resourceId)
-    let canAccess = access(member,resource)
-    if (member && resource && canAccess){
+    if (member && resource && access(member,resource)){
         events.resourcesEvs.resourceUsed(
           req.body.resourceId,
           member.memberId,

@@ -49,6 +49,7 @@ function socketAuth(socket, data, callback){
             authorized = true
         }
     })
+    console.log("socket auth triggered:", authorized)
     callback(null, authorized)
 }
 

@@ -67,7 +67,7 @@ export default {
             return name
         },
         toggleActivated() {
-            if(this.m.memberId !== $store.getters.member.memberId) {
+            if(this.m.memberId !== this.$store.getters.member.memberId) {
                 return
             }
             if(this.$store.getters.member.active > 0) {
@@ -118,7 +118,7 @@ label
     padding: 1em
     background: rgba(22, 22, 22, 0.2)
     text-align: center
-    
+
 .agedwrapper
     position: relative
 
@@ -166,16 +166,16 @@ label
 
 .smallguild
     height: 2em
-    
+
 .bottomleft, .bottomright
     width: fit-content
     position: relative
     bottom: 0
-    
+
 .bottomleft
     float: left
     left: 0
-        
+
 .bottomright
     right: 0
     float: right
@@ -188,7 +188,7 @@ label
 
 .clearboth
     clear: both
-    
+
 .gui
     font-size: 1.7em
     cursor: pointer
@@ -201,19 +201,19 @@ label
 
 .help
     font-size: 1.3em
-    
+
 .suggest
     font-style: italic
     font-size: 1.3em
-    
+
 .dogecoin
     width: 3em
     height: 3em
     cursor: pointer
-    
+
 .faded
     opacity: 0.39
-    
+
 .tooltiptext.membertooltip
     width: 20em
     z-index: 151

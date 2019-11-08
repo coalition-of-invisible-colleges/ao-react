@@ -100,10 +100,11 @@ const actions = {
                   .end((err, res)=>{
                       if (err || !res.body) {
                           commit("setReqStatus", "failed")
+                          console.log("req failed")
                         } else {
                           commit("setPing", Date.now() - startTs)
                           commit("setReqStatus", "ready")
-
+                          console.log("req succ")
                           if (state.pendingRequests.length > 0){
                               let nextEv = state.pendingRequests.slice(-1)
                               commit("popRequest")

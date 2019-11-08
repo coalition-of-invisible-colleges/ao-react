@@ -49,6 +49,7 @@ function specResourceCreated(req, res, next){
 
 function specResourceUsed(req, res, next){
   let errRes = []
+  console.log('trying to use')
   if (
     validators.isActiveMemberId(req.body.memberId, errRes) &&
     validators.isResourceId(req.body.resourceId, errRes) &&
@@ -67,6 +68,7 @@ function specResourceUsed(req, res, next){
     )
   } else {
     res.status(200).send(errRes)
+    console.log("failed auth", errRes)
   }
 }
 
