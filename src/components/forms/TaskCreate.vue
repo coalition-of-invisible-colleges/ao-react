@@ -269,9 +269,7 @@ export default {
             let dogematches = []
             try {
                 this.$store.state.tasks.forEach(t => {
-                    if(t.name === this.task.name || t.memberId == t.taskId) {
-                        // do not display exact matches and filter out doges
-                    } else if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
+                    if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
                         guildmatches.push(t)
                     } else if(regex.test(t.name) && t.deck.length > 0) {
                         matches.push(t)
