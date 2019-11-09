@@ -13,7 +13,7 @@
             form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
         select(v-model='toGuild')
             option(disabled, value='') to mission
-            template(v-for='g in $store.getters.sendableGuilds')
+            template(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds')
                 option(:value="g.taskId") {{ g.guild }}
                 template(v-for='p in g.guilds')
                     option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
