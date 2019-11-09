@@ -34,6 +34,7 @@ export default {
                     taskId: this.b.taskId,
                     guild: false,
                 })
+                return
             }
             this.$emit('closeit')
             SoundFX.playBattleCry()
