@@ -199,6 +199,7 @@ export default new Vuex.Store({
       sendableGuilds(state, getters) {
           let guilds = _.filter(getters.myGuilds, st => !getters.pubguilds.some(t => { return t.taskId === st.taskId } ))
           guilds = getters.pubguilds.concat(guilds)
+          guilds = _.filter(guilds, st => !guilds.some(t => t.subTasks.concat(t.priorities, t.completed).indexOf(st.taskId) > -1))
           guilds.forEach(g => {
               g.subTasks.concat(g.priorities, g.completed).forEach(p => {
                   let task = getters.hashMap[p]
