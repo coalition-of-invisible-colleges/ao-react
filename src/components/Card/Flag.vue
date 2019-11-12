@@ -49,7 +49,11 @@ export default {
             switch(this.$store.state.upgrades.mode) {
                 case 'doge':
                 case 'boat':
-                    this.flagIt()
+                    if(this.isDoged) {
+                        this.dogeIt()
+                    } else {
+                        this.flagIt()
+                    }
                     break
                 case 'badge':
                     if(!this.isCompleted) {

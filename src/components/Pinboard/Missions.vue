@@ -8,6 +8,11 @@
           span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
   flickity(:options='flickityOptions')
       .carousel-cell(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)' )  {{ t.guild }}
+  .center
+      div(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds') {{ g.guild }}
+        .indentone(v-for='p in g.guilds') {{ p.guild }}
+            .indenttwo(v-for='sp in p.guilds') {{ sp.guild }}
+
 </template>
 
 <script>
@@ -332,4 +337,15 @@ h2
     font-weight: bold
     font-size: 1.25em
     margin-top: -0.13em
+    
+.indentone
+    margin-left: 2em
+
+.indenttwo
+    margin-left: 4em
+    
+.center
+    margin-left: 50%
+    transform: translateX(-50%)
+    width: fit-content
 </style>

@@ -3,7 +3,7 @@
 .preview(v-if='deck.length > 0 || topPriorities.length > 0')
     .row
         .four.grid
-            .tooltip(v-for="(tId,i) in topPriorities")
+            .tooltip(v-for="(tId, i) in topPriorities")
                 img.tinyboat(v-if="i < 5", @click='goto(tId)', src='../../assets/images/boatbtnselected.svg')
                 linky.tooltiptext(:x='tId? shortName(card(tId).name) : "unknown card"')
             .bead.redwx.tooltip(v-for="(b,i) in red"  :b="b", @click='goto(b.taskId)')
@@ -140,6 +140,7 @@ export default {
 
 .tooltip
     position: relative
+    z-index: 153
 
 .tooltip .tooltiptext
     font-size: 1em

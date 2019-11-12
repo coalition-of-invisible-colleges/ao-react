@@ -380,7 +380,7 @@ h2
     overflow: auto
     width: 100%
 
-.checkmark
+.plain.checkmark
     font-size: 2em
     display: inline-block
     cursor: pointer
