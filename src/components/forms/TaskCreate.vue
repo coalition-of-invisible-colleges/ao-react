@@ -263,11 +263,11 @@ export default {
             // if(!this.task.name) return []
             if(this.task.name.length < 1) return []
             if(this.exploring) return this.searchResults
-            let regex = new RegExp(this.task.name, 'i')
             let matches = []
             let guildmatches = []
             let dogematches = []
             try {
+                let regex = new RegExp(this.task.name, 'i')
                 this.$store.state.tasks.forEach(t => {
                     if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
                         guildmatches.push(t)
