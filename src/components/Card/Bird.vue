@@ -97,6 +97,18 @@ export default {
             this.toggleGuildCreate()
             e.stopPropagation()
         })
+
+        let Swipe = new Hammer.Swipe()
+        mc.add(Swipe)
+        mc.on('swipeleft', (e) => {
+            console.log(this.phaseShift)
+            e.stopPropagation()
+        })
+
+        mc.on('swiperight', (e) => {
+            console.log(this.phaseShift)
+            e.stopPropagation()
+        })
     },
     methods: {
         toggleGive(){
@@ -175,6 +187,21 @@ export default {
                     deck: [],
                 }
             }
+        },
+        phaseShift(delta = 1){
+            let others = []
+            let index = 0
+            this.$store.state.tasks.forEach((t, i) => {
+                if(t.subTasks.indexOf(this.b.taskId) !== -1) {
+                    if(t.taskId === this.inId) {
+                        index = i
+                    }
+                    others.push(t)
+                }
+            })
+            console.log("others is ", others)
+            others = others.slice(index).concat(others.slice(0, index))
+            return others
         },
     },
 }

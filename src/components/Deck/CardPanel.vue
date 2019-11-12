@@ -42,7 +42,7 @@
     .open(v-if='open')
         hypercard(v-for='b in c'  :b="b"  :key="b.taskId"  :inId='taskId'  :c='panelIds')
     .box(v-else  :class='panelSty')
-        hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId'  :c='panelIds')
+        hypercard(:b="c[top]"  :inId='taskId'  :c='panelIds')
 </template>
 
 <script>
@@ -56,6 +56,7 @@ import SoundFX from '../../modules/sounds'
 export default {
   props: ['c', 'taskId'],
   mounted(){
+        console.log("mounted")
         let orbel = this.$refs.mandelorb
         if(!orbel) return
         let orbmc = Propagating(new Hammer.Manager(orbel))
@@ -89,14 +90,14 @@ export default {
 
         orbmc.on('swipeup', (e) => {
             this.swap(-1)
-            this.previous()
+            this.previous(false)
             e.stopPropagation()
         })
 
         orbmc.on('swipedown', (e) => {
             this.swap(1)
             e.stopPropagation()
-        });
+        })
 
         let orbPress = new Hammer.Press({ time: 400 })
         orbmc.add(orbPress)
@@ -111,16 +112,17 @@ export default {
         let prevmc = Propagating(new Hammer.Manager(prevel))
 
         let prevTap = new Hammer.Tap({ time: 400 })
-        prevmc.add(prevTap)
+        let prevPress = new Hammer.Press({ time: 400 })
+
+        prevmc.add([prevTap, prevPress])
+
         prevmc.on('tap', (e) => {
             this.previous()
             e.stopPropagation()
         })
 
-        let prevPress = new Hammer.Press({ time: 400 })
-        prevmc.add(prevPress)
         prevmc.on('press', (e) => {
-
+            console.log("go to first - press")
             this.first()
             e.stopPropagation()
         })
@@ -130,27 +132,61 @@ export default {
         let nextmc = Propagating(new Hammer.Manager(nextel))
 
         let nextTap = new Hammer.Tap({ time: 400 })
-        nextmc.add(nextTap)
+        let nextPress = new Hammer.Press({ time: 400 })
+
+        nextmc.add([nextTap, nextPress])
+
         nextmc.on('tap', (e) => {
             this.next()
             e.stopPropagation()
         })
 
-        let nextPress = new Hammer.Press({ time: 400 })
-        nextmc.add(nextPress)
         nextmc.on('press', (e) => {
-
             this.last()
             e.stopPropagation()
         })
+        console.log("mounted complete")
+        console.log("top is ", this.top)
+        console.log("uniqueId is", this.uniqueId)
   },
   data(){
+      console.log("data called")
       return {
           open: false,
           top: 0,
           orbuuid: uuidv1(),
           componentKey: 0,
+          uniqueId: uuidv1(),
       }
+  },
+  beforeCreate(){
+      console.log("beforeCreate")
+      console.log("top is ", this.top)
+  },
+  created(){
+      console.log("created")
+      console.log("top is ", this.top)
+  },
+  beforeMount(){
+      console.log("beforeMount")
+      console.log("top is ", this.top)
+  },
+  beforeUpdate(){
+      console.log("beforeUpdate")
+      console.log("top is ", this.top)
+      console.log("uniqueId is", this.uniqueId)
+  },
+  activated(){
+      console.log("created")
+      console.log("top is ", this.top)
+  },
+  updated(){
+      console.log("updated")
+      console.log("top is ", this.top)
+      console.log("uniqueId is", this.uniqueId)
+  },
+  destroyed(){
+      console.log("destroyed")
   },
   methods:{
     toggleOpen(){
@@ -183,6 +219,7 @@ export default {
         this.top = this.c.length - 1
     },
     swap(direction){
+        console.log("swap pre: top is ", this.top)
         let cardIndex
         this.c.forEach((t, i) => {
           if(t.taskId === this.topCard.taskId) {
@@ -195,6 +232,7 @@ export default {
         } else if (swapIndex > this.c.length - 1) {
             swapIndex = 0
         }
+        console.log("swap check: top is ", this.top)
         SoundFX.playChunkSwap()
         this.$store.dispatch("makeEvent", {
             type: 'task-swapped',
@@ -203,6 +241,7 @@ export default {
             swapId2: this.c[swapIndex].taskId,
             direction: 'up',
         })
+        console.log("swap post: top is ", this.top)
     },
     toggleStacks(){
         if(this.$store.state.upgrades.stacks === 1) {

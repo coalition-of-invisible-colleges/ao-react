@@ -62,15 +62,15 @@ const mutations = {
     setAction(state, a){
         state.action = a
     },
-    last(state){
-        state.top = (this.top - 1) % state.panel.length
-        if (state.top === -1) {
-            state.top = state.panel.length - 1
-        }
-    },
-    next(state){
-        state.top = (state.top + 1) % state.panel.length
-    },
+    // last(state){
+    //     state.top = (this.top - 1) % state.panel.length
+    //     if (state.top === -1) {
+    //         state.top = state.panel.length - 1
+    //     }
+    // },
+    // next(state){
+    //     state.top = (state.top + 1) % state.panel.length
+    // },
     addParent(state, pId){
         state.parent = _.filter(state.parent, p => p !== pId)
         state.parent.push(pId)
