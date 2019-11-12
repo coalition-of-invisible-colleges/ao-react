@@ -246,7 +246,7 @@ export default {
                 }
             } else {
                 HelmControl.flashHelm(2)
-                this.goUni(this.$store.state.upgrades.mode)
+                this.goUni('doge')
             }
             e.stopPropagation()
         })
