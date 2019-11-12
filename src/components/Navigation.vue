@@ -36,7 +36,7 @@
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Controls (tap-and-hodl)
+                span Controls (dab-and-hodl)
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
                 span Connections (double dab)
