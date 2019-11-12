@@ -256,8 +256,10 @@ function tasksMuts(tasks, ev) {
                         return true
                     })
                 }
-                if (task.taskId === ev.taskId){
-                    task.claimed.push(ev.memberId)
+                if (task.taskId === ev.taskId) {
+                    if(task.claimed.indexOf(ev.memberId) === -1) {
+                        task.claimed.push(ev.memberId)
+                    }
                     task.lastClaimed = ev.timestamp
                 }
             })
