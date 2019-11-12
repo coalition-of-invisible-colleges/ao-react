@@ -160,4 +160,7 @@ ul
   margin: -1.25em auto 0.25em auto
   padding: 0.25em
   z-index: 80
+  
+.container
+  min-height: 50vh
 </style>

@@ -12,19 +12,20 @@
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Newspaper (tap-and-hodl)
+                span Newspaper (dab-and-hodl)
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Top Missions
+                span Top Missions (double dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Much Recent
+                span Much Recent (triple dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Bounties
+                span Bounties (4 dabs)
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Calendar
+                span Calendar (5 dabs)
+        p.leftalign dab once to advance
     img.dabright.adjtooltip(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
     img.dabright.adjtooltip(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
     img.dabright.adjtooltip(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
@@ -38,16 +39,16 @@
                 span Controls (tap-and-hodl)
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Connections
+                span Connections (double dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Accounts
+                span Accounts (triple dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Lightning
+                span Lightning (4 dabs)
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Central Reserve
+                span Central Reserve (5 dabs)
     button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
@@ -67,19 +68,19 @@
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span &mdash;
+                span Home (dab-and-hodl)
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Priorities
+                span Priorities (double dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Missions &amp; Checkmarks
+                span Missions &amp; Checkmarks (triple dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Send Points
+                span Send Points (4 dabs)
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Book Event
+                span Book Event (5 dabs)
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -136,6 +137,8 @@ import Context from './Deck/Context'
 import TaskCreate from './forms/TaskCreate'
 import Dimensions from '../modules/dimensions'
 import HelmControl from '../modules/helm'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
 import SoundFX from '../modules/sounds'
 
 export default {
@@ -144,20 +147,20 @@ export default {
     mounted() {
         this.setToRoute()
         let el = document.getElementById('helm')
-        let mc = new Hammer.Manager(el)
+        let mc = Propagating(new Hammer.Manager(el))
 
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
             HelmControl.flashHelm()
-            SoundFX.playCaChunk()
-            HelmControl.previousUpgradeMode(this.$router)
+            this.nextMode()
+            e.stopPropagation()
         })
 
         mc.on('swiperight', (e) => {
             HelmControl.flashHelm()
-            SoundFX.playCaChunk()
-            HelmControl.nextUpgradeMode(this.$router)
+            this.nextMode()
+            e.stopPropagation()
         })
 
         mc.on('swipeup', (e) => {
@@ -170,64 +173,82 @@ export default {
             } else {
                 this.$router.push('/doge')
             }
+            e.stopPropagation()
         })
 
         mc.on('swipedown', (e) => {
             HelmControl.flashHelm()
-            SoundFX.playCaChunk()
-            HelmControl.nextUpgradeMode(this.$router)
+            this.nextMode()
+            e.stopPropagation()
         })
 
-        let Press = new Hammer.Press({
-          time: 400
+        let helmTap = new Hammer.Tap({ time: 400 })
+        let helmDoubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        let helmTripleTap = new Hammer.Tap({ event: 'tripletap', taps: 3, time: 400, interval: 400 })
+        let helmQuadrupleTap = new Hammer.Tap({ event: 'quadrupletap', taps: 4, time: 400, interval: 400 })
+        let helmQuintupleTap = new Hammer.Tap({ event: 'quintupletap', taps: 5, time: 400, interval: 400 })
+        let helmPress = new Hammer.Press({ time: 600 })
+        mc.add([helmPress, helmQuintupleTap, helmQuadrupleTap, helmTripleTap, helmDoubleTap, helmTap])
+        helmPress.recognizeWith([helmQuintupleTap, helmQuadrupleTap, helmTripleTap, helmDoubleTap, helmTap])
+        helmTap.recognizeWith([helmQuintupleTap, helmQuadrupleTap, helmTripleTap, helmDoubleTap])
+        helmTap.requireFailure([helmQuintupleTap, helmQuadrupleTap, helmTripleTap, helmDoubleTap])
+        helmDoubleTap.recognizeWith([helmQuintupleTap, helmQuadrupleTap, helmTripleTap])
+        helmDoubleTap.requireFailure([helmQuintupleTap, helmQuadrupleTap, helmTripleTap])
+        helmTripleTap.recognizeWith([helmQuintupleTap, helmQuadrupleTap])
+        helmTripleTap.requireFailure([helmQuintupleTap, helmQuadrupleTap])
+        helmQuadrupleTap.recognizeWith(helmQuintupleTap)
+        helmQuadrupleTap.requireFailure(helmQuintupleTap)
+
+        mc.on('tap', (e) => {
+            HelmControl.flashHelm(0.5)
+            if(!this.isUni()) {
+                this.goUni(this.$store.state.upgrades.mode)
+            } else {
+                this.nextMode()
+            }
+            e.stopPropagation()
         })
-        mc.add(Press)
+
+        mc.on('doubletap', (e) => {
+            console.log("double click")
+            HelmControl.flashHelm(0.5)
+            this.goUni('boat')
+            e.stopPropagation()
+        })
+
+        mc.on('tripletap', (e) => {
+            console.log("triple click")
+            HelmControl.flashHelm(0.5)
+            this.goUni('badge')
+            e.stopPropagation()
+        })
+
+        mc.on('quadrupletap', (e) => {
+            HelmControl.flashHelm(0.5)
+            this.goUni('chest')
+            e.stopPropagation()
+        })
+
+        mc.on('quintupletap', (e) => {
+            HelmControl.flashHelm(0.5)
+            this.goUni('timecube')
+            e.stopPropagation()
+        })
+
         mc.on('press', (e) => {
-            if(this.$router.currentRoute.path.split("/")[1] === 'front'){
+            if(this.isUni()){
                 if(this.$store.state.upgrades.mode === 'doge') {
                     HelmControl.flashHelm(5)
-                    SoundFX.playPortalTransit()
-                    this.$router.push('/doge')
+                    this.goFront('doge')
                 } else {
                     HelmControl.flashHelm(2)
-                    SoundFX.playPortalTransit()
-                    this.$router.push('/front/doge')
-                    HelmControl.closeUpgrades()
+                    this.goUni('doge')
                 }
             } else {
                 HelmControl.flashHelm(2)
-                SoundFX.playPortalTransit()
-                switch(this.$store.state.upgrades.mode) {
-                case 'doge':
-                    this.$router.push('/front/doge')
-                    break
-                case 'boat':
-                    this.$router.push('/front/boat')
-                    break
-                case 'badge':
-                    this.$router.push('/front/badge')
-                    break
-                case 'chest':
-                    this.$router.push('/front/chest')
-                    break
-                case 'timecube':
-                    this.$router.push('/front/timecube')
-                    break
-                }
+                this.goUni(this.$store.state.upgrades.mode)
             }
-        })
-
-        let Tap = new Hammer.Tap({ time: 400 })
-        mc.add(Tap)
-        mc.on('tap', (e) => {
-            HelmControl.flashHelm(0.5)
-            if (!this.$store.state.upgrades.mode){
-                SoundFX.playCaChunk()
-                HelmControl.setUpgradeMode(0)
-            } else {
-                SoundFX.playCaChunk()
-                HelmControl.nextUpgradeMode(this.$router)
-            }
+            e.stopPropagation()
         })
 
         let rel = document.getElementById('helmright')
@@ -281,34 +302,117 @@ export default {
         })
 
         let sunel = this.$refs.sun
-        let sunmc = new Hammer.Manager(sunel)
+        let sunmc = Propagating(new Hammer.Manager(sunel))
         let sunTap = new Hammer.Tap({ time: 400 })
+        let sunDoubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        let sunTripleTap = new Hammer.Tap({ event: 'tripletap', taps: 3, time: 400, interval: 400 })
+        let sunQuadrupleTap = new Hammer.Tap({ event: 'quadrupletap', taps: 4, time: 400, interval: 400 })
+        let sunQuintupleTap = new Hammer.Tap({ event: 'quintupletap', taps: 5, time: 400, interval: 400 })
         let sunPress = new Hammer.Press({ time: 600 })
-        sunmc.add([sunTap, sunPress])
-        sunPress.recognizeWith(sunTap);
+        sunmc.add([sunPress, sunQuintupleTap, sunQuadrupleTap, sunTripleTap, sunDoubleTap, sunTap])
+        sunPress.recognizeWith([sunQuintupleTap, sunQuadrupleTap, sunTripleTap, sunDoubleTap, sunTap])
+        sunTap.recognizeWith([sunQuintupleTap, sunQuadrupleTap, sunTripleTap, sunDoubleTap])
+        sunTap.requireFailure([sunQuintupleTap, sunQuadrupleTap, sunTripleTap, sunDoubleTap])
+        sunDoubleTap.recognizeWith([sunQuintupleTap, sunQuadrupleTap, sunTripleTap])
+        sunDoubleTap.requireFailure([sunQuintupleTap, sunQuadrupleTap, sunTripleTap])
+        sunTripleTap.recognizeWith([sunQuintupleTap, sunQuadrupleTap])
+        sunTripleTap.requireFailure([sunQuintupleTap, sunQuadrupleTap])
+        sunQuadrupleTap.recognizeWith(sunQuintupleTap)
+        sunQuadrupleTap.requireFailure(sunQuintupleTap)
 
         sunmc.on('tap', (e) => {
-            this.cycleLeft()
+            if(!this.isSun()) {
+                this.goFront(this.$store.state.upgrades.mode)
+
+            } else {
+                this.nextMode()
+            }
+            e.stopPropagation()
+        })
+
+        sunmc.on('doubletap', (e) => {
+            console.log("double click")
+            this.goFront('boat')
+            e.stopPropagation()
+        })
+
+        sunmc.on('tripletap', (e) => {
+            console.log("triple click")
+            this.goFront('badge')
+            e.stopPropagation()
+        })
+
+        sunmc.on('quadrupletap', (e) => {
+            this.goFront('chest')
+            e.stopPropagation()
+        })
+
+        sunmc.on('quintupletap', (e) => {
+            this.goFront('timecube')
+            e.stopPropagation()
         })
 
         sunmc.on('press', (e) => {
-            this.goNewspaper()
+            this.goFront('doge')
+            e.stopPropagation()
         })
 
         let bullel = this.$refs.bull
-        let bullmc = new Hammer.Manager(bullel)
+        let bullmc = Propagating(new Hammer.Manager(bullel))
         let bullTap = new Hammer.Tap({ time: 400 })
+        let bullDoubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        let bullTripleTap = new Hammer.Tap({ event: 'tripletap', taps: 3, time: 400, interval: 400 })
+        let bullQuadrupleTap = new Hammer.Tap({ event: 'quadrupletap', taps: 4, time: 400, interval: 400 })
+        let bullQuintupleTap = new Hammer.Tap({ event: 'quintupletap', taps: 5, time: 400, interval: 400 })
         let bullPress = new Hammer.Press({ time: 600 })
-        bullmc.add([bullTap, bullPress])
-        bullPress.recognizeWith(bullTap);
+        bullmc.add([bullPress, bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap, bullTap])
+        bullPress.recognizeWith([bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap, bullTap])
+        bullTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap])
+        bullTap.requireFailure([bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap])
+        bullDoubleTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap, bullTripleTap])
+        bullDoubleTap.requireFailure([bullQuintupleTap, bullQuadrupleTap, bullTripleTap])
+        bullTripleTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap])
+        bullTripleTap.requireFailure([bullQuintupleTap, bullQuadrupleTap])
+        bullQuadrupleTap.recognizeWith(bullQuintupleTap)
+        bullQuadrupleTap.requireFailure(bullQuintupleTap)
 
         bullmc.on('tap', (e) => {
-            this.cycleRight()
+            console.log("single click")
+            if(!this.isBull()) {
+                this.goDash(this.$store.state.upgrades.mode)
+            } else {
+                this.nextMode()
+            }
+            e.stopPropagation()
+        })
+
+        bullmc.on('doubletap', (e) => {
+            console.log("double click")
+            this.goDash('boat')
+            e.stopPropagation()
+        })
+
+        bullmc.on('tripletap', (e) => {
+            console.log("triple click")
+            this.goDash('badge')
+            e.stopPropagation()
+        })
+
+        bullmc.on('quadrupletap', (e) => {
+            this.goDash('chest')
+            e.stopPropagation()
+        })
+
+        bullmc.on('quintupletap', (e) => {
+            this.goDash('timecube')
+            e.stopPropagation()
         })
 
         bullmc.on('press', (e) => {
-            this.goFrontDash()
+            this.goDash('doge')
+            e.stopPropagation()
         })
+        console.log("checkpoint 4")
     },
     watch: {
       '$route': 'setToRoute'
@@ -362,27 +466,52 @@ export default {
                 this.uniRight = !this.uniRight
             }, 20)
         },
-        goNewspaper() {
-            if(Dimensions.isNewspaper(this.$router)) {
+        goFront(mode) {
+            if(Dimensions.isFront(this.$router, mode)) {
                 SoundFX.playPortalBlocked()
                 return
             }
-            SoundFX.playDogeBark()
+            if(mode === 'doge') {
+                SoundFX.playDogeBark()
+            } else {
+                SoundFX.playCaChunk()
+            }
             this.$store.commit('startLoading', 'sun')
-            this.$router.push('/front/doge')
+            this.$router.push('/front/' + mode)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniLeft = !this.uniLeft
             }, 20)
         },
-        goFrontDash() {
-            if(Dimensions.isFrontDash(this.$router)) {
+        goUni(mode) {
+            if(Dimensions.isDeck(this.$router, mode)) {
                 SoundFX.playPortalBlocked()
                 return
             }
-            SoundFX.playPortalTransit()
+            if(!this.isUni()) {
+                SoundFX.playPortalTransit()
+            } else {
+                SoundFX.playCaChunk()
+            }
+            this.$store.commit('startLoading', 'uni')
+            this.$router.push('/' + mode)
+            setTimeout(() => {
+                this.setToRoute()
+                // this.uniRight = !this.uniRight
+            }, 20)
+        },
+        goDash(mode) {
+            if(Dimensions.isDash(this.$router, mode)) {
+                SoundFX.playPortalBlocked()
+                return
+            }
+            if(mode === 'doge') {
+                SoundFX.playBullRoar()
+            } else {
+                SoundFX.playCaChunk()
+            }
             this.$store.commit('startLoading', 'bull')
-            this.$router.push('/dash/doge')
+            this.$router.push('/dash/' + mode)
             setTimeout(() => {
                 this.setToRoute()
                 this.uniRight = !this.uniRight
@@ -430,6 +559,9 @@ export default {
         },
         isBull() {
             return Dimensions.isBull(this.$router)
+        },
+        isUni() {
+            return Dimensions.isUni(this.$router)
         },
         shortFlash() {
             HelmControl.flashHelm(0.5)

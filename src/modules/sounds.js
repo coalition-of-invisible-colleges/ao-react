@@ -128,6 +128,13 @@ function playBattleCry() {
     roar[index].play()
 }
 
+function playBullRoar() {
+    if(Store.getters.member.muted) return
+    let roar = new Audio(require('../assets/sounds/terran_academy.wav'))
+    roar.volume = roar.volume * 0.1
+    roar.play()
+}
+
 export default {
     playPageTurn,
     playScrollOpen,
@@ -146,4 +153,5 @@ export default {
     playChunkSwap,
     playBirdFlap,
     playBattleCry,
+    playBullRoar
 }
