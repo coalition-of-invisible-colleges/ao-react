@@ -5,7 +5,7 @@ function isSun(router) {
 
 function isUni(router) {
     let mainroute = router.currentRoute.path.split('/')
-    let isUni = mainroute[0] === '' && (mainroute[1] === 'doge' || mainroute[1] === 'boat' || mainroute[1] === 'badge' || mainroute[1] === 'chest' || mainroute[1] === 'timecube')
+    let isUni = mainroute[0] === '' && (mainroute.length < 2 || mainroute[1] === '' || mainroute[1] === 'doge' || mainroute[1] === 'boat' || mainroute[1] === 'badge' || mainroute[1] === 'chest' || mainroute[1] === 'timecube')
     return isUni
 }
 
