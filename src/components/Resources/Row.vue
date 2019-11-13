@@ -12,7 +12,7 @@
         button(@click='use("C")') C
         button(@click='use("D")') D
         button(@click='use("E")') E
-        button(@click='use("E")') F
+        button(@click='use("F")') F
     .bottomleft(v-if='card.boost')
 
     .bottomright
