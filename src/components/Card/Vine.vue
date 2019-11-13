@@ -7,7 +7,7 @@
 <script>
 
 import FormBox from '../slotUtils/FormBox'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     props: ['b'],

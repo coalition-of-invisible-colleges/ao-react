@@ -24,8 +24,8 @@ import Tag from '../Nodes/Tag'
 import ResourceBook from '../forms/ResourceBook'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import HelmControl from '../../modules/helm'
-import SoundFX from '../../modules/sounds'
+import HelmControl from '../../utils/helm'
+import SoundFX from '../../utils/sounds'
 import uuidv1 from 'uuid/v1'
 
 export default {

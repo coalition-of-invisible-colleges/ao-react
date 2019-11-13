@@ -11,7 +11,7 @@
 
 import calculations from '../../calculations'
 import FormBox from '../slotUtils/FormBox'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'

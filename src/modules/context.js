@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import SoundFX from './sounds'
+import SoundFX from '../utils/sounds'
 import _ from 'lodash'
 
 // const modes = ["boat", "badge", "bounty", "timecube"]

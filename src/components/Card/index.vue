@@ -61,7 +61,7 @@ import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     props: ['b', 'inId', 'c'],
@@ -445,7 +445,7 @@ export default {
     top: -0.66em
     left: 50%
     transform: translateX(-50%)
-    z-index: 100
+    z-index: 154
 
 .dogecoin .tooltiptext
     left: 3em

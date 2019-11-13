@@ -29,7 +29,7 @@ import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import SimplePriorities from '../Deck/SimplePriorities'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     props: ['m'],

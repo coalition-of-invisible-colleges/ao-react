@@ -21,7 +21,7 @@
 import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import _ from 'lodash'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
   mounted() {

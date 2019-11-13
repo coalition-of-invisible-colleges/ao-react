@@ -51,7 +51,7 @@ import Hypercard from "../Card"
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
   props: ['c', 'taskId'],

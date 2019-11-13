@@ -18,7 +18,7 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     props: ['taskId', 'inId', 'c'],

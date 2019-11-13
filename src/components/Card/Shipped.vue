@@ -16,7 +16,7 @@
 
 import request from 'superagent'
 import Current from '../Resources/Current'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     props: ['b', 'inId'],

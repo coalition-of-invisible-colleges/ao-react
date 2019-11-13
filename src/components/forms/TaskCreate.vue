@@ -20,20 +20,21 @@
               img.agedbackground
     .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0')
         .searchresults
-            .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+            .result(v-for='t in matchCards.guilds'  @click.stop='debounced = _.debounce(loadResult, 500, { t: t })'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
                 img.smallguild(src='../../assets/images/badge_white.svg')
                 span {{ t.guild }}
                 div {{ t.name }}
-            .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+            .result(v-for='t in matchCards.doges'  @click.stop='debounced = _.debounce(loadResult, 500, { t: t })'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
                 current(:memberId='t.taskId')
-            .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ t.name }}
+            .result(v-for='t in matchCards.cards'  @click.stop='debounced = _.debounce(loadResult, 500, { t: t })'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ t.name }}
 </template>
 
 <script>
 
 import request from "superagent"
 import Current from '../Resources/Current'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
+import _ from 'lodash'
 
 export default {
     data(){
@@ -46,7 +47,7 @@ export default {
             swipeTimeout: 0,
             searchResults: [],
             exploring: false,
-            inDebounce: false,
+            debounced: false,
         }
     },
     components: {
@@ -121,7 +122,7 @@ export default {
     },
     methods: {
         goIn(taskId){
-            clearTimeout(this.inDebounce)
+            this.debounced.cancel()
             console.log("goIn")
             SoundFX.playPageTurn()
             let panel = [taskId]
@@ -235,15 +236,6 @@ export default {
             this.task.name = t.name.trim()
             this.task.color = t.color
         },
-        debounce(func, delay) {
-            console.log("debounce")
-            const context = this
-            const args = arguments
-            console.log("debounce")
-            console.log("context is ", context, " and args is ", args)
-            clearTimeout(this.inDebounce)
-            this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
-        }
     },
     computed: {
         taskId(){

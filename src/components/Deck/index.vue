@@ -17,7 +17,7 @@
 
 import HyperDeck from './HyperDeck'
 import GiftBox from './GiftBox.vue'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
   components:{

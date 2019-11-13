@@ -15,7 +15,7 @@
 <script>
 import _ from 'lodash'
 import Linky from '../Card/Linky'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 function getDMY(ts){
     let d = new Date(ts)

@@ -13,7 +13,7 @@
 
 <script>
 
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
   props: ['memberId', 'b', 'inId', 'completions'],

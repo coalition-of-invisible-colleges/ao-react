@@ -37,7 +37,7 @@ import Context from './Context'
 import Hypercard from "../Card"
 import Panels from './Panels'
 import Auth from '../Auth'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     beforeRouteUpdate (to, from, next) {

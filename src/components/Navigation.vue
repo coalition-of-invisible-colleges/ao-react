@@ -135,11 +135,12 @@ import CardPanel from './Deck/CardPanel'
 import FancyInput from './slotUtils/FancyInput'
 import Context from './Deck/Context'
 import TaskCreate from './forms/TaskCreate'
-import Dimensions from '../modules/dimensions'
-import HelmControl from '../modules/helm'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import SoundFX from '../modules/sounds'
+import Dimensions from '../utils/dimensions'
+import HelmControl from '../utils/helm'
+import Themes from '../utils/themes'
+import SoundFX from '../utils/sounds'
 
 export default {
     name: 'navigation',
@@ -299,6 +300,12 @@ export default {
         dogemc.add(Tap4)
         dogemc.on('tap', (e) => {
             this.toggleMute()
+        })
+
+        let dogeSwipeRight = new Hammer.Swipe()
+        dogemc.add(dogeSwipeRight)
+        dogemc.on('swiperight', (e) => {
+            Themes.nextTheme()
         })
 
         let sunel = this.$refs.sun

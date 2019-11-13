@@ -37,7 +37,7 @@
 
 import FormBox from '../slotUtils/FormBox'
 import GuildCreate from '../forms/GuildCreate'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 

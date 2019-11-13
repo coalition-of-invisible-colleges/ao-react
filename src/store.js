@@ -1,14 +1,11 @@
 import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
-
 import modules from './modules'
-
 import loader from './modules/loader'
 import eventstream from './modules/eventstream'
 import upgrades from './modules/upgrades'
 import context from './modules/context'
-
 import calculations from './calculations'
 
 Vue.use(Vuex)

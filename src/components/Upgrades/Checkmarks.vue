@@ -37,7 +37,11 @@
                         span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'    :class=  '  { padleft : getSubPriorities(g.taskId).length > 0 }')
                             .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                 linky.tooltiptext(:x='c.name')
-                        linky.description(:x='g.name')
+                        .description
+                            linky(:x='g.name')
+                            span.projectlist.aproject(v-if='g.guilds && g.guilds.length >= 1'  v-for='(p, i) in g.guilds'  @click='goIn(p.taskId, g.taskId)')
+                                img(src='../../assets/images/badge.svg'  :class='{ first : i === 0 }')
+                                span(:class='cardInputSty(p.color)') {{ p.guild }}
                 .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{       $store.getters.myGuilds.length - 5 }}
                 .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
 </template>
@@ -45,7 +49,7 @@
 <script>
 import Current from '../Members/Current'
 import Linky from '../Card/Linky'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     components:{
@@ -158,12 +162,28 @@ export default {
     computed: {
         missions(){
             let missions = []
-            if (this.isDoge){
-              if (this.isDoge.memberId === this.$store.getters.member.memberId){
-                return this.$store.getters.myGuilds
-              } else {
-                return this.$store.state.tasks.filter(g => g.guild && g.deck.indexOf(this.isDoge.memberId) > -1)
-              }
+            if(this.isDoge) {
+                if (this.isDoge.memberId === this.$store.getters.member.memberId) {
+                    let guilds = this.$store.getters.myGuilds
+                    guilds.forEach(g => {
+                        g.subTasks.concat(g.priorities, g.completed).forEach(p => {
+                            let task = this.$store.getters.hashMap[p]
+                            if(!task) {
+                                console.log("null taskId found, this means cleanup is not happening elsewhere and is very bad")
+                            } else if(task.guild) {
+                                if(!g.guilds) {
+                                    g.guilds = []
+                                }
+                                if(g.guilds.indexOf(task) === -1) {
+                                    g.guilds.push(task)
+                                }
+                            }
+                        })
+                    })
+                    return guilds
+                } else {
+                    return this.$store.state.tasks.filter(g => g.guild && g.deck.indexOf(this.isDoge.memberId) > -1)
+                }
             }
         },
         holdOrSent(){
@@ -455,6 +475,7 @@ h2
 
 .gui.yellowtx
     margin-right: 0.5em
+    vertical-align: text-bottom
 
 .more
     text-align: center
@@ -499,4 +520,24 @@ ul
     
 .projects ul
     margin-left: -2em
+    
+.projectlist
+    font-size: 1.2em
+    margin-top: 0.15em
+    
+.projectlist.aproject
+    cursor: pointer
+    font-style: italic
+    
+.projectlist > img
+    display: inline-block
+    float: none
+    height: 1.1em
+    margin-right: 0.225em
+    position: relative
+    top: 0.25em
+    margin-left: 0.48em
+    
+.projectlist > img.first
+    margin-left: 0
 </style>

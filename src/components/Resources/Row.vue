@@ -23,7 +23,7 @@
 import Current from './Current'
 import PayReq from './PayReq'
 import calculations from '../../calculations'
-import SoundFX from '../../modules/sounds'
+import SoundFX from '../../utils/sounds'
 
 export default {
     data(){
