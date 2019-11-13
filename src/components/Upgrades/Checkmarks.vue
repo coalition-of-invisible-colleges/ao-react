@@ -167,7 +167,6 @@ export default {
             if(this.isDoge) {
                 if (this.isDoge.memberId === this.$store.getters.member.memberId) {
                     let guilds = this.$store.getters.myGuilds
-                    console.log("missions(). myguilds is ", guilds.length)
                     guilds.forEach(g => {
                         g.subTasks.concat(g.priorities, g.completed).forEach(p => {
                             let task = this.$store.getters.hashMap[p]
@@ -521,7 +520,7 @@ ul
     margin-top: -0.5em
     margin-right: 1em
     margin-bottom: 1em
-    padding: 0 0.5em 0.5em 0.5em
+    padding: 0 0.5em 0.55em 0.5em
     
 .projects h3
     text-align: center
