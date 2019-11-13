@@ -195,17 +195,17 @@ function tasksMuts(tasks, ev) {
             break
         case "task-de-sub-tasked":
             tasks.forEach(task => {
-                    if (task.taskId === ev.taskId) {
-                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
-                        task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
-                    }
+                if (task.taskId === ev.taskId) {
+                    task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
+                    task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
+                }
             })
             break
         case "task-guilded":
             tasks.forEach(task => {
-                    if (task.taskId === ev.taskId) {
-                            task.guild = ev.guild
-                    }
+                if(task.taskId === ev.taskId) {
+                    task.guild = ev.guild
+                }
             })
             break
         case "task-bountied":

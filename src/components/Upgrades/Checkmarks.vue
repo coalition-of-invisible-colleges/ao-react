@@ -11,11 +11,13 @@
                         span(@click='goIn(p.taskId)')
                             img.floatleft(src='../../assets/images/badge.svg')
                         span(@click='goIn(p.taskId)')
-                            span.nl.gui.bluetx {{ p.guild }}
-                        //- span(v-for='c in completions(p)'  @click='goIn(c.taskId, p.taskId)'    :class=  '  { padleft : getSubPriorities(p.taskId).length > 0 }')
-                        //-     .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
-                        //-         linky.tooltiptext(:x='c.name')
-                        //- linky.description(:x='p.name')
+                            span.nl.gui.smaller(:class='cardInputSty(p.color)') {{ p.guild }}
+                        ul.none.indent
+                            li.spaced(v-for='sp in p.guilds')
+                                span(@click='goIn(sp.taskId, p.taskId)')
+                                    img.floatleft.smaller(src='../../assets/images/badge.svg')
+                                span(@click='goIn(sp.taskId), p.taskId')
+                                    span.nl.gui.smallest(:class='cardInputSty(sp.color)') {{ sp.guild }}
             current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions')
             current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
             .box.morepad
@@ -165,12 +167,26 @@ export default {
             if(this.isDoge) {
                 if (this.isDoge.memberId === this.$store.getters.member.memberId) {
                     let guilds = this.$store.getters.myGuilds
+                    console.log("missions(). myguilds is ", guilds.length)
                     guilds.forEach(g => {
                         g.subTasks.concat(g.priorities, g.completed).forEach(p => {
                             let task = this.$store.getters.hashMap[p]
                             if(!task) {
                                 console.log("null taskId found, this means cleanup is not happening elsewhere and is very bad")
                             } else if(task.guild) {
+                                task.subTasks.concat(task.priorities, task.completed).forEach(sp => {
+                                    let subtask = this.$store.getters.hashMap[sp]
+                                    if(!subtask) {
+                                        console.log("null subtaskId found, this means cleanup is not happening elsewhere and is very bad")
+                                    } else if(subtask.guild) {
+                                        if(!task.guilds) {
+                                            task.guilds = []
+                                        }
+                                        if(task.guilds.indexOf(subtask) === -1) {
+                                            task.guilds.push(subtask)
+                                        }
+                                    }
+                                })
                                 if(!g.guilds) {
                                     g.guilds = []
                                 }
@@ -337,9 +353,6 @@ h3
 .gui
     font-size: 1.5em
     cursor: pointer
-
-.gui.bluetx
-    font-size: 1.3em
     
 .row .three
     height: 5em
@@ -356,8 +369,8 @@ h3
     width: 100%
 
 .spaced
-    margin-bottom: 1em
     clear: both
+    margin-top: 0.25em
 
 .floatleft
     height: 100%
@@ -507,16 +520,18 @@ ul
     border-radius: 0.5em
     margin-top: -0.5em
     margin-right: 1em
-    padding: 0 0.5em
+    margin-bottom: 1em
+    padding: 0 0.5em 0.5em 0.5em
     
 .projects h3
     text-align: center
     margin-top: 0.5em
+    margin-bottom: 0
     
 .projects .floatleft
-    max-height: 1.3em
+    max-height: 1.5em
     margin-top: 0
-    margin-right: 0.5em
+    margin-right: 0.4em
     
 .projects ul
     margin-left: -2em
@@ -528,6 +543,8 @@ ul
 .projectlist.aproject
     cursor: pointer
     font-style: italic
+    white-space: nowrap
+    margin-right: 0.48em
     
 .projectlist > img
     display: inline-block
@@ -536,8 +553,20 @@ ul
     margin-right: 0.225em
     position: relative
     top: 0.25em
-    margin-left: 0.48em
     
 .projectlist > img.first
     margin-left: 0
+    
+.smaller
+    font-size: 1.3em
+    
+ul.none.indent
+    margin-left: -0.5em
+    
+.projects .floatleft.smaller
+    max-height: 1em
+    margin-right: 0.4em
+
+span.nl.gui.smallest
+    font-size: 1.1em
 </style>
