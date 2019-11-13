@@ -14,7 +14,6 @@
         button(@click='use("E")') E
         button(@click='use("F")') F
     .bottomleft(v-if='card.boost')
-
     .bottomright
     .clearboth
 </template>
@@ -24,9 +23,10 @@
 import Addr from '../Members/Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import Vouch from '../Members/Vouch'
+import SoundFX from '../../utils/sounds'
 
 export default {
-    props: ['r'],
+    props: ['r', 'c'],
     components: { Addr, PreviewDeck, Vouch},
     computed:{
         card(){
