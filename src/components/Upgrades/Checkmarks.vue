@@ -7,7 +7,7 @@
             .projects(v-if='subguilds.length > 0')
                 h3.bluetx projects
                 ul.none
-                    li.spaced(v-for='p in subguilds')
+                    li.spaced(v-for='p in subguilds'  :key='subguilds')
                         span(@click='goIn(p.taskId)')
                             img.floatleft(src='../../assets/images/badge.svg')
                         span(@click='goIn(p.taskId)')

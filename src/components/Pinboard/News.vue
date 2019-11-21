@@ -1,20 +1,9 @@
 <template lang='pug'>
 
-#frontnews
-      h1.up {{ $store.state.cash.alias }} newspaper
-      .row.pagemargins
-          .three.columns
-              div(v-for='(t, i) in rows.row1'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-          .three.columns
-              div(v-for='(t, i) in rows.row2'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-          .three.columns
-              div(v-for='(t, i) in rows.row3'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
-          .three.columns
-              div(v-for='(t, i) in rows.row4'  :key='t.taskId')
-                  hypercard.bounty(:b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+#theoracle
+    img.thegoldendoge(src='../../assets/images/sundoge.png').center
+    h1.up oracle
+    hypercard.bounty(v-if='topcard'  :b='topcard'  :key='topcard.taskId'  :c='[topcard.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(topcard.taskId)')
 </template>
 
 <script>
@@ -51,7 +40,7 @@ export default {
       },
   },
   computed: {
-      rows(){
+      topcard(){
           let news = []
           this.$store.getters.memberIds.forEach(mId => {
               let member = this.$store.getters.hashMap[mId]
@@ -78,31 +67,9 @@ export default {
           news.sort((a, b) => {
               return b.weight - a.weight
           })
-
-          let row1 = []
-          let row2 = []
-          let row3 = []
-          let row4 = []
-
-          news.forEach( (a, i) => {
-              let row = i % 4
-              if (row === 0){
-                  row1.push(a)
-              }
-              if (row === 1){
-                  row2.push(a)
-              }
-              if (row === 2){
-                  row3.push(a)
-              }
-              if (row === 3){
-                  row4.push(a)
-              }
-          })
-
-          return {
-              row1, row2, row3, row4
-          }
+          console.log(news)
+          if(news.length < 1) return
+          return news[0]
       }
   }
 }
@@ -260,12 +227,15 @@ h2
 
 .bounty
     margin-bottom: 2em
+    max-width: 30em
+    position: relative
+    left: 50%
+    transform: translateX(-50%)
+    margin-top: 10.5em
 
 .pagemargins
     margin: 0 3% 0 1%
     width: 96%
-
-
 
 @media (min-width: breakpoint)
     .three.columns
@@ -356,4 +326,12 @@ h2
     font-weight: bold
     font-size: 1.25em
     margin-top: -0.13em
+    
+.thegoldendoge
+    position: absolute
+    left: 50%
+    transform: translateX(-50%)
+    top: 7em
+    height: 8em
+    z-index: -1
 </style>

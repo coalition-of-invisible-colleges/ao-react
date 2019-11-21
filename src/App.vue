@@ -46,6 +46,7 @@ export default {
     color: accent1
     font-weight: lighter
     overflow-x: hidden
+    height: 100vh
 
 body
     background: main
