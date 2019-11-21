@@ -170,8 +170,12 @@ function tasksMuts(tasks, ev) {
             tasks.forEach( task => {
                 if (task.taskId === ev.inId){
                     task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
-                    task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId )
-                    task.subTasks.push(ev.taskId)
+                    task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId)
+                    if(ev.claimed && ev.claimed.length >= 1) {
+                        task.completed.push(ev.taskId)
+                    } else {
+                        task.subTasks.push(ev.taskId)
+                    }
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
 
                     task.allocations = _.filter(task.allocations, al => {
@@ -223,21 +227,21 @@ function tasksMuts(tasks, ev) {
                     task.boost += parseFloat(ev.paid)
                 }
 
-                task.priorities = task.priorities.filter(taskId => {
+                task.priorities.some(taskId => {
                     if(taskId !== ev.taskId) {
-                        return true
+                        return false
                     } else {
                         found = true
-                        return false
+                        return true
                     }
                 })
 
-                task.subTasks = task.subTasks.filter(taskId => {
+                task.subTasks.some(taskId => {
                     if(taskId !== ev.taskId) {
-                        return true
+                        return false
                     } else {
                         found = true
-                        return false
+                        return true
                     }
                 })
 
@@ -269,12 +273,12 @@ function tasksMuts(tasks, ev) {
                 if(task.taskId === ev.taskId){
                     task.claimed = task.claimed.filter(mId => mId !== ev.memberId)
                 }
-
-                if (task.completed.indexOf(ev.taskId) > -1){
-                    task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
-                    task.subTasks.push(ev.taskId)
+                if(task.claimed.length < 1) {
+                    if(task.priorities.indexOf(ev.taskId) === -1 && task.completed.indexOf(ev.taskId) > -1){
+                        task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
+                        task.subTasks.push(ev.taskId)
+                    }
                 }
-
             })
             break
         case "task-cap-updated":

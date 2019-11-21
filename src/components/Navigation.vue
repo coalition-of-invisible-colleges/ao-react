@@ -238,18 +238,21 @@ export default {
 
         mc.on('press', (e) => {
             if(this.isUni()){
-                if(this.$store.state.upgrades.mode === 'doge') {
+                if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.taskId === this.$store.getters.memberCard.taskId) {
                     HelmControl.flashHelm(5)
                     this.goFront('doge')
                 } else {
                     HelmControl.flashHelm(2)
                     this.goUni('doge')
+                    this.goHome()
                 }
             } else {
                 HelmControl.flashHelm(2)
                 this.goUni('doge')
+                if(this.$store.getters.contextCard.taskId !== this.$store.getters.memberCard.taskId) {
+                    this.goHome()
+                }
             }
-            this.goHome()
             e.stopPropagation()
         })
 
