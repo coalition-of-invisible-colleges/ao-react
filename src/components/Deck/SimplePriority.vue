@@ -9,8 +9,8 @@
       img.front.nopad(v-if='card.guild'  src="../../assets/images/badge.svg")
       span.front.nudge(v-if='card.guild')  {{ card.guild }}
       img.left.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
-      span.checkmark.clickable.right.front(v-if='isCompleted'  ref='checkbox') ☑
-      span.checkmark.clickable.right.front(v-else-if='!isCompleted'  ref='checkbox') ☐
+      span.checkmark.right.front(v-if='isCompleted'  ref='checkbox') ☑
+      span.checkmark.right.front(v-else-if='!isCompleted'  ref='checkbox') ☐
       span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
       img.right.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
       linky.cardname.front(:x='card.name'  :key='name')
@@ -70,7 +70,7 @@ export default {
           this.$store.dispatch("makeEvent", {
               type: 'task-claimed',
               inId: this.inId,
-              taskId: this.b.taskId,
+              taskId: this.taskId,
               memberId: this.$store.getters.member.memberId,
               notes: 'checked by ' + this.$store.getters.member.memberId
           })
@@ -79,7 +79,7 @@ export default {
           SoundFX.playTickMark()
           this.$store.dispatch("makeEvent", {
               type: 'task-unclaimed',
-              taskId: this.b.taskId,
+              taskId: this.taskId,
               memberId:  this.$store.getters.member.memberId,
               notes: ''
           })
@@ -242,4 +242,5 @@ img
     opacity: 0.5
     cursor: pointer
     color: white
+    z-index: 105
 </style>

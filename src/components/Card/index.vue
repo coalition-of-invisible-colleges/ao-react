@@ -8,7 +8,7 @@
     flag(:b='b', :inId='inId')
     .tickmarks
         img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
-    .dogecoin.tooltip(v-if='b.weight && b.weight > 0')
+    .dogecoin.tooltip(v-if='b.weight && b.weight > 0'  :key='dogers')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
         img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
         .tooltiptext

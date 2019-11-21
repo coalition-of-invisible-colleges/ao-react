@@ -249,6 +249,7 @@ export default {
                 HelmControl.flashHelm(2)
                 this.goUni('doge')
             }
+            this.goHome()
             e.stopPropagation()
         })
 
@@ -576,6 +577,19 @@ export default {
         nextMode() {
             SoundFX.playCaChunk()
             HelmControl.nextUpgradeMode(this.$router)
+        },
+        goHome(taskId){
+            SoundFX.playPageTurn()
+            let parents = []
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            }
+            this.$store.dispatch("goIn", {
+                panel: [this.$store.getters.memberCard.taskId],
+                top: 0,
+                parents
+            })
+            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
     },
 }

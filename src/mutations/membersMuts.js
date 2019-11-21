@@ -8,7 +8,7 @@ function membersMuts(members, ev){
           break
       case "member-created":
           ev.lastUsed = ev.timestamp
-          ev.muted = false
+          ev.muted = true
           members.push(ev)
           break
       case "member-activated":

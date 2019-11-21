@@ -69,7 +69,10 @@ export default {
           })
           console.log(news)
           if(news.length < 1) return
-          return news[0]
+          if(!news[0].guild || news[0].priorities.length < 1) {
+              return news[0]
+          }
+          return this.$store.getters.hashMap[news[0].priorities[news[0].priorities.length - 1]]
       }
   }
 }
