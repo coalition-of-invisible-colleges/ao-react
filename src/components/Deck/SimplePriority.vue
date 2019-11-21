@@ -9,6 +9,8 @@
       img.front.nopad(v-if='card.guild'  src="../../assets/images/badge.svg")
       span.front.nudge(v-if='card.guild')  {{ card.guild }}
       img.left.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
+      span.checkmark.clickable.right.front(v-if='isCompleted'  ref='checkbox') ☑
+      span.checkmark.clickable.right.front(v-else-if='!isCompleted'  ref='checkbox') ☐
       span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
       img.right.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
       linky.cardname.front(:x='card.name'  :key='name')
@@ -19,10 +21,28 @@
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
 import SoundFX from '../../utils/sounds'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
 
 export default {
     props: ['taskId', 'inId', 'c'],
     components: { Hypercard, Linky },
+    mounted() {
+        let el = this.$refs.checkbox
+        if(!el) return
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let Tap = new Hammer.Tap({ time: 400 })
+        mc.add(Tap)
+        mc.on('tap', (e) => {
+            if(!this.isCompleted) {
+                this.complete()
+            } else {
+                this.uncheck()
+            }
+            e.stopPropagation()
+        })
+    },
     methods: {
       goIn(taskId){
           SoundFX.playPageTurn()
@@ -44,6 +64,25 @@ export default {
 
           this.$store.commit("startLoading", 'unicorn')
           this.$router.push("/" + this.$store.state.upgrades.mode)
+      },
+      complete(){
+          SoundFX.playTickMark()
+          this.$store.dispatch("makeEvent", {
+              type: 'task-claimed',
+              inId: this.inId,
+              taskId: this.b.taskId,
+              memberId: this.$store.getters.member.memberId,
+              notes: 'checked by ' + this.$store.getters.member.memberId
+          })
+      },
+      uncheck(){
+          SoundFX.playTickMark()
+          this.$store.dispatch("makeEvent", {
+              type: 'task-unclaimed',
+              taskId: this.b.taskId,
+              memberId:  this.$store.getters.member.memberId,
+              notes: ''
+          })
       },
     },
     computed: {
@@ -96,6 +135,9 @@ export default {
           let msSince = now - this.c.timestamp
           let days = msSince / (1000 * 60 * 60 * 24)
           return days
+        },
+        isCompleted(){
+            return this.card.claimed.indexOf(this.$store.getters.member.memberId) > -1
         },
     }
 }
@@ -190,4 +232,14 @@ img
     position: relative
     z-index: 100
     max-width: 100%
+    
+.checkmark
+    font-size: 1.58em
+    float: right
+    margin-top: -.15em
+    margin-bottom: -0.25em
+    margin-left: 0.25em
+    opacity: 0.5
+    cursor: pointer
+    color: white
 </style>

@@ -5,8 +5,8 @@
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../../assets/images/doge_faded.png')
         img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../../assets/images/boatbtnselected.svg')
-        span.checkmark.clickable(v-else-if='$store.state.upgrades.mode === "badge" && isCompleted') ☑
-        span.checkmark.clickable(v-else-if='$store.state.upgrades.mode === "badge" && !isCompleted') ☐
+        span.checkmark(v-else-if='$store.state.upgrades.mode === "badge" && isCompleted') ☑
+        span.checkmark(v-else-if='$store.state.upgrades.mode === "badge" && !isCompleted') ☐
         img(v-else-if='$store.state.upgrades.mode === "chest"'  src='../../assets/images/bounty.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../../assets/images/timecube.svg')
     .opened

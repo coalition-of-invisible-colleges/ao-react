@@ -53,13 +53,13 @@ export default {
       }
   },
   computed: {
-      guilds(){
+      topten(){
           let guilds = []
           let uniqueG = []
           this.$store.state.tasks.forEach((c, i) => {
               if (c.guild){
                   let l = uniqueG.indexOf(c.guild)
-                  if (l === -1){
+                  if (guilds.indexOf(c.guild) === -1){
                     guilds.push(c)
                     uniqueG.push(c.guild)
                   } else {
@@ -68,21 +68,30 @@ export default {
                         guilds[l] = c
                     }
                   }
+                  if(this.alldoged && this.alldoged.length >= 1) {
+                      let index = this.alldoged.indexOf(guilds[l])
+                      if(index > -1) {
+                          guilds[l].weight = this.alldoged[index].weight
+                      }
+                  }
               }
           })
           guilds.sort( (a, b) => {
-              let aVal = a.deck.length
-              let bVal = b.deck.length
-              return bVal - aVal
+              let aHodls = a.deck.length
+              let bHodls = b.deck.length
+              let aWeight = a.weight > 0 ? a.weight : 0
+              let bWeight = b.weight > 0 ? b.weight : 0
+              let result = (bHodls + bWeight) - (aHodls + aWeight)
+              return result
           })
 
           if (guilds.length > 11){
-              return guilds.slice(0,11)
+              guilds = guilds.slice(0, 11)
           }
 
           return guilds
       },
-      topten(){
+      alldoged(){
           let news = []
           this.$store.getters.memberIds.forEach(mId => {
               let member = this.$store.getters.hashMap[mId]
@@ -106,10 +115,9 @@ export default {
                   })
               }
           })
-          news.sort((a, b) => {
-              return b.weight - a.weight
-          })
-          console.log(news)
+          // news.sort((a, b) => {
+          //     return b.weight - a.weight
+          // })
           if(news.length < 1) return
           return news
       },

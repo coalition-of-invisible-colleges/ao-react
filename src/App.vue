@@ -45,7 +45,7 @@ export default {
     position:relative
     color: accent1
     font-weight: lighter
-    overflow-x: hidden
+    // overflow-x: hidden
     height: 100vh
 
 body
