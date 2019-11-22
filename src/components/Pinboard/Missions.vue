@@ -77,18 +77,24 @@ export default {
               }
           })
           guilds.sort( (a, b) => {
+              console.log(" ")
+              console.log("a is ", a.guild, " and b is ", b.guild)
+              console.log("a.weight is ", a.weight, " and b.weight is ", b.weight)
+              console.log("a.hodls is ", a.deck.length, " and b.hodls is ", b.deck.length)
               let aHodls = a.deck.length
               let bHodls = b.deck.length
-              let aWeight = a.weight
-              let bWeight = b.weight
-              if(bWeight && !aWeight) {
+              if(b.weight && !a.weight) {
+                  console.log("b is first")
                   return 1
-              } else if(aWeight && !bWeight) {
+              } else if(a.weight && !b.weight) {
+                  console.log("a is first")
                   return -1
-              } else if(bWeight && aWeight) {
-                  if(bWeight !== aWeight) {
-                      return bWeight - aWeight
+              } else if(b.weight && a.weight) {
+                  if(b.weight !== a.weight) {
+                      console.log("is b first? by weight ", b.weight > a.weight)
+                      return b.weight - a.weight
                   } else {
+                      console.log("is b first? by hodls", b.deck.length > a.deck.length)
                       return bHodls - aHodls
                   }
               }
