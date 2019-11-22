@@ -5,9 +5,10 @@
     img.dableft.adjtooltip(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg"  ref='sun')
     img.dableft.adjtooltip(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
     img.dableft.adjtooltip(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
-    .tooltiptext.left()
+    .tooltiptext.left(v-if='$store.getters.member.muted')
         h1(v-if='!isSun()') Dab to Sun
         h1(v-if='isSun()') Dab to Deck (unicorn)
+        p dab once to advance or multidab to jump to a specific page
         p.leftalign Sun Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
@@ -25,13 +26,13 @@
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
                 span Calendar (5 dabs)
-        p.leftalign dab once to advance
     img.dabright.adjtooltip(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
-    img.dabright.adjtooltip(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
+    img.dabright.adjtooltip(v-else-if='uniRight && $store.getters.member.muted'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
     img.dabright.adjtooltip(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
-    .tooltiptext.right()
+    .tooltiptext.right(v-if='$store.getters.member.muted')
         h1(v-if='!isBull()') Dab to Bull
         h1(v-if='isBull()') Dab to Deck (unicorn)
+        p dab once to advance or multidab to jump to a specific page
         p.leftalign Bull Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
@@ -61,26 +62,26 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
-    .tooltiptext.center(:class='{ fix : $store.state.upgrades.mode !== "doge" }')
+    .tooltiptext.center(v-if='$store.getters.member.muted'  :class='{ fix : $store.state.upgrades.mode !== "doge" }')
         h1 Helm
-        p Tap or swipe to change mode
+        p dab to advance mode, multidab to jump to a specific mode, or swipe left/right to change mode
         p.leftalign Card Upgrades:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Home (dab-and-hodl)
+                span Doge Mode - Member Card (dab-and-hodl)
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Priorities (double dab)
+                span Boat Mode - Priorities (double dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Missions &amp; Checkmarks (triple dab)
+                span Badge Mode - Missions &amp; Checkmarks (triple dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Send Points (4 dabs)
+                span Chest Mode - Send Points (4 dabs)
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Book Event (5 dabs)
+                span Timecube - Book Event (5 dabs)
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -294,7 +295,7 @@ export default {
             this.pinging = true
             setTimeout(()=> {
                 this.barking = false
-            }, 1000)
+            }, 3000)
             setTimeout(()=> {
                 this.pinging = false
             }, 2000)
@@ -1235,24 +1236,6 @@ body
     left: 50%
     top: 3em
     transform: translateX(-50%)
-
-.tooltiptext .leftalign
-    text-align: left
-
-.tooltiptext ul, .tooltiptext li
-    text-align: left
-    list-style-type: none
-    position: relative
-
-.tooltiptext li
-    padding-left: 0.5em
-    margin-left: 1em
-
-.tooltiptext h1
-    margin-top: 0
-    margin-bottom: 0
-    font-size: 1.1em
-    font-weight: bold
 
 .tooltiptext.center.fix
     position: fixed

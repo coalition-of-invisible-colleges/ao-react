@@ -8,7 +8,7 @@
   //-         span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
   //- flickity(:options='flickityOptions')
   //-     .carousel-cell(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)' )  {{ t.guild }}
-  hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.taskId'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+  hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.weight'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
 
 </template>
 
@@ -79,10 +79,19 @@ export default {
           guilds.sort( (a, b) => {
               let aHodls = a.deck.length
               let bHodls = b.deck.length
-              let aWeight = a.weight > 0 ? a.weight : 0
-              let bWeight = b.weight > 0 ? b.weight : 0
-              let result = (bHodls + bWeight) - (aHodls + aWeight)
-              return result
+              let aWeight = a.weight
+              let bWeight = b.weight
+              if(bWeight && !aWeight) {
+                  return 1
+              } else if(aWeight && !bWeight) {
+                  return -1
+              } else if(bWeight && aWeight) {
+                  if(bWeight !== aWeight) {
+                      return bWeight - aWeight
+                  } else {
+                      return bHodls - aHodls
+                  }
+              }
           })
 
           if (guilds.length > 11){
@@ -389,4 +398,5 @@ h2
     max-width: 30em
     margin-left: 50%
     transform: translateX(-50%)
+    margin-bottom: 1em
 </style>

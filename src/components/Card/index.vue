@@ -10,10 +10,10 @@
         img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0'  :key='dogers')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
-        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png')
+        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png'  :key='dogers')
         .tooltiptext
             p prioritized by:
-            current(v-for='doger in b.dogers'  :memberId='doger')
+            current(v-for='doger in b.dogers'  :memberId='doger'  :key='dogers')
     .tooltip
         .tooltip
             .tooltiptext
