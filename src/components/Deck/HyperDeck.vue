@@ -22,7 +22,8 @@
         panels
         .completed.adjtooltip(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
         .tooltiptext.correctspot
-            p.suggest show completed cards
+            p.suggest(v-if='!$store.state.context.completed') show completed cards
+            p.suggest(v-else) show uncompleted cards
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
