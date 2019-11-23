@@ -73,7 +73,7 @@ export default {
           })
           console.log(news)
           if(news.length < 1) return
-          let ndex = news.length - 1
+          let ndex = 0
           let subpriorities = news[ndex].priorities.filter(tId => {
               let subpriority = this.$store.getters.hashMap[tId]
               if(!subpriority.claimed) return true
