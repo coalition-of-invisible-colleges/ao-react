@@ -93,7 +93,6 @@ export default {
     height: 100%
     display: block
     min-width: 0.75em
-    min-height: 0.1em
     
 .checkmark
     position: relative

@@ -25,6 +25,7 @@ export default {
 .tally
     padding-right: 0.5em
     padding-left: 0.5em
+    min-height: 0.1em
     
 img
     height: 1em
