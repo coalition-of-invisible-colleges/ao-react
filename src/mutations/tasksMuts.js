@@ -246,8 +246,10 @@ function tasksMuts(tasks, ev) {
                 })
 
                 if(found) {
-                    task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
-                    task.completed.push(ev.taskId)
+                    if(task.priorities.indexOf(ev.taskId) === -1) {
+                        task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
+                        task.completed.push(ev.taskId)
+                    }
                     let alloc = false
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
                     task.allocations = _.filter(task.allocations, al => {
@@ -270,13 +272,15 @@ function tasksMuts(tasks, ev) {
             break
         case "task-unclaimed":
             tasks.forEach(task => {
-                if(task.taskId === ev.taskId){
+                if(task.taskId === ev.taskId) {
                     task.claimed = task.claimed.filter(mId => mId !== ev.memberId)
-                }
-                if(task.claimed.length < 1) {
-                    if(task.priorities.indexOf(ev.taskId) === -1 && task.completed.indexOf(ev.taskId) > -1){
-                        task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
-                        task.subTasks.push(ev.taskId)
+                    if(task.claimed.length < 1) {
+                        tasks.forEach(p => {
+                            if(p.priorities.indexOf(ev.taskId) === -1 && p.completed.indexOf(ev.taskId) > -1) {
+                                task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
+                                task.subTasks.push(ev.taskId)
+                            }
+                        })
                     }
                 }
             })

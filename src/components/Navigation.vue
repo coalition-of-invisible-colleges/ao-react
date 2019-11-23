@@ -98,7 +98,7 @@
             img.doge(v-if='$store.getters.member.muted'  src='../assets/images/bread_corgi.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
             img.doge(v-else-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
             img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-            .tooltiptext.right
+            .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
                 p {{ $store.state.cash.alias }}
                 p
                     span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
@@ -111,6 +111,10 @@
                     span.pong ({{ $store.state.loader.lastPing }} ms pong)
                 p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
                 p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
+                p.suggest(v-if='$store.getters.member.muted') you are in Bread Doge Mode. while in Bread Doge Mode, sounds will be muted and tutorial tooltips will be displayed.
+                p.suggest(v-if='$store.getters.member.muted') double-dab to switch to Doge Radar Mode
+                p.suggest(v-if='!$store.getters.member.muted') Doge Radar - long dab to bark
+                p.suggest(v-if='!$store.getters.member.muted') double-dab to mute sounds and show tooltips
         .wowdar(v-if='!$store.getters.member.muted')
             .ringbase.ring1
             .ringbase.ring2
@@ -295,7 +299,7 @@ export default {
             this.pinging = true
             setTimeout(()=> {
                 this.barking = false
-            }, 3000)
+            }, 1000)
             setTimeout(()=> {
                 this.pinging = false
             }, 2000)
@@ -435,7 +439,9 @@ export default {
             search: '',
             showImg: 'uni',
             uniLeft: false,
-            uniRight: false
+            uniRight: false,
+            barking: false,
+            pinging: false,
         }
     },
     methods: {
@@ -926,18 +932,18 @@ hr
     z-index: 151
 
 body
-  background-color: #333
-  padding: 50px
+    background-color: #333
+    padding: 50px
 
-.wowdar
-  float:left
-  position:relative
-  width:70px
-  height:70px
-  background-size: 100% 100%
-  border-radius:35px
-  box-shadow:0 1px 1px 0 rgba(0,0,0,0.4), 0 0 4px 1px rgba(0,0,0,0.2), inset 0 1px 1px 0 rgba(255,255,255,0.2), inset 0 2px 4px 1px rgba(255,255,255,0.1)
-  display: none
+.wowdar, altwowdar
+    float:left
+    position:relative
+    width:70px
+    height:70px
+    background-size: 100% 100%
+    border-radius:35px
+    box-shadow:0 1px 1px 0 rgba(0,0,0,0.4), 0 0 4px 1px rgba(0,0,0,0.2), inset 0 1px 1px 0 rgba(255,255,255,0.2), inset 0 2px 4px 1px rgba(255,255,255,0.1)
+    display: none
 
 @keyframes wow
   0% { opacity: 0 }
@@ -1239,4 +1245,15 @@ body
 
 .tooltiptext.center.fix
     position: fixed
+    
+.tooltiptext.bottom
+    min-width: 20em
+    position: absolute
+    left: 0.5em
+    bottom: -2.5em
+    top: unset
+    
+.tooltiptext.bottom.breadpad
+    left: 4em
+    bottom: 0.25em
 </style>

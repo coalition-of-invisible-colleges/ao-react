@@ -21,7 +21,7 @@
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         panels
         .completed.adjtooltip(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
-        .tooltiptext.correctspot
+        .tooltiptext.correctspot(v-if='$store.getters.member.muted')
             p.suggest(v-if='!$store.state.context.completed') show completed cards
             p.suggest(v-else) show uncompleted cards
     img.fw(src='../../assets/images/pixeldesert.png')
@@ -363,6 +363,6 @@ export default {
     
 .tooltiptext.correctspot
     position: absolute
-    top: calc(100% + 0.3em)
-    right: 0
+    top: calc(100% - 1.75em)
+    right: 2em
 </style>

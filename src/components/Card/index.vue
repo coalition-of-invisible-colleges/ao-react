@@ -6,18 +6,13 @@
     .agedbackground.threemontholdpaper(v-else='cardAge >= 90')
     bird(:b='b', :inId='inId')
     flag(:b='b', :inId='inId')
-    .tickmarks
-        img.claimvine(v-for='n in b.claimed'  src='../../assets/images/mark.svg')
+    tally(:b='b')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0'  :key='dogers')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../../assets/images/doge_in_circle.png')
         img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../../assets/images/doge_in_circle.png'  :key='dogers')
         .tooltiptext
             p prioritized by:
             current(v-for='doger in b.dogers'  :memberId='doger'  :key='dogers')
-    .tooltip
-        .tooltip
-            .tooltiptext
-                current.block(v-for='memberId in b.claimed', :memberId='memberId')
     .buffertop
       preview-deck(:task='b')
       .cardbody
@@ -39,6 +34,7 @@
         .tooltip.dogepepecoin
             img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             .tooltiptext
+                p(v-if='$store.getters.member.muted') held by:
                 current.block(v-for='memberId in b.deck'  :memberId='memberId')
                 .suggest(v-if='!isGrabbed') click to hodl
                 .suggest(v-if='isGrabbed') click to dump
@@ -56,6 +52,7 @@ import Scroll from './Scroll'
 import Vine from './Vine'
 import Passed from './Passed'
 import Shipped from './Shipped'
+import Tally from './Tally'
 import Linky from './Linky'
 import SimplePriorities from '../Deck/SimplePriorities'
 import Current from '../Resources/Current'
@@ -68,7 +65,7 @@ export default {
     data(){
         return { active: false }
     },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Shipped, Linky, SimplePriorities, Current},
+    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
     mounted() {
         let el = this.$refs.wholeCard
         if(!el) return
@@ -286,13 +283,6 @@ export default {
 .brder
     label
         text-align: center
-
-.claimvine
-    height: 1em
-    img
-        position: relative
-        bottom: 0
-        right: 0
 
 .tooltip .tooltiptext
     font-size: 1em
@@ -515,8 +505,8 @@ export default {
     margin-left: 0.5em
     margin-bottom: 0.5em
     
-.tickmarks
+.tally
     position: absolute
-    right: 3em
+    right: 2.5em
     top: 0.85em
 </style>

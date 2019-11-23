@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.priority.closedcard(@dblclick.stop='goIn(taskId)')
+.priority.closedcard(ref='wholeCard')
   .row.agedwrapper(:class="cardInputSty")
       .agedbackground.freshpaper(v-if='cardAge < 8')
       .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
@@ -11,6 +11,7 @@
       img.left.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
       span.checkmark.right.front(v-if='isCompleted'  ref='checkbox') ☑
       span.checkmark.right.front(v-else-if='!isCompleted'  ref='checkbox') ☐
+      tally.right.front.lesspadding(:b='card')
       span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
       img.right.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
       linky.cardname.front(:x='card.name'  :key='name')
@@ -20,21 +21,44 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
+import Tally from '../Card/Tally'
 import SoundFX from '../../utils/sounds'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 
 export default {
     props: ['taskId', 'inId', 'c'],
-    components: { Hypercard, Linky },
+    components: { Hypercard, Linky, Tally },
     mounted() {
-        let el = this.$refs.checkbox
+        let el = this.$refs.wholeCard
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        let longPress = new Hammer.Press({ time: 600 })
+
+        mc.add([doubleTap, longPress])
+
+        longPress.recognizeWith([doubleTap])
+        longPress.requireFailure([doubleTap])
+
+        mc.on('doubletap', (e) => {
+            this.goIn(this.taskId)
+            e.stopPropagation()
+        })
+
+        mc.on('press', (e) => {
+            this.copyCardToClipboard()
+            e.stopPropagation()
+        })
+
+        let checkel = this.$refs.checkbox
+        if(!checkel) return
+        let checkmc = Propagating(new Hammer.Manager(checkel))
+
         let Tap = new Hammer.Tap({ time: 400 })
-        mc.add(Tap)
-        mc.on('tap', (e) => {
+        checkmc.add(Tap)
+        checkmc.on('tap', (e) => {
             if(!this.isCompleted) {
                 this.complete()
             } else {
@@ -54,6 +78,10 @@ export default {
               parents.push(this.$store.getters.contextCard.taskId)
           } else if (this.$store.getters.memberCard.taskId){
               parents.push(this.$store.getters.memberCard.taskId)
+          }
+
+          if(this.inId) {
+              parents.push(this.inId)
           }
 
           this.$store.dispatch("goIn", {
@@ -83,6 +111,18 @@ export default {
               memberId:  this.$store.getters.member.memberId,
               notes: ''
           })
+      },
+      copyCardToClipboard(){
+          //navigator.clipboard.writeText(this.b.name)
+          // navigator.permissions.query({name: "clipboard-write"}).then(result => {
+              // if (result.state == "granted" || result.state == "prompt") {
+                  navigator.clipboard.writeText(this.b.name).then(function() {
+                      SoundFX.playChunkSwap()
+                  }, function() {
+                      console.log("copy failed")
+                  })
+              // }
+          // })
       },
     },
     computed: {
@@ -243,4 +283,7 @@ img
     cursor: pointer
     color: white
     z-index: 105
+    
+.tally.right.front.lesspadding
+    padding-right: 0
 </style>
