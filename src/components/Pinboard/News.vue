@@ -64,15 +64,25 @@ export default {
                   })
               }
           })
+          news = news.filter(c => {
+              if(!c.claimed) return true
+              return c.claimed.indexOf(this.$store.getters.member.memberId) === -1
+          })
           news.sort((a, b) => {
               return b.weight - a.weight
           })
           console.log(news)
           if(news.length < 1) return
-          if(!news[0].guild || news[0].priorities.length < 1) {
-              return news[0]
+          let ndex = news.length - 1
+          let subpriorities = news[ndex].priorities.filter(tId => {
+              let subpriority = this.$store.getters.hashMap[tId]
+              if(!subpriority.claimed) return true
+              return subpriority.claimed.indexOf(this.$store.getters.member.memberId) === -1
+          })
+          if(!news[ndex].guild || subpriorities.length < 1) {
+              return news[ndex]
           }
-          return this.$store.getters.hashMap[news[0].priorities[news[0].priorities.length - 1]]
+          return this.$store.getters.hashMap[subpriorities[subpriorities.length - 1]]
       }
   }
 }

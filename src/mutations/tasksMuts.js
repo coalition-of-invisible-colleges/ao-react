@@ -247,6 +247,7 @@ function tasksMuts(tasks, ev) {
 
                 if(found) {
                     if(task.priorities.indexOf(ev.taskId) === -1) {
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
                         task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
                         task.completed.push(ev.taskId)
                     }
@@ -254,8 +255,7 @@ function tasksMuts(tasks, ev) {
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
                     task.allocations = _.filter(task.allocations, al => {
 
-                        if (al.allocatedId === ev.taskId){
-
+                        if (al.allocatedId === ev.taskId) {
                             alloc = al.amount
                             return false
                         }

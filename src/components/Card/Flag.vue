@@ -2,11 +2,11 @@
 .flag(v-if="$store.getters.memberCard")
     .flaggy(:id='uuid'  :class='{ boat : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isDoged, doge : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged, chest : $store.state.upgrades.mode === "chest", timecube : $store.state.upgrades.mode === "timecube", nolightning : $store.state.upgrades.mode === "chest" && !$store.state.cash.info.alias  }')
         img(v-if='!$store.state.context.panel[$store.state.context.top]'  src='../../assets/images/scroll.svg')
+        span.checkmark(v-else-if='($store.state.upgrades.mode === "badge" || isOracle()) && isCompleted') ☑
+        span.checkmark(v-else-if='($store.state.upgrades.mode === "badge" || isOracle()) && !isCompleted') ☐
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../../assets/images/doge_faded.png')
         img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../../assets/images/boatbtnselected.svg')
-        span.checkmark(v-else-if='$store.state.upgrades.mode === "badge" && isCompleted') ☑
-        span.checkmark(v-else-if='$store.state.upgrades.mode === "badge" && !isCompleted') ☐
         img(v-else-if='$store.state.upgrades.mode === "chest"'  src='../../assets/images/bounty.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../../assets/images/timecube.svg')
     .opened
@@ -27,6 +27,7 @@ import Propagating from 'propagating-hammerjs'
 import HelmControl from '../../utils/helm'
 import SoundFX from '../../utils/sounds'
 import uuidv1 from 'uuid/v1'
+import Dimensions from '../../utils/dimensions'
 
 export default {
     components: { PayReq, PayAddress, Tag, ResourceBook },
@@ -48,6 +49,14 @@ export default {
         mc.on('tap', (e) => {
             switch(this.$store.state.upgrades.mode) {
                 case 'doge':
+                    if(this.isOracle()) {
+                        if(!this.isCompleted) {
+                            this.complete()
+                        } else {
+                            this.uncheck()
+                        }
+                        break
+                    }
                 case 'boat':
                     if(this.isDoged) {
                         this.dogeIt()
@@ -165,7 +174,11 @@ export default {
         flagIt(){
             if (!this.isFlagged) {
                 if (this.inId){
-                    SoundFX.playSailUnfurl()
+                    if(this.inId === this.$store.getters.memberCard.taskId) {
+                        SoundFX.playDogeBark()
+                    } else {
+                        SoundFX.playSailUnfurl()
+                    }
                     this.$store.dispatch("makeEvent", {
                       type: 'task-prioritized',
                       taskId: this.b.taskId,
@@ -203,6 +216,9 @@ export default {
                   inId: this.$store.getters.memberCard.taskId,
                 })
             }
+        },
+        isOracle() {
+            return Dimensions.isSun(this.$router) && this.$store.state.upgrades.mode === 'doge'
         },
     },
     computed: {

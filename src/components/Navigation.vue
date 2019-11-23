@@ -248,7 +248,7 @@ export default {
                     this.goFront('doge')
                 } else {
                     HelmControl.flashHelm(2)
-                    this.goUni('doge')
+                    this.goUni('doge', true)
                     this.goHome()
                 }
             } else {
@@ -501,9 +501,11 @@ export default {
                 this.uniLeft = !this.uniLeft
             }, 20)
         },
-        goUni(mode) {
+        goUni(mode, silent = false) {
             if(Dimensions.isDeck(this.$router, mode)) {
-                SoundFX.playPortalBlocked()
+                if(!silent) {
+                    SoundFX.playPortalBlocked()
+                }
                 return
             }
             if(!this.isUni()) {
@@ -589,7 +591,7 @@ export default {
             HelmControl.nextUpgradeMode(this.$router)
         },
         goHome(taskId){
-            SoundFX.playPageTurn()
+            SoundFX.playPortalTransit()
             let parents = []
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)

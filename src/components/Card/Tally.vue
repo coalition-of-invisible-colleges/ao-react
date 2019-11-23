@@ -12,11 +12,8 @@
 import Current from '../Resources/Current'
 
 export default {
-    name: 'linky',
     props: ['b'],
     components: { Current },
-    computed: {
-    },
 }
 
 </script>
