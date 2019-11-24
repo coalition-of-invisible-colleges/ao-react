@@ -9,6 +9,7 @@ const state = {
     bird: false,
     stacks: 1,
     warp: -1,
+    highlights: []
 }
 
 const mutations = {
@@ -55,6 +56,16 @@ const mutations = {
     },
     closeWarp(state){
         state.warp = -1
+    },
+    toggleHighlight(state, memberId) {
+        console.log("togglehighlights pre. list is", state.highlights)
+        console.log("memberId is ", memberId)
+        if(state.highlights.indexOf(memberId) > -1) {
+            state.highlights = state.highlights.filter(mId => mId !== memberId)
+        } else {
+            state.highlights.push(memberId)
+        }
+        console.log("togglehighlights post. list is", state.highlights)
     }
 }
 
