@@ -74,7 +74,7 @@ export default {
         }
     },
     toggleHighlight() {
-        console.log("toggleHighlighted()")
+        if(!this.completions || this.completions.length < 1) return
         this.$store.commit("toggleHighlight", this.memberId)
     },
   },
