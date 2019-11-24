@@ -7,7 +7,7 @@
     template(v-for='c in completions')
       span.tooltip.plain(@click='goIn(c.taskId)')
         span.checkmark(:class="cardInputSty(c.color)") ☑
-          .tooltiptext
+          .tooltiptext.smalltext
             .bigger {{ c.name }}
 </template>
 
@@ -127,9 +127,9 @@ img
 .plain
     text-decoration: none
 
-.tooltiptext
+.tooltiptext.smalltext
     z-index: 153
-    font-size: 1.6em
+    font-size: 0.7em
         
 .name.highlight
     text-shadow: 0 0 20px yellow, 0 0 20px yellow, 0 0 20px yellow
