@@ -70,6 +70,9 @@ export default {
                   }
                   if(this.alldoged && this.alldoged.length >= 1) {
                       let index = this.alldoged.indexOf(guilds[l])
+                      if(guilds[l] && guilds[l.weight] > 0) {
+                          console.log("non-zero weight found for guild ", guilds[l].guild)
+                      }
                       if(index > -1) {
                           guilds[l].weight = this.alldoged[index].weight
                       }
@@ -115,8 +118,11 @@ export default {
                   }
               })
               if(member && lastUsed) {
-                  let presence = (Date.now() - lastUsed) <= 3600000
+                  let now = Date.now()
+                  console.log("date.now is ", now)
+                  let presence = (now - lastUsed) <= 3600000
                   if(presence && member.priorities) {
+                      console.log("member present ", member.name)
                       member.priorities.forEach(p => {
                           let priority = this.$store.getters.hashMap[p]
                           if(!priority.dogers) {
