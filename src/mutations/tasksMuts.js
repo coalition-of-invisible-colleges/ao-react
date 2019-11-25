@@ -167,11 +167,17 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "task-refocused":
+            let claimed
+            tasks.forEach( task => {
+                if (task.taskId === ev.taskId) {
+                    claimed = task.claimed
+                }
+            })
             tasks.forEach( task => {
                 if (task.taskId === ev.inId){
                     task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
                     task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId)
-                    if(ev.claimed && ev.claimed.length >= 1) {
+                    if(claimed && claimed.length >= 1) {
                         task.completed.push(ev.taskId)
                     } else {
                         task.subTasks.push(ev.taskId)
