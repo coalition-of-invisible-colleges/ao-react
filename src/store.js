@@ -81,21 +81,13 @@ export default new Vuex.Store({
           if(Object.keys(state.upgrades.highlights).length >= 1) {
               holds.forEach(m => {
                   m.contextCompletions = m.contextCompletions.filter(c => {
-                    console.log("c is ", c)
-                    let entries = Object.entries(state.upgrades.highlights)
-                    console.log("entries is ", entries)
-                    let some = entries.some((arr) => {
-                        console.log("highlight is ", arr[0], " valence is ", arr[1])
+                    return !Object.entries(state.upgrades.highlights).some((arr) => {
                         if(arr[1]) {
                             return c.claimed.indexOf(arr[0]) === -1
                         } else {
                             return c.claimed.indexOf(arr[0]) !== -1
                         }
                     })
-                    console.log("some is ", some)
-                    let negation = !some
-                    console.log("negation is ", negation)
-                    return negation
                   })
               })
           }

@@ -110,24 +110,35 @@ export default {
           let news = []
           this.$store.getters.memberIds.forEach(mId => {
               let member = this.$store.getters.hashMap[mId]
-              if(member && member.priorities) {
-                  member.priorities.forEach(p => {
-                      let priority = this.$store.getters.hashMap[p]
-                      if(!priority.dogers) {
-                          priority.dogers = []
-                      }
-                      priority.dogers.push(member.name)
-                      if(!news.some((sp, i) => {
-                          if(sp.taskId === p) {
-                              news[i].weight += 1 / member.priorities.length
-                              return true
+              console.log("member is", member)
+              let lastUsed
+              this.$store.state.members.forEach( member => {
+                  if(member.memberId === mId){
+                      lastUsed = member.lastUsed
+                  }
+              })
+              if(member && lastUsed) {
+                  let presence = (Date.now() - lastUsed) <= 3600000
+                  console.log("presence is", presence)
+                  if(presence && member.priorities) {
+                      member.priorities.forEach(p => {
+                          let priority = this.$store.getters.hashMap[p]
+                          if(!priority.dogers) {
+                              priority.dogers = []
                           }
-                          return false
-                      })) {
-                          priority.weight = 1 / member.priorities.length
-                          news.push(priority)
-                      }
-                  })
+                          priority.dogers.push(member.name)
+                          if(!news.some((sp, i) => {
+                              if(sp.taskId === p) {
+                                  news[i].weight += 1 / member.priorities.length
+                                  return true
+                              }
+                              return false
+                          })) {
+                              priority.weight = 1 / member.priorities.length
+                              news.push(priority)
+                          }
+                      })
+                  }
               }
           })
           // news.sort((a, b) => {
