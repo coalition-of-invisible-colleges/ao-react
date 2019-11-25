@@ -74,7 +74,7 @@ export default {
                           guilds[l].weight = this.alldoged[index].weight
                       } else {
                           if(guilds[l]) {
-                              guilds[l].weight = 0
+                              Vue.delete(guilds[l], weight)
                           }
                       }
                   }
