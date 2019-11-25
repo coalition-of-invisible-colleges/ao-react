@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
 const dimensions = ["time", "space", "replication"]
@@ -9,7 +11,7 @@ const state = {
     bird: false,
     stacks: 1,
     warp: -1,
-    highlights: []
+    highlights: {}
 }
 
 const mutations = {
@@ -57,15 +59,26 @@ const mutations = {
     closeWarp(state){
         state.warp = -1
     },
-    toggleHighlight(state, memberId) {
-        console.log("togglehighlights pre. list is", state.highlights)
-        console.log("memberId is ", memberId)
-        if(state.highlights.indexOf(memberId) > -1) {
-            state.highlights = state.highlights.filter(mId => mId !== memberId)
+    toggleHighlight(state, args) {
+        // console.log("togglehighlights pre. list is", state.highlights)
+        // console.log("memberId is ", args.memberId)
+        // console.log("valence is ", args.valence)
+        let valence = args.valence
+        let memberId = args.memberId
+        console.log("upgrades togglehighlight")
+        // let index = state.highlights.indexOf(memberId)
+        if(state.highlights.hasOwnProperty(memberId) && (state.highlights[memberId] === valence || valence === true)) {
+            // delete state.highlights[memberId]
+            console.log("removing highlight")
+            Vue.delete(state.highlights, memberId)
+            // state.highlights = state.highlights.filter(mId => mId !== memberId)
         } else {
-            state.highlights.push(memberId)
+            console.log("setting highlight")
+            Vue.set(state.highlights, memberId, valence)
+            // state.highlights[memberId] = valence
+            // state.highlights.push(memberId)
         }
-        console.log("togglehighlights post. list is", state.highlights)
+        // console.log("togglehighlights post. list is", state.highlights)
     }
 }
 

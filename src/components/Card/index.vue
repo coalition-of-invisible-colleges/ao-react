@@ -492,7 +492,7 @@ export default {
     clip-path: polygon(50% 50%, 50% 0, 0 0, 0 100%, 100% 100%, 100% 0, 50% 0)
 
 .buffertop
-    margin-top: 1em
+    margin-top: 3em
     clear: both
     width: 100%
 

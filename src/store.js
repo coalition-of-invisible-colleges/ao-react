@@ -78,12 +78,24 @@ export default new Vuex.Store({
               holds.push(member)
           })
           console.log("claimed task found")
-          if(state.upgrades.highlights.length >= 1) {
+          if(Object.keys(state.upgrades.highlights).length >= 1) {
               holds.forEach(m => {
                   m.contextCompletions = m.contextCompletions.filter(c => {
-                    return !state.upgrades.highlights.some(h => {
-                        return c.claimed.indexOf(h) === -1
+                    console.log("c is ", c)
+                    let entries = Object.entries(state.upgrades.highlights)
+                    console.log("entries is ", entries)
+                    let some = entries.some((arr) => {
+                        console.log("highlight is ", arr[0], " valence is ", arr[1])
+                        if(arr[1]) {
+                            return c.claimed.indexOf(arr[0]) === -1
+                        } else {
+                            return c.claimed.indexOf(arr[0]) !== -1
+                        }
                     })
+                    console.log("some is ", some)
+                    let negation = !some
+                    console.log("negation is ", negation)
+                    return negation
                   })
               })
           }
