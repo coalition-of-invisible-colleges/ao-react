@@ -72,6 +72,8 @@ export default {
                       let index = this.alldoged.indexOf(guilds[l])
                       if(index > -1) {
                           guilds[l].weight = this.alldoged[index].weight
+                      } else {
+                          guilds[l].weight = 0
                       }
                   }
               }
