@@ -109,7 +109,7 @@ function tasksMuts(tasks, ev) {
                 if (task.taskId === ev.taskId) {
                     task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
                     if(task.deck.indexOf(ev.memberId) === -1) {
-                        if(ev.taskId !== ev.memberId) {
+                        if(ev.taskId !== ev.memberId && ev.memberId) {
                             task.deck.push(ev.memberId)
                         }
                     }
@@ -197,7 +197,15 @@ function tasksMuts(tasks, ev) {
             break
         case "task-sub-tasked":
             tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
+                if(task.taskId === ev.subTask) {
+                    task.deck = _.filter(task.deck, mId => mId !== ev.memberId)
+                    if(task.deck.indexOf(ev.memberId) === -1) {
+                        if(ev.subTask !== ev.memberId && ev.memberId) {
+                            task.deck.push(ev.memberId)
+                        }
+                    }
+                }
+                if(task.taskId === ev.taskId) {
                     task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
                     task.subTasks.push(ev.subTask)
                 }
