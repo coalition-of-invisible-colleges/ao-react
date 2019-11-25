@@ -2,33 +2,45 @@
 
 #tasks(@contextmenu.capture.prevent)
     .row.ptr(v-if="topCard"  ref='swipebar')
-        .three.grid(ref='previous')
+        .three.grid.tooltip(ref='previous')
             span &nbsp;
             img.fl(v-if='!open && topCard.color === "red"', src='../../assets/images/backRed.svg')
             img.fl(v-if='!open && topCard.color === "yellow"', src='../../assets/images/backYellow.svg')
             img.fl(v-if='!open && topCard.color === "green"', src='../../assets/images/backGreen.svg')
             img.fl(v-if='!open && topCard.color === "purple"', src='../../assets/images/backPurple.svg')
             img.fl(v-if='!open && topCard.color === "blue"', src='../../assets/images/backBlue.svg')
+            .tooltiptext(v-if='$store.getters.member.muted')
+                p.suggest dab to go back to the previous card
+                p.suggest dab-and-hold to jump to the first card
         .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ top + 1 }}
         .four.grid.horizcenter(:class='panelSty')
-            .mandalign(ref='mandelorb')
+            .mandalign.tooltip(ref='mandelorb')
                 img(v-if='open && $store.state.upgrades.stacks === 5', src='../../assets/images/openRed.svg'  draggable='false')
                 img(v-else-if='$store.state.upgrades.stacks === 5'  src='../../assets/images/open.svg'  draggable='false')
                 img.iris(v-else-if='open && $store.state.upgrades.stacks === 1'  src='../../assets/images/mandelorb_sequential.svg'  draggable='false')
                 img.iris(v-else  src='../../assets/images/mandelorb_linear.svg'  draggable='false')
+                .tooltiptext(v-if='$store.getters.member.muted')
+                    h1 mandelorb
+                    p.suggest(v-if='!open') dab to expand cards
+                    p.suggest(v-else) dab to collapse cards
+                    p.suggest(v-if='$store.state.upgrades.stacks === 1') dab-and-hold to refract cards by color
+                    p.suggest(v-else) dab-and-hold to coalesce cards of all colors
         .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
                 h3(v-else) all
-        .three.grid(ref='next')
+        .three.grid.tooltip(ref='next')
             span &nbsp;
             img.fr(v-if='!open && topCard.color === "red"', , src='../../assets/images/forwardRed.svg')
             img.fr(v-if='!open && topCard.color === "yellow"', src='../../assets/images/forwardYellow.svg')
             img.fr(v-if='!open && topCard.color === "green"', src='../../assets/images/forwardGreen.svg')
             img.fr(v-if='!open && topCard.color === "purple"', src='../../assets/images/forwardPurple.svg')
             img.fr(v-if='!open && topCard.color === "blue"', src='../../assets/images/forwardBlue.svg')
+            .tooltiptext(v-if='$store.getters.member.muted')
+                p.suggest dab to advance to the next card
+                p.suggest dab-and-hold to jump to the last card
     .row.fadey(v-else)
       .three.grid
           img.fl(src='../../assets/images/back.svg')
@@ -250,6 +262,7 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/grid'
 @import '../../styles/button'
+@import '../../styles/tooltips'
 
 button
     background: darkteal
@@ -364,5 +377,4 @@ img
 
 .center
     text-align: center
-
 </style>

@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
 const dimensions = ["time", "space", "replication"]
@@ -9,6 +11,7 @@ const state = {
     bird: false,
     stacks: 1,
     warp: -1,
+    highlights: {}
 }
 
 const mutations = {
@@ -55,6 +58,18 @@ const mutations = {
     },
     closeWarp(state){
         state.warp = -1
+    },
+    toggleHighlight(state, args) {
+        let valence = args.valence
+        let memberId = args.memberId
+        console.log("upgrades togglehighlight")
+        if(state.highlights.hasOwnProperty(memberId) && (state.highlights[memberId] === valence || valence === true)) {
+            console.log("removing highlight")
+            Vue.delete(state.highlights, memberId)
+        } else {
+            console.log("setting highlight")
+            Vue.set(state.highlights, memberId, valence)
+        }
     }
 }
 

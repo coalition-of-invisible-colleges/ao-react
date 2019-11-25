@@ -8,7 +8,7 @@ function membersMuts(members, ev){
           break
       case "member-created":
           ev.lastUsed = ev.timestamp
-          ev.muted = false
+          ev.muted = true
           members.push(ev)
           break
       case "member-activated":
@@ -140,6 +140,7 @@ function membersMuts(members, ev){
           members.forEach( member => {
               // this should only bump up for mutual doges
               if (member.memberId === ev.memberId){
+                  console.log("doge-barked. member.lastUsed is ", member.lastUsed)
                   member.lastUsed = ev.timestamp
                   // then bark
               }

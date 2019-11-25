@@ -130,7 +130,7 @@ function dogeBarked(memberId, callback) {
         type: "doge-barked",
         memberId,
     }
-    dctrlDb.triggerShadow(newEvent, callback)
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeMuted(memberId, callback) {

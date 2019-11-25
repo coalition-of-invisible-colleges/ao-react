@@ -20,7 +20,10 @@
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         panels
-        .completed(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
+        .completed.adjtooltip(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
+        .tooltiptext.correctspot(v-if='$store.getters.member.muted')
+            p.suggest(v-if='!$store.state.context.completed') show completed cards
+            p.suggest(v-else) show uncompleted cards
     img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
@@ -127,6 +130,7 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/button'
+@import '../../styles/tooltips'
 
 .bluewx
     color: white
@@ -244,7 +248,7 @@ export default {
     right: 0
     position: absolute
     width: 100%
-    height: 100%
+    height: 142%
     pointer-events: none
 
 .freshpaperbg
@@ -356,4 +360,9 @@ export default {
     // max-width: 100%
     // max-width: 29.8em
     // max-width: 39.333333333333%
+    
+.tooltiptext.correctspot
+    position: absolute
+    top: calc(100% - 1.75em)
+    right: 2em
 </style>

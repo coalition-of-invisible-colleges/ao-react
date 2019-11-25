@@ -5,9 +5,10 @@
     img.dableft.adjtooltip(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg"  ref='sun')
     img.dableft.adjtooltip(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
     img.dableft.adjtooltip(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
-    .tooltiptext.left()
+    .tooltiptext.left(v-if='$store.getters.member.muted')
         h1(v-if='!isSun()') Dab to Sun
         h1(v-if='isSun()') Dab to Deck (unicorn)
+        p dab once to advance or multidab to jump to a specific page
         p.leftalign Sun Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
@@ -25,13 +26,13 @@
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
                 span Calendar (5 dabs)
-        p.leftalign dab once to advance
     img.dabright.adjtooltip(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
-    img.dabright.adjtooltip(v-else-if='uniRight'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
+    img.dabright.adjtooltip(v-else-if='uniRight && $store.getters.member.muted'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
     img.dabright.adjtooltip(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
-    .tooltiptext.right()
+    .tooltiptext.right(v-if='$store.getters.member.muted')
         h1(v-if='!isBull()') Dab to Bull
         h1(v-if='isBull()') Dab to Deck (unicorn)
+        p dab once to advance or multidab to jump to a specific page
         p.leftalign Bull Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
@@ -61,26 +62,26 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
-    .tooltiptext.center(:class='{ fix : $store.state.upgrades.mode !== "doge" }')
+    .tooltiptext.center(v-if='$store.getters.member.muted'  :class='{ fix : $store.state.upgrades.mode !== "doge" }')
         h1 Helm
-        p Tap or swipe to change mode
+        p dab to advance mode, multidab to jump to a specific mode, or swipe left/right to change mode
         p.leftalign Card Upgrades:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Home (dab-and-hodl)
+                span Doge Mode - Member Card (dab-and-hodl)
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Priorities (double dab)
+                span Boat Mode - Priorities (double dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Missions &amp; Checkmarks (triple dab)
+                span Badge Mode - Missions &amp; Checkmarks (triple dab)
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Send Points (4 dabs)
+                span Chest Mode - Send Points (4 dabs)
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Book Event (5 dabs)
+                span Timecube - Book Event (5 dabs)
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -92,33 +93,7 @@
     template(v-if='showImg === "uni"'  v-for='(n, i) in $store.state.context.parent')
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
-    .small.always.left
-        .tooltip
-            img.doge(v-if='$store.getters.member.muted'  src='../assets/images/bread_corgi.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-            img.doge(v-else-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-            img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-            .tooltiptext.right
-                p {{ $store.state.cash.alias }}
-                p
-                    span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
-                    span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
-                    span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
-                    span.dot.purplewx(v-else="$store.state.loader.connectionError")
-                    span(v-if="$store.state.loader.connected == 'connecting'") connecting
-                    span(v-else-if="$store.state.loader.connected == 'connected'") connected
-                    span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
-                    span.pong ({{ $store.state.loader.lastPing }} ms pong)
-                p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
-                p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
-        .wowdar(v-if='!$store.getters.member.muted')
-            .ringbase.ring1
-            .ringbase.ring2
-            .pulse
-            .pointer
-                .div
-            .ping.pos1
-            .ping.pos2
-        .ringbase.ring3.big(:class='{ showping : pinging }')
+    status
     task-create.always(v-if='!isSun() && !isBull()')
     div(v-if='isBull()')
         .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
@@ -141,10 +116,11 @@ import Dimensions from '../utils/dimensions'
 import HelmControl from '../utils/helm'
 import Themes from '../utils/themes'
 import SoundFX from '../utils/sounds'
+import Status from './Status'
 
 export default {
     name: 'navigation',
-    components: { Auth, CardPanel, FancyInput, Context, TaskCreate },
+    components: { Auth, CardPanel, FancyInput, Context, TaskCreate, Status },
     mounted() {
         this.setToRoute()
         let el = document.getElementById('helm')
@@ -238,16 +214,20 @@ export default {
 
         mc.on('press', (e) => {
             if(this.isUni()){
-                if(this.$store.state.upgrades.mode === 'doge') {
+                if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.taskId === this.$store.getters.memberCard.taskId) {
                     HelmControl.flashHelm(5)
                     this.goFront('doge')
                 } else {
                     HelmControl.flashHelm(2)
-                    this.goUni('doge')
+                    this.goUni('doge', true)
+                    this.goHome()
                 }
             } else {
                 HelmControl.flashHelm(2)
                 this.goUni('doge')
+                if(this.$store.getters.contextCard.taskId !== this.$store.getters.memberCard.taskId) {
+                    this.goHome()
+                }
             }
             e.stopPropagation()
         })
@@ -272,40 +252,6 @@ export default {
             HelmControl.flashHelm(0.5)
             SoundFX.playCaChunk()
             HelmControl.previousUpgradeMode(this.$router)
-        })
-
-        let dogeel = document.getElementById('dogecomm')
-        let dogemc = new Hammer.Manager(dogeel)
-
-        let Press2 = new Hammer.Press({
-          time: 800
-        })
-        dogemc.add(Press2)
-        dogemc.on('press', (e) => {
-            if(this.$store.getters.member.muted) {
-                return
-            }
-            SoundFX.playBarkPing()
-            this.barking = true
-            this.pinging = true
-            setTimeout(()=> {
-                this.barking = false
-            }, 1000)
-            setTimeout(()=> {
-                this.pinging = false
-            }, 2000)
-        })
-
-        let Tap4 = new Hammer.Tap({ taps: 2, time: 400, interval: 400 })
-        dogemc.add(Tap4)
-        dogemc.on('tap', (e) => {
-            this.toggleMute()
-        })
-
-        let dogeSwipeRight = new Hammer.Swipe()
-        dogemc.add(dogeSwipeRight)
-        dogemc.on('swiperight', (e) => {
-            Themes.nextTheme()
         })
 
         let sunel = this.$refs.sun
@@ -430,7 +376,7 @@ export default {
             search: '',
             showImg: 'uni',
             uniLeft: false,
-            uniRight: false
+            uniRight: false,
         }
     },
     methods: {
@@ -490,9 +436,11 @@ export default {
                 this.uniLeft = !this.uniLeft
             }, 20)
         },
-        goUni(mode) {
+        goUni(mode, silent = false) {
             if(Dimensions.isDeck(this.$router, mode)) {
-                SoundFX.playPortalBlocked()
+                if(!silent) {
+                    SoundFX.playPortalBlocked()
+                }
                 return
             }
             if(!this.isUni()) {
@@ -535,19 +483,6 @@ export default {
         toggleShowBtc() {
             this.showBtc = !this.showBtc
         },
-        toggleMute() {
-            if(this.$store.getters.member.muted) {
-                this.$store.dispatch("makeEvent", {
-                    type: "doge-unmuted",
-                    memberId: this.$store.getters.member.memberId
-                })
-            } else {
-                this.$store.dispatch("makeEvent", {
-                    type: "doge-muted",
-                    memberId: this.$store.getters.member.memberId
-                })
-            }
-        },
         killSession(){
           //XXX TODO tell server to remove session
           this.$store.dispatch("makeEvent", {
@@ -576,6 +511,19 @@ export default {
         nextMode() {
             SoundFX.playCaChunk()
             HelmControl.nextUpgradeMode(this.$router)
+        },
+        goHome(taskId){
+            SoundFX.playPortalTransit()
+            let parents = []
+            if (this.$store.getters.contextCard.taskId){
+                parents.push(this.$store.getters.contextCard.taskId)
+            }
+            this.$store.dispatch("goIn", {
+                panel: [this.$store.getters.memberCard.taskId],
+                top: 0,
+                parents
+            })
+            this.$router.push("/" + this.$store.state.upgrades.mode)
         },
     },
 }
@@ -899,255 +847,6 @@ hr
     transform: translateX(-50%)
     z-index: 149
 
-.small.always.left
-    position: fixed
-    bottom: 0
-    left: 0
-    margin-left: 0.5em
-    margin-bottom: 0.3em
-    z-index: 151
-
-body
-  background-color: #333
-  padding: 50px
-
-.wowdar
-  float:left
-  position:relative
-  width:70px
-  height:70px
-  background-size: 100% 100%
-  border-radius:35px
-  box-shadow:0 1px 1px 0 rgba(0,0,0,0.4), 0 0 4px 1px rgba(0,0,0,0.2), inset 0 1px 1px 0 rgba(255,255,255,0.2), inset 0 2px 4px 1px rgba(255,255,255,0.1)
-  display: none
-
-@keyframes wow
-  0% { opacity: 0 }
-  100% { opacity: 1 }
-
-.tooltip:hover > .tooltiptext
-    animation-name: wow
-    animation-duration: 0.5s
-    transition-timing-function: ease
-    transition-property: opacity
-
-.tooltip:hover+.wowdar
-    display: block
-    animation-name: wow
-    animation-duration: 0.2s
-    transition-timing-function: ease
-    transition-property: opacity
-
-.pulse
-  position:absolute
-  top:0
-  left:0
-  width:70px
-  height:70px
-  border-radius:35px
-  background:#dcf48a
-  -moz-animation: pulsating 2s ease-in-out
-  -moz-animation-iteration-count: infinite
-  -webkit-animation: pulsating 2s ease-in-out
-  -webkit-animation-iteration-count: infinite
-  opacity:0.0
-  z-index:5
-
-.ringbase {
-  position:absolute
-  top:0
-  left:0
-  width:70px
-  height:70px
-  border-radius:35px
-  opacity:0.0
-  z-index:10
-}
-
-.ring1 {
-  box-shadow:0 0 2px 1px #8eb716, inset 0 0 2px 1px #00f400
-  -moz-animation: ring 2s ease-in-out
-  -moz-animation-iteration-count: infinite
-  -webkit-animation: ring 2s ease-in-out
-  -webkit-animation-iteration-count: infinite
-  animation: ring 2s ease-in-out
-  animation-iteration-count: infinite
-}
-
-.ring2 {
-  box-shadow:0 0 1px 0px #cbe572, inset 0 0 1px 0px #00f400
-  -moz-animation: ring 2s ease-in-out
-  -moz-animation-iteration-count: infinite
-  -moz-animation-delay: 0.5s
-  -webkit-animation: ring 2s ease-in-out
-  -webkit-animation-iteration-count: infinite
-  -webkit-animation-delay: 0.5s
-  animation: ring 2s ease-in-out
-  animation-iteration-count: infinite
-  animation-delay: 0.5s
-}
-
-.ring3 {
-  box-shadow:0 0 3px 0px #cbe572, inset 0 0 1px 0px #cbe572
-  -moz-animation: ring 1.5s ease-in-out
-  -moz-animation-iteration-count: infinite
-  -moz-animation-delay: 0.5s
-  -webkit-animation: ring 1.5s ease-in-out
-  -webkit-animation-iteration-count: infinite
-  -webkit-animation-delay: 0.5s
-  animation: ring 1.5s ease-in-out
-  animation-iteration-count: infinite
-  animation-delay: 0.5s
-  display: block
-}
-
-@-webkit-keyframes pulsating {
-  0% {opacity: 0.0}
-  50% {opacity: 0.2}
-  100% {opacity: 0.0}
-}
-
-@-moz-keyframes pulsating {
-  0% {opacity: 0.0}
-  50% {opacity: 0.2}
-  100% {opacity: 0.0}
-}
-
-@keyframes pulsating {
-  0% {opacity: 0.0}
-  50% {opacity: 0.2}
-  100% {opacity: 0.0}
-}
-
-@-webkit-keyframes ring {
-  0% {-webkit-transform: scale(0.4, 0.4); opacity: 0.0}
-  50% {opacity: 0.6}
-  100% {-webkit-transform: scale(1.1, 1.1); opacity: 0.0}
-}
-
-@-moz-keyframes ring {
-  0% {-moz-transform: scale(0.4, 0.4); opacity: 0.0}
-  50% {opacity: 0.6}
-  100% {-moz-transform: scale(1.1, 1.1); opacity: 0.0}
-}
-
-@keyframes ring {
-  0% {transform: scale(0.4, 0.4); opacity: 0.0}
-  50% {opacity: 0.6}
-  100% {transform: scale(1.1, 1.1); opacity: 0.0}
-}
-
-
-.pointer {
-  position: absolute
-  width: 70px
-  top: 35px
-  -webkit-animation: circling 2s linear
-  -webkit-animation-iteration-count: infinite
-  -moz-animation: circling 2s linear
-  -moz-animation-iteration-count: infinite
-  animation: circling 2s linear
-  animation-iteration-count: infinite
-  z-index: 20
-}
-
-.pointer div {
-  width: 49%
-  border-bottom:2px solid #00f400
-}
-
-.ping {
-  opacity: 0
-  border: 3px solid #e0f400
-  border-radius: 100%
-  position:absolute
-  -webkit-animation: blink 2s ease-out
-  -webkit-animation-iteration-count: infinite
-  -moz-animation: blink 2s ease-out
-  -moz-animation-iteration-count: infinite
-  animation: blink 2s ease-out
-  animation-iteration-count: infinite
-  z-index: 25
-}
-
-.ping.pos1 {
-  left:10px
-  top:38px
-}
-
-.ping.pos2 {
-  left:40px
-  top:18px
-  -webkit-animation-delay: 0.6s
-  -moz-animation-delay: 0.6s
-  animation-delay: 0.6s
-}
-
-@-webkit-keyframes circling {
-  0% {-webkit-transform: rotate(0deg)}
-  50% {-webkit-transform: rotate(180deg)}
-  100% {-webkit-transform: rotate(360deg)}
-}
-
-@-moz-keyframes circling {
-  0% {-moz-transform: rotate(0deg)}
-  50% {-moz-transform: rotate(180deg)}
-  100% {-moz-transform: rotate(360deg)}
-}
-
-@keyframes circling {
-  0% {transform: rotate(0deg)}
-  50% {transform: rotate(180deg)}
-  100% {transform: rotate(360deg)}
-}
-
-@-webkit-keyframes blink {
-  0% { opacity: 1 }
-  100% { opacity: 0 }
-}
-
-@-moz-keyframes blink {
-  0% { opacity: 1 }
-  100% { opacity: 0 }
-}
-
-@keyframes blink {
-  0% { opacity: 1 }
-  100% { opacity: 0 }
-}
-
-.doge
-    left: 25px
-    bottom: 23px
-    position: fixed
-    opacity: 0.5
-    height: 35px
-    width: 35px
-    cursor: pointer
-    z-index: 9001
-
-.doge.red
-    filter: hue-rotate(-38deg)
-    transform: scaleX(-1)
-
-.big
-    position: fixed
-    left: -85%
-    bottom: 27px
-    width: 2000px
-    height: 2000px
-    border-radius: 50%
-    display: none
-
-.showping
-    display: block
-
-.flip
-    transform: scaleX(-1)
-
-.pong
-    margin-left: 0.25em
-
 .loadingscreen
     position: fixed
     left: 50%
@@ -1218,24 +917,6 @@ body
     left: 50%
     top: 3em
     transform: translateX(-50%)
-
-.tooltiptext .leftalign
-    text-align: left
-
-.tooltiptext ul, .tooltiptext li
-    text-align: left
-    list-style-type: none
-    position: relative
-
-.tooltiptext li
-    padding-left: 0.5em
-    margin-left: 1em
-
-.tooltiptext h1
-    margin-top: 0
-    margin-bottom: 0
-    font-size: 1.1em
-    font-weight: bold
 
 .tooltiptext.center.fix
     position: fixed

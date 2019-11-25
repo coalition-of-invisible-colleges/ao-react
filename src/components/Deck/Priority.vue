@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.p.clearboth(:id='uuid')
+.p.clearboth(ref='wholeCard')
     .opencard(v-if='$store.state.context.action === taskId')
         hypercard(:b="card", :c="parent.priorities",  :inId="inId")
     .closedcard.agedwrapper.dont-break-out(v-else  :class="cardInputSty")
@@ -11,7 +11,9 @@
         img.front.nopad.cancel(v-if='card.guild'  src="../../assets/images/badge.svg")
         span.front.nudge(v-if='card.guild')  {{ card.guild }}
         img.left.front.cancel(v-if='isMember' src="../../assets/images/loggedIn.svg")
-        span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
+        checkbox(:b='card'  :inId='inId')
+        tally.right.front.lesspadding.buffer(:b='card')
+        span.right.front(v-if='card.book.startTs'  :class='{ buffertwo : !card.claimed || card.claimed.length < 1 }') {{ cardStart.days.toFixed(1) }} days
         img.right.front.cancel(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
         linky.front(:x='name'  :key='name')
 </template>
@@ -20,21 +22,17 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
-import uuidv1 from 'uuid/v1'
+import Checkbox from '../Card/Checkbox'
+import Tally from '../Card/Tally'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import SoundFX from '../../utils/sounds'
 
 export default {
-    props: ['taskId', 'inId'],
-    components: { Hypercard, Linky },
-    data(){
-      return {
-          uuid: uuidv1(),
-      }
-    },
+    props: ['taskId', 'inId', 'inInId'],
+    components: { Hypercard, Linky, Checkbox, Tally },
     mounted() {
-        let el = document.getElementById(this.uuid)
+        let el = this.$refs.wholeCard
         if(!el) return
         let mc = Propagating(new Hammer.Manager(el))
 
@@ -48,7 +46,11 @@ export default {
         doubleTap.recognizeWith(singleTap)
         singleTap.requireFailure(doubleTap)
 
+        // checkTap.recognizeWith(singleTap)
+        // singleTap.requireFailure(checkTap)
+
         mc.on('singletap', (e) => {
+            console.log("tap on priority")
             if(this.$store.state.context.action === this.taskId) {
                 this.deaction()
             } else {
@@ -75,7 +77,7 @@ export default {
         mc.on('swipedown', (e) => {
             this.refocus()
             e.stopPropagation()
-        });
+        })
     },
     computed: {
         card(){
@@ -140,7 +142,7 @@ export default {
               purplewx : color == 'purple',
               blackwx : color == 'black',
           }
-        }
+        },
     },
     methods: {
         deaction(){
@@ -161,6 +163,14 @@ export default {
                 parents.push(this.$store.getters.contextCard.taskId)
             } else if (this.$store.getters.memberCard.taskId){
                 parents.push(this.$store.getters.memberCard.taskId)
+            }
+
+            if(this.inInId) {
+                parents.push(this.inInId)
+            }
+
+            if(this.inId) {
+                parents.push(this.inId)
             }
 
             this.$store.dispatch("goIn", {
@@ -281,4 +291,9 @@ img
     word-break: break-word
     hyphens: auto
 
+.buffer
+    margin-right: 1.25em
+
+.buffertwo
+    margin-right: 1.75em
 </style>

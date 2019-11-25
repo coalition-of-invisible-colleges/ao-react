@@ -12,7 +12,7 @@
               hyperpriority(:taskId='st'  :inId="t")
           .row.subsubpriority(v-for='(st2, k) of getSubPriorities(st)'  :key='st2')
               .clearboth.opensubcard
-                  hyperpriority(:taskId='st2'  :inId="st")
+                  hyperpriority(:taskId='st2'  :inId="st"  :inInId='t')
     div.clearboth
 </template>
 

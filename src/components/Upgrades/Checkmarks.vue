@@ -7,7 +7,7 @@
             .projects(v-if='subguilds.length > 0')
                 h3.bluetx projects
                 ul.none
-                    li.spaced(v-for='p in subguilds')
+                    li.spaced(v-for='p in subguilds'  :key='subguilds')
                         span(@click='goIn(p.taskId)')
                             img.floatleft(src='../../assets/images/badge.svg')
                         span(@click='goIn(p.taskId)')
@@ -18,7 +18,7 @@
                                     img.floatleft.smaller(src='../../assets/images/badge.svg')
                                 span(@click='goIn(sp.taskId), p.taskId')
                                     span.nl.gui.smallest(:class='cardInputSty(sp.color)') {{ sp.guild }}
-            current(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions')
+            current.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions')
             current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
             .box.morepad
                 div.dogep.spinslow
@@ -36,7 +36,7 @@
                             img.floatleft(src='../../assets/images/badge.svg')
                         span(@click='goIn(g.taskId)')
                             span.nl.gui.yellowtx {{ g.guild }}
-                        span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'    :class=  '  { padleft : getSubPriorities(g.taskId).length > 0 }')
+                        span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
                             .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
                                 linky.tooltiptext(:x='c.name')
                         .description
@@ -44,7 +44,7 @@
                             span.projectlist.aproject(v-if='g.guilds && g.guilds.length >= 1'  v-for='(p, i) in g.guilds'  @click='goIn(p.taskId, g.taskId)')
                                 img(src='../../assets/images/badge.svg'  :class='{ first : i === 0 }')
                                 span(:class='cardInputSty(p.color)') {{ p.guild }}
-                .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{       $store.getters.myGuilds.length - 5 }}
+                .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
                 .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
 </template>
 
@@ -417,6 +417,9 @@ h2
     display: inline-block
     cursor: pointer
 
+.plain.checkmark .tooltiptext
+    font-size: 0.5em
+
 .plain
     text-decoration: none
 
@@ -568,4 +571,7 @@ ul.none.indent
 
 span.nl.gui.smallest
     font-size: 1.1em
+    
+.clickable
+    cursor: pointer
 </style>

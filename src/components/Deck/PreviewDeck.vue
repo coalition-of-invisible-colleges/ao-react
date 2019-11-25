@@ -116,6 +116,7 @@ export default {
 
 .preview
     width: 100%
+    margin-top: 0.5em
     //opacity: 0.5
 
 .tinyboat

@@ -3,11 +3,11 @@
 .current(v-if='memberId')
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
-    span.name {{ name }}
+    span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }'  :key='$store.state.upgrades.highlights') {{ name }}
     template(v-for='c in completions')
       span.tooltip.plain(@click='goIn(c.taskId)')
         span.checkmark(:class="cardInputSty(c.color)") ☑
-          .tooltiptext
+          .tooltiptext.smalltext
             .bigger {{ c.name }}
 </template>
 
@@ -72,7 +72,12 @@ export default {
             purpletx : c === 'purple',
             blacktx : c === 'black',
         }
-    }
+    },
+    toggleHighlight(invert = false) {
+        console.log("togglehighlight")
+        if(!this.isHighlighted && !this.isLowdarked && (!this.completions || this.completions.length < 1)) return
+        this.$store.commit("toggleHighlight", { memberId: this.memberId, valence: !invert })
+    },
   },
   computed:{
     name(){
@@ -87,6 +92,12 @@ export default {
     },
     isCompleted(){
         return this.b.claimed.indexOf(this.memberId) > -1
+    },
+    isHighlighted() {
+        return this.$store.state.upgrades.highlights[this.memberId] === true
+    },
+    isLowdarked() {
+        return this.$store.state.upgrades.highlights[this.memberId] === false
     },
   }
 }
@@ -107,6 +118,7 @@ img
     margin-right: 1em
     position: relative
     top: -0.3em
+    user-select: none
 
 .checkmark
     font-size: 2em
@@ -119,6 +131,13 @@ img
 .plain
     text-decoration: none
 
-.bigger
-    font-size: 2.02em
+.tooltiptext.smalltext
+    z-index: 153
+    font-size: 0.7em
+        
+.name.highlight
+    text-shadow: 0 0 20px yellow, 0 0 20px yellow, 0 0 20px yellow
+
+.name.lowdark
+    text-shadow: 0 0 20px red, 0 0 20px red, 0 0 20px red
 </style>

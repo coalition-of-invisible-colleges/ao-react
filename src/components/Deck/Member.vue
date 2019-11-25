@@ -10,18 +10,18 @@
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
     .bottomright
-        .tooltip
+        .adjtooltip
             img.dogecoin(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
-            .tooltiptext.membertooltip
-                .gui(v-if='m.active > 0') account is active
-                .gui(v-else) account is inactive
-                p.suggest(v-if='m.active > 0 && m.memberId === $store.getters.member.memberId') click to deactivate
-                p.help(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
-                p.suggest(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') click to activate
-                .gui.title(v-if='nameList.length > 0') vouches
-                ul.left(v-if='nameList.length > 0')
-                    li(v-for='n in nameList')
-                        vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
+        .tooltiptext.membertooltip
+            .gui(v-if='m.active > 0') account is active
+            .gui(v-else) account is inactive
+            p.suggest(v-if='m.active > 0 && m.memberId === $store.getters.member.memberId') click to deactivate
+            p.help(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
+            p.suggest(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') click to activate
+            .gui.title(v-if='nameList.length > 0') vouches
+            ul.left(v-if='nameList.length > 0')
+                li(v-for='n in nameList')
+                    vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
     .clearboth
 </template>
 
@@ -217,8 +217,9 @@ label
 .tooltiptext.membertooltip
     width: 20em
     z-index: 151
-    left: 7em
-    top: -11em
+    left: 6.5em
+    top: -10.1em
+    font-size: 0.7em
 
 ul.left
     text-align: left

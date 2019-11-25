@@ -109,7 +109,7 @@ function tasksMuts(tasks, ev) {
                 if (task.taskId === ev.taskId) {
                     task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
                     if(task.deck.indexOf(ev.memberId) === -1) {
-                        if(ev.taskId !== ev.memberId) {
+                        if(ev.taskId !== ev.memberId && ev.memberId) {
                             task.deck.push(ev.memberId)
                         }
                     }
@@ -167,11 +167,21 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "task-refocused":
+            let claimed
+            tasks.forEach( task => {
+                if (task.taskId === ev.taskId) {
+                    claimed = task.claimed
+                }
+            })
             tasks.forEach( task => {
                 if (task.taskId === ev.inId){
                     task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
-                    task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId )
-                    task.subTasks.push(ev.taskId)
+                    task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId)
+                    if(claimed && claimed.length >= 1) {
+                        task.completed.push(ev.taskId)
+                    } else {
+                        task.subTasks.push(ev.taskId)
+                    }
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
 
                     task.allocations = _.filter(task.allocations, al => {
@@ -187,7 +197,15 @@ function tasksMuts(tasks, ev) {
             break
         case "task-sub-tasked":
             tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
+                if(task.taskId === ev.subTask) {
+                    task.deck = _.filter(task.deck, mId => mId !== ev.memberId)
+                    if(task.deck.indexOf(ev.memberId) === -1) {
+                        if(ev.subTask !== ev.memberId && ev.memberId) {
+                            task.deck.push(ev.memberId)
+                        }
+                    }
+                }
+                if(task.taskId === ev.taskId) {
                     task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
                     task.subTasks.push(ev.subTask)
                 }
@@ -223,33 +241,35 @@ function tasksMuts(tasks, ev) {
                     task.boost += parseFloat(ev.paid)
                 }
 
-                task.priorities = task.priorities.filter(taskId => {
+                task.priorities.some(taskId => {
                     if(taskId !== ev.taskId) {
-                        return true
+                        return false
                     } else {
                         found = true
-                        return false
+                        return true
                     }
                 })
 
-                task.subTasks = task.subTasks.filter(taskId => {
+                task.subTasks.some(taskId => {
                     if(taskId !== ev.taskId) {
-                        return true
+                        return false
                     } else {
                         found = true
-                        return false
+                        return true
                     }
                 })
 
                 if(found) {
-                    task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
-                    task.completed.push(ev.taskId)
+                    if(task.priorities.indexOf(ev.taskId) === -1) {
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
+                        task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
+                        task.completed.push(ev.taskId)
+                    }
                     let alloc = false
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
                     task.allocations = _.filter(task.allocations, al => {
 
-                        if (al.allocatedId === ev.taskId){
-
+                        if (al.allocatedId === ev.taskId) {
                             alloc = al.amount
                             return false
                         }
@@ -266,15 +286,17 @@ function tasksMuts(tasks, ev) {
             break
         case "task-unclaimed":
             tasks.forEach(task => {
-                if(task.taskId === ev.taskId){
+                if(task.taskId === ev.taskId) {
                     task.claimed = task.claimed.filter(mId => mId !== ev.memberId)
+                    if(task.claimed.length < 1) {
+                        tasks.forEach(p => {
+                            if(p.priorities.indexOf(ev.taskId) === -1 && p.completed.indexOf(ev.taskId) > -1) {
+                                task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
+                                task.subTasks.push(ev.taskId)
+                            }
+                        })
+                    }
                 }
-
-                if (task.completed.indexOf(ev.taskId) > -1){
-                    task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
-                    task.subTasks.push(ev.taskId)
-                }
-
             })
             break
         case "task-cap-updated":

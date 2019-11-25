@@ -159,17 +159,11 @@ export default {
             this.task.name = ''
         },
         subTaskTask(taskId) {
-            if(this.matchCard && !this.isGrabbed(taskId)) {
-              this.$store.dispatch("makeEvent", {
-                  type: 'task-grabbed',
-                  taskId: taskId,
-                  memberId: this.$store.getters.member.memberId,
-              })
-            }
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 taskId: this.taskId,
                 subTask: taskId,
+                memberId: this.$store.getters.member.memberId,
             })
         },
         createOrFindTask(){

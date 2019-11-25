@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.priority.closedcard(@dblclick.stop='goIn(taskId)')
+.priority.closedcard(ref='wholeCard')
   .row.agedwrapper(:class="cardInputSty")
       .agedbackground.freshpaper(v-if='cardAge < 8')
       .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
@@ -9,6 +9,9 @@
       img.front.nopad(v-if='card.guild'  src="../../assets/images/badge.svg")
       span.front.nudge(v-if='card.guild')  {{ card.guild }}
       img.left.front(v-if='isMember' src="../../assets/images/loggedIn.svg")
+      span.checkmark.right.front(v-if='isCompleted'  ref='checkbox') ☑
+      span.checkmark.right.front(v-else-if='!isCompleted'  ref='checkbox') ☐
+      tally.right.front.lesspadding(:b='card')
       span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
       img.right.front(v-if='card.book.startTs' src="../../assets/images/timecube.svg")
       linky.cardname.front(:x='card.name'  :key='name')
@@ -18,11 +21,52 @@
 
 import Linky from '../Card/Linky'
 import Hypercard from '../Card/index'
+import Tally from '../Card/Tally'
 import SoundFX from '../../utils/sounds'
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
 
 export default {
     props: ['taskId', 'inId', 'c'],
-    components: { Hypercard, Linky },
+    components: { Hypercard, Linky, Tally },
+    mounted() {
+        let el = this.$refs.wholeCard
+        if(!el) return
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        let longPress = new Hammer.Press({ time: 600 })
+
+        mc.add([doubleTap, longPress])
+
+        longPress.recognizeWith([doubleTap])
+        longPress.requireFailure([doubleTap])
+
+        mc.on('doubletap', (e) => {
+            this.goIn(this.taskId)
+            e.stopPropagation()
+        })
+
+        mc.on('press', (e) => {
+            this.copyCardToClipboard()
+            e.stopPropagation()
+        })
+
+        let checkel = this.$refs.checkbox
+        if(!checkel) return
+        let checkmc = Propagating(new Hammer.Manager(checkel))
+
+        let Tap = new Hammer.Tap({ time: 400 })
+        checkmc.add(Tap)
+        checkmc.on('tap', (e) => {
+            if(!this.isCompleted) {
+                this.complete()
+            } else {
+                this.uncheck()
+            }
+            e.stopPropagation()
+        })
+    },
     methods: {
       goIn(taskId){
           SoundFX.playPageTurn()
@@ -36,6 +80,10 @@ export default {
               parents.push(this.$store.getters.memberCard.taskId)
           }
 
+          if(this.inId) {
+              parents.push(this.inId)
+          }
+
           this.$store.dispatch("goIn", {
               parents,
               top,
@@ -44,6 +92,37 @@ export default {
 
           this.$store.commit("startLoading", 'unicorn')
           this.$router.push("/" + this.$store.state.upgrades.mode)
+      },
+      complete(){
+          SoundFX.playTickMark()
+          this.$store.dispatch("makeEvent", {
+              type: 'task-claimed',
+              inId: this.inId,
+              taskId: this.taskId,
+              memberId: this.$store.getters.member.memberId,
+              notes: 'checked by ' + this.$store.getters.member.memberId
+          })
+      },
+      uncheck(){
+          SoundFX.playTickMark()
+          this.$store.dispatch("makeEvent", {
+              type: 'task-unclaimed',
+              taskId: this.taskId,
+              memberId:  this.$store.getters.member.memberId,
+              notes: ''
+          })
+      },
+      copyCardToClipboard(){
+          //navigator.clipboard.writeText(this.b.name)
+          // navigator.permissions.query({name: "clipboard-write"}).then(result => {
+              // if (result.state == "granted" || result.state == "prompt") {
+                  navigator.clipboard.writeText(this.b.name).then(function() {
+                      SoundFX.playChunkSwap()
+                  }, function() {
+                      console.log("copy failed")
+                  })
+              // }
+          // })
       },
     },
     computed: {
@@ -96,6 +175,9 @@ export default {
           let msSince = now - this.c.timestamp
           let days = msSince / (1000 * 60 * 60 * 24)
           return days
+        },
+        isCompleted(){
+            return this.card.claimed.indexOf(this.$store.getters.member.memberId) > -1
         },
     }
 }
@@ -190,4 +272,18 @@ img
     position: relative
     z-index: 100
     max-width: 100%
+    
+.checkmark
+    font-size: 1.58em
+    float: right
+    margin-top: -.15em
+    margin-bottom: -0.25em
+    margin-left: 0.25em
+    opacity: 0.5
+    cursor: pointer
+    color: white
+    z-index: 105
+    
+.tally.right.front.lesspadding
+    padding-right: 0
 </style>

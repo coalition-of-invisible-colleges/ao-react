@@ -1,17 +1,14 @@
 <template lang='pug'>
 #wrex
-  h1.up ao joggler
-  flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-      .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
-          span(:class='{redTx: -1 === $store.state.upgrades.warp}') {{ $store.state.cash.alias }}
-      .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-          span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
-  flickity(:options='flickityOptions')
-      .carousel-cell(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)' )  {{ t.guild }}
-  .center
-      div(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds') {{ g.guild }}
-        .indentone(v-for='p in g.guilds') {{ p.guild }}
-            .indenttwo(v-for='sp in p.guilds') {{ sp.guild }}
+  h1.up top 11 missions
+  //- flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
+  //-     .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
+  //-         span(:class='{redTx: -1 === $store.state.upgrades.warp}') {{ $store.state.cash.alias }}
+  //-     .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
+  //-         span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
+  //- flickity(:options='flickityOptions')
+  //-     .carousel-cell(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)' )  {{ t.guild }}
+  hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.weight'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
 
 </template>
 
@@ -56,13 +53,13 @@ export default {
       }
   },
   computed: {
-      guilds(){
+      topten(){
           let guilds = []
           let uniqueG = []
           this.$store.state.tasks.forEach((c, i) => {
               if (c.guild){
                   let l = uniqueG.indexOf(c.guild)
-                  if (l === -1){
+                  if (guilds.indexOf(c.guild) === -1){
                     guilds.push(c)
                     uniqueG.push(c.guild)
                   } else {
@@ -71,19 +68,74 @@ export default {
                         guilds[l] = c
                     }
                   }
+                  if(this.alldoged && this.alldoged.length >= 1) {
+                      let index = this.alldoged.indexOf(guilds[l])
+                      if(index > -1) {
+                          guilds[l].weight = this.alldoged[index].weight
+                      }
+                  }
               }
           })
           guilds.sort( (a, b) => {
-              let aVal = a.deck.length
-              let bVal = b.deck.length
-              return bVal - aVal
+              let aHodls = a.deck.length
+              let bHodls = b.deck.length
+              if(b.weight && !a.weight) {
+                  return 1
+              } else if(a.weight && !b.weight) {
+                  return -1
+              } else if(b.weight && a.weight) {
+                  if(b.weight !== a.weight) {
+                      return b.weight - a.weight
+                  } else {
+                      return bHodls - aHodls
+                  }
+              }
           })
 
           if (guilds.length > 11){
-              return guilds.slice(0,11)
+              guilds = guilds.slice(0, 11)
           }
 
           return guilds
+      },
+      alldoged(){
+          let news = []
+          this.$store.getters.memberIds.forEach(mId => {
+              let member = this.$store.getters.hashMap[mId]
+              let lastUsed
+              this.$store.state.members.forEach( m => {
+                  if(m.memberId === mId){
+                      lastUsed = m.lastUsed
+                  }
+              })
+              if(member && lastUsed) {
+                  let presence = (Date.now() - lastUsed) <= 3600000
+                  if(presence && member.priorities) {
+                      member.priorities.forEach(p => {
+                          let priority = this.$store.getters.hashMap[p]
+                          if(!priority.dogers) {
+                              priority.dogers = []
+                          }
+                          priority.dogers.push(member.name)
+                          if(!news.some((sp, i) => {
+                              if(sp.taskId === p) {
+                                  news[i].weight += 1 / member.priorities.length
+                                  return true
+                              }
+                              return false
+                          })) {
+                              priority.weight = 1 / member.priorities.length
+                              news.push(priority)
+                          }
+                      })
+                  }
+              }
+          })
+          // news.sort((a, b) => {
+          //     return b.weight - a.weight
+          // })
+          if(news.length < 1) return
+          return news
       },
   }
 }
@@ -348,4 +400,10 @@ h2
     margin-left: 50%
     transform: translateX(-50%)
     width: fit-content
+    
+.topmission
+    max-width: 30em
+    margin-left: 50%
+    transform: translateX(-50%)
+    margin-bottom: 1em
 </style>
