@@ -77,24 +77,16 @@ export default {
               }
           })
           guilds.sort( (a, b) => {
-              console.log(" ")
-              console.log("a is ", a.guild, " and b is ", b.guild)
-              console.log("a.weight is ", a.weight, " and b.weight is ", b.weight)
-              console.log("a.hodls is ", a.deck.length, " and b.hodls is ", b.deck.length)
               let aHodls = a.deck.length
               let bHodls = b.deck.length
               if(b.weight && !a.weight) {
-                  console.log("b is first")
                   return 1
               } else if(a.weight && !b.weight) {
-                  console.log("a is first")
                   return -1
               } else if(b.weight && a.weight) {
                   if(b.weight !== a.weight) {
-                      console.log("is b first? by weight ", b.weight > a.weight)
                       return b.weight - a.weight
                   } else {
-                      console.log("is b first? by hodls", b.deck.length > a.deck.length)
                       return bHodls - aHodls
                   }
               }
@@ -110,7 +102,6 @@ export default {
           let news = []
           this.$store.getters.memberIds.forEach(mId => {
               let member = this.$store.getters.hashMap[mId]
-              console.log("member is", member)
               let lastUsed
               this.$store.state.members.forEach( member => {
                   if(member.memberId === mId){
@@ -119,7 +110,6 @@ export default {
               })
               if(member && lastUsed) {
                   let presence = (Date.now() - lastUsed) <= 3600000
-                  console.log("presence is", presence)
                   if(presence && member.priorities) {
                       member.priorities.forEach(p => {
                           let priority = this.$store.getters.hashMap[p]
