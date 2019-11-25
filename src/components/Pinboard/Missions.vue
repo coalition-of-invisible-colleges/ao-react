@@ -73,7 +73,9 @@ export default {
                       if(index > -1) {
                           guilds[l].weight = this.alldoged[index].weight
                       } else {
-                          guilds[l].weight = 0
+                          if(guilds[l]) {
+                              guilds[l].weight = 0
+                          }
                       }
                   }
               }
