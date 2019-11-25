@@ -46,7 +46,7 @@ export default {
               let member = this.$store.getters.hashMap[mId]
               if(member && member.priorities) {
                   member.priorities.forEach(p => {
-                      let priority = this.$store.getters.hashMap[p]
+                      let priority = Object.assign({}, this.$store.getters.hashMap[p])
                       if(!priority.dogers) {
                           priority.dogers = []
                       }
