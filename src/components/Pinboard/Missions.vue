@@ -72,10 +72,6 @@ export default {
                       let index = this.alldoged.indexOf(guilds[l])
                       if(index > -1) {
                           guilds[l].weight = this.alldoged[index].weight
-                      } else {
-                          if(guilds[l]) {
-                              Vue.delete(guilds[l], weight)
-                          }
                       }
                   }
               }
@@ -113,7 +109,9 @@ export default {
                   }
               })
               if(member && lastUsed) {
+                  console.log("lastUsed is ", lastUsed)
                   let presence = (Date.now() - lastUsed) <= 3600000
+                  console.log("presence is ", presence)
                   if(presence && member.priorities) {
                       member.priorities.forEach(p => {
                           let priority = this.$store.getters.hashMap[p]
