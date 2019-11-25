@@ -70,9 +70,6 @@ export default {
                   }
                   if(this.alldoged && this.alldoged.length >= 1) {
                       let index = this.alldoged.indexOf(guilds[l])
-                      if(guilds[l] && guilds[l.weight] > 0) {
-                          console.log("non-zero weight found for guild ", guilds[l].guild)
-                      }
                       if(index > -1) {
                           guilds[l].weight = this.alldoged[index].weight
                       }
@@ -82,20 +79,14 @@ export default {
           guilds.sort( (a, b) => {
               let aHodls = a.deck.length
               let bHodls = b.deck.length
-              console.log("b.guild is ", b.guild, " and a.guild is ", a.guild)
-              console.log("b weight is ", b.weight, " and a.weight is ", a.weight)
               if(b.weight && !a.weight) {
-                  console.log("b wins.")
                   return 1
               } else if(a.weight && !b.weight) {
-                  console.log("a wins.")
                   return -1
               } else if(b.weight && a.weight) {
                   if(b.weight !== a.weight) {
-                      console.log("b or wins by weight.")
                       return b.weight - a.weight
                   } else {
-                      console.log("b or a wins by hodls.")
                       return bHodls - aHodls
                   }
               }
@@ -118,11 +109,8 @@ export default {
                   }
               })
               if(member && lastUsed) {
-                  let now = Date.now()
-                  console.log("date.now is ", now)
-                  let presence = (now - lastUsed) <= 3600000
+                  let presence = (Date.now() - lastUsed) <= 3600000
                   if(presence && member.priorities) {
-                      console.log("member present ", member.name)
                       member.priorities.forEach(p => {
                           let priority = this.$store.getters.hashMap[p]
                           if(!priority.dogers) {

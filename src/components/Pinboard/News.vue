@@ -71,7 +71,6 @@ export default {
           news.sort((a, b) => {
               return b.weight - a.weight
           })
-          console.log(news)
           if(news.length < 1) return
           let ndex = 0
           let subpriorities = news[ndex].priorities.filter(tId => {
