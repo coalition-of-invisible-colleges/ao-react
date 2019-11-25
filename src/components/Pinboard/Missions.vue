@@ -79,14 +79,20 @@ export default {
           guilds.sort( (a, b) => {
               let aHodls = a.deck.length
               let bHodls = b.deck.length
+              console.log("b.guild is ", b.guild, " and a.guild is ", a.guild)
+              console.log("b weight is ", b.weight, " and a.weight is ", a.weight)
               if(b.weight && !a.weight) {
+                  console.log("b wins.")
                   return 1
               } else if(a.weight && !b.weight) {
+                  console.log("a wins.")
                   return -1
               } else if(b.weight && a.weight) {
                   if(b.weight !== a.weight) {
+                      console.log("b or wins by weight.")
                       return b.weight - a.weight
                   } else {
+                      console.log("b or a wins by hodls.")
                       return bHodls - aHodls
                   }
               }
@@ -109,9 +115,7 @@ export default {
                   }
               })
               if(member && lastUsed) {
-                  console.log("lastUsed is ", lastUsed)
                   let presence = (Date.now() - lastUsed) <= 3600000
-                  console.log("presence is ", presence)
                   if(presence && member.priorities) {
                       member.priorities.forEach(p => {
                           let priority = this.$store.getters.hashMap[p]
