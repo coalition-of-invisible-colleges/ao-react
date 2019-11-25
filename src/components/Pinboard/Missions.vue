@@ -103,9 +103,9 @@ export default {
           this.$store.getters.memberIds.forEach(mId => {
               let member = this.$store.getters.hashMap[mId]
               let lastUsed
-              this.$store.state.members.forEach( member => {
-                  if(member.memberId === mId){
-                      lastUsed = member.lastUsed
+              this.$store.state.members.forEach( m => {
+                  if(m.memberId === mId){
+                      lastUsed = m.lastUsed
                   }
               })
               if(member && lastUsed) {
