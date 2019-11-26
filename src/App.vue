@@ -25,9 +25,21 @@ export default {
             this.$store.dispatch('loadCurrent')
         }
     },
-    components: {
+    created() {
+        window.addEventListener('keydown', this.testInput);
+    },
+    destroyed() {
+        window.removeEventListener('keydown', this.testInput);
+    },
+   components: {
         Navigation, MobileHeading, EventFeed
     },
+    methods: {
+        testInput(e) {
+            let cmd = String.fromCharCode(e.keyCode).toLowerCase()
+            console.log("testInput: ", e)
+        },
+    }
 }
 
 
