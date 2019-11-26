@@ -37,7 +37,7 @@ export default {
     methods: {
         testInput(e) {
             let cmd = String.fromCharCode(e.keyCode).toLowerCase()
-            console.log("testInput: ", e)
+            // console.log("testInput: ", e)
         },
     }
 }
