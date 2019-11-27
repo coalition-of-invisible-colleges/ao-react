@@ -287,10 +287,13 @@ function tasksMuts(tasks, ev) {
         case "task-unclaimed":
             tasks.forEach(task => {
                 if(task.taskId === ev.taskId) {
+                    console.log("found the task")
                     task.claimed = task.claimed.filter(mId => mId !== ev.memberId)
                     if(task.claimed.length < 1) {
+                        console.log("removing task from completed...")
                         tasks.forEach(p => {
                             if(p.priorities.indexOf(ev.taskId) === -1 && p.completed.indexOf(ev.taskId) > -1) {
+                                console.log("found")
                                 task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
                                 task.subTasks.push(ev.taskId)
                             }
