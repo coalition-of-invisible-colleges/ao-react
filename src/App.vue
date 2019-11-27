@@ -25,9 +25,25 @@ export default {
             this.$store.dispatch('loadCurrent')
         }
     },
-    components: {
+    created() {
+        window.addEventListener('keydown', this.testInput);
+    },
+    destroyed() {
+        window.removeEventListener('keydown', this.testInput);
+    },
+   components: {
         Navigation, MobileHeading, EventFeed
     },
+    methods: {
+        testInput(e) {
+            let cmd = String.fromCharCode(e.keyCode).toLowerCase()
+            // in keyboard control mode, capture spacebar and arrow keys to prevent scrolling
+            // if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+            //     e.preventDefault();
+            // }
+            // console.log("testInput: ", e)
+        },
+    }
 }
 
 

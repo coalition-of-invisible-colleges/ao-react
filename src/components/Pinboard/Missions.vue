@@ -109,7 +109,7 @@ export default {
                   }
               })
               if(member && lastUsed) {
-                  let presence = (Date.now() - lastUsed) <= 3600000
+                  let presence = (Date.now() - lastUsed) <= (3600000 * 4)
                   if(presence && member.priorities) {
                       member.priorities.forEach(p => {
                           let priority = this.$store.getters.hashMap[p]
