@@ -13,6 +13,7 @@
         button(@click='use("D")') D
         button(@click='use("E")') E
         button(@click='use("F")') F
+        button(@click='resourcePurged')
     .bottomleft(v-if='card.boost')
     .bottomright
     .clearboth
@@ -34,6 +35,14 @@ export default {
         },
     },
     methods: {
+        resourcePurged(){
+            let newEv = {
+                type: 'resource-purged',
+                resourceId: this.r.resourceId,
+            }
+            console.log('kill triggered:', newEv)
+            this.$store.dispatch("makeEvent", newEv)
+        },
         use(letter){
             let newEv = {
                 type: 'resource-used',

@@ -413,7 +413,7 @@ function tasksMuts(tasks, ev) {
                     if (task.boost >= 1){
                         task.boost --
                         if(!task.allocations || !Array.isArray(task.allocations)) {
-                          task.allocations = []
+                            task.allocations = []
                         }
                         let alreadyPointed = task.allocations.some(als => {
                           if (als.allocatedId === ev.allocatedId){

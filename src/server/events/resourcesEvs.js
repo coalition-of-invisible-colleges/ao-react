@@ -71,6 +71,15 @@ function bookCancelled(resourceId, bookTime, callback){
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function resourcePurged(resourceId, blame, callback) {
+  let newEvent = {
+    type: "resource-purged",
+    resourceId,
+    blame,
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 export default {
     resourceCreated,
     resourceUsed,
@@ -78,4 +87,5 @@ export default {
     resourceBooked,
     bookCancelled,
     resourceRemoved,
+    resourcePurged,
 }
