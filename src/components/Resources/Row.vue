@@ -7,13 +7,13 @@
                 img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
                 label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
                 label.stash(v-else) 0
-        button(@click='use("A")') A
-        button(@click='use("B")') B
-        button(@click='use("C")') C
-        button(@click='use("D")') D
-        button(@click='use("E")') E
-        button(@click='use("F")') F
-        button(@click='resourcePurged')
+        button(v-if='resourcePriorities.optionList.A' @click='use("A")'  :class='cardInputSty(resourcePriorities.colorList.A)') {{resourcePriorities.optionList.A}}
+        button(v-if='resourcePriorities.optionList.B' @click='use("B")'  :class='cardInputSty(resourcePriorities.colorList.B)') {{resourcePriorities.optionList.B}}
+        button(v-if='resourcePriorities.optionList.C' @click='use("C")'  :class='cardInputSty(resourcePriorities.colorList.C)') {{resourcePriorities.optionList.C}}
+        button(v-if='resourcePriorities.optionList.D' @click='use("D")'  :class='cardInputSty(resourcePriorities.colorList.D)') {{resourcePriorities.optionList.D}}
+        button(v-if='resourcePriorities.optionList.E' @click='use("E")'  :class='cardInputSty(resourcePriorities.colorList.E)') {{resourcePriorities.optionList.E}}
+        button(v-if='resourcePriorities.optionList.F' @click='use("F")'  :class='cardInputSty(resourcePriorities.colorList.F)') {{resourcePriorities.optionList.F}}
+        button(v-if='!isAnyOptions' @click='resourcePurged')
     .bottomleft(v-if='card.boost')
     .bottomright
     .clearboth
@@ -30,11 +30,72 @@ export default {
     props: ['r', 'c'],
     components: { Addr, PreviewDeck, Vouch},
     computed:{
+
+        isAnyOptions(){
+            return this.resourcePriorities.optionList.A || this.resourcePriorities.optionList.B || this.resourcePriorities.optionList.C || this.resourcePriorities.optionList.D || this.resourcePriorities.optionList.E || this.resourcePriorities.optionList.F
+        },
         card(){
             return this.$store.getters.hashMap[this.r.resourceId]
         },
+        resourcePriorities(){
+            let optionList = {
+                  A: '',
+                  B: '',
+                  C: '',
+                  D: '',
+                  E: '',
+                  F: ''
+            }
+            let colorList = {
+                A: '',
+                B: '',
+                C: '',
+                D: '',
+                E: '',
+                F: ''
+            }
+            this.card.priorities.forEach( taskId => {
+                let option = this.$store.getters.hashMap[taskId]
+                if(/^A/.test(option.name)) {
+                    optionList.A = option.name.slice(2)
+                    colorList.A = option.color
+                }
+                if(/^B/.test(option.name)) {
+                    optionList.B = option.name.slice(2)
+                    colorList.B = option.color
+                }
+                if(/^C/.test(option.name)) {
+                    optionList.C = option.name.slice(2)
+                    colorList.C = option.color
+                }
+                if(/^D/.test(option.name)) {
+                    optionList.D = option.name.slice(2)
+                    colorList.D = option.color
+                }
+                if(/^E/.test(option.name)) {
+                    optionList.E = option.name.slice(2)
+                    colorList.E = option.color
+                }
+                if(/^F/.test(option.name)) {
+                    optionList.F = option.name.slice(2)
+                    colorList.F = option.color
+                }
+            })
+
+            return {optionList, colorList}
+        }
     },
     methods: {
+        cardInputSty(color){
+          return {
+              redwx : color == 'red',
+              bluewx : color == 'blue',
+              greenwx : color == 'green',
+              yellowwx : color == 'yellow',
+              purplewx : color == 'purple',
+              blackwx : color == 'black',
+          }
+        },
         resourcePurged(){
             let newEv = {
                 type: 'resource-purged',
