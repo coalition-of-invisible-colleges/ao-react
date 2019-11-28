@@ -151,10 +151,10 @@ export default {
         },
         sendAllHodls() {
             let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)
-            this.$store.dispatch('makeEvent', { type: 'ao-relay', ev: { type: 'task-received', tasks: all} })
+            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
         },
         testCreate() {
-            this.$store.dispatch('makeEvent', { type: 'ao-relay', ev: { type: 'task-created', name: 'the test card 11111111' }})
+            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-created', name: 'the test card 11111111' }})
         }
     },
     computed: {
