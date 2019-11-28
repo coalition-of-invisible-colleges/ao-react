@@ -6,12 +6,12 @@
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .play(v-if='showPlay')
-        div(v-if='$store.getters.warpDrive > -1')
+        div(v-if='$store.state.upgrades.warp > -1')
             select(v-model='toGuildWarp')
                 option(disabled, value='') to mission
                 option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
             form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
-        select(v-model='toGuild')
+        select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
             template(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds')
                 option(:value="g.taskId") {{ g.guild }}
@@ -21,20 +21,20 @@
                         option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
         form-box.small( btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
     .give(v-if='showGive')
-        div(v-if='$store.getters.warpDrive > -1')
+        div(v-if='$store.state.upgrades.warp > -1')
             select(v-model='toMemberWarp')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
-            form-box.small(v-if='toMemberWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
-        select(v-model='toMember')
+            form-box.small(btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+        select(v-else  v-model='toMember')
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
         form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
     .warp(v-if='showWarp')
-        select(v-model='toAo'  ref='aoSelect')
+        select(v-model='toAo')
             option(disabled  value='') to AO
-            option(v-for='n in $store.state.ao', :value="n.address") {{ n.name }}
-        form-box.small(btntxt="set"  @click='setWarp')
+            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.address }}
+        button.small(@click='setWarp') set
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
@@ -162,13 +162,17 @@ export default {
             this.showWarp = !this.showWarp
         },
         setWarp(){
-            this.$store.commit('setWarp', this.$refs['aoSelect'].index)
+            console.log("this.toAo is ", this.toAo)
+            this.$store.commit('setWarp', this.toAo)
         },
         makeSound(){
             SoundFX.playBirdFlap()
         },
         sendAllHodls() {
             let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)
+            all.forEach(t => {
+                t.deck.length = 0
+            })
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
         },
         testCreate() {

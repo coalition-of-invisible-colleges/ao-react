@@ -5,7 +5,7 @@
         .six.columns
             h4 {{ $store.state.cash.alias }} Connection Info:
             h6 Address:
-                code(v-if='aoNamed.alias') {{ $store.state.cash.address }}
+                code(v-if='$store.state.cash.alias') {{ $store.state.cash.address }}
                 code(v-else) set an alias for this AO to display address
             h6 Connection Secret:
                 code {{ connectionString }}
