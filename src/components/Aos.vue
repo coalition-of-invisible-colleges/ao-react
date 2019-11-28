@@ -18,6 +18,10 @@
                 input#aoAddressInput(v-model='ao.address' type='text')
                 label(for="aoSecretInput")  connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
+        .clearboth
+            h4 Connected AOs
+            ul
+                li(v-for='$store.state.ao') {{ ao }}
     //- h4 current active links:
     //- .row
     //-     template.row(v-for='r in $store.state.ao')
@@ -143,4 +147,9 @@ select.form-control
     cursor: pointer
     color: red
 
+.clearboth
+    width: 40%
+    margin-left: 50%
+    transform: translateX(-50%)
+    clear: both
 </style>

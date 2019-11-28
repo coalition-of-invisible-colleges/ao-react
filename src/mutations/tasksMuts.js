@@ -407,6 +407,9 @@ function tasksMuts(tasks, ev) {
             }
 
             break
+        case "tasks-received":
+            tasks = tasks.concat(ev.tasks)
+        break
         case "task-allocated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {

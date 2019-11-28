@@ -30,6 +30,7 @@
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
         form-box.small( btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+    .warp(v-if='showWarp')
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
@@ -53,6 +54,7 @@ export default {
             showGive: false,
             showGuildCreate: false,
             showPlay: false,
+            showWarp: false,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -88,7 +90,9 @@ export default {
         })
 
         mc.on('tripletap', (e) => {
-            // catch for possible later addition. triple click to send to node?
+            SoundFX.playTickMark()
+            // this.toggleWarp()
+            this.testCreate()
             e.stopPropagation()
         })
 
@@ -144,6 +148,13 @@ export default {
         },
         makeSound(){
             SoundFX.playBirdFlap()
+        },
+        sendAllHodls() {
+            let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)
+            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
+        },
+        testCreate() {
+            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-created', name: 'the test card 11111111' }})
         }
     },
     computed: {

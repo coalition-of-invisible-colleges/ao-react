@@ -225,6 +225,15 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback){
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function tasksReceived(tasks, blame, callback) {
+  let newEvent = {
+    type: "tasks-received",
+    tasks,
+    blame,
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function taskAllocated(taskId, allocatedId, memberId, callback) {
   let newEvent = {
      type: "task-allocated",
