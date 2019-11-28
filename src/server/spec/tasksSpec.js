@@ -450,6 +450,19 @@ function specTaskSwapped(req, res, next){
   }
 }
 
+function specTasksReceived(req, res, next){
+  let errRes = []
+  if (true) {
+    events.tasksEvs.tasksReceived(
+      req.body.tasks,
+      req.body.blame,
+      utils.buildResCallback(res)
+    )
+  } else {
+    res.status(200).send(errRes)
+  }
+}
+
 function specTaskAllocated(req, res, next) {
   let errRes = []
   if (validators.isTaskId(req.body.taskId, errRes)) {

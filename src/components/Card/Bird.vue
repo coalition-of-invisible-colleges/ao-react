@@ -144,6 +144,10 @@ export default {
         },
         makeSound(){
             SoundFX.playBirdFlap()
+        },
+        sendAllHodls() {
+            let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)
+            this.$store.dispatch('makeEvent', { type: 'ao-relay', ev: { type: 'task-received', tasks: all} })
         }
     },
     computed: {
