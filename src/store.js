@@ -22,6 +22,8 @@ export default new Vuex.Store({
   },
   getters: {
       warpDrive(state, getters){
+          console.log("warp is ", state.upgrades.warp)
+          console.log("state is ", state.ao[state.upgrades.warp])
           return state.ao[state.upgrades.warp]
       },
       memberCard(state, getters){

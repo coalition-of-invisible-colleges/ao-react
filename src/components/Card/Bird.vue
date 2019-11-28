@@ -24,7 +24,7 @@
         div(v-if='$store.state.upgrades.warp > -1')
             select(v-model='toMemberWarp')
                 option(disabled, value='') to people
-                option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
+                option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             form-box.small(btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
         select(v-else  v-model='toMember')
             option(disabled, value='') to people

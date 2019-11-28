@@ -53,8 +53,8 @@ const mutations = {
     closeDimension(state) {
         state.dimension = false
     },
-    setWarp(state, address){
-        state.warp = address
+    setWarp(state, i){
+        state.warp = i
     },
     closeWarp(state){
         state.warp = -1
