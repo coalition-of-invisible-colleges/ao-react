@@ -29,8 +29,12 @@
         select(v-model='toMember')
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-        form-box.small( btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+        form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
     .warp(v-if='showWarp')
+        select(v-model='toAo'  ref='aoSelect')
+            option(disabled  value='') to AO
+            option(v-for='n in $store.state.ao', :value="n.address") {{ n.name }}
+        form-box.small(btntxt="set"  @click='setWarp')
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
@@ -92,7 +96,7 @@ export default {
         mc.on('tripletap', (e) => {
             SoundFX.playTickMark()
             // this.toggleWarp()
-            this.testCreate()
+            this.toggleWarp()
             e.stopPropagation()
         })
 
@@ -124,12 +128,17 @@ export default {
                 this.togglePlay()
                 return
             }
+            if(this.showWarp) {
+                this.toggleWarp()
+                return
+            }
             this.showGive = !this.showGive
         },
         toggleGuildCreate(){
             if(!this.showGuildCreate) {
                 this.showGive = false
                 this.showPlay = false
+                this.showWarp = false
             }
             this.showGuildCreate = !this.showGuildCreate
             if(this.showGuildCreate) {
@@ -140,11 +149,20 @@ export default {
             if(!this.showPlay) {
                 this.showGive = false
                 this.showGuildCreate = false
+                this.showWarp = false
             }
             this.showPlay = !this.showPlay
         },
-        setWarp(i){
-            this.$store.commit('setWarp', i)
+        toggleWarp(){
+            if(!this.showWarp) {
+                this.showGive = false
+                this.showGuildCreate = false
+                this.showPlay = false
+            }
+            this.showWarp = !this.showWarp
+        },
+        setWarp(){
+            this.$store.commit('setWarp', this.$refs['aoSelect'].index)
         },
         makeSound(){
             SoundFX.playBirdFlap()
@@ -289,10 +307,11 @@ label
 .smallguild:hover, .smallguild.open
     background-image: url('../../assets/images/badge_white.svg')
 
-.give, .play
+.give, .play, .warp
     position: relative
     top: 2em
     margin-bottom: 1em
+    padding-bottom: 1em
     width: 100%
 
 .theTitle
