@@ -21,7 +21,6 @@ function postEvent(address, secret, body, callback){
 }
 
 function getState(address, secret, callback){
-
   tr.request({
       url: 'http://' + address + '/state',
       headers: {"Authorization": secret},
@@ -37,7 +36,6 @@ function getState(address, secret, callback){
           console.log("also state resBody", resBody)
           callback(null, resBody)
   })
-
 }
 
 module.exports = {

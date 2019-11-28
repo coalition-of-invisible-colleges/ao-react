@@ -6,7 +6,8 @@
         img.doge(v-else-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
-            p {{ $store.state.cash.alias }}
+            p(v-if='$store.state.upgrades.warp > -1') {{ $store.getters.warpDrive.state.cash.alias }}
+            p(v-else) {{ $store.state.cash.alias }}
             p
                 span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
                 span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
@@ -78,7 +79,14 @@ export default {
         let dogeSwipeRight = new Hammer.Swipe()
         dogemc.add(dogeSwipeRight)
         dogemc.on('swiperight', (e) => {
-            Themes.nextTheme()
+            console.log("swiperight")
+            console.log("warp is ", this.$store.state.upgrades.warp + 1)
+            console.log("ao length is", this.$store.state.ao.length)
+            let both = (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
+            console.log("both is ", both)
+            console.log("ao state is ", this.$store.state.ao[both].state)
+            // Themes.nextTheme()
+            this.$store.commit('setWarp', (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length)
         })
     },
     data(){
