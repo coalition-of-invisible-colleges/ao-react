@@ -56,7 +56,6 @@ router.put('/sidewalk',(req, res) => {
             break
         case 'banner':
             show = writer.longBanner(req.body.banner.toUpperCase(), liiloo)
-            setStop()
             break
         case 'chill':
             show = shows.rainbowShow(liiloo, .69, 1111)

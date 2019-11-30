@@ -20,10 +20,29 @@ module.exports = function(req,res, next){
       case 'resource-booked':
           specResourceBooked(req, res, next)
           break
+      case 'resource-purged':
+          specResourcePurged(req, res, next)
+          break
       default:
           next()
   }
 }
+
+function specResourcePurged(req, res, next){
+  let errRes = []
+  if (
+    validators.isResourceId(req.body.resourceId, errRes)
+  ){
+    events.resourcesEvs.resourcePurged(
+      req.body.resourceId,
+      req.body.blame,
+      utils.buildResCallback(res)
+    )
+  } else {
+    res.status(400).send(errRes)
+  }
+}
+
 
 function specResourceCreated(req, res, next){
   let errRes = []

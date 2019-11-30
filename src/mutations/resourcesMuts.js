@@ -17,6 +17,13 @@ function resourcesMuts(resources, ev){
 				}
 			})
 			break
+		case "resource-purged":
+				resources.forEach( (r, i) => {
+						if (r.memberId === ev.memberId) {
+								resources.splice(i, 1)
+						}
+				})
+				break
 		case "resource-stocked":
 			resources.forEach( resource => {
 				if (resource.resourceId == ev.resourceId){

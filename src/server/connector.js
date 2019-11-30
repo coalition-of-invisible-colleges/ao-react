@@ -15,6 +15,7 @@ function postEvent(address, secret, body, callback){
               console.log("error res", err)
               return callback(err)
           }
+          console.log("got response from eventpost:", resBody)
           callback(resBody)
   })
 }
@@ -36,16 +37,6 @@ function getState(address, secret, callback){
           callback(null, resBody)
   })
 }
-
-// router.post('/connect', (req, res) => {
-//     post(req.body.address, req.body.secret, {
-//         type: 'ao-connected',
-//         address: req.body.address,
-//         secret:  req.body.secret
-//     })
-// })
-
-router.post('/relay', (req, res) => {})
 
 module.exports = {
     postEvent,

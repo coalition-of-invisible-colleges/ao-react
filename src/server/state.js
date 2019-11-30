@@ -136,7 +136,6 @@ function backupState(){
 
 function removeSensitive(ev){
       let secretStuff = ['fob', 'secret', 'token', 'email']
-
       if (ev.type === 'member-field-updated'){
           ['fob', 'secret', 'email'].forEach( str => {
               if (ev.field === str){
@@ -144,7 +143,6 @@ function removeSensitive(ev){
               }
           })
       }
-
       return _.omit(ev, secretStuff)
 }
 
