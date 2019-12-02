@@ -1,7 +1,8 @@
 <template lang='pug'>
 
 .memberrow.membershipcard
-    .row.center
+    bird(:b='card')
+    .row.center.clearboth
         img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
         label.hackername {{ m.name }}
@@ -32,10 +33,11 @@ import Badges from '../Members/Badges'
 import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
 import Vouch from '../Members/Vouch'
+import Bird from '../Card/Bird'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch},
+    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch, Bird},
     computed:{
         card(){
             return this.$store.getters.hashMap[this.m.memberId]
@@ -223,4 +225,7 @@ label
 
 ul.left
     text-align: left
+    
+.clearboth
+    clear: both
 </style>

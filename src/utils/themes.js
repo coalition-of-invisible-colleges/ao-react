@@ -3,7 +3,7 @@ let theme = themes[0]
 
 function setTheme(newTheme) {
     if(newTheme > themes.length) return
-    theme = themes[theme]
+    theme = themes[newTheme]
     console.log("theme set to ", theme)
 }
 
@@ -13,7 +13,17 @@ function nextTheme() {
     console.log("theme advanced to ", theme)
 }
 
+function imagesPath(depth) {
+	let up = ''
+	for(let i = 0; i < depth; i++) {
+		up += '../'
+	}
+	let path = up + 'assets/themes/' + theme + '/images/'
+	return path
+}
+
 export default {
     setTheme,
     nextTheme,
+    imagesPath,
 }

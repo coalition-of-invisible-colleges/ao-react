@@ -6,7 +6,7 @@
         img.doge(v-else-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
-            p(v-if='$store.state.upgrades.warp > -1') {{ $store.getters.warpDrive.state.cash.alias }}
+            p(v-if='$store.state.upgrades.warp > -1') {{ $store.getters.warpDrive.alias }}
             p(v-else) {{ $store.state.cash.alias }}
             p
                 span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
@@ -79,6 +79,10 @@ export default {
         let dogeSwipeRight = new Hammer.Swipe()
         dogemc.add(dogeSwipeRight)
         dogemc.on('swiperight', (e) => {
+            if(this.$store.state.ao.length < 1) {
+                SoundFX.playPortalBlocked()
+                return
+            }
             console.log("swiperight")
             console.log("warp is ", this.$store.state.upgrades.warp + 1)
             console.log("ao length is", this.$store.state.ao.length)

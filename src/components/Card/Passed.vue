@@ -15,11 +15,11 @@ div.totop(v-if='b.passed.length > 0')
     .row.pad(v-if='toMe.length > 0')
        .six.grid
            button.accept(@click='accept')
-               img.arrow.fr(src='../../assets/images/buddadoge.svg')
+               img.arrow.fr(src='../../assets/themes/dctrl/images/buddadoge.svg')
                span I Accept
        .six.grid
            button.dontaccept(@click='refuse')
-               img.arrow.fl(src='../../assets/images/buddadoge.svg')
+               img.arrow.fl(:src="require('../../assets/themes/dctrl/images/buddadoge.svg')")
                span I Do Not Accept
 </template>
 
@@ -27,6 +27,9 @@ div.totop(v-if='b.passed.length > 0')
 
 import request from 'superagent'
 import Current from '../Resources/Current'
+import Themes from '../../utils/themes'
+
+const buddadoge = require('../../assets/themes/dctrl/images/buddadoge.svg')
 
 export default {
     props: ['b'],
@@ -71,6 +74,10 @@ export default {
                 m = this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
             }
             return m
+        },
+        buddaDogePath() {
+            console.log("path is ", Themes.imagesPath(2) + 'buddadoge.svg')
+            return Themes.imagesPath(2) + 'buddadoge.svg'
         }
     }
 }
