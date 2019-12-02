@@ -3,32 +3,42 @@
 .AOs
     .row
         .six.columns
-            h4 {{ $store.state.cash.alias }} Connection Info:
-            h6 Address:
-                code(v-if='$store.state.cash.alias') {{ $store.state.cash.address }}
-                code(v-else) set an alias for this AO to display address
-            h6 Connection Secret:
-                code {{ connectionString }}
-            form-box(btntxt="rename"  event='ao-named'  v-bind:data='aoNamed')
+            h3 {{ $store.state.cash.alias }} Connection Info:
+            h4 Address:
+            code(v-if='$store.state.cash.alias') {{ $store.state.cash.address }}
+            code(v-else) set an alias for this AO to display address
+            h4 Connection Secret:
+            code {{ connectionString }}
+            form-box.topspace(btntxt="rename"  event='ao-named'  v-bind:data='aoNamed')
                 label(for="aoAliasInput") change ao alias:
                 input#aoAliasInput(v-model='aoNamed.alias' type='text')
         .six.columns
-            h4 Connect to AO
+            h3 Connect to AO
             form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
-                label(for="aoAddressInput") address:
+                label(for="aoAddressInput") address: 
                 input#aoAddressInput(v-model='ao.address' type='text')
-                label(for="aoSecretInput")  connection secret:
+                label(for="aoSecretInput")  connection secret: 
                 input#aoSecretInput(v-model='ao.secret' type='text')
         .clearboth
-            h4 Connected AOs
-            ul
-                li(v-for='$store.state.ao') {{ ao }}
+            h2 Connected AOs
+            div(v-for='r in $store.state.ao')
+                h2 {{ r.alias }}
+                    span.conn(@click='pollState(r.address)') update state
+                    span.discon(@click='discon(r.address)') delete connection
+                div {{ r.address }}
+                div
+                    span.padleft(v-if='r.state') connected
+                    span.padleft(v-else) disconnected
+                    span.padleft(v-if='r.lastAttemptSuccess') last request successful
+                        span.padleft(v-if='r.successes > 0') {{ r.successes}}
+                    span.padleft(v-else) last request unsuccessful
+                        span.padleft(v-if='r.fails > 0') {{ r.fails}}
     //- h4 current active links:
     //- .row
     //-     template.row(v-for='r in $store.state.ao')
     //-         // relay info / recent communications
     //-         h6 {{ r.address }} -
-    //-             span.discon(@click='discon(r.address)') disconnect
+    //-             
     //-         h6 attempts: {{ r.attempts }} -- successes: {{ r.successfuls }}, fails: {{ r.fails }}
     //-     template.row(v-for='a in $store.state.cash.subscribed')
     //-         p {{ a }}
@@ -64,6 +74,9 @@ export default {
                 type: 'ao-disconnected',
                 address,
             })
+        },
+        pollState(address) {
+            console.log("pollstate")
         },
         toggleGive(){
             this.showGive = !this.showGive
@@ -144,13 +157,33 @@ select.form-control
 .faded:hover
     opacity: 1
 
+.conn, .discon
+    font-size: 0.8em
+    margin-left: 0.5em
+    margin-right: 0.5em
+    
 .discon
     cursor: pointer
     color: red
 
+.conn
+    cursor: pointer
+    color: green
+    
 .clearboth
-    width: 40%
+    width: 50%
     margin-left: 50%
     transform: translateX(-50%)
     clear: both
+    margin-top: 1em
+    padding-top: 0.75em
+    
+code
+    word-wrap: break-word
+    
+.padleft
+    margin-left: 1em
+    
+.topspace
+    margin-top: 1em
 </style>

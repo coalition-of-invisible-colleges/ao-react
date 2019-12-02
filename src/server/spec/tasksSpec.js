@@ -70,6 +70,9 @@ module.exports = function(req,res, next){
       case 'invoice-created':
           specInvoiceCreated(req, res, next)
           break
+      case 'state-requested':
+          specStateRequested(req, res, next)
+          break
       default:
           next()
   }
@@ -475,4 +478,11 @@ function specTaskAllocated(req, res, next) {
   } else {
     res.status(200).send(errRes)
   }
+}
+
+import Connector from '../connector'
+
+function specStateRequested(req, res, next) {
+  let errRes = []
+  // Connector.getState(state.serverState.  state.serverState.)
 }

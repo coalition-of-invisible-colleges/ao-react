@@ -11,6 +11,7 @@
                 option(disabled, value='') to mission
                 option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
             form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+            .serverLabel on {{ $store.getters.warpDrive.address }}
         select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
             template(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds')
@@ -24,17 +25,24 @@
         div(v-if='$store.state.upgrades.warp > -1')
             select(v-model='toMemberWarp')
                 option(disabled, value='') to people
-                option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            form-box.small(btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
-        select(v-else  v-model='toMember')
-            option(disabled, value='') to people
-            option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-        form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+                option(v-for='n in $store.getters.warpDrive.members', :value="n.memberId") {{ n.name }}
+            button.small(btntxt='give'  event='testCreate'  @click='testCreate')
+            .serverLabel on {{ $store.getters.warpDrive.address }}
+        div(v-else)
+            select(  v-model='toMember')
+                option(disabled, value='') to people
+                option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
+            form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.address }}
+            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.alias }}
         button.small(@click='setWarp') set
+    .migrate(v-if='showMigrate')
+        select(v-model='toAo')
+            option(disabled  value='') to AO
+            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.address }}
+        button.small(@click='setWarp') send all cards
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
@@ -59,6 +67,7 @@ export default {
             showGuildCreate: false,
             showPlay: false,
             showWarp: false,
+            showMigrate: false,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -82,18 +91,26 @@ export default {
         doubleTap.requireFailure(tripleTap)
 
         mc.on('singletap', (e) => {
+            if(this.b.taskId === this.$store.getters.member.memberId) {
+                SoundFX.playTickMark()
+                this.toggleMigrate()
+                e.stopPropagation()
+                return
+            }
             SoundFX.playTickMark()
             this.toggleGive()
             e.stopPropagation()
         })
 
         mc.on('doubletap', (e) => {
+            if(this.b.taskId === this.$store.getters.member.memberId) return
             SoundFX.playTickMark()
             this.togglePlay()
             e.stopPropagation()
         })
 
         mc.on('tripletap', (e) => {
+            if(this.b.taskId === this.$store.getters.member.memberId) return
             SoundFX.playTickMark()
             // this.toggleWarp()
             this.toggleWarp()
@@ -101,6 +118,7 @@ export default {
         })
 
         mc.on('press', (e) => {
+            if(this.b.taskId === this.$store.getters.member.memberId) return
             SoundFX.playTickMark()
             this.toggleGuildCreate()
             e.stopPropagation()
@@ -160,6 +178,9 @@ export default {
                 this.showPlay = false
             }
             this.showWarp = !this.showWarp
+        },
+        toggleMigrate() {
+            this.showMigrate = !this.showMigrate
         },
         setWarp(){
             console.log("this.toAo is ", this.toAo)
@@ -311,7 +332,7 @@ label
 .smallguild:hover, .smallguild.open
     background-image: url('../../assets/images/badge_white.svg')
 
-.give, .play, .warp
+.give, .play, .warp, .migrate
     position: relative
     top: 2em
     margin-bottom: 1em
