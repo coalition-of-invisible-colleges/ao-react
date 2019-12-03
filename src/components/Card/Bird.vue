@@ -197,8 +197,11 @@ export default {
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
         },
         testCreate() {
-            let tasks = []
-            tasks.push(this.t)
+            let tasks = [this.b]
+
+            tasks[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
+            tasks[0].deck = []
+            console.log("trying to send tasks: " )
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: {
                 type: 'tasks-received', tasks }
             })
