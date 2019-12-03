@@ -11,7 +11,8 @@ const state = {
     bird: false,
     stacks: 1,
     warp: -1,
-    highlights: {}
+    highlights: {},
+    sierpinski: true,
 }
 
 const mutations = {
@@ -70,6 +71,9 @@ const mutations = {
             console.log("setting highlight")
             Vue.set(state.highlights, memberId, valence)
         }
+    },
+    toggleSierpinski(state, primed) {
+        state.sierpinski = !state.sierpinski
     }
 }
 

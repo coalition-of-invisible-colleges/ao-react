@@ -7,10 +7,13 @@
         img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
     .play(v-if='showPlay')
         div(v-if='$store.state.upgrades.warp > -1')
-            select(v-model='toGuildWarp')
+            select.shorten(v-model='toGuildWarp')
                 option(disabled, value='') to mission
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+            span.sierpinskiwrapper
+                sierpinski(:b='b'  ref='sierpinski')
+            .serverLabel on {{ $store.getters.warpDrive.address }}
             .serverLabel on {{ $store.getters.warpDrive.alias }}
         select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
@@ -23,23 +26,18 @@
         form-box.small( btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
     .give(v-if='showGive')
         div(v-if='$store.state.upgrades.warp > -1')
-            select(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
+            select.shorten(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            button.small(btntxt='give'  event='testCreate'  @click='testCreate') send
+            button.small(@click='give') send
+            span.sierpinskiwrapper
+                sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
-            img.sierpinski.adjtooltip(v-if='sierpinskiDrive'  src='../../assets/images/sierpinski_activated.svg'  @click='toggleSierpinskiDrive')
-            img.sierpinski.adjtooltip(v-else  src='../../assets/images/sierpinski.svg'  @click='toggleSierpinskiDrive')
-            .tooltiptext(v-if='$store.getters.member.muted')
-                p(v-if='!sierpinskiDrive') Sierpinski Drive Deactivated
-                p(v-if='!sierpinskiDrive') Only this card will send (not the cards within).
-                p(v-if='sierpinskiDrive') Sierpinski Jump Drive Activated
-                p(v-if='sierpinskiDrive') Send this card and all cards within it (and the cards within those).
         div(v-else)
             select(  v-model='toMember')
                 option(disabled, value='') to people
                 option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-            form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+            button.small(@click='give') give
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
@@ -60,11 +58,12 @@ import GuildCreate from '../forms/GuildCreate'
 import SoundFX from '../../utils/sounds'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
+import Sierpinski from './Sierpinski'
 
 export default {
     props: ['b', 'inId'],
     components: {
-        FormBox, GuildCreate
+        FormBox, GuildCreate, Sierpinski
     },
     data() {
         return {
@@ -78,7 +77,6 @@ export default {
             toMember: '',
             toGuild: '',
             toAo:'',
-            sierpinskiDrive: false,
         }
     },
     mounted() {
@@ -143,6 +141,8 @@ export default {
             console.log(this.phaseShift)
             e.stopPropagation()
         })
+
+        console.log("this.refs is ", this.$refs)
     },
     methods: {
         toggleGive(){
@@ -194,10 +194,6 @@ export default {
             console.log("this.toAo is ", this.toAo)
             this.$store.commit('setWarp', this.toAo)
         },
-        toggleSierpinskiDrive() {
-            console.log("toggled")
-            this.sierpinskiDrive = !this.sierpinskiDrive
-        },
         makeSound() {
             SoundFX.playBirdFlap()
         },
@@ -209,8 +205,43 @@ export default {
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
         },
         testCreate() {
-            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-created', name: 'the test card 11111111' }})
-        }
+            let tasks = [Object.assign({}, this.b)]
+
+            tasks[0].passed = [[this.$store.state.cash.address, this.$store.getters.member.memberId, this.toMemberWarp]]
+            tasks[0].deck = []
+            console.log("trying to send tasks: " , tasks)
+            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: {
+                type: 'tasks-received', tasks }
+            })
+        },
+        give() {
+            let found = []
+            let crawler = [ this.b ]
+            if($store.state.upgrades.sierpinski) {
+                let newCards = []
+                do {
+                    newCards = []
+                    crawler = _.filter(crawler, t => {
+                        if(found.indexOf(t) > -1) return false
+                        let task = this.$store.getters.hashMap[t]
+                        if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
+
+                        found.push(t)
+                        newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
+                        return true
+                    })
+                    crawler = newCards
+                } while(crawler.length > 0)
+            }
+            this.$store.dispatch('makeEvent', {
+                type: 'ao-relay',
+                address: this.$store.getters.warpDrive.address,
+                ev: {
+                    type: 'tasks-received',
+                    found
+                }
+            })
+        },
     },
     computed: {
         playInfo(){
@@ -276,10 +307,11 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours';
-@import '../../styles/skeleton';
-@import '../../styles/grid';
-@import '../../styles/button';
+@import '../../styles/colours'
+@import '../../styles/skeleton'
+@import '../../styles/grid'
+@import '../../styles/button'
+@import '../../styles/tooltips'
 
 .count
     float: right
@@ -304,12 +336,15 @@ export default {
 
 select
     background-color: lightteal
-    width: 80%
+    width: 70%
     margin-left: -1.5em
 
 select.form-control
     color: black
 
+select.shorten
+    width: 68%
+    
 .curs
     cursor: pointer;
 
@@ -359,8 +394,11 @@ label
 .small
     width: 19%
     display: inline-block
-
-.sierpinski
-    height: 1.5em
-    cursor: pointer
+    height: 2.3em
+    position: relative
+    top: -0.07em
+        
+.sierpinskiwrapper
+    padding-top: 0.2em
+    padding-left: 1em
 </style>

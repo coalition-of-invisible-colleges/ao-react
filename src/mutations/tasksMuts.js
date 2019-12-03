@@ -408,7 +408,8 @@ function tasksMuts(tasks, ev) {
 
             break
         case "tasks-received":
-            tasks = tasks.concat(ev.tasks)
+            console.log("rec tasks: ", ev)
+            ev.tasks.forEach(p => tasks.push(p))
         break
         case "task-allocated":
             tasks.forEach(task => {

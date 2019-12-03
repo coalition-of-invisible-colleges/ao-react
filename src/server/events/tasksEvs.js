@@ -277,4 +277,5 @@ export default {
   addressUpdated,
   invoiceCreated,
   taskBoostedLightning,
+  tasksReceived,
 }
