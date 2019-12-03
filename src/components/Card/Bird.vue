@@ -9,9 +9,9 @@
         div(v-if='$store.state.upgrades.warp > -1')
             select(v-model='toGuildWarp')
                 option(disabled, value='') to mission
-                option(v-for='n in $store.getters.warpMembers', :value="n.memberId") {{ n.name }}
+                option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
-            .serverLabel on {{ $store.getters.warpDrive.address }}
+            .serverLabel on {{ $store.getters.warpDrive.alias }}
         select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
             template(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds')
@@ -23,10 +23,10 @@
         form-box.small( btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
     .give(v-if='showGive')
         div(v-if='$store.state.upgrades.warp > -1')
-            select(v-model='toMemberWarp')
+            select(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
                 option(disabled, value='') to people
-                option(v-for='n in $store.getters.warpDrive.members', :value="n.memberId") {{ n.name }}
-            button.small(btntxt='give'  event='testCreate'  @click='testCreate')
+                option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
+            button.small(btntxt='give'  event='testCreate'  @click='testCreate') send
             .serverLabel on {{ $store.getters.warpDrive.address }}
         div(v-else)
             select(  v-model='toMember')
@@ -343,9 +343,9 @@ label
     position: absolute
     left: 3.3em
     top: 1.3em
-        
+
 .small
     width: 19%
     display: inline-block
-    
+
 </style>

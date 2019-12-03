@@ -27,13 +27,10 @@ function attachSocket(commit, dispatch){
                 dispatch('displayEvent', ev)
             })
         })
-
-        socket.on('disconnect', (reason)=> {
+        socket.on('disconnect', (reason) => {
             commit('setConnected', 'disconnected')
             commit('setConnectionError', 'disconnect: ' + reason)
-            //socket.open()
-       })
-
+        })
         socket.on('connect_error', (error)=> {
             commit('setConnectionError', error.message)
         })

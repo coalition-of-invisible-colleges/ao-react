@@ -18,7 +18,7 @@ function imagesPath(depth) {
 	for(let i = 0; i < depth; i++) {
 		up += '../'
 	}
-	let path = up + 'assets/themes/' + theme + '/images/'
+	let path = up + '' + theme + '/images/'
 	return path
 }
 

@@ -15,6 +15,7 @@ import Kefir from 'kefir'
 import cronStarter from './crons'
 import lightning from './lightning'
 import connector from   './connector'
+import { watchAos } from   './peerState'
 
 const app = express()
 applyRouter(app)
@@ -29,24 +30,9 @@ function startDctrlAo(){
       if (err) return console.log('state initialize failed:', err)
       console.log(Date.now() - start, ' ms to initialize')
 
-      console.log("fetching AO data")
-      state.serverState.ao.forEach(n => {
-          console.log("getting state for ", n.address)
-          connector.getState(n.address, n.secret, (err, s) => {
-              console.log("err, state is ", err, s)
-              console.log("assigning state")
-              state.pubState.ao.forEach(pn => {
-                  if(pn.address === n.address) {
-                      pn.state = s
-                      console.log("public state set for ", pn.address)
-                  }
-
-              })
-          })
-      })
-
       watchSpot()
       cronStarter()
+      watchAos()
 
       lightning.recordEveryInvoice(state.pubState.cash.pay_index)
       lightning.watchOnChain()

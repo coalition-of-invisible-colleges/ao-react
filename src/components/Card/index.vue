@@ -149,16 +149,11 @@ export default {
             }
         },
         copyCardToClipboard(){
-            //navigator.clipboard.writeText(this.b.name)
-            // navigator.permissions.query({name: "clipboard-write"}).then(result => {
-                // if (result.state == "granted" || result.state == "prompt") {
-                    navigator.clipboard.writeText(this.b.name).then(function() {
-                        SoundFX.playChunkSwap()
-                    }, function() {
-                        console.log("copy failed")
-                    })
-                // }
-            // })
+          console.log('attemt to copy, ', this.b.name)
+          navigator.clipboard.writeText(this.b.name)
+              .then(x => console.log('success', x))
+              .catch(err => console.log('fail', err))
+
         },
         deaction(){
           SoundFX.playPageTurn()
@@ -504,7 +499,7 @@ export default {
     float: right
     margin-left: 0.5em
     margin-bottom: 0.5em
-    
+
 .tally
     position: absolute
     right: 2.5em
