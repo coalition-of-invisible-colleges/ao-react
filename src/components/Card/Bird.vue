@@ -28,6 +28,13 @@
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             button.small(btntxt='give'  event='testCreate'  @click='testCreate') send
             .serverLabel on {{ $store.getters.warpDrive.address }}
+            img.sierpinski.adjtooltip(v-if='sierpinskiDrive'  src='../../assets/images/sierpinski_activated.svg'  @click='toggleSierpinskiDrive')
+            img.sierpinski.adjtooltip(v-else  src='../../assets/images/sierpinski.svg'  @click='toggleSierpinskiDrive')
+            .tooltiptext(v-if='$store.getters.member.muted')
+                p(v-if='!sierpinskiDrive') Sierpinski Drive Deactivated
+                p(v-if='!sierpinskiDrive') Only this card will send (not the cards within).
+                p(v-if='sierpinskiDrive') Sierpinski Jump Drive Activated
+                p(v-if='sierpinskiDrive') Send this card and all cards within it (and the cards within those).
         div(v-else)
             select(  v-model='toMember')
                 option(disabled, value='') to people
@@ -71,6 +78,7 @@ export default {
             toMember: '',
             toGuild: '',
             toAo:'',
+            sierpinskiDrive: false,
         }
     },
     mounted() {
@@ -182,11 +190,15 @@ export default {
         toggleMigrate() {
             this.showMigrate = !this.showMigrate
         },
-        setWarp(){
+        setWarp() {
             console.log("this.toAo is ", this.toAo)
             this.$store.commit('setWarp', this.toAo)
         },
-        makeSound(){
+        toggleSierpinskiDrive() {
+            console.log("toggled")
+            this.sierpinskiDrive = !this.sierpinskiDrive
+        },
+        makeSound() {
             SoundFX.playBirdFlap()
         },
         sendAllHodls() {
@@ -348,4 +360,7 @@ label
     width: 19%
     display: inline-block
 
+.sierpinski
+    height: 1.5em
+    cursor: pointer
 </style>
