@@ -12,7 +12,7 @@
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
             span.sierpinskiwrapper
-                sierpinski(:b='b'  ref='sierpinski')
+                sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
             .serverLabel on {{ $store.getters.warpDrive.alias }}
         select(v-else  v-model='toGuild')
@@ -216,29 +216,31 @@ export default {
         },
         give() {
             let found = []
-            let crawler = [ this.b ]
-            if($store.state.upgrades.sierpinski) {
+            if(this.$store.state.upgrades.sierpinski) {
+                let crawler = [ this.b.taskId ]
                 let newCards = []
                 do {
                     newCards = []
                     crawler = _.filter(crawler, t => {
-                        if(found.indexOf(t) > -1) return false
+                        if(found.some(t2 => { return t2.taskId === t })) return false
                         let task = this.$store.getters.hashMap[t]
                         if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
 
-                        found.push(t)
+                        found.push(task)
                         newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
                         return true
                     })
                     crawler = newCards
                 } while(crawler.length > 0)
+            } else {
+                found = [ this.b ]
             }
             this.$store.dispatch('makeEvent', {
                 type: 'ao-relay',
                 address: this.$store.getters.warpDrive.address,
                 ev: {
                     type: 'tasks-received',
-                    found
+                    tasks: found
                 }
             })
         },
