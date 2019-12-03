@@ -2,8 +2,6 @@ import _ from 'lodash'
 import crypto from 'crypto'
 const uuidV1 = require('uuid/v1')
 
-// import {applyEvent} from '../server/state'
-
 function aoMuts(aos, ev) {
     switch (ev.type) {
         case "ao-connected":
@@ -26,10 +24,8 @@ function aoMuts(aos, ev) {
             })
             break
         case "ao-relay-attempted":
-            console.log("relay attempted", ev)
             aos.forEach( (ao, i) => {
                 if (ao.address === ev.address) {
-                    console.log("address matched", ao)
                     ao.attempts ++
                     if (ev.successful){
                         ao.successfuls ++
@@ -38,7 +34,6 @@ function aoMuts(aos, ev) {
                         ao.fails ++
                         ao.lastAttemptSuccess = false
                     }
-                    console.log("link updated?", ao)
                 }
             })
             break

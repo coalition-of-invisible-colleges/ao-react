@@ -27,7 +27,7 @@
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             button.small(@click='testCreate') send
-            .serverLabel on {{ $store.getters.warpDrive.address }}
+            .serverLabel on {{ $store.getters.warpDrive.alias }}
         div(v-else)
             select(  v-model='toMember')
                 option(disabled, value='') to people
@@ -197,11 +197,11 @@ export default {
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
         },
         testCreate() {
-            let tasks = [this.b]
+            let tasks = [Object.assign({}, this.b)]
 
-            tasks[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
+            tasks[0].passed = [[this.$store.state.cash.address, this.$store.getters.member.memberId, this.toMemberWarp]]
             tasks[0].deck = []
-            console.log("trying to send tasks: " )
+            console.log("trying to send tasks: " , tasks)
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: {
                 type: 'tasks-received', tasks }
             })
