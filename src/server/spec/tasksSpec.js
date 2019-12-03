@@ -73,9 +73,22 @@ module.exports = function(req,res, next){
       case 'state-requested':
           specStateRequested(req, res, next)
           break
+      case 'tasks-received':
+          specTasksReceived(req, res, next)
+          break
       default:
           next()
   }
+}
+
+function specTasksReceived(req, res, next){
+    let errRes = []
+    console.log("tasks rec called: ", req.body)
+    if (true) { // XXX
+        events.tasksEvs.tasksReceived(req.body.tasks, req.body.blame, utils.buildResCallback(res))
+    } else {
+      res.status(200).send(errRes)
+    }
 }
 
 function specInvoiceCreated(req, res, next){
