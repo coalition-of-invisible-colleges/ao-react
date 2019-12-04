@@ -23,7 +23,7 @@
                     option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
                     template(v-for='sp in p.guilds')
                         option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
-        form-box.small( btntxt="play"  event='task-sub-tasked' v-bind:data='playInfo'  @click='makeSound')
+        form-box.small(btntxt="give"  event='task-passed' v-bind:data='playInfo'  @click='makeSound')
     .give(v-if='showGive')
         div(v-if='$store.state.upgrades.warp > -1')
             select.shorten(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
@@ -34,10 +34,10 @@
                 sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
         div(v-else)
-            select(  v-model='toMember')
+            select(v-model='toMember')
                 option(disabled, value='') to people
                 option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-            button.small(@click='give') give
+            form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
@@ -227,6 +227,7 @@ export default {
             })
         },
         give() {
+            this.makeSound()
             let found = []
             if(this.$store.state.upgrades.sierpinski) {
                 let crawler = [ this.b.taskId ]
