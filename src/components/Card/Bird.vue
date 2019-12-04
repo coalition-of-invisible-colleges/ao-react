@@ -207,7 +207,7 @@ export default {
         testCreate() {
             let tasks = [Object.assign({}, this.b)]
 
-            tasks[0].passed = [[this.$store.state.cash.address, this.$store.getters.member.memberId, this.toMemberWarp]]
+            tasks[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             tasks[0].deck = []
             console.log("trying to send tasks: " , tasks)
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: {
@@ -226,7 +226,27 @@ export default {
                         let task = this.$store.getters.hashMap[t]
                         if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
 
-                        found.push(task)
+                        let safeClone = {
+                            taskId: task.taskId,
+                            name: task.name,
+                            claimed: [],
+                            completed: task.completed,
+                            passed: [],
+                            guild: task.guild,
+                            subTasks: task.subTasks,
+                            lastClaimed: 0,
+                            book: task.book,
+                            priorities: task.priorities,
+                            deck: [],
+                            color: task.color,
+                            address: task.address,
+                            allocations: [],
+                            bolt11: task.bolt11,
+                            payment_hash: '',
+                            boost: 0,
+                        }
+                        console.log("safeClone is ", safeClone)
+                        found.push(safeClone)
                         newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
                         return true
                     })
@@ -235,6 +255,7 @@ export default {
             } else {
                 found = [ this.b ]
             }
+            found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             this.$store.dispatch('makeEvent', {
                 type: 'ao-relay',
                 address: this.$store.getters.warpDrive.address,
