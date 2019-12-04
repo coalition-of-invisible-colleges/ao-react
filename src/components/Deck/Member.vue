@@ -5,14 +5,14 @@
     .row.center.clearboth
         img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
-        label.hackername {{ m.name }}
+        label.hackername(:class='{ spacer: $store.state.upgrades.mode !== "doge" || $store.getters.contextCard.priorities.length < 1 }') {{ m.name }}
     .bottomleft(v-if='card.boost')
         img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
+    not-zen(v-if='$store.state.upgrades.mode === "doge" && dukkha >= 1')
     .bottomright
-        .adjtooltip
-            img.dogecoin(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
+        img.dogecoin.adjtooltip(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
         .tooltiptext.membertooltip
             .gui(v-if='m.active > 0') account is active
             .gui(v-else) account is inactive
@@ -34,10 +34,11 @@ import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
 import Vouch from '../Members/Vouch'
 import Bird from '../Card/Bird'
+import NotZen from '../Upgrades/NotZen'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch, Bird},
+    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch, Bird, NotZen},
     computed:{
         card(){
             return this.$store.getters.hashMap[this.m.memberId]
@@ -55,6 +56,9 @@ export default {
             return this.$store.getters.contextCard.deck.map(mId => {
                 return mId
             })
+        },
+        dukkha() {
+            return this.$store.getters.contextCard.priorities.length
         },
     },
     methods: {
@@ -116,10 +120,14 @@ label
     font-family: monospace
     font-size: 1.5em
 
+.spacer
+    margin-bottom: 3em
+    
 .membershipcard
     padding: 1em
     background: rgba(22, 22, 22, 0.2)
     text-align: center
+    position: relative
 
 .agedwrapper
     position: relative
@@ -169,17 +177,18 @@ label
 .smallguild
     height: 2em
 
-.bottomleft, .bottomright
+.bottomleft
+    float: left
     width: fit-content
     position: relative
     bottom: 0
-
-.bottomleft
-    float: left
     left: 0
 
 .bottomright
-    right: 0
+    width: fit-content
+    right: 1em
+    bottom: 0.65em
+    position: absolute
     float: right
 
 .stash

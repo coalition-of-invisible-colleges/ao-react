@@ -31,7 +31,6 @@ export default {
           try {
             recentMembers = this.$store.state.members.slice()
             recentMembers.sort((a, b) => {
-                console.log("sort. b is ", b.lastUsed, " and a is ", a.lastUsed)
                 return b.lastUsed - a.lastUsed
             })
           } catch (err){

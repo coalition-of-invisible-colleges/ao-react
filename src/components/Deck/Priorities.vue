@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .priorities
-    img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg')
+    img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg'  @click='$router.push("/doge")')
     template.clearboth(v-for='(t, i) of priorities'  :key='t')
       .row.priority
           .allocated(v-if='allocated(t) > 0'  :class='{ openallocated : $store.state.context.action }') {{ allocated(t) }}
@@ -202,6 +202,7 @@ img
     opacity: 0.8
     height: 17em
     margin-top: 1em
+    cursor: pointer
 
 .priority
     margin-left: 4em

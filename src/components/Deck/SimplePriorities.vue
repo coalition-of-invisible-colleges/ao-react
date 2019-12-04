@@ -1,9 +1,9 @@
 <template lang='pug'>
 
 .priorities
-    .empty(v-if='priorities.length < 1')
-        img.bdoge(src='../../assets/images/buddadoge.svg')
-    template.clearboth(v-for='(t, i) of priorities.slice(0, 5)'  :key='priorities')
+    .empty(v-if='priorities.length >= 1')
+        not-zen
+    template.clearboth(v-else  v-for='(t, i) of priorities.slice(0, 5)'  :key='priorities')
         simple-hyperpriority.front(:taskId='t'  :c='priorities'  :inId='taskId')
         .centerer
             .more(v-if='i === 4 && priorities.length > 5') +{{ priorities.length - 5 }}
@@ -13,6 +13,7 @@
 
 import Hypercard from '../Card'
 import SimpleHyperpriority from './SimplePriority'
+import NotZen from '../Upgrades/NotZen'
 
 export default {
   props: ['taskId'],
@@ -29,8 +30,7 @@ export default {
       }
   },
   components:{
-      SimpleHyperpriority,
-      Hypercard,
+      SimpleHyperpriority, Hypercard, NotZen,
   },
 }
 
