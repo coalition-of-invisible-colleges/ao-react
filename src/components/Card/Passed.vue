@@ -7,7 +7,7 @@ div.totop(v-if='b.passed.length > 0')
             .row.pad.centered
                 img.send(src='../../assets/images/birdbtn.svg')
                 span {{ b.passed.length}}
-        template(v-else   v-for='n in b.passed'  @click='toggleBird')
+        template(v-else  v-for='n in b.passed'  @click='toggleBird')
             .row.pad.centered
                 current(:memberId='n[0]')
                 img.send(src='../../assets/images/birdbtn.svg')

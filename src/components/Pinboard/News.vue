@@ -104,11 +104,6 @@ export default {
 @import '../../styles/button'
 @import '../../styles/breakpoints'
 
-.bounty:hover
-    border-style: dashed
-    border-width: 3px
-    border-color: yellow
-
 h1
     text-align: center
     color: yellow

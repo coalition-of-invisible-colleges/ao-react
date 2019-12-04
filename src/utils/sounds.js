@@ -111,7 +111,7 @@ function playChunkSwap() {
 
 function playBirdFlap() {
     if(Store.getters.member.muted) return
-    let flutter = new Audio(require('../assets/sounds/birdsflap.mp3'))
+    let flutter = new Audio(require('../assets/sounds/birdsflap.wav'))
     flutter.volume = flutter.volume * 0.4
     flutter.play()
 }

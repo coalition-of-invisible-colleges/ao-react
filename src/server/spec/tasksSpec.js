@@ -85,7 +85,10 @@ function specTasksReceived(req, res, next){
     let errRes = []
     console.log("tasks rec called: ", req.body)
     if (true) { // XXX
-        events.tasksEvs.tasksReceived(req.body.tasks, req.body.blame, utils.buildResCallback(res))
+        events.tasksEvs.tasksReceived(
+          req.body.tasks,
+          req.body.blame,
+          utils.buildResCallback(res))
     } else {
       res.status(200).send(errRes)
     }

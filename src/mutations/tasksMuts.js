@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import crypto from 'crypto'
+import cryptoUtils from '../crypto'
 const uuidV1 = require('uuid/v1')
 
 function tasksMuts(tasks, ev) {
@@ -409,8 +409,28 @@ function tasksMuts(tasks, ev) {
             break
         case "tasks-received":
             console.log("rec tasks: ", ev)
-            ev.tasks.forEach(p => tasks.push(p))
-        break
+            ev.tasks.forEach(p => {
+                if(!tasks.some(t => {
+                    if(cryptoUtils.createHash(p.name.trim()) === cryptoUtils.createHash(t.name.trim())) {
+                        // safely merge in the card
+                        t.color = p.color
+                        t.guild = p.guild
+                        t.book = p.book
+                        t.address = p.address
+                        t.bolt11 = p.bolt11
+                        t.subTasks = _.union(t.subTasks, p.subTasks)
+                        t.priorities = _.union(t.priorities, p.priorities)
+                        t.completed = _.union(t.completed, p.completed)
+                        console.log("merged in card ", t.name)
+                        return true
+                    }
+                })) {
+                    console.log("added card")
+                    // type check and purge extra fields here for security
+                    tasks.push(p)
+                }
+            })
+            break
         case "task-allocated":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {

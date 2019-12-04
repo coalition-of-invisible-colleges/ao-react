@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.bird
+.bird(ref='wholeBird')
     div(ref='bird')
         div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
@@ -142,6 +142,18 @@ export default {
             e.stopPropagation()
         })
 
+        let wholeel = this.$refs.wholeBird
+        if(!wholeel) return
+        let wholemc = Propagating(new Hammer.Manager(wholeel))
+
+        let wholeLongPress = new Hammer.Press({ time: 400 })
+
+        wholemc.add([wholeLongPress])
+
+        wholemc.on('press', (e) => {
+            e.stopPropagation()
+        })
+
         console.log("this.refs is ", this.$refs)
     },
     methods: {
@@ -226,6 +238,7 @@ export default {
                         let task = this.$store.getters.hashMap[t]
                         if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
 
+                        // type check all this
                         let safeClone = {
                             taskId: task.taskId,
                             name: task.name,
@@ -256,12 +269,13 @@ export default {
                 found = [ this.b ]
             }
             found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
+            console.log("found is ", found)
             this.$store.dispatch('makeEvent', {
                 type: 'ao-relay',
                 address: this.$store.getters.warpDrive.address,
                 ev: {
                     type: 'tasks-received',
-                    tasks: found
+                    tasks: found,
                 }
             })
         },
