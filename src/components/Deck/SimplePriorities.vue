@@ -158,7 +158,6 @@ img
     z-index: 9001
 
 .empty
-    height: 3em
     padding-top: 0.6em
     padding-bottom: 0.2em
 
