@@ -149,6 +149,7 @@ export default {
             }
         },
         copyCardToClipboard(){
+          SoundFX.playChunkSwap()
           console.log('attemt to copy, ', this.b.name)
           navigator.clipboard.writeText(this.b.name)
               .then(x => console.log('success', x))
