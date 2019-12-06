@@ -154,6 +154,7 @@ function specAoDisconnected(req, res, next){
     if (
       validators.isAddress(req.body.address, errRes)
     ){
+      console.log("making disconnected ev")
       events.aoEvs.aoDisconnected(
         req.body.address,
         utils.buildResCallback(res)
@@ -182,8 +183,8 @@ function specAOConnect(req, res, next){
       )
       connector.postEvent(req.body.address, req.body.secret, {
           type: 'ao-subscribed',
-          address: req.body.address,
-          secret: req.body.secret,
+          address: state.serverState.cash.address,
+          secret: req.body.secret, //
       }, (err, res) => {
           console.log('subscription requested', {err, res})
       })
