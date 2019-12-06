@@ -185,6 +185,14 @@ export default {
         })
     },
     methods: {
+        setToRoute() {
+            let mainroute = this.$router.currentRoute.path.split('/')[1]
+            switch (mainroute){
+              case "front": return this.showImg = "sun"
+              case "dash": return this.showImg = "bull"
+              default: return this.showImg = "uni"
+            }
+        },
         goUni(mode, silent = false) {
             if(Dimensions.isDeck(this.$router, mode)) {
                 if(!silent) {

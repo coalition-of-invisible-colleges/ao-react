@@ -4,7 +4,7 @@
     div(ref='bird')
         div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
         img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
-        img.birdy(v-else, src='../../assets/images/birdbtnselected.svg')
+        img.birdy(v-else  src='../../assets/images/birdbtnselected.svg')
     .play(v-if='showPlay')
         div(v-if='$store.state.upgrades.warp > -1')
             select.shorten(v-model='toGuildWarp')
@@ -43,11 +43,6 @@
             option(disabled  value='') to AO
             option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.alias }}
         button.small(@click='setWarp') set
-    .migrate(v-if='showMigrate')
-        select(v-model='toAo')
-            option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.address }}
-        button.small(@click='setWarp') send all cards
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
@@ -56,6 +51,7 @@
 import FormBox from '../slotUtils/FormBox'
 import GuildCreate from '../forms/GuildCreate'
 import SoundFX from '../../utils/sounds'
+import Cards from '../../utils/cards'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import Sierpinski from './Sierpinski'
@@ -73,7 +69,6 @@ export default {
             showGuildCreate: false,
             showPlay: false,
             showWarp: false,
-            showMigrate: false,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -97,12 +92,6 @@ export default {
         doubleTap.requireFailure(tripleTap)
 
         mc.on('singletap', (e) => {
-            if(this.b.taskId === this.$store.getters.member.memberId) {
-                SoundFX.playTickMark()
-                this.toggleMigrate()
-                e.stopPropagation()
-                return
-            }
             SoundFX.playTickMark()
             this.toggleGive()
             e.stopPropagation()
@@ -116,7 +105,6 @@ export default {
         })
 
         mc.on('tripletap', (e) => {
-            if(this.b.taskId === this.$store.getters.member.memberId) return
             SoundFX.playTickMark()
             // this.toggleWarp()
             this.toggleWarp()
@@ -199,9 +187,6 @@ export default {
             }
             this.showWarp = !this.showWarp
         },
-        toggleMigrate() {
-            this.showMigrate = !this.showMigrate
-        },
         setWarp() {
             console.log("this.toAo is ", this.toAo)
             this.$store.commit('setWarp', this.toAo)
@@ -230,37 +215,30 @@ export default {
             this.makeSound()
             let found = []
             if(this.$store.state.upgrades.sierpinski) {
-                let crawler = [ this.b.taskId ]
+                let crawler = []
+                if(this.b.taskId === this.$store.getters.member.memberId) {
+                    this.$store.state.tasks.forEach(t => {
+                        if(t.deck.indexOf(this.$store.getters.member.memberId) > -1) {
+                            crawler.push(t.taskId)
+                        }
+                    })
+                } else {
+                    crawler = [ this.b.taskId ]
+                }
                 let newCards = []
                 do {
                     newCards = []
                     crawler = _.filter(crawler, t => {
-                        if(found.some(t2 => { return t2.taskId === t })) return false
+                        if(found.some(t2 => {
+                            if(!t2 || !t2.taskId) return false
+                            return t2.taskId === t
+                        })) {
+                            return false
+                        }
                         let task = this.$store.getters.hashMap[t]
                         if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
 
-                        // type check all this
-                        let safeClone = {
-                            taskId: task.taskId,
-                            name: task.name,
-                            claimed: [],
-                            completed: task.completed,
-                            passed: [],
-                            guild: task.guild,
-                            subTasks: task.subTasks,
-                            lastClaimed: 0,
-                            book: task.book,
-                            priorities: task.priorities,
-                            deck: [],
-                            color: task.color,
-                            address: task.address,
-                            allocations: [],
-                            bolt11: task.bolt11,
-                            payment_hash: '',
-                            boost: 0,
-                        }
-                        console.log("safeClone is ", safeClone)
-                        found.push(safeClone)
+                        found.push(Cards.safeClone(task))
                         newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
                         return true
                     })
@@ -269,16 +247,38 @@ export default {
             } else {
                 found = [ this.b ]
             }
+            if(this.b.taskId === this.$store.getters.member.memberId) {
+                let envelope = Cards.safeClone(this.$store.getters.memberCard)
+                envelope.name = this.$store.getters.member.name
+                // envelope.subTasks = found
+                found.splice(0, 0, envelope)
+            }
             found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             console.log("found is ", found)
-            this.$store.dispatch('makeEvent', {
-                type: 'ao-relay',
-                address: this.$store.getters.warpDrive.address,
-                ev: {
-                    type: 'tasks-received',
-                    tasks: found,
+            if(found.length > 20) {
+                let next100 = found.splice(0, 20)
+                while(next100.length > 0) {
+                    console.log("next100 is ", next100)
+                    this.$store.dispatch('makeEvent', {
+                        type: 'ao-relay',
+                        address: this.$store.getters.warpDrive.address,
+                        ev: {
+                            type: 'tasks-received',
+                            tasks: next100,
+                        }
+                    })
+                    next100 = found.splice(0, 20)
                 }
-            })
+            } else {
+                this.$store.dispatch('makeEvent', {
+                    type: 'ao-relay',
+                    address: this.$store.getters.warpDrive.address,
+                    ev: {
+                        type: 'tasks-received',
+                        tasks: found,
+                    }
+                })
+            }
         },
     },
     computed: {
@@ -417,7 +417,7 @@ label
 .smallguild:hover, .smallguild.open
     background-image: url('../../assets/images/badge_white.svg')
 
-.give, .play, .warp, .migrate
+.give, .play, .warp
     position: relative
     top: 2em
     margin-bottom: 1em

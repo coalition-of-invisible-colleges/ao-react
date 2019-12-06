@@ -421,6 +421,7 @@ function tasksMuts(tasks, ev) {
                         t.subTasks = _.union(t.subTasks, p.subTasks)
                         t.priorities = _.union(t.priorities, p.priorities)
                         t.completed = _.union(t.completed, p.completed)
+                        t.passed = p.passed
                         console.log("merged in card ", t.name)
                         return true
                     }
