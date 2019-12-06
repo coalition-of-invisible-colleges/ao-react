@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .priorities
-    .empty(v-if='$store.getters.contextCard.taskId === taskId && priorities.length >= 1')
+    .empty(v-if='($store.getters.contextCard.taskId === taskId && priorities.length >= 1) || priorities.length === 0')
         not-zen
     template.clearboth(v-else  v-for='(t, i) of priorities.slice(0, 5)'  :key='priorities')
         simple-hyperpriority.front(:taskId='t'  :c='priorities'  :inId='taskId')

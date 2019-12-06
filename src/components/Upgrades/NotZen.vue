@@ -8,6 +8,7 @@
 export default {
     computed:{
         dukkha() {
+            if(this.$store.getters.contextCard.priorities.length === 0) return ''
             return this.$store.getters.contextCard.priorities.length
         },
     },
