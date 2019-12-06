@@ -15,9 +15,9 @@
         .six.columns
             h3 Connect to AO
             form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
-                label(for="aoAddressInput") address: 
+                label(for="aoAddressInput") address:
                 input#aoAddressInput(v-model='ao.address' type='text')
-                label(for="aoSecretInput")  connection secret: 
+                label(for="aoSecretInput")  connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
         .clearboth
             h2 Connected AOs
@@ -30,15 +30,18 @@
                     span.padleft(v-if='r.state') connected
                     span.padleft(v-else) disconnected
                     span.padleft(v-if='r.lastAttemptSuccess') last request successful
-                        span.padleft(v-if='r.successes > 0') {{ r.successes}}
+                        span.padleft(v-if='r.successes > 0') {{ r.successes }}
                     span.padleft(v-else) last request unsuccessful
                         span.padleft(v-if='r.fails > 0') {{ r.fails}}
+            div(v-for='s in $store.state.cash.subscribed')
+                span.conn {{ s.address }}
+                span(@click='discon(s.address)').discon delete subscription
     //- h4 current active links:
     //- .row
     //-     template.row(v-for='r in $store.state.ao')
     //-         // relay info / recent communications
     //-         h6 {{ r.address }} -
-    //-             
+    //-
     //-         h6 attempts: {{ r.attempts }} -- successes: {{ r.successfuls }}, fails: {{ r.fails }}
     //-     template.row(v-for='a in $store.state.cash.subscribed')
     //-         p {{ a }}
@@ -70,6 +73,7 @@ export default {
     components: { FormBox },
     methods: {
         discon(address){
+            console.log("try diconnection", address)
             this.$store.dispatch("makeEvent", {
                 type: 'ao-disconnected',
                 address,
@@ -161,7 +165,7 @@ select.form-control
     font-size: 0.8em
     margin-left: 0.5em
     margin-right: 0.5em
-    
+
 .discon
     cursor: pointer
     color: red
@@ -169,7 +173,7 @@ select.form-control
 .conn
     cursor: pointer
     color: green
-    
+
 .clearboth
     width: 50%
     margin-left: 50%
@@ -177,13 +181,13 @@ select.form-control
     clear: both
     margin-top: 1em
     padding-top: 0.75em
-    
+
 code
     word-wrap: break-word
-    
+
 .padleft
     margin-left: 1em
-    
+
 .topspace
     margin-top: 1em
 </style>

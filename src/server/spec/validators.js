@@ -46,7 +46,7 @@ module.exports = {
       return true // XXX
   },
   isAddress(val, errRes){
-      return state.pubState.ao.some(a => a.address === val) // XXX
+      return true // XXX
   },
   isMemberId(val, errRes){
       let result = false

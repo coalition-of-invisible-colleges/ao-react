@@ -113,16 +113,11 @@ export default {
           })
       },
       copyCardToClipboard(){
-          //navigator.clipboard.writeText(this.b.name)
-          // navigator.permissions.query({name: "clipboard-write"}).then(result => {
-              // if (result.state == "granted" || result.state == "prompt") {
-                  navigator.clipboard.writeText(this.b.name).then(function() {
-                      SoundFX.playChunkSwap()
-                  }, function() {
-                      console.log("copy failed")
-                  })
-              // }
-          // })
+          navigator.clipboard.writeText(this.card.name).then(function() {
+              SoundFX.playChunkSwap()
+          }, function() {
+              console.log("copy failed")
+          })
       },
     },
     computed: {
@@ -272,7 +267,7 @@ img
     position: relative
     z-index: 100
     max-width: 100%
-    
+
 .checkmark
     font-size: 1.58em
     float: right
@@ -283,7 +278,7 @@ img
     cursor: pointer
     color: white
     z-index: 105
-    
+
 .tally.right.front.lesspadding
     padding-right: 0
 </style>
