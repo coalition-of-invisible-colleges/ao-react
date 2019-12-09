@@ -107,11 +107,13 @@ export default {
         sunQuadrupleTap.requireFailure(sunQuintupleTap)
 
         sunmc.on('tap', (e) => {
+            console.log("sun tap")
             if(!this.isSun()) {
                 this.goFront(this.$store.state.upgrades.mode)
 
             } else {
                 this.nextMode()
+                this.goFront(this.$store.state.upgrades.mode)
             }
             e.stopPropagation()
         })
@@ -163,11 +165,12 @@ export default {
         bullQuadrupleTap.requireFailure(bullQuintupleTap)
 
         bullmc.on('tap', (e) => {
-            console.log("single click")
+            console.log("single click bull")
             if(!this.isBull()) {
                 this.goDash(this.$store.state.upgrades.mode)
             } else {
                 this.nextMode()
+                this.goDash(this.$store.state.upgrades.mode)
             }
             e.stopPropagation()
         })
@@ -253,38 +256,30 @@ export default {
             }, 20)
         },
         goFront(mode) {
-            if(Dimensions.isFront(this.$router, mode)) {
-                SoundFX.playPortalBlocked()
-                return
-            }
+            this.$store.commit('startLoading', 'sun-' + mode)
             if(mode === 'doge') {
                 SoundFX.playDogeBark()
             } else {
                 SoundFX.playCaChunk()
             }
-            this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + mode)
-            setTimeout(() => {
-                this.setToRoute()
-                this.uniLeft = !this.uniLeft
-            }, 20)
+            // setTimeout(() => {
+            //     this.setToRoute()
+            //     this.uniLeft = !this.uniLeft
+            // }, 20)
         },
         goDash(mode) {
-            if(Dimensions.isDash(this.$router, mode)) {
-                SoundFX.playPortalBlocked()
-                return
-            }
+            this.$store.commit('startLoading', 'bull-' + mode)
             if(mode === 'doge') {
                 SoundFX.playBullRoar()
             } else {
                 SoundFX.playCaChunk()
             }
-            this.$store.commit('startLoading', 'bull')
             this.$router.push('/dash/' + mode)
-            setTimeout(() => {
-                this.setToRoute()
-                this.uniRight = !this.uniRight
-            }, 20)
+            // setTimeout(() => {
+            //     this.setToRoute()
+            //     this.uniRight = !this.uniRight
+            // }, 20)
         },
         setToRoute() {
             let mainroute = this.$router.currentRoute.path.split('/')[1]
@@ -318,7 +313,8 @@ export default {
         },
         nextMode() {
             SoundFX.playCaChunk()
-            HelmControl.nextUpgradeMode(this.$router)
+            this.$store.commit('nextMode')
+
         },
     },
 }
