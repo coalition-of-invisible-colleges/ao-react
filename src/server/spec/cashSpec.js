@@ -167,30 +167,31 @@ function specAoDisconnected(req, res, next){
 function specAOConnect(req, res, next){
   let errRes = []
   console.log('attempt post to ', req.body.address)
-
-  connector.getState(req.body.address, req.body.secret, (err, response) => {
-      if (err) {
-          return console.log(err)
-      }
-      console.log("got state:", {response})
-
+  connector.postEvent(req.body.address, req.body.secret, {
+      type: 'ao-subscribed',
+      address: state.serverState.cash.address,
+      secret: req.body.secret, //
+  }, (err, res) => {
+      console.log('subscription requested', {err, res})
       console.log('ao-connected', req.body.address, req.body.secret)
       events.aoEvs.aoConnected(
         req.body.address,
         req.body.secret,
-        response,
         utils.buildResCallback(res)
       )
-      connector.postEvent(req.body.address, req.body.secret, {
-          type: 'ao-subscribed',
-          address: state.serverState.cash.address,
-          secret: req.body.secret, //
-      }, (err, res) => {
-          console.log('subscription requested', {err, res})
+
+      console.log("ao subscribed now try to initialize")
+      connector.getState(req.body.address, req.body.secret, (err, response) => {
+        if (err) {
+          return console.log(err)
+        }
+        console.log("got state:", {response})
+        events
+
+
       })
-
-
-
   })
+
+
 
 }

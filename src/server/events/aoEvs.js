@@ -10,12 +10,11 @@ function aoSubscribed(address, secret, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoConnected(address, secret, state, callback) {
+function aoConnected(address, secret, callback) {
     let newEvent = {
         type: "ao-connected",
         address,
         secret,
-        state,
     }
     dctrlDb.insertEvent(newEvent, callback)
 }
