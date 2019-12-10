@@ -41,7 +41,7 @@
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.alias }}
+            option(v-for='(n, i) in $store.state.ao'  v-if='n.state && n.state.cash.alias'  :value='i') {{ n.state.cash.alias }}
         button.small(@click='setWarp') set
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>

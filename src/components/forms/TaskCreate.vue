@@ -2,7 +2,7 @@
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
-          textarea#card.fwi(v-model='task.name' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false').paperwrapper
+          textarea#card.fwi(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false').paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi create card
     .label
@@ -300,6 +300,14 @@ export default {
                 purplewx : this.task.color == 'purple',
                 blackwx : this.task.color == 'black',
             }
+        },
+        debouncedName: {
+            get() {
+                return this.task.name;
+            },
+            set: _.debounce(function(newValue) {
+                this.task.name = newValue;
+            }, 400)
         },
     }
 }

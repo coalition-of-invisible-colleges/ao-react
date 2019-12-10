@@ -25,6 +25,7 @@ export default {
   },
   mounted(){
       this.$store.commit('stopLoading')
+      console.log("refs is ", this.$refs.flickity)
   },
   methods:{
       cardAge(t){

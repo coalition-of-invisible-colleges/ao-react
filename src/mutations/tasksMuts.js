@@ -277,6 +277,12 @@ function tasksMuts(tasks, ev) {
                     })
                 }
                 if (task.taskId === ev.taskId) {
+                    task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
+                    if(task.deck.indexOf(ev.memberId) === -1) {
+                        if(ev.taskId !== ev.memberId && ev.memberId) {
+                            task.deck.push(ev.memberId)
+                        }
+                    }
                     if(task.claimed.indexOf(ev.memberId) === -1) {
                         task.claimed.push(ev.memberId)
                     }

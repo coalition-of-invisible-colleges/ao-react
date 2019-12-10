@@ -1,8 +1,8 @@
 <template lang='pug'>
 
 .priorities
-    .empty(v-if='($store.getters.contextCard.taskId === taskId && priorities.length >= 1) || priorities.length === 0')
-        not-zen
+    .empty(v-if='(isSun && taskId === $store.getters.member.memberId) || (isUni && taskId === $store.getters.contextCard.taskId && priorities.length >= 1) || priorities.length === 0')
+        not-zen(:taskId='taskId')
     template.clearboth(v-else  v-for='(t, i) of priorities.slice(0, 5)'  :key='priorities')
         simple-hyperpriority.front(:taskId='t'  :c='priorities'  :inId='taskId')
         .centerer
@@ -14,19 +14,26 @@
 import Hypercard from '../Card'
 import SimpleHyperpriority from './SimplePriority'
 import NotZen from '../Upgrades/NotZen'
+import Dimensions from '../../utils/dimensions'
 
 export default {
   props: ['taskId'],
   computed: {
-      card(){
+      card() {
           return this.$store.getters.hashMap[this.taskId]
       },
-      priorities(){
+      priorities() {
           let p = []
           if ( this.card && this.card.priorities.length > 0){
               p = this.card.priorities.slice().reverse()
           }
           return p
+      },
+      isSun() {
+          return Dimensions.isSun(this.$router)
+      },
+      isUni() {
+          return Dimensions.isUni(this.$router)
       }
   },
   components:{

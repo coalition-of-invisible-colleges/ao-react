@@ -58,7 +58,8 @@ export default {
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
             HelmControl.flashHelm()
-            this.nextMode()
+            SoundFX.playCaChunk()
+            HelmControl.previousUpgradeMode(this.$router)
             e.stopPropagation()
         })
 

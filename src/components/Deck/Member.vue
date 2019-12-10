@@ -2,7 +2,7 @@
 
 .memberrow.membershipcard
     bird(:b='card')
-    .row.center.clearboth
+    .row.center.clearboth(:class='{ pullup : $store.state.upgrades.mode !== "boat" && $store.state.upgrades.mode !== "doge" && dukkha >= 1 }')
         img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
         label.hackername(:class='{ spacer: $store.state.upgrades.mode !== "doge" || $store.getters.contextCard.priorities.length < 1 }') {{ m.name }}
@@ -10,7 +10,7 @@
         img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
-    not-zen(v-if='$store.state.upgrades.mode === "doge" && dukkha >= 1')
+    not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
     .bottomright
         img.dogecoin.adjtooltip(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
         .tooltiptext.membertooltip
@@ -237,4 +237,7 @@ ul.left
     
 .clearboth
     clear: both
+    
+.pullup
+    margin-bottom: -2em
 </style>

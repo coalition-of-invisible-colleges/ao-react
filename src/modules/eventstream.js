@@ -5,6 +5,7 @@ let memes = [
     'much store',
     'wow',
     'very happen',
+    'much do',
 ]
 
 let colors = [
