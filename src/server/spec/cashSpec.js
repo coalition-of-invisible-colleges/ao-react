@@ -171,25 +171,16 @@ function specAOConnect(req, res, next){
       type: 'ao-subscribed',
       address: state.serverState.cash.address,
       secret: req.body.secret, //
-  }, (err, res) => {
-      console.log('subscription requested', {err, res})
-      console.log('ao-connected', req.body.address, req.body.secret)
+  }, (subscriptionResponse) => {
+      if (!subscriptionResponse.lastInsertRowid){
+          return res.status(200).send(['ao-connect failed'])
+      }
+      console.log('subscribe success, attempt ao connect')
       events.aoEvs.aoConnected(
         req.body.address,
         req.body.secret,
         utils.buildResCallback(res)
       )
-
-      console.log("ao subscribed now try to initialize")
-      connector.getState(req.body.address, req.body.secret, (err, response) => {
-        if (err) {
-          return console.log(err)
-        }
-        console.log("got state:", {response})
-        events
-
-
-      })
   })
 
 

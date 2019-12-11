@@ -15,7 +15,6 @@ function postEvent(address, secret, body, callback){
               console.log("error res", err)
               return callback(err)
           }
-          console.log("got response from eventpost:", resBody)
           callback(resBody)
   })
 }

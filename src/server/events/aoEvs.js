@@ -16,6 +16,7 @@ function aoConnected(address, secret, callback) {
         address,
         secret,
     }
+    console.log("why no emit db insert called?", {newEvent})
     dctrlDb.insertEvent(newEvent, callback)
 }
 
