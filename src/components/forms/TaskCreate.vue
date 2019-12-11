@@ -18,23 +18,24 @@
               img.agedbackground
             button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
               img.agedbackground
-    .scrollbarwrapper(v-show='showCreate && task.name.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0')
+    .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
         .searchresults
             .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
                 img.smallguild(src='../../assets/images/badge_white.svg')
                 span {{ t.guild }}
-                div {{ t.name }}
+                div {{ shortName(t.name) }}
             .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
                 current(:memberId='t.taskId')
-            .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ t.name }}
+            .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
 </template>
 
 <script>
 
+import _ from 'lodash'
 import request from "superagent"
 import Current from '../Resources/Current'
 import SoundFX from '../../utils/sounds'
-import _ from 'lodash'
+import Cards from '../../utils/cards'
 
 export default {
     data(){
@@ -42,6 +43,7 @@ export default {
             showCreate: false,
             task: {
                 name: '',
+                search: '',
                 color: 'green',
             },
             swipeTimeout: 0,
@@ -237,6 +239,9 @@ export default {
             clearTimeout(this.inDebounce)
             this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
         },
+        shortName(theName) {
+            return Cards.shortName(theName)
+        },
     },
     computed: {
         taskId(){
@@ -245,7 +250,7 @@ export default {
         matchCard(){
             let foundId
             this.$store.state.tasks.filter(t => {
-                if(t.name === this.task.name.trim()) {
+                if(t.name === this.task.search.trim()) {
                     foundId = t.taskId
                 }
             })
@@ -254,13 +259,13 @@ export default {
         matchCards() {
             // if(!this.task) return []
             // if(!this.task.name) return []
-            if(this.task.name.length < 1) return []
+            if(this.task.search.length < 1) return []
             if(this.exploring) return this.searchResults
             let matches = []
             let guildmatches = []
             let dogematches = []
             try {
-                let regex = new RegExp(this.task.name, 'i')
+                let regex = new RegExp(this.task.search, 'i')
                 this.$store.state.tasks.forEach(t => {
                     if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
                         guildmatches.push(t)
@@ -291,23 +296,22 @@ export default {
                 case "black": return 'bark'
             }
         },
-        cardInputSty(){
-            return {
-                redwx : this.task.color == 'red',
-                bluewx : this.task.color == 'blue',
-                greenwx : this.task.color == 'green',
-                yellowwx : this.task.color == 'yellow',
-                purplewx : this.task.color == 'purple',
-                blackwx : this.task.color == 'black',
-            }
+        cardInputSty() {
+            return Cards.cardColorCSS(this.task.color)
         },
         debouncedName: {
             get() {
-                return this.task.name;
+                return this.task.name
             },
-            set: _.debounce(function(newValue) {
-                this.task.name = newValue;
-            }, 400)
+            set(newValue) {
+                console.log("set called")
+                this.task.name = newValue
+                this.debounce(() => {
+                    console.log("debauncedcalled")
+                    this.task.search = newValue
+                }, 400)
+                console.log("debounce set")
+            }
         },
     }
 }

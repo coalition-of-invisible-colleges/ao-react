@@ -29,42 +29,38 @@
 import SharedTitle from '../slotUtils/SharedTitle'
 import TaskCreate from '../forms/TaskCreate'
 import Linky from '../Card/Linky'
+import Cards from '../../utils/cards'
 
 export default {
   props: ['memberId', 'taskId', 'task'],
   methods:{
-    getTask(taskId){
-        return this.$store.getters.hashMap[taskId]
-    },
-    goto(taskId){
-        let panel = [taskId]
-        let top = 0
-        let t = this.$store.getters.hashMap[taskId]
-        let panelColor = this.task.subTasks.filter( p => {
-            return this.card(p).color === t.color
-        })
-        let topColor = panelColor.indexOf(taskId)
+      getTask(taskId){
+          return this.$store.getters.hashMap[taskId]
+      },
+      goto(taskId){
+          let panel = [taskId]
+          let top = 0
+          let t = this.$store.getters.hashMap[taskId]
+          let panelColor = this.task.subTasks.filter( p => {
+              return this.card(p).color === t.color
+          })
+          let topColor = panelColor.indexOf(taskId)
 
-        if (topColor > -1){
-          panel = panelColor
-          top = topColor
-        }
-        let parents =  [this.$store.getters.contextCard.taskId, this.task.taskId]
-        this.$store.dispatch("goIn", {parents, panel, top})
+          if (topColor > -1){
+            panel = panelColor
+            top = topColor
+          }
+          let parents =  [this.$store.getters.contextCard.taskId, this.task.taskId]
+          this.$store.dispatch("goIn", {parents, panel, top})
 
-        this.$router.push("/" + this.$store.state.upgrades.mode)
-    },
-    card(tId) {
-        return this.$store.getters.hashMap[tId]
-    },
-    shortName(name) {
-        let limit = 280
-        let shortened = name.substring(0, limit)
-        if(name.length > limit) {
-            shortened += '…'
-        }
-        return shortened
-    }
+          this.$router.push("/" + this.$store.state.upgrades.mode)
+      },
+      card(tId) {
+          return this.$store.getters.hashMap[tId]
+      },
+      shortName(name) {
+          return Cards.shortName(name)
+      }
   },
   computed: {
       deck(){
@@ -97,7 +93,7 @@ export default {
       },
       topPriorities(){
           return this.task.priorities.slice(0, 5).reverse()
-      }
+      },
   },
   components:{
       SharedTitle,
