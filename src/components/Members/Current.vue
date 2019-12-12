@@ -74,7 +74,6 @@ export default {
         }
     },
     toggleHighlight(invert = false) {
-        console.log("togglehighlight")
         if(!this.isHighlighted && !this.isLowdarked && (!this.completions || this.completions.length < 1)) return
         this.$store.commit("toggleHighlight", { memberId: this.memberId, valence: !invert })
     },
@@ -110,7 +109,11 @@ export default {
                     if(arr[1] && c.claimed.indexOf(arr[0]) !== -1) {
                         highlights[c.taskId] = 1
                     } else if(!arr[1] && c.claimed.indexOf(arr[0]) === -1) {
-                        highlights[c.taskId] = -1
+                        if(highlights.hasOwnProperty(c.taskId) && highlights[c.taskId] !== 1) {
+                            highlights[c.taskId] = -1
+                        } else {
+                            highlights[c.taskId] = 0
+                        }
                     }
                 })
             })
