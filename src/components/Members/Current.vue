@@ -3,10 +3,10 @@
 .current(v-if='memberId')
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
-    span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }'  :key='$store.state.upgrades.highlights') {{ name }}
-    template(v-for='c in completions')
+    span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
+    template(v-for='c in completions'  :key='$store.state.upgrades.highlights')
       span.tooltip.plain(@click='goIn(c.taskId)')
-        span.checkmark(:class="{ ...cardInputSty(c.color), highlight : (c.highlight === 1), lowdark : (c.highlight === -1) }"  v-model='completions') ☑
+        span.checkmark(:class="{ ...cardInputSty(c.color), highlight : (checkmarkHighlights.hasOwnProperty(c.taskId) && checkmarkHighlights[c.taskId] === 1), lowdark : (checkmarkHighlights.hasOwnProperty(c.taskId) && checkmarkHighlights[c.taskId] === -1), lilypad : (checkmarkHighlights.hasOwnProperty(c.taskId) && checkmarkHighlights[c.taskId] === 2) }"  :key='checkmarkHighlights') ☑
           .tooltiptext.smalltext
             .bigger {{ c.name }}
 </template>
@@ -99,6 +99,30 @@ export default {
     isLowdarked() {
         return this.$store.state.upgrades.highlights[this.memberId] === false
     },
+    checkmarkHighlights() {
+        let highlights = {}
+        let myIndex = this.$store.getters.hodlersByCompletions.indexOf(this.memberId)
+        if(Object.keys(this.$store.state.upgrades.highlights).length >= 1) {
+            this.$store.getters.hodlersByCompletions.forEach((m, j) => {
+                m.contextCompletions.forEach((c, i) => {
+                    Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
+                        if(arr[1] && c.claimed.indexOf(arr[0]) !== -1) {
+                            highlights[c.taskId] = 1
+                        } else if(!arr[1] && c.claimed.indexOf(arr[0]) === -1) {
+                            highlights[c.taskId] = -1
+                        }
+                        if(myIndex - j >= 2) {
+                            if(arr[1] && c.claimed.indexOf(m.memberId) && c.claimed.indexOf(arr[0]) === -1) {
+                                highlights[c.taskId] = 2
+                            }
+                        }
+                        console.log("highlights is ", highlights)
+                    })
+                })
+            })
+        }
+        return highlights
+    },
   }
 }
 
@@ -140,4 +164,7 @@ img
 
 .lowdark
     text-shadow: 0 0 20px red, 0 0 20px red, 0 0 20px red
+    
+.lilypad
+    text-shadow: 0 0 20px green, 0 0 20px green, 0 0 20px green
 </style>

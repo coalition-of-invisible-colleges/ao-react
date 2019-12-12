@@ -79,19 +79,6 @@ export default new Vuex.Store({
               member.contextCompletions = hodlers[mId]
               holds.push(member)
           })
-          if(Object.keys(state.upgrades.highlights).length >= 1) {
-              holds.forEach(m => {
-                  m.contextCompletions.forEach((c, i) => {
-                      Object.entries(state.upgrades.highlights).some((arr) => {
-                          if(arr[1] && c.claimed.indexOf(arr[0]) !== -1) {
-                              c.highlight = 1
-                          } else if(!arr[1] && c.claimed.indexOf(arr[0]) === -1) {
-                              c.highlight = -1
-                          }
-                      })
-                  })
-              })
-          }
           return holds
       },
       all(state, getters){

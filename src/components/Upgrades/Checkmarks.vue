@@ -18,7 +18,7 @@
                                     img.floatleft.smaller(src='../../assets/images/badge.svg')
                                 span(@click='goIn(sp.taskId), p.taskId')
                                     span.nl.gui.smallest(:class='cardInputSty(sp.color)') {{ sp.guild }}
-            current.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions'  v-model='n.contextCompletions')
+            current.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions'  :key='$store.getters.hodlersByCompletions')
             current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
             .box.morepad
                 div.dogep.spinslow
