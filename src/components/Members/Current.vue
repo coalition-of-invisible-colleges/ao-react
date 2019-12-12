@@ -6,7 +6,7 @@
     span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }'  :key='$store.state.upgrades.highlights') {{ name }}
     template(v-for='c in completions')
       span.tooltip.plain(@click='goIn(c.taskId)')
-        span.checkmark(:class="cardInputSty(c.color)") ☑
+        span.checkmark(:class="{ ...cardInputSty(c.color), highlight : (c.highlight === 1), lowdark : (c.highlight === -1) }"  v-model='completions') ☑
           .tooltiptext.smalltext
             .bigger {{ c.name }}
 </template>
@@ -135,9 +135,9 @@ img
     z-index: 153
     font-size: 0.7em
         
-.name.highlight
+.highlight
     text-shadow: 0 0 20px yellow, 0 0 20px yellow, 0 0 20px yellow
 
-.name.lowdark
+.lowdark
     text-shadow: 0 0 20px red, 0 0 20px red, 0 0 20px red
 </style>

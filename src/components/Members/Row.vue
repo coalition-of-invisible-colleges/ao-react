@@ -9,7 +9,7 @@
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId'  @click='goIn(g.taskId)') {{ g.guild }} -
-        .two.grid(v-if='!hasAnyVouches')
+        .two.grid(v-if='!hasAnyVouches || $router.path === "/slayer"')
             img.btn.goldengun(src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
