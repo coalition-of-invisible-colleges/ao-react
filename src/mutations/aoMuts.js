@@ -11,7 +11,8 @@ function aoMuts(aos, ev) {
                 attempts: 0,
                 successfuls: 0,
                 fails: 0,
-                lastAttemptSuccess: true
+                lastAttemptSuccess: true,
+                state: false
             }
             aos.push(newEv)
             break

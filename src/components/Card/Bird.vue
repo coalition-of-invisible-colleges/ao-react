@@ -41,7 +41,7 @@
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.alias }}
+            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.address }}
         button.small(@click='setWarp') set
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
@@ -382,7 +382,7 @@ select.form-control
 
 select.shorten
     width: 68%
-    
+
 .curs
     cursor: pointer;
 
@@ -435,7 +435,7 @@ label
     height: 2.3em
     position: relative
     top: -0.07em
-        
+
 .sierpinskiwrapper
     padding-top: 0.2em
     padding-left: 1em

@@ -59,6 +59,9 @@ module.exports = function(req, res, next){
               console.log("no connection for ", req.body.address)
           }
           break
+      case "ao-updated":
+          specAoUpdated(req, res, next)
+          break
       default:
           next()
   }
@@ -182,7 +185,21 @@ function specAOConnect(req, res, next){
         utils.buildResCallback(res)
       )
   })
+}
 
 
+function specAoUpdated(req, res, next){
+    state.serverState.ao.forEach(a => {
+        if (a.address === req.body.address){
+            connector.getState(a.address, a.secret, (err, state) => {
+                if (err){
+                    return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
+                }
+                console.log("adding state for:", {state})
+                events.aoEvs.aoUpdated(a.address, state, utils.buildResCallback(res))
+            })
+
+        }
+    })
 
 }

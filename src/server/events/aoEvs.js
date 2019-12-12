@@ -16,7 +16,6 @@ function aoConnected(address, secret, callback) {
         address,
         secret,
     }
-    console.log("why no emit db insert called?", {newEvent})
     dctrlDb.insertEvent(newEvent, callback)
 }
 
@@ -37,11 +36,11 @@ function aoRelayAttempted(address, successful, callback) {
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoUpdated(aoId, ev, callback){
+function aoUpdated(address, state, callback){
     let newEvent = {
         type: "ao-updated",
-        aoId,
-        ev,
+        address,
+        state,
     }
     dctrlDb.triggerShadow(newEvent, callback)
 }
