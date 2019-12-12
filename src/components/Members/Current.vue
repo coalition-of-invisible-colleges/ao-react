@@ -101,23 +101,17 @@ export default {
     },
     checkmarkHighlights() {
         let highlights = {}
-        let myIndex = this.$store.getters.hodlersByCompletions.indexOf(this.memberId)
         if(Object.keys(this.$store.state.upgrades.highlights).length >= 1) {
-            this.$store.getters.hodlersByCompletions.forEach((m, j) => {
-                m.contextCompletions.forEach((c, i) => {
-                    Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
-                        if(arr[1] && c.claimed.indexOf(arr[0]) !== -1) {
-                            highlights[c.taskId] = 1
-                        } else if(!arr[1] && c.claimed.indexOf(arr[0]) === -1) {
-                            highlights[c.taskId] = -1
-                        }
-                        if(myIndex - j >= 2) {
-                            if(arr[1] && c.claimed.indexOf(m.memberId) && c.claimed.indexOf(arr[0]) === -1) {
-                                highlights[c.taskId] = 2
-                            }
-                        }
-                        console.log("highlights is ", highlights)
-                    })
+            let checkmarks = this.$store.getters.hodlersByCompletions.find(m => m.taskId === this.memberId)
+            if(!checkmarks || !checkmarks.contextCompletions) return highlights
+            checkmarks = checkmarks.contextCompletions
+            checkmarks.forEach((c, i) => {
+                Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
+                    if(arr[1] && c.claimed.indexOf(arr[0]) !== -1) {
+                        highlights[c.taskId] = 1
+                    } else if(!arr[1] && c.claimed.indexOf(arr[0]) === -1) {
+                        highlights[c.taskId] = -1
+                    }
                 })
             })
         }
