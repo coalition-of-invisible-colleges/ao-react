@@ -1,6 +1,5 @@
 const dctrlDb = require('../dctrlDb')
 
-
 function getNodeInfo(info, callback){
     let newEvent = {
         type: "get-node-info",

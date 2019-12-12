@@ -36,8 +36,8 @@
             .tooltiptext
                 p(v-if='$store.getters.member.muted') held by:
                 current.block(v-for='memberId in b.deck'  :memberId='memberId')
-                .suggest(v-if='!isGrabbed') click to hodl
-                .suggest(v-if='isGrabbed') click to dump
+                .suggest(v-if='!isGrabbed && $store.getters.member.muted') click to hodl
+                .suggest(v-if='isGrabbed && $store.getters.member.muted') click to dump
             p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
 </template>
 

@@ -8,11 +8,11 @@ function aoMuts(aos, ev) {
             let newEv = {
                 address: ev.address,
                 secret: ev.secret,
-                alias: ev.state.cash.alias,
                 attempts: 0,
                 successfuls: 0,
                 fails: 0,
-                lastAttemptSuccess: true
+                lastAttemptSuccess: true,
+                state: false
             }
             aos.push(newEv)
             break
@@ -34,6 +34,13 @@ function aoMuts(aos, ev) {
                         ao.fails ++
                         ao.lastAttemptSuccess = false
                     }
+                }
+            })
+            break
+        case "ao-updated":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    ao.state = ev.state
                 }
             })
             break

@@ -10,12 +10,11 @@ function aoSubscribed(address, secret, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoConnected(address, secret, state, callback) {
+function aoConnected(address, secret, callback) {
     let newEvent = {
         type: "ao-connected",
         address,
         secret,
-        state,
     }
     dctrlDb.insertEvent(newEvent, callback)
 }
@@ -37,11 +36,11 @@ function aoRelayAttempted(address, successful, callback) {
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoUpdated(aoId, ev, callback){
+function aoUpdated(address, state, callback){
     let newEvent = {
         type: "ao-updated",
-        aoId,
-        ev,
+        address,
+        state,
     }
     dctrlDb.triggerShadow(newEvent, callback)
 }

@@ -22,29 +22,17 @@
         .clearboth
             h2 Connected AOs
             div(v-for='r in $store.state.ao')
-                h2 {{ r.alias }}
-                    span.conn(@click='pollState(r.address)') update state
-                    span.discon(@click='discon(r.address)') delete connection
-                div {{ r.address }}
+                h2
+                    span.conn(@click='pollState(r.address)') update
+                    span.discon(@click='discon(r.address)') delete
                 div
-                    span.padleft(v-if='r.state') connected
-                    span.padleft(v-else) disconnected
-                    span.padleft(v-if='r.lastAttemptSuccess') last request successful
-                        span.padleft(v-if='r.successes > 0') {{ r.successes }}
-                    span.padleft(v-else) last request unsuccessful
-                        span.padleft(v-if='r.fails > 0') {{ r.fails}}
+                    span.padleft(v-if='r.state')  connected
+                        span {{ r.state.cash.alias }}
+                    span.padleft(v-else) {{r.address}} disconnected
+                    span - {{r.successfuls}} - {{r.fails}} -
             div(v-for='s in $store.state.cash.subscribed')
                 span.conn {{ s.address }}
                 span(@click='discon(s.address)').discon delete subscription
-    //- h4 current active links:
-    //- .row
-    //-     template.row(v-for='r in $store.state.ao')
-    //-         // relay info / recent communications
-    //-         h6 {{ r.address }} -
-    //-
-    //-         h6 attempts: {{ r.attempts }} -- successes: {{ r.successfuls }}, fails: {{ r.fails }}
-    //-     template.row(v-for='a in $store.state.cash.subscribed')
-    //-         p {{ a }}
 </template>
 
 <script>
@@ -81,6 +69,10 @@ export default {
         },
         pollState(address) {
             console.log("pollstate")
+            this.$store.dispatch("makeEvent", {
+                type: 'ao-updated',
+                address
+            })
         },
         toggleGive(){
             this.showGive = !this.showGive

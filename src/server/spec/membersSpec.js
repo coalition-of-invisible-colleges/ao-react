@@ -1,6 +1,7 @@
 import utils from './utils'
 import validators from './validators'
 import events from '../events'
+import Connector from '../connector'
 
 // export single middleware for each type
 module.exports = function(req,res,next){
@@ -46,6 +47,9 @@ module.exports = function(req,res,next){
           break
       case 'doge-unmuted':
           specDogeUnmuted(req, res, next)
+          break
+      case 'doge-migrated':
+          specDogeMigrated(req, res, next)
           break
       default:
           next()
@@ -270,5 +274,87 @@ function specDogeUnmuted(req, res, next) {
     } else {
       res.status(400).send(errRes)
     }
-
 }
+
+// function specDogeMigrated(req, res, next) {
+//     let errRes = []
+//     if (validators.isMemberId(req.body.memberId, errRes)){
+//       state.serverState.ao.forEach(a => {
+//           if (a.address === req.body.address){
+//                 found = []
+//                 let crawler = []
+//                 state.tasks.forEach(t => {
+//                     if(t.deck.indexOf(req.body.memberId) > -1) {
+//                         crawler.push(t.taskId)
+//                     }
+//                 })
+//                 let newCards = []
+//                 do {
+//                     newCards = []
+//                     crawler = _.filter(crawler, t => {
+//                         if(found.some(t2 => {
+//                             if(!t2 || !t2.taskId) return false
+//                             return t2.taskId === t
+//                         })) {
+//                             return false
+//                         }
+//                         let task = this.$store.getters.hashMap[t]
+//                         if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
+
+//                         found.push(Cards.safeClone(task))
+//                         newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
+//                         return true
+//                     })
+//                     crawler = newCards
+//                 } while(crawler.length > 0)
+
+//                 let envelope = Cards.safeClone(this.$store.getters.memberCard)
+//                 envelope.name = this.$store.getters.member.name
+//                 envelope.subTasks = found
+//                 found.splice(0, 0, envelope)
+                
+//                 found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
+//                 console.log("found is ", found)
+//                 if(found.length > 20) {
+//                     let next100 = found.splice(0, 20)
+//                     while(next100.length > 0) {
+//                         console.log("next100 is ", next100)
+//                         this.$store.dispatch('makeEvent', {
+//                             type: 'ao-relay',
+//                             address: this.$store.getters.warpDrive.address,
+//                             ev: {
+//                                 type: 'tasks-received',
+//                                 tasks: next100,
+//                             }
+//                         })
+//                         next100 = found.splice(0, 20)
+//                     }
+//                 } else {
+//                     this.$store.dispatch('makeEvent', {
+//                         type: 'ao-relay',
+//                         address: this.$store.getters.warpDrive.address,
+//                         ev: {
+//                             type: 'tasks-received',
+//                             tasks: found,
+//                         }
+//                     })
+//                 }
+
+//               connector.postEvent(a.address, a.secret, req.body, (err, state) => {
+//                   if (err){
+//                       return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
+//                   }
+//                   console.log("adding state for:", {state})
+//                   events.aoEvs.aoUpdated(a.address, state, utils.buildResCallback(res))
+//               })
+
+//           }
+//       })
+//       events.membersEvs.dogeMigrated(
+//         req.body.memberId,
+//         utils.buildResCallback(res)
+//       )
+//     } else {
+//       res.status(400).send(errRes)
+//     }
+// }

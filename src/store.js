@@ -79,7 +79,6 @@ export default new Vuex.Store({
               member.contextCompletions = hodlers[mId]
               holds.push(member)
           })
-          console.log("claimed task found")
           if(Object.keys(state.upgrades.highlights).length >= 1) {
               holds.forEach(m => {
                   m.contextCompletions.forEach((c, i) => {

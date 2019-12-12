@@ -59,6 +59,9 @@ module.exports = function(req, res, next){
               console.log("no connection for ", req.body.address)
           }
           break
+      case "ao-updated":
+          specAoUpdated(req, res, next)
+          break
       default:
           next()
   }
@@ -167,30 +170,36 @@ function specAoDisconnected(req, res, next){
 function specAOConnect(req, res, next){
   let errRes = []
   console.log('attempt post to ', req.body.address)
-
-  connector.getState(req.body.address, req.body.secret, (err, response) => {
-      if (err) {
-          return console.log(err)
+  connector.postEvent(req.body.address, req.body.secret, {
+      type: 'ao-subscribed',
+      address: state.serverState.cash.address,
+      secret: req.body.secret, //
+  }, (subscriptionResponse) => {
+      if (!subscriptionResponse.lastInsertRowid){
+          return res.status(200).send(['ao-connect failed'])
       }
-      console.log("got state:", {response})
-
-      console.log('ao-connected', req.body.address, req.body.secret)
+      console.log('subscribe success, attempt ao connect')
       events.aoEvs.aoConnected(
         req.body.address,
         req.body.secret,
-        response,
         utils.buildResCallback(res)
       )
-      connector.postEvent(req.body.address, req.body.secret, {
-          type: 'ao-subscribed',
-          address: state.serverState.cash.address,
-          secret: req.body.secret, //
-      }, (err, res) => {
-          console.log('subscription requested', {err, res})
-      })
-
-
-
   })
+}
+
+
+function specAoUpdated(req, res, next){
+    state.serverState.ao.forEach(a => {
+        if (a.address === req.body.address){
+            connector.getState(a.address, a.secret, (err, state) => {
+                if (err){
+                    return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
+                }
+                console.log("adding state for:", {state})
+                events.aoEvs.aoUpdated(a.address, state, utils.buildResCallback(res))
+            })
+
+        }
+    })
 
 }
