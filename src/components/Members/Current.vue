@@ -107,13 +107,13 @@ export default {
             checkmarks.forEach((c, i) => {
                 Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
                     if(arr[1] && c.claimed.indexOf(arr[0]) !== -1) {
-                        if(highlights.hasOwnProperty(c.taskId) && highlights[c.taskId] !== -1) {
+                        if(highlights[c.taskId] !== -1) {
                             highlights[c.taskId] = 1
                         } else {
                             highlights[c.taskId] = 0
                         }
                     } else if(!arr[1] && c.claimed.indexOf(arr[0]) === -1) {
-                        if(highlights.hasOwnProperty(c.taskId) && highlights[c.taskId] !== 1) {
+                        if(highlights[c.taskId] !== 1) {
                             highlights[c.taskId] = -1
                         } else {
                             highlights[c.taskId] = 0
