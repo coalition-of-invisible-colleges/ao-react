@@ -32,7 +32,7 @@
                     span.discon(@click='discon(r.address)') delete
             h2 Feed to
             div(v-for='s in unmatchedSubs')
-                span {{ s.address }}
+                span.conn {{ s.address }}
                 span.discon(@click='discon(s.address)').discon delete
 </template>
 
@@ -81,7 +81,7 @@ export default {
     },
     computed: {
         liveConnections(){
-            return this.$store.state.ao.filter(r => r.state)
+            return this.$store.state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
         },
         brokeConnections(){
             return this.$store.state.ao.filter(r => !r.state)

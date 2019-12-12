@@ -27,6 +27,13 @@ function sessionsMuts(sessions, ev){
 								}
 						})
 						break
+				case "ao-connected":
+						sessions.push({
+								ownerId: ev.address,
+								token: ev.secret,
+								session: ev.address,
+						})
+						break
 	}
 }
 
