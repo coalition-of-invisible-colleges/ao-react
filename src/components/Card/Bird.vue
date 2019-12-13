@@ -107,7 +107,6 @@ export default {
 
         mc.on('tripletap', (e) => {
             SoundFX.playTickMark()
-            // this.toggleWarp()
             this.toggleWarp()
             e.stopPropagation()
         })
@@ -142,8 +141,6 @@ export default {
         wholemc.on('press', (e) => {
             e.stopPropagation()
         })
-
-        console.log("this.refs is ", this.$refs)
     },
     methods: {
         toggleGive(){
@@ -205,7 +202,6 @@ export default {
         },
         testCreate() {
             let tasks = [Object.assign({}, this.b)]
-
             tasks[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             tasks[0].deck = []
             console.log("trying to send tasks: " , tasks)
@@ -246,10 +242,10 @@ export default {
                     })
                     crawler = newCards
                 } while(crawler.length > 0)
-                found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             } else {
                 found = [ this.b ]
             }
+            found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             this.$store.dispatch('makeEvent', {
                 type: 'ao-relay',
                 address: this.$store.getters.warpDrive.address,
