@@ -237,7 +237,7 @@ function tasksMuts(tasks, ev) {
             let bounty = 0
             tasks.forEach(task => {
                 let found = false
-                if (task.taskId === ev.memberId){
+                if(task.taskId === ev.memberId) {
                     task.boost += parseFloat(ev.paid)
                 }
 
@@ -260,11 +260,15 @@ function tasksMuts(tasks, ev) {
                 })
 
                 if(found) {
+                    console.log("checkpoint a")
                     if(task.priorities.indexOf(ev.taskId) === -1) {
-                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
-                        task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
+                        console.log("checkpoint b")
+                        task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId )
+                        task.completed = _.filter(task.completed, tId => tId !== ev.taskId )
                         task.completed.push(ev.taskId)
+                        console.log("checkpoint c")
                     }
+                    console.log("checkpoint d")
                     let alloc = false
                     if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
                     task.allocations = _.filter(task.allocations, al => {
