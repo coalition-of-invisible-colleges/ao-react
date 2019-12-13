@@ -415,7 +415,6 @@ function tasksMuts(tasks, ev) {
 
             break
         case "tasks-received":
-            console.log("rec tasks: ", ev)
             ev.tasks.forEach(p => {
                 if(!tasks.some(t => {
                     if(cryptoUtils.createHash(p.name.trim()) === cryptoUtils.createHash(t.name.trim())) {
@@ -429,12 +428,10 @@ function tasksMuts(tasks, ev) {
                         t.priorities = _.union(t.priorities, p.priorities)
                         t.completed = _.union(t.completed, p.completed)
                         t.passed = p.passed
-                        console.log("merged in card ", t.name)
                         return true
                     }
                 })) {
-                    console.log("added card")
-                    // type check and purge extra fields here for security
+                    // do a safeClone here for security
                     tasks.push(p)
                 }
             })

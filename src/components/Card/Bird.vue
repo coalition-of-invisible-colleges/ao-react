@@ -29,7 +29,8 @@
             select.shorten(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            button.small(@click='give') send
+            button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
+            button.small(v-else  @click='give') send entire deck
             span.sierpinskiwrapper
                 sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
@@ -211,19 +212,19 @@ export default {
                 type: 'tasks-received', tasks }
             })
         },
-        give() {
+        migrate() {
             this.makeSound()
             let found = []
-            if(this.b.taskId === this.$store.getters.member.memberId) {
-                console.log("this.toMemberWarp is", this.toMemberWarp)
-                this.$store.dispatch('makeEvent', {
-                    type: 'doge-migrated',
-                    address: this.$store.getters.warpDrive.address,
-                    memberId: this.$store.getters.member.memberId,
-                    toMemberId: this.toMemberWarp,
-                })
-                console.log("22this.toMemberWarp is", this.toMemberWarp)
-            } else if(this.$store.state.upgrades.sierpinski) {
+            this.$store.dispatch('makeEvent', {
+                type: 'doge-migrated',
+                address: this.$store.getters.warpDrive.address,
+                memberId: this.$store.getters.member.memberId,
+                toMemberId: this.toMemberWarp,
+            })
+        },
+        give() {
+            let found = []
+            if(this.$store.state.upgrades.sierpinski) {
                 let crawler = [ this.b.taskId ]
                 let newCards = []
                 do {
@@ -244,27 +245,18 @@ export default {
                     })
                     crawler = newCards
                 } while(crawler.length > 0)
-                // found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
-                                found = [ this.b ]
-                this.$store.dispatch('makeEvent', {
-                    type: 'ao-relay',
-                    address: this.$store.getters.warpDrive.address,
-                    ev: {
-                        type: 'tasks-received',
-                        tasks: found,
-                    }
-                })
+                found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             } else {
                 found = [ this.b ]
-                this.$store.dispatch('makeEvent', {
-                    type: 'ao-relay',
-                    address: this.$store.getters.warpDrive.address,
-                    ev: {
-                        type: 'tasks-received',
-                        tasks: found,
-                    }
-                })
             }
+            this.$store.dispatch('makeEvent', {
+                type: 'ao-relay',
+                address: this.$store.getters.warpDrive.address,
+                ev: {
+                    type: 'tasks-received',
+                    tasks: found,
+                }
+            })
         },
     },
     computed: {

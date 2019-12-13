@@ -202,7 +202,6 @@ export default {
             this.goDash('doge')
             e.stopPropagation()
         })
-        console.log("checkpoint 4")
     },
     watch: {
       '$route': 'setToRoute'
