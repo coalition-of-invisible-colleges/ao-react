@@ -2,54 +2,46 @@
 
 .navigation(@contextmenu.prevent)
     h1.loadingscreen(v-if='$store.state.context.loading') loading {{ $store.state.context.loading }}
-    img.dableft.adjtooltip(v-if='showImg === "sun"' src="../assets/images/navigas/sunUni.svg"  ref='sun')
-    img.dableft.adjtooltip(v-else-if='uniLeft'  src="../assets/images/navigas/uniSun.svg"  ref='sun')
-    img.dableft.adjtooltip(v-else  src="../assets/images/navigas/uniSunDab.svg"  ref='sun')
+    img.dableft.adjtooltip(src="../assets/images/navigas/sunUni.svg"  ref='sun')
     .tooltiptext.left(v-if='$store.getters.member.muted')
-        h1(v-if='!isSun()') Dab to Sun
-        h1(v-if='isSun()') Dab to Deck (unicorn)
-        p dab once to advance or multidab to jump to a specific page
-        p.leftalign Sun Pages:
+        h2.leftalign Sun Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Newspaper (dab-and-hodl)
+                span Oracle *
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Top Missions (double dab)
+                span Top Missions **
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Much Recent (triple dab)
+                span Recent ***
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Bounties (4 dabs)
+                span Bounties ****
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Calendar (5 dabs)
-    img.dabright.adjtooltip(v-if='showImg === "bull"'  src="../assets/images/navigas/bullUni.svg"  ref='bull')
-    img.dabright.adjtooltip(v-else-if='uniRight && $store.getters.member.muted'  src="../assets/images/navigas/uniBull.svg"  ref='bull')
-    img.dabright.adjtooltip(v-else  src="../assets/images/navigas/uniBullDab.svg"  ref='bull')
+                span Calendar *****
+        p once to advance or multiclick to a specific page
+    img.dabright.adjtooltip(src="../assets/images/navigas/bullUni.svg"  ref='bull')
     .tooltiptext.right(v-if='$store.getters.member.muted')
-        h1(v-if='!isBull()') Dab to Bull
-        h1(v-if='isBull()') Dab to Deck (unicorn)
-        p dab once to advance or multidab to jump to a specific page
-        p.leftalign Bull Pages:
+        h2.leftalign Bull Pages:
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Controls (dab-and-hodl)
+                span Controls *
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Connections (double dab)
+                span Connections **
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Accounts (triple dab)
+                span Accounts ***
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Lightning (4 dabs)
+                span Lightning ****
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Central Reserve (5 dabs)
+                span Central Reserve *****
+        p once to advance or multiclick to a specific page
     helm
     .pushdown
     div(:class='{suncontext: isSun(), bullcontext: isBull()}' @keydown.tab='nextMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)

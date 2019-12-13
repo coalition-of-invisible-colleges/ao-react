@@ -14,25 +14,25 @@
             img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
             img.upg(v-else  src='../assets/images/buddadoge.svg')
     .tooltiptext.center(v-if='$store.getters.member.muted'  :class='{ fix : $store.state.upgrades.mode !== "doge" }')
-        h1 Helm
-        p dab to advance mode, multidab to jump to a specific mode, or swipe left/right to change mode
-        p.leftalign Card Upgrades:
+        h1 Card modes
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Doge Mode - Member Card (dab-and-hodl)
+                span Member Card *
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
-                span Boat Mode - Priorities (double dab)
+                span Priorities **
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Badge Mode - Missions &amp; Checkmarks (triple dab)
+                span Missions &amp; Checkmarks ***
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
-                span Chest Mode - Send Points (4 dabs)
+                span Send Points ****
             li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
                 img.lil(src='../assets/images/timecube.svg')
-                span Timecube - Book Event (5 dabs)
+                span Calendar &amp; Events *****
+        p click to advance mode, multiclick to to a specific mode
+        p swipe left/right to change mode
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
