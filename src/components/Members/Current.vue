@@ -108,30 +108,40 @@ export default {
                 Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
                     // add the other two combinations here to correctly do anded logic
                     if(arr[1]) {
+                        // hasPos = true
                         if(c.claimed.indexOf(arr[0]) !== -1) {
-                            if (highlights[c.taskId] === 0) {
-                                highlights[c.taskId] = 0
-                            } else if(highlights[c.taskId] === 1) {
-                                highlights[c.taskId] = 1
-                            } else if (highlights[c.taskId] === -1) {
-                                highlights[c.taskId] = 0
-                            } else {
+                            if(!highlights.hasOwnProperty(c.taskId)) {
                                 highlights[c.taskId] = 1
                             }
+                            highlights[c.taskId] *= 1 // does fucking nothing
+                            // if (highlights[c.taskId] === 0) {
+                            //     highlights[c.taskId] = 0
+                            // } else if(highlights[c.taskId] === 1) {
+                            //     highlights[c.taskId] = 1
+                            // } else if (highlights[c.taskId] === -1) {
+                            //     highlights[c.taskId] = 1
+                            // } else {
+                            //     highlights[c.taskId] = 1
+                            // }
                         } else {
                             highlights[c.taskId] = 0
                         }
                     } else if(!arr[1]) {
                         if(c.claimed.indexOf(arr[0]) === -1) {
-                            if(highlights[c.taskId] === 0) {
+                            if(!highlights.hasOwnProperty(c.taskId)) {
                                 highlights[c.taskId] = -1
-                            } else if(highlights[c.taskId] === -1) {
-                                highlights[c.taskId] = -1
-                            } else if(highlights[c.taskId] === 1) {
-                                highlights[c.taskId] = 0
                             } else {
-                                highlights[c.taskId] = -1
+                                highlights[c.taskId] *= -1
                             }
+                            // if(highlights[c.taskId] === 0) {
+                            //     highlights[c.taskId] = -1
+                            // } else if(highlights[c.taskId] === -1) {
+                            //     highlights[c.taskId] = -1
+                            // } else if(highlights[c.taskId] === 1) {
+                            //     highlights[c.taskId] = 0
+                            // } else {
+                            //     highlights[c.taskId] = -1
+                            // }
                         } else {
                             highlights[c.taskId] = 0
                         }
