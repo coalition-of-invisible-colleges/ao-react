@@ -327,6 +327,9 @@ export default new Vuex.Store({
           })
           return vouches
       },
+      liveConnections(state, getters){
+          return state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
+      },
   },
   middlewares: [],
   strict: process.env.NODE_ENV !== 'production'

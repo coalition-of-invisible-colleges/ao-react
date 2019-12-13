@@ -32,7 +32,7 @@
             button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
             button.small(v-else  @click='give') send entire deck
             span.sierpinskiwrapper
-                sierpinski(:b='b')
+                sierpinski(v-if='this.b.taskId !== this.$store.getters.member.memberId'  :b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
         div(v-else)
             select(v-model='toMember')
@@ -42,7 +42,7 @@
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.state.ao', :value='i') {{ n.address }}
+            option(v-for='(n, i) in $store.getters.liveConnections', :value='i') {{ n.state.cash.alias }}
         button.small(@click='setWarp') set
     guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
@@ -191,6 +191,7 @@ export default {
         setWarp() {
             console.log("this.toAo is ", this.toAo)
             this.$store.commit('setWarp', this.toAo)
+            this.toggleWarp()
         },
         makeSound() {
             SoundFX.playBirdFlap()
