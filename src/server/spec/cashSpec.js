@@ -189,8 +189,10 @@ function specAOConnect(req, res, next){
 
 
 function specAoUpdated(req, res, next){
+    console.log('attempting update')
     state.serverState.ao.forEach(a => {
         if (a.address === req.body.address){
+            console.log("matched address")
             connector.getState(a.address, a.secret, (err, state) => {
                 if (err){
                     return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))

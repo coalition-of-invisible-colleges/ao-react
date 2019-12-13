@@ -10,7 +10,7 @@ let sockets = {}
 function watchAos(){
     state.serverState.ao.forEach(n => {
         connector.getState(n.address, n.secret, (err, s) => {
-          if (err){
+          if (err || s === 'unauthorized'){
               aoEvs.aoRelayAttempted(n.address, false)
               return
           }

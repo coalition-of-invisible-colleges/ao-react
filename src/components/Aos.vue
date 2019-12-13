@@ -20,19 +20,20 @@
                 label(for="aoSecretInput")  connection secret:
                 input#aoSecretInput(v-model='ao.secret' type='text')
         .clearboth
-            h2 Connected AOs
-            div(v-for='r in $store.state.ao')
-                h2
+            h2 Connected to
+            div(v-for='r in liveConnections')
+                h4 {{ r.state.cash.alias }} connected - {{r.successfuls}} - {{r.fails}} -
                     span.conn(@click='pollState(r.address)') update
                     span.discon(@click='discon(r.address)') delete
-                div
-                    span.padleft(v-if='r.state')  connected
-                        span {{ r.state.cash.alias }}
-                    span.padleft(v-else) {{r.address}} disconnected
-                    span - {{r.successfuls}} - {{r.fails}} -
-            div(v-for='s in $store.state.cash.subscribed')
+            h2 Broken from
+            div(v-for='r in brokeConnections')
+                h4 {{ r.address.slice(0, 11) }} - {{r.successfuls}} - {{r.fails}} -
+                    span.conn(@click='pollState(r.address)') update
+                    span.discon(@click='discon(r.address)') delete
+            h2 Feed to
+            div(v-for='s in unmatchedSubs')
                 span.conn {{ s.address }}
-                span(@click='discon(s.address)').discon delete subscription
+                span.discon(@click='discon(s.address)').discon delete
 </template>
 
 <script>
@@ -79,6 +80,21 @@ export default {
         },
     },
     computed: {
+        liveConnections(){
+            return this.$store.state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
+        },
+        brokeConnections(){
+            return this.$store.state.ao.filter(r => !r.state)
+        },
+        unmatchedSubs(){
+            let addresses = this.$store.state.ao.map(r => r.address)
+            console.log("connected addresses:" , {addresses})
+            let un = this.$store.state.cash.subscribed.filter(s => {
+                return addresses.indexOf(s.address) === -1
+            })
+            console.log('unmatched ', un)
+            return un
+        },
         playInfo(){
             return {
                 type: 'task-sub-tasked',
