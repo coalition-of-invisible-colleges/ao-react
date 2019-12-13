@@ -301,6 +301,7 @@ function tasksMuts(tasks, ev) {
                             if(p.priorities.indexOf(ev.taskId) === -1 && p.completed.indexOf(ev.taskId) > -1) {
                                 console.log("found")
                                 task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
+                                task.subTasks = task.subTasks.filter(taskId => taskId !== ev.taskId)
                                 task.subTasks.push(ev.taskId)
                             }
                         })

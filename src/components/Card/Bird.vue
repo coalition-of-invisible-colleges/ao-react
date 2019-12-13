@@ -214,17 +214,17 @@ export default {
         give() {
             this.makeSound()
             let found = []
-            if(this.$store.state.upgrades.sierpinski) {
-                let crawler = []
-                if(this.b.taskId === this.$store.getters.member.memberId) {
-                    this.$store.state.tasks.forEach(t => {
-                        if(t.deck.indexOf(this.$store.getters.member.memberId) > -1) {
-                            crawler.push(t.taskId)
-                        }
-                    })
-                } else {
-                    crawler = [ this.b.taskId ]
-                }
+            if(this.b.taskId === this.$store.getters.member.memberId) {
+                console.log("this.toMemberWarp is", this.toMemberWarp)
+                this.$store.dispatch('makeEvent', {
+                    type: 'doge-migrated',
+                    address: this.$store.getters.warpDrive.address,
+                    memberId: this.$store.getters.member.memberId,
+                    toMemberId: this.toMemberWarp,
+                })
+                console.log("22this.toMemberWarp is", this.toMemberWarp)
+            } else if(this.$store.state.upgrades.sierpinski) {
+                let crawler = [ this.b.taskId ]
                 let newCards = []
                 do {
                     newCards = []
@@ -244,32 +244,18 @@ export default {
                     })
                     crawler = newCards
                 } while(crawler.length > 0)
+                // found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
+                                found = [ this.b ]
+                this.$store.dispatch('makeEvent', {
+                    type: 'ao-relay',
+                    address: this.$store.getters.warpDrive.address,
+                    ev: {
+                        type: 'tasks-received',
+                        tasks: found,
+                    }
+                })
             } else {
                 found = [ this.b ]
-            }
-            if(this.b.taskId === this.$store.getters.member.memberId) {
-                let envelope = Cards.safeClone(this.$store.getters.memberCard)
-                envelope.name = this.$store.getters.member.name
-                envelope.subTasks = found
-                found.splice(0, 0, envelope)
-            }
-            found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
-            console.log("found is ", found)
-            if(found.length > 20) {
-                let next100 = found.splice(0, 20)
-                while(next100.length > 0) {
-                    console.log("next100 is ", next100)
-                    this.$store.dispatch('makeEvent', {
-                        type: 'ao-relay',
-                        address: this.$store.getters.warpDrive.address,
-                        ev: {
-                            type: 'tasks-received',
-                            tasks: next100,
-                        }
-                    })
-                    next100 = found.splice(0, 20)
-                }
-            } else {
                 this.$store.dispatch('makeEvent', {
                     type: 'ao-relay',
                     address: this.$store.getters.warpDrive.address,
