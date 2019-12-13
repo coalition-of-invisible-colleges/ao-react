@@ -8,13 +8,13 @@
         ul
             li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
                 img.lil(src='../assets/images/buddadoge.svg')
-                span Newspaper *
+                span Oracle *
             li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
                 img.lil(src='../assets/images/boatblack.svg')
                 span Top Missions **
             li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
                 img.lil(src='../assets/images/badge.svg')
-                span Much Recent ***
+                span Recent ***
             li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
                 img.lil(src='../assets/images/bounty.svg')
                 span Bounties ****
