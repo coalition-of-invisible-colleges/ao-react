@@ -4,9 +4,9 @@
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
-    template(v-for='c in completions'  :key='$store.state.upgrades.highlights')
+    template(v-for='c in checkmarks'  :key='$store.state.upgrades.highlights')
       span.tooltip.plain(@click='goIn(c.taskId)')
-        span.checkmark(:class="{ ...cardInputSty(c.color), highlight : (checkmarkHighlights.hasOwnProperty(c.taskId) && checkmarkHighlights[c.taskId] === 1), lowdark : (checkmarkHighlights.hasOwnProperty(c.taskId) && checkmarkHighlights[c.taskId] === -1), lilypad : (checkmarkHighlights.hasOwnProperty(c.taskId) && checkmarkHighlights[c.taskId] === 2) }"  :key='checkmarkHighlights') ☑
+        span.checkmark(:class="{ ...cardInputSty(c.color), highlight : c.highlight === 1, lowdark : c.highlight === -1, lilypad : c.highlight === 2 }"  :key='checkmarks') ☑
           .tooltiptext.smalltext
             .bigger {{ c.name }}
 </template>
@@ -98,48 +98,40 @@ export default {
     isLowdarked() {
         return this.$store.state.upgrades.highlights[this.memberId] === false
     },
-    checkmarkHighlights() {
-        let highlights = {}
-        if(Object.keys(this.$store.state.upgrades.highlights).length >= 1) {
-            let checkmarks = this.$store.getters.hodlersByCompletions.find(m => m.taskId === this.memberId)
-            if(!checkmarks || !checkmarks.contextCompletions) return highlights
-            checkmarks = checkmarks.contextCompletions
-            checkmarks.forEach((c, i) => {
-                Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
-                    // add the other two combinations here to correctly do anded logic
-                    if(arr[1]) {
-                        if(c.claimed.indexOf(arr[0]) !== -1) {
-                            if (highlights[c.taskId] === 0) {
-                                highlights[c.taskId] = 0
-                            } else if(highlights[c.taskId] === 1) {
-                                highlights[c.taskId] = 1
-                            } else if (highlights[c.taskId] === -1) {
-                                highlights[c.taskId] = 0
-                            } else {
-                                highlights[c.taskId] = 1
-                            }
-                        } else {
-                            highlights[c.taskId] = 0
-                        }
-                    } else if(!arr[1]) {
-                        if(c.claimed.indexOf(arr[0]) === -1) {
-                            if(highlights[c.taskId] === 0) {
-                                highlights[c.taskId] = -1
-                            } else if(highlights[c.taskId] === -1) {
-                                highlights[c.taskId] = -1
-                            } else if(highlights[c.taskId] === 1) {
-                                highlights[c.taskId] = 0
-                            } else {
-                                highlights[c.taskId] = -1
-                            }
-                        } else {
-                            highlights[c.taskId] = 0
-                        }
-                    }
-                })
-            })
+    checkmarks() {
+        let checkmarks = this.$store.getters.hodlersByCompletions.find(m => m.taskId === this.memberId)
+        if(!checkmarks || !checkmarks.contextCompletions) {
+            console.log("null contextpletions")
+            return []
         }
-        return highlights
+        checkmarks = checkmarks.contextCompletions
+        checkmarks.forEach(c => {
+            delete c.highlight
+        })
+        Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
+            checkmarks.forEach((c, i) => {
+                if(arr[1]) {
+                    if(c.claimed.indexOf(arr[0]) >= 0) {
+                        if(!c.hasOwnProperty('highlight')) {
+                            c.highlight = 1
+                        }
+                    } else {
+                        c.highlight = 0
+                    }
+                } else if(!arr[1]) {
+                    if(c.claimed.indexOf(arr[0]) === -1) {
+                        if(!c.hasOwnProperty('highlight')) {
+                            c.highlight = -1
+                        } else {
+                            c.highlight *= -1
+                        }
+                    } else {
+                        c.highlight = 0
+                    }
+                }
+            })
+        })
+        return checkmarks
     },
   }
 }

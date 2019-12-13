@@ -237,7 +237,7 @@ function tasksMuts(tasks, ev) {
             let bounty = 0
             tasks.forEach(task => {
                 let found = false
-                if (task.taskId === ev.memberId){
+                if(task.taskId === ev.memberId) {
                     task.boost += parseFloat(ev.paid)
                 }
 
@@ -301,6 +301,7 @@ function tasksMuts(tasks, ev) {
                             if(p.priorities.indexOf(ev.taskId) === -1 && p.completed.indexOf(ev.taskId) > -1) {
                                 console.log("found")
                                 task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
+                                task.subTasks = task.subTasks.filter(taskId => taskId !== ev.taskId)
                                 task.subTasks.push(ev.taskId)
                             }
                         })
