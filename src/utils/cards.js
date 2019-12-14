@@ -39,7 +39,6 @@ function safeClone(card) {
         payment_hash: '',
         boost: 0,
     }
-    console.log("safeClone is ", safeClone)
     return safeClone
 }
 
