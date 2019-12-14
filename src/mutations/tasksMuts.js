@@ -71,6 +71,7 @@ function tasksMuts(tasks, ev) {
             newEv.cap = 0
             newEv.allocations = []
             if(newEv.name) {
+                newEv.name = newEv.name.trim()
                 tasks.push(newEv)
             }
             if (newEv.inId){
@@ -198,9 +199,8 @@ function tasksMuts(tasks, ev) {
         case "task-sub-tasked":
             tasks.forEach(task => {
                 if(task.taskId === ev.subTask) {
-                    task.deck = _.filter(task.deck, mId => mId !== ev.memberId)
-                    if(task.deck.indexOf(ev.memberId) === -1) {
-                        if(ev.subTask !== ev.memberId && ev.memberId) {
+                    if(ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
+                        if(ev.subTask !== ev.memberId) {
                             task.deck.push(ev.memberId)
                         }
                     }

@@ -159,7 +159,7 @@ function specSubTasked(req, res, next){
     events.tasksEvs.taskSubTasked(
       req.body.taskId,
       req.body.subTask,
-      req.body.blame,
+      req.body.memberId,
       utils.buildResCallback(res)
     )
   } else {

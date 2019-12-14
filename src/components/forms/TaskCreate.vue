@@ -231,11 +231,8 @@ export default {
             this.task.color = t.color
         },
         debounce(func, delay) {
-            console.log("debounce")
             const context = this
             const args = arguments
-            console.log("debounce")
-            console.log("context is ", context, " and args is ", args)
             clearTimeout(this.inDebounce)
             this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
         },
@@ -250,7 +247,7 @@ export default {
         matchCard(){
             let foundId
             this.$store.state.tasks.filter(t => {
-                if(t.name === this.task.search.trim()) {
+                if(t.name === this.task.name.trim()) {
                     foundId = t.taskId
                 }
             })
@@ -304,13 +301,10 @@ export default {
                 return this.task.name
             },
             set(newValue) {
-                console.log("set called")
                 this.task.name = newValue
                 this.debounce(() => {
-                    console.log("debauncedcalled")
                     this.task.search = newValue
                 }, 400)
-                console.log("debounce set")
             }
         },
     }
