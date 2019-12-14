@@ -22,9 +22,7 @@ export default new Vuex.Store({
   },
   getters: {
       warpDrive(state, getters){
-          console.log("warp is ", state.upgrades.warp)
-          console.log("warpDrive is ", state.ao[state.upgrades.warp])
-          return state.ao[state.upgrades.warp]
+          return getters.liveConnections[state.upgrades.warp]
       },
       memberCard(state, getters){
           let memberCard = _.merge({
