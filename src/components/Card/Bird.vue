@@ -246,14 +246,18 @@ export default {
                 found = [ this.b ]
             }
             found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
-            this.$store.dispatch('makeEvent', {
-                type: 'ao-relay',
-                address: this.$store.getters.warpDrive.address,
-                ev: {
-                    type: 'tasks-received',
-                    tasks: found,
-                }
-            })
+            let next100 = found.splice(0, 20)
+            while(found.length > 0) {
+                this.$store.dispatch('makeEvent', {
+                    type: 'ao-relay',
+                    address: this.$store.getters.warpDrive.address,
+                    ev: {
+                        type: 'tasks-received',
+                        tasks: next100,
+                    }
+                })
+                next100 = found.splice(0, 20)
+            }
         },
     },
     computed: {

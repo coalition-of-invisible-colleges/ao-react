@@ -329,8 +329,8 @@ function specDogeMigrated(req, res, next){
             serverSecret = a.secret
           }
     })
-    while(tasks.length > 0) {
-        let next100 = tasks.splice(0, 20)
+    let next100 = tasks.splice(0, 20)
+    while(next100.length > 0) {
         let newEvent = {
             type: 'tasks-received',
             tasks: next100,
