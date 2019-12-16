@@ -153,6 +153,6 @@ export default {
     clear: both
     
 .highlight
-    box-shadow: 0 0 20px yellow, 0 0 20px rgba(255, 255, 0, 0.25)
+    box-shadow: 0 0 20px yellow
     border-radius: 50%
 </style>
