@@ -7,16 +7,18 @@
     template(v-for='c in checkmarks'  :key='$store.state.upgrades.highlights')
         span.tooltip.plain(@click='goIn(c.taskId)')
             span.checkmark(:class="{ ...cardInputSty(c.color), highlight : c.highlight === 1, lowdark : c.highlight === -1, lilypad : c.highlight === 2 }"  :key='checkmarks') ☑
-            .tooltiptext.bigger {{ c.name }}
+            linky.tooltiptext.bigger(:x='c.name')
 </template>
 
 <script>
 
 import SoundFX from '../../utils/sounds'
+import Linky from '../Card/Linky'
 
 export default {
   props: ['memberId', 'b', 'inId', 'completions'],
-  methods:{
+  components: { Linky },
+  methods: {
     goIn(taskId){
         SoundFX.playPageTurn()
         if (!this.$store.state.context.completed){

@@ -418,7 +418,7 @@ h2
     cursor: pointer
 
 .plain.checkmark .tooltiptext
-    font-size: 0.5em
+    font-size: 0.65em
 
 .plain
     text-decoration: none
