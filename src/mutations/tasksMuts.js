@@ -115,10 +115,47 @@ function tasksMuts(tasks, ev) {
                         }
                     }
                 }
-                if(task.taskId === ev.memberId) {
-                    if(task.subTasks.indexOf(ev.taskId) === -1) {
-                        task.subTasks.push(ev.taskId)
-                    }
+            })
+            break
+        case "pile-grabbed":
+            console.log("pile-grabbed case")
+            if(!ev.memberId) {
+                break
+            }
+            tasks.forEach(task => {
+                if(task.taskId === ev.taskId) {
+                    task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+                    let crawler = [ev.taskId]
+                    let history = []
+                    let newCards = []
+                    do {
+                        newCards = []
+                        crawler = crawler.forEach(t => {
+                            if(history.indexOf(t) >= 0) return
+                            let subTask = tasks.filter(pst => pst.taskId === t)
+                            if(subTask.length < 1) {
+                                console.log("missing subtask, this is messy")
+                                return
+                            }
+                            if(subTask.length > 1) {
+                                console.log("duplicate task found, this is very bad")
+                            }
+                            subTask = subTask[0]
+                            if(subTask === undefined || subTask.subTasks === undefined || subTask.priorities === undefined || subTask.completed === undefined) {
+                                console.log("invalid task data found, this is very bad")
+                                return
+                            }
+    
+                            history.push(t)
+    
+                            if(subTask.deck.indexOf(ev.memberId) === -1 && ev.taskId !== ev.memberId) {
+                                subTask.passed = _.filter(subTask.passed, d => d[1] !== ev.memberId)
+                                subTask.deck.push(ev.memberId)
+                            }
+                            newCards = newCards.concat(subTask.subTasks).concat(subTask.priorities).concat(subTask.completed)
+                        })
+                        crawler = newCards
+                    } while(crawler.length > 0)
                 }
             })
             break
@@ -126,7 +163,50 @@ function tasksMuts(tasks, ev) {
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
                     task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
-                    task.deck = _.filter(task.deck, d => d !== ev.memberId )
+                    task.deck = _.filter(task.deck, d => d !== ev.memberId)
+                }
+            })
+            break
+        case "pile-dropped":
+            console.log("case pile-dropped")
+            if(!ev.memberId) {
+                break
+            }
+            tasks.forEach(task => {
+                if(task.taskId === ev.taskId) {
+                    task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+                    let crawler = [ev.taskId]
+                    let history = []
+                    let newCards = []
+                    do {
+                        newCards = []
+                        crawler = crawler.forEach(t => {
+                            if(history.indexOf(t) >= 0) return
+                            let subTask = tasks.filter(pst => pst.taskId === t)
+                            if(subTask.length < 1) {
+                                console.log('missing subtask, this is messy')
+                                return
+                            }
+                            if(subTask.length > 1) {
+                                console.log('duplicate task found, this is very bad')
+                            }
+                            subTask = subTask[0]
+                            if(subTask === undefined || subTask.subTasks === undefined || subTask.priorities === undefined || subTask.completed === undefined) {
+                                console.log('invalid task data found, this is very bad')
+                                return
+                            }
+    
+                            history.push(t)
+    
+                            if(subTask.deck.indexOf(ev.memberId) >= 0 && ev.taskId !== ev.memberId) {
+                                subTask.passed = _.filter(subTask.passed, d => d[1] !== ev.memberId)
+                                subTask.deck = _.filter(subTask.deck, d => d !== ev.memberId)
+                                console.log("dropped one card")
+                            }
+                            newCards = newCards.concat(subTask.subTasks).concat(subTask.priorities).concat(subTask.completed)
+                        })
+                        crawler = newCards
+                    } while(crawler.length > 0)
                 }
             })
             break

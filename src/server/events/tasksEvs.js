@@ -73,6 +73,24 @@ function taskGrabbed(taskId, memberId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
+function pileGrabbed(taskId, memberId, callback){
+    let newEvent = {
+      type: "pile-grabbed",
+      taskId,
+      memberId,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
+function pileDropped(taskId, memberId, callback){
+    let newEvent = {
+      type: "pile-dropped",
+      taskId,
+      memberId,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
 function taskSubTasked(taskId, subTask, memberId, callback){
     let newEvent = {
       type: "task-sub-tasked",
@@ -267,6 +285,8 @@ export default {
   taskRemoved,
   taskSwapped,
   taskGrabbed,
+  pileGrabbed,
+  pileDropped,
   taskPrioritized,
   taskDropped,
   taskPassed,

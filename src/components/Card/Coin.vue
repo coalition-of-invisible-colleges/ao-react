@@ -41,7 +41,7 @@ export default {
         })
 
         mc.on('press', (e) => {
-            this.grabAllWithin()
+            this.grabOrDropPile()
             e.stopPropagation()
         })
 
@@ -60,7 +60,7 @@ export default {
     },
     computed: {
         isGrabbed(){
-          return this.b.deck.indexOf( this.$store.getters.member.memberId ) >= 0
+          return this.b.deck.indexOf(this.$store.getters.member.memberId) >= 0
         },
         inHand() {
             console.log("index is ", this.$store.getters.memberCard.subTasks.concat(this.$store.getters.memberCard.priorities, this.$store.getters.memberCard.completed).indexOf(this.b.taskId))
@@ -69,7 +69,7 @@ export default {
     },
     methods: {
         toggleGrab(){
-            if (this.isGrabbed) {
+            if(this.isGrabbed) {
                 SoundFX.playTwinkleDown()
                 this.$store.dispatch("makeEvent", {
                     type: 'task-dropped',
@@ -85,8 +85,22 @@ export default {
                 })
             }
         },
-        grabAllWithin() {
-            console.log("grabAllWithin()")
+        grabOrDropPile() {
+            if(!this.isGrabbed) {
+                SoundFX.playTwinkleUp()
+                this.$store.dispatch("makeEvent", {
+                    type: 'pile-grabbed',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
+            } else {
+                SoundFX.playTwinkleDown()
+                this.$store.dispatch("makeEvent", {
+                    type: 'pile-dropped',
+                    taskId: this.b.taskId,
+                    memberId: this.$store.getters.member.memberId,
+                })
+            }
         },
         upHand() {
             if(!this.inHand) {

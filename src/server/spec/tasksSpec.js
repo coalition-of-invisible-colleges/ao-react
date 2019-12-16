@@ -55,7 +55,9 @@ module.exports = function(req,res, next){
           specTaskPassed(req, res, next)
           break
       case 'task-grabbed':
+      case 'pile-grabbed':
       case 'task-dropped':
+      case 'pile-dropped':
           specTaskMoved(req, res, next)
           break
       case 'task-swapped':
@@ -441,8 +443,22 @@ function specTaskMoved(req, res, next){
                 utils.buildResCallback(res)
               )
               break
+          case 'pile-grabbed':
+              events.tasksEvs.pileGrabbed(
+                req.body.taskId,
+                req.body.memberId,
+                utils.buildResCallback(res)
+              )
+              break
           case 'task-dropped':
               events.tasksEvs.taskDropped(
+                req.body.taskId,
+                req.body.memberId,
+                utils.buildResCallback(res)
+              )
+              break
+          case 'pile-dropped':
+              events.tasksEvs.pileDropped(
                 req.body.taskId,
                 req.body.memberId,
                 utils.buildResCallback(res)
