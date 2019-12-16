@@ -31,14 +31,7 @@
     div
         scroll.faded(:b='b', :inId='inId')
         vine.faded(:b='b')
-        .tooltip.dogepepecoin
-            img.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
-            .tooltiptext
-                p(v-if='$store.getters.member.muted') held by:
-                current.block(v-for='memberId in b.deck'  :memberId='memberId')
-                .suggest(v-if='!isGrabbed && $store.getters.member.muted') click to hodl
-                .suggest(v-if='isGrabbed && $store.getters.member.muted') click to dump
-            p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
+        hodlcoin(:b='b')
 </template>
 
 <script>
@@ -50,6 +43,7 @@ import Bird from './Bird'
 import Flag from './Flag'
 import Scroll from './Scroll'
 import Vine from './Vine'
+import Hodlcoin from './Coin'
 import Passed from './Passed'
 import Shipped from './Shipped'
 import Tally from './Tally'
@@ -65,7 +59,7 @@ export default {
     data(){
         return { active: false }
     },
-    components: {FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
+    components: { FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Hodlcoin, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
     mounted() {
         let el = this.$refs.wholeCard
         if(!el) return
@@ -89,7 +83,7 @@ export default {
             e.stopPropagation()
         })
     },
-    methods: {
+    makeEventhods: {
         purge(){
           this.$store.dispatch("makeEvent", {
               type: 'task-removed',
@@ -130,23 +124,6 @@ export default {
             })
 
             this.$router.push("/" + this.$store.state.upgrades.mode)
-        },
-        toggleGrab(){
-            if (this.isGrabbed) {
-                SoundFX.playTwinkleDown()
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-dropped',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-            } else {
-                SoundFX.playTwinkleUp()
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-grabbed',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-            }
         },
         copyCardToClipboard(){
           SoundFX.playChunkSwap()
@@ -212,12 +189,6 @@ export default {
           })
           return task
         },
-        isGrabbed(){
-          return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
-        },
-        isDecked(){
-          return this.$store.getters.memberCard.subTasks.indexOf(this.b.taskId) > -1
-        },
         cardAge(){
           let now = Date.now()
           let msSince = now - this.b.timestamp
@@ -235,7 +206,7 @@ export default {
         },
         fractionalReserveDoge() {
             return Math.max(Math.floor((this.b.weight % 1) * 16), 1)
-        }
+        },
     },
 }
 
@@ -284,10 +255,6 @@ export default {
     font-size: 1em
     padding-bottom: 1em
 
-.block
-    display: block
-    clear: both
-
 .arrow
     height: 3.35em
 
@@ -325,36 +292,6 @@ export default {
   left: 0
   right: 0
   bottom: 0
-}
-
-.dogepepecoin {
-  width: 35px
-  height: 35px
-  position: absolute
-  left: calc(50% - 17.5px)
-  bottom: 0.75em
-  cursor: pointer
-}
-
-.hodlcount {
-    position: absolute
-    left: calc(50% - 17.5px)
-    text-align: center
-    width: 35px
-    bottom: calc(0.75em + 9px)
-    padding-bottom: 0
-    margin-bottom: 0
-    font-weight: bold
-    color: rgba(255, 255, 255, 0.75)
-    pointer-events: none
-}
-
-.grabbedhodlcount {
-    opacity: 1
-}
-
-.ungrabbedcoin {
-    opacity: 0.3
 }
 
 .faded
@@ -421,10 +358,6 @@ export default {
 .cardname
     z-index: 15
     position: relative
-
-.suggest
-    font-style: italic
-    margin-top: 1em
 
 .dogecoin
     position: absolute

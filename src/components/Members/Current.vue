@@ -105,6 +105,8 @@ export default {
             return []
         }
         checkmarks = checkmarks.contextCompletions
+        // remove duplicates, shouldn't be possible
+        checkmarks = [...new Set(checkmarks)]
         checkmarks.forEach(c => {
             delete c.highlight
         })
