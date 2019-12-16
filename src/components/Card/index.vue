@@ -83,7 +83,7 @@ export default {
             e.stopPropagation()
         })
     },
-    makeEventhods: {
+    methods: {
         purge(){
           this.$store.dispatch("makeEvent", {
               type: 'task-removed',
