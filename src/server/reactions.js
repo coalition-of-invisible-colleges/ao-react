@@ -43,19 +43,21 @@ function reactions(ev){
                         return true
                     }
                 })
-
+                
                 serverState.tasks.some(t => {
                     if (ev.taskId === t.taskId){
                         let str = t.name
                         let cashTagLocation = str.search(/\$/)
-                        let customPrice = parseFloat( str.slice(cashTagLocation + 1, cashTagLocation + 3) )
+                        let customPrice = parseFloat( str.slice(cashTagLocation + 1, cashTagLocation + 5) )
                         if (customPrice > 0){
+                            console.log("using custom price, ", customPrice)
                             defaultPrice = customPrice
                         }
                         if (defaultPrice > 0 && amount > 0){
                             amount = amount / defaultPrice
                         }
-                        events.resourcesEvs.resourceUsed(resourceId, '', amount, 0, t.name.slice(0,1), console.log)
+                        let hopper = t.name.slice(0,1)
+                        events.resourcesEvs.resourceUsed(resourceId, '', amount, 0, hopper, console.log)
                         return true
                     }
                 })
@@ -66,6 +68,7 @@ function reactions(ev){
                 }
                 break
             case 'member-paid':
+                break
             case 'resource-stocked':
                 events.membersEvs.memberActivated(ev.memberId)
                 break

@@ -19,7 +19,7 @@ function resourcesMuts(resources, ev){
 			break
 		case "resource-purged":
 				resources.forEach( (r, i) => {
-						if (r.memberId === ev.memberId) {
+						if (r.resourceId === ev.resourceId) {
 								resources.splice(i, 1)
 						}
 				})
