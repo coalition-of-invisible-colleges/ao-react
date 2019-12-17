@@ -24,14 +24,38 @@ function reactions(ev){
         switch (ev.type) {
             case 'task-boosted':
             case 'task-boosted-lightning':
-                serverState.resources.some( r => {
-                    if (r.resourceId === ev.taskId){
-                        let amount = parseFloat( ev.amount ) | 1
-                        let charge = parseFloat( r.charge )
-                        if (charge > 0 && amount > 0){
-                            amount = amount / charge
+                let optionList = []
+                let defaultPrice
+                let resourceId
+                let resourceList = serverState.resources.map(r => r.resourceId)
+                let amount = parseFloat(ev.amount)
+
+                serverState.tasks.some(t => {
+                    if (resourceList.indexOf(t.taskId) > -1 && t.priorities.indexOf(ev.taskId) > -1){
+                        resourceId = t.taskId
+                        return true
+                    }
+                })
+
+                serverState.resources.some(r => {
+                    if (r.resourceId === resourceId){
+                        defaultPrice = r.charge
+                        return true
+                    }
+                })
+
+                serverState.tasks.some(t => {
+                    if (ev.taskId === t.taskId){
+                        let str = t.name
+                        let cashTagLocation = str.search(/\$/)
+                        let customPrice = parseFloat( str.slice(cashTagLocation + 1, cashTagLocation + 3) )
+                        if (customPrice > 0){
+                            defaultPrice = customPrice
                         }
-                        events.resourcesEvs.resourceUsed(r.resourceId, '', amount, 0, '', console.log)
+                        if (defaultPrice > 0 && amount > 0){
+                            amount = amount / defaultPrice
+                        }
+                        events.resourcesEvs.resourceUsed(resourceId, '', amount, 0, t.name.slice(0,1), console.log)
                         return true
                     }
                 })
