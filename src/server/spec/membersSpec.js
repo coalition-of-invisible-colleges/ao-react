@@ -314,7 +314,7 @@ function specDogeMigrated(req, res, next){
     })
     
     let envelope = Cards.safeClone(memberCard)
-    envelope.name = state.members.find(m => { mId === req.body.memberId }).name
+    envelope.name = memberCard.name
     envelope.subTasks = taskIds
     envelope.passed = [[req.body.address, req.body.toMemberId]]
 
