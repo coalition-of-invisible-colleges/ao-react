@@ -36,14 +36,13 @@ function reactions(ev){
                         return true
                     }
                 })
-
+                console.log("got resourceId", resourceId)
                 serverState.resources.some(r => {
                     if (r.resourceId === resourceId){
                         defaultPrice = r.charge
                         return true
                     }
                 })
-                
                 serverState.tasks.some(t => {
                     if (ev.taskId === t.taskId){
                         let str = t.name

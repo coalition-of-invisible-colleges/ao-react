@@ -1,23 +1,21 @@
 <template lang='pug'>
 
 .upgrades
-    .padded
-        div(v-if='$store.state.cash.info.alias')
-            .togglepayments
-                button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
-                    img.max(src='../../assets/images/bitcoin.svg')
-                button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
-                    img.max(src='../../assets/images/lightning.svg')
-            div(v-show='$store.state.upgrades.payment === "bitcoin"')
-                div(v-if='b.address')
-                    pay-address(:address='b.address')
-            div(v-show='$store.state.upgrades.payment === "lightning"')
-                form-box.centerform(:btntxt='"invoice " + payreqAmount'  event='invoice-created'  v-bind:data='invoiceCreate')
-                    label.adjusttop.fl choose amount:
-                    input.smallbox.fr(v-model='payreqAmount')
-                div(v-if='b.bolt11')
-                    pay-req(:bolt11='b.bolt11')
-        div.suggest(v-else) no lightning node :(
+    div(v-if='$store.state.cash.info.alias')
+        .togglepayments
+            button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
+                img.max(src='../../assets/images/bitcoin.svg')
+            button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
+                img.max(src='../../assets/images/lightning.svg')
+        div(v-show='$store.state.upgrades.payment === "bitcoin"')
+            div(v-if='b.address')
+                pay-address(:address='b.address')
+        div(v-show='$store.state.upgrades.payment === "lightning"')
+            //- label.adjusttop.fl choose amount:
+            //- input.smallbox.fr(v-model='payreqAmount')
+            div(v-if='b.bolt11')
+                pay-req(:bolt11='b.bolt11')
+    div.suggest(v-else) no lightning node :(
 </template>
 
 <script>
@@ -148,7 +146,7 @@ h3
 
 
 .lightbg
-    background: softGrey
+    background: rgba(0,0,0,0)
 
 .fl
     float: left

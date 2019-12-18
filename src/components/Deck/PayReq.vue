@@ -1,14 +1,11 @@
 <template lang='pug'>
 
 .payreq
-  .row
-    .six.columns
-        label lightning payment request
-        a(:href='"lightning:" + (this.bolt11)')
-            button Open Wallet
-        .small {{ bolt11 }}
-    .six.columns
-        div(v-html='imgTag')
+    h3 lightning payment request
+    span(v-html='imgTag')
+    span.small {{ bolt11 }}
+    a(:href='"lightning:" + (this.bolt11)')
+      button Open Wallet
 </template>
 
 <script>
@@ -51,8 +48,8 @@ export default {
 @import '../../styles/skeleton'
 
 .payreq
-    color: main
-    background-color: lightGrey
+    color: wrexblue
+    background-color: rgba(0,0,0,0)
     border-radius: 0.5em
     padding: 1em
     margin-bottom: 1.654321em
@@ -71,12 +68,10 @@ a
     color: purple
     font-size: 5em
 
-p
-    color: accent1
-
 .small
     font-size: .82em
-    word-wrap: break-word;
+    word-wrap: break-word
+    word-break: break-all
 
 
 </style>
