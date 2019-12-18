@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .memberrow.membershipcard
-    bird(:b='card')
+    bird(v-if='$store.state.upgrades.warp >= 0'  :b='card')
     .row.center.clearboth(:class='{ pullup : $store.state.upgrades.mode !== "boat" && $store.state.upgrades.mode !== "doge" && dukkha >= 1 }')
         img.logindicator(v-if='isLoggedIn', src='../../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
@@ -23,6 +23,7 @@
             ul.left(v-if='nameList.length > 0')
                 li(v-for='n in nameList')
                     vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
+            h2 hodling {{ deckSize }} cards
     .clearboth
 </template>
 
@@ -59,6 +60,11 @@ export default {
         },
         dukkha() {
             return this.$store.getters.contextCard.priorities.length
+        },
+        deckSize() {
+            return this.$store.state.tasks.filter(t => {
+                return t.deck.indexOf(this.$store.getters.member.memberId) >= 0
+            }).length
         },
     },
     methods: {

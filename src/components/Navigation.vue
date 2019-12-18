@@ -2,7 +2,8 @@
 
 .navigation(@contextmenu.prevent)
     h1.loadingscreen(v-if='$store.state.context.loading') loading {{ $store.state.context.loading }}
-    img.dableft.adjtooltip(src="../assets/images/navigas/sunUni.svg"  ref='sun')
+    img.dableft.adjtooltip(src="../assets/images/navigas/sun.svg"  ref='sun')
+    //- img.dableft.adjtooltip(v-if='$store.state.upgrades.warp > -1'  src="../assets/images/navigas/sun_red.svg"  ref='sun')
     .tooltiptext.left(v-if='$store.getters.member.muted')
         h2.leftalign Sun Pages:
         ul
@@ -22,7 +23,7 @@
                 img.lil(src='../assets/images/timecube.svg')
                 span Calendar *****
         p once to advance or multiclick to a specific page
-    img.dabright.adjtooltip(src="../assets/images/navigas/bullUni.svg"  ref='bull')
+    img.dabright.adjtooltip(src="../assets/images/navigas/bull.svg"  ref='bull')
     .tooltiptext.right(v-if='$store.getters.member.muted')
         h2.leftalign Bull Pages:
         ul

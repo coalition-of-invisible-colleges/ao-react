@@ -72,9 +72,9 @@ else
 fi
 
 #install yarn
-if [ $(yarn --version | grep -c "1\.19\.1") -eq 1 ];
+if [ $(yarn --version | grep -c "1\.21\.1") -eq 1 ];
 then
-	echo yarn v1.17.3 already installed
+	echo yarn v1.21.1 already installed
 else
 	cd ~
 	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -164,7 +164,7 @@ fi
 
 if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.7\.3") -eq 1 ];
 then
-	echo c-lightning v0.7.3 already installed
+	echo c-lightning v0.8.0 already installed
 else
 	cd ~
 	git clone https://github.com/ElementsProject/lightning.git

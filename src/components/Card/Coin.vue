@@ -63,7 +63,6 @@ export default {
           return this.b.deck.indexOf(this.$store.getters.member.memberId) >= 0
         },
         inHand() {
-            console.log("index is ", this.$store.getters.memberCard.subTasks.concat(this.$store.getters.memberCard.priorities, this.$store.getters.memberCard.completed).indexOf(this.b.taskId))
             return this.$store.getters.memberCard.subTasks.concat(this.$store.getters.memberCard.priorities, this.$store.getters.memberCard.completed).indexOf(this.b.taskId) >= 0
         }
     },
