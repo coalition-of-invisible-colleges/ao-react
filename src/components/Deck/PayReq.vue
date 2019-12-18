@@ -2,6 +2,8 @@
 
 .payreq
     h3 lightning payment request
+        span.yellowtx {{ satAmount.toLocaleString() }} &#12471;
+        span - {{ cadAmount }}
     span(v-html='imgTag')
     span.small {{ bolt11 }}
     a(:href='"lightning:" + (this.bolt11)')
@@ -33,8 +35,12 @@ export default {
             return tag
         },
         cadAmount(){
-            return 1
-            // return calculations.satsToCad(this.i.sats, this.$store.state.cash.spot)
+            let found = this.bolt11.match(/[0-9]+/)
+            return calculations.satsToCad(found[0] / 10, this.$store.state.cash.spot)
+        },
+        satAmount(){
+            let found = this.bolt11.match(/[0-9]+/)
+            return found[0] / 10
         }
     }
 }
