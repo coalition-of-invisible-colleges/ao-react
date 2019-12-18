@@ -72,7 +72,12 @@ export default {
               let t = this.$store.getters.hashMap[this.taskId]
               t.subTasks.forEach(t => tasks.push( this.getTask(t)))
           } else if (this.task && this.task.subTasks) {
-              this.task.subTasks.forEach( tId => tasks.push( this.getTask(tId) ))
+              this.task.subTasks.forEach( tId => {
+                  let task = this.getTask(tId)
+                  if(task) {
+                      tasks.push( task )
+                  }
+              })
           }
           return tasks
       },

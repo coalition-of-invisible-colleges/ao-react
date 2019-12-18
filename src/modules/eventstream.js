@@ -1,3 +1,6 @@
+import SoundFX from '../utils/sounds'
+import Store from '../store'
+
 let memes = [
     'very database',
     'such create',
@@ -55,6 +58,13 @@ const mutations = {
 
 const actions = {
     displayEvent({commit}, ev){
+        console.log("ev type is ", ev.type)
+        if(ev.type === 'doge-barked') {
+            SoundFX.playBarkPing()
+            Store.commit('bark')
+            return
+        }
+
         commit('show', ev)
         setTimeout(()=>{
             commit('hide')

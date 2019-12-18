@@ -118,7 +118,6 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "pile-grabbed":
-            console.log("pile-grabbed case")
             if(!ev.memberId) {
                 break
             }
@@ -168,7 +167,6 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "pile-dropped":
-            console.log("case pile-dropped")
             if(!ev.memberId) {
                 break
             }
@@ -201,7 +199,6 @@ function tasksMuts(tasks, ev) {
                             if(subTask.deck.indexOf(ev.memberId) >= 0 && ev.taskId !== ev.memberId) {
                                 subTask.passed = _.filter(subTask.passed, d => d[1] !== ev.memberId)
                                 subTask.deck = _.filter(subTask.deck, d => d !== ev.memberId)
-                                console.log("dropped one card")
                             }
                             newCards = newCards.concat(subTask.subTasks).concat(subTask.priorities).concat(subTask.completed)
                         })
@@ -501,13 +498,16 @@ function tasksMuts(tasks, ev) {
                         t.book = p.book
                         t.address = p.address
                         t.bolt11 = p.bolt11
-                        t.subTasks = _.union(t.subTasks, p.subTasks)
-                        t.priorities = _.union(t.priorities, p.priorities)
-                        t.completed = _.union(t.completed, p.completed)
+                        t.subTasks = [...new Set(t.subTasks.concat(p.subTasks))]
+                        t.priorities = [...new Set(t.priorities.concat(p.priorities))]
+                        t.completed = [...new Set(t.completed.concat(p.completed))]
                         t.passed = p.passed
                         return true
                     }
                 })) {
+                    if(p.name.trim().includes('migrated')) {
+                        console.log("merging a card with the word migrated in it, this is very bad and probably overwriting subTasks lists in the envelope")
+                    }
                     // do a safeClone here for security
                     tasks.push(p)
                 }

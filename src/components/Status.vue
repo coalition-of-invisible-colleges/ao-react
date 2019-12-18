@@ -3,7 +3,7 @@
 .status.small.always.left
     .tooltip
         img.doge(v-if='$store.getters.member.muted'  src='../assets/images/bread_corgi.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-        img.doge(v-else-if='!barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+        img.doge(v-else-if='!$store.state.upgrades.barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
             p(v-if='$store.state.upgrades.warp > -1') {{ $store.getters.warpDrive.alias }}
@@ -19,6 +19,11 @@
                 span.pong ({{ $store.state.loader.lastPing }} ms pong)
             p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
             p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
+            h3(v-if='liveConnections.length > 0') Connected AOs
+            h3(v-else) no connected AOs
+            div(v-for='r in liveConnections')
+                ul
+                    li {{ r.state.cash.alias }}
             p.suggest(v-if='$store.getters.member.muted') you are in Bread Doge Mode. while in Bread Doge Mode, sounds will be muted and tutorial tooltips will be displayed.
             p.suggest(v-if='$store.getters.member.muted') double-dab to switch to Doge Radar Mode
             p.suggest(v-if='!$store.getters.member.muted') Doge Radar - long dab to bark
@@ -31,7 +36,7 @@
             .div
         .ping.pos1
         .ping.pos2
-    .ringbase.ring3.big(:class='{ showping : pinging }')
+    .ringbase.ring3.big(:class='{ showping : $store.state.upgrades.pinging }')
 </template>
 
 <script>
@@ -55,15 +60,6 @@ export default {
             if(this.$store.getters.member.muted) {
                 return
             }
-            SoundFX.playBarkPing()
-            this.barking = true
-            this.pinging = true
-            setTimeout(()=> {
-                this.barking = false
-            }, 1000)
-            setTimeout(()=> {
-                this.pinging = false
-            }, 2000)
             this.$store.dispatch("makeEvent", {
                 type: "doge-barked",
                 memberId: this.$store.getters.member.memberId
@@ -93,12 +89,6 @@ export default {
             this.$store.commit('setWarp', (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length)
         })
     },
-    data(){
-        return {
-            barking: false,
-            pinging: false,
-        }
-    },
     methods: {
         toggleMute() {
             if(this.$store.getters.member.muted) {
@@ -114,6 +104,11 @@ export default {
             }
         },
     },
+    computed: {
+        liveConnections(){
+            return this.$store.state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
+        },
+    }
 }
 </script>
 

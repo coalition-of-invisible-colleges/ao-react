@@ -2,9 +2,14 @@
 
 .bird(ref='wholeBird')
     div(ref='bird')
-        div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
-        img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
-        img.birdy(v-else  src='../../assets/images/birdbtnselected.svg')
+        div(v-if='$store.state.upgrades.warp === -1')
+            div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
+            img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn.svg')
+            img.birdy(v-else  src='../../assets/images/birdbtnselected.svg')
+        div(v-else)
+            div.birdy.faded.smallguild.red(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
+            img.birdy.faded(v-else-if='!showGive && !b.guild' src='../../assets/images/birdbtn_red.svg')
+            img.birdy(v-else  src='../../assets/images/birdbtnselected_red.svg')
     .play(v-if='showPlay')
         div(v-if='$store.state.upgrades.warp > -1')
             select.shorten(v-model='toGuildWarp')
@@ -30,7 +35,7 @@
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
-            button.small(v-else  @click='give') send entire deck
+            button.small(v-else  @click='migrate') send entire deck
             span.sierpinskiwrapper
                 sierpinski(v-if='this.b.taskId !== this.$store.getters.member.memberId'  :b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
@@ -396,6 +401,13 @@ label
 
 .smallguild:hover, .smallguild.open
     background-image: url('../../assets/images/badge_white.svg')
+
+.smallguild.red
+    background-image: url('../../assets/images/badge_red.svg')
+    opacity: 0.55
+    
+.smallguild:hover, .smallguild.red.open
+    background-image: url('../../assets/images/badge_white_red.svg')
 
 .give, .play, .warp
     position: relative

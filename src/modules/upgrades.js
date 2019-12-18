@@ -13,6 +13,8 @@ const state = {
     warp: -1,
     highlights: {},
     sierpinski: true,
+    barking: false,
+    pinging: false,
 }
 
 const mutations = {
@@ -74,6 +76,16 @@ const mutations = {
     },
     toggleSierpinski(state, primed) {
         state.sierpinski = !state.sierpinski
+    },
+    bark(state) {
+        state.barking = true
+        state.pinging = true
+        setTimeout(()=> {
+            state.barking = false
+        }, 1000)
+        setTimeout(()=> {
+            state.pinging = false
+        }, 2000)
     }
 }
 
