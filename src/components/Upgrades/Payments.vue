@@ -7,12 +7,13 @@
                 img.max(src='../../assets/images/bitcoin.svg')
             button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
                 img.max(src='../../assets/images/lightning.svg')
+            button.submode
+                input.smallbox.fr(v-model='payreqAmount')
+                button(@click='invoiceCreate') ♻️
         div(v-show='$store.state.upgrades.payment === "bitcoin"')
             div(v-if='b.address')
                 pay-address(:address='b.address')
         div(v-show='$store.state.upgrades.payment === "lightning"')
-            //- label.adjusttop.fl choose amount:
-            //- input.smallbox.fr(v-model='payreqAmount')
             div(v-if='b.bolt11')
                 pay-req(:bolt11='b.bolt11')
     div.suggest(v-else) no lightning node :(
@@ -34,7 +35,7 @@ export default {
     },
     data(){
         return {
-            payreqAmount: '',
+            payreqAmount: 1,
         }
     },
     methods: {
@@ -53,6 +54,19 @@ export default {
                     })
                 }
             }
+            if (x === 1) {
+                this.invoiceCreate()
+            }
+        },
+        invoiceCreate(){
+          let spot = this.$store.state.cash.spot
+          let amount = calcs.cadToSats( this.payreqAmount, spot)
+          this.$store.dispatch('makeEvent', {
+            type: 'invoice-created',
+            taskId: this.b.taskId,
+            amount,
+            label: '<3'
+          })
         },
     },
     computed: {
@@ -63,16 +77,6 @@ export default {
             return {
                 type: 'address-updated',
                 taskId: this.b.taskId
-            }
-        },
-        invoiceCreate(){
-            let spot = this.$store.state.cash.spot
-            let amount = calcs.cadToSats( this.payreqAmount, spot)
-            return {
-                type: 'invoice-created',
-                taskId: this.b.taskId,
-                amount,
-                label: '<3'
             }
         },
     },
