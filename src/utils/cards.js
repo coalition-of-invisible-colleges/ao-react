@@ -1,3 +1,5 @@
+import cryptoUtils from '../crypto'
+
 function shortName(name) {
     let limit = 280
     let shortened = name.substring(0, limit)
@@ -16,6 +18,35 @@ function cardColorCSS(color) {
         purplewx : color == 'purple',
         blackwx : color == 'black',
     }
+}
+
+function blankCard(name) {
+    name = name.trim()
+    let newCard = {
+        taskId: cryptoUtils.createHash(name),
+        name: name,
+        claimed: [],
+        completed: [],
+        passed: [],
+        guild: false,
+        subTasks: [],
+        lastClaimed: 0,
+        book: {},
+        priorities: [],
+        deck: [],
+        color: 'purple',
+        address: '',
+        allocations: [],
+        bolt11: 0,
+        payment_hash: '',
+        boost: 0,
+        monthlyValue: 0,
+        cap: 0,
+        book: {},
+        bolt11: '',
+        payment_hash: ''
+    }
+    return newCard
 }
 
 function safeClone(card) {
@@ -47,5 +78,6 @@ function safeClone(card) {
 export default {
     shortName,
     cardColorCSS,
+    blankCard,
     safeClone,
 }

@@ -313,9 +313,17 @@ function specDogeMigrated(req, res, next){
         }
     })
     
-    let envelope = Cards.safeClone(memberCard)
+    let memberObject = state.serverState.members.find(m => {
+        return m.memberId === req.body.memberId
+    })
+    console.log("memberObject is ", memberObject)
+    let name = 'migrated doge'
+    if(memberObject) {
+        name = memberObject.name
+    }
+    let envelope = Cards.blankCard(name)
     envelope.name = memberCard.name
-    envelope.subTasks = taskIds
+    envelope.subTasks = [...new Set(taskIds)]
     envelope.passed = [[req.body.address, req.body.toMemberId]]
 
     tasks = state.serverState.tasks.filter(t => taskIds.indexOf(t.taskId) >= 0)
@@ -330,7 +338,7 @@ function specDogeMigrated(req, res, next){
           }
     })
     console.log("tasks to be sent: ", tasks.length)
-    let next100 = tasks.splice(0, 10)
+    let next100 = tasks.splice(0, 50)
     let delay = 0
     while(next100.length > 0) {
         console.log("iteration next100 length is ", next100.length, " delay is ", delay)
@@ -349,7 +357,7 @@ function specDogeMigrated(req, res, next){
             })
         }, delay)
         console.log("timeout set with delay ", delay)
-        next100 = tasks.splice(0, 10)
-        delay += 10000
+        next100 = tasks.splice(0, 50)
+        delay += 500
     }
 }
