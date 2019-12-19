@@ -501,7 +501,7 @@ function tasksMuts(tasks, ev) {
                         t.subTasks = [...new Set(t.subTasks.concat(p.subTasks))]
                         t.priorities = [...new Set(t.priorities.concat(p.priorities))]
                         t.completed = [...new Set(t.completed.concat(p.completed))]
-                        t.passed = p.passed
+                        t.passed = [...new Set(t.passed.concat(p.passed))]
                         return true
                     }
                 })) {

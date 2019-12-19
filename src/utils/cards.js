@@ -23,28 +23,25 @@ function cardColorCSS(color) {
 function blankCard(name) {
     name = name.trim()
     let newCard = {
-        taskId: cryptoUtils.createHash(name),
         name: name,
-        claimed: [],
-        completed: [],
-        passed: [],
-        guild: false,
-        subTasks: [],
-        lastClaimed: 0,
-        book: {},
-        priorities: [],
-        deck: [],
-        color: 'purple',
+        taskId: cryptoUtils.createHash(name),
         address: '',
         allocations: [],
-        bolt11: 0,
-        payment_hash: '',
-        boost: 0,
-        monthlyValue: 0,
-        cap: 0,
-        book: {},
         bolt11: '',
-        payment_hash: ''
+        book: {},
+        boost: 0,
+        cap: 0,
+        claimed: [],
+        color: 'purple',
+        completed: [],
+        deck: [],
+        guild: false,
+        lastClaimed: 0,
+        monthlyValue: 0,
+        passed: [],
+        payment_hash: '',
+        priorities: [],
+        subTasks: [],
     }
     return newCard
 }

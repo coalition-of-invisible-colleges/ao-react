@@ -313,14 +313,12 @@ function specDogeMigrated(req, res, next){
         }
     })
     
-    let memberObject = state.serverState.members.find(m => {
-        return m.memberId === req.body.memberId
+    let name = "migrated doge"
+    let memberObject = state.serverState.members.some(m => {
+        if(m.memberId === req.body.memberId) {
+            let name = m.name
+        }
     })
-    console.log("memberObject is ", memberObject)
-    let name = 'migrated doge'
-    if(memberObject) {
-        name = memberObject.name
-    }
     let envelope = Cards.blankCard(name)
     envelope.name = memberCard.name
     envelope.subTasks = [...new Set(taskIds)]

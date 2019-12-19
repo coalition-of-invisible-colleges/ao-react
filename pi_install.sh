@@ -162,7 +162,7 @@ else
 	sudo apt install -y libsodium-dev
 fi
 
-if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.7\.3") -eq 1 ];
+if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.8\.0") -eq 1 ];
 then
 	echo c-lightning v0.8.0 already installed
 else
