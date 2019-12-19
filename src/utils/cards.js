@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import _ from 'lodash'
 import cryptoUtils from '../crypto'
 
@@ -77,18 +78,21 @@ function isString(x) {
 }
 
 function safeMerge(cardA, cardZ) {
-    cardA.color = cardZ.color
+    if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
+        Vue.set(cardA, 'color', cardZ.guild )
+    }
 
     if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
-        cardA.guild = cardZ.guild
+        Vue.set(cardA, 'guild', cardZ.guild )
     }
-    cardA.book = cardZ.book
-    cardA.address = cardZ.address
-    cardA.bolt11 = cardZ.bolt11
-    cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
-    cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
-    cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]
-    cardA.passed = [...new Set(cardA.passed.concat(cardZ.passed))]
+
+    Vue.set(cardA, 'book', cardZ.guild )
+    Vue.set(cardA, 'address', cardZ.guild )
+    Vue.set(cardA, 'bolt11', cardZ.guild )
+    Vue.set(cardA, 'subTasks', [...new Set(cardA.subTasks.concat(cardZ.subTasks))])
+    Vue.set(cardA, 'priorities', [...new Set(cardA.priorities.concat(cardZ.priorities))])
+    Vue.set(cardA, 'completed', [...new Set(cardA.completed.concat(cardZ.completed))])
+    Vue.set(cardA, 'passed', [...new Set(cardA.passed.concat(cardZ.passed))])
 }
 
 // generalized goIn and other card utility functions should go here

@@ -338,22 +338,18 @@ function specDogeMigrated(req, res, next){
     let next100 = tasks.splice(0, 50)
     let delay = 0
     while(next100.length > 0) {
-        console.log("iteration next100 length is ", next100.length, " delay is ", delay)
         let newEvent = {
             type: 'tasks-received',
             tasks: next100,
         }
         setTimeout(() => {
-            console.log("timeout triggered")
             connector.postEvent(serverAddress, serverSecret, newEvent, (err, state) => {
                 if (err){
                     return events.aoEvs.aoRelayAttempted(serverAddress, false)
                 }
                 events.aoEvs.aoRelayAttempted(serverAddress, true)
-                console.log("event posted")
             })
         }, delay)
-        console.log("timeout set with delay ", delay)
         next100 = tasks.splice(0, 50)
         delay += 500
     }

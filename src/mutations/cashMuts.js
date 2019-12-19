@@ -2,10 +2,10 @@ function cashMuts(cash, ev){
 		switch (ev.type) {
 			case "ao-disconnected":
 				cash.subscribed.forEach( (ao, i) => {
-						if (ao.address === ev.address) {
-							console.log("attempting to remove subscription")
-								cash.subscribed.splice(i, 1)
-						}
+					if (ao.address === ev.address) {
+						console.log("attempting to remove subscription")
+							cash.subscribed.splice(i, 1)
+					}
 				})
 				break
 			case "ao-subscribed":
