@@ -278,26 +278,6 @@ function specDogeUnmuted(req, res, next) {
     }
 }
 
-function specAoUpdated(req, res, next) {
-    let errRes = []
-    if (validators.isMemberId(req.body.memberId, errRes)) {
-        connector.postEvent(a.address, a.secret, req.body, (err, state) => {
-            if (err){
-                return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
-            }
-            console.log("adding state for:", {state})
-            events.aoEvs.aoUpdated(a.address, state, utils.buildResCallback(res))
-        })
-      events.membersEvs.dogeMigrated(
-
-        req.body.memberId,
-        utils.buildResCallback(res)
-      )
-    } else {
-      res.status(400).send(errRes)
-    }
-}
-
 function specDogeMigrated(req, res, next){
     let tasks = []
     let memberCard
@@ -311,7 +291,7 @@ function specDogeMigrated(req, res, next){
             taskIds = [...taskIds, ...t.subTasks, ...t.priorities, ...t.completed]
         }
     })
-    
+
     let name = "migrated doge"
     let memberObject = state.serverState.members.some(m => {
         if(m.memberId === req.body.memberId) {

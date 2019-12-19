@@ -2,7 +2,7 @@
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
-          textarea#card.fwi(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false').paperwrapper
+          input.textarea#card.fwi(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false').paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi create card
     .label
@@ -280,7 +280,7 @@ export default {
             } catch (err){
                 console.log("regex search terminated in error: ", err)
             }
-            this.searchResults = { guilds: guildmatches, doges: dogematches, cards: matches } 
+            this.searchResults = { guilds: guildmatches, doges: dogematches, cards: matches }
             return this.searchResults
         },
         colorWord(){
@@ -441,11 +441,17 @@ p
     color: white
     font-weight: bolder
 
-textarea
+.textarea
     padding-top: 1em
     border-color: rgba(0, 0, 0, 0.4)
     height: 12.5em
     padding-top: 5.5em
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
 .centr
     text-align: center
@@ -525,7 +531,7 @@ textarea
     margin-right: 0.3em
     position: relative
     top: 0.16em
-    
+
 .guildname
     font-weight: bold
 
