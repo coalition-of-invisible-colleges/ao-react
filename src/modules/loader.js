@@ -86,34 +86,22 @@ const actions = {
             })
     },
     makeEvent({commit, state, getters, dispatch}, newEv){
-      switch(state.reqStatus){
-          case "ready":
-              let startTs = Date.now()
-              commit("setReqStatus", "pending")
-              request
-                  .post('/events')
-                  .send(newEv)
-                  .set("Authorization", state.token)
-                  .end((err, res)=>{
-                      if (err || !res.body) {
-                          commit("setReqStatus", "failed")
-                          console.log("req failed")
-                        } else {
-                          commit("setPing", Date.now() - startTs)
-                          commit("setReqStatus", "ready")
-                          console.log("req succ")
-                          if (state.pendingRequests.length > 0){
-                              let nextEv = state.pendingRequests.slice(-1)
-                              commit("popRequest")
-                              dispatch("makeEvent", nextEv )
-                          }
-                      }
-                  })
-              break
-          case "pending":
-              commit("addRequest", newEv)
-              break
-      }
+        let startTs = Date.now()
+        commit("setReqStatus", "pending")
+        request
+            .post('/events')
+            .send(newEv)
+            .set("Authorization", state.token)
+            .end((err, res)=>{
+                if (err || !res.body) {
+                    commit("setReqStatus", "failed")
+                    console.log("event req failed")
+                  } else {
+                    commit("setPing", Date.now() - startTs)
+                    commit("setReqStatus", "ready")
+                    console.log("event req succ")
+                }
+            })
     }
 }
 
@@ -122,18 +110,11 @@ const state = {
     session: '',
     connected: 'disconnected',
     connectionError: '',
-    pendingRequests: [],
     reqStatus: 'ready',
     lastPing: 1,
 }
 
 const mutations = {
-    popRequest(loader, newReq){
-        loader.pendingRequests.pop()
-    },
-    addRequest(loader, newReq){
-        loader.pendingRequests.push(newReq)
-    },
     setPing(loader, ping){
         loader.lastPing = ping
     },
