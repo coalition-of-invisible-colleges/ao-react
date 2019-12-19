@@ -1,6 +1,7 @@
 import Kefir from 'kefir'
 import config from '../../configuration'
 import cryptoUtils from '../crypto'
+import uuidV1 from 'uuid/v1'
 import _ from 'lodash'
 // import s from './bs'
 
@@ -43,7 +44,7 @@ function initializeSqlite(cb) {
       name: 'dctrl',
       fob: '0000000000',
       secret: cryptoUtils.createHash('dctrl'), // init user-password is dctrl
-      memberId: 'xd',
+      memberId: uuidV1(),
       address: '2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu',
       active: 1,
       balance: 0,

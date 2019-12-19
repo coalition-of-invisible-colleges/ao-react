@@ -78,8 +78,8 @@ function isString(x) {
 }
 
 function safeMerge(cardA, cardZ) {
-    if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
-        Vue.set(cardA, 'color', cardZ.guild )
+    if(isString(cardZ.color) && !_.isEmpty(cardZ.color.trim())) {
+        Vue.set(cardA, 'color', cardZ.color )
     }
 
     if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {

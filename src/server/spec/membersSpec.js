@@ -324,7 +324,7 @@ function specDogeMigrated(req, res, next){
     envelope.passed = [[req.body.address, req.body.toMemberId]]
 
     tasks = state.serverState.tasks.filter(t => taskIds.indexOf(t.taskId) >= 0)
-    tasks = [envelope, ...tasks]
+    tasks.push(envelope)
 
     let serverAddress
     let serverSecret

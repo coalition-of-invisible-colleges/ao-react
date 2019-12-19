@@ -203,31 +203,3 @@ function specAoUpdated(req, res, next){
         }
     })
 }
-
-function specDogeMigrated(req, res, next){
-    console.log('attempting update')
-    let tasks = []
-    let newEvent = {
-        type: 'tasks-received',
-        tasks
-    }
-    let taskIds = []
-    state.serverState.tasks.forEach(t => {
-        if(t.deck.indexOf(req.body.memberId) >= 0) {
-            taskIds.push(tId)
-            taskIds = [...taskIds, ...t.subTasks, ...t.priorities, ...t.completed]
-        }
-    })
-    tasks = state.serverState.tasks.filter(t => taskIds.indexOf(t.taskId) >= 0)
-    state.serverState.ao.forEach(a => {
-        if (a.address === req.body.address) {
-            connector.postEvent(a.address, a.secret, newEvent ,(err, state) => {
-                if (err){
-                    return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
-                }
-                events.aoEvs.aoRelayAttempted(a.address, true, utils.buildResCallback(res))
-            })
-
-        }
-    })
-}
