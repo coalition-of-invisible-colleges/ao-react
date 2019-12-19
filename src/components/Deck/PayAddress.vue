@@ -1,14 +1,11 @@
 <template lang='pug'>
 
 .payreq
-  .row
-    .six.columns
-        label bitcoin address
-        a(:href='"bitcoin:" + (this.address)')
-            button Open Wallet
-        h4 {{ address }}
-    .six.columns
-        div(v-html='imgTag')
+    h3 bitcoin address
+    div(v-html='imgTag')
+    span {{ address }}
+    a(:href='"bitcoin:" + (this.address)')
+        button Open Wallet
 </template>
 
 <script>
@@ -51,28 +48,21 @@ export default {
 @import '../../styles/skeleton'
 
 .payreq
-    color: main
-    background-color: lightGrey
+    color: wrexblue
+    background-color: rgba(0,0,0,0)
     border-radius: 0.5em
     padding: 1em
     margin-bottom: 1.654321em
 
 a
     text-decoration: none
-    color: main
+    color: wrexblue
 
 .box
     word-wrap:break-word
     max-width: 500px
     z-index: 100001
     padding: 1em
-
-.paid
-    color: purple
-    font-size: 5em
-
-p
-    color: accent1
 
 h4
     word-wrap: break-word;
