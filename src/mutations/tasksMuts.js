@@ -1,6 +1,7 @@
 import _ from 'lodash'
+import uuidv1 from 'uuid/v1'
 import cryptoUtils from '../crypto'
-const uuidV1 = require('uuid/v1')
+import cards from '../utils/cards'
 
 function tasksMuts(tasks, ev) {
     let newEv = {}
@@ -490,26 +491,13 @@ function tasksMuts(tasks, ev) {
             break
         case "tasks-received":
             ev.tasks.forEach(p => {
-                if(!tasks.some(t => {
+                if(!tasks.some((t, i) => {
                     if(cryptoUtils.createHash(p.name.trim()) === cryptoUtils.createHash(t.name.trim())) {
-                        // safely merge in the card
-                        t.color = p.color
-                        t.guild = p.guild
-                        t.book = p.book
-                        t.address = p.address
-                        t.bolt11 = p.bolt11
-                        t.subTasks = [...new Set(t.subTasks.concat(p.subTasks))]
-                        t.priorities = [...new Set(t.priorities.concat(p.priorities))]
-                        t.completed = [...new Set(t.completed.concat(p.completed))]
-                        t.passed = p.passed
+                        cards.safeMerge(t, p)
                         return true
                     }
                 })) {
-                    if(p.name.trim().includes('migrated')) {
-                        console.log("merging a card with the word migrated in it, this is very bad and probably overwriting subTasks lists in the envelope")
-                    }
-                    // do a safeClone here for security
-                    tasks.push(p)
+                    tasks.push(cards.safeClone(p))
                 }
             })
             break

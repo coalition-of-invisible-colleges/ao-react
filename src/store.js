@@ -153,6 +153,10 @@ export default new Vuex.Store({
               g.tempLastClaimed = 0
               let completions = g.completed.map(t => getters.hashMap[t])
               completions.forEach(c => {
+                  if(typeof c === 'undefined') {
+                      console.log("invalid data due to broken subTaskId links in completed list")
+                      return
+                  }
                   if(c.lastClaimed > g.tempLastClaimed) {
                       g.tempLastClaimed = c.lastClaimed
                   }

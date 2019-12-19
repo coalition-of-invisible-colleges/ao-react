@@ -299,7 +299,6 @@ function specAoUpdated(req, res, next) {
 }
 
 function specDogeMigrated(req, res, next){
-    console.log('attempting update')
     let tasks = []
     let memberCard
     let taskIds = []
@@ -313,13 +312,19 @@ function specDogeMigrated(req, res, next){
         }
     })
     
-    let envelope = Cards.safeClone(memberCard)
+    let name = "migrated doge"
+    let memberObject = state.serverState.members.some(m => {
+        if(m.memberId === req.body.memberId) {
+            let name = m.name
+        }
+    })
+    let envelope = Cards.blankCard(name)
     envelope.name = memberCard.name
-    envelope.subTasks = taskIds
+    envelope.subTasks = [...new Set(taskIds)]
     envelope.passed = [[req.body.address, req.body.toMemberId]]
 
     tasks = state.serverState.tasks.filter(t => taskIds.indexOf(t.taskId) >= 0)
-    tasks = [envelope, ...tasks]
+    tasks.push(envelope)
 
     let serverAddress
     let serverSecret
@@ -330,26 +335,22 @@ function specDogeMigrated(req, res, next){
           }
     })
     console.log("tasks to be sent: ", tasks.length)
-    let next100 = tasks.splice(0, 10)
+    let next100 = tasks.splice(0, 50)
     let delay = 0
     while(next100.length > 0) {
-        console.log("iteration next100 length is ", next100.length, " delay is ", delay)
         let newEvent = {
             type: 'tasks-received',
             tasks: next100,
         }
         setTimeout(() => {
-            console.log("timeout triggered")
             connector.postEvent(serverAddress, serverSecret, newEvent, (err, state) => {
                 if (err){
                     return events.aoEvs.aoRelayAttempted(serverAddress, false)
                 }
                 events.aoEvs.aoRelayAttempted(serverAddress, true)
-                console.log("event posted")
             })
         }, delay)
-        console.log("timeout set with delay ", delay)
-        next100 = tasks.splice(0, 10)
-        delay += 10000
+        next100 = tasks.splice(0, 50)
+        delay += 500
     }
 }
