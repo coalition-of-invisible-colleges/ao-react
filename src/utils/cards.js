@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import cryptoUtils from '../crypto'
 
 function shortName(name) {
@@ -70,6 +71,26 @@ function safeClone(card) {
     return safeClone
 }
 
+
+function isString(x) {
+  return Object.prototype.toString.call(x) === "[object String]"
+}
+
+function safeMerge(cardA, cardZ) {
+    cardA.color = cardZ.color
+
+    if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
+        cardA.guild = cardZ.guild
+    }
+    cardA.book = cardZ.book
+    cardA.address = cardZ.address
+    cardA.bolt11 = cardZ.bolt11
+    cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
+    cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
+    cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]
+    cardA.passed = [...new Set(cardA.passed.concat(cardZ.passed))]
+}
+
 // generalized goIn and other card utility functions should go here
 
 export default {
@@ -77,4 +98,5 @@ export default {
     cardColorCSS,
     blankCard,
     safeClone,
+    safeMerge,
 }

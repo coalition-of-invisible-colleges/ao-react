@@ -299,7 +299,6 @@ function specAoUpdated(req, res, next) {
 }
 
 function specDogeMigrated(req, res, next){
-    console.log('attempting update')
     let tasks = []
     let memberCard
     let taskIds = []
