@@ -59,7 +59,7 @@ const mutations = {
 const actions = {
     displayEvent({commit}, ev){
         console.log("ev type is ", ev.type)
-        if(ev.type === 'doge-barked') {
+        if(ev.type === 'doge-barked' || ev.type === 'resource-used') {
             SoundFX.playBarkPing()
             Store.commit('bark')
             return
