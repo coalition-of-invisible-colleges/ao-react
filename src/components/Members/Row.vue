@@ -9,13 +9,13 @@
                 br
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId'  @click='goIn(g.taskId)') {{ g.guild }} -
-        .two.grid(v-if='!hasAnyVouches || $router.path === "/slayer"')
+        .two.grid(v-if='isVulnerable')
             img.btn.goldengun(src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
             span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
-        .grid(:class='{ seven: hasAnyVouches, five: !hasAnyVouches }')
+        .grid(:class='{ seven: isVulnerable, five: !isVulnerable }')
             simple-priorities(:taskId='m.memberId')
         .grid.one
             preview-deck(:task='$store.getters.hashMap[m.memberId]')
@@ -84,6 +84,11 @@ export default {
        }
     },
     computed:{
+        isVulnerable(){
+            let v = !this.hasAnyVouches || this.$router.currentRoute.path === "/dash/slayer"
+            console.log({v}, this.$router.currentRoute.path)
+            return v
+        },
         isLoggedIn(){
             let isLoggedIn
             this.$store.state.sessions.forEach( s => {
