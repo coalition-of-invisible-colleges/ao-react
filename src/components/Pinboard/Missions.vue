@@ -8,7 +8,7 @@
           span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
   flickity(:options='flickityOptions')
       .carousel-cell(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)' )  {{ t.guild }}
-  hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.weight'  :c='[t.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(t.taskId)')
+  hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.weight'  :c='[t.taskId]'  :inId='$store.getters.member.memberId')
 
 </template>
 

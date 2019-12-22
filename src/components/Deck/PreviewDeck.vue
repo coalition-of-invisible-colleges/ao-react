@@ -53,6 +53,10 @@ export default {
           let parents =  [this.$store.getters.contextCard.taskId, this.task.taskId]
           this.$store.dispatch("goIn", {parents, panel, top})
 
+          if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
+              this.$store.commit("setMode", 1)
+          }
+
           this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       card(tId) {

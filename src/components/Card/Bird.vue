@@ -34,8 +34,8 @@
             select.shorten(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
-            button.small(v-else  @click='migrate') send entire deck
+            //- button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
+            button.small(@click='migrate') send entire deck
             span.sierpinskiwrapper
                 sierpinski(v-if='this.b.taskId !== this.$store.getters.member.memberId'  :b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
@@ -220,7 +220,7 @@ export default {
             this.$store.dispatch('makeEvent', {
                 type: 'doge-migrated',
                 address: this.$store.getters.warpDrive.address,
-                memberId: this.$store.getters.member.memberId,
+                memberId: this.b.taskId,
                 toMemberId: this.toMemberWarp,
             })
         },

@@ -46,6 +46,9 @@ export default {
 
             this.$store.dispatch("goIn", {taskId, panel, top, parents})
 
+            if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
+                this.$store.commit("setMode", 1)
+            }
         }, 5)
     },
     complete(){

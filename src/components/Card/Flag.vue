@@ -5,7 +5,7 @@
         span.checkmark(v-else-if='($store.state.upgrades.mode === "badge" || isOracle()) && isCompleted') ☑
         span.checkmark(v-else-if='($store.state.upgrades.mode === "badge" || isOracle()) && !isCompleted') ☐
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../../assets/images/doge_faded.png')
-        img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isFlagged', src='../../assets/images/boatwhite.svg',  :class='{raiseboat: !inId}')
+        img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && inId && !isFlagged', src='../../assets/images/boatwhite.svg')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../../assets/images/boatbtnselected.svg')
         img(v-else-if='$store.state.upgrades.mode === "chest"'  src='../../assets/images/bounty.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../../assets/images/timecube.svg')
@@ -246,9 +246,6 @@ export default {
 @import '../../styles/grid';
 @import '../../styles/button';
 
-.raiseboat
-    transform: rotate(-30deg)
-
 .count
     float: right
 
@@ -310,7 +307,7 @@ export default {
 .svgwhite
     fill: white
 
-.svgwhite.hover
+.svgwhite:hover
     transform: rotate(-30deg)
 
 .opened

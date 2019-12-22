@@ -141,6 +141,10 @@ export default {
                 top,
                 panel
             })
+
+            if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
+            this.$store.commit("setMode", 1)
+            }
         },
         switchColor(color, refocus = true){
             if (this.task.color === color){

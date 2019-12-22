@@ -90,6 +90,9 @@ export default {
             if(guild) parents.push(guild)
 
             this.$store.dispatch("goIn", {panel, top, parents})
+            if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
+                this.$store.commit("setMode", 1)
+            }
         },
         playPageTurn(){
             var flip = new Audio(require('../../assets/sounds/myst158.wav'))

@@ -126,6 +126,9 @@ export default {
                     panel: this.c,
                     top,
                 })
+                if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
+                    this.$store.commit("setMode", 1)
+                }
                 this.$router.push('/' + this.$store.state.upgrades.mode)
             }
         },

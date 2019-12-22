@@ -90,13 +90,16 @@ const mutations = {
 }
 
 const actions = {
-    goIn({commit, state}, pContext ){
+    goIn({commit, state, getters}, pContext ){
         SoundFX.playPageTurn()
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
         pContext.parents.forEach(p => {
-        commit("addParent", p)
+            commit("addParent", p)
         })
+        // if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
+            // this.$store.commit("setMode", 1)
+        // }
     },
     goUp({commit, state}, pContext){
         SoundFX.playPageTurn()
