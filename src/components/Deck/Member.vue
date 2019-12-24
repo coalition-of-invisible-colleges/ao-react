@@ -63,7 +63,7 @@ export default {
         },
         deckSize() {
             return this.$store.state.tasks.filter(t => {
-                return t.deck.indexOf(this.$store.getters.member.memberId) >= 0
+                return t.deck.indexOf(this.m.memberId) >= 0
             }).length
         },
     },

@@ -249,8 +249,7 @@ export default {
         },
         goFront(mode) {
             if(mode && this.isSun() && this.$store.state.upgrades.mode === mode) {
-                SoundFX.playPortalBlocked()
-                return
+                mode = 'timecube'
             }
             if(!mode) {
                 mode = this.$store.state.upgrades.mode
@@ -269,8 +268,7 @@ export default {
         },
         goDash(mode) {
             if(mode && this.isBull() && this.$store.state.upgrades.mode === mode) {
-                SoundFX.playPortalBlocked()
-                return
+                mode = 'timecube'
             }
             if(!mode) {
                 mode = this.$store.state.upgrades.mode
