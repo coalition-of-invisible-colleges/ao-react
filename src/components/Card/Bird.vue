@@ -406,7 +406,7 @@ label
     background-image: url('../../assets/images/badge_red.svg')
     opacity: 0.55
     
-.smallguild:hover, .smallguild.red.open
+.smallguild.red:hover, .smallguild.red.open
     background-image: url('../../assets/images/badge_white_red.svg')
 
 .give, .play, .warp
