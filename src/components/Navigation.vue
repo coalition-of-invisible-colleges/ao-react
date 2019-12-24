@@ -101,13 +101,12 @@ export default {
         sunQuadrupleTap.requireFailure(sunQuintupleTap)
 
         sunmc.on('tap', (e) => {
-            console.log("sun tap")
             if(!this.isSun()) {
-                this.goFront(this.$store.state.upgrades.mode)
+                this.goFront(false)
 
             } else {
                 this.nextMode()
-                this.goFront(this.$store.state.upgrades.mode)
+                this.goFront(false)
             }
             e.stopPropagation()
         })
@@ -161,10 +160,10 @@ export default {
         bullmc.on('tap', (e) => {
             console.log("single click bull")
             if(!this.isBull()) {
-                this.goDash(this.$store.state.upgrades.mode)
+                this.goDash(false)
             } else {
                 this.nextMode()
-                this.goDash(this.$store.state.upgrades.mode)
+                this.goDash(false)
             }
             e.stopPropagation()
         })
@@ -249,9 +248,12 @@ export default {
             }, 20)
         },
         goFront(mode) {
-            if(this.isSun() && this.$store.state.upgrades.mode === mode) {
+            if(mode && this.isSun() && this.$store.state.upgrades.mode === mode) {
                 SoundFX.playPortalBlocked()
                 return
+            }
+            if(!mode) {
+                mode = this.$store.state.upgrades.mode
             }
             this.$store.commit('startLoading', 'sun-' + mode)
             if(mode === 'doge') {
@@ -266,9 +268,12 @@ export default {
             // }, 20)
         },
         goDash(mode) {
-            if(this.isBull() && this.$store.state.upgrades.mode === mode) {
+            if(mode && this.isBull() && this.$store.state.upgrades.mode === mode) {
                 SoundFX.playPortalBlocked()
                 return
+            }
+            if(!mode) {
+                mode = this.$store.state.upgrades.mode
             }
             this.$store.commit('startLoading', 'bull-' + mode)
             if(mode === 'doge') {
