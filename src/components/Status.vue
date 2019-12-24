@@ -18,7 +18,6 @@
                 span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
                 span.pong ({{ $store.state.loader.lastPing }} ms pong)
             p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
-            p(v-if="$store.state.loader.pendingRequests.length > 0") - {{ $store.state.loader.pendingRequests.length }} pending : {{ $store.state.loader.pendingRequests }}
             h3(v-if='liveConnections.length > 0') Connected AOs
             h3(v-else) no connected AOs
             div(v-for='r in liveConnections')
@@ -373,7 +372,7 @@ body
     left: 0.5em
     bottom: -2.5em
     top: unset
-    
+
 .tooltiptext.bottom.breadpad
     left: 4em
     bottom: 0.25em
