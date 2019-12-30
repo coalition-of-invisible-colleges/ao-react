@@ -10,11 +10,8 @@ function access(member, resource){
     if (resource.charged == 0){
         return true
     }
-    let limit = member.active * 3 + 17
     let newBalance = member.balance - resource.charged
-    let canAccess = (newBalance + limit > 0)
-    console.log( {member, resource, limit, newBalance, canAccess} )
-    return canAccess
+    return newBalance >= 0
 }
 
 module.exports = function(req, res, next){
@@ -26,7 +23,7 @@ module.exports = function(req, res, next){
           member.memberId,
           req.body.amount || 1,
           resource.charged || 0,
-          req.body.notes || '',
+          req.body.notes || 'D',
           utils.buildResCallback(res)
         )
     } else {

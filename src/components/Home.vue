@@ -34,8 +34,9 @@
             p Attempt at fairness and reduced administration while sharing.
             p Holographic communication, organization, and prioritization tool.
             a(target="_blank", href='https://github.com/AutonomousOrganization') github.com/AutonomousOrganization
-    p Decentralization fails without accepting responsibility and striving to create. Exploring dogeconciousness is worthy.
+    p Decentralization fails without accepting responsibility and striving to create.
     img#sundogepurp(src="./../assets/images/sundogepurp.png")
+    p Exploring dogeconciousness is worthy.
 </template>
 
 <script>

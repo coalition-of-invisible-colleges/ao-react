@@ -2,11 +2,11 @@
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
-          input.textarea#card.fwi(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false').paperwrapper
+          textarea.textarea#card.fwi(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
           img.specialoverlay
           button(@click='createOrFindTask').fwi create card
     .label
-      .row.btnpanel
+      .btnpanel
           div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
             button.lit(@click='switchColor("red")'  :class='{ currentColor : showCreate && task.color === "red" }').redwx.paperwrapper
               img.agedbackground
@@ -89,7 +89,6 @@ export default {
             }
         });
 
-        // terrible hack--swipes are not detected on a textarea unless this specific gesture detector is added directly on the element. then, it does a double event for some reason on this element (not the parent element). a timeout prevents the double event.
         var ca = document.getElementById('card')
         var mc2 = new Hammer.Manager(ca)
         var Swipe2 = new Hammer.Swipe()
@@ -330,9 +329,12 @@ export default {
   margin: 0 auto 0 auto
   text-align: center
   padding: 0.5em
-  position: relative
+  position: fixed
   left: 1em
   z-index: 149
+  bottom: 0
+  left: 50%
+  transform: translateX(-50%)
 
 button
     background: green
@@ -415,6 +417,7 @@ p
         cursor: pointer
         min-height: 2.5em
         width: 4.045085em
+        max-width: 20%
         margin: 0
 
 .btnwrapper
