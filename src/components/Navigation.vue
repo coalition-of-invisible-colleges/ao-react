@@ -343,6 +343,7 @@ let intervalID = window.setInterval(updateTransition, 7000)
     transform: translateX(-50%)
     height: 5.5555555555em
     cursor: pointer
+    z-index: 9002
 
 .bullcontext, .suncontext
     height: 1.75em
@@ -632,6 +633,10 @@ hr
 @media (max-width: breakpoint)
     .btcspot , .satspot
         display: none
+        margin-top: 3em
+    .satspot
+        margin-top: 5em
+
 
 .btcspot
     right: 111px

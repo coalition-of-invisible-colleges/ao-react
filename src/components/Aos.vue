@@ -1,8 +1,8 @@
 <template lang='pug'>
 
 .AOs
-    .row
-        .six.columns
+    .flex
+        div
             h3 {{ $store.state.cash.alias }} Connection Info:
             h4 Address:
             code(v-if='$store.state.cash.alias') {{ $store.state.cash.address }}
@@ -12,7 +12,7 @@
             form-box.topspace(btntxt="rename"  event='ao-named'  v-bind:data='aoNamed')
                 label(for="aoAliasInput") change ao alias:
                 input#aoAliasInput(v-model='aoNamed.alias' type='text')
-        .six.columns
+        div
             h3 Connect to AO
             form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
                 label(for="aoAddressInput") address:
@@ -184,21 +184,34 @@ select.form-control
 .conn
     cursor: pointer
     color: green
+    word-wrap: break-word
+    word-break: break-word
 
 .clearboth
-    width: 50%
-    margin-left: 50%
-    transform: translateX(-50%)
-    clear: both
-    margin-top: 1em
-    padding-top: 0.75em
+    // width: 50%
+    // margin-left: 50%
+    // transform: translateX(-50%)
+    // clear: both
+    // margin-top: 1em
+    // padding-top: 0.75em
 
 code
     word-wrap: break-word
+    word-break: break-word
 
 .padleft
     margin-left: 1em
 
 .topspace
     margin-top: 1em
+
+.flex
+    display: flex
+    flex-wrap: wrap
+    flex-basis: 50%
+    justify-content: center
+
+@media all and (max-width: 600px)
+    .flex
+        flex-basis: 100%
 </style>

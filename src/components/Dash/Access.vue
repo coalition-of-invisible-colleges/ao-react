@@ -2,10 +2,8 @@
 
 #home
     h1.up {{ $store.state.cash.alias }} controls
-    div
-        resources
-    div
-        sidewalk
+    resources
+    sidewalk
 </template>
 
 <script>

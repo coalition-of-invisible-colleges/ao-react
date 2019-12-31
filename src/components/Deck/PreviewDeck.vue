@@ -79,7 +79,7 @@ export default {
               this.task.subTasks.forEach( tId => {
                   let task = this.getTask(tId)
                   if(task) {
-                      tasks.push( task )
+                      tasks.push(task)
                   }
               })
           }
