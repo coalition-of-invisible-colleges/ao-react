@@ -69,6 +69,8 @@ function specResourceCreated(req, res, next){
 function specResourceUsed(req, res, next){
   let errRes = []
   console.log('trying to use')
+  
+
   if (
     validators.isActiveMemberId(req.body.memberId, errRes) &&
     validators.isResourceId(req.body.resourceId, errRes) &&

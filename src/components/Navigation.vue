@@ -51,7 +51,8 @@
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
     status
-    task-create.always(v-if='!isSun() && !isBull()')
+    task-create(v-if='!isBull() && !isSun()')
+    img.uni(v-else  src="../assets/images/navigas/uni.svg"  @click='toCardMode')
     div(v-if='isBull()')
         .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
@@ -208,6 +209,9 @@ export default {
         }
     },
     methods: {
+        toCardMode(){
+            this.$router.push("/" + this.$store.state.upgrades.mode)
+        },
         killSession(){
             this.$store.dispatch("makeEvent", {
                 type: "session-killed",
@@ -261,10 +265,6 @@ export default {
                 SoundFX.playCaChunk()
             }
             this.$router.push('/front/' + mode)
-            // setTimeout(() => {
-            //     this.setToRoute()
-            //     this.uniLeft = !this.uniLeft
-            // }, 20)
         },
         goDash(mode) {
             if(mode && this.isBull() && this.$store.state.upgrades.mode === mode) {
@@ -280,10 +280,6 @@ export default {
                 SoundFX.playCaChunk()
             }
             this.$router.push('/dash/' + mode)
-            // setTimeout(() => {
-            //     this.setToRoute()
-            //     this.uniRight = !this.uniRight
-            // }, 20)
         },
         setToRoute() {
             let mainroute = this.$router.currentRoute.path.split('/')[1]
@@ -297,7 +293,6 @@ export default {
             this.showBtc = !this.showBtc
         },
         killSession(){
-          //XXX TODO tell server to remove session
           this.$store.dispatch("makeEvent", {
               type: "session-killed",
               session: this.$store.state.loader.session
@@ -308,6 +303,7 @@ export default {
           this.$store.commit('setAuth', {
               token: '', session: ''
           })
+          this.$store.dispatch('loadCurrent')
         },
         isSun() {
             return Dimensions.isSun(this.$router)
@@ -318,7 +314,6 @@ export default {
         nextMode() {
             SoundFX.playCaChunk()
             this.$store.commit('nextMode')
-
         },
     },
 }
@@ -346,6 +341,15 @@ let intervalID = window.setInterval(updateTransition, 7000)
 @import '../styles/colours'
 @import '../styles/grid'
 @import '../styles/tooltips'
+
+
+.uni
+    position: fixed
+    bottom: 0
+    left: 50%
+    transform: translateX(-50%)
+    height: 5.5555555555em
+    cursor: pointer
 
 .bullcontext, .suncontext
     height: 1.75em
@@ -403,6 +407,7 @@ let intervalID = window.setInterval(updateTransition, 7000)
   display: flex
   flex-direction: column
   min-height: 5.8em
+  max-width: 100vw
 
 .side_bar ul
   margin-left: 10px
@@ -451,7 +456,7 @@ hr
     color: lightteal
 
 .dableft, .dabright
-    position: absolute
+    position: fixed
     top: 0
     display: flex
     flex-direction: column
@@ -634,13 +639,6 @@ hr
 
 .pushdown
     margin-top: auto
-
-#createtask.always
-    position: fixed
-    bottom: 0
-    left: 50%
-    transform: translateX(-50%)
-    z-index: 149
 
 .loadingscreen
     position: fixed

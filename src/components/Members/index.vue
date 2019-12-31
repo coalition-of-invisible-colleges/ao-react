@@ -10,10 +10,6 @@
                 p.mt {{showStart + 1}} - {{showStart + 5}}  of {{ showTotal }}
             .inline(@click='showNext')
                 img(src='../../assets/images/right.svg')
-        .center
-            .padding
-                p believer in a transcendent future
-                p possible human, magical entity, fairy, cyborg or alien
 </template>
 
 <script>

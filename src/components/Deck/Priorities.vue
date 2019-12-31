@@ -22,6 +22,7 @@ import Hypercard from '../Card'
 import Hyperpriority from './Priority'
 import _ from 'lodash'
 import SoundFX from '../../utils/sounds'
+import TaskCreate from '../forms/TaskCreate'
 
 export default {
   mounted() {
@@ -72,6 +73,7 @@ export default {
   components:{
       Hyperpriority,
       Hypercard,
+      TaskCreate
   },
 }
 
