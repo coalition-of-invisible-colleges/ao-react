@@ -1,10 +1,10 @@
 <template lang='pug'>
 
 #app
-  //- .contain
-  event-feed
-  navigation
-  router-view
+  .contain
+    event-feed
+    navigation
+    router-view
 </template>
 
 <script>
