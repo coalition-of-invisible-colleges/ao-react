@@ -43,17 +43,6 @@ import Auth from '../Auth'
 import SoundFX from '../../utils/sounds'
 
 export default {
-    beforeRouteUpdate (to, from, next) {
-      console.log("update called ", to.path)
-      // this.$store.
-
-    // called when the route that renders this component has changed,
-    // but this component is reused in the new route.
-    // For example, for a route with dynamic params `/foo/:id`, when we
-    // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-    // will be reused, and this hook will be called when that happens.
-    // has access to `this` component instance.
-  },
   components:{
       Hypercard,
       Panels, MemberRow,
@@ -195,7 +184,7 @@ export default {
     margin-top: 1em
     margin-bottom: 1em
     clear: both
-  
+
 .completedfadey
     background: repeating-radial-gradient(
       circle,
@@ -213,7 +202,7 @@ export default {
     position: relative
     left: 50%
     transform: translateX(calc(-50% - 1em))
-    
+
 .slide-fade-enter-active {
   transition: all .6s ease;
 }
@@ -231,7 +220,7 @@ export default {
 
 .paperwrapper
     position: relative
-    
+
 .paperwrapper.padsides
     display: flex
     flex-wrap: wrap
@@ -297,7 +286,7 @@ export default {
     position: absolute
     right: 0.5em
     bottom: 0.25em
-    
+
 
 .upgrademode
     float: left
@@ -355,12 +344,12 @@ export default {
     width: 30.65em
     // transform: translateX(calc(50% - 1em))
     flex-grow: 0
-    
+
  // .card.adjustwidth
     // max-width: 100%
     // max-width: 29.8em
     // max-width: 39.333333333333%
-    
+
 .tooltiptext.correctspot
     position: absolute
     top: calc(100% - 1.75em)
