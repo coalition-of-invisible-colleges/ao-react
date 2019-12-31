@@ -52,7 +52,8 @@
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
     status
     task-create(v-if='!isBull() && !isSun()')
-    img.uni(v-else  src="../assets/images/navigas/uni.svg"  @click='toCardMode')
+    div(v-else)
+        img.uni(src="../assets/images/navigas/uni.svg"  @click='toCardMode')
     div(v-if='isBull()')
         .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
