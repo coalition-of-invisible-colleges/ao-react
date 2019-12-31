@@ -364,27 +364,6 @@ let intervalID = window.setInterval(updateTransition, 7000)
     margin-left: 9em
     margin-right: 9em
 
-.transparentleft
-    width: 100%
-    height: 100%
-    background: -moz-linear-gradient(right, rgba(32,32,32,0) 0%, rgba(32,32,32,0) 1%, rgba(32,32,32,0) 90%, rgba(32,32,32,1) 100%) /* FF3.6-15 */
-    background: -webkit-linear-gradient(right, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%) /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to left, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%) /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-
-.transparentright
-    width: 100%
-    height: 100%
-    background: -moz-linear-gradient(left, rgba(32,32,32,0) 0%, rgba(32,32,32,0) 1%, rgba(32,32,32,0) 90%, rgba(32,32,32,1) 100%) /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%) /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%) /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-
-.transparentbottom
-    width: 100%
-    height: 100%
-    background: -moz-linear-gradient(top, rgba(32,32,32,0) 0%, rgba(32,32,32,0) 1%, rgba(32,32,32,0) 90%, rgba(32,32,32,1) 100%)
-    background: -webkit-linear-gradient(top, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
-    background: linear-gradient(to bottom, rgba(32,32,32,0) 0%,rgba(32,32,32,0) 1%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
-
 .transparentsides
     width: 100%
     height: 100%
@@ -400,7 +379,7 @@ let intervalID = window.setInterval(updateTransition, 7000)
   display: flex
   flex-direction: column
   min-height: 5.8em
-  max-width: 100vw
+  // max-width: 100vw
 
 .side_bar ul
   margin-left: 10px

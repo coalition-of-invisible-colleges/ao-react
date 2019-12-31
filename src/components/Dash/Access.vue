@@ -2,9 +2,9 @@
 
 #home
     h1.up {{ $store.state.cash.alias }} controls
-    .row
+    div
         resources
-    .row
+    div
         sidewalk
 </template>
 

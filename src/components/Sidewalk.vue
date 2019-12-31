@@ -2,33 +2,22 @@
 
 #sidewalk
     h3 sidewalk
-    .row
-        .four.grid
-            button(@click='trySidewalk("crazy")').redwx crazy
-        .four.grid
-            button(@click='trySidewalk("chill")').purplewx chill
-        .four.grid
-            button(@click='trySidewalk("dna")').greenwx dna
-    .row
-        .two.columns  &nbsp;
-        .four.columns
-            button(@click='trySidewalk("rainbow")').yellowwx rainbow
-        .four.columns
+    .flex
+        button(@click='trySidewalk("crazy")').redwx crazy
+        button(@click='trySidewalk("chill")').purplewx chill
+        button(@click='trySidewalk("dna")').greenwx dna
+    .flex
+        button(@click='trySidewalk("rainbow")').yellowwx rainbow
+        div
             button(@click='trySidewalk("banner")').bluewx banner
             input(v-model='banner')
-    .row
-        .two.grid
-            button(@click='trySidewalk("color", "red")').redwx
-        .two.grid
-            button(@click='trySidewalk("color", "purple")').purplewx
-        .two.grid
-            button(@click='trySidewalk("color", "blue")').bluewx
-        .two.grid
-            button(@click='trySidewalk("color", "green")').greenwx
-        .two.grid
-            button(@click='trySidewalk("color", "yellow")').yellowwx
-        .two.grid
-            button(@click='trySidewalk("color", "black")').blackwx
+    .flex
+        button(@click='trySidewalk("color", "red")').redwx
+        button(@click='trySidewalk("color", "purple")').purplewx
+        button(@click='trySidewalk("color", "blue")').bluewx
+        button(@click='trySidewalk("color", "green")').greenwx
+        button(@click='trySidewalk("color", "yellow")').yellowwx
+        button(@click='trySidewalk("color", "black")').blackwx
 </template>
 
 <script>
@@ -121,4 +110,6 @@ a
     color: purple
     text-align: center
 
+.flex
+    display: flex
 </style>

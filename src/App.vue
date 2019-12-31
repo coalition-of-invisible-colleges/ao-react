@@ -1,10 +1,10 @@
 <template lang='pug'>
 
 #app
-  .contain
-    event-feed
-    navigation
-    router-view
+  //- .contain
+  event-feed
+  navigation
+  router-view
 </template>
 
 <script>
@@ -58,11 +58,11 @@ export default {
 @import "./styles/input"
 
 #app
-    position:relative
+    // position:relative
     color: accent1
     font-weight: lighter
     // overflow-x: hidden
-    height: 100vh
+    // height: 100vh
 
 body
     background: main
