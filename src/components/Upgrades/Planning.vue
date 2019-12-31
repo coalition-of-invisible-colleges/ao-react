@@ -11,6 +11,7 @@
         h2 cube
         .gui(v-if='calcTime') {{ calcTime.slice(0,24) }}
         resource-book(:tId='b.taskId')
+    task-create
 </template>
 
 <script>
@@ -18,13 +19,14 @@
 import calcs from '../../calculations'
 import TaskCalendar from '../TaskCalendar/Calendar'
 import ResourceBook from '../forms/ResourceBook'
+import TaskCreate from '../forms/TaskCreate'
 
 export default {
     mounted() {
         this.$store.commit('stopLoading')
     },
     components:{
-        ResourceBook, TaskCalendar,
+        ResourceBook, TaskCalendar, TaskCreate
     },
     methods: {
         toggleDimension(x){
