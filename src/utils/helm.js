@@ -9,10 +9,10 @@ function nextUpgradeMode(router) {
     Store.commit("nextMode")
     Store.commit('startLoading', Store.state.upgrades.mode)
 
-    if(Dimensions.isSun(router)){
+    if(Dimensions.isSun(router.currentRoute.path)){
         return router.push('/front/' + Store.state.upgrades.mode)
     }
-    if(Dimensions.isBull(router)){
+    if(Dimensions.isBull(router.currentRoute.path)){
         return router.push('/dash/' + Store.state.upgrades.mode)
     }
     router.push('/' + Store.state.upgrades.mode)
@@ -22,10 +22,10 @@ function previousUpgradeMode(router) {
     Store.commit("previousMode")
     Store.commit('startLoading', Store.state.upgrades.mode)
 
-    if(Dimensions.isSun(router)){
+    if(Dimensions.isSun(router.currentRoute.path)){
         return router.push('/front/' + Store.state.upgrades.mode)
     }
-    if(Dimensions.isBull(router)){
+    if(Dimensions.isBull(router.currentRoute.path)){
         return router.push('/dash/' + Store.state.upgrades.mode)
     }
     router.push('/' + Store.state.upgrades.mode)

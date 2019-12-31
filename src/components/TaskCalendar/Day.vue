@@ -1,7 +1,7 @@
 <template lang="pug">
 .day
     .date {{ day }}
-    router-link(to='/deck')
+    router-link(to='/doge')
         img.today(v-if='isToday && day % 2 === 1'  src='../../assets/images/bulluni.svg')
         img.today(v-else-if='isToday'  src='../../assets/images/unibull.svg')
     .tooltip.upgrade(v-for='t in ev')

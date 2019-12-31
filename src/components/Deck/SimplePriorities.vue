@@ -30,10 +30,10 @@ export default {
           return p
       },
       isSun() {
-          return Dimensions.isSun(this.$router)
+          return Dimensions.isSun(this.$router.currentRoute.path)
       },
       isUni() {
-          return Dimensions.isUni(this.$router)
+          return Dimensions.isUni(this.$router.currentRoute.path)
       }
   },
   components:{

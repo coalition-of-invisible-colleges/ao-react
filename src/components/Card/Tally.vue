@@ -26,6 +26,7 @@ export default {
     padding-right: 0.5em
     padding-left: 0.5em
     min-height: 0.1em
+    font-size: 1em
     
 img
     height: 1em

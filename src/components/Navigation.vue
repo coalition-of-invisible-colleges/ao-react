@@ -234,10 +234,6 @@ export default {
             }
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + this.$store.state.upgrades.mode)
-            setTimeout(() => {
-                this.setToRoute()
-                this.uniLeft = !this.uniLeft
-            }, 20)
         },
         cycleRight(){
             SoundFX.playSqaWink()
@@ -247,10 +243,6 @@ export default {
             }
             this.$store.commit('startLoading', 'bull')
             this.$router.push('/dash/'  + this.$store.state.upgrades.mode)
-            setTimeout(() => {
-                this.setToRoute()
-                this.uniRight = !this.uniRight
-            }, 20)
         },
         goFront(mode) {
             if(mode && this.isSun() && this.$store.state.upgrades.mode === mode) {
@@ -307,10 +299,10 @@ export default {
           this.$store.dispatch('loadCurrent')
         },
         isSun() {
-            return Dimensions.isSun(this.$router)
+            return Dimensions.isSun(this.$router.currentRoute.path)
         },
         isBull() {
-            return Dimensions.isBull(this.$router)
+            return Dimensions.isBull(this.$router.currentRoute.path)
         },
         nextMode() {
             SoundFX.playCaChunk()

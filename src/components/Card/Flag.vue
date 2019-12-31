@@ -218,7 +218,7 @@ export default {
             }
         },
         isOracle() {
-            return Dimensions.isSun(this.$router) && this.$store.state.upgrades.mode === 'doge'
+            return Dimensions.isSun(this.$router.currentRoute.path) && this.$store.state.upgrades.mode === 'doge'
         },
     },
     computed: {

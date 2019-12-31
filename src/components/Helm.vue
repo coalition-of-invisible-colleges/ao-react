@@ -107,11 +107,11 @@ export default {
 
         mc.on('tap', (e) => {
             HelmControl.flashHelm(0.5)
-            if(!this.isUni()) {
-                this.goUni(this.$store.state.upgrades.mode)
-            } else {
+            // if(!this.isUni()) {
+                // this.goUni(this.$store.state.upgrades.mode)
+            // } else {
                 this.nextMode()
-            }
+            // }
             e.stopPropagation()
         })
 
@@ -195,7 +195,7 @@ export default {
             }
         },
         goUni(mode, silent = false) {
-            if(Dimensions.isDeck(this.$router, mode)) {
+            if(Dimensions.isDeck(this.$router.currentRoute.path, mode)) {
                 if(!silent) {
                     SoundFX.playPortalBlocked()
                 }
@@ -214,10 +214,10 @@ export default {
             }, 20)
         },
         isUni() {
-            return Dimensions.isUni(this.$router)
+            return Dimensions.isUni(this.$router.currentRoute.path)
         },
         goFront(mode) {
-            if(Dimensions.isFront(this.$router, mode)) {
+            if(Dimensions.isFront(this.$router.currentRoute.path, mode)) {
                 SoundFX.playPortalBlocked()
                 return
             }

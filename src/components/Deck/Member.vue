@@ -194,8 +194,8 @@ label
     width: fit-content
     right: 1em
     bottom: 0.65em
-    position: absolute
     float: right
+    margin-top: -3em
 
 .stash
     display: inline
