@@ -332,9 +332,7 @@ let intervalID = window.setInterval(updateTransition, 7000)
 <style lang="stylus" scoped>
 
 @import '../styles/colours'
-@import '../styles/grid'
 @import '../styles/tooltips'
-
 
 .uni
     position: fixed
@@ -690,7 +688,7 @@ hr
 
 .tooltiptext.center.fix
     position: fixed
-    
+
 .bigger
     width: 8em
 </style>

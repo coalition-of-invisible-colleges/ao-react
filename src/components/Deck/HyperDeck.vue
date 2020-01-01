@@ -39,6 +39,7 @@ import ResourceRow from '../Resources/Row'
 import Context from './Context'
 import Hypercard from "../Card"
 import Panels from './Panels'
+import GiftBox from './GiftBox'
 import Auth from '../Auth'
 import SoundFX from '../../utils/sounds'
 
@@ -46,7 +47,7 @@ export default {
   components:{
       Hypercard,
       Panels, MemberRow,
-      ResourceRow, Context, Auth
+      ResourceRow, Context, Auth, GiftBox
   },
   methods:{
       goWithinPanel(n){
@@ -117,7 +118,6 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../../styles/colours'
-@import '../../styles/skeleton'
 @import '../../styles/button'
 @import '../../styles/tooltips'
 

@@ -25,6 +25,7 @@
                     vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
             h2 hodling {{ deckSize }} cards
     .clearboth
+    gift-box(v-if="$store.getters.inbox.length > 0")
 </template>
 
 <script>
@@ -36,10 +37,11 @@ import PreviewDeck from './PreviewDeck'
 import Vouch from '../Members/Vouch'
 import Bird from '../Card/Bird'
 import NotZen from '../Upgrades/NotZen'
+import GiftBox from './GiftBox'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch, Bird, NotZen},
+    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch, Bird, NotZen, GiftBox},
     computed:{
         card(){
             return this.$store.getters.hashMap[this.m.memberId]
@@ -109,8 +111,6 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/grid'
 @import '../../styles/tooltips'
 
 img
@@ -128,7 +128,7 @@ label
 
 .spacer
     margin-bottom: 3em
-    
+
 .membershipcard
     padding: 1em
     background: rgba(22, 22, 22, 0.2)
@@ -240,10 +240,10 @@ label
 
 ul.left
     text-align: left
-    
+
 .clearboth
     clear: both
-    
+
 .pullup
     margin-bottom: -2em
 </style>

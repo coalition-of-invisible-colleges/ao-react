@@ -1,13 +1,9 @@
 <template lang='pug'>
 
 #deck()
-    //h1.up.white(v-if='$router.currentRoute.path.trim() == "/deck"') deck
-    .row.shadow
-        .four.columns(v-if='$store.getters.inbox.length > 0')
-            gift-box
-        .columns(:class='{eight: $store.getters.inbox.length > 0}')
-            hyper-deck
-                router-view
+    .shadow
+      hyper-deck
+          router-view
     .row
         router-link(to='/archive', @click='sink')
             img.sunkenship(src='../../assets/images/sunken_ship.png')
