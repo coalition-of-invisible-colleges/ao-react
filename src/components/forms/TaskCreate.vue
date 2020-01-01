@@ -2,8 +2,7 @@
 #createtask(ref="closeable")
     transition(name="slide-fade")
       .cc(v-show='showCreate')
-          textarea.textarea#card.fwi(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
-          img.specialoverlay
+          textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
           button(@click='createOrFindTask').fwi create card
     .label
       .btnpanel
@@ -323,9 +322,6 @@ export default {
 @import '../../styles/button'
 @import '../../styles/breakpoints'
 
-#card
-    margin-bottom: 0
-
 #createtask
   width: fit-content
   background-color: rgba(51, 51, 51, 0.3)
@@ -382,26 +378,8 @@ button
     height: 3em
 
 .fwi
-    width: 100%
     text-align: center
     color: white
-    max-width: 20.225425em
-
-.specialoverlay
-    background-image: url('../../assets/images/paper.jpg')
-    background-repeat: no-repeat
-    background-position: center center
-    background-size: cover
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
-    width: 20.225425em
-    pointer-events: none
-    height: 12.5em
-    z-index: 10
-    position: absolute
-    opacity: 0.13
 
 .tealbk
     background: green

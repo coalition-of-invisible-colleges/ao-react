@@ -3,46 +3,45 @@
 .navigation(@contextmenu.prevent)
     h1.loadingscreen(v-if='$store.state.context.loading') loading {{ $store.state.context.loading }}
     img.dableft.adjtooltip(src="../assets/images/navigas/sun.svg"  ref='sun'  :class='{ bigger : isSun() }')
-    //- img.dableft.adjtooltip(v-if='$store.state.upgrades.warp > -1'  src="../assets/images/navigas/sun_red.svg"  ref='sun')
-    .tooltiptext.left(v-if='$store.getters.member.muted')
-        h2.leftalign Sun Pages:
-        ul
-            li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-                img.lil(src='../assets/images/buddadoge.svg')
-                span Oracle *
-            li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-                img.lil(src='../assets/images/boatblack.svg')
-                span Top Missions **
-            li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-                img.lil(src='../assets/images/badge.svg')
-                span Recent ***
-            li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-                img.lil(src='../assets/images/bounty.svg')
-                span Bounties ****
-            li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-                img.lil(src='../assets/images/timecube.svg')
-                span Calendar *****
-        p once to advance or multiclick to a specific page
+    //- .tooltiptext.left(v-if='$store.getters.member.muted')
+    //-     h2.leftalign Sun Pages:
+    //-     ul
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+    //-             img.lil(src='../assets/images/buddadoge.svg')
+    //-             span Oracle *
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+    //-             img.lil(src='../assets/images/boatblack.svg')
+    //-             span Top Missions **
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+    //-             img.lil(src='../assets/images/badge.svg')
+    //-             span Recent ***
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+    //-             img.lil(src='../assets/images/bounty.svg')
+    //-             span Bounties ****
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+    //-             img.lil(src='../assets/images/timecube.svg')
+    //-             span Calendar *****
+    //-     p once to advance or multiclick to a specific page
     img.dabright.adjtooltip(src="../assets/images/navigas/bull.svg"  ref='bull'  :class='{ bigger : isBull() }')
-    .tooltiptext.right(v-if='$store.getters.member.muted')
-        h2.leftalign Bull Pages:
-        ul
-            li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-                img.lil(src='../assets/images/buddadoge.svg')
-                span Controls *
-            li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-                img.lil(src='../assets/images/boatblack.svg')
-                span Connections **
-            li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-                img.lil(src='../assets/images/badge.svg')
-                span Accounts ***
-            li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-                img.lil(src='../assets/images/bounty.svg')
-                span Lightning ****
-            li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-                img.lil(src='../assets/images/timecube.svg')
-                span Central Reserve *****
-        p once to advance or multiclick to a specific page
+    //- .tooltiptext.right(v-if='$store.getters.member.muted')
+    //-     h2.leftalign Bull Pages:
+    //-     ul
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+    //-             img.lil(src='../assets/images/buddadoge.svg')
+    //-             span Controls *
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+    //-             img.lil(src='../assets/images/boatblack.svg')
+    //-             span Connections **
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+    //-             img.lil(src='../assets/images/badge.svg')
+    //-             span Accounts ***
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+    //-             img.lil(src='../assets/images/bounty.svg')
+    //-             span Lightning ****
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+    //-             img.lil(src='../assets/images/timecube.svg')
+    //-             span Central Reserve *****
+    //-     p once to advance or multiclick to a specific page
     helm
     .pushdown
     div(:class='{suncontext: isSun(), bullcontext: isBull()}' @keydown.tab='nextMode' /* @keydown.shift.tab='previousUpgradeMode'  @keyup.preventDefault */)
@@ -347,21 +346,26 @@ let intervalID = window.setInterval(updateTransition, 7000)
     height: 1.75em
     background-repeat: repeat-x
     background-size: 3em
-    margin-left: 7em
-    margin-right: 7em
+    // margin-left: 7em
+    // margin-right: 7em
     z-index: -1
 
 .bullcontext
     background-image: url("../assets/images/bullleg.svg")
     bacground-position: top center
-    margin-left: 9em
-    margin-right: 9em
+    // margin-left: 9em
+    // margin-right: 9em
+
+.context
+    width: calc(100% - 14em)
+    margin: 0 auto
+    align-self: flex-end
 
 .suncontext
     background-image: url("../assets/images/sunbean.svg")
     bacground-position: top center
-    margin-left: 9em
-    margin-right: 9em
+    // margin-left: 9em
+    // margin-right: 9em
 
 .transparentsides
     width: 100%
@@ -370,15 +374,10 @@ let intervalID = window.setInterval(updateTransition, 7000)
     background: -webkit-linear-gradient(left,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 10%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
     background: linear-gradient(to right,  rgba(32,32,32,1) 0%,rgba(32,32,32,0) 10%,rgba(32,32,32,0) 90%,rgba(32,32,32,1) 100%)
 
-.full
-    width: 100%
-    height: 100%
-
 .navigation
   display: flex
   flex-direction: column
   min-height: 5.8em
-  // max-width: 100vw
 
 .side_bar ul
   margin-left: 10px
@@ -429,55 +428,15 @@ hr
 .dableft, .dabright
     position: fixed
     top: 0
-    display: flex
-    flex-direction: column
-    width: 7em
     cursor: pointer
     z-index: 152
+    height: 5.5555555555em
 
 .dableft
     left: 0
 
 .dabright
     right: 0
-
-@media only screen and (max-width: 550px) {
-  .modeleft, .moderight {
-    display: none
-  }
-}
-
-.btc
-    border: 2px purple solid
-    border-radius: 5px
-    background-color: purple
-    color: white
-    height: 4em
-    margin-left: 0.5em
-    margin-right: 0.5em
-    margin-top: 1.5em
-    margin-bottom: 0em
-    -webkit-transition-property: background-color margin-bottom margin-top border
-    -webkit-transition-duration: 7s
-    -webkit-transition-timing-function: ease-in-out
-    transition-property: background-color margin-bottom margin-top border
-    transition-duration: 7s
-    transition-timing-function: ease-in-out
-
-.sat
-    border: 2px teal solid
-    border-radius: 5px
-    background-color: teal
-    color: white
-    height: 4em
-    margin-top: 0em
-    margin-bottom: 1.5em
-    -webkit-transition-property: background-color margin-bottom margin-top border
-    -webkit-transition-duration: 7s
-    -webkit-transition-timing-function: ease-in-out
-    transition-property: background-color margin-bottom margin-top border
-    transition-duration: 7s
-    transition-timing-function: ease-in-out
 
 .smallbird
     height:1em
@@ -510,7 +469,6 @@ hr
     transform: translateX(-50%)
 
 .topauth
-    max-width: 50%
     padding: 1em
     position: absolute
     top: 0
@@ -522,7 +480,6 @@ hr
     top: 0
     left: 50%
     transform: translateX(-50%)
-    width: 10em
     max-width: 33%
     background: softGray
     color: main
@@ -541,8 +498,6 @@ hr
     top: 0
     left: calc(50% - 10em)
     opacity: 0.4
-    // background: white
-    // box-shadow: rgba(255, 255, 255, 0.65) 0px 0px 10px
     background: none
     border: none
     z-index: 153
@@ -563,7 +518,6 @@ hr
     100% { background-color: softGray; border-color: buttonface }
 
 @keyframes flash
-    // 0% { background-color: softGray; border-color: buttonface }  // this makes the flash start late when there is GUI lag. but looks better.
     0% { background-color: #9ff; border-color: #aff }
     50% { background-color: #9ff; border-color: #aff }
     100% { background-color: softGray; border-color: buttonface }
@@ -596,18 +550,6 @@ hr
 .timecube
     transform: translateX(-0.2em)
 
-.context
-    width: calc(100% - 14em)
-    margin: 0 auto
-    align-self: flex-end
-
-.fl
-    float: left
-
-.fr
-    float: right
-    width: 7em
-
 .pushdown
     margin-top: auto
 
@@ -634,7 +576,6 @@ hr
         margin-top: 3em
     .satspot
         margin-top: 5em
-
 
 .btcspot
     right: 111px
@@ -671,7 +612,6 @@ hr
 .tooltiptext.left, .tooltiptext.right, .tooltiptext.center
     position: absolute
     font-size: 1.3em
-    width: 20em
     z-index: 88888
     top: 0.5em
 
@@ -689,6 +629,4 @@ hr
 .tooltiptext.center.fix
     position: fixed
 
-.bigger
-    width: 8em
 </style>

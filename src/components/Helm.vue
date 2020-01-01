@@ -7,32 +7,31 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
     button.topcenter.adjtooltip(:class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }' id='helm'  @mousedown='shortFlash')
-        .full
-            img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
-            img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
-            img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
-            img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
-            img.upg(v-else  src='../assets/images/buddadoge.svg')
-    .tooltiptext.center(v-if='$store.getters.member.muted'  :class='{ fix : $store.state.upgrades.mode !== "doge" }')
-        h1 Card modes
-        ul
-            li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-                img.lil(src='../assets/images/buddadoge.svg')
-                span Member Card *
-            li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-                img.lil(src='../assets/images/boatblack.svg')
-                span Priorities **
-            li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-                img.lil(src='../assets/images/badge.svg')
-                span Missions &amp; Checkmarks ***
-            li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-                img.lil(src='../assets/images/bounty.svg')
-                span Send Points ****
-            li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-                img.lil(src='../assets/images/timecube.svg')
-                span Calendar &amp; Events *****
-        p click to advance mode, multiclick to to a specific mode
-        p swipe left/right to change mode
+        img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
+        img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
+        img.upg(v-else  src='../assets/images/buddadoge.svg')
+    //- .tooltiptext.center(v-if='$store.getters.member.muted'  :class='{ fix : $store.state.upgrades.mode !== "doge" }')
+    //-     h1 Card modes
+    //-     ul
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+    //-             img.lil(src='../assets/images/buddadoge.svg')
+    //-             span Member Card *
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+    //-             img.lil(src='../assets/images/boatblack.svg')
+    //-             span Priorities **
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+    //-             img.lil(src='../assets/images/badge.svg')
+    //-             span Missions &amp; Checkmarks ***
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+    //-             img.lil(src='../assets/images/bounty.svg')
+    //-             span Send Points ****
+    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+    //-             img.lil(src='../assets/images/timecube.svg')
+    //-             span Calendar &amp; Events *****
+    //-     p click to advance mode, multiclick to to a specific mode
+    //-     p swipe left/right to change mode
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -266,10 +265,6 @@ export default {
 @import '../styles/grid'
 @import '../styles/tooltips'
 
-.full
-    width: 100%
-    height: 100%
-
 .helpcontrol
   display: flex
   flex-direction: column
@@ -326,7 +321,7 @@ hr
     top: 0
     display: flex
     flex-direction: column
-    width: 7em
+    // width: 7em
     cursor: pointer
     z-index: 152
 
@@ -503,7 +498,6 @@ hr
 .tooltiptext.left, .tooltiptext.right, .tooltiptext.center
     position: absolute
     font-size: 1.3em
-    width: 20em
     z-index: 88888
     top: 0.5em
 

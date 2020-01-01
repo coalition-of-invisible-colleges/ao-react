@@ -1,12 +1,11 @@
 <template lang='pug'>
 
-#deck()
-    .shadow
-      hyper-deck
-          router-view
-    .row
-        router-link(to='/archive', @click='sink')
-            img.sunkenship(src='../../assets/images/sunken_ship.png')
+#deck
+    hyper-deck
+        router-view
+    div
+      router-link(to='/archive', @click='sink')
+          img.sunkenship(src='../../assets/images/sunken_ship.png')
 </template>
 
 <script>
@@ -39,22 +38,20 @@ export default {
 @import '../../styles/button'
 
 #deck
-    width: 100%
+    min-width: 100%
 
-.row.shadow
+.shadow
     box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5)
 
 .floater
     position: relative;
     top: 0
     left: 0
-    width: 100%
     min-height: 500px
 
 .sunkenship
-    width: 22em
     opacity: 0.5
-    margin: 16em calc(50% - 11em) 4em calc(50% - 11em)
+    max-width: 100%
 
 .up
   width: fit-content

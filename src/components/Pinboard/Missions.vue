@@ -1,15 +1,7 @@
 <template lang='pug'>
 #wrex
   h1.up top 11 missions
-  flickity(v-if='$store.state.ao.length > 0'  :options='flickityOptions')
-      .carousel-cell.greenwx(@click='setWarp(-1)'  ref='warp')
-          span(:class='{redTx: -1 === $store.state.upgrades.warp}') {{ $store.state.cash.alias }}
-      .carousel-cell.greenwx(v-for='(a, i) in $store.state.ao'  @click='setWarp(i)')
-          span(:class='{redTx: i === $store.state.upgrades.warp}')  {{ a.alias ? a.alias : a.address.slice(0,11) }}
-  flickity(:options='flickityOptions')
-      .carousel-cell(v-for='(t, i) in guilds'  :key='t.taskId'  :class='cardInputSty(t.color)' )  {{ t.guild }}
   hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.weight'  :c='[t.taskId]'  :inId='$store.getters.member.memberId')
-
 </template>
 
 <script>
@@ -390,18 +382,18 @@ h2
     font-weight: bold
     font-size: 1.25em
     margin-top: -0.13em
-    
+
 .indentone
     margin-left: 2em
 
 .indenttwo
     margin-left: 4em
-    
+
 .center
     margin-left: 50%
     transform: translateX(-50%)
     width: fit-content
-    
+
 .topmission
     max-width: 30em
     margin-left: 50%

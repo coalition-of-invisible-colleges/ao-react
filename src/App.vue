@@ -1,10 +1,9 @@
 <template lang='pug'>
 
-#app
-  .contain
-    event-feed
-    navigation
-    router-view
+.app
+  navigation
+  router-view
+  event-feed
 </template>
 
 <script>
@@ -25,20 +24,9 @@ export default {
             this.$store.dispatch('loadCurrent')
         }
     },
-    created() {
-        window.addEventListener('keydown', this.testInput);
-    },
-    destroyed() {
-        window.removeEventListener('keydown', this.testInput);
-    },
-   components: {
+    components: {
         Navigation, MobileHeading, EventFeed
     },
-    methods: {
-        testInput(e) {
-            let cmd = String.fromCharCode(e.keyCode).toLowerCase()
-        },
-    }
 }
 
 
@@ -52,61 +40,13 @@ export default {
 @import "./styles/colours"
 @import "./styles/input"
 
-#app
-    // position:relative
+.app
     color: accent1
     font-weight: lighter
-    // overflow-x: hidden
-    // height: 100vh
 
 body
     background: main
     overflow-x: hidden
 
-main
-    height: 100%
-    width: 100%
-    margin: 0
-    padding: 0
-    display: flex
-
-hr
-    background-color: purple
-    border-color: purple
-    color: purple
-
-h4
-    margin-bottom:35px
-
-.agedwrapper a
-    text-shadow: rgba(255, 255, 255, 0.65) 0px 0px 10px
-
-.side_bar, .content
-    display: flex;
-
-.content
-    flex-grow: 4;
-    overflow-y:scroll;
-    padding:0 5rem;
-
-.side_bar {
-    flex-basis: 10rem;
-    flex-shrink: 0;
-    flex-grow: 0;
-}
-
-.mobile
-    width: calc(100% - 40px);
-    padding-left: 20px;
-    padding-right: 20px;
-
-@media (max-width: breakpoint)
-    main
-        display: none
-
-
-@media (min-width: breakpoint)
-    .mobile
-        display: none
 
 </style>

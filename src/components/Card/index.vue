@@ -121,7 +121,7 @@ export default {
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
-            
+
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         purge(){
@@ -136,7 +136,6 @@ export default {
           navigator.clipboard.writeText(this.b.name)
               .then(x => console.log('success', x))
               .catch(err => console.log('fail', err))
-
         },
         deaction(){
           SoundFX.playPageTurn()
