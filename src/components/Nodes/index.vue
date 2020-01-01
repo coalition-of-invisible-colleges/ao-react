@@ -23,6 +23,7 @@
                       tag(:d='a')
                   .six.columns
                       label {{a}}
+    payments
   .row(v-else)
       p <em>unable to read info from lightning node</em>
 </template>
@@ -37,6 +38,7 @@ import Mercher from './Mercher'
 import Channel from './Channel'
 import ChannelCreate from '../forms/ChannelCreate'
 import LocalRemoteBar from './LocalRemoteBar'
+import Payments from '../Upgrades/Payments'
 
 import request from 'superagent'
 
@@ -47,7 +49,7 @@ export default {
         }
     },
     components:{
-        SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar
+        SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar, Payments
     },
     computed: {
         unchanneled(){

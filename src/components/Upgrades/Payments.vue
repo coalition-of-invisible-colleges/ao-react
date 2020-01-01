@@ -3,19 +3,19 @@
 .upgrades
     div(v-if='$store.state.cash.info.alias')
         .togglepayments
-            button.submode(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
+            button.submode.marg(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
                 img.max(src='../../assets/images/bitcoin.svg')
             button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
                 img.max(src='../../assets/images/lightning.svg')
-            button.submode
-                input.smallbox.fr(v-model='payreqAmount')
-                button(@click='invoiceCreate') ♻️
         div(v-show='$store.state.upgrades.payment === "bitcoin"')
             div(v-if='b.address')
                 pay-address(:address='b.address')
         div(v-show='$store.state.upgrades.payment === "lightning"')
             div(v-if='b.bolt11')
                 pay-req(:bolt11='b.bolt11')
+                .submode
+                    input.smallbox.fr(v-model='payreqAmount')
+                    button(@click='invoiceCreate') ♻️
     div.suggest(v-else) no lightning node :(
 </template>
 
@@ -92,6 +92,9 @@ export default {
 @import '../../styles/button'
 @import '../../styles/tooltips'
 @import '../../styles/spinners'
+
+.marg
+    margin-right: 1.97em
 
 .nl
     text-decoration:none
@@ -181,10 +184,6 @@ h3
 .box
     padding: 1em 0
 
-.box.morepad
-    //padding: 2em 0
-    //margin-left: 2em
-
 .ungrabbedcoin {
   opacity: 0.3
 }
@@ -215,10 +214,6 @@ h3
     cursor: pointer
     position: relative
     left: calc(50% - 3em)
-
-.dogep img
-    height: 100%
-    width: 100%
 
 .spaced
     margin-bottom: 1em
@@ -289,8 +284,9 @@ h2
 
 .thickborder
     border-style: solid
-    border-color: green
+    border-color: wrexyellow
     border-width: 4px
+    border-radius: 3.3%
 
 .mainbkg
     background: main
@@ -355,8 +351,6 @@ h2
     background-color: rgba(22, 22, 22, 0.4)
     display: inline-block;
     border-width: 2px
-    //border-color: rgba(255, 255, 255, 0.68)
-    //border-style: solid
     padding: 0.5em
     margin: 0
     font-size: 1em
