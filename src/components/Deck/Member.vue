@@ -25,7 +25,6 @@
                     vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
             h2 hodling {{ deckSize }} cards
     .clearboth
-    gift-box(v-if="$store.getters.inbox.length > 0")
 </template>
 
 <script>

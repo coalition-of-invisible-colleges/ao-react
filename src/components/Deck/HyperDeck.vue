@@ -16,6 +16,7 @@
                 context(:taskId='n')
             .centerer
                 .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
+            gift-box(v-if="$store.getters.inbox.length > 0")
         .upgradesbar(v-show='$store.state.upgrades.mode !== "doge"')
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
