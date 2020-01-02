@@ -1,55 +1,17 @@
 
-#### Autonomous Organization
-Feature list:
-    * Connect physical resources (door, vending) with readers and pin activated hardware.
-    * Maintain list of accounts associated with rfid tags.
-    * Accounts can create cards, send them between accounts, create lists of priorities, plunge cards into cards inception.
-    
-To fully function, ao requires sqlite3, bitcoind, and clightning. When you have them installed you must create a configuration.js file in the ao folder. configuration.js example...
+#### Install
 
-    module.exports = {
-    bitcoind:{
-        network: 'regtest'
-    },
-    clightning: {
-        dir:'/home/trhode/.lightning'
-    },
-    sqlite3: {
-        file: '/home/trhode/.ao/database.sqlite3'
-    },
-    bitcoinAverage: {
-        pub: '',
-        secret: ''
-    }}
+On Raspbian or Ubunutu 18 run the pi_install.sh script.
+```
+chmod u+x pi_install.sh
+./pi_install.sh
+```
+Run the script again to see if it worked. Process should be running on localhost:8003 after setup.
+Wallet (clightning) requires full node. Addresses and invoices are controlled on your device. Backup the ~/.lightning/bitcoin/hsm_secret file.
 
+### Autonomous Organization
 
-
-
-AO is locally run infrastructure to help create successful commons hackerspaces.
-
-`git clone ...`
-`cd ao`
-
-`yarn install`
-`yarn compile`
-`yarn start`
-
-````
-module.exports = {
-    bitcoind:{
-        network: 'regtest'
-    },
-    clightning: {
-        dir:'/home/trhode/.lightning'
-    },
-    sqlite3: {
-        file: '/home/trhode/.ao/database.sqlite3'
-    },
-    bitcoinAverage: {
-        pub: '',
-        secret: ''
-    },
-}
-````
-
-The addresses created by ao are on this device - backup the ~/.lightning/hsm_secret file - this is very experimental; use at your own risk.
+1. Add ideas, missions, goals on cards.
+2. Gather accounts that can log in and carry rfid tags.
+3. Manage smart vending machine and maglock door.
+4. Connect over tor and relay cards to another ao
