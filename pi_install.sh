@@ -297,7 +297,7 @@ then
 else
 	CONFIG="module.exports = {
     bitcoind: {
-        network: 'regtest'
+        network: 'mainnet'
     },
     bitcoinAverage: {
         pub: '',
@@ -307,7 +307,7 @@ else
         file: '$HOME/.ao/database.sqlite3'
     },
     clightning: {
-        dir: '$HOME/.lightning/'
+        dir: '$HOME/.lightning/bitcoin'
     },
     tor: {
     	hostname: '$TORHOSTNAME'
