@@ -49,7 +49,9 @@
             option(disabled  value='') to AO
             option(v-for='(n, i) in $store.getters.liveConnections', :value='i') {{ n.state.cash.alias }}
         button.small(@click='setWarp') set
-    guild-create.theTitle(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
+    .theTitle(v-if='b.guild') {{ b.guild }}
+    .count
+        guild-create(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
 <script>
@@ -405,7 +407,7 @@ label
 .smallguild.red
     background-image: url('../../assets/images/badge_red.svg')
     opacity: 0.55
-    
+
 .smallguild.red:hover, .smallguild.red.open
     background-image: url('../../assets/images/badge_white_red.svg')
 

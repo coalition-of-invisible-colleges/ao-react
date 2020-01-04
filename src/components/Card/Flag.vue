@@ -2,18 +2,16 @@
 .flag(v-if="$store.getters.memberCard")
     .flaggy(:id='uuid'  :class='{ boat : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isDoged, doge : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged, chest : $store.state.upgrades.mode === "chest", timecube : $store.state.upgrades.mode === "timecube", nolightning : $store.state.upgrades.mode === "chest" && !$store.state.cash.info.alias  }')
         img(v-if='!$store.state.context.panel[$store.state.context.top]'  src='../../assets/images/scroll.svg')
-        span.checkmark(v-else-if='($store.state.upgrades.mode === "badge" || isOracle()) && isCompleted') ☑
-        span.checkmark(v-else-if='($store.state.upgrades.mode === "badge" || isOracle()) && !isCompleted') ☐
+        span.checkmark(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && isCompleted') ☑
+        span.checkmark(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && !isCompleted') ☐
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../../assets/images/doge_faded.png')
         img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && inId && !isFlagged', src='../../assets/images/boatwhite.svg')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../../assets/images/boatbtnselected.svg')
-        img(v-else-if='$store.state.upgrades.mode === "chest"'  src='../../assets/images/bounty.svg')
+        img(v-else-if='$store.state.upgrades.mode === "badge"'  src='../../assets/images/badge.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../../assets/images/timecube.svg')
     .opened
         resource-book(v-if='isCubeOpen'  :tId='b.taskId')
-        div(v-if='isPayOpen')
-          tag(v-if='$store.state.upgrades.payment === "lightning" && b.bolt11'  :d='b.bolt11')
-          tag(v-if='$store.state.upgrades.payment === "bitcoin" && b.address'  :d='b.address')
+        guild-create(:editing='isPayOpen'  :b='b' )
 </template>
 
 <script>
@@ -28,9 +26,10 @@ import HelmControl from '../../utils/helm'
 import SoundFX from '../../utils/sounds'
 import uuidv1 from 'uuid/v1'
 import Dimensions from '../../utils/dimensions'
+import GuildCreate from '../forms/GuildCreate'
 
 export default {
-    components: { PayReq, PayAddress, Tag, ResourceBook },
+    components: { PayReq, PayAddress, Tag, ResourceBook, GuildCreate },
     data(){
         return {
             isPayOpen: false,
@@ -64,17 +63,15 @@ export default {
                         this.flagIt()
                     }
                     break
-                case 'badge':
+                case 'chest':
                     if(!this.isCompleted) {
                         this.complete()
                     } else {
                         this.uncheck()
                     }
                     break
-                case 'chest':
-                    if(this.$store.state.cash.info.alias) {
-                        this.togglePay()
-                    }
+                case 'badge':
+                    this.togglePay()
                     break
                 case 'timecube':
                     this.toggleCube()
@@ -141,24 +138,6 @@ export default {
         },
         togglePay(){
             this.isPayOpen = !this.isPayOpen
-
-            if (this.isPayOpen && this.$store.state.upgrades.payment === "bitcoin" && !this.b.address){
-              this.$store.dispatch("makeEvent", {
-                  type: 'address-updated',
-                  taskId: this.b.taskId
-              })
-            }
-
-            if (this.isPayOpen && this.$store.state.upgrades.payment === "lightning" && !this.b.bolt11){
-                let spot = this.$store.state.cash.spot | 10000
-                let amount = calcs.cadToSats( 1 , spot)
-                this.$store.dispatch("makeEvent", {
-                    type: 'invoice-created',
-                    taskId: this.b.taskId,
-                    amount, //
-                    label: '<3'
-                })
-            }
         },
         toggleCube(){
             this.isCubeOpen = !this.isCubeOpen
@@ -246,6 +225,9 @@ export default {
 @import '../../styles/grid';
 @import '../../styles/button';
 
+.flag, .opened
+    width: 100%
+
 .count
     float: right
 
@@ -269,7 +251,7 @@ export default {
     height: 1em
     cursor: pointer
     z-index: 99
-    
+
 .flaggy img
     pointer-events: none
     height: 100%
@@ -283,12 +265,12 @@ export default {
     height: 1.1em
     margin-top: -0.2em
     margin-right: -0.2em
-    
+
 .boat
     height: 1em
     margin-top: -0.2em
     margin-right: -0.4em
-    
+
 .faded
     opacity: 0.235654
 
@@ -310,11 +292,10 @@ export default {
 .svgwhite:hover
     transform: rotate(-30deg)
 
-.opened
-    display: block
-    position: relative
-    
 .nolightning
     opacity: 0.15
     cursor: default
+
+.opened
+    float: left
 </style>

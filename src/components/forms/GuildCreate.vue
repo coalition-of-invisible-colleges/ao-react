@@ -1,7 +1,6 @@
 <template lang='pug'>
 
 .guildcreate(:class='{ bumpup : editing }')
-    span(v-if='b.guild && !editing') {{ b.guild }}
     input#titlebox(v-if='editing'  v-model='task.guild'  type='text'  placeholder='code name'  @keypress.enter='titleIt(false)')
     button(v-if='editing'  @click='titleIt') {{ detectRename }}
 </template>
@@ -72,19 +71,18 @@ export default {
     background: transparent
     padding: 0
     color: white
-    margin: 0 2em 0 0
+    height: 2.2em
 
 .guildcreate button
     width: 40%
     height: 2.2em
     padding: 0
-    position: relative
-    top: -0.16em
 
 .guildcreate input
     border-color: rgba(22, 22, 22, 1)
     border-width: 1px
     background-color: rgba(22, 22, 22, 0.3)
+    height: 2.2em
     width: 60%
 
 .guildcreate.bumpup
