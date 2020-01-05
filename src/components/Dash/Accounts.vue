@@ -5,8 +5,7 @@
   .container
     members
     .row
-      member-create.five.columns(v-if='this.$store.getters.memberCard.deck.length > 3 || $store.state.members.length < 5')
-      p(v-else) Get 3 vouches to unlock to account creation panel.
+      member-create.five.columns
       .two.columns &nbsp;
       changer.five.columns
 </template>

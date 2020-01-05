@@ -4,7 +4,8 @@
   .container(v-if='recentMembers.length > 0')
     h1.up Much Recent
     row(v-for="(m, i) in recentMembers", :m="m"  v-if="showTotal > i")
-    img(@click='andThen'  src='../../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
+    img.andThen(@click='andThen'  src='../../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
+    img.fw(src='../../assets/images/pixeldesert.png')
 </template>
 
 <script>
@@ -50,7 +51,7 @@ export default {
 @import '../../styles/button'
 @import '../../styles/breakpoints'
 
-img
+.andThen
     height: 3em
     position: relative
     left: 50%
@@ -76,9 +77,6 @@ ol
         margin: .3em
 
 #wrex
-    width: 100%
-
-.fw
     width: 100%
 
 .budda
@@ -125,8 +123,7 @@ h2
 
 .fw
     width: 100%
-    float: left
-    opacity: 0.5
+    opacity: 0.3456
 
 .fr
     float: right

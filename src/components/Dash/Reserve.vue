@@ -26,6 +26,7 @@
     div(v-if='pendingDeactivations.length > 0')
         h4 Pending Deactivation:
         current(v-for='mId in pendingDeactivations'  :memberId='mId')
+    img.fw(src='../../assets/images/pixeldesert.png')
 </template>
 
 <script>
@@ -70,6 +71,10 @@ export default {
 @import '../../styles/colours'
 @import '../../styles/skeleton'
 @import '../../styles/breakpoints'
+
+.fw
+    width: 100%
+    opacity: 0.3456
 
 .btcspot , .satspot
     position: absolute

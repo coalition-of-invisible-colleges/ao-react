@@ -15,11 +15,8 @@
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
             span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
-        .grid(:class='{ seven: isVulnerable, five: !isVulnerable }')
+        .grid(:class='{ eight: isVulnerable, six: !isVulnerable }')
             simple-priorities(:taskId='m.memberId')
-        .grid.one
-            preview-deck(:task='$store.getters.hashMap[m.memberId]')
-            img.viney.faded(src='../../assets/images/vinebtn.svg'  @click='goIn(m.memberId)')
 </template>
 
 <script>
@@ -63,7 +60,7 @@ export default {
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
-            
+
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         toggleGrab(){
@@ -154,8 +151,6 @@ label
 
 .memberrow
     border-bottom: .2em dashed softGrey
-    padding-bottom: .3em
-    margin-bottom: .5em
 
 .fw
     width: 100%
@@ -206,8 +201,7 @@ label
 
 .goldengun
     cursor: pointer
-    width: 100%
-    height: auto
+    height: 2em
     margin-top: 1em
 
 .nopointer
