@@ -1,10 +1,10 @@
 
 #### Install
 
-On Raspbian or Ubunutu 18 run the pi_install.sh script.
+On Raspbian or Ubunutu 18 run the `install.sh` script file. From the ao directory, add the permission and run:
 ```
-chmod u+x pi_install.sh
-./pi_install.sh
+chmod u+x install.sh
+./install.sh
 ```
 Run the script again to see if it worked. Process should be running on localhost:8003 after setup.
 Wallet (clightning) requires full node. Addresses and invoices are controlled on your device. Backup the ~/.lightning/bitcoin/hsm_secret file.
