@@ -1,11 +1,8 @@
 <template lang='pug'>
 .dogepepecoin.tooltip(ref='hodlcoin')
-    img.dogepepecoin.spinslow(:class="{ ungrabbedcoin : !isGrabbed, highlight: inHand }" src='../../assets/images/dogepepecoin.png'  draggable='false')
+    img.dogepepecoin.spinslow(:class="{ ungrabbedcoin : !isGrabbed, highlight: inHand }" src='../../assets/images/navigas/coin.svg'  draggable='false')
     .tooltiptext
-        p(v-if='$store.getters.member.muted') held by:
         current.block(v-for='memberId in b.deck'  :memberId='memberId')
-        .suggest(v-if='!isGrabbed && $store.getters.member.muted') click to hodl
-        .suggest(v-if='isGrabbed && $store.getters.member.muted') click to dump
     p.hodlcount(:class="{ grabbedhodlcount: isGrabbed }") {{ b.deck.length }}
 </template>
 
@@ -160,12 +157,12 @@ export default {
 .suggest
     font-style: italic
     margin-top: 1em
-    
+
 .block
     display: block
     clear: both
-    
+
 .highlight
-    box-shadow: 0 0 20px yellow
+    box-shadow: 0 0 20px white
     border-radius: 50%
 </style>

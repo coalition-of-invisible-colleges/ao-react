@@ -10,8 +10,7 @@
             img.fl(v-if='!open && topCard.color === "purple"', src='../../assets/images/backPurple.svg')
             img.fl(v-if='!open && topCard.color === "blue"', src='../../assets/images/backBlue.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
-                p.suggest dab to go back to the previous card
-                p.suggest dab-and-hold to jump to the first card
+                p.suggest previous
         .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ top + 1 }}
@@ -22,11 +21,7 @@
                 img.iris(v-else-if='open && $store.state.upgrades.stacks === 1'  src='../../assets/images/mandelorb_sequential.svg'  draggable='false')
                 img.iris(v-else  src='../../assets/images/mandelorb_linear.svg'  draggable='false')
                 .tooltiptext(v-if='$store.getters.member.muted')
-                    h1 mandelorb
-                    p.suggest(v-if='!open') dab to expand cards
-                    p.suggest(v-else) dab to collapse cards
-                    p.suggest(v-if='$store.state.upgrades.stacks === 1') dab-and-hold to refract cards by color
-                    p.suggest(v-else) dab-and-hold to coalesce cards of all colors
+                    p.suggest long press to split
         .one.grid.horizcenter(:class='panelSty')
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
@@ -39,8 +34,7 @@
             img.fr(v-if='!open && topCard.color === "purple"', src='../../assets/images/forwardPurple.svg')
             img.fr(v-if='!open && topCard.color === "blue"', src='../../assets/images/forwardBlue.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
-                p.suggest dab to advance to the next card
-                p.suggest dab-and-hold to jump to the last card
+                p.suggest next
     .row.fadey(v-else)
       .three.grid
           img.fl(src='../../assets/images/back.svg')
@@ -95,7 +89,7 @@ export default {
           this.next()
           e.stopPropagation()
         })
-        
+
         let orbSwipe = new Hammer.Swipe({ threshold: 50 })
         orbmc.add(orbSwipe)
 

@@ -12,18 +12,18 @@
         label.stash(v-else) 0
     not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
     .bottomright
+      .tooltip
         img.dogecoin.adjtooltip(src='../../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
         .tooltiptext.membertooltip
-            .gui(v-if='m.active > 0') account is active
-            .gui(v-else) account is inactive
             p.suggest(v-if='m.active > 0 && m.memberId === $store.getters.member.memberId') click to deactivate
-            p.help(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') you cannot use resources (door fob etc.) and will not be included in the monthly rent split.
             p.suggest(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') click to activate
             .gui.title(v-if='nameList.length > 0') vouches
             ul.left(v-if='nameList.length > 0')
                 li(v-for='n in nameList')
                     vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
-            h2 hodling {{ deckSize }} cards
+            h2 {{ deckSize }} cards
+            .gui(v-if='m.active > 0') account is active
+            .gui(v-else) account is inactive cannot use resources, will not be included in rent.
     .clearboth
 </template>
 
