@@ -1,6 +1,6 @@
 <template lang='pug'>
 #wrex
-  h1.up top 11 missions
+  h1.up missions
   hypercard.topmission(v-for='(t, i) in topten'  v-if='i < 11'  :b='t'  :key='t.weight'  :c='[t.taskId]'  :inId='$store.getters.member.memberId')
 </template>
 

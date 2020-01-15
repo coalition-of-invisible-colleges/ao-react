@@ -3,9 +3,6 @@
 #deck
     hyper-deck
         router-view
-    div
-      router-link(to='/archive', @click='sink')
-          img.sunkenship(src='../../assets/images/sunken_ship.png')
 </template>
 
 <script>

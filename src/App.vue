@@ -1,6 +1,7 @@
 <template lang='pug'>
 
 .app
+  contexts
   sun
   helm
   bull
@@ -19,6 +20,7 @@ import Bull from './components/Bull'
 import Loader from './components/Loader'
 import Helm from './components/Helm'
 import Status from './components/Status'
+import Contexts from './components/Contexts'
 import TaskCreate from './components/TaskCreate'
 
 export default {
@@ -34,7 +36,7 @@ export default {
         }
     },
     components: {
-        EventFeed, Sun, Bull, Loader, Helm, Status, TaskCreate
+        EventFeed, Sun, Bull, Loader, Helm, Status, TaskCreate, Contexts
     },
 }
 
