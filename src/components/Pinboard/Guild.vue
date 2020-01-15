@@ -18,7 +18,6 @@ import SharedTitle from '../slotUtils/SharedTitle'
 import CrazyBtn from '../slotUtils/CrazyBtn'
 import calculations from '../../calculations'
 import FormBox from '../slotUtils/FormBox'
-import TaskCreate from '../forms/TaskCreate'
 import PreviewDeck from '../Deck/PreviewDeck'
 import HyperDeck from '../Deck/HyperDeck'
 
@@ -31,7 +30,6 @@ export default {
       FormBox,
       PreviewDeck,
       HyperDeck,
-      TaskCreate,
   },
   methods: {
       toTask(id){

@@ -1,0 +1,175 @@
+<template lang='pug'>
+div
+    div(ref='bull')
+        img.r(src="../assets/images/navigas/bull.svg"    :class='{ bigger : isBull() }')
+        .bullmenu(v-if='isBull()')
+            p(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+                img.lil(src='../assets/images/buddadoge.svg')
+                span Control
+            p(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+                img.lil(src='../assets/images/boatblack.svg')
+                span Connection
+            p(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+                img.lil(src='../assets/images/badge.svg')
+                span Account
+            p(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+                img.lil(src='../assets/images/bounty.svg')
+                span Wallet
+            p(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+                img.lil(src='../assets/images/timecube.svg')
+                span Reserve
+    div(v-if='isBull()')
+        .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471; ~
+            span  1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
+        .logout(v-if='$store.getters.isLoggedIn'  @click="killSession") log out
+</template>
+
+<script>
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
+import Dimensions from '../utils/dimensions'
+import SoundFX from '../utils/sounds'
+
+export default {
+  methods: {
+    isBull() {
+        return Dimensions.isBull(this.$router.currentRoute.path)
+    },
+    killSession(){
+        this.$store.dispatch("makeEvent", {
+            type: "session-killed",
+            session: this.$store.state.loader.session
+        })
+    },
+    goDash(mode) {
+        if(!mode) {
+            mode = this.$store.state.upgrades.mode
+        }
+        this.$store.commit('startLoading', 'bull-' + mode)
+        SoundFX.playCaChunk()
+        this.$router.push('/dash/' + mode)
+    },
+    nextMode() {
+        SoundFX.playCaChunk()
+        this.$store.commit('nextMode')
+    },
+  },
+  mounted(){
+    let bullel = this.$refs.bull
+    let bullmc = Propagating(new Hammer.Manager(bullel))
+    let bullTap = new Hammer.Tap({ time: 400 })
+    let bullDoubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+    let bullTripleTap = new Hammer.Tap({ event: 'tripletap', taps: 3, time: 400, interval: 400 })
+    let bullQuadrupleTap = new Hammer.Tap({ event: 'quadrupletap', taps: 4, time: 400, interval: 400 })
+    let bullQuintupleTap = new Hammer.Tap({ event: 'quintupletap', taps: 5, time: 400, interval: 400 })
+    let bullPress = new Hammer.Press({ time: 600 })
+    bullmc.add([bullPress, bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap, bullTap])
+    bullPress.recognizeWith([bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap, bullTap])
+    bullTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap])
+    bullTap.requireFailure([bullQuintupleTap, bullQuadrupleTap, bullTripleTap, bullDoubleTap])
+    bullDoubleTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap, bullTripleTap])
+    bullDoubleTap.requireFailure([bullQuintupleTap, bullQuadrupleTap, bullTripleTap])
+    bullTripleTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap])
+    bullTripleTap.requireFailure([bullQuintupleTap, bullQuadrupleTap])
+    bullQuadrupleTap.recognizeWith(bullQuintupleTap)
+    bullQuadrupleTap.requireFailure(bullQuintupleTap)
+
+    bullmc.on('tap', (e) => {
+        console.log("single click bull")
+        if(!this.isBull()) {
+            this.goDash(false)
+        } else {
+            this.nextMode()
+            this.goDash(false)
+        }
+        e.stopPropagation()
+    })
+
+    bullmc.on('doubletap', (e) => {
+        console.log("double click")
+        this.goDash('boat')
+        e.stopPropagation()
+    })
+
+    bullmc.on('tripletap', (e) => {
+        console.log("triple click")
+        this.goDash('badge')
+        e.stopPropagation()
+    })
+
+    bullmc.on('quadrupletap', (e) => {
+        this.goDash('chest')
+        e.stopPropagation()
+    })
+
+    bullmc.on('quintupletap', (e) => {
+        this.goDash('timecube')
+        e.stopPropagation()
+    })
+
+    bullmc.on('press', (e) => {
+        this.goDash('doge')
+        e.stopPropagation()
+    })
+  }
+}
+
+</script>
+
+<style lang='stylus' scoped>
+@import '../styles/tooltips'
+@import '../styles/colours'
+
+.r
+    position: fixed
+    top: 0
+    cursor: pointer
+    z-index: 152
+    height: 3.5555555555em
+    right: 0
+
+.lil
+    height: 1em
+    transform: translateX(-5%)
+
+.bigger
+    height: 5.5555555555em
+
+.bullmenu
+    position: fixed
+    top: 5em
+    background: lightGrey
+    right: 1em
+    color: main
+
+.satspot
+    position: fixed
+    top: 5.5em
+    left: 1em
+
+.logout
+    position: fixed
+    right: 1em
+    bottom: 1em
+    color: teal
+    font-size: 1.3em
+    font-weight: bold
+    cursor: pointer
+
+.dabstination:before
+    content: ""
+    border: 1px solid white
+    border-width: 2px 2px 0 0
+    display: block
+    height: 0
+    width: 0
+    position: absolute
+    top: 0.42em
+    left: -2.5em
+    height: 5px
+    width: 5px
+    transform: rotate(45deg)
+
+.dabstination
+    font-weight: bold
+</style>

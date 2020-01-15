@@ -46,7 +46,6 @@ import request from "superagent"
 import SharedTitle from './slotUtils/SharedTitle'
 import CrazyBtn from './slotUtils/CrazyBtn'
 import calculations from './../calculations'
-import TaskCreate from './forms/TaskCreate'
 import WhyLightning from './Nodes/WhyLightning'
 
 export default {
@@ -75,7 +74,6 @@ export default {
       SharedTitle,
       Hypercard,
       CrazyBtn,
-      TaskCreate,
       WhyLightning,
   },
 }

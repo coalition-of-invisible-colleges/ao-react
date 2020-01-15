@@ -25,7 +25,6 @@
         .tooltiptext.correctspot(v-if='$store.getters.member.muted && ($store.getters.contextCompleted.length > 0  || $store.state.context.completed)')
             p.suggest(v-if='!$store.state.context.completed') show completed cards
             p.suggest(v-else) show uncompleted cards
-    img.fw(src='../../assets/images/pixeldesert.png')
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
     .agedbackground.weekoldpaperbg(v-else-if='cardAge < 30')

@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#home
+#access
     h1.up {{ $store.state.cash.alias }} controls
     resources
     sidewalk

@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#home
+#accounts
   h1.up {{ activeAccounts }} accounts
   .container
     members

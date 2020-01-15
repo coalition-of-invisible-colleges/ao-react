@@ -27,7 +27,6 @@
 <script>
 
 import SharedTitle from '../slotUtils/SharedTitle'
-import TaskCreate from '../forms/TaskCreate'
 import Linky from '../Card/Linky'
 import Cards from '../../utils/cards'
 
@@ -106,7 +105,6 @@ export default {
   },
   components:{
       SharedTitle,
-      TaskCreate,
       Linky,
   },
 }

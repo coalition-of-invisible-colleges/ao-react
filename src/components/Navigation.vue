@@ -50,9 +50,7 @@
         div(@click='goToParent(n)')
             context(:taskId='n'  :style="{ width: 'calc(100% - 14em - ' + ($store.state.context.parent.length - 1 - (i * 0.5)) + 'em)' }")
     status
-    task-create(v-if='!isBull() && !isSun()')
-    div(v-else)
-        img.uni(src="../assets/images/navigas/uni.svg"  @click='toCardMode')
+    task-create
     div(v-if='isBull()')
         .btcspot 1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
@@ -353,9 +351,7 @@ let intervalID = window.setInterval(updateTransition, 7000)
 .bullcontext
     background-image: url("../assets/images/bullleg.svg")
     bacground-position: top center
-    // margin-left: 9em
-    // margin-right: 9em
-
+    
 .context
     width: calc(100% - 14em)
     margin: 0 auto

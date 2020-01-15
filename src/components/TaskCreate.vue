@@ -1,40 +1,44 @@
 <template lang='pug'>
 #createtask(ref="closeable")
-    transition(name="slide-fade")
-      .cc(v-show='showCreate')
-          textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
-          button(@click='createOrFindTask').fwi create card
-    .label
-      .btnpanel
-          div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
-            button.lit(@click='switchColor("red")'  :class='{ currentColor : showCreate && task.color === "red" }').redwx.paperwrapper
-              img.agedbackground
-            button.lit(@click='switchColor("yellow")'  :class='{ currentColor : showCreate && task.color === "yellow" }').yellowwx.paperwrapper
-              img.agedbackground
-            button.lit(@click='switchColor("green")'  :class='{ currentColor : showCreate && task.color === "green" }').greenwx.paperwrapper
-              img.agedbackground
-            button.lit(@click='switchColor("purple")'  :class='{ currentColor : showCreate && task.color === "purple" }').purplewx.paperwrapper
-              img.agedbackground
-            button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
-              img.agedbackground
-    .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
-        .searchresults
-            .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
-                img.smallguild(src='../../assets/images/badge_white.svg')
-                span {{ t.guild }}
-                div {{ shortName(t.name) }}
-            .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
-                current(:memberId='t.taskId')
-            .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
+  div(v-if='isCard')
+      transition(name="slide-fade")
+        .cc(v-show='showCreate')
+            textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
+            button(@click='createOrFindTask').fwi create card
+      .label
+        .btnpanel
+            div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
+              button.lit(@click='switchColor("red")'  :class='{ currentColor : showCreate && task.color === "red" }').redwx.paperwrapper
+                img.agedbackground
+              button.lit(@click='switchColor("yellow")'  :class='{ currentColor : showCreate && task.color === "yellow" }').yellowwx.paperwrapper
+                img.agedbackground
+              button.lit(@click='switchColor("green")'  :class='{ currentColor : showCreate && task.color === "green" }').greenwx.paperwrapper
+                img.agedbackground
+              button.lit(@click='switchColor("purple")'  :class='{ currentColor : showCreate && task.color === "purple" }').purplewx.paperwrapper
+                img.agedbackground
+              button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
+                img.agedbackground
+      .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
+          .searchresults
+              .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+                  img.smallguild(src='../assets/images/badge_white.svg')
+                  span {{ t.guild }}
+                  div {{ shortName(t.name) }}
+              .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+                  current(:memberId='t.taskId')
+              .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
+  div(v-else)
+      img.uni(src="../assets/images/navigas/uni.svg"  @click='toCardMode')
 </template>
 
 <script>
 
 import _ from 'lodash'
 import request from "superagent"
-import Current from '../Resources/Current'
-import SoundFX from '../../utils/sounds'
-import Cards from '../../utils/cards'
+import Current from './Resources/Current'
+import SoundFX from '../utils/sounds'
+import Cards from '../utils/cards'
+import Dimensions from '../utils/dimensions'
 
 export default {
     data(){
@@ -243,6 +247,9 @@ export default {
         shortName(theName) {
             return Cards.shortName(theName)
         },
+        isCard(){
+          return !Dimensions.isSun(this.$router.currentRoute.path) && !Dimensions.isBull(this.$router.currentRoute.path)
+        }
     },
     computed: {
         taskId(){
@@ -318,9 +325,9 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/button'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/button'
+@import '../styles/breakpoints'
 
 #createtask
   width: fit-content
@@ -445,7 +452,7 @@ p
     position: relative
 
 .agedbackground
-    background-image: url('../../assets/images/paper.jpg')
+    background-image: url('../assets/images/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -522,4 +529,13 @@ p
 
 .current.result
     display: block
+
+.uni
+    position: fixed
+    bottom: 0
+    left: 50%
+    transform: translateX(-50%)
+    height: 5.5555555555em
+    cursor: pointer
+    z-index: 9002
 </style>
