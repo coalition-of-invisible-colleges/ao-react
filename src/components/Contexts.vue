@@ -2,14 +2,14 @@
 .contexts(:class="cardInputSty")
     div(:class='{suncontext: isSun(), bullcontext: isBull()}')
         .transparentsides
-    template(v-for='(n, i) in $store.state.context.parent')
-        .narrow(@click='goToParent(n)')
+    template(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)')
+        .narrow
             context-row(:taskId='n')
 </template>
 
 <script>
 
-import ContextRow from './Deck/Context'
+import ContextRow from './ContextRow'
 import Dimensions from '../utils/dimensions'
 
 export default {
@@ -28,13 +28,6 @@ export default {
         },
     },
     methods: {
-        goToParent(target){
-            this.$store.dispatch("goUp", {
-                target,
-                panel: [target],
-                top: 0
-            })
-        },
         isSun() {
             return Dimensions.isSun(this.$router.currentRoute.path)
         },
@@ -56,6 +49,7 @@ export default {
 
 .contexts
     opacity: 0.9
+    z-index: 9009
 
 .bullcontext, .suncontext
     height: 1.75em

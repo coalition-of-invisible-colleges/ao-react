@@ -16,10 +16,6 @@
 
 import _ from "lodash"
 import Row from "./Row"
-import SharedTitle from '../slotUtils/SharedTitle'
-import CrazyBtn from '../slotUtils/CrazyBtn'
-import DctrlActive from './DctrlActive'
-import Addr from './Addr'
 
 export default {
     data(){
@@ -61,11 +57,7 @@ export default {
         },
     },
     components : {
-        SharedTitle,
         Row,
-        CrazyBtn,
-        DctrlActive,
-        Addr,
     },
 }
 

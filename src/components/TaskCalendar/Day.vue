@@ -2,10 +2,9 @@
 .day
     .date {{ day }}
     router-link(to='/doge')
-        img.today(v-if='isToday && day % 2 === 1'  src='../../assets/images/bulluni.svg')
-        img.today(v-else-if='isToday'  src='../../assets/images/unibull.svg')
+        img.today(v-if='isToday'  src='../../assets/images/navigas/uni.svg')
     .tooltip.upgrade(v-for='t in ev')
-        img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecubewithwhite.png'  :class='styl(t.color)')
+        img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/navigas/timecube.svg'  :class='styl(t.color)')
         .tooltiptext
             .until {{ cardDate(t) }}
             linky(:x='t.name')

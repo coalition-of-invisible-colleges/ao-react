@@ -14,7 +14,7 @@
 
 <script>
 
-import EventFeed from './components/slotUtils/EventFeed'
+import EventFeed from './components/EventFeed'
 import Sun from './components/Sun'
 import Bull from './components/Bull'
 import Loader from './components/Loader'

@@ -17,10 +17,10 @@
       preview-deck(:task='b')
       .cardbody
           .cardhud(v-if='calcVal >= 1')
-              img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+              img.smallguild(src='../../assets/images/chest.svg')
               span {{ calcVal }}
           .cardhud(v-if='cardStart')
-              img.smallguild(src='../../assets/images/timecubewithwhite.png')
+              img.smallguild(src='../../assets/images/timecube.svg')
               span {{ cardStart.days.toFixed(1) }} days
           linky.cardhud(:x='b.name' v-if='!dogeCard')
           .cardhud(v-if='dogeCard') {{ dogeCard.name }}

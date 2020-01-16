@@ -4,7 +4,7 @@
     .row.center
         label.hackername {{ r.name }}
             span
-                img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+                img.smallguild(src='../../assets/images/chest.svg')
                 label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
                 label.stash(v-else) 0
         button(v-if='resourcePriorities.optionList.A' @click='use("A")'  :class='cardInputSty(resourcePriorities.colorList.A)') {{resourcePriorities.optionList.A}}

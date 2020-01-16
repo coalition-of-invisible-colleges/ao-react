@@ -12,7 +12,7 @@
         .two.grid(v-if='isVulnerable')
             img.btn.goldengun(src='../../assets/gifs/golden_gun.gif' @click='purgeAccount')
         .one.grid
-            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../../assets/images/coin.svg' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
             span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
         .grid(:class='{ eight: isVulnerable, six: !isVulnerable }')
@@ -21,8 +21,6 @@
 
 <script>
 
-import DctrlActive from './DctrlActive'
-import Badges from './Badges'
 import Addr from './Addr'
 import PreviewDeck from '../Deck/PreviewDeck'
 import SimplePriorities from '../Deck/SimplePriorities'
@@ -30,7 +28,7 @@ import SoundFX from '../../utils/sounds'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck, SimplePriorities},
+    components: {Addr, PreviewDeck, SimplePriorities},
     methods:{
         isBull(){
             let mainroute = this.$router.currentRoute.path.split('/')[1]

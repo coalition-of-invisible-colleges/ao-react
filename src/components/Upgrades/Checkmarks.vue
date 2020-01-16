@@ -23,7 +23,7 @@
             .box.morepad
                 div.dogep.spinslow
                     .tooltip
-                        img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/dogepepecoin.png' @click='toggleGrab')
+                        img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/coin.svg' @click='toggleGrab')
                         .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
                         .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
                     p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
@@ -355,7 +355,7 @@ h3
 .gui
     font-size: 1.5em
     cursor: pointer
-    
+
 .row .three
     height: 5em
 
@@ -517,7 +517,7 @@ ul
 
 .padleft
     margin-left: 0.36em
-    
+
 .projects
     float: right
     max-width: 33%
@@ -527,30 +527,30 @@ ul
     margin-right: 1em
     margin-bottom: 1em
     padding: 0 0.5em 0.55em 0.5em
-    
+
 .projects h3
     text-align: center
     margin-top: 0.5em
     margin-bottom: 0
-    
+
 .projects .floatleft
     max-height: 1.5em
     margin-top: 0
     margin-right: 0.4em
-    
+
 .projects ul
     margin-left: -2em
-    
+
 .projectlist
     font-size: 1.2em
     margin-top: 0.15em
-    
+
 .projectlist.aproject
     cursor: pointer
     font-style: italic
     white-space: nowrap
     margin-right: 0.48em
-    
+
 .projectlist > img
     display: inline-block
     float: none
@@ -558,23 +558,23 @@ ul
     margin-right: 0.225em
     position: relative
     top: 0.25em
-    
+
 .projectlist > img.first
     margin-left: 0
-    
+
 .smaller
     font-size: 1.3em
-    
+
 ul.none.indent
     margin-left: -0.5em
-    
+
 .projects .floatleft.smaller
     max-height: 1em
     margin-right: 0.4em
 
 span.nl.gui.smallest
     font-size: 1.1em
-    
+
 .clickable
     cursor: pointer
 </style>

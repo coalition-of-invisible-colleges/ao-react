@@ -86,7 +86,6 @@ export default {
     min-height: 76vh
 
 .shipbackground
-    background-image: url('../../assets/images/sunken_ship.png')
     background-repeat: no-repeat
     background-position: center center
     background-size: contain

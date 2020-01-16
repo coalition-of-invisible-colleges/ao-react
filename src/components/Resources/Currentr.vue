@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 span.current
-    img.onlineicon(src='../../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
+    img.onlineicon(src='../../assets/images/loader.svg')
     span(v-if='resourceId && name') {{ name }}
 </template>
 

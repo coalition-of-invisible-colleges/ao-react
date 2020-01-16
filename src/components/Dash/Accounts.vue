@@ -12,7 +12,7 @@
 
 <script>
 
-import MemberCreate from '../forms/MemberCreate'
+import MemberCreate from './MemberCreate'
 import Changer from './Changer'
 import Members from '../Members'
 

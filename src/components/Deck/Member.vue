@@ -7,7 +7,7 @@
         img.logindicator(v-else, src='../../assets/images/loggedOut.svg')
         label.hackername(:class='{ spacer: $store.state.upgrades.mode !== "doge" || $store.getters.contextCard.priorities.length < 1 }') {{ m.name }}
     .bottomleft(v-if='card.boost')
-        img.smallguild(src='../../assets/images/treasurechestnobkgrndwhiteD.png')
+        img.smallguild(src='../../assets/images/chest.svg')
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
     not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
@@ -29,8 +29,6 @@
 
 <script>
 
-import DctrlActive from '../Members/DctrlActive'
-import Badges from '../Members/Badges'
 import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
 import Vouch from '../Members/Vouch'
@@ -40,7 +38,7 @@ import GiftBox from './GiftBox'
 
 export default {
     props: ['m'],
-    components: {DctrlActive, Badges, Addr, PreviewDeck, Vouch, Bird, NotZen, GiftBox},
+    components: {Addr, PreviewDeck, Vouch, Bird, NotZen, GiftBox},
     computed:{
         card(){
             return this.$store.getters.hashMap[this.m.memberId]

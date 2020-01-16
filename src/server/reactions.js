@@ -62,9 +62,6 @@ function reactions(ev){
                 })
                 break
             case 'member-field-updated':
-                if (ev.field === 'secret') { //This seems wrong - tofu
-                    events.membersEvs.badgeAdded(ev.memberId, 'secure')
-                }
                 break
             case 'member-paid':
                 break
@@ -72,7 +69,6 @@ function reactions(ev){
                 events.membersEvs.memberActivated(ev.memberId)
                 break
             case 'resource-stocked':
-                events.membersEvs.badgeAdded(ev.memberId, 'bitpepsi')
                 break
             case 'member-address-updated':
                 break

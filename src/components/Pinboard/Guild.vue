@@ -15,7 +15,6 @@
 
 import Hypercard from "../Card"
 import SharedTitle from '../slotUtils/SharedTitle'
-import CrazyBtn from '../slotUtils/CrazyBtn'
 import calculations from '../../calculations'
 import FormBox from '../slotUtils/FormBox'
 import PreviewDeck from '../Deck/PreviewDeck'
@@ -26,7 +25,6 @@ export default {
   components:{
       Hypercard,
       SharedTitle,
-      CrazyBtn,
       FormBox,
       PreviewDeck,
       HyperDeck,

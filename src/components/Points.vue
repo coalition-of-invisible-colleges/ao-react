@@ -11,7 +11,7 @@
             div(v-for='n in members')
                 span {{ n.boost.toFixed(0) }}
                 current(:memberId='n.taskId')
-            img(src='../assets/images/kisspng-dolphin-porpoise-sticker-adhesive-5aef7f9d672f78.5792508915256452134227.png')
+            img(src='../assets/images/loader.svg')
             h4 {{ totalResources.toFixed(0) }} in resources
             div(v-for='n in resources')
                 span {{ n.boost.toFixed(0) }}
@@ -20,7 +20,7 @@
             img(src='../assets/images/badge.svg')
             h4 {{ totalGuilds.toFixed(0) }} on missions
             h3(v-for='n in guilds') {{ n.boost.toFixed(0) }} - {{ n.guild }}
-            img(src='../assets/images/kisspng-coconut-asian-palmyra-palm-tree-coconut-tree-5a84ba1cec05d9.1551759415186478369668.png')
+            img(src='../assets/images/coin.svg')
             h4 {{ totalCards.toFixed(0) }} on cards
             template(v-for='n in cards')
                 p {{ n.boost }} - {{ n.name }}

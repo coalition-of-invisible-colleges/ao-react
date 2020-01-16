@@ -32,11 +32,10 @@
 import calculations from '../../calculations'
 import SharedTitle from '../slotUtils/SharedTitle'
 import Tag from './Tag'
-import WhyLightning from './WhyLightning'
 import Summaryy from './Summary'
 import Mercher from './Mercher'
 import Channel from './Channel'
-import ChannelCreate from '../forms/ChannelCreate'
+import ChannelCreate from './ChannelCreate'
 import LocalRemoteBar from './LocalRemoteBar'
 import Payments from '../Upgrades/Payments'
 
@@ -49,7 +48,7 @@ export default {
         }
     },
     components:{
-        SharedTitle, Tag, WhyLightning, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar, Payments
+        SharedTitle, Tag, Summaryy, Mercher, Channel, ChannelCreate, LocalRemoteBar, Payments
     },
     computed: {
         unchanneled(){

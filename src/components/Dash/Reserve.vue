@@ -2,7 +2,7 @@
 
 #home
   .container
-    h1.up central reserve
+    h1.up reserve
     points
     .row.center
         .seven.grid
@@ -26,14 +26,13 @@
     div(v-if='pendingDeactivations.length > 0')
         h4 Pending Deactivation:
         current(v-for='mId in pendingDeactivations'  :memberId='mId')
-    img.fw(src='../../assets/images/pixeldesert.png')
 </template>
 
 <script>
 
 import Points from '../Points'
-import RentSet from '../forms/RentSet'
-import CapSet from '../forms/CapSet'
+import RentSet from './RentSet'
+import CapSet from './CapSet'
 import Current from '../Resources/Current'
 
 export default {
