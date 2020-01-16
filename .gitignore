@@ -34,3 +34,4 @@ docker/rethink/rethink_data/*
 
 docker/ao/ao_data/*
 !docker/ao/ao_data/.gitkeep
+package-lock.json

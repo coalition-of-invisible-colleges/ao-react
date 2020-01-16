@@ -4,8 +4,6 @@ import express from 'express'
 
 const lightningRouter = express.Router()
 
-import {hashblockStream} from './onChain/bitcoindZmq'
-
 import cashEvs from './events/cashEvs'
 import tasksEvs from './events/tasksEvs'
 import calculations from '../calculations'

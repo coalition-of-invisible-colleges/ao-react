@@ -5,13 +5,11 @@
 </template>
 
 <script>
-import Flickity from 'vue-flickity'
 import CardPanel from '../Deck/CardPanel'
 import Hypercard from "../Card"
 
 export default {
   components:{
-      Flickity,
       CardPanel,
       Hypercard,
   },

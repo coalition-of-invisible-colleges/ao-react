@@ -1,4 +1,3 @@
-import { importAddress } from '../onChain/bitcoindRpc'
 
 import uuidV1 from 'uuid/v1'
 import dctrlDb from '../dctrlDb'
@@ -66,26 +65,6 @@ function memberActivated(memberId, callback) {
     memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
-}
-
-function memberAddressUpdated(memberId, callback){
-  // lnd.getClient().newAddress({
-  //     type: NESTED_PUBKEY_HASH ,
-  // }, (err, response)=>{
-  //     if (err) {
-  //         return console.log('lnd err', err)
-  //     }
-  //     let a = response.address
-  //     importAddress(a)
-  //
-  //     let newEvent = {
-  //       type: "member-address-updated",
-  //       memberId,
-  //       address: a,
-  //     }
-  //
-  //     dctrlDb.insertEvent(newEvent, callback)
-  // })
 }
 
 function memberFieldUpdated(memberId, field, newfield, callback){
@@ -156,7 +135,6 @@ export default {
   memberDeactivated,
   memberPurged,
   memberActivated,
-  memberAddressUpdated,
   memberFieldUpdated,
   badgeAdded,
   badgeRemoved,

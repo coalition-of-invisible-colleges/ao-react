@@ -26,9 +26,6 @@ module.exports = function(req,res,next){
       case 'member-purged':
           specMemberPurged(req, res, next)
           break
-      case 'member-address-updated':
-          specMemberAddressUpdated(req, res, next)
-          break
       case 'member-field-updated':
           specMemberFieldUpdated(req, res, next)
           break
@@ -55,21 +52,6 @@ module.exports = function(req,res,next){
           break
       default:
           next()
-  }
-}
-
-function specMemberAddressUpdated(req, res, next){
-  let errRes = []
-
-  if (
-    validators.isId(req.body.memberId, errRes)
-  ){
-    events.membersEvs.memberAddressUpdated(
-      req.body.memberId,
-      utils.buildResCallback(res)
-    )
-  } else {
-    res.status(400).send(errRes)
   }
 }
 
