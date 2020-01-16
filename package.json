@@ -8,6 +8,7 @@
     "buildFront": "vue-cli-service build",
     "buildBack": "npx babel src --no-babelrc --presets=env --out-dir production --copy-files",
     "compile": "npm run buildBack && npm run buildFront && npm run start",
+    "setup": "chmod u+x install.sh && ./install.sh",
     "start": "node production/server/app.js"
   },
   "dependencies": {
