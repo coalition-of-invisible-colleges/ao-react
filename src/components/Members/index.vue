@@ -66,7 +66,6 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../../styles/colours'
-@import '../../styles/input'
 @import '../../styles/skeleton'
 @import '../../styles/button'
 

@@ -3,11 +3,11 @@
 #accounts
   h1.up {{ activeAccounts }} accounts
   .container
-    members
     .row
       member-create.five.columns
       .two.columns &nbsp;
       changer.five.columns
+    members
 </template>
 
 <script>

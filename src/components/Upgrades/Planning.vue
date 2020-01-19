@@ -3,12 +3,7 @@
 .upgrades
     div(v-if='isDoge || b.guild')
         task-calendar(:inId='b.taskId')
-    div(v-else-if='!$store.state.upgrades.dimension')
-        .togglepayments
-            button.submode(@click='toggleDimension(0)', :class='{thickborder: $store.state.upgrades.dimension === "time" }')
-                img.max(src='../../assets/images/calendar.svg')
-    .box(v-else)
-        h2 cube
+    div(v-else)
         .gui(v-if='calcTime') {{ calcTime.slice(0,24) }}
         resource-book(:tId='b.taskId')
 </template>
