@@ -1,4 +1,4 @@
-<template lang='pug'>
+isUni<template lang='pug'>
 
 .helm(@contextmenu.prevent)
     button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='shortFlash')
@@ -12,26 +12,6 @@
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
         img.upg(v-else  src='../assets/images/buddadoge.svg')
-    //- .tooltiptext.center(v-if='$store.getters.member.muted'  :class='{ fix : $store.state.upgrades.mode !== "doge" }')
-    //-     h1 Card modes
-    //-     ul
-    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-    //-             img.lil(src='../assets/images/buddadoge.svg')
-    //-             span Member Card *
-    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-    //-             img.lil(src='../assets/images/boatblack.svg')
-    //-             span Priorities **
-    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-    //-             img.lil(src='../assets/images/badge.svg')
-    //-             span Missions &amp; Checkmarks ***
-    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-    //-             img.lil(src='../assets/images/bounty.svg')
-    //-             span Send Points ****
-    //-         li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-    //-             img.lil(src='../assets/images/timecube.svg')
-    //-             span Calendar &amp; Events *****
-    //-     p click to advance mode, multiclick to to a specific mode
-    //-     p swipe left/right to change mode
     button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='shortFlash')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
@@ -106,11 +86,7 @@ export default {
 
         mc.on('tap', (e) => {
             HelmControl.flashHelm(0.5)
-            // if(!this.isUni()) {
-                // this.goUni(this.$store.state.upgrades.mode)
-            // } else {
-                this.nextMode()
-            // }
+            this.nextMode()
             e.stopPropagation()
         })
 
@@ -141,7 +117,7 @@ export default {
         })
 
         mc.on('press', (e) => {
-            if(this.isUni()){
+            if(this.isUni){
                 if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.taskId === this.$store.getters.memberCard.taskId) {
                     HelmControl.flashHelm(5)
                     this.goFront('doge')
@@ -153,6 +129,7 @@ export default {
                     }
                 }
             } else {
+
                 HelmControl.flashHelm(2)
                 this.goUni('doge')
                 if(this.$store.getters.contextCard.taskId !== this.$store.getters.memberCard.taskId) {
@@ -200,20 +177,18 @@ export default {
                 }
                 return
             }
-            if(!this.isUni()) {
+            if(!this.isUni) {
                 SoundFX.playPortalTransit()
             } else {
                 SoundFX.playCaChunk()
             }
+            this.$store.commit('setDimension', 0)
             this.$store.commit('startLoading', 'uni')
             this.$router.push('/' + mode)
             setTimeout(() => {
                 this.setToRoute()
                 // this.uniRight = !this.uniRight
             }, 20)
-        },
-        isUni() {
-            return Dimensions.isUni(this.$router.currentRoute.path)
         },
         goFront(mode) {
             if(Dimensions.isFront(this.$router.currentRoute.path, mode)) {
@@ -256,6 +231,11 @@ export default {
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
     },
+    computed: {
+        isUni() {
+            return this.$store.state.upgrades.dimension === "unicorn"
+        },
+    }
 }
 </script>
 
@@ -265,126 +245,11 @@ export default {
 @import '../styles/grid'
 @import '../styles/tooltips'
 
-.helpcontrol
-  display: flex
-  flex-direction: column
-  min-height: 5.8em
-
-.side_bar ul
-  margin-left: 10px
-
-.toggle ul
-  padding-left:0
-
-a
-  text-decoration: none
-  color: accent1
-  padding: 10px 20px
-  margin-bottom: 0
-  margin-left:auto
-  margin-right:auto
-  list-style: none
-  font-family:sans-serif
-  display: block
-  margin-bottom:5px
-  max-width:360px
-  text-align:center
-  background-color:accent5
-
-a:hover, .router-link-active
-  background-color: accent4
-  color:contentColour
-  border-style: none
-
-a.router-link-active
-    background-color: purple
-    color:contentColour
-    :hover
-        background-color: purple
-
-.admin
-  color: main
-  background: green
-  border-radius: .6em
-  padding: .5em
-
-.p
-    color: white
-    text-align: center
-    padding: 1em
-
-hr
-    color: lightteal
-
-.dableft, .dabright
-    position: absolute
-    top: 0
-    display: flex
-    flex-direction: column
-    // width: 7em
-    cursor: pointer
-    z-index: 152
-
-.dableft
-    left: 0
-
-.dabright
-    right: 0
-
 @media only screen and (max-width: 550px) {
   .modeleft, .moderight {
     display: none
   }
 }
-
-.btc
-    border: 2px purple solid
-    border-radius: 5px
-    background-color: purple
-    color: white
-    height: 4em
-    margin-left: 0.5em
-    margin-right: 0.5em
-    margin-top: 1.5em
-    margin-bottom: 0em
-    -webkit-transition-property: background-color margin-bottom margin-top border
-    -webkit-transition-duration: 7s
-    -webkit-transition-timing-function: ease-in-out
-    transition-property: background-color margin-bottom margin-top border
-    transition-duration: 7s
-    transition-timing-function: ease-in-out
-
-.sat
-    border: 2px teal solid
-    border-radius: 5px
-    background-color: teal
-    color: white
-    height: 4em
-    margin-top: 0em
-    margin-bottom: 1.5em
-    -webkit-transition-property: background-color margin-bottom margin-top border
-    -webkit-transition-duration: 7s
-    -webkit-transition-timing-function: ease-in-out
-    transition-property: background-color margin-bottom margin-top border
-    transition-duration: 7s
-    transition-timing-function: ease-in-out
-
-.smallbird
-    height:1em
-
-.subheading
-    opacity: 0.9
-    font-size: 85%
-
-.dot
-    height: 0.5em
-    width: 0.5em
-    border-radius: 50%
-    display: inline-block
-    margin-right: 0.5em
-
-.faded
-    opacity: 0.4
 
 #helm
     cursor: pointer
@@ -392,12 +257,6 @@ hr
 .upg
     height: 2em
     pointer-events: none
-
-.lil
-    height: 1em
-    position: absolute
-    left: -1em
-    transform: translateX(-50%)
 
 .topcenter
     position: fixed
@@ -472,46 +331,4 @@ hr
 .topcenter:hover
     background-color: #d3e3e3
 
-.boat
-    transform: none
-
-.timecube
-    transform: translateX(-0.2em)
-
-.dabstination:before
-    content: ""
-    border: 1px solid white
-    border-width: 2px 2px 0 0
-    display: block
-    height: 0
-    width: 0
-    position: absolute
-    top: 0.42em
-    left: -2.5em
-    height: 5px
-    width: 5px
-    transform: rotate(45deg)
-
-.dabstination
-    font-weight: bold
-
-.tooltiptext.left, .tooltiptext.right, .tooltiptext.center
-    position: absolute
-    font-size: 1.3em
-    z-index: 88888
-    top: 0.5em
-
-.tooltiptext.left
-    left: 6em
-
-.tooltiptext.right
-    right: 6em
-
-.tooltiptext.center
-    left: 50%
-    top: 3em
-    transform: translateX(-50%)
-
-.tooltiptext.center.fix
-    position: fixed
 </style>

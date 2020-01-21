@@ -1,25 +1,25 @@
 <template lang='pug'>
 div
-  img.l(src="../assets/images/navigas/sun.svg"  ref='sun'  :class='{ bigger : isSun() }')
-  //- .tooltiptext.left(v-if='$store.getters.member.muted')
-  //-     h2.leftalign Sun Pages:
-  //-     ul
-  //-         li(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-  //-             img.lil(src='../assets/images/buddadoge.svg')
-  //-             span Oracle *
-  //-         li(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-  //-             img.lil(src='../assets/images/boatblack.svg')
-  //-             span Top Missions **
-  //-         li(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-  //-             img.lil(src='../assets/images/badge.svg')
-  //-             span Recent ***
-  //-         li(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-  //-             img.lil(src='../assets/images/bounty.svg')
-  //-             span Bounties ****
-  //-         li(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-  //-             img.lil(src='../assets/images/timecube.svg')
-  //-             span Calendar *****
-  //-     p once to advance or multiclick to a specific page
+  img.l(src="../assets/images/sun.svg"  ref='sun'  :class='{ bigger : isSun }')
+  div.sunmenu(v-if='isSun')
+      p(@click='goFront("doge")'  :class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+          img.lil(src='../assets/images/buddadoge.svg')
+          span Oracle
+      p(@click='goFront("boat")'  :class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+          img.lil(src='../assets/images/boatblack.svg')
+          span Top
+      p(@click='goFront("badge")'  :class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+          img.lil(src='../assets/images/badge.svg')
+          span Recent
+      p(@click='goFront("chest")'  :class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+          img.lil(src='../assets/images/bounty.svg')
+          span Bounties
+      p(@click='goFront("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+          img.lil(src='../assets/images/timecube.svg')
+          span Calendar
+      p.closemenu(@click='close(false)')
+          img(src='../assets/images/loggedOut.svg')
+          span
 </template>
 
 <script>
@@ -29,10 +29,12 @@ import SoundFX from '../utils/sounds'
 import Dimensions from '../utils/dimensions'
 
 export default {
+  computed:{
+      isSun() {
+          return this.$store.state.upgrades.dimension === "sun"
+      },
+  },
   methods: {
-    isSun() {
-        return Dimensions.isSun(this.$router.currentRoute.path)
-    },
     nextMode() {
         SoundFX.playCaChunk()
         this.$store.commit('nextMode')
@@ -41,9 +43,17 @@ export default {
         if(!mode) {
             mode = this.$store.state.upgrades.mode
         }
+        this.$store.commit('setDimension', 1)
         this.$store.commit('startLoading', 'sun-' + mode)
         SoundFX.playCaChunk()
         this.$router.push('/front/' + mode)
+    },
+    close(mode){
+        if(!mode) {
+            mode = this.$store.state.upgrades.mode
+        }
+        this.$store.commit('setDimension', 0)
+        this.$router.push('/' + mode)
     },
   },
   components:{},
@@ -68,7 +78,7 @@ export default {
     sunQuadrupleTap.requireFailure(sunQuintupleTap)
 
     sunmc.on('tap', (e) => {
-        if(!this.isSun()) {
+        if(!this.isSun) {
             this.goFront(false)
 
         } else {
@@ -111,6 +121,8 @@ export default {
 
 <style lang='stylus' scoped>
 
+@import '../styles/colours'
+
 .l
     position: fixed
     top: 0
@@ -118,5 +130,46 @@ export default {
     z-index: 152
     height: 3.5555555555em
     left: 0
+
+
+.sunmenu
+    position: fixed
+    top: 5em
+    background: yellow
+    left: 1em
+    color: main
+    border-radius: 3px
+    padding: 1em
+    opacity: 0.8
+    z-index: 9009
+    p
+        cursor: pointer
+
+.dabstination:before
+    content: ""
+    border: 1px solid white
+    border-width: 2px 2px 0 0
+    display: block
+    height: 0
+    width: 0
+    position: absolute
+    top: 0.42em
+    left: -2.5em
+    height: 5px
+    width: 5px
+    transform: rotate(45deg)
+
+.dabstination
+    font-weight: bold
+
+.lil
+    height: 1em
+    transform: translateX(-5%)
+
+.closemenu
+    align-content: center
+    img
+        transform: translateX(50%)
+        height: 1.1em
 
 </style>

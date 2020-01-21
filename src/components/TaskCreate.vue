@@ -28,7 +28,7 @@
                   current(:memberId='t.taskId')
               .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
   div(v-else)
-      img.uni(src="../assets/images/navigas/uni.svg"  @click='toCardMode')
+      img.uni(src="../assets/images/uni.svg"  @click='toCardMode')
 </template>
 
 <script>
@@ -125,6 +125,10 @@ export default {
         });
     },
     methods: {
+        toCardMode(){
+            this.$store.commit("setDimension", 0)
+            this.$router.push('/' + this.$store.state.upgrades.mode)
+        },
         goIn(taskId){
             clearTimeout(this.inDebounce)
             SoundFX.playPageTurn()
@@ -247,11 +251,11 @@ export default {
         shortName(theName) {
             return Cards.shortName(theName)
         },
-        isCard(){
-          return !Dimensions.isSun(this.$router.currentRoute.path) && !Dimensions.isBull(this.$router.currentRoute.path)
-        }
     },
     computed: {
+        isCard(){
+            return this.$store.state.upgrades.dimension === 'unicorn'
+        },
         taskId(){
             return this.$store.getters.contextCard.taskId
         },

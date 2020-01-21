@@ -1,24 +1,27 @@
 <template lang='pug'>
 div
     div(ref='bull')
-        img.r(src="../assets/images/navigas/bull.svg"    :class='{ bigger : isBull() }')
-        .bullmenu(v-if='isBull()')
-            p(:class='{ dabstination : $store.state.upgrades.mode === "doge" }')
-                img.lil(src='../assets/images/buddadoge.svg')
-                span Control
-            p(:class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-                img.lil(src='../assets/images/boatblack.svg')
-                span Connection
-            p(:class='{ dabstination : $store.state.upgrades.mode === "badge" }')
-                img.lil(src='../assets/images/badge.svg')
-                span Account
-            p(:class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-                img.lil(src='../assets/images/bounty.svg')
-                span Wallet
-            p(:class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
-                img.lil(src='../assets/images/timecube.svg')
-                span Reserve
-    div(v-if='isBull()')
+        img.r(src="../assets/images/bull.svg"    :class='{ bigger : isBull }')
+    .bullmenu(v-if='isBull')
+        p(@click='goDash("doge")'  :class='{ dabstination : $store.state.upgrades.mode === "doge" }')
+            img.lil(src='../assets/images/buddadoge.svg')
+            span Control
+        p(@click='goDash("boat")'  :class='{ dabstination : $store.state.upgrades.mode === "boat" }')
+            img.lil(src='../assets/images/boatblack.svg')
+            span Connect
+        p(@click='goDash("badge")'  :class='{ dabstination : $store.state.upgrades.mode === "badge" }')
+            img.lil(src='../assets/images/badge.svg')
+            span Account
+        p(@click='goDash("chest")'  :class='{ dabstination : $store.state.upgrades.mode === "chest" }')
+            img.lil(src='../assets/images/bounty.svg')
+            span Wallet
+        p(@click='goDash("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
+            img.lil(src='../assets/images/timecube.svg')
+            span Reserve
+        p.closemenu(@click='close(false)')
+            img(src='../assets/images/loggedOut.svg')
+            span
+    div(v-if='isBull')
         .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471; ~
             span  1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .logout(v-if='$store.getters.isLoggedIn'  @click="killSession") log out
@@ -31,10 +34,12 @@ import Dimensions from '../utils/dimensions'
 import SoundFX from '../utils/sounds'
 
 export default {
+  computed: {
+      isBull(){
+          return this.$store.state.upgrades.dimension === "bull"
+      }
+  },
   methods: {
-    isBull() {
-        return Dimensions.isBull(this.$router.currentRoute.path)
-    },
     killSession(){
         this.$store.dispatch("makeEvent", {
             type: "session-killed",
@@ -45,9 +50,17 @@ export default {
         if(!mode) {
             mode = this.$store.state.upgrades.mode
         }
+        this.$store.commit('setDimension', 2)
         this.$store.commit('startLoading', 'bull-' + mode)
         SoundFX.playCaChunk()
         this.$router.push('/dash/' + mode)
+    },
+    close(mode){
+        if(!mode) {
+            mode = this.$store.state.upgrades.mode
+        }
+        this.$store.commit('setDimension', 0)
+        this.$router.push('/' + mode)
     },
     nextMode() {
         SoundFX.playCaChunk()
@@ -76,7 +89,7 @@ export default {
 
     bullmc.on('tap', (e) => {
         console.log("single click bull")
-        if(!this.isBull()) {
+        if(!this.isBull) {
             this.goDash(false)
         } else {
             this.nextMode()
@@ -138,10 +151,15 @@ export default {
 .bullmenu
     position: fixed
     top: 5em
-    background: lightGrey
+    background: teal
     right: 1em
     color: main
-
+    border-radius: 3px
+    padding: 1em
+    opacity: 0.8
+    z-index: 9009
+    p
+        cursor: pointer
 .satspot
     position: fixed
     top: 5.5em
@@ -172,4 +190,10 @@ export default {
 
 .dabstination
     font-weight: bold
+
+.closemenu
+    align-content: center
+    img
+        transform: translateX(50%)
+        height: 1.1em
 </style>
