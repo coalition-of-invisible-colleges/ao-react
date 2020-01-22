@@ -5,16 +5,16 @@ div
     .bullmenu(v-if='isBull')
         p(@click='goDash("doge")'  :class='{ dabstination : $store.state.upgrades.mode === "doge" }')
             img.lil(src='../assets/images/buddadoge.svg')
-            span Control
+            span Access
         p(@click='goDash("boat")'  :class='{ dabstination : $store.state.upgrades.mode === "boat" }')
             img.lil(src='../assets/images/boatblack.svg')
             span Connect
         p(@click='goDash("badge")'  :class='{ dabstination : $store.state.upgrades.mode === "badge" }')
             img.lil(src='../assets/images/badge.svg')
-            span Account
+            span Accounts
         p(@click='goDash("chest")'  :class='{ dabstination : $store.state.upgrades.mode === "chest" }')
             img.lil(src='../assets/images/bounty.svg')
-            span Wallet
+            span Lightning
         p(@click='goDash("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
             img.lil(src='../assets/images/timecube.svg')
             span Reserve
@@ -133,6 +133,9 @@ export default {
 @import '../styles/tooltips'
 @import '../styles/colours'
 
+p:hover
+    background: rgba(255,255,255, 0.4)
+
 .r
     position: fixed
     top: 0
@@ -160,6 +163,7 @@ export default {
     z-index: 9009
     p
         cursor: pointer
+        padding: 0.7654321
 .satspot
     position: fixed
     top: 5.5em

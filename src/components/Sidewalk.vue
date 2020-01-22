@@ -24,7 +24,7 @@
 
 import Hypercard from "./Card"
 import request from "superagent"
-import SharedTitle from './slotUtils/SharedTitle'
+import SharedTitle from './SharedTitle'
 import calculations from './../calculations'
 
 export default {

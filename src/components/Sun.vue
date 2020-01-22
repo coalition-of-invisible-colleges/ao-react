@@ -16,7 +16,7 @@ div
           span Bounties
       p(@click='goFront("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
           img.lil(src='../assets/images/timecube.svg')
-          span Calendar
+          span Upcoming
       p.closemenu(@click='close(false)')
           img(src='../assets/images/loggedOut.svg')
           span
@@ -144,6 +144,10 @@ export default {
     z-index: 9009
     p
         cursor: pointer
+        padding: 0.7654321
+
+p:hover
+    background: rgba(255,255,255, 0.4)
 
 .dabstination:before
     content: ""

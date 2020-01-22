@@ -11,7 +11,7 @@ import Reserve from './components/Reserve'
 
 
 import News from './components/News'
-import Missions from './components/Missions'
+import Top from './components/Top'
 import Recent from './components/Recent'
 import Bounties from './components/Bounties'
 import Upcoming from './components/Upcoming'
@@ -22,7 +22,7 @@ import Planning from './components/Planning'
 import Zen from './components/Zen'
 import Priorities from './components/Priorities'
 
-import Archive from './components/Deck/Archive'
+import Archive from './components/Archive'
 Vue.use(VueRouter)
 
 const routes =[{
@@ -65,7 +65,7 @@ const routes =[{
   meta: { title: "newspaper" }
 },{
   path: '/front/boat',
-  component: Missions,
+  component: Top,
   meta: { title: "top cards" }
 },{
   path: '/front/badge',
@@ -120,38 +120,6 @@ const router = new VueRouter({
   scrollBehavior: (to, from, savedPosition) => {
       return { x: 0, y: 0 }
   }
-})
-
-import Store from './store.js'
-
-router.beforeEach((to, from, next) => {
-
-  Store.commit("startLoading", to.path)
-
-  if (/doge/.test(to.path)){
-      Store.commit("setMode", 0)
-  }
-
-  if (/boat/.test(to.path)){
-      Store.commit("setMode", 1)
-  }
-
-  if (/badge/.test(to.path)){
-      Store.commit("setMode", 2)
-  }
-
-  if (/chest/.test(to.path)){
-      Store.commit("setMode", 3)
-  }
-
-  if (/timecube/.test(to.path)){
-      Store.commit("setMode", 4)
-  }
-
-  setTimeout(()=>{
-    next()
-  }, 3)
-
 })
 
 export default router

@@ -19,7 +19,7 @@
 <script>
 
 import Hypercard from './Card'
-import Hyperpriority from './Deck/Priority'
+import Hyperpriority from './Priority'
 import _ from 'lodash'
 import SoundFX from '../utils/sounds'
 

@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import Current from './Members/Current'
-import Linky from './Card/Linky'
+import Current from './CurrentChecks'
+import Linky from './Linky'
 import SoundFX from '../utils/sounds'
 
 export default {

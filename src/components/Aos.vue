@@ -38,7 +38,7 @@
 
 <script>
 
-import FormBox from './slotUtils/FormBox'
+import FormBox from './FormBox'
 
 export default {
     props: ['b', 'inId'],

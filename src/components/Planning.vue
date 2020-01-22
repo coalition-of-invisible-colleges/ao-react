@@ -1,18 +1,16 @@
 <template lang='pug'>
 
 .upgrades
-    div(v-if='isDoge || b.guild')
-        task-calendar(:inId='b.taskId')
-    div(v-else)
-        .gui(v-if='calcTime') {{ calcTime.slice(0,24) }}
-        resource-book(:tId='b.taskId')
+    task-calendar(:inId='b.taskId')
+    .gui(v-if='calcTime') {{ calcTime.slice(0,24) }}
+    resource-book(:tId='b.taskId')
 </template>
 
 <script>
 
 import calcs from '../calculations'
 import TaskCalendar from './Calendar'
-import ResourceBook from './forms/ResourceBook'
+import ResourceBook from './ResourceBook'
 
 export default {
     mounted() {

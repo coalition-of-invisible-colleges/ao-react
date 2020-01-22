@@ -13,7 +13,7 @@
 
 <script>
 import _ from 'lodash'
-import Linky from './Card/Linky'
+import Linky from './Linky'
 import SoundFX from '../utils/sounds'
 
 function getDMY(ts){

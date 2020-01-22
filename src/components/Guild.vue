@@ -4,7 +4,7 @@
     .row.greenwx
         .eight.grid.cur(@click='toTask(g.taskId)')
             h3.big
-                img.fl(src='../../assets/images/spartan.png')
+                img.fl(src='../assets/images/spartan.png')
                 span - {{ g.guild }}
             p.big {{ g.name }}
         .four.grid
@@ -14,11 +14,11 @@
 <script>
 
 import Hypercard from "./Card"
-import SharedTitle from './slotUtils/SharedTitle'
+import SharedTitle from './SharedTitle'
 import calculations from '../calculations'
-import FormBox from './slotUtils/FormBox'
-import PreviewDeck from './Deck/PreviewDeck'
-import HyperDeck from './Deck/HyperDeck'
+import FormBox from './FormBox'
+import PreviewDeck from './PreviewDeck'
+import HyperDeck from './HyperDeck'
 
 export default {
   props: ['g'],
@@ -76,9 +76,9 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/grid'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/grid'
 
 .guild
     padding: 1.7em

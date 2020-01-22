@@ -20,7 +20,7 @@
 
 <script>
 
-import Linky from './Card/Linky'
+import Linky from './Linky'
 
 export default {
     props: ['taskId'],

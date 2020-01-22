@@ -22,9 +22,9 @@
 <script>
 
 import calcs from '../calculations'
-import FormBox from './slotUtils/FormBox'
-import PayAddress from './Deck/PayAddress'
-import PayReq from './Deck/PayReq'
+import FormBox from './FormBox'
+import PayAddress from './PayAddress'
+import PayReq from './PayReq'
 
 export default {
     components:{

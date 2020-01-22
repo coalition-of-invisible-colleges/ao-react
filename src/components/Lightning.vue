@@ -1,22 +1,73 @@
 <template lang='pug'>
 
-#home
-  .container
-    h1.up lightning
-    nodes(v-if='$store.state.cash.info.alias')
-    p(v-else) no lightning node :(
+#nodes
+  div(v-if='$store.state.cash.info')
+    .row
+        .six.columns.container
+            .row
+                p.fl {{ $store.state.cash.info.alias }} Wallet
+                p.fr block {{ $store.state.cash.info.blockheight.toLocaleString() }}
+            summaryy
+            .row
+                h4(v-if='unchanneled.length > 0') select peer to open channel
+                div(v-for='p in unchanneled' @click='selectPeer(p.id)'  :class='{bluetx: p.id === selectedPeer}') {{ p.id }}
+                button(v-if='selectedPeer'   @click='requestChannel') Request Channel
+        .six.columns.container
+            p {{ $store.state.cash.info.num_active_channels }} Lightning Channels
+            local-remote-bar(v-for='n in $store.state.cash.channels', :c='n')
+    .row
+          h3 Connection Info
+          template(v-for='a in $store.getters.connectionUris')
+              .row.container
+                  .six.columns
+                      tag(:d='a')
+                  .six.columns
+                      label {{a}}
+    payments
+  .row(v-else)
+      p <em>unable to read info from lightning node</em>
 </template>
 
 <script>
+import calculations from '../calculations'
+import SharedTitle from './SharedTitle'
+import Tag from './Tag'
+import Summaryy from './Summary'
+import LocalRemoteBar from './LocalRemoteBar'
+import Payments from './Payments'
 
-import Nodes from './Nodes'
+import request from 'superagent'
 
 export default {
-    components:{
-        Nodes,
+    data(){
+        return {
+            selectedPeer: false
+        }
     },
-    mounted() {
-        this.$store.commit('stopLoading')
+    components:{
+        SharedTitle, Tag, Summaryy, LocalRemoteBar, Payments
+    },
+    computed: {
+        unchanneled(){
+            return this.$store.state.cash.info.peers.filter(p => !p.channels)
+        }
+    },
+    methods:{
+        selectPeer(pId){
+            if (pId === this.selectedPeer){
+                return this.selectedPeer = false
+            }
+            this.selectedPeer = pId
+        },
+        requestChannel(){
+            request
+                .post('/lightning/channel')
+                .send({id : this.selectedPeer})
+                .set("Authorization", this.$store.state.loader.token)
+                .end((err, res)=>{
+                    console.log("response from channel", res.body)
+                })
+        }
     }
 }
 
@@ -26,141 +77,68 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/skeleton'
-@import '../styles/breakpoints'
+@import '../styles/grid'
+@import '../styles/button'
 
-.btcspot , .satspot
-    position: absolute
-    top: 0
-    z-index: 11
-    padding: 1em
+.container
+    content-align: center
 
-@media (max-width: breakpoint)
-    .btcspot , .satspot
-        display: none
-
-.btcspot
-    right: 111px
-
-.satspot
-    left: 111px
-
-.center
+h3
     text-align: center
 
-.intro
-    padding: 5em 0;
+option
+    // background: wrexblue
+    color: white
 
-p
-    font-size:1.1em
-    color:white
-    font-family: 'Open Sans', light, sans-serif;
+a
+    color: purple
 
 h1
     text-align: center
 
-h3
-    text-align: center
-    color:accent1
-    font-family: 'Open Sans', light, sans-serif;
-    font-size:3em
+.h
+    height: 2em
 
-a
-    color: accent2
-    text-decoration: none;
-
-a:visited
+.j
     color: accent1
+    font-size: 1.5em
+    margin-bottom: 1.123em
+    background-color: main
 
-#whales
+label
+    word-break: break-all
+
+
+#nodes
+    color:paleYellow
     width: 100%
-    opacity: 0.234567
 
+.break
+    overflow-wrap: break-word;
 
-.evhis
-  margin-top: 2em
-  button
-    background-color: purple
-    background: purple
+#worf
+    height: 23em
 
-select
-  color: white
-  background: purple
+#palm
+    width:110%
 
-.info
-  color: accent2
-  font-size: 1.2em
-  text-align: center
+.setupyourown
+    margin-top: 2.2345em
+    padding: 2em
+    color: purple
+    font-size: 1.12em
 
-.p
-  color: purple
+.small
+    font-size: .68em
+    word-break: break-all
 
-#sundogepurp
-  width:100%
-  max-height:auto
+p
+    text-align: center
 
-#burg
-    float: right;
-    margin-bottom: -9em
-
-#addmember
-    height: 5em
+.fl
+    float: left
+.fr
     float: right
-    margin-bottom: -1em
-    z-index: 1010
 
-.open
-    background: red
 
-.number
-    font-size: 1.1em
-    color: green
-
-.underline
-    border-bottom-style: solid
-    border-color: accent2
-    padding-left: 1em
-
-.equals
-    margin-top: 1.3em
-    font-size: 2em
-
-.equals2
-    margin-top: 1.1em
-    font-size: 1.69em
-
-.padd
-    padding: 1em
-
-.purplewx
-    color: white
-    transition: opacity 2s;
-
-.slide-fade-enter-active {
-  transition: all .6s ease;
-}
-.slide-fade-leave-active {
-  transition: all .4s ease;
-}
-.slide-fade-enter {
-  // transform: translateY(-400px);
-  opacity: 0;
-}
-.slide-fade-leave-to {
- // transform: translateY(-400px);
-  opacity: 0;
-}
-
-ul
-    text-align: left
-
-.up
-  width: fit-content
-  background: rgba(22, 22, 22, 0.8)
-  border-radius: 0.5em
-  margin: -1.25em auto 0.25em auto
-  padding: 0.25em
-  z-index: 80
-
-.container
-  min-height: 50vh
 </style>

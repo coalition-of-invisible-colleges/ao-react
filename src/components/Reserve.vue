@@ -33,7 +33,7 @@
 import Points from './Points'
 import RentSet from './RentSet'
 import CapSet from './CapSet'
-import Current from './Resources/Current'
+import Current from './Current'
 
 export default {
     components:{

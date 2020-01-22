@@ -19,9 +19,9 @@
 
 <script>
 
-import FormBox from './slotUtils/FormBox'
+import FormBox from './FormBox'
 import cryptoUtils from '../crypto'
-import FancyInput from './slotUtils/FancyInput'
+import FancyInput from './FancyInput'
 
 
 export default {

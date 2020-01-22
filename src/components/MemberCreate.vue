@@ -15,9 +15,9 @@
 
 <script>
 import cryptoUtils from '../crypto'
-import SharedTitle from './slotUtils/SharedTitle'
-import FormBox from './slotUtils/FormBox'
-import FancyInput from './slotUtils/FancyInput'
+import SharedTitle from './SharedTitle'
+import FormBox from './FormBox'
+import FancyInput from './FancyInput'
 
 export default {
   data() {

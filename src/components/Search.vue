@@ -15,7 +15,7 @@
 
 import _ from 'lodash'
 import request from "superagent"
-import Current from './Resources/Current'
+import Current from './Current'
 import SoundFX from '../utils/sounds'
 import Cards from '../utils/cards'
 import Dimensions from '../utils/dimensions'

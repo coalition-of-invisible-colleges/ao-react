@@ -28,8 +28,8 @@
 
 <script>
 
-import Current from './Resources/Current'
-import Currentr from './Resources/Currentr'
+import Current from './Current'
+import Currentr from './Currentr'
 
 export default {
     components: { Current, Currentr },

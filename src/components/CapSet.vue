@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import SharedTitle from './slotUtils/SharedTitle'
-import FormBox from './slotUtils/FormBox'
+import SharedTitle from './SharedTitle'
+import FormBox from './FormBox'
 
 export default {
     data(){

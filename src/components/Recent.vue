@@ -9,7 +9,7 @@
 
 <script>
 
-import Row from './Members/Row'
+import Row from './MemberRow'
 export default {
   components:{
       Row,
