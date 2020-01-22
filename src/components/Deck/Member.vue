@@ -33,7 +33,7 @@ import Addr from '../Members/Addr'
 import PreviewDeck from './PreviewDeck'
 import Vouch from '../Members/Vouch'
 import Bird from '../Card/Bird'
-import NotZen from '../Upgrades/NotZen'
+import NotZen from '../NotZen'
 import GiftBox from './GiftBox'
 
 export default {

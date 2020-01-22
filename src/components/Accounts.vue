@@ -1,32 +1,47 @@
 <template lang='pug'>
 
-#home
+#accounts
+  h1.up {{ activeAccounts }} accounts
   .container
-    h1.up lightning
-    nodes(v-if='$store.state.cash.info.alias')
-    p(v-else) no lightning node :(
+    .row
+      member-create.five.columns
+      .two.columns &nbsp;
+      changer.five.columns
+    members
 </template>
 
 <script>
 
-import Nodes from '../Nodes'
+import MemberCreate from './MemberCreate'
+import Changer from './Changer'
+import Members from './Members'
 
 export default {
     components:{
-        Nodes,
+        MemberCreate, Changer, Members,
     },
     mounted() {
         this.$store.commit('stopLoading')
+    },
+    computed:{
+        activeAccounts(){
+            let a = 0
+            this.$store.state.members.forEach(m => {
+                if (m.active > 0) {
+                    a ++
+                }
+            })
+            return a
+        }
     }
 }
-
 </script>
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/breakpoints'
 
 .btcspot , .satspot
     position: absolute
@@ -160,7 +175,4 @@ ul
   margin: -1.25em auto 0.25em auto
   padding: 0.25em
   z-index: 80
-  
-.container
-  min-height: 50vh
 </style>

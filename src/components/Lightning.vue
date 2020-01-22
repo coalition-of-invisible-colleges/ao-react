@@ -1,18 +1,19 @@
 <template lang='pug'>
 
-#access
-    h1.up {{ $store.state.cash.alias }} controls
-    resources
-    sidewalk
+#home
+  .container
+    h1.up lightning
+    nodes(v-if='$store.state.cash.info.alias')
+    p(v-else) no lightning node :(
 </template>
 
 <script>
-import Sidewalk from '../Sidewalk'
-import Resources from '../Resources'
+
+import Nodes from './Nodes'
 
 export default {
     components:{
-        Resources, Sidewalk,
+        Nodes,
     },
     mounted() {
         this.$store.commit('stopLoading')
@@ -23,9 +24,9 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/breakpoints'
 
 .btcspot , .satspot
     position: absolute
@@ -159,4 +160,7 @@ ul
   margin: -1.25em auto 0.25em auto
   padding: 0.25em
   z-index: 80
+
+.container
+  min-height: 50vh
 </style>

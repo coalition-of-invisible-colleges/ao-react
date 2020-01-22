@@ -2,9 +2,9 @@
 .day
     .date {{ day }}
     router-link(to='/doge')
-        img.today(v-if='isToday'  src='../../assets/images/uni.svg')
+        img.today(v-if='isToday'  src='../assets/images/uni.svg')
     .tooltip.upgrade(v-for='t in ev')
-        img.upgrade(@click="goIn(t.taskId)"  src='../../assets/images/timecube.svg'  :class='styl(t.color)')
+        img.upgrade(@click="goIn(t.taskId)"  src='../assets/images/timecube.svg'  :class='styl(t.color)')
         .tooltiptext
             .until {{ cardDate(t) }}
             linky(:x='t.name')
@@ -13,8 +13,8 @@
 
 <script>
 import _ from 'lodash'
-import Linky from '../Card/Linky'
-import SoundFX from '../../utils/sounds'
+import Linky from './Card/Linky'
+import SoundFX from '../utils/sounds'
 
 function getDMY(ts){
     let d = new Date(ts)
@@ -68,7 +68,7 @@ export default {
     },
     computed: {
         calcDayRange(){
-          return
+            return
         },
     },
 }
@@ -76,8 +76,8 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/tooltips'
+@import '../styles/colours'
+@import '../styles/tooltips'
 
 .guild
     color: black
@@ -101,7 +101,6 @@ export default {
     font-size: .5em
     float: left
     white-space: nowrap;
-    // font-size
 
 .day
     position: relative

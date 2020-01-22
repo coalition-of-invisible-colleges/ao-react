@@ -1,47 +1,31 @@
 <template lang='pug'>
 
-#accounts
-  h1.up {{ activeAccounts }} accounts
+#home
   .container
-    .row
-      member-create.five.columns
-      .two.columns &nbsp;
-      changer.five.columns
-    members
+    h1.up connections
+    aos
 </template>
 
 <script>
 
-import MemberCreate from './MemberCreate'
-import Changer from './Changer'
-import Members from '../Members'
+import Aos from './Aos'
 
 export default {
     components:{
-        MemberCreate, Changer, Members,
+        Aos
     },
     mounted() {
         this.$store.commit('stopLoading')
-    },
-    computed:{
-        activeAccounts(){
-            let a = 0
-            this.$store.state.members.forEach(m => {
-                if (m.active > 0) {
-                    a ++
-                }
-            })
-            return a
-        }
     }
 }
+
 </script>
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/breakpoints'
 
 .btcspot , .satspot
     position: absolute

@@ -4,9 +4,9 @@
     div(v-if='$store.state.cash.info.alias')
         .togglepayments
             button.submode.marg(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
-                img.max(src='../../assets/images/bitcoin.svg')
+                img.max(src='../assets/images/bitcoin.svg')
             button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
-                img.max(src='../../assets/images/lightning.svg')
+                img.max(src='../assets/images/lightning.svg')
         div(v-show='$store.state.upgrades.payment === "bitcoin"')
             div(v-if='b.address')
                 pay-address(:address='b.address')
@@ -21,10 +21,10 @@
 
 <script>
 
-import calcs from '../../calculations'
-import FormBox from '../slotUtils/FormBox'
-import PayAddress from '../Deck/PayAddress'
-import PayReq from '../Deck/PayReq'
+import calcs from '../calculations'
+import FormBox from './slotUtils/FormBox'
+import PayAddress from './Deck/PayAddress'
+import PayReq from './Deck/PayReq'
 
 export default {
     components:{
@@ -86,12 +86,12 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/grid'
-@import '../../styles/button'
-@import '../../styles/tooltips'
-@import '../../styles/spinners'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/grid'
+@import '../styles/button'
+@import '../styles/tooltips'
+@import '../styles/spinners'
 
 .marg
     margin-right: 1.97em

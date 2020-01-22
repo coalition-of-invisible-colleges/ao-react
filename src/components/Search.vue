@@ -1,34 +1,14 @@
 <template lang='pug'>
-#createtask(ref="closeable")
-  div(v-if='isCard')
-      transition(name="slide-fade")
-        .cc(v-show='showCreate')
-            textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
-            button(@click='createOrFindTask').fwi create card
-      .label
-        .btnpanel
-            div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
-              button.lit(@click='switchColor("red")'  :class='{ currentColor : showCreate && task.color === "red" }').redwx.paperwrapper
-                img.agedbackground
-              button.lit(@click='switchColor("yellow")'  :class='{ currentColor : showCreate && task.color === "yellow" }').yellowwx.paperwrapper
-                img.agedbackground
-              button.lit(@click='switchColor("green")'  :class='{ currentColor : showCreate && task.color === "green" }').greenwx.paperwrapper
-                img.agedbackground
-              button.lit(@click='switchColor("purple")'  :class='{ currentColor : showCreate && task.color === "purple" }').purplewx.paperwrapper
-                img.agedbackground
-              button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
-                img.agedbackground
-      .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
-          .searchresults
-              .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
-                  img.smallguild(src='../assets/images/badge_white.svg')
-                  span {{ t.guild }}
-                  div {{ shortName(t.name) }}
-              .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
-                  current(:memberId='t.taskId')
-              .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
-  div(v-else)
-      img.uni(src="../assets/images/uni.svg"  @click='toCardMode')
+#search(ref="closeable")
+  .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
+      .searchresults
+          .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+              img.smallguild(src='../assets/images/badge_white.svg')
+              span {{ t.guild }}
+              div {{ shortName(t.name) }}
+          .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+              current(:memberId='t.taskId')
+          .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
 </template>
 
 <script>
@@ -125,10 +105,6 @@ export default {
         });
     },
     methods: {
-        toCardMode(){
-            this.$store.commit("setDimension", 0)
-            this.$router.push('/' + this.$store.state.upgrades.mode)
-        },
         goIn(taskId){
             clearTimeout(this.inDebounce)
             SoundFX.playPageTurn()
@@ -203,6 +179,9 @@ export default {
             }
             this.resetCard()
         },
+        // hasSubTask(taskId){
+        //     return this.$store.getters.hashMap[this.taskId].subTasks.indexOf(taskId) > -1
+        // },
         isGrabbed(taskId){
             return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
         },
@@ -248,11 +227,11 @@ export default {
         shortName(theName) {
             return Cards.shortName(theName)
         },
+        isCard(){
+          return !Dimensions.isSun(this.$router.currentRoute.path) && !Dimensions.isBull(this.$router.currentRoute.path)
+        }
     },
     computed: {
-        isCard(){
-            return this.$store.state.upgrades.dimension === 'unicorn'
-        },
         taskId(){
             return this.$store.getters.contextCard.taskId
         },
@@ -266,6 +245,8 @@ export default {
             return foundId
         },
         matchCards() {
+            // if(!this.task) return []
+            // if(!this.task.name) return []
             if(this.task.search.length < 1) return []
             if(this.exploring) return this.searchResults
             let matches = []

@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import SharedTitle from '../slotUtils/SharedTitle'
-import FormBox from '../slotUtils/FormBox'
+import SharedTitle from './slotUtils/SharedTitle'
+import FormBox from './slotUtils/FormBox'
 
 export default {
     data(){
@@ -30,7 +30,7 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
+@import '../styles/colours'
 
 
 </style>

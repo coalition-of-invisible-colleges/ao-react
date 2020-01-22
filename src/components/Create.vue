@@ -125,10 +125,6 @@ export default {
         });
     },
     methods: {
-        toCardMode(){
-            this.$store.commit("setDimension", 0)
-            this.$router.push('/' + this.$store.state.upgrades.mode)
-        },
         goIn(taskId){
             clearTimeout(this.inDebounce)
             SoundFX.playPageTurn()
@@ -203,6 +199,9 @@ export default {
             }
             this.resetCard()
         },
+        // hasSubTask(taskId){
+        //     return this.$store.getters.hashMap[this.taskId].subTasks.indexOf(taskId) > -1
+        // },
         isGrabbed(taskId){
             return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
         },
@@ -248,11 +247,11 @@ export default {
         shortName(theName) {
             return Cards.shortName(theName)
         },
+        isCard(){
+          return !Dimensions.isSun(this.$router.currentRoute.path) && !Dimensions.isBull(this.$router.currentRoute.path)
+        }
     },
     computed: {
-        isCard(){
-            return this.$store.state.upgrades.dimension === 'unicorn'
-        },
         taskId(){
             return this.$store.getters.contextCard.taskId
         },
@@ -266,6 +265,8 @@ export default {
             return foundId
         },
         matchCards() {
+            // if(!this.task) return []
+            // if(!this.task.name) return []
             if(this.task.search.length < 1) return []
             if(this.exploring) return this.searchResults
             let matches = []

@@ -1,11 +1,11 @@
 <template lang='pug'>
 
 .priorities
-    img.bdoge(v-if='priorities.length < 1'  src='../../assets/images/buddadoge.svg'  @click='$router.push("/doge")')
+    img.bdoge(v-if='priorities.length < 1'  src='../assets/images/buddadoge.svg'  @click='$router.push("/doge")')
     template.clearboth(v-for='(t, i) of priorities'  :key='t')
       .row.priority
           .allocated(v-if='allocated(t) > 0'  :class='{ openallocated : $store.state.context.action }') {{ allocated(t) }}
-          img.singleship(@click='allocate(t)'  src='../../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')
+          img.singleship(@click='allocate(t)'  src='../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')
           hyperpriority.closedcard(:taskId='t'  :inId='$store.getters.contextCard.taskId')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
           .clearboth.opensubcard
@@ -18,10 +18,10 @@
 
 <script>
 
-import Hypercard from '../Card'
-import Hyperpriority from './Priority'
+import Hypercard from './Card'
+import Hyperpriority from './Deck/Priority'
 import _ from 'lodash'
-import SoundFX from '../../utils/sounds'
+import SoundFX from '../utils/sounds'
 
 export default {
   mounted() {
@@ -79,9 +79,9 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/button'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/button'
 
 .priorities
     padding-bottom: 0.6em

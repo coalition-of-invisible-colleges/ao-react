@@ -1,13 +1,13 @@
 <template lang='pug'>
 
 #theoracle
-    img.thegoldendoge(src='../../assets/images/sundoge.png').center
+    img.thegoldendoge(src='../assets/images/sundoge.png').center
     h1.up oracle
     hypercard.bounty(v-if='topcard'  :b='topcard'  :key='topcard.taskId'  :c='[topcard.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(topcard.taskId)')
 </template>
 
 <script>
-import Hypercard from "../Card"
+import Hypercard from "./Card"
 
 export default {
   components:{
@@ -37,7 +37,7 @@ export default {
           this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       playPageTurn(){
-          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+          var flip = new Audio(require('../assets/sounds/myst158.wav'))
           flip.volume = flip.volume * 0.3
           flip.play()
       },
@@ -102,10 +102,10 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/button'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/button'
+@import '../styles/breakpoints'
 
 h1
     text-align: center
@@ -307,7 +307,7 @@ h2
     position: relative
 
 .agedbackground
-    background-image: url('../../assets/images/paper.jpg')
+    background-image: url('../assets/images/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -321,19 +321,19 @@ h2
     pointer-events: none
 
 .freshpaper
-    background-image: url('../../assets/images/paper.jpg')
+    background-image: url('../assets/images/paper.jpg')
     opacity: 0.2
 
 .weekoldpaper
-    background-image: url('../../assets/images/paper_aged_1.png')
+    background-image: url('../assets/images/paper_aged_1.png')
     opacity: 0.25
 
 .montholdpaper
-    background-image: url('../../assets/images/paper_aged_2.png')
+    background-image: url('../assets/images/paper_aged_2.png')
     opacity: 0.3
 
 .threemontholdpaper
-    background-image: url('../../assets/images/paper_aged_3.png')
+    background-image: url('../assets/images/paper_aged_3.png')
     opacity: 0.35
 
 .guildname
@@ -345,7 +345,7 @@ h2
     font-weight: bold
     font-size: 1.25em
     margin-top: -0.13em
-    
+
 .thegoldendoge
     position: absolute
     left: 50%

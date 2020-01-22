@@ -10,9 +10,9 @@
 
 <script>
 
-import calcs from '../../calculations'
-import TaskCalendar from '../TaskCalendar/Calendar'
-import ResourceBook from '../forms/ResourceBook'
+import calcs from '../calculations'
+import TaskCalendar from './Calendar'
+import ResourceBook from './forms/ResourceBook'
 
 export default {
     mounted() {
@@ -75,12 +75,12 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/grid'
-@import '../../styles/button'
-@import '../../styles/tooltips'
-@import '../../styles/spinners'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/grid'
+@import '../styles/button'
+@import '../styles/tooltips'
+@import '../styles/spinners'
 
 .nl
     text-decoration:none

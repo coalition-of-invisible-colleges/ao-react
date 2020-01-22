@@ -13,7 +13,7 @@
 
 import Hypercard from '../Card'
 import SimpleHyperpriority from './SimplePriority'
-import NotZen from '../Upgrades/NotZen'
+import NotZen from '../NotZen'
 import Dimensions from '../../utils/dimensions'
 
 export default {

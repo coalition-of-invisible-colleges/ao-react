@@ -13,15 +13,15 @@
       fancy-input(v-if='inputType === "password"', labelText='repeat')
           input.input-effect(:type='inputType', v-model='change.confirmNewfield')
       .check(v-if='inputType === "password"')
-          img(v-if='matched', src='../../assets/images/check.svg')
-          img(v-else, src='../../assets/images/warn.svg')
+          img(v-if='matched', src='../assets/images/check.svg')
+          img(v-else, src='../assets/images/warn.svg')
 </template>
 
 <script>
 
-import FormBox from '../slotUtils/FormBox'
-import cryptoUtils from '../../crypto'
-import FancyInput from '../slotUtils/FancyInput'
+import FormBox from './slotUtils/FormBox'
+import cryptoUtils from '../crypto'
+import FancyInput from './slotUtils/FancyInput'
 
 
 export default {
@@ -85,9 +85,9 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/button'
-@import '../../styles/skeleton'
+@import '../styles/colours'
+@import '../styles/button'
+@import '../styles/skeleton'
 
 img
     float: left

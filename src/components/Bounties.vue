@@ -26,8 +26,8 @@
 
 <script>
 import Vue from 'vue'
-import calculations from '../../calculations'
-import Hypercard from "../Card"
+import calculations from '../calculations'
+import Hypercard from "./Card"
 
 export default {
   data(){
@@ -115,7 +115,7 @@ export default {
           return this.$store.getters.hashMap[taskId].guild
       },
       playPageTurn(){
-          var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+          var flip = new Audio(require('../assets/sounds/myst158.wav'))
           flip.volume = flip.volume * 0.3
           flip.play()
       },
@@ -126,10 +126,10 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/button'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/button'
+@import '../styles/breakpoints'
 
 .bounty:hover
     border-style: dashed
@@ -333,7 +333,7 @@ h2
     position: relative
 
 .agedbackground
-    background-image: url('../../assets/images/paper.jpg')
+    background-image: url('../assets/images/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -347,19 +347,19 @@ h2
     pointer-events: none
 
 .freshpaper
-    background-image: url('../../assets/images/paper.jpg')
+    background-image: url('../assets/images/paper.jpg')
     opacity: 0.2
 
 .weekoldpaper
-    background-image: url('../../assets/images/paper_aged_1.png')
+    background-image: url('../assets/images/paper_aged_1.png')
     opacity: 0.25
 
 .montholdpaper
-    background-image: url('../../assets/images/paper_aged_2.png')
+    background-image: url('../assets/images/paper_aged_2.png')
     opacity: 0.3
 
 .threemontholdpaper
-    background-image: url('../../assets/images/paper_aged_3.png')
+    background-image: url('../assets/images/paper_aged_3.png')
     opacity: 0.35
 
 .guildname

@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import cryptoUtils from '../../crypto'
-import SharedTitle from '../slotUtils/SharedTitle'
-import FormBox from '../slotUtils/FormBox'
-import FancyInput from '../slotUtils/FancyInput'
+import cryptoUtils from '../crypto'
+import SharedTitle from './slotUtils/SharedTitle'
+import FormBox from './slotUtils/FormBox'
+import FancyInput from './slotUtils/FancyInput'
 
 export default {
   data() {
@@ -57,8 +57,8 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
+@import '../styles/colours'
+@import '../styles/skeleton'
 
 #projects
     color:accent1

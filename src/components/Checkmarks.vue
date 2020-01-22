@@ -9,13 +9,13 @@
                 ul.none
                     li.spaced(v-for='p in subguilds'  :key='subguilds')
                         span(@click='goIn(p.taskId)')
-                            img.floatleft(src='../../assets/images/badge.svg')
+                            img.floatleft(src='../assets/images/badge.svg')
                         span(@click='goIn(p.taskId)')
                             span.nl.gui.smaller(:class='cardInputSty(p.color)') {{ p.guild }}
                         ul.none.indent
                             li.spaced(v-for='sp in p.guilds')
                                 span(@click='goIn(sp.taskId, p.taskId)')
-                                    img.floatleft.smaller(src='../../assets/images/badge.svg')
+                                    img.floatleft.smaller(src='../assets/images/badge.svg')
                                 span(@click='goIn(sp.taskId), p.taskId')
                                     span.nl.gui.smallest(:class='cardInputSty(sp.color)') {{ sp.guild }}
             current.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions'  :key='$store.getters.hodlersByCompletions')
@@ -23,7 +23,7 @@
             .box.morepad
                 div.dogep.spinslow
                     .tooltip
-                        img(:class="{ungrabbedcoin : !isGrabbed}" src='../../assets/images/coin.svg' @click='toggleGrab')
+                        img(:class="{ungrabbedcoin : !isGrabbed}" src='../assets/images/coin.svg' @click='toggleGrab')
                         .tooltiptext.hodlsuggest(v-if='!isGrabbed') click to hodl
                         .tooltiptext.hodlsuggest(v-else) hodled ~ click to dump
                     p.hodlcount(:class="{grabbedhodlcount: isGrabbed}") {{ b.deck.length }}
@@ -33,7 +33,7 @@
                 template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
                     li.spaced
                         span(@click='goIn(g.taskId)')
-                            img.floatleft(src='../../assets/images/badge.svg')
+                            img.floatleft(src='../assets/images/badge.svg')
                         span(@click='goIn(g.taskId)')
                             span.nl.gui.yellowtx {{ g.guild }}
                         span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
@@ -42,16 +42,16 @@
                         .description
                             linky(:x='g.name')
                             span.projectlist.aproject(v-if='g.guilds && g.guilds.length >= 1'  v-for='(p, i) in g.guilds'  @click='goIn(p.taskId, g.taskId)')
-                                img(src='../../assets/images/badge.svg'  :class='{ first : i === 0 }')
+                                img(src='../assets/images/badge.svg'  :class='{ first : i === 0 }')
                                 span(:class='cardInputSty(p.color)') {{ p.guild }}
                 .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
                 .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
 </template>
 
 <script>
-import Current from '../Members/Current'
-import Linky from '../Card/Linky'
-import SoundFX from '../../utils/sounds'
+import Current from './Members/Current'
+import Linky from './Card/Linky'
+import SoundFX from '../utils/sounds'
 
 export default {
     components:{
@@ -95,7 +95,7 @@ export default {
             }
         },
         playPageTurn(){
-            var flip = new Audio(require('../../assets/sounds/myst158.wav'))
+            var flip = new Audio(require('../assets/sounds/myst158.wav'))
             flip.volume = flip.volume * 0.3
             flip.play()
         },
@@ -236,12 +236,12 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/grid'
-@import '../../styles/button'
-@import '../../styles/tooltips'
-@import '../../styles/spinners'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/grid'
+@import '../styles/button'
+@import '../styles/tooltips'
+@import '../styles/spinners'
 
 .nl
     text-decoration:none

@@ -13,12 +13,12 @@
 
 <script>
 
-import Hypercard from "../Card"
-import SharedTitle from '../slotUtils/SharedTitle'
-import calculations from '../../calculations'
-import FormBox from '../slotUtils/FormBox'
-import PreviewDeck from '../Deck/PreviewDeck'
-import HyperDeck from '../Deck/HyperDeck'
+import Hypercard from "./Card"
+import SharedTitle from './slotUtils/SharedTitle'
+import calculations from '../calculations'
+import FormBox from './slotUtils/FormBox'
+import PreviewDeck from './Deck/PreviewDeck'
+import HyperDeck from './Deck/HyperDeck'
 
 export default {
   props: ['g'],

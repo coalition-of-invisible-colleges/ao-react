@@ -37,7 +37,7 @@ import Mercher from './Mercher'
 import Channel from './Channel'
 import ChannelCreate from './ChannelCreate'
 import LocalRemoteBar from './LocalRemoteBar'
-import Payments from '../Upgrades/Payments'
+import Payments from '../Payments'
 
 import request from 'superagent'
 

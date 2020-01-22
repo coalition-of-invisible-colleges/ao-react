@@ -1,18 +1,18 @@
 <template lang='pug'>
 
-#home
-  .container
-    h1.up connections
-    aos
+#access
+    h1.up {{ $store.state.cash.alias }} controls
+    resources
+    sidewalk
 </template>
 
 <script>
-
-import Aos from '../Aos'
+import Sidewalk from './Sidewalk'
+import Resources from './Resources'
 
 export default {
     components:{
-        Aos
+        Resources, Sidewalk,
     },
     mounted() {
         this.$store.commit('stopLoading')
@@ -23,9 +23,9 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/breakpoints'
 
 .btcspot , .satspot
     position: absolute

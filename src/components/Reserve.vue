@@ -30,10 +30,10 @@
 
 <script>
 
-import Points from '../Points'
+import Points from './Points'
 import RentSet from './RentSet'
 import CapSet from './CapSet'
-import Current from '../Resources/Current'
+import Current from './Resources/Current'
 
 export default {
     components:{
@@ -67,9 +67,9 @@ export default {
 
 <style lang='stylus' scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/breakpoints'
 
 .fw
     width: 100%

@@ -5,8 +5,8 @@
 
 <script>
 
-import HelmControl from '../../utils/helm'
-import SoundFX from '../../utils/sounds'
+import HelmControl from '../utils/helm'
+import SoundFX from '../utils/sounds'
 
 export default {
     props: ['taskId'],
@@ -36,14 +36,14 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours'
+@import '../styles/colours'
 
 .notzen
     margin-left: 51.4%
     transform: translateX(-50%)
     font-size: 2.75em
     cursor: pointer
-    background-image: url('../../assets/images/buddadoge.svg')
+    background-image: url('../assets/images/buddadoge.svg')
     background-size: auto 100%
     background-repeat: no-repeat
     background-position: 50%
@@ -52,16 +52,16 @@ export default {
     padding-right: 0.09em
     font-weight: bold
     text-align: center
-    
+
 .drink
     color: wrexgreen
-    
+
 .cloud
     color: wrexyellow
-    
+
 .storm
     color: wrexred
-    
+
 .river
     color: black
 </style>

@@ -7,7 +7,7 @@
 
 <script>
 
-import Calendar from '../TaskCalendar/Calendar'
+import Calendar from './Calendar'
 
 export default {
   mounted(){
@@ -22,10 +22,10 @@ export default {
 
 <style lang="stylus" scoped>
 
-@import '../../styles/colours'
-@import '../../styles/skeleton'
-@import '../../styles/button'
-@import '../../styles/breakpoints'
+@import '../styles/colours'
+@import '../styles/skeleton'
+@import '../styles/button'
+@import '../styles/breakpoints'
 
 .bounty:hover
     border-style: dashed
@@ -227,36 +227,6 @@ h2
 
 .agedwrapper
     position: relative
-
-.agedbackground
-    background-image: url('../../assets/images/paper.jpg')
-    background-repeat: no-repeat
-    background-position: center center
-    background-size: cover
-    top: 0
-    left: 0
-    bottom: 0
-    right: 0
-    position: absolute
-    width: 100%
-    height: 100%
-    pointer-events: none
-
-.freshpaper
-    background-image: url('../../assets/images/paper.jpg')
-    opacity: 0.2
-
-.weekoldpaper
-    background-image: url('../../assets/images/paper_aged_1.png')
-    opacity: 0.25
-
-.montholdpaper
-    background-image: url('../../assets/images/paper_aged_2.png')
-    opacity: 0.3
-
-.threemontholdpaper
-    background-image: url('../../assets/images/paper_aged_3.png')
-    opacity: 0.35
 
 .guildname
     position: relative

@@ -3,12 +3,12 @@
 #calendar(:key='inId')
     .row.menu
         .inline(@click='prevMonth')
-            img(src='../../assets/images/left.svg')
+            img(src='../assets/images/left.svg')
         .inline
             //- .yellowtx(v-if='card.guild') {{card.guild}}
             .soft {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
-            img(src='../../assets/images/right.svg')
+            img(src='../assets/images/right.svg')
     .calmonth
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')
@@ -145,8 +145,8 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-@import '../../styles/colours';
-@import '../../styles/skeleton';
+@import '../styles/colours';
+@import '../styles/skeleton';
 
 .soft
     color: softGrey

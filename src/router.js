@@ -1,28 +1,28 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Access from './components/Dash/Access'
-import Connect from './components/Dash/Connect'
-import Accounts from './components/Dash/Accounts'
-import Lightning from './components/Dash/Lightning'
-import Reserve from './components/Dash/Reserve'
-import Members from './components/Members'
-
 import Deck from './components/Deck'
+
+import Access from './components/Access'
+import Connect from './components/Connect'
+import Accounts from './components/Accounts'
+import Lightning from './components/Lightning'
+import Reserve from './components/Reserve'
+
+
+import News from './components/News'
+import Missions from './components/Missions'
+import Recent from './components/Recent'
+import Bounties from './components/Bounties'
+import Upcoming from './components/Upcoming'
+
+import Checkmarks from './components/Checkmarks'
+import Payments from './components/Payments'
+import Planning from './components/Planning'
+import Zen from './components/Zen'
+import Priorities from './components/Priorities'
+
 import Archive from './components/Deck/Archive'
-
-import News from './components/Pinboard/News'
-import Missions from './components/Pinboard/Missions'
-import Recent from './components/Pinboard/Recent'
-import Bounties from './components/Pinboard/Bounties'
-import Calendar from './components/Pinboard/Calendar'
-
-import Checkmarks from './components/Upgrades/Checkmarks'
-import Payments from './components/Upgrades/Payments'
-import Planning from './components/Upgrades/Planning'
-import Zen from './components/Upgrades/Zen'
-import Priorities from './components/Deck/Priorities'
-
 Vue.use(VueRouter)
 
 const routes =[{
@@ -77,7 +77,7 @@ const routes =[{
   meta: { title: "bounties" }
 },{
   path: '/front/timecube',
-  component: Calendar,
+  component: Upcoming,
   meta: { title: "calendar" }
 },{
   path: '/dash',
@@ -87,13 +87,11 @@ const routes =[{
   path: '/dash/doge',
   component: Access,
   meta: { title: "resources" }
-},
-{
+},{
   path: '/dash/boat',
   component: Connect,
   meta: { title: "networking" }
-},
-{
+},{
   path: '/dash/badge',
   component: Accounts ,
   meta: { title: "manage accounts" }
