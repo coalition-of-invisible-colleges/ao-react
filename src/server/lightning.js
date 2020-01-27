@@ -4,8 +4,7 @@ import express from 'express'
 
 const lightningRouter = express.Router()
 
-import cashEvs from './events/cashEvs'
-import tasksEvs from './events/tasksEvs'
+import evs from './events'
 import calculations from '../calculations'
 
 import LightningClient from 'lightning-client'
@@ -50,13 +49,13 @@ function checkFunds(){
         .listfunds()
         .then(result => {
             try {
-                cashEvs.fundsSet(result.outputs, result.channels)
+                evs.fundsSet(result.outputs, result.channels)
                 result.outputs.forEach( o => {
                     if (o.status === 'confirmed' && pubState.cash.usedTxIds.indexOf(o.txid) === -1){
                         pubState.tasks.forEach( t => {
                             if (t.address === o.address){
                                 let cadAmt = calculations.satsToCad(o.value, pubState.cash.spot)
-                                tasksEvs.taskBoosted(t.taskId, cadAmt, o.txid)
+                                evs.taskBoosted(t.taskId, cadAmt, o.txid)
                             }
                         })
                     }
@@ -79,7 +78,7 @@ function getInfo(){
                             channels: p.channels.length > 0
                         }
                     })
-                    cashEvs.getNodeInfo(result, console.log)
+                    evs.getNodeInfo(result, console.log)
                   } catch (err){
                     console.log("error from cashEvs", err)
                   }
@@ -97,7 +96,7 @@ function recordEveryInvoice(start){
 
             pubState.tasks.forEach( t => {
                 if (t.payment_hash === invoice.payment_hash){
-                    tasksEvs.taskBoostedLightning(t.taskId, cadAmt, invoice.payment_hash, invoice.pay_index)
+                    evs.taskBoostedLightning(t.taskId, cadAmt, invoice.payment_hash, invoice.pay_index)
                 }
             })
             recordEveryInvoice(start + 1)

@@ -42,13 +42,13 @@ module.exports = function(req, res, next){
             connector.postEvent(req.body.address, secret, req.body.ev, (connectorRes) => {
                 console.log("connection response: ", {connectorRes})
                 if (connectorRes.lastInsertRowid){
-                    events.aoEvs.aoRelayAttempted(
+                    events.aoRelayAttempted(
                       req.body.address,
                       true,
                       utils.buildResCallback(res)
                     )
                 } else {
-                    events.aoEvs.aoRelayAttempted(
+                    events.aoRelayAttempted(
                       req.body.address,
                       false,
                       utils.buildResCallback(res)
@@ -70,7 +70,7 @@ module.exports = function(req, res, next){
 function specAoNamed(req, res, next){
     let errRes = []
     if (validators.isNotes(req.body.alias, errRes)){
-        events.aoEvs.aoNamed(req.body.alias, utils.buildResCallback(res))
+        events.aoNamed(req.body.alias, utils.buildResCallback(res))
     } else {
         res.status(200).send(errRes)
     }
@@ -82,7 +82,7 @@ function specCashIncreased(req, res, next){
     validators.isAmount(req.body.amount, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.cashEvs.cashIncreased(
+    events.cashIncreased(
       req.body.amount,
       req.body.notes,
       utils.buildResCallback(res)
@@ -98,7 +98,7 @@ function specCashDecreased(req, res, next){
     validators.isAmount(req.body.amount, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.cashEvs.cashDecreased(
+    events.cashDecreased(
       req.body.amount,
       req.body.notes,
       utils.buildResCallback(res)
@@ -113,7 +113,7 @@ function specRentSet(req, res, next){
   if (
     validators.isAmount(req.body.amount, errRes)
   ){
-    events.cashEvs.rentSet(
+    events.rentSet(
       req.body.amount,
       utils.buildResCallback(res)
     )
@@ -127,7 +127,7 @@ function specCapSet(req, res, next){
   if (
     validators.isAmount(req.body.amount, errRes)
   ){
-    events.cashEvs.capSet(
+    events.capSet(
       req.body.amount,
       utils.buildResCallback(res)
     )
@@ -142,7 +142,7 @@ function specAOSubscribed(req, res, next){
       validators.isNotes(req.body.address, errRes) &&
       validators.isNotes(req.body.secret, errRes)
   ){
-    events.aoEvs.aoSubscribed(
+    events.aoSubscribed(
       req.body.address,
       req.body.secret,
       utils.buildResCallback(res)
@@ -158,7 +158,7 @@ function specAoDisconnected(req, res, next){
       validators.isAddress(req.body.address, errRes)
     ){
       console.log("making disconnected ev")
-      events.aoEvs.aoDisconnected(
+      events.aoDisconnected(
         req.body.address,
         utils.buildResCallback(res)
       )
@@ -179,7 +179,7 @@ function specAOConnect(req, res, next){
           return res.status(200).send(['ao-connect failed'])
       }
       console.log('subscribe success, attempt ao connect')
-      events.aoEvs.aoConnected(
+      events.aoConnected(
         req.body.address,
         req.body.secret,
         utils.buildResCallback(res)
@@ -194,10 +194,10 @@ function specAoUpdated(req, res, next){
             console.log("matched address")
             connector.getState(a.address, a.secret, (err, state) => {
                 if (err){
-                    return events.aoEvs.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
+                    return events.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
                 }
                 console.log("adding state for:", {state})
-                events.aoEvs.aoUpdated(a.address, state, utils.buildResCallback(res))
+                events.aoUpdated(a.address, state, utils.buildResCallback(res))
             })
 
         }

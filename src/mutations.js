@@ -1,7 +1,357 @@
+// Mutations are state builders.
+// The current state is the result of all the events in the system fed through the mutation functions.
+// The first argument is the current state segment and the second argument is the event that is being applied to the state.
+// `server/state.js` for server; `modules/*` for vue client.
 import _ from 'lodash'
 import uuidv1 from 'uuid/v1'
-import cryptoUtils from '../crypto'
-import cards from '../utils/cards'
+import cryptoUtils from './crypto'
+import cards from './utils/cards'
+
+let mutations = {
+    aoMuts,
+    cashMuts,
+    membersMuts,
+    resourcesMuts,
+    sessionsMuts,
+    tasksMuts,
+}
+
+export default mutations
+
+function aoMuts(aos, ev) {
+    switch (ev.type) {
+        case "ao-connected":
+            let newEv = {
+                address: ev.address,
+                secret: ev.secret,
+                attempts: 0,
+                successfuls: 0,
+                fails: 0,
+                lastAttemptSuccess: true,
+                state: false
+            }
+            aos.push(newEv)
+            break
+        case "ao-disconnected":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    aos.splice(i, 1)
+                }
+            })
+            break
+        case "ao-relay-attempted":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    ao.attempts ++
+                    if (ev.successful){
+                        ao.successfuls ++
+                        ao.lastAttemptSuccess = true
+                    } else {
+                        ao.fails ++
+                        ao.lastAttemptSuccess = false
+                    }
+                }
+            })
+            break
+        case "ao-updated":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    ao.state = ev.state
+                }
+            })
+            break
+    }
+}
+
+function cashMuts(cash, ev){
+		switch (ev.type) {
+			case "ao-disconnected":
+				cash.subscribed.forEach( (ao, i) => {
+					if (ao.address === ev.address) {
+							cash.subscribed.splice(i, 1)
+					}
+				})
+				break
+			case "ao-subscribed":
+				cash.subscribed.push(ev)
+				break
+			case "ao-named":
+				cash.alias = ev.alias
+				break
+			case "cash-increased":
+				cash.cash += parseFloat(ev.amount)
+				break
+			case "cash-decreased":
+				cash.cash -= parseFloat(ev.amount)
+				break
+			case "member-paid":
+				if (ev.isCash) {
+					cash.cash += parseFloat(ev.paid)
+				}
+				break
+			case "task-claimed":
+			 	cash.variable += parseFloat(ev.paid)
+				break
+			case "spot-updated":
+				cash.spot = ev.spot
+				break
+			case "currency-switched":
+				cash.currency = ev.currency
+				break
+			case "rent-set":
+				cash.rent = parseFloat(ev.amount)
+				break
+			case "cap-set":
+				cash.cap = ev.amount
+				break
+			case "variable-set":
+				cash.variable = ev.amount
+				break
+			case "funds-set":
+				cash.outputs = ev.outputs
+				cash.channels = ev.channels
+				break
+			case "task-boosted":
+				cash.usedTxIds.push(ev.txid)
+				break
+			case "task-boosted-lightning":
+				cash.pay_index = ev.pay_index
+				break
+			case "get-node-info":
+				cash.info = ev.info
+				break
+		}
+}
+
+function membersMuts(members, ev){
+  switch (ev.type){
+      case "ao-connected":
+          break
+      case "ao-disconnected":
+          break
+      case "member-created":
+          ev.lastUsed = ev.timestamp
+          ev.muted = true
+          members.push(ev)
+          break
+      case "member-activated":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId){
+                  if ( member.active < 0) {
+                      member.active = -1 * member.active
+                  } else {
+                      member.active ++
+                  }
+              }
+          })
+          break
+      case "task-boosted":
+          members.forEach( member => {
+              if (member.memberId === ev.taskId){
+                  if ( member.active < 0) {
+                      member.active = -1 * member.active
+                  } else {
+                      member.active ++
+                  }
+              }
+          })
+          break
+      case "task-boosted-lightning":
+          members.forEach( member => {
+              if (member.memberId === ev.taskId){
+                  if ( member.active < 0) {
+                      member.active = -1 * member.active
+                  } else {
+                      member.active ++
+                  }
+              }
+          })
+          break
+      case "member-deactivated":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId){
+                  if (member.active >= 0){
+                      member.active = -1 * member.active - 1
+                  }
+              }
+          })
+          break
+      case "member-purged":
+          members.forEach( (member, i) => {
+              if (member.memberId === ev.memberId) {
+                      members.splice(i, 1)
+              }
+          })
+          break
+      case "resource-used":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId){
+                  member.lastUsed = ev.timestamp
+              }
+          })
+          break
+
+      case "member-field-updated":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId){
+                  member[ev.field] = ev.newfield
+              }
+          })
+          break
+
+      case "badge-added":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId){
+                  member.badges.push( ev )
+              }
+          })
+          break
+
+      case "badge-removed":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId) {
+                  member.badges.forEach((b, i) => {
+                      if (ev.badge === b.badge) {
+                          member.badges.splice(i, 1)
+                      }
+                  })
+              }
+          })
+          break
+
+      case "badge-hidden":
+          members.forEach( member => {
+              if (member.memberId === ev.memberId) {
+                  if(!member.hiddenBadges) member.hiddenBadges = [] //add hiddenBadges property if it doesn't exist
+                  if(member.hiddenBadges.includes(ev.badge)){ //if the badge is currently in the hidden list, remove it
+                    member.hiddenBadges = member.hiddenBadges.filter( badge => { //We need to remove all references, since bugs could create multiples
+                        if(badge == ev.badge){
+                            return false
+                        }
+                        return true
+                    })
+                  } else { //We don't have the badge in our hidden list, so let's add it
+                      member.hiddenBadges.push(ev.badge)
+                  }
+              }
+
+          })
+          break
+
+      case "doge-barked":
+          members.forEach( member => {
+              // this should only bump up for mutual doges
+              if (member.memberId === ev.memberId){
+                  member.lastUsed = ev.timestamp
+                  // then bark
+              }
+          })
+          break
+
+      case "doge-muted":
+        members.forEach( member => {
+            if (member.memberId === ev.memberId){
+                member.muted = true
+            }
+        })
+        break
+
+      case "doge-unmuted":
+        members.forEach( member => {
+            if (member.memberId === ev.memberId){
+                member.muted = false
+            }
+        })
+        break
+  }
+}
+
+function resourcesMuts(resources, ev){
+	switch (ev.type) {
+		case "resource-created":
+			let resourceIds = resources.map(r => r.resourceId)
+			if (resourceIds.indexOf(ev.resourceId) === -1){
+					resources.push(ev)
+			} else {
+					console.log("BAD data duplicate resource rejected in mutation, dup resource task likely created")
+			}
+			break
+		case "resource-used":
+			resources.forEach( resource => {
+				if (resource.resourceId == ev.resourceId){
+					resource.stock -= parseInt(ev.amount)
+				}
+			})
+			break
+		case "resource-purged":
+				resources.forEach( (r, i) => {
+						if (r.resourceId === ev.resourceId) {
+								resources.splice(i, 1)
+						}
+				})
+				break
+		case "resource-stocked":
+			resources.forEach( resource => {
+				if (resource.resourceId == ev.resourceId){
+						resource.stock += parseInt(ev.amount)
+				}
+			})
+			break
+		case "resource-removed":
+				resources.forEach( (r, i) => {
+						if (r.resourceId == ev.resourceId){
+								resources.splice(i, 1)
+						}
+				})
+				break
+		case "channel-created":
+				resources.forEach((r, i) => {
+						if (r.resourceId == ev.resourceId){
+								r.pubkey = ev.pubkey
+						}
+				})
+				break
+	}
+}
+
+
+function sessionsMuts(sessions, ev){
+		switch (ev.type) {
+				case "session-created":
+						let idHasSession = sessions.some(session => {
+								// replace that sessions creds,
+								let match = false
+								if (session.ownerId === ev.ownerId){
+										match = true
+										_.merge(session, ev)
+								}
+								return match // true terminates the some loop & idHasSession->true too
+						})
+
+						if (idHasSession){
+							 // edited in session
+						} else {
+								// id didn't previously have session
+								sessions.push(ev)
+						}
+						break
+				case "session-killed":
+						sessions.forEach( (s, i) => {
+								if (s.session == ev.session){
+										_.pullAt(sessions, i)
+								}
+						})
+						break
+				case "ao-connected":
+						sessions.push({
+								ownerId: ev.address,
+								token: ev.secret,
+								session: ev.address,
+						})
+						break
+	}
+}
+
 
 function tasksMuts(tasks, ev) {
     let newEv = {}
@@ -145,9 +495,9 @@ function tasksMuts(tasks, ev) {
                                 console.log("invalid task data found, this is very bad")
                                 return
                             }
-    
+
                             history.push(t)
-    
+
                             if(subTask.deck.indexOf(ev.memberId) === -1 && ev.taskId !== ev.memberId) {
                                 subTask.passed = _.filter(subTask.passed, d => d[1] !== ev.memberId)
                                 subTask.deck.push(ev.memberId)
@@ -194,9 +544,9 @@ function tasksMuts(tasks, ev) {
                                 console.log('invalid task data found, this is very bad')
                                 return
                             }
-    
+
                             history.push(t)
-    
+
                             if(subTask.deck.indexOf(ev.memberId) >= 0 && ev.taskId !== ev.memberId) {
                                 subTask.passed = _.filter(subTask.passed, d => d[1] !== ev.memberId)
                                 subTask.deck = _.filter(subTask.deck, d => d !== ev.memberId)
@@ -537,10 +887,5 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
-        case "cleanup":
-            //
-            break
     }
 }
-
-export default tasksMuts

@@ -14,7 +14,7 @@ function watchSpot(){
 function getRecordSpot(){
     getPrice( (err, spot)=> {
         if (!err){
-            events.cashEvs.spotUpdated(spot)
+            events.spotUpdated(spot)
         }
     })
 }

@@ -56,7 +56,7 @@ function reactions(ev){
                             amount = amount / defaultPrice
                         }
                         let hopper = t.name.slice(0,1)
-                        events.resourcesEvs.resourceUsed(resourceId, '', amount, 0, hopper, console.log)
+                        events.resourceUsed(resourceId, '', amount, 0, hopper, console.log)
                         return true
                     }
                 })
@@ -66,7 +66,7 @@ function reactions(ev){
             case 'member-paid':
                 break
             case 'resource-stocked':
-                events.membersEvs.memberActivated(ev.memberId)
+                events.memberActivated(ev.memberId)
                 break
             case 'resource-stocked':
                 break

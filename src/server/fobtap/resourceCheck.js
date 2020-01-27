@@ -18,7 +18,7 @@ module.exports = function(req, res, next){
     let member = utils.memberFromFob(req.body.fob)
     let resource = utils.getResource(req.body.resourceId)
     if (member && resource && access(member,resource)){
-        events.resourcesEvs.resourceUsed(
+        events.resourceUsed(
           req.body.resourceId,
           member.memberId,
           req.body.amount || 1,

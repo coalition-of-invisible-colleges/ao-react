@@ -33,7 +33,7 @@ function specResourcePurged(req, res, next){
   if (
     validators.isResourceId(req.body.resourceId, errRes)
   ){
-    events.resourcesEvs.resourcePurged(
+    events.resourcePurged(
       req.body.resourceId,
       req.body.blame,
       utils.buildResCallback(res)
@@ -53,7 +53,7 @@ function specResourceCreated(req, res, next){
     validators.isNotes(req.body.secret, errRes) &&
     validators.isBool(req.body.trackStock, errRes)
   ){
-    events.resourcesEvs.resourceCreated(
+    events.resourceCreated(
       req.body.resourceId,
       req.body.name,
       req.body.charged,
@@ -79,7 +79,7 @@ function specResourceUsed(req, res, next){
     validators.isNotes(req.body.notes, errRes)
   ){
     // check member balance
-    events.resourcesEvs.resourceUsed(
+    events.resourceUsed(
       req.body.resourceId,
       req.body.memberId,
       req.body.amount,
@@ -102,7 +102,7 @@ function specResourceStocked(req, res, next){
     validators.isAmount(req.body.paid, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.resourcesEvs.resourceStocked(
+    events.resourceStocked(
       req.body.resourceId,
       req.body.memberId,
       req.body.amount,
@@ -126,7 +126,7 @@ function specResourceBooked(req, res, next){
     validators.isNotes(req.body.charge, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.resourcesEvs.resourceBooked(
+    events.resourceBooked(
       req.body.resourceId,
       req.body.memberId,
       req.body.startTs,
@@ -146,7 +146,7 @@ function specResourceRemoved(req, res, next){
   if (
     validators.isResourceId(req.body.resourceId, errRes)
   ){
-    events.resourcesEvs.resourceRemoved(
+    events.resourceRemoved(
       req.body.resourceId,
       utils.buildResCallback(res)
     )

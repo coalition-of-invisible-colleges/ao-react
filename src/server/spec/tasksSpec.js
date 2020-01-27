@@ -87,7 +87,7 @@ function specTasksReceived(req, res, next){
     let errRes = []
     console.log("tasks rec called: ", req.body)
     if (true) { // XXX
-        events.tasksEvs.tasksReceived(
+        events.tasksReceived(
           req.body.tasks,
           req.body.blame,
           utils.buildResCallback(res))
@@ -106,7 +106,7 @@ function specInvoiceCreated(req, res, next){
         lightning.createInvoice(req.body.amount, "<3" +  uuidV1(), '~', 3600)
             .then(result => {
                 let addr = result['p2sh-segwit']
-                events.tasksEvs.invoiceCreated(req.body.taskId, result.bolt11, result.payment_hash, utils.buildResCallback(res))
+                events.invoiceCreated(req.body.taskId, result.bolt11, result.payment_hash, utils.buildResCallback(res))
             })
             .catch(err => {
                 console.log({err})
@@ -124,7 +124,7 @@ function specAddressUpdated(req, res, next){
         lightning.newAddress()
             .then(result => {
                 let addr = result['p2sh-segwit']
-                events.tasksEvs.addressUpdated(req.body.taskId, addr, utils.buildResCallback(res))
+                events.addressUpdated(req.body.taskId, addr, utils.buildResCallback(res))
             })
             .catch(err => {
                 res.status(200).send("attempt failed")
@@ -142,7 +142,7 @@ function specTaskGuilded(req, res, next){
     validators.isNotes(req.body.taskId, errRes) &&
     validators.isNotes(req.body.guild, errRes)
   ){
-    events.tasksEvs.taskGuilded(
+    events.taskGuilded(
       req.body.taskId,
       req.body.guild,
       utils.buildResCallback(res)
@@ -158,7 +158,7 @@ function specSubTasked(req, res, next){
     validators.isNotes(req.body.taskId, errRes) &&
     validators.isNotes(req.body.subTask, errRes)
   ){
-    events.tasksEvs.taskSubTasked(
+    events.taskSubTasked(
       req.body.taskId,
       req.body.subTask,
       req.body.memberId,
@@ -175,7 +175,7 @@ function specDeSubTasked(req, res, next){
     validators.isNotes(req.body.taskId, errRes) &&
     validators.isNotes(req.body.subTask, errRes)
   ){
-    events.tasksEvs.taskDeSubTasked(
+    events.taskDeSubTasked(
       req.body.taskId,
       req.body.subTask,
       utils.buildResCallback(res)
@@ -193,7 +193,7 @@ function specTaskCreated(req, res, next){
     validators.isNotes(req.body.deck, errRes) &&
     validators.isTaskId(req.body.inId)
   ){
-    events.tasksEvs.taskCreated(
+    events.taskCreated(
       req.body.name,
       req.body.color,
       req.body.deck,
@@ -216,7 +216,7 @@ function specTaskBountied(req, res, next) {
     validators.isBool(req.body.oneTime, errRes) &&
     validators.isMemberId(req.body.blame, errRes)
   ){
-    events.tasksEvs.taskBountied(
+    events.taskBountied(
       req.body.taskId,
       req.body.instructions,
       req.body.boost,
@@ -245,7 +245,7 @@ function specTaskPassed(req, res, next){
     validators.isMemberId(req.body.fromMemberId, errRes) &&
     validators.isMemberId(req.body.toMemberId, errRes)
   ){
-    events.tasksEvs.taskPassed(
+    events.taskPassed(
       req.body.taskId,
       req.body.fromMemberId,
       req.body.toMemberId,
@@ -274,7 +274,7 @@ function specTaskClaimed(req, res, next){
     validators.isMemberId(req.body.memberId, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.tasksEvs.taskClaimed(
+    events.taskClaimed(
       req.body.taskId,
       req.body.memberId,
       paid,
@@ -294,7 +294,7 @@ function specTaskUnclaimed(req, res, next){
     validators.isMemberId(req.body.memberId, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.tasksEvs.taskUnclaimed(
+    events.taskUnclaimed(
       req.body.taskId,
       req.body.memberId,
       req.body.blame,
@@ -313,7 +313,7 @@ function specTaskPrioritized(req, res, next){
   ){
       switch (req.body.type) {
 case 'task-prioritized':
-    events.tasksEvs.taskPrioritized(
+    events.taskPrioritized(
       req.body.taskId,
       req.body.inId,
       utils.buildResCallback(res)
@@ -331,7 +331,7 @@ function specTaskRefocused(req, res, next){
     validators.isTaskId(req.body.inId, errRes) &&
     validators.isTaskId(req.body.taskId, errRes)
   ){
-    events.tasksEvs.taskRefocused(
+    events.taskRefocused(
       req.body.taskId,
       req.body.inId,
       req.body.blame,
@@ -348,7 +348,7 @@ function specTaskCapUpdated(req, res, next){
     validators.isTaskId(req.body.taskId, errRes) &&
     validators.isAmount(req.body.amount, errRes)
   ){
-    events.tasksEvs.taskCapUpdated(
+    events.taskCapUpdated(
       req.body.taskId,
       req.body.amount,
       req.body.blame,
@@ -365,7 +365,7 @@ function specTaskRateUpdated(req, res, next){
     validators.isTaskId(req.body.taskId, errRes) &&
     validators.isAmount(req.body.amount, errRes)
   ){
-    events.tasksEvs.taskRateUpdated(
+    events.taskRateUpdated(
       req.body.taskId,
       req.body.amount,
       req.body.blame,
@@ -383,7 +383,7 @@ function specTaskInstructionsUpdated(req, res, next){
     validators.isTaskId(req.body.taskId, errRes) &&
     validators.isNotes(req.body.newInstructions, errRes)
   ){
-    events.tasksEvs.taskInstructionsUpdated(
+    events.taskInstructionsUpdated(
       req.body.taskId,
       req.body.newInstructions,
       req.body.blame,
@@ -400,7 +400,7 @@ function specTaskInstructionsUpdated(req, res, next){
 //     validators.isTaskId(req.body.taskId, errRes) &&
 //     validators.isAmount(req.body.amount, errRes)
 //   ){
-//     events.tasksEvs.taskBoosted(
+//     events.taskBoosted(
 //       req.body.taskId,
 //       req.body.amount,
 //       req.body.blame,
@@ -417,7 +417,7 @@ function specTaskRemoved(req, res, next){
   if (
     validators.isTaskId(req.body.taskId, errRes)
   ){
-    events.tasksEvs.taskRemoved(
+    events.taskRemoved(
       req.body.taskId,
       req.body.blame,
       utils.buildResCallback(res)
@@ -437,28 +437,28 @@ function specTaskMoved(req, res, next){
   ){
       switch (req.body.type) {
           case 'task-grabbed':
-              events.tasksEvs.taskGrabbed(
+              events.taskGrabbed(
                 req.body.taskId,
                 req.body.memberId,
                 utils.buildResCallback(res)
               )
               break
           case 'pile-grabbed':
-              events.tasksEvs.pileGrabbed(
+              events.pileGrabbed(
                 req.body.taskId,
                 req.body.memberId,
                 utils.buildResCallback(res)
               )
               break
           case 'task-dropped':
-              events.tasksEvs.taskDropped(
+              events.taskDropped(
                 req.body.taskId,
                 req.body.memberId,
                 utils.buildResCallback(res)
               )
               break
           case 'pile-dropped':
-              events.tasksEvs.pileDropped(
+              events.pileDropped(
                 req.body.taskId,
                 req.body.memberId,
                 utils.buildResCallback(res)
@@ -473,7 +473,7 @@ function specTaskMoved(req, res, next){
 function specTaskSwapped(req, res, next){
   let errRes = []
   if (validators.isTaskId(req.body.taskId, errRes)) {
-    events.tasksEvs.taskSwapped(
+    events.taskSwapped(
       req.body.taskId,
       req.body.swapId1,
       req.body.swapId2,
@@ -488,7 +488,7 @@ function specTaskSwapped(req, res, next){
 function specTasksReceived(req, res, next){
   let errRes = []
   if (true) {
-    events.tasksEvs.tasksReceived(
+    events.tasksReceived(
       req.body.tasks,
       req.body.blame,
       utils.buildResCallback(res)
@@ -501,7 +501,7 @@ function specTasksReceived(req, res, next){
 function specTaskAllocated(req, res, next) {
   let errRes = []
   if (validators.isTaskId(req.body.taskId, errRes)) {
-    events.tasksEvs.taskAllocated(
+    events.taskAllocated(
       req.body.taskId,
       req.body.allocatedId,
       req.body.blame,

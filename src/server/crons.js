@@ -34,17 +34,17 @@ function rent(){
     console.log("rent ran: ", {fixed, variable, numActiveMembers, perMonth, charged})
 
     activeMembers.forEach( m => {
-        events.membersEvs.memberCharged(m.memberId, charged, notes)
+        events.memberCharged(m.memberId, charged, notes)
     })
 
-    events.cashEvs.variableSet(0) // XXX not used anymore?
+    events.variableSet(0) // XXX not used anymore?
     dctrlDb.insertBackup(serverState)
 }
 
 function deactivate(){
     serverState.tasks.forEach(t => {
         if (t.boost <= 0){
-            events.membersEvs.memberDeactivated(t.taskId)
+            events.memberDeactivated(t.taskId)
         }
     })
 }

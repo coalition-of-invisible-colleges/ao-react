@@ -24,7 +24,7 @@ function specInvoiceCreated(req, res, next){
     validators.isAmount(req.body.sats, errRes)
   ){
     if (req.body.r_hash){
-        return events.invoicesEvs.resourceInvoiceCreated(
+        return events.resourceInvoiceCreated(
           req.body.ownerId,
           req.body.r_hash,
           req.body.payment_request,
@@ -34,7 +34,7 @@ function specInvoiceCreated(req, res, next){
         )
     }
 
-    events.invoicesEvs.invoiceCreated(
+    events.invoiceCreated(
       req.body.ownerId,
       req.body.memo,
       req.body.sats,
@@ -52,7 +52,7 @@ function specInvoiceRequested(req, res, next){
     validators.isNotes(req.body.memo, errRes) &&
     validators.isAmount(req.body.sats, errRes)
   ){
-    events.invoicesEvs.invoiceRequested(
+    events.invoiceRequested(
       req.body.ownerId,
       req.body.memo,
       req.body.sats,

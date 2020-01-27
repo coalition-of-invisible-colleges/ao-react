@@ -72,59 +72,29 @@ function applyBackup(b){
 }
 
 function applyEvent(state, ev) {
-      M.cashMuts(state.cash, ev)
-      M.membersMuts(state.members, ev)
-      M.resourcesMuts(state.resources, ev)
-      M.sessionsMuts(state.sessions, ev)
-      M.tasksMuts(state.tasks, ev)
-      M.aoMuts(state.ao, ev)
+    M.cashMuts(state.cash, ev)
+    M.membersMuts(state.members, ev)
+    M.resourcesMuts(state.resources, ev)
+    M.sessionsMuts(state.sessions, ev)
+    M.tasksMuts(state.tasks, ev)
+    M.aoMuts(state.ao, ev)
 }
 
 function initialize(callback) {
     dctrlDb.recover((err, backup) => {
           let ts = 0
           if (backup.length > 0){
-              console.log( backup[0].members.length, " members in backup")
-              console.log( backup[0].tasks.length, " task in backup")
-              console.log( backup[0].resources.length, " resources in backup")
               ts = backup[0].timestamp
-              let knownMIds = []
-              let knownTIds = []
-              let knownRIds = []
-              backup[0].members = backup[0].members.filter(m => {
-                  if (knownMIds.indexOf(m.memberId) === -1){
-                      knownMIds.push(m.memberId)
-                      return true
-                  }
-              })
-              backup[0].tasks = backup[0].tasks.filter(t => {
-                  if (knownTIds.indexOf(t.taskId) === -1){
-                      knownTIds.push(t.taskId)
-                      return true
-                  }
-              })
-              backup[0].resources = backup[0].resources.filter(r => {
-                  if (knownRIds.indexOf(r.resourceId) === -1){
-                      knownRIds.push(r.resourceId)
-                      return true
-                  }
-              })
-              console.log( backup[0].members.length, " members in backup after dedup")
-              console.log( backup[0].tasks.length, " tasks in backup after dedup")
-              console.log( backup[0].resources.length, " resources in backup after dedup")
               applyBackup(backup[0])
           }
           dctrlDb.getAll(ts, (err, all) => {
               if (err) return callback(err)
-
               all.forEach( ev => {
                   applyEvent(serverState, Object.assign({}, ev) )
                   applyEvent(pubState, removeSensitive( Object.assign({}, ev) ))
               })
-
               applyEvent(serverState, {type: 'cleanup'})
               applyEvent(pubState, {type: 'cleanup'})
-
               callback(null)
           })
     })

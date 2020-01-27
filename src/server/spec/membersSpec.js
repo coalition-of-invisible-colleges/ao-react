@@ -62,7 +62,7 @@ function specMemberFieldUpdated(req, res, next){
     validators.isField(req.body.field, errRes) &&
     validators.isNotes(req.body.newfield, errRes)
   ){
-    events.membersEvs.memberFieldUpdated(
+    events.memberFieldUpdated(
         req.body.memberId,
         req.body.field,
         req.body.newfield,
@@ -80,7 +80,7 @@ function specMemberCreated(req, res, next){
     validators.isFob(req.body.fob, errRes) &&
     validators.isNotes(req.body.secret)
   ){
-    events.membersEvs.memberCreated(
+    events.memberCreated(
       req.body.name,
       req.body.fob,
       req.body.secret,
@@ -99,7 +99,7 @@ function specMemberPaid(req, res, next){
     validators.isBool(req.body.isCash, errRes) &&
     validators.isNotes(req.body.fob, errRes)
   ){
-    events.membersEvs.memberPaid(
+    events.memberPaid(
       req.body.memberId,
       req.body.paid,
       req.body.isCash,
@@ -118,7 +118,7 @@ function specMemberCharged(req, res, next){
     validators.isAmount(req.body.charged, errRes) &&
     validators.isNotes(req.body.notes, errRes)
   ){
-    events.membersEvs.memberCharged(
+    events.memberCharged(
       req.body.memberId,
       req.body.charged,
       req.body.notes,
@@ -134,7 +134,7 @@ function specMemberDeactivated(req, res, next){
   if (
     validators.isMemberId(req.body.memberId, errRes)
   ){
-    events.membersEvs.memberDeactivated(
+    events.memberDeactivated(
       req.body.memberId,
       utils.buildResCallback(res)
     )
@@ -148,7 +148,7 @@ function specMemberPurged(req, res, next){
   if (
     validators.isMemberId(req.body.memberId, errRes)
   ){
-    events.membersEvs.memberPurged(
+    events.memberPurged(
       req.body.memberId,
       req.body.blame,
       utils.buildResCallback(res)
@@ -163,7 +163,7 @@ function specMemberActivated(req, res, next){
   if (
     validators.isMemberId(req.body.memberId, errRes)
   ){
-    events.membersEvs.memberActivated(
+    events.memberActivated(
       req.body.memberId,
       utils.buildResCallback(res)
     )
@@ -178,7 +178,7 @@ function specBadgeAdded(req, res, next){
       validators.isMemberId(req.body.memberId, errRes) &&
       validators.isNotes( req.body.badge )
     ){
-      events.membersEvs.badgeAdded(
+      events.badgeAdded(
         req.body.memberId,
         req.body.badge,
         utils.buildResCallback(res)
@@ -194,7 +194,7 @@ function specBadgeRemoved(req, res, next){
       validators.isMemberId(req.body.memberId, errRes) &&
       validators.isNotes( req.body.badge )
     ){
-      events.membersEvs.badgeRemoved(
+      events.badgeRemoved(
         req.body.memberId,
         req.body.badge,
         utils.buildResCallback(res)
@@ -210,7 +210,7 @@ function specBadgeHidden(req, res, next){
       validators.isMemberId(req.body.memberId, errRes) &&
       validators.isNotes( req.body.badge )
     ){
-      events.membersEvs.badgeHidden(
+      events.badgeHidden(
         req.body.memberId,
         req.body.badge,
         utils.buildResCallback(res)
@@ -225,7 +225,7 @@ function specDogeBarked(req, res, next) {
     if (
       validators.isMemberId(req.body.memberId, errRes)
     ){
-      events.membersEvs.dogeBarked(
+      events.dogeBarked(
         req.body.memberId,
         utils.buildResCallback(res)
       )
@@ -238,7 +238,7 @@ function specDogeBarked(req, res, next) {
 function specDogeMuted(req, res, next) {
     let errRes = []
     if (validators.isMemberId(req.body.memberId, errRes)){
-      events.membersEvs.dogeMuted(
+      events.dogeMuted(
         req.body.memberId,
         utils.buildResCallback(res)
       )
@@ -251,7 +251,7 @@ function specDogeMuted(req, res, next) {
 function specDogeUnmuted(req, res, next) {
     let errRes = []
     if (validators.isMemberId(req.body.memberId, errRes)){
-      events.membersEvs.dogeUnmuted(
+      events.dogeUnmuted(
         req.body.memberId,
         utils.buildResCallback(res)
       )
@@ -307,9 +307,9 @@ function specDogeMigrated(req, res, next){
         setTimeout(() => {
             connector.postEvent(serverAddress, serverSecret, newEvent, (err, state) => {
                 if (err){
-                    return events.aoEvs.aoRelayAttempted(serverAddress, false)
+                    return events.aoRelayAttempted(serverAddress, false)
                 }
-                events.aoEvs.aoRelayAttempted(serverAddress, true)
+                events.aoRelayAttempted(serverAddress, true)
             })
         }, delay)
         next100 = tasks.splice(0, 50)

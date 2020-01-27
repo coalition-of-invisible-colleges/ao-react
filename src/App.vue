@@ -1,15 +1,15 @@
 <template lang='pug'>
 
 .app
-  contexts
-  sun
-  helm
-  bull
-  loader
-  event-feed
-  status
-  task-create
-  router-view
+    contexts
+    sun
+    helm
+    bull
+    loader
+    event-feed
+    status
+    task-create
+    router-view
 </template>
 
 <script>

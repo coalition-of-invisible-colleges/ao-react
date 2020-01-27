@@ -19,7 +19,7 @@ function specSessionKilled(req, res, next){
   if (
     validators.isSession(req.body.session, errRes)
   ){
-    events.sessionsEvs.sessionKilled(
+    events.sessionKilled(
       req.body.session,
       utils.buildResCallback(res)
     )
