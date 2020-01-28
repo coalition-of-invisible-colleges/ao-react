@@ -1,4 +1,4 @@
-import M from '../mutations'
+const M = require('../mutations')
 
 const state = []
 
@@ -16,7 +16,7 @@ const actions = {
 
 }
 
-export default {
+module.exports = {
   state,
   mutations,
   actions

@@ -14,7 +14,7 @@
 <script>
 import _ from 'lodash'
 import Linky from './Linky'
-import SoundFX from '../utils/sounds'
+
 
 function getDMY(ts){
     let d = new Date(ts)
@@ -42,7 +42,7 @@ export default {
             }
         },
         goIn(taskId){
-            SoundFX.playPageTurn()
+
             let parents = []
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)

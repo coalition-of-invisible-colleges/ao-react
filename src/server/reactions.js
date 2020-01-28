@@ -1,6 +1,6 @@
-import { getResource } from './spec/utils'
-import events from './events'
-import { serverState } from './state'
+const { getResource } = require( './spec/utils')
+const events = require( './events')
+const { serverState } = require( './state')
 
 function checkForChargedEvent( resourceId ){
     let charged

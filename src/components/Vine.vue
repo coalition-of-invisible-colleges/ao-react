@@ -7,7 +7,7 @@
 <script>
 
 import FormBox from './FormBox'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['b'],

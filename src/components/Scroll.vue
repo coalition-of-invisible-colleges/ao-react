@@ -11,7 +11,7 @@
 
 import calculations from '../calculations'
 import FormBox from './FormBox'
-import SoundFX from '../utils/sounds'
+
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
@@ -42,7 +42,7 @@ export default {
         let Press = new Hammer.Press({ time: 500 })
         mc.add(Press)
         mc.on('press', (e) => {
-            SoundFX.playBoatCapsize()
+
             this.$router.push('/archive')
             window.scrollTo(0, 0)
             e.stopPropagation()
@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         rollsafeIt(){
-            SoundFX.playBoatCapsize()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-de-sub-tasked',
                 taskId: this.inId,
@@ -63,7 +63,7 @@ export default {
             })
         },
         canIt(){
-            SoundFX.playBoatCapsize()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-removed',
                 taskId: this.b.taskId,

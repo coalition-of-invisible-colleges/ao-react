@@ -43,7 +43,7 @@
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import Themes from '../utils/themes'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     name: 'status',
@@ -75,7 +75,7 @@ export default {
         dogemc.add(dogeSwipeRight)
         dogemc.on('swiperight', (e) => {
             if(this.$store.state.ao.length < 1) {
-                SoundFX.playPortalBlocked()
+
                 return
             }
             console.log("swiperight")

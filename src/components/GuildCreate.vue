@@ -9,7 +9,7 @@
 
 import SharedTitle from './SharedTitle'
 import FormBox from './FormBox'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['b', 'editing'],
@@ -33,12 +33,12 @@ export default {
                     taskId: this.b.taskId,
                     guild: false,
                 })
-                SoundFX.playBattleCry()
+
                 this.$emit('closeit')
                 return
             }
             this.$emit('closeit')
-            SoundFX.playBattleCry()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-guilded',
                 taskId: this.b.taskId,

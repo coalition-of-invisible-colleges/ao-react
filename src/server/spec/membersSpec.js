@@ -1,10 +1,9 @@
-import utils from './utils'
-import validators from './validators'
-import events from '../events'
-import connector from '../connector'
-import state from '../state'
-import Cards from '../../utils/cards'
-
+const utils = require( './utils')
+const validators = require( './validators')
+const events = require( '../events')
+const connector = require( '../connector')
+const state = require( '../state')
+const Cards = require( '../../utils/cards')
 // export single middleware for each type
 module.exports = function(req,res,next){
   switch (req.body.type){

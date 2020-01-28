@@ -1,12 +1,12 @@
-import express from 'express'
-import path from 'path'
-import bodyParser from 'body-parser'
-import state from './state'
-import spec from './spec'
-import fobtap from './fobtap'
-import { serverAuth } from './auth'
-import { lightningRouter } from './lightning'
-import publicAccess from './publicAccess'
+const express = require( 'express')
+const path = require( 'path')
+const bodyParser = require( 'body-parser')
+const state = require( './state')
+const spec = require( './spec')
+const fobtap = require( './fobtap')
+const { serverAuth } = require( './auth')
+const { lightningRouter } = require( './lightning')
+const publicAccess = require( './publicAccess')
 
 module.exports = function applyRouter(app){
 

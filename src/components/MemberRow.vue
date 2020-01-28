@@ -24,7 +24,7 @@
 import Addr from './Addr'
 import PreviewDeck from './PreviewDeck'
 import SimplePriorities from './SimplePriorities'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['m'],
@@ -36,7 +36,7 @@ export default {
             return isBull
         },
         goIn(taskId){
-            SoundFX.playPageTurn()
+
             let panel = [taskId]
             let parents = [  ]
             let top = 0

@@ -1,6 +1,6 @@
-import utils from './utils'
-import validators from './validators'
-import events from '../events'
+const utils = require( './utils')
+const validators = require( './validators')
+const events = require( '../events')
 
 // export single middleware for each type
 module.exports = function(req,res, next){

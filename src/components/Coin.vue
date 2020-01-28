@@ -10,7 +10,7 @@
 
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import SoundFX from '../utils/sounds'
+
 import Current from './Current'
 
 export default {
@@ -66,14 +66,14 @@ export default {
     methods: {
         toggleGrab(){
             if(this.isGrabbed) {
-                SoundFX.playTwinkleDown()
+
                 this.$store.dispatch("makeEvent", {
                     type: 'task-dropped',
                     taskId: this.b.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
             } else {
-                SoundFX.playTwinkleUp()
+
                 this.$store.dispatch("makeEvent", {
                     type: 'task-grabbed',
                     taskId: this.b.taskId,
@@ -83,14 +83,14 @@ export default {
         },
         grabOrDropPile() {
             if(!this.isGrabbed) {
-                SoundFX.playTwinkleUp()
+
                 this.$store.dispatch("makeEvent", {
                     type: 'pile-grabbed',
                     taskId: this.b.taskId,
                     memberId: this.$store.getters.member.memberId,
                 })
             } else {
-                SoundFX.playTwinkleDown()
+
                 this.$store.dispatch("makeEvent", {
                     type: 'pile-dropped',
                     taskId: this.b.taskId,
@@ -100,7 +100,7 @@ export default {
         },
         upHand() {
             if(!this.inHand) {
-                SoundFX.playTwinkleUp()
+
                 this.$store.dispatch("makeEvent", {
                     type: 'task-sub-tasked',
                     subTask: this.b.taskId,
@@ -110,7 +110,7 @@ export default {
         },
         downHand() {
             if(this.inHand) {
-                SoundFX.playBoatCapsize()
+
                 this.$store.dispatch("makeEvent", {
                     type: 'task-de-sub-tasked',
                     subTask: this.b.taskId,

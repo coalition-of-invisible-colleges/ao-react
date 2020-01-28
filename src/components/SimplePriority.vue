@@ -24,7 +24,7 @@ import Propagating from 'propagating-hammerjs'
 import Linky from './Linky'
 import Hypercard from './Card'
 import Tally from './Tally'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['taskId', 'inId', 'c'],
@@ -69,7 +69,7 @@ export default {
     },
     methods: {
       goIn(taskId){
-          SoundFX.playPageTurn()
+
           let panel = [taskId]
           let parents = [  ]
           let top = 0
@@ -98,7 +98,7 @@ export default {
           this.$router.push("/" + this.$store.state.upgrades.mode)
       },
       complete(){
-          SoundFX.playTickMark()
+
           this.$store.dispatch("makeEvent", {
               type: 'task-claimed',
               inId: this.inId,
@@ -108,7 +108,7 @@ export default {
           })
       },
       uncheck(){
-          SoundFX.playTickMark()
+
           this.$store.dispatch("makeEvent", {
               type: 'task-unclaimed',
               taskId: this.taskId,
@@ -118,7 +118,7 @@ export default {
       },
       copyCardToClipboard(){
           navigator.clipboard.writeText(this.card.name).then(function() {
-              SoundFX.playChunkSwap()
+
           }, function() {
               console.log("copy failed")
           })

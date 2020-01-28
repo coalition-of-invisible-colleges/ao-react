@@ -24,7 +24,7 @@
 import Addr from './Addr'
 import PreviewDeck from './PreviewDeck'
 import Vouch from './Vouch'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['r', 'c'],
@@ -117,7 +117,7 @@ export default {
             this.$store.dispatch("makeEvent", newEv)
         },
         goIn(){
-            SoundFX.playPageTurn()
+
             let top = this.c.indexOf(this.r.resourceId)
             console.log("goIn called with TOP: ", top)
             if (top > -1){

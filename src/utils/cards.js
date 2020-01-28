@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import _ from 'lodash'
-import cryptoUtils from '../crypto'
+const Vue = require( 'vue')
+const _ = require('lodash')
+const cryptoUtils = require('../crypto')
 
 function shortName(name) {
     let limit = 280
@@ -97,7 +97,7 @@ function safeMerge(cardA, cardZ) {
 
 // generalized goIn and other card utility functions should go here
 
-export default {
+module.exports = {
     shortName,
     cardColorCSS,
     blankCard,

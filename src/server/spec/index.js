@@ -1,12 +1,12 @@
-import express from 'express'
-import { serverState } from '../state'
+const express = require( 'express')
+const { serverState } = require( '../state')
 
-import membersSpec from './membersSpec'
-import tasksSpec from './tasksSpec'
-import cashSpec from './cashSpec'
-import resourcesSpec from './resourcesSpec'
-import invoicesSpec from './invoicesSpec'
-import sessionsSpec from './sessionsSpec'
+const membersSpec = require( './membersSpec')
+const tasksSpec = require( './tasksSpec')
+const cashSpec = require( './cashSpec')
+const resourcesSpec = require( './resourcesSpec')
+const invoicesSpec = require( './invoicesSpec')
+const sessionsSpec = require( './sessionsSpec')
 
 const router = express.Router()
 

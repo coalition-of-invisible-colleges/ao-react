@@ -1,8 +1,8 @@
-import express from 'express'
-import _ from 'lodash'
-import state from './state'
-import events from './events'
-import utils from './spec/utils'
+const express = require( 'express')
+const _ = require( 'lodash')
+const state = require( './state')
+const events = require( './events')
+const utils = require( './spec/utils')
 
 const router = express.Router()
 

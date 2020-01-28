@@ -60,7 +60,7 @@ function getMeridienTime(ts){
     return { weekday, year, month, date, hour, minute, meridien }
 }
 
-export default {
+module.exports = {
   calculateTaskPayout,
   cadToSats,
   satsToCad,

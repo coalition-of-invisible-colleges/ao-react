@@ -2,21 +2,10 @@
 // The current state is the result of all the events in the system fed through the mutation functions.
 // The first argument is the current state segment and the second argument is the event that is being applied to the state.
 // `server/state.js` for server; `modules/*` for vue client.
-import _ from 'lodash'
-import uuidv1 from 'uuid/v1'
-import cryptoUtils from './crypto'
-import cards from './utils/cards'
-
-let mutations = {
-    aoMuts,
-    cashMuts,
-    membersMuts,
-    resourcesMuts,
-    sessionsMuts,
-    tasksMuts,
-}
-
-export default mutations
+const _ = require( 'lodash')
+const uuidv1 = require( 'uuid/v1')
+const cryptoUtils = require( './crypto')
+const cards = require( './utils/cards')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
@@ -888,4 +877,13 @@ function tasksMuts(tasks, ev) {
             })
             break
     }
+}
+
+module.exports = {
+    aoMuts,
+    cashMuts,
+    membersMuts,
+    resourcesMuts,
+    sessionsMuts,
+    tasksMuts,
 }

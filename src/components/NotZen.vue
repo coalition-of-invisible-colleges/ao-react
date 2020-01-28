@@ -6,7 +6,7 @@
 <script>
 
 import HelmControl from '../utils/helm'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['taskId'],
@@ -26,7 +26,7 @@ export default {
     methods: {
         goBoat() {
             HelmControl.flashHelm(0.5)
-            SoundFX.playCaChunk()
+
             setTimeout(() => {this.$router.push("/boat") }, 100 )
         }
     }

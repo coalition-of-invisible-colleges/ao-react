@@ -25,7 +25,7 @@ div
 <script>
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import SoundFX from '../utils/sounds'
+
 import Dimensions from '../utils/dimensions'
 
 export default {
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     nextMode() {
-        SoundFX.playCaChunk()
+
         this.$store.commit('nextMode')
     },
     goFront(mode) {
@@ -45,7 +45,7 @@ export default {
         }
         this.$store.commit('setDimension', 1)
         this.$store.commit('startLoading', 'sun-' + mode)
-        SoundFX.playCaChunk()
+
         this.$router.push('/front/' + mode)
     },
     close(mode){

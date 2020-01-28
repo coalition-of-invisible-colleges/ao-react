@@ -1,4 +1,4 @@
-import M from '../mutations'
+const M = require( '../mutations')
 
 const state = {
     subscribed: [],
@@ -41,7 +41,7 @@ const mutations = {
 const actions = {}
 const getters = {}
 
-export default {
+module.exports = {
     state,
     mutations,
     actions,

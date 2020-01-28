@@ -4,14 +4,16 @@
     img.thegoldendoge(src='../assets/images/sundoge.png').center
     h1.up oracle
     hypercard.bounty(v-if='topcard'  :b='topcard'  :key='topcard.taskId'  :c='[topcard.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(topcard.taskId)')
+    //- missions
 </template>
 
 <script>
 import Hypercard from "./Card"
+import Missions from "./Missions"
 
 export default {
   components:{
-      Hypercard,
+      Hypercard,Missions
   },
   mounted(){
       this.$store.commit('stopLoading')

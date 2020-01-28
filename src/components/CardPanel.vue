@@ -57,7 +57,7 @@ import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 
 import Hypercard from "./Card"
-import SoundFX from '../utils/sounds'
+
 
 export default {
   props: ['c', 'taskId'],
@@ -161,18 +161,18 @@ export default {
   methods:{
     toggleOpen(){
         if(!this.open) {
-            SoundFX.playScrollOpen()
+
         } else {
-            SoundFX.playBookClose()
+
         }
         this.open = !this.open
     },
     first() {
-        SoundFX.playPageTurn()
+
         this.top = 0
     },
     previous(){
-        SoundFX.playPageTurn()
+
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
@@ -180,12 +180,12 @@ export default {
         this.componentKey ++
     },
     next(){
-        SoundFX.playPageTurn()
+
         this.top = (this.top + 1) % this.c.length
         this.componentKey ++
     },
     last() {
-        SoundFX.playPageTurn()
+
         this.top = this.c.length - 1
     },
     swap(direction){
@@ -201,7 +201,7 @@ export default {
         } else if (swapIndex > this.c.length - 1) {
             swapIndex = 0
         }
-        SoundFX.playChunkSwap()
+
         this.$store.dispatch("makeEvent", {
             type: 'task-swapped',
             taskId: this.taskId,
@@ -212,9 +212,9 @@ export default {
     },
     toggleStacks(){
         if(this.$store.state.upgrades.stacks === 1) {
-            SoundFX.playScrollOpen()
+
         } else {
-            SoundFX.playBookClose()
+
         }
         this.$store.commit('toggleStacks')
     },

@@ -1,7 +1,7 @@
-import utils from './utils'
-import validators from './validators'
-import events from '../events'
-import state from '../state'
+const utils = require( './utils')
+const validators = require( './validators')
+const events = require( '../events')
+const state = require( '../state')
 
 module.exports = function(req,res, next){
   switch (req.body.type){
@@ -69,7 +69,7 @@ function specResourceCreated(req, res, next){
 function specResourceUsed(req, res, next){
   let errRes = []
   console.log('trying to use')
-  
+
 
   if (
     validators.isActiveMemberId(req.body.memberId, errRes) &&

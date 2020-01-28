@@ -1,11 +1,9 @@
-import Kefir from 'kefir'
-import config from '../../configuration'
-import cryptoUtils from '../crypto'
-import uuidV1 from 'uuid/v1'
-import _ from 'lodash'
-// import s from './bs'
-
-import dbengine from  'better-sqlite3'
+const Kefir = require('kefir')
+const _ = require('lodash')
+const uuidV1 = require('uuid/v1')
+const dbengine = require( 'better-sqlite3')
+const config = require('../../configuration')
+const cryptoUtils = require('../crypto')
 
 const preparedStmts = {};
 

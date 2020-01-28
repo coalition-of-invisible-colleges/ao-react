@@ -41,7 +41,7 @@ import Hypercard from "./Card"
 import Panels from './Panels'
 import GiftBox from './GiftBox'
 import Auth from './Auth'
-import SoundFX from '../utils/sounds'
+
 
 export default {
   components:{
@@ -51,14 +51,14 @@ export default {
   },
   methods:{
       goWithinPanel(n){
-          SoundFX.playPageTurn()
+
           let i = this.$store.state.context.panel.indexOf(n)
           if (i > -1){
               this.$store.commit("setTop", i)
           }
       },
       toggleShowComplete(){
-          SoundFX.playTickMark()
+
           this.$store.commit("toggleCompleted")
       },
       setPageTitle(){

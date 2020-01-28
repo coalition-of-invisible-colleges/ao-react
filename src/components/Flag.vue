@@ -25,7 +25,7 @@ import PayAddress from './PayAddress'
 import Tag from './Tag'
 import ResourceBook from './ResourceBook'
 import HelmControl from '../utils/helm'
-import SoundFX from '../utils/sounds'
+
 import Dimensions from '../utils/dimensions'
 import GuildCreate from './GuildCreate'
 
@@ -105,21 +105,21 @@ export default {
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
             HelmControl.flashHelm()
-            SoundFX.playCaChunk()
+
             HelmControl.previousUpgradeMode(this.$router)
             e.stopPropagation()
         })
 
         mc.on('swiperight', (e) => {
             HelmControl.flashHelm()
-            SoundFX.playCaChunk()
+
             HelmControl.nextUpgradeMode(this.$router)
             e.stopPropagation()
         })
     },
     methods: {
         complete(){
-            SoundFX.playTickMark()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 inId: this.inId,
@@ -129,7 +129,7 @@ export default {
             })
         },
         uncheck(){
-            SoundFX.playTickMark()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-unclaimed',
                 taskId: this.b.taskId,
@@ -144,7 +144,7 @@ export default {
             this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
-            SoundFX.playTwinkleUp()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
@@ -155,9 +155,9 @@ export default {
             if (!this.isFlagged) {
                 if (this.inId){
                     if(this.inId === this.$store.getters.memberCard.taskId) {
-                        SoundFX.playDogeBark()
+
                     } else {
-                        SoundFX.playSailUnfurl()
+
                     }
                     this.$store.dispatch("makeEvent", {
                       type: 'task-prioritized',
@@ -169,7 +169,7 @@ export default {
                 }
             } else {
                 if (this.inId){
-                    SoundFX.playBoatCapsize()
+
                     this.$store.dispatch("makeEvent", {
                       type: 'task-refocused',
                       taskId: this.b.taskId,
@@ -182,14 +182,14 @@ export default {
         },
         dogeIt(){
             if(this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) === -1) {
-                SoundFX.playDogeBark()
+
                 this.$store.dispatch("makeEvent", {
                   type: 'task-prioritized',
                   taskId: this.b.taskId,
                   inId: this.$store.getters.memberCard.taskId,
                 })
             } else {
-                SoundFX.playBoatCapsize()
+
                 this.$store.dispatch("makeEvent", {
                   type: 'task-refocused',
                   taskId: this.b.taskId,

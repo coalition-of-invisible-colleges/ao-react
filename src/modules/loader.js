@@ -1,6 +1,6 @@
-import request from 'superagent'
-import uuidV1 from 'uuid/v1'
-import io from 'socket.io-client'
+const request = require( 'superagent')
+const uuidV1 = require( 'uuid/v1')
+const io = require( 'socket.io-client')
 const socket = io()
 
 var attached = false
@@ -137,7 +137,7 @@ const mutations = {
     }
 }
 
-export default {
+module.exports = {
     state,
     mutations,
     actions

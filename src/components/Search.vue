@@ -16,7 +16,7 @@
 import _ from 'lodash'
 import request from "superagent"
 import Current from './Current'
-import SoundFX from '../utils/sounds'
+
 import Cards from '../utils/cards'
 import Dimensions from '../utils/dimensions'
 
@@ -107,7 +107,7 @@ export default {
     methods: {
         goIn(taskId){
             clearTimeout(this.inDebounce)
-            SoundFX.playPageTurn()
+
             let panel = [taskId]
             let parents = [  ]
             let top = 0
@@ -157,7 +157,7 @@ export default {
             })
         },
         createOrFindTask(){
-            SoundFX.playPageTurn()
+
             let foundId = this.matchCard
             let potentialCard = this.task.name.trim()
             if(!foundId) {

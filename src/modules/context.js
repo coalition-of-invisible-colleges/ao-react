@@ -1,6 +1,5 @@
-import Vue from 'vue'
-import SoundFX from '../utils/sounds'
-import _ from 'lodash'
+const Vue = require( 'vue')
+const _ = require( 'lodash')
 
 // const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
@@ -91,7 +90,6 @@ const mutations = {
 
 const actions = {
     goIn({commit, state, getters}, pContext ){
-        SoundFX.playPageTurn()
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
         pContext.parents.forEach(p => {
@@ -102,7 +100,6 @@ const actions = {
         // }
     },
     goUp({commit, state}, pContext){
-        SoundFX.playPageTurn()
         commit("goToParent", pContext.target)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
@@ -111,7 +108,7 @@ const actions = {
 
 const getters = {}
 
-export default {
+module.exports = {
     state,
     mutations,
     actions,

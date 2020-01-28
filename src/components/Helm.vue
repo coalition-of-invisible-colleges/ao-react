@@ -25,7 +25,7 @@ import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import HelmControl from '../utils/helm'
 import Dimensions from '../utils/dimensions'
-import SoundFX from '../utils/sounds'
+
 import Status from './Status'
 
 export default {
@@ -37,7 +37,7 @@ export default {
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
             HelmControl.flashHelm()
-            SoundFX.playCaChunk()
+
             HelmControl.previousUpgradeMode(this.$router)
             e.stopPropagation()
         })
@@ -146,7 +146,7 @@ export default {
         rmc.add(Tap2)
         rmc.on('tap', (e) => {
             HelmControl.flashHelm(0.5)
-            SoundFX.playCaChunk()
+
             HelmControl.nextUpgradeMode(this.$router)
         })
 
@@ -157,7 +157,7 @@ export default {
         lmc.add(Tap3)
         lmc.on('tap', (e) => {
             HelmControl.flashHelm(0.5)
-            SoundFX.playCaChunk()
+
             HelmControl.previousUpgradeMode(this.$router)
         })
     },
@@ -173,14 +173,14 @@ export default {
         goUni(mode, silent = false) {
             if(Dimensions.isDeck(this.$router.currentRoute.path, mode)) {
                 if(!silent) {
-                    SoundFX.playPortalBlocked()
+
                 }
                 return
             }
             if(!this.isUni) {
-                SoundFX.playPortalTransit()
+
             } else {
-                SoundFX.playCaChunk()
+
             }
             this.$store.commit('setDimension', 0)
             this.$store.commit('startLoading', 'uni')
@@ -192,13 +192,13 @@ export default {
         },
         goFront(mode) {
             if(Dimensions.isFront(this.$router.currentRoute.path, mode)) {
-                SoundFX.playPortalBlocked()
+
                 return
             }
             if(mode === 'doge') {
-                SoundFX.playDogeBark()
+
             } else {
-                SoundFX.playCaChunk()
+
             }
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + mode)
@@ -211,11 +211,11 @@ export default {
             HelmControl.flashHelm(0.5)
         },
         nextMode() {
-            SoundFX.playCaChunk()
+
             HelmControl.nextUpgradeMode(this.$router)
         },
         goHome(taskId){
-            SoundFX.playPortalTransit()
+
             let parents = []
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)

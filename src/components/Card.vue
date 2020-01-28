@@ -52,7 +52,7 @@ import Tally from './Tally'
 import Linky from './Linky'
 import SimplePriorities from './SimplePriorities'
 import Current from './Current'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['b', 'inId', 'c'],
@@ -85,7 +85,7 @@ export default {
     },
     methods: {
         goIn(){
-            SoundFX.playPageTurn()
+
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -131,14 +131,14 @@ export default {
           })
         },
         copyCardToClipboard(){
-          SoundFX.playChunkSwap()
+
           console.log('attemt to copy, ', this.b.name)
           navigator.clipboard.writeText(this.b.name)
               .then(x => console.log('success', x))
               .catch(err => console.log('fail', err))
         },
         deaction(){
-          SoundFX.playPageTurn()
+
           this.$store.commit("setAction", false)
         },
     },

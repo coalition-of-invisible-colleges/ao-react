@@ -1,11 +1,11 @@
-import utils from './utils'
-import uuidV1 from 'uuid/v1'
+const utils = require( './utils')
+const uuidV1 = require( 'uuid/v1')
 
-import validators from './validators'
-import events from '../events'
-import state from '../state'
-import calculations from '../../calculations'
-import lightning from '../lightning'
+const validators = require( './validators')
+const events = require( '../events')
+const state = require( '../state')
+const calculations = require( '../../calculations')
+const lightning = require( '../lightning')
 
 module.exports = function(req,res, next){
   switch (req.body.type){
@@ -512,7 +512,7 @@ function specTaskAllocated(req, res, next) {
   }
 }
 
-import Connector from '../connector'
+// import Connector from '../connector'
 
 function specStateRequested(req, res, next) {
   let errRes = []

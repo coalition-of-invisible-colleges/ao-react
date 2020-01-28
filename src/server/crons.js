@@ -1,8 +1,8 @@
 
-import cron from 'cron'
-import events from './events'
-import {serverState} from './state'
-import dctrlDb from './dctrlDb'
+const cron = require('cron')
+const events = require('./events')
+const {serverState} = require('./state')
+const dctrlDb = require('./dctrlDb')
 
 const rentJob = new cron.CronJob({
   cronTime: '0 0 0 1 * *',

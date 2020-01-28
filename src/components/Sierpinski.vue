@@ -12,7 +12,7 @@
 
 <script>
 
-import SoundFX from '../utils/sounds'
+
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 
@@ -31,7 +31,7 @@ export default {
 
         mc.on('singletap', (e) => {
             console.log("singletap")
-            SoundFX.playTickMark()
+
             this.togglePrime()
             e.stopPropagation()
         })

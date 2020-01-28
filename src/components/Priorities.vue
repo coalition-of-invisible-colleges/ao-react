@@ -21,7 +21,7 @@
 import Hypercard from './Card'
 import Hyperpriority from './Priority'
 import _ from 'lodash'
-import SoundFX from '../utils/sounds'
+
 
 export default {
   mounted() {
@@ -40,7 +40,7 @@ export default {
       }
     },
     allocate(taskId){
-      SoundFX.playSailUnfurl()
+
       this.$store.dispatch("makeEvent", {
         type: 'task-allocated',
         taskId: this.$store.getters.contextCard.taskId,

@@ -1,4 +1,4 @@
-import Vue from 'vue'
+const Vue = require( 'vue')
 
 const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
@@ -92,7 +92,7 @@ const mutations = {
 const actions = {}
 const getters = {}
 
-export default {
+module.exports = {
     state,
     mutations,
     actions,

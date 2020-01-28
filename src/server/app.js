@@ -1,21 +1,21 @@
 
 let PORT = process.env.PORT || 8003
 
-import express from 'express'
-import dctrlDb from './dctrlDb'
-import path from "path"
-import socketProtector from 'socketio-auth'
-import socketIo from 'socket.io'
-import state from './state'
-import reactions from './reactions'
-import applyRouter from './router'
-import { socketAuth } from './auth'
-import { watchSpot } from './exchangeRate'
-import Kefir from 'kefir'
-import cronStarter from './crons'
-import lightning from './lightning'
-import connector from   './connector'
-import { watchAos } from   './peerState'
+const express = require('express')
+const dctrlDb = require('./dctrlDb')
+const path = require("path")
+const socketProtector = require('socketio-auth')
+const socketIo = require('socket.io')
+const state = require('./state')
+const reactions = require('./reactions')
+const applyRouter = require('./router')
+const { socketAuth } = require('./auth')
+const { watchSpot } = require('./exchangeRate')
+const Kefir = require('kefir')
+const cronStarter = require('./crons')
+const lightning = require('./lightning')
+const connector = require(  './connector')
+const { watchAos } = require(  './peerState')
 
 const app = express()
 applyRouter(app)
@@ -33,7 +33,6 @@ function startDctrlAo(){
       watchSpot()
       cronStarter()
       watchAos()
-
       lightning.recordEveryInvoice(state.pubState.cash.pay_index)
       lightning.watchOnChain()
 

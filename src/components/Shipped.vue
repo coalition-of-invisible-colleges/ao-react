@@ -16,14 +16,14 @@
 
 import request from 'superagent'
 import Current from './Current'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['b', 'inId'],
     components: { Current },
     methods: {
         claim(){
-            SoundFX.playTickMark()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 taskId: this.b.taskId,
@@ -33,7 +33,7 @@ export default {
             this.$store.commit('setAction', false)
         },
         refocus(){
-            SoundFX.playBoatCapsize()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-refocused',
                 inId: this.inId,

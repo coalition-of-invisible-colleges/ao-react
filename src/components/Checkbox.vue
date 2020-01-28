@@ -9,7 +9,7 @@
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['b', 'inId'],
@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         complete(){
-            SoundFX.playTickMark()
+
             this.$store.dispatch("makeEvent", {
               type: 'task-claimed',
               inId: this.inId,
@@ -62,7 +62,7 @@ export default {
             })
         },
         uncheck(){
-            SoundFX.playTickMark()
+
             this.$store.dispatch("makeEvent", {
               type: 'task-unclaimed',
               taskId: this.b.taskId,

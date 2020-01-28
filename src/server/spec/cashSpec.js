@@ -1,8 +1,8 @@
-import utils from './utils'
-import validators from './validators'
-import events from '../events'
-import state from '../state'
-import connector from '../connector'
+const utils = require( './utils')
+const validators = require( './validators')
+const events = require( '../events')
+const state = require( '../state')
+const connector = require( '../connector')
 
 module.exports = function(req, res, next){
   switch (req.body.type){

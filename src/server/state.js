@@ -1,8 +1,8 @@
-import _ from 'lodash'
-import dctrlDb from './dctrlDb'
-import M from '../mutations'
-import modules from '../modules'
-import config from '../../configuration'
+const _ = require( 'lodash')
+const dctrlDb = require( './dctrlDb')
+const M = require( '../mutations')
+const modules = require( '../modules')
+const config = require( '../../configuration')
 
 const serverState = {
   ao: [],

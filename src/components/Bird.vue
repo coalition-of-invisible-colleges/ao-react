@@ -60,7 +60,7 @@ import Propagating from 'propagating-hammerjs'
 
 import FormBox from './FormBox'
 import GuildCreate from './GuildCreate'
-import SoundFX from '../utils/sounds'
+
 import Cards from '../utils/cards'
 import Sierpinski from './Sierpinski'
 
@@ -100,27 +100,27 @@ export default {
         doubleTap.requireFailure(tripleTap)
 
         mc.on('singletap', (e) => {
-            SoundFX.playTickMark()
+
             this.toggleGive()
             e.stopPropagation()
         })
 
         mc.on('doubletap', (e) => {
             if(this.b.taskId === this.$store.getters.member.memberId) return
-            SoundFX.playTickMark()
+
             this.togglePlay()
             e.stopPropagation()
         })
 
         mc.on('tripletap', (e) => {
-            SoundFX.playTickMark()
+
             this.toggleWarp()
             e.stopPropagation()
         })
 
         mc.on('press', (e) => {
             if(this.b.taskId === this.$store.getters.member.memberId) return
-            SoundFX.playTickMark()
+
             this.toggleGuildCreate()
             e.stopPropagation()
         })
@@ -198,7 +198,7 @@ export default {
             this.toggleWarp()
         },
         makeSound() {
-            SoundFX.playBirdFlap()
+
         },
         sendAllHodls() {
             let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)

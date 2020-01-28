@@ -26,7 +26,7 @@ import Linky from './Linky'
 import Hypercard from './Card'
 import Checkbox from './Checkbox'
 import Tally from './Tally'
-import SoundFX from '../utils/sounds'
+
 
 export default {
     props: ['taskId', 'inId', 'inInId'],
@@ -146,15 +146,15 @@ export default {
     },
     methods: {
         deaction(){
-            SoundFX.playPageTurn()
+
             this.$store.commit("setAction", false)
         },
         setAction(){
-            SoundFX.playPageTurn()
+
             this.$store.commit("setAction", this.taskId)
         },
         goIn(){
-            SoundFX.playPageTurn()
+
             let panel = this.parent.priorities
             let parents = []
             let top = this.parent.priorities.indexOf(this.taskId)
@@ -188,11 +188,11 @@ export default {
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         copyCardToClipboard(){
-            SoundFX.playChunkSwap()
+
             navigator.clipboard.writeText(this.name)
         },
         allocate(){
-          SoundFX.playSailUnfurl()
+
           this.$store.dispatch("makeEvent", {
             type: 'task-allocated',
             taskId: this.$store.getters.contextCard.taskId,
@@ -200,7 +200,7 @@ export default {
           })
         },
         refocus(){
-            SoundFX.playBoatCapsize()
+
             this.$store.dispatch("makeEvent", {
                 type: 'task-refocused',
                 inId: this.inId,

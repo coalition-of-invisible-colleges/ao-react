@@ -12,7 +12,7 @@
 
 <script>
 
-import SoundFX from '../utils/sounds'
+
 import Linky from './Linky'
 
 export default {
@@ -20,7 +20,7 @@ export default {
   components: { Linky },
   methods: {
     goIn(taskId){
-        SoundFX.playPageTurn()
+
         if (!this.$store.state.context.completed){
             this.$store.commit("toggleCompleted")
         }

@@ -6,12 +6,11 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "buildFront": "vue-cli-service build",
-    "buildBack": "npx babel src --no-babelrc --presets=env --out-dir production --copy-files",
-    "compile": "npm run buildBack && npm run buildFront && npm run start",
+    "compile": "npm run buildFront && npm run start",
     "setup": "chmod u+x install.sh && ./install.sh",
-    "start": "node production/server/app.js"
+    "start": "node src/server/app.js"
   },
-  "main":"production/server/app.js",
+  "main": "production/server/app.js",
   "dependencies": {
     "better-sqlite3": "^5.4.3",
     "body-parser": "^1.19.0",

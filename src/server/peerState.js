@@ -1,8 +1,8 @@
 
-import io from 'socket.io-client'
-import state from './state'
-import connector from   './connector'
-import evs from './events'
+const io = require( 'socket.io-client')
+const state = require( './state')
+const connector = require(   './connector')
+const evs = require( './events')
 
 let sockets = {}
 
@@ -18,4 +18,4 @@ function watchAos(){
     })
 }
 
-export { watchAos }
+module.exports = { watchAos }
