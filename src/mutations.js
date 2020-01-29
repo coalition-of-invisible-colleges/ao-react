@@ -1,6 +1,5 @@
 // Mutations are state builders.
 // The current state is the result of all the events in the system fed through the mutation functions.
-// The first argument is the current state segment and the second argument is the event that is being applied to the state.
 // `server/state.js` for server; `modules/*` for vue client.
 const _ = require( 'lodash')
 const uuidv1 = require( 'uuid/v1')
