@@ -1,4 +1,4 @@
-const { getResource } = require( './spec/utils')
+const { getResource } = require( './utils')
 const events = require( './events')
 const { serverState } = require( './state')
 

@@ -4,7 +4,7 @@ const request = require('superagent')
 const config = require('../../configuration')
 const events = require('./events')
 const state = require('./state')
-const validators = require('./spec/validators')
+const validators = require('./validators')
 
 function watchSpot(){
     getRecordSpot()

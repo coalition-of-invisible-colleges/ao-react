@@ -1,4 +1,4 @@
-const utils = require('./spec/utils')
+const utils = require('./utils')
 const events = require('./events')
 const cryptoUtils = require('../crypto')
 const state = require('./state')

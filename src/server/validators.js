@@ -1,5 +1,5 @@
 const _ = require( 'lodash')
-const state = require( '../state')
+const state = require( './state')
 
 module.exports = {
   isName(val, errRes){

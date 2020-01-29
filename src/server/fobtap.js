@@ -1,7 +1,10 @@
-const state = require('../state')
-const utils = require('../spec/utils')
-const validators = require('../spec/validators')
-const events = require('../events')
+const express = require('express')
+const router = express.Router()
+
+const state = require('./state')
+const utils = require('./utils')
+const validators = require('./validators')
+const events = require('./events')
 
 function access(member, resource){
     if (member.active < 0){
@@ -14,7 +17,7 @@ function access(member, resource){
     return newBalance >= 0
 }
 
-module.exports = function(req, res, next){
+function resourceCheck(req, res, next){
     let member = utils.memberFromFob(req.body.fob)
     let resource = utils.getResource(req.body.resourceId)
     if (member && resource && access(member,resource)){
@@ -30,3 +33,11 @@ module.exports = function(req, res, next){
         next()
     }
 }
+
+router.use('/fobtap', resourceCheck)
+
+router.use('/fobtap', (req, res)=> {
+    res.end('fobtap not handled')
+})
+
+module.exports = router

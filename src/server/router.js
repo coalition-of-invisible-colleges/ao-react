@@ -6,7 +6,6 @@ const spec = require( './spec')
 const fobtap = require( './fobtap')
 const { serverAuth } = require( './auth')
 const { lightningRouter } = require( './lightning')
-const publicAccess = require( './publicAccess')
 
 module.exports = function applyRouter(app){
 
@@ -21,8 +20,6 @@ module.exports = function applyRouter(app){
     app.use(bodyParser.urlencoded({
         extended: true
     }))
-
-    app.use(publicAccess)
 
     app.use(serverAuth) // below here requires auth token
 

@@ -1,6 +1,5 @@
-const state = require('../state')
+const state = require('./state')
 
-// we use this function to build a callback for auto response to db create attempt
 function buildResCallback(res){
     return (err, dbResponse) => {
         if (err) {
@@ -13,7 +12,6 @@ function buildResCallback(res){
 
 function memberIdFromFob(fob){
   let memberId
-  // TODO: hide fob in server side state
   state.serverState.members.filter(m => m.active > 0).forEach(member => {
       if (member.fob == fob){
           memberId = member.memberId
