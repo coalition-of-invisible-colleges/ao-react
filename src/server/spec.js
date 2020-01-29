@@ -6,6 +6,7 @@ const calculations = require( '../calculations')
 const events = require( './events')
 const connector = require( './connector')
 const lightning = require( './lightning')
+const uuidV1 = require( 'uuid/v1')
 const Cards = require( '../utils/cards')
 
 const router = express.Router()
