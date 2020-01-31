@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #frontcalendar
-    h1.up Calendar
+    h1 Upcoming
     calendar(inId='g')
 </template>
 
@@ -26,6 +26,7 @@ export default {
 @import '../styles/skeleton'
 @import '../styles/button'
 @import '../styles/breakpoints'
+@import '../styles/title'
 
 .bounty:hover
     border-style: dashed

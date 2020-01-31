@@ -2,7 +2,7 @@
 
 #home
   .container
-    h1.up reserve
+    h1 Reserve
     points
     .row.center
         .seven.grid
@@ -70,6 +70,7 @@ export default {
 @import '../styles/colours'
 @import '../styles/skeleton'
 @import '../styles/breakpoints'
+@import '../styles/title'
 
 .fw
     width: 100%
@@ -200,11 +201,4 @@ select
 ul
     text-align: left
 
-.up
-  width: fit-content
-  background: rgba(22, 22, 22, 0.8)
-  border-radius: 0.5em
-  margin: -1.25em auto 0.25em auto
-  padding: 0.25em
-  z-index: 80
 </style>

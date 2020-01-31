@@ -1,10 +1,10 @@
 <template lang='pug'>
-.contexts(:class="cardInputSty")
-    div(:class='{suncontext: isSun(), bullcontext: isBull()}')
+.contexts
+    div(:class='{suncontext: isSun, bullcontext: isBull}')
         .transparentsides
     template(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)')
         .narrow
-            context-row(:taskId='n')
+            context-row(:taskId ='n')
 </template>
 
 <script>
@@ -26,15 +26,13 @@ export default {
               blackwx : color == 'black',
           }
         },
-    },
-    methods: {
         isSun() {
-            return Dimensions.isSun(this.$router.currentRoute.path)
+          return this.$store.state.upgrades.dimension === 'sun'
         },
         isBull() {
-            return Dimensions.isBull(this.$router.currentRoute.path)
+          return this.$store.state.upgrades.dimension === 'bull'
         },
-    }
+    },
 }
 
 </script>
@@ -50,13 +48,21 @@ export default {
 .contexts
     opacity: 0.9
     z-index: 9009
+    background: transparent
+
+.suncontext
+    background-image: url('../assets/images/sunbean.svg')
+
+.bullcontext
+    background-image: url('../assets/images/bullleg.svg')
 
 .bullcontext, .suncontext
-    height: 1.75em
+    margin-top: 2.571111em
+    height: 1.71111em
     background-repeat: repeat-x
     background-size: 3em
-    // margin-left: 7em
-    // margin-right: 7em
+    margin-left: 7em
+    margin-right: 7em
     z-index: -1
 
 h4

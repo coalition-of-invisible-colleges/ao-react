@@ -22,8 +22,8 @@ div
             img(src='../assets/images/loggedOut.svg')
             span
     div(v-if='isBull')
-        .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471; ~
-            span  1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
+        .satspot 1 = {{ $store.getters.satPointSpot.toLocaleString() }}&#12471;
+            //- span  1BTC = ${{ $store.state.cash.spot.toLocaleString() }}
         .logout(v-if='$store.getters.isLoggedIn'  @click="killSession") log out
 </template>
 
@@ -166,8 +166,8 @@ p:hover
         padding: 0.7654321
 .satspot
     position: fixed
-    top: 5.5em
-    left: 1em
+    top: 1em
+    left: 3.7em
 
 .logout
     position: fixed
