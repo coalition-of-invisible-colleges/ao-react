@@ -63,7 +63,6 @@ export default {
         this.$router.push('/' + mode)
     },
     nextMode() {
-
         this.$store.commit('nextMode')
     },
   },

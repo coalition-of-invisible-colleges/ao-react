@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #nodes
-  div(v-if='$store.state.cash.info')
+  div(v-if='$store.state.cash.info && $store.state.cash.info.blockheight')
     .row
         .six.columns.container
             .row
@@ -39,6 +39,10 @@ import Payments from './Payments'
 import request from 'superagent'
 
 export default {
+    mounted(){
+        this.$store.commit('setMode' , 2)
+        this.$store.commit('setDimension' , 3)
+    },
     data(){
         return {
             selectedPeer: false

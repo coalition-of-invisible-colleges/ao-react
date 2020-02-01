@@ -10,7 +10,7 @@ import Lightning from './components/Lightning'
 import Reserve from './components/Reserve'
 
 
-import News from './components/News'
+import Oracle from './components/Oracle'
 import Top from './components/Top'
 import Recent from './components/Recent'
 import Bounties from './components/Bounties'
@@ -57,11 +57,11 @@ const routes =[{
   ]
 },{
   path: '/front',
-  component: News,
+  component: Oracle,
   meta: { title: "DCTRL" }
 },{
   path: '/front/doge',
-  component: News,
+  component: Oracle,
   meta: { title: "newspaper" }
 },{
   path: '/front/boat',

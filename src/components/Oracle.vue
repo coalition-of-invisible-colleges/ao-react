@@ -4,7 +4,8 @@
     h1 Oracle
     img.thegoldendoge(src='../assets/images/sundoge.png')
     hypercard.bounty(v-if='topcard'  :b='topcard'  :key='topcard.taskId'  :c='[topcard.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(topcard.taskId)')
-    //- missions
+    .container
+        missions
 </template>
 
 <script>
@@ -16,6 +17,8 @@ export default {
       Hypercard,Missions
   },
   mounted(){
+      this.$store.commit('setMode' , 0)
+      this.$store.commit('setDimension' , 1)
       this.$store.commit('stopLoading')
   },
   methods:{

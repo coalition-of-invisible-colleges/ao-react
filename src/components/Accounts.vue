@@ -20,6 +20,8 @@ export default {
         MemberCreate, Changer, Members,
     },
     mounted() {
+        this.$store.commit('setMode' , 2)
+        this.$store.commit('setDimension' , 2)
         this.$store.commit('stopLoading')
     },
     computed:{

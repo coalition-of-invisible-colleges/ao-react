@@ -15,6 +15,8 @@ export default {
         Aos
     },
     mounted() {
+        this.$store.commit('setMode' , 1)
+        this.$store.commit('setDimension' , 2)
         this.$store.commit('stopLoading')
     }
 }

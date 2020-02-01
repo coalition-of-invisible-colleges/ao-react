@@ -11,6 +11,8 @@ import Calendar from './Calendar'
 
 export default {
   mounted(){
+      this.$store.commit('setMode' , 4)
+      this.$store.commit('setDimension' , 1)
       this.$store.commit('stopLoading')
   },
   components:{

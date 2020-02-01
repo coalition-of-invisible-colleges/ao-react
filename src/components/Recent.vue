@@ -18,6 +18,8 @@ export default {
       return {showTotal: 11}
   },
   mounted(){
+      this.$store.commit('setMode' , 2)
+      this.$store.commit('setDimension' , 1)
       this.$store.commit('stopLoading')
   },
   methods: {
