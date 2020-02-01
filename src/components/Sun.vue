@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     nextMode() {
-
         this.$store.commit('nextMode')
     },
     goFront(mode) {
@@ -175,5 +174,9 @@ p:hover
     img
         transform: translateX(50%)
         height: 1.1em
+        
+.bigger
+    height: 5.5555555555em
+
 
 </style>

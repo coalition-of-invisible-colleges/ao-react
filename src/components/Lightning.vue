@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #nodes
-  div(v-if='$store.state.cash.info && $store.state.cash.info.blockheight')
+  .container(v-if='$store.state.cash.info && $store.state.cash.info.blockheight')
     .row
         .six.columns.container
             .row
@@ -40,8 +40,8 @@ import request from 'superagent'
 
 export default {
     mounted(){
-        this.$store.commit('setMode' , 2)
-        this.$store.commit('setDimension' , 3)
+        this.$store.commit('setMode' , 3)
+        this.$store.commit('setDimension' , 2)
     },
     data(){
         return {
