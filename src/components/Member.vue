@@ -29,7 +29,6 @@
 
 <script>
 
-import Addr from './Addr'
 import PreviewDeck from './PreviewDeck'
 import Vouch from './Vouch'
 import Bird from './Bird'
@@ -38,7 +37,7 @@ import GiftBox from './GiftBox'
 
 export default {
     props: ['m'],
-    components: {Addr, PreviewDeck, Vouch, Bird, NotZen, GiftBox},
+    components: {PreviewDeck, Vouch, Bird, NotZen, GiftBox},
     computed:{
         card(){
             return this.$store.getters.hashMap[this.m.memberId]

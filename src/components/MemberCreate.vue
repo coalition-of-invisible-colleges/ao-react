@@ -15,7 +15,7 @@
 
 <script>
 import cryptoUtils from '../crypto'
-import SharedTitle from './SharedTitle'
+
 import FormBox from './FormBox'
 import FancyInput from './FancyInput'
 
@@ -50,7 +50,7 @@ export default {
 		}
 	},
   components: {
-    SharedTitle, FormBox, FancyInput
+     FormBox, FancyInput
   }
 }
 </script>

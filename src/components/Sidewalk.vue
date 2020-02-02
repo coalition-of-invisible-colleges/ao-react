@@ -24,7 +24,7 @@
 
 import Hypercard from "./Card"
 import request from "superagent"
-import SharedTitle from './SharedTitle'
+
 import calculations from './../calculations'
 
 export default {
@@ -50,7 +50,7 @@ export default {
       },
   },
   components:{
-      SharedTitle,
+      
       Hypercard,
   },
 }

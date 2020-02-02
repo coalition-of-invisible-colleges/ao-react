@@ -30,7 +30,7 @@
 
 <script>
 import calculations from '../calculations'
-import SharedTitle from './SharedTitle'
+
 import Tag from './Tag'
 import Summaryy from './Summary'
 import LocalRemoteBar from './LocalRemoteBar'
@@ -49,7 +49,7 @@ export default {
         }
     },
     components:{
-        SharedTitle, Tag, Summaryy, LocalRemoteBar, Payments
+         Tag, Summaryy, LocalRemoteBar, Payments
     },
     computed: {
         unchanneled(){

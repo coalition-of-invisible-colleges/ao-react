@@ -21,14 +21,9 @@
 
 <script>
 
-import Addr from './Addr'
-import PreviewDeck from './PreviewDeck'
-import Vouch from './Vouch'
-
-
 export default {
     props: ['r', 'c'],
-    components: { Addr, PreviewDeck, Vouch},
+    components: { },
     computed:{
 
         isAnyOptions(){

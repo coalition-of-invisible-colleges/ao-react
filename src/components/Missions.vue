@@ -25,8 +25,6 @@
 <script>
 import Current from './CurrentChecks'
 import Linky from './Linky'
-
-
 export default {
     components:{
         Linky,  Current,

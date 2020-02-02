@@ -30,8 +30,6 @@ div
 <script>
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import Dimensions from '../utils/dimensions'
-
 
 export default {
   computed: {

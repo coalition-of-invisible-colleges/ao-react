@@ -181,7 +181,6 @@ export default {
             })
         },
         createOrFindTask(){
-
             let foundId = this.matchCard
             let potentialCard = this.task.name.trim()
             if(!foundId) {

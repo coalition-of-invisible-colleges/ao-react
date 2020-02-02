@@ -13,7 +13,7 @@
 <script>
 
 import Row from "./ResourceRow"
-import SharedTitle from './SharedTitle'
+
 
 export default {
     computed: {
@@ -28,7 +28,7 @@ export default {
         }
     },
     components:{
-        SharedTitle,
+        
         Row,
         // CrazyBtn
     }

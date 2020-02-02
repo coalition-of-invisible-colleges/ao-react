@@ -26,7 +26,7 @@
 
 <script>
 
-import SharedTitle from './SharedTitle'
+
 import Linky from './Linky'
 import Cards from '../utils/cards'
 
@@ -104,7 +104,7 @@ export default {
       },
   },
   components:{
-      SharedTitle,
+
       Linky,
   },
 }

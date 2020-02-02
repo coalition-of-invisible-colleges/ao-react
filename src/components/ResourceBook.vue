@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import SharedTitle from './SharedTitle'
+
 import FormBox from './FormBox'
 import FancyInput from './FancyInput'
 
@@ -36,7 +36,7 @@ const HALFDAY = HOUR * 12
 export default {
     props:['tId'],
     components: {
-        SharedTitle, FormBox, FancyInput
+         FormBox, FancyInput
     },
     mounted(){
         let i = this.$router.currentRoute.path.split('/')[2]

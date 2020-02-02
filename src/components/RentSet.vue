@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import SharedTitle from './SharedTitle'
+
 import FormBox from './FormBox'
 
 export default {
@@ -22,7 +22,7 @@ export default {
         }
     },
     components: {
-        SharedTitle, FormBox
+         FormBox
     }
 }
 

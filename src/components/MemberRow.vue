@@ -21,14 +21,13 @@
 
 <script>
 
-import Addr from './Addr'
 import PreviewDeck from './PreviewDeck'
 import SimplePriorities from './SimplePriorities'
 
 
 export default {
     props: ['m'],
-    components: {Addr, PreviewDeck, SimplePriorities},
+    components: {PreviewDeck, SimplePriorities},
     methods:{
         isBull(){
             let mainroute = this.$router.currentRoute.path.split('/')[1]

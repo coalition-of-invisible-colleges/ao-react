@@ -14,7 +14,7 @@
 <script>
 
 import Hypercard from "./Card"
-import SharedTitle from './SharedTitle'
+
 import calculations from '../calculations'
 import FormBox from './FormBox'
 import PreviewDeck from './PreviewDeck'
@@ -24,7 +24,7 @@ export default {
   props: ['g'],
   components:{
       Hypercard,
-      SharedTitle,
+      
       FormBox,
       PreviewDeck,
       HyperDeck,
