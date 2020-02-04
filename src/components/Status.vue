@@ -42,8 +42,6 @@
 
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import Themes from '../utils/themes'
-
 
 export default {
     name: 'status',
@@ -84,7 +82,6 @@ export default {
             let both = (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
             console.log("both is ", both)
             console.log("ao state is ", this.$store.state.ao[both].state)
-            // Themes.nextTheme()
             this.$store.commit('setWarp', (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length)
         })
     },

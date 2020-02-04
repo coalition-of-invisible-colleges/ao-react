@@ -108,7 +108,6 @@ export default {
           })
       },
       uncheck(){
-
           this.$store.dispatch("makeEvent", {
               type: 'task-unclaimed',
               taskId: this.taskId,

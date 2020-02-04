@@ -26,7 +26,6 @@ import Tag from './Tag'
 import ResourceBook from './ResourceBook'
 import HelmControl from '../utils/helm'
 
-import Dimensions from '../utils/dimensions'
 import GuildCreate from './GuildCreate'
 
 export default {
@@ -198,7 +197,7 @@ export default {
             }
         },
         isOracle() {
-            return Dimensions.isSun(this.$router.currentRoute.path) && this.$store.state.upgrades.mode === 'doge'
+            return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
         },
     },
     computed: {

@@ -27,7 +27,6 @@ div.totop(v-if='b.passed.length > 0')
 
 import request from 'superagent'
 import Current from './Current'
-import Themes from '../utils/themes'
 
 const buddadoge = require('../assets/images/buddadoge.svg')
 
@@ -74,10 +73,6 @@ export default {
                 m = this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
             }
             return m
-        },
-        buddaDogePath() {
-            console.log("path is ", Themes.imagesPath(2) + 'buddadoge.svg')
-            return Themes.imagesPath(2) + 'buddadoge.svg'
         }
     }
 }

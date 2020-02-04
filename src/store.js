@@ -21,9 +21,6 @@ export default new Vuex.Store({
       sessions: modules.sessions,
   },
   getters: {
-      isBull(){
-          return Dimensions.isBull(this.$router.currentRoute.path)
-      },
       warpDrive(state, getters){
           return getters.liveConnections[state.upgrades.warp]
       },

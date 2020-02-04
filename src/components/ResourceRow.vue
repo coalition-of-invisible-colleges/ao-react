@@ -112,7 +112,6 @@ export default {
             this.$store.dispatch("makeEvent", newEv)
         },
         goIn(){
-
             let top = this.c.indexOf(this.r.resourceId)
             console.log("goIn called with TOP: ", top)
             if (top > -1){

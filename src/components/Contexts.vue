@@ -10,7 +10,6 @@
 <script>
 
 import ContextRow from './ContextRow'
-import Dimensions from '../utils/dimensions'
 
 export default {
     components: { ContextRow },

@@ -12,13 +12,7 @@ import FormBox from './FormBox'
 export default {
     props: ['b'],
     methods: {
-        playPageTurn(){
-            var flip = new Audio(require('../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
-        },
         goIn(){
-            this.playPageTurn()
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -53,7 +47,7 @@ export default {
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
-            
+
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
     },

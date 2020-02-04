@@ -7,7 +7,6 @@ const events = require( './events')
 const connector = require( './connector')
 const lightning = require( './lightning')
 const uuidV1 = require( 'uuid/v1')
-const Cards = require( '../utils/cards')
 
 const router = express.Router()
 
@@ -322,7 +321,7 @@ router.post('/events', (req, res, next)=>{
                   let name = m.name
               }
           })
-          let envelope = Cards.blankCard(name)
+          let envelope = calculations.blankCard(name)
           envelope.name = memberCard.name
           envelope.subTasks = [...new Set(taskIds)]
           envelope.passed = [[req.body.address, req.body.toMemberId]]

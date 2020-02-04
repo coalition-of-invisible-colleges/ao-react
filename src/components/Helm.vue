@@ -24,7 +24,6 @@ isUni<template lang='pug'>
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import HelmControl from '../utils/helm'
-import Dimensions from '../utils/dimensions'
 
 import Status from './Status'
 
@@ -171,17 +170,6 @@ export default {
             }
         },
         goUni(mode, silent = false) {
-            if(Dimensions.isDeck(this.$router.currentRoute.path, mode)) {
-                if(!silent) {
-
-                }
-                return
-            }
-            if(!this.isUni) {
-
-            } else {
-
-            }
             this.$store.commit('setDimension', 0)
             this.$store.commit('startLoading', 'uni')
             this.$router.push('/' + mode)
@@ -191,15 +179,6 @@ export default {
             }, 20)
         },
         goFront(mode) {
-            if(Dimensions.isFront(this.$router.currentRoute.path, mode)) {
-
-                return
-            }
-            if(mode === 'doge') {
-
-            } else {
-
-            }
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + mode)
             setTimeout(() => {
@@ -211,11 +190,9 @@ export default {
             HelmControl.flashHelm(0.5)
         },
         nextMode() {
-
             HelmControl.nextUpgradeMode(this.$router)
         },
         goHome(taskId){
-
             let parents = []
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)

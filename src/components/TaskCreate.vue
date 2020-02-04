@@ -36,9 +36,7 @@
 import _ from 'lodash'
 import request from "superagent"
 import Current from './Current'
-
-import Cards from '../utils/cards'
-import Dimensions from '../utils/dimensions'
+import calculations from '../calculations'
 
 export default {
     data(){
@@ -131,7 +129,6 @@ export default {
         },
         goIn(taskId){
             clearTimeout(this.inDebounce)
-
             let panel = [taskId]
             let parents = [  ]
             let top = 0
@@ -141,13 +138,11 @@ export default {
             } else if (this.$store.getters.memberCard.taskId){
                 parents.push(this.$store.getters.memberCard.taskId)
             }
-
             this.$store.dispatch("goIn", {
                 parents,
                 top,
                 panel
             })
-
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
@@ -245,7 +240,7 @@ export default {
             this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
         },
         shortName(theName) {
-            return Cards.shortName(theName)
+            return calculations.shortName(theName)
         },
     },
     computed: {
@@ -303,7 +298,7 @@ export default {
             }
         },
         cardInputSty() {
-            return Cards.cardColorCSS(this.task.color)
+            return calculations.cardColorCSS(this.task.color)
         },
         debouncedName: {
             get() {

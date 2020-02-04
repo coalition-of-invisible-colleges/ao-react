@@ -28,7 +28,7 @@
 
 
 import Linky from './Linky'
-import Cards from '../utils/cards'
+import calculations from '../calculations'
 
 export default {
   props: ['memberId', 'taskId', 'task'],
@@ -62,7 +62,7 @@ export default {
           return this.$store.getters.hashMap[tId]
       },
       shortName(name) {
-          return Cards.shortName(name)
+          return calculations.shortName(name)
       }
   },
   computed: {

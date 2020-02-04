@@ -7,7 +7,6 @@
 
 import HelmControl from '../utils/helm'
 
-
 export default {
     props: ['taskId'],
     computed: {
@@ -26,7 +25,6 @@ export default {
     methods: {
         goBoat() {
             HelmControl.flashHelm(0.5)
-
             setTimeout(() => {this.$router.push("/boat") }, 100 )
         }
     }

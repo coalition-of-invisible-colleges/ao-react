@@ -59,7 +59,7 @@ import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import FormBox from './FormBox'
 import GuildCreate from './GuildCreate'
-import Cards from '../utils/cards'
+import calculations from '../calculations'
 import Sierpinski from './Sierpinski'
 
 export default {
@@ -236,7 +236,7 @@ export default {
                         let task = this.$store.getters.hashMap[t]
                         if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
 
-                        found.push(Cards.safeClone(task))
+                        found.push(calculations.safeClone(task))
                         newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
                         return true
                     })

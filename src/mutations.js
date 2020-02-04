@@ -4,7 +4,7 @@
 const _ = require( 'lodash')
 const uuidv1 = require( 'uuid/v1')
 const cryptoUtils = require( './crypto')
-const cards = require( './utils/cards')
+const calculations = require( './calculations')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
@@ -831,11 +831,11 @@ function tasksMuts(tasks, ev) {
             ev.tasks.forEach(p => {
                 if(!tasks.some((t, i) => {
                     if(cryptoUtils.createHash(p.name.trim()) === cryptoUtils.createHash(t.name.trim())) {
-                        cards.safeMerge(t, p)
+                        calculations.safeMerge(t, p)
                         return true
                     }
                 })) {
-                    tasks.push(cards.safeClone(p))
+                    tasks.push(calculations.safeClone(p))
                 }
             })
             break
