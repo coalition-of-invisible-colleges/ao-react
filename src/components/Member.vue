@@ -6,7 +6,7 @@
         img.logindicator(v-if='isLoggedIn', src='../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../assets/images/loggedOut.svg')
         label.hackername(:class='{ spacer: $store.state.upgrades.mode !== "doge" || $store.getters.contextCard.priorities.length < 1 }') {{ m.name }}
-    .bottomleft(v-if='card.boost')
+    .bottomleft(@click='goChest')
         img.smallguild(src='../assets/images/chest.svg')
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
@@ -66,6 +66,9 @@ export default {
         },
     },
     methods: {
+        goChest(){
+            this.$router.push('/chest')
+        },
         getName(taskId){
             let name
             this.$store.state.tasks.some(t => {
@@ -185,6 +188,7 @@ label
     position: relative
     bottom: 0
     left: 0
+    cursor: pointer
 
 .bottomright
     width: fit-content

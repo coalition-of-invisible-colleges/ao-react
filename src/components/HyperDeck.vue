@@ -156,7 +156,6 @@ export default {
     margin-top: 1em
     margin-right: 1em
     flex-grow: 1
-    // width: 58%
     flex-basis: 54%
 
 .upgrade
@@ -187,7 +186,6 @@ export default {
     )
 
 .onestack
-    // margin-top: 1em
     display: flex
     flex-wrap: wrap
     max-width: 34em

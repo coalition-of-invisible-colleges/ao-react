@@ -15,7 +15,7 @@
             select.shorten(v-model='toGuildWarp')
                 option(disabled, value='') to mission
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM'  @click='makeSound')
+            form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM')
             span.sierpinskiwrapper
                 sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
@@ -28,7 +28,7 @@
                     option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
                     template(v-for='sp in p.guilds')
                         option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
-        form-box.small(btntxt="give"  event='task-passed' v-bind:data='playInfo'  @click='makeSound')
+        form-box.small(btntxt="give"  event='task-passed' v-bind:data='playInfo')
     .give(v-if='showGive')
         div(v-if='$store.state.upgrades.warp > -1')
             select.shorten(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
@@ -43,7 +43,7 @@
             select(v-model='toMember')
                 option(disabled, value='') to people
                 option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-            form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo'  @click='makeSound')
+            form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo')
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
@@ -195,9 +195,6 @@ export default {
             this.$store.commit('setWarp', this.toAo)
             this.toggleWarp()
         },
-        makeSound() {
-
-        },
         sendAllHodls() {
             let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)
             all.forEach(t => {
@@ -209,13 +206,11 @@ export default {
             let tasks = [Object.assign({}, this.b)]
             tasks[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             tasks[0].deck = []
-            console.log("trying to send tasks: " , tasks)
             this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: {
                 type: 'tasks-received', tasks }
             })
         },
         migrate() {
-            this.makeSound()
             let found = []
             this.$store.dispatch('makeEvent', {
                 type: 'doge-migrated',
@@ -250,7 +245,6 @@ export default {
             } else {
                 found = [ this.b ]
             }
-            console.log('there are this many tasks: ', found.length)
             found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
             let next100 = found.splice(0, 20)
             while(next100.length > 0 || found.length > 0) {

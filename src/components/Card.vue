@@ -24,7 +24,7 @@
               span {{ cardStart.days.toFixed(1) }} days
           linky.cardhud(:x='b.name' v-if='!dogeCard')
           .cardhud(v-if='dogeCard') {{ dogeCard.name }}
-    simple-priorities(v-if='b.guild', :taskId="b.taskId", :inId='b.taskId')
+    simple-priorities(:taskId="b.taskId", :inId='b.taskId')
     passed(:b='b')
     shipped(:b='b', :inId='inId')
     .spacer
