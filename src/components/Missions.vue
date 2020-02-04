@@ -43,22 +43,18 @@ export default {
             let parents = []
             let panel = [taskId]
             let top = 0
-
             let t = this.$store.getters.hashMap[taskId]
             let panelColor = this.$store.getters[t.color]
             let topColor = panelColor.indexOf(taskId)
-
             if (topColor > -1){
                 panel = panelColor
                 top = topColor
             }
-
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)
             } else if (this.$store.getters.memberCard.taskId){
                 parents.push(this.$store.getters.memberCard.taskId)
             }
-
             if(guild) parents.push(guild)
 
             this.$store.dispatch("goIn", {panel, top, parents})

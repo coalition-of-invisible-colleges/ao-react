@@ -3,27 +3,24 @@
 #points
     .center
         h4 {{ totalPointsSum.toFixed(0) }} total points ({{ satPoint.toFixed(0) }} &#12471;)
-    .row
-        .five.grid
-            img(src='../assets/images/loggedIn.svg')
-            span
-                h4 {{ totalMembers.toFixed(0) }} in accounts
-            div(v-for='n in members')
-                span {{ n.boost.toFixed(0) }}
-                current(:memberId='n.taskId')
-            img(src='../assets/images/loader.svg')
-            h4 {{ totalResources.toFixed(0) }} in resources
-            div(v-for='n in resources')
-                span {{ n.boost.toFixed(0) }}
-                currentr(:resourceId='n.taskId')
-        .seven.grid
-            img(src='../assets/images/badge.svg')
-            h4 {{ totalGuilds.toFixed(0) }} on missions
-            h3(v-for='n in guilds') {{ n.boost.toFixed(0) }} - {{ n.guild }}
-            img(src='../assets/images/coin.svg')
-            h4 {{ totalCards.toFixed(0) }} on cards
-            template(v-for='n in cards')
-                p {{ n.boost }} - {{ n.name }}
+    .center
+        img(src='../assets/images/loggedIn.svg')
+        span {{ totalMembers.toFixed(0) }} in accounts
+        img(src='../assets/images/loader.svg')
+        span {{ totalResources.toFixed(0) }} in resources
+        img(src='../assets/images/badge.svg')
+        span {{ totalGuilds.toFixed(0) }} on missions
+        img(src='../assets/images/coin.svg')
+        span {{ totalCards.toFixed(0) }} on cards
+    template(v-for='n in cards')
+        p {{ n.boost }} - {{ n.name }}
+    div(v-for='n in members')
+        span {{ n.boost.toFixed(0) }}
+        current(:memberId='n.taskId')
+    div(v-for='n in resources')
+        span {{ n.boost.toFixed(0) }}
+        currentr(:resourceId='n.taskId')
+    h3(v-for='n in guilds') {{ n.boost.toFixed(0) }} - {{ n.guild }}
 </template>
 
 <script>

@@ -47,8 +47,6 @@ export default {
 form
     padding: 0em
     max-width:400px
-    // color: accent1
-    //margin: 1em
 
 .small button
     height: 2.4em

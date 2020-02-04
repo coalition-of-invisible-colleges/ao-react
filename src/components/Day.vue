@@ -42,7 +42,6 @@ export default {
             }
         },
         goIn(taskId){
-
             let parents = []
             if (this.$store.getters.contextCard.taskId){
                 parents.push(this.$store.getters.contextCard.taskId)
@@ -64,11 +63,6 @@ export default {
                let DMY = getDMY(b.book.startTs)
                return DMY.hour + ":" + DMY.minute.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})
             }
-        },
-    },
-    computed: {
-        calcDayRange(){
-            return
         },
     },
 }

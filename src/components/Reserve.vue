@@ -3,7 +3,6 @@
 #home
   .container
     h1 Reserve
-    points
     .row.center
         .seven.grid
             p.underline.padd Node Cost - {{ parseInt($store.state.cash.rent) }}
@@ -26,6 +25,7 @@
     div(v-if='pendingDeactivations.length > 0')
         h4 Pending Deactivation:
         current(v-for='mId in pendingDeactivations'  :memberId='mId')
+    points
 </template>
 
 <script>

@@ -7,7 +7,9 @@
             .row
                 p.fl {{ $store.state.cash.info.alias }} Wallet
                 p.fr block {{ $store.state.cash.info.blockheight.toLocaleString() }}
-            summaryy
+            p.chain
+                span mainnet &#12471; {{ $store.getters.confirmedBalance.toLocaleString() }}
+                .lim(v-if='$store.getters.limbo > 0') limbo &#12471; {{ $store.getters.limbo.toLocaleString() }}
             .row
                 h4(v-if='unchanneled.length > 0') select peer to open channel
                 div(v-for='p in unchanneled' @click='selectPeer(p.id)'  :class='{bluetx: p.id === selectedPeer}') {{ p.id }}
@@ -15,6 +17,12 @@
         .six.columns.container
             p {{ $store.state.cash.info.num_active_channels }} Lightning Channels
             local-remote-bar(v-for='n in $store.state.cash.channels', :c='n')
+            hr
+            .row
+              .six.grid
+                p.local local &#12471; {{ $store.getters.totalLocal.toLocaleString() }}
+              .six.grid
+                p.remote remote  &#12471; {{ $store.getters.totalRemote.toLocaleString() }}
     .row
           h3 Connection Info
           template(v-for='a in $store.getters.connectionUris')
@@ -32,7 +40,6 @@
 import calculations from '../calculations'
 
 import Tag from './Tag'
-import Summaryy from './Summary'
 import LocalRemoteBar from './LocalRemoteBar'
 import Payments from './Payments'
 
@@ -49,7 +56,7 @@ export default {
         }
     },
     components:{
-         Tag, Summaryy, LocalRemoteBar, Payments
+         Tag, LocalRemoteBar, Payments
     },
     computed: {
         unchanneled(){
@@ -144,5 +151,40 @@ p
 .fr
     float: right
 
+
+.local
+    margin: 0
+    background: wrexpurple
+    color: white
+    padding: 1em
+
+.remote
+    margin: 0
+    background: wrexgreen
+    color: white
+    text-align: right
+    padding: 1em
+
+.chain
+    margin: 0
+    background: wrexyellow
+    color: white
+    padding: 1em
+    text-align: center
+    position: relative
+
+
+.break
+    overflow-wrap: break-word;
+
+#worf
+    float: right
+
+.lim
+  color: black
+
+.block
+    float: right
+    font-size: .77em
 
 </style>

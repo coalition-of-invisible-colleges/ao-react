@@ -2,7 +2,6 @@
 
 #theoracle
     h1 Oracle
-    img.thegoldendoge(src='../assets/images/sundoge.png')
     hypercard.bounty(v-if='topcard'  :b='topcard'  :key='topcard.taskId'  :c='[topcard.taskId]'  :inId='$store.getters.member.memberId'  @click.capture.stop='goInNews(topcard.taskId)')
     .container
         missions
@@ -40,11 +39,6 @@ export default {
               this.$store.commit("setMode", 1)
           }
           this.$router.push("/" + this.$store.state.upgrades.mode)
-      },
-      playPageTurn(){
-          var flip = new Audio(require('../assets/sounds/myst158.wav'))
-          flip.volume = flip.volume * 0.3
-          flip.play()
       },
   },
   computed: {

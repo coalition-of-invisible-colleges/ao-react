@@ -130,7 +130,6 @@ export default {
     height: 3.5555555555em
     left: 0
 
-
 .sunmenu
     position: fixed
     top: 5em
@@ -174,9 +173,8 @@ p:hover
     img
         transform: translateX(50%)
         height: 1.1em
-        
+
 .bigger
     height: 5.5555555555em
-
 
 </style>

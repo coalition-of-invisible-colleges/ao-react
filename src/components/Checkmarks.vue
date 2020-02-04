@@ -67,7 +67,6 @@ export default {
     },
     methods: {
         goIn(taskId, guild = undefined){
-            this.playPageTurn()
             let parents = []
             let panel = [taskId]
             let top = 0
@@ -93,11 +92,6 @@ export default {
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
-        },
-        playPageTurn(){
-            var flip = new Audio(require('../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
         },
         completions(guild){
             let completions = []
