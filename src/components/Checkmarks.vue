@@ -58,6 +58,8 @@ export default {
         Linky,  Current,
     },
     mounted() {
+        this.$store.commit('setMode' , 2)
+        this.$store.commit('setDimension' , 0)
         this.$store.commit('stopLoading')
     },
     data(){

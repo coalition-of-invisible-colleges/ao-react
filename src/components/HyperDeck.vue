@@ -58,14 +58,7 @@ export default {
           }
       },
       toggleShowComplete(){
-
           this.$store.commit("toggleCompleted")
-      },
-      setPageTitle(){
-          if(this.card.taskId === this.$store.getters.member.memberId) document.title = 'deck'
-          else if(this.card.guild) document.title = this.card.guild
-          else document.title = this.card.name
-          return true
       },
   },
   computed: {
@@ -139,7 +132,6 @@ export default {
     font-size:1.111em
     margin-top: 1em
     display: inline-block
-    // width: 39.3333333333%
     margin-left: 1em
     margin-right: 1em
     flex-grow: 1

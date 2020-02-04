@@ -31,6 +31,8 @@ export default {
       FormBox, PayReq, PayAddress,
     },
     mounted() {
+        this.$store.commit('setMode' , 3)
+        this.$store.commit('setDimension' , 0)
         this.$store.commit('stopLoading')
     },
     data(){

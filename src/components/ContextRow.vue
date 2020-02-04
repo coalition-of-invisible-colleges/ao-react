@@ -43,7 +43,6 @@ export default {
             return this.$store.getters.hashMap[this.taskId]
         },
         cardStart(){
-            // XXX recalc on nav
             if ( this.card.book.startTs ){
               let now = Date.now()
               let msTill = this.card.book.startTs - now
@@ -78,6 +77,9 @@ export default {
     },
     methods: {
         goToParent(target){
+            if (this.$store.state.upgrades.dimension !== "unicorn"){
+                this.$router.push('/' + this.$store.state.upgrades.mode)
+            }
             this.$store.dispatch("goUp", {
                 target,
                 panel: [target],

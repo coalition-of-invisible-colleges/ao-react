@@ -25,6 +25,8 @@ import _ from 'lodash'
 
 export default {
   mounted() {
+      this.$store.commit('setMode' , 1)
+      this.$store.commit('setDimension' , 0)
       this.$store.commit('stopLoading')
   },
   data(){
