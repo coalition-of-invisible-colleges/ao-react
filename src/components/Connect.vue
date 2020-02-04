@@ -16,8 +16,6 @@
     div(v-for='s in unmatchedSubs')
         span.conn {{ s.address }}
         span.discon(@click='discon(s.address)').discon delete
-    h3 This Nodes Connection Info:
-
     h3 Connect to another AO:
     form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
         label(for="aoAddressInput") address:

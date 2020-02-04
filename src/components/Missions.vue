@@ -18,8 +18,8 @@
                       span.projectlist.aproject(v-if='g.guilds && g.guilds.length >= 1'  v-for='(p, i) in g.guilds'  @click='goIn(p.taskId, g.taskId)')
                           img(src='../assets/images/badge.svg'  :class='{ first : i === 0 }')
                           span(:class='cardInputSty(p.color)') {{ p.guild }}
-          .more(v-if='missions.length > 5 && !showAllGuilds'  @click='showGuilds') +{{ $store.getters.myGuilds.length - 5 }}
-          .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='hideGuilds') ( )
+          .more(v-if='missions.length > 5 && !showAllGuilds'  @click='toggleGuilds') +{{ $store.getters.myGuilds.length - 5 }}
+          .more(v-else-if='missions.length > 5 && showAllGuilds'  @click='toggleGuilds') (^_^)
 </template>
 
 <script>
@@ -39,7 +39,6 @@ export default {
     },
     methods: {
         goIn(taskId, guild = undefined){
-            this.playPageTurn()
             let parents = []
             let panel = [taskId]
             let top = 0
@@ -62,11 +61,6 @@ export default {
                 this.$store.commit("setMode", 1)
             }
         },
-        playPageTurn(){
-            var flip = new Audio(require('../assets/sounds/myst158.wav'))
-            flip.volume = flip.volume * 0.3
-            flip.play()
-        },
         completions(guild){
             let completions = []
             let allTasks = guild.subTasks.concat(guild.priorities).concat(guild.completed)
@@ -87,9 +81,6 @@ export default {
                 return card.priorities.slice().reverse()
             }
         },
-        getCard(taskId){
-            return this.$store.getters.hashMap[taskId]
-        },
         cardInputSty(c){
             return {
                 redtx : c === 'red',
@@ -100,102 +91,42 @@ export default {
                 blacktx : c === 'black',
             }
         },
-        showGuilds(){
-            this.showAllGuilds = true
-        },
-        hideGuilds(){
-            this.showAllGuilds = false
-        },
-        shortName(name) {
-            let limit = 280
-            let shortened = name.substring(0, limit)
-            if(name.length > limit) {
-                shortened += '…'
-            }
-            return shortened
-        },
-        toggleGrab() {
-            if (this.isGrabbed) {
-
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-dropped',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-            } else {
-
-                this.$store.dispatch("makeEvent", {
-                    type: 'task-grabbed',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                })
-            }
+        toggleGuilds(){
+            this.showAllGuilds = !this.showAllGuilds
         },
     },
     computed: {
         missions(){
-            let missions = []
-            if(this.isDoge) {
-                if (this.isDoge.memberId === this.$store.getters.member.memberId) {
-                    let guilds = this.$store.getters.myGuilds
-                    guilds.forEach(g => {
-                        g.subTasks.concat(g.priorities, g.completed).forEach(p => {
-                            let task = this.$store.getters.hashMap[p]
-                            if(!task) {
-                                console.log("null taskId found, this means cleanup is not happening elsewhere and is very bad")
-                            } else if(task.guild) {
-                                task.subTasks.concat(task.priorities, task.completed).forEach(sp => {
-                                    let subtask = this.$store.getters.hashMap[sp]
-                                    if(!subtask) {
-                                        console.log("null subtaskId found, this means cleanup is not happening elsewhere and is very bad")
-                                    } else if(subtask.guild) {
-                                        if(!task.guilds) {
-                                            task.guilds = []
-                                        }
-                                        if(task.guilds.indexOf(subtask) === -1) {
-                                            task.guilds.push(subtask)
-                                        }
-                                    }
-                                })
-                                if(!g.guilds) {
-                                    g.guilds = []
-                                }
-                                if(g.guilds.indexOf(task) === -1) {
-                                    g.guilds.push(task)
-                                }
-                            }
-                        })
-                    })
-                    return guilds
-                } else {
-                    return this.$store.state.tasks.filter(g => g.guild && g.deck.indexOf(this.isDoge.memberId) > -1)
-                }
-            }
-        },
-        holdOrSent(){
-            let deck = this.b.deck
-            let passedTo = this.b.passed.map(p => p[1])
-            let allHoldPassed = deck.concat( passedTo )
-            return allHoldPassed.filter(x => !this.$store.getters.hodlersByCompletions.some(p => p.taskId === x))
-        },
-        b(){
-            return this.$store.getters.contextCard
-        },
-        isDoge(){
-            let doge
-            this.$store.state.members.some( m => {
-                if (m.memberId ==  this.b.taskId){
-                    doge = m
-                    return true
-                }
-            })
-            return doge
-        },
-        isGrabbed(){
-          return this.b.deck.indexOf( this.$store.getters.member.memberId ) > -1
-        },
-        subguilds() {
-            return this.$store.state.tasks.filter(p => p.guild && this.b.subTasks.concat(this.b.priorities, this.b.completed).indexOf(p.taskId) > -1)
+          let guilds = this.$store.getters.myGuilds
+          guilds.forEach(g => {
+              g.subTasks.concat(g.priorities, g.completed).forEach(p => {
+                  let task = this.$store.getters.hashMap[p]
+                  if(!task) {
+                      console.log("null taskId found, this means cleanup is not happening elsewhere and is very bad")
+                  } else if(task.guild) {
+                      task.subTasks.concat(task.priorities, task.completed).forEach(sp => {
+                          let subtask = this.$store.getters.hashMap[sp]
+                          if(!subtask) {
+                              console.log("null subtaskId found, this means cleanup is not happening elsewhere and is very bad")
+                          } else if(subtask.guild) {
+                              if(!task.guilds) {
+                                  task.guilds = []
+                              }
+                              if(task.guilds.indexOf(subtask) === -1) {
+                                  task.guilds.push(subtask)
+                              }
+                          }
+                      })
+                      if(!g.guilds) { // XXX seems bad to mutate like this?
+                          g.guilds = []
+                      }
+                      if(g.guilds.indexOf(task) === -1) {
+                          g.guilds.push(task)
+                      }
+                  }
+              })
+          })
+          return guilds
         },
     },
 }

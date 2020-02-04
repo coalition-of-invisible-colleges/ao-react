@@ -57,10 +57,8 @@
 <script>
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-
 import FormBox from './FormBox'
 import GuildCreate from './GuildCreate'
-
 import Cards from '../utils/cards'
 import Sierpinski from './Sierpinski'
 

@@ -18,32 +18,6 @@ export default {
       this.$store.commit('setDimension' , 1)
       this.$store.commit('stopLoading')
   },
-  methods:{
-      cardAge(t){
-          let now = Date.now()
-          let msSince = now - t.timestamp
-          let days = msSince / (1000 * 60 * 60 * 24)
-          return days
-      },
-      setWarp(i){
-          this.$store.commit('setWarp', i)
-      },
-      playPageTurn(){
-          var flip = new Audio(require('../assets/sounds/myst158.wav'))
-          flip.volume = flip.volume * 0.3
-          flip.play()
-      },
-      cardInputSty(c){
-          return {
-              redtx : c === 'red',
-              bluetx : c === 'blue',
-              greentx : c === 'green',
-              yellowtx : c === 'yellow',
-              purpletx : c === 'purple',
-              blacktx : c === 'black',
-          }
-      }
-  },
   computed: {
       topten(){
           let guilds = []
