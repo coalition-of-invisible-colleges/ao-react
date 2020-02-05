@@ -1,31 +1,30 @@
-import config from '../../configuration.js'
-import uuidV1 from 'uuid/v1'
-import express from 'express'
+const config = require( '../../configuration.js')
+const uuidV1 = require( 'uuid/v1')
+const express = require( 'express')
 
 const lightningRouter = express.Router()
 
-import {hashblockStream} from './onChain/bitcoindZmq'
+const allEvents = require('./events')
+const calculations = require( '../calculations')
 
-import cashEvs from './events/cashEvs'
-import tasksEvs from './events/tasksEvs'
-import calculations from '../calculations'
+const LightningClient = require( 'lightning-client')
+const {serverState, pubState} = require( './state')
 
-import LightningClient from 'lightning-client'
-import {serverState, pubState} from './state'
+console.log("using, " + config.clightning.dir)
 
 const client = new LightningClient(config.clightning.dir, true);
 
 
-lightningRouter.post('/lightning/channel',(req, res) => {
-    client.fundchannel(req.body.id, 'all')
-        .then(channel => {
-            console.log(channel)
-        })
-})
-
-lightningRouter.post('/lightning/update',(req, res) => {
-    updateAll()
-})
+// lightningRouter.post('/lightning/channel',(req, res) => {
+//     client.fundchannel(req.body.id, 'all')
+//         .then(channel => {
+//             console.log(channel)
+//         })
+// })
+//
+// lightningRouter.post('/lightning/update',(req, res) => {
+//     updateAll()
+// })
 
 function createInvoice(amount, label, description, expiresInSec){
     return client.invoice(amount * 1000, label, description, expiresInSec)
@@ -52,13 +51,13 @@ function checkFunds(){
         .listfunds()
         .then(result => {
             try {
-                cashEvs.fundsSet(result.outputs, result.channels)
+                allEvents.fundsSet(result.outputs, result.channels)
                 result.outputs.forEach( o => {
                     if (o.status === 'confirmed' && pubState.cash.usedTxIds.indexOf(o.txid) === -1){
                         pubState.tasks.forEach( t => {
                             if (t.address === o.address){
                                 let cadAmt = calculations.satsToCad(o.value, pubState.cash.spot)
-                                tasksEvs.taskBoosted(t.taskId, cadAmt, o.txid)
+                                allEvents.taskBoosted(t.taskId, cadAmt, o.txid)
                             }
                         })
                     }
@@ -81,10 +80,18 @@ function getInfo(){
                             channels: p.channels.length > 0
                         }
                     })
-                    cashEvs.getNodeInfo(result, console.log)
+                    console.log("lightning client result:", result)
                   } catch (err){
-                    console.log("error from cashEvs", err)
+
                   }
+                  try {
+                      allEvents.getNodeInfo(result)
+                  } catch (err) {
+                      console.log('getNodeInfo error:  ', err)
+                  }
+                })
+                .catch(err => {
+
                 })
         })
         .catch(console.log)
@@ -99,7 +106,7 @@ function recordEveryInvoice(start){
 
             pubState.tasks.forEach( t => {
                 if (t.payment_hash === invoice.payment_hash){
-                    tasksEvs.taskBoostedLightning(t.taskId, cadAmt, invoice.payment_hash, invoice.pay_index)
+                    allEvents.taskBoostedLightning(t.taskId, cadAmt, invoice.payment_hash, invoice.pay_index)
                 }
             })
             recordEveryInvoice(start + 1)

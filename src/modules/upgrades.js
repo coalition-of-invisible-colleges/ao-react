@@ -1,13 +1,13 @@
-import Vue from 'vue'
+const Vue = require( 'vue')
 
 const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
-const dimensions = ["time", "space", "replication"]
+const dimensions = ["unicorn", "sun", "bull"]
 
 const state = {
     mode: modes[0],
     payment: false,
-    dimension: false,
+    dimension: "unicorn",
     bird: false,
     stacks: 1,
     warp: -1,
@@ -92,7 +92,7 @@ const mutations = {
 const actions = {}
 const getters = {}
 
-export default {
+module.exports = {
     state,
     mutations,
     actions,

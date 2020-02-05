@@ -24,11 +24,8 @@
 
 import Hypercard from "./Card"
 import request from "superagent"
-import SharedTitle from './slotUtils/SharedTitle'
-import CrazyBtn from './slotUtils/CrazyBtn'
+
 import calculations from './../calculations'
-import TaskCreate from './forms/TaskCreate'
-import WhyLightning from './Nodes/WhyLightning'
 
 export default {
   data(){
@@ -53,11 +50,8 @@ export default {
       },
   },
   components:{
-      SharedTitle,
+      
       Hypercard,
-      CrazyBtn,
-      TaskCreate,
-      WhyLightning,
   },
 }
 

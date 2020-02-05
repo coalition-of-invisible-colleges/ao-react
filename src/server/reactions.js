@@ -1,6 +1,6 @@
-import { getResource } from './spec/utils'
-import events from './events'
-import { serverState } from './state'
+const { getResource } = require( './utils')
+const events = require( './events')
+const { serverState } = require( './state')
 
 function checkForChargedEvent( resourceId ){
     let charged
@@ -56,23 +56,19 @@ function reactions(ev){
                             amount = amount / defaultPrice
                         }
                         let hopper = t.name.slice(0,1)
-                        events.resourcesEvs.resourceUsed(resourceId, '', amount, 0, hopper, console.log)
+                        events.resourceUsed(resourceId, '', amount, 0, hopper, console.log)
                         return true
                     }
                 })
                 break
             case 'member-field-updated':
-                if (ev.field === 'secret') { //This seems wrong - tofu
-                    events.membersEvs.badgeAdded(ev.memberId, 'secure')
-                }
                 break
             case 'member-paid':
                 break
             case 'resource-stocked':
-                events.membersEvs.memberActivated(ev.memberId)
+                events.memberActivated(ev.memberId)
                 break
             case 'resource-stocked':
-                events.membersEvs.badgeAdded(ev.memberId, 'bitpepsi')
                 break
             case 'member-address-updated':
                 break

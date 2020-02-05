@@ -1,14 +1,13 @@
 
 // state
-import cash from './cash'
-import members from './members'
-import tasks from './tasks'
-import resources from './resources'
-import sessions from './sessions'
-import ao from './ao'
+const cash = require( './cash')
+const members = require( './members')
+const tasks = require( './tasks')
+const resources = require( './resources')
+const sessions = require( './sessions')
+const ao = require( './ao')
 
-
-export default {
+module.exports = {
     cash,
     members,
     tasks,

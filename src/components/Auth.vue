@@ -81,6 +81,9 @@ export default {
 
 #auth
     background-color:accent5
+    margin: 50px auto 50px auto
+    padding: 20px 50px 50px 50px;
+    width:300px
 
 main #auth
     margin: 0 0 0 50px
@@ -92,10 +95,6 @@ input
     margin-bottom: 0.5em
     border-radius: 0.25em
 
-#mobileheading #auth
-    margin: 50px auto 50px auto
-    padding: 20px 50px 50px 50px;
-    width:300px
 
 .secret
     -webkit-text-fill-color: transparent; /* sets just the text color */

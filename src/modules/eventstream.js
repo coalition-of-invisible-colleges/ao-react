@@ -1,5 +1,4 @@
-import SoundFX from '../utils/sounds'
-import Store from '../store'
+// const Store = require( '../store')
 
 let memes = [
     'very database',
@@ -59,11 +58,11 @@ const mutations = {
 const actions = {
     displayEvent({commit}, ev){
         console.log("ev type is ", ev.type)
-        if(!Store.getters.member.muted && (ev.type === 'doge-barked' || ev.type === 'resource-used')) {
-            SoundFX.playBarkPing()
-            Store.commit('bark')
-            return
-        }
+        // if(!Store.getters.member.muted && (ev.type === 'doge-barked' || ev.type === 'resource-used')) {
+        //
+        //     Store.commit('bark')
+        //     return
+        // }
 
         commit('show', ev)
         setTimeout(()=>{
@@ -72,7 +71,7 @@ const actions = {
     }
 }
 
-export default {
+module.exports = {
   state,
   mutations,
   actions

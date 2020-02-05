@@ -1,16 +1,25 @@
 
 #### Install
 
-On Raspbian or Ubunutu 18 run the `install.sh` script file. From the ao directory, add the permission and run script:
+To get started from the node projects directory:
+
 ```
-chmod u+x install.sh
-./install.sh
+npm install
+npm run compile
+npm run start
 ```
-Try running the script 2-3 times. Process should be running on localhost:8003 after setup. **The username and password of the first user is dctrl**. Script creates lightning wallet [clightning](https://github.com/ElementsProject/lightning) and requires a full node. Addresses and invoices are controlled on your device. Backup the ~/.lightning/bitcoin/hsm_secret file. Use at your own risk!
+
+On Raspbian or Ubunutu 18 run `npm run setup` to updates and environment dependencies
+- sqlite3
+- tor
+- lightning
+<!-- - ipfs  -->
+
+Process runs on localhost:8003 after setup. **The username and password of the first user is dctrl**. Script creates lightning wallet [clightning](https://github.com/ElementsProject/lightning) and requires a full node (bitcoind). Addresses and invoices are controlled on your device. Backup the ~/.lightning/bitcoin/hsm_secret file. Use at your own risk!
 
 ### Autonomous Organization
 
-1. Add ideas, missions, goals, text on cards.
-2. Create accounts that can log in and register rfid tags.
-3. Manage smart vending machine and maglock door using [pi](https://github.com/autonomousorganization/pi).
-4. Use tor to access remotely and relay cards to another ao.
+- Create accounts that can log in and register rfid tags.
+- Manage vending machines and maglocks using [pi](https://github.com/autonomousorganization/pi).
+- Add ideas, missions, goals, text to cards and pass them to other users.
+- Use tor to access remotely and relay cards to other aos.

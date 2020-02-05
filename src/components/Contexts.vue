@@ -1,0 +1,69 @@
+<template lang='pug'>
+.contexts
+    div(:class='{suncontext: isSun, bullcontext: isBull}')
+        .transparentsides
+    template(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)')
+        .narrow
+            context-row(:taskId ='n')
+</template>
+
+<script>
+
+import ContextRow from './ContextRow'
+
+export default {
+    components: { ContextRow },
+    computed: {
+        cardInputSty() {
+          let color = this.$store.getters.contextCard.color
+          return {
+              redwx : color == 'red',
+              bluewx : color == 'blue',
+              greenwx : color == 'green',
+              yellowwx : color == 'yellow',
+              purplewx : color == 'purple',
+              blackwx : color == 'black',
+          }
+        },
+        isSun() {
+          return this.$store.state.upgrades.dimension === 'sun'
+        },
+        isBull() {
+          return this.$store.state.upgrades.dimension === 'bull'
+        },
+    },
+}
+
+</script>
+
+<style lang='stylus' scoped>
+
+@import '../styles/colours'
+
+.narrow
+    padding-left: 4em
+    padding-right: 4em
+
+.contexts
+    opacity: 0.9
+    z-index: 9009
+    background: transparent
+
+.suncontext
+    background-image: url('../assets/images/sunbean.svg')
+
+.bullcontext
+    background-image: url('../assets/images/bullleg.svg')
+
+.bullcontext, .suncontext
+    margin-top: 2.571111em
+    height: 1.71111em
+    background-repeat: repeat-x
+    background-size: 3em
+    margin-left: 7em
+    margin-right: 7em
+    z-index: -1
+
+h4
+    padding-left: 3.655em
+</style>

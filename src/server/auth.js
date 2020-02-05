@@ -1,4 +1,4 @@
-const utils = require('./spec/utils')
+const utils = require('./utils')
 const events = require('./events')
 const cryptoUtils = require('../crypto')
 const state = require('./state')
@@ -61,7 +61,7 @@ function serverAuth(req, res, next){
         let token = cryptoUtils.hmacHex(req.headers.session, sessionKey)
         if (token === req.headers.authorization){
             // client able to create the token, must have secret
-            events.sessionsEvs.sessionCreated(ownerId, req.headers.session, token, utils.buildResCallback(res))
+            events.sessionCreated(ownerId, req.headers.session, token, utils.buildResCallback(res))
         } else {
             res.status(401).end('unauthorized')
         }

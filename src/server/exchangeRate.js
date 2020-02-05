@@ -4,7 +4,7 @@ const request = require('superagent')
 const config = require('../../configuration')
 const events = require('./events')
 const state = require('./state')
-const validators = require('./spec/validators')
+const validators = require('./validators')
 
 function watchSpot(){
     getRecordSpot()
@@ -14,7 +14,7 @@ function watchSpot(){
 function getRecordSpot(){
     getPrice( (err, spot)=> {
         if (!err){
-            events.cashEvs.spotUpdated(spot)
+            events.spotUpdated(spot)
         }
     })
 }

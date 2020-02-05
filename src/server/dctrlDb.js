@@ -1,11 +1,9 @@
-import Kefir from 'kefir'
-import config from '../../configuration'
-import cryptoUtils from '../crypto'
-import uuidV1 from 'uuid/v1'
-import _ from 'lodash'
-// import s from './bs'
-
-import dbengine from  'better-sqlite3'
+const Kefir = require('kefir')
+const _ = require('lodash')
+const uuidV1 = require('uuid/v1')
+const dbengine = require( 'better-sqlite3')
+const config = require('../../configuration')
+const cryptoUtils = require('../crypto')
 
 const preparedStmts = {};
 
@@ -132,46 +130,6 @@ function insertBackup(state, callback) {
     }
     if (callback) return callback(err, result);
 }
-
-//
-// setTimeout( () => {
-//   let members = []
-//   let ids = []
-//   let names = []
-//   let tasks = []
-//   let memberTasks = []
-//   s.members.forEach( m => {
-//     if ( ids.indexOf(m.memberId) > -1 || names.indexOf(m.name) > -1 ) {
-//       return false
-//     }
-//     ids.push(m.memberId)
-//     names.push(m.name)
-//     m.fob = ''
-//     m.email = ''
-//     members.push(m)
-//     if (m.balance < 0) m.balance = 0
-//   })
-//
-//   s.tasks.forEach( t => {
-//       if (ids.indexOf(t.name) > -1){
-//           if (memberTasks.indexOf(t.name) > -1){
-//               return false
-//           }
-//           memberTasks.push(t.name)
-//       }
-//       tasks.push(t)
-//   })
-//
-//   s.members = members
-//   s.tasks = tasks
-//
-//   console.log('trying to migrate s', s.members.length, " members, ", s.tasks.length, " tasks")
-//   names.forEach((n, i) => {
-//     console.log(i, '. ', n)
-//   })
-//
-//   insertBackup(s, console.log)
-// }, 10000)
 
 function startDb(callback){
     conn = dbengine(config.sqlite3.file, { });

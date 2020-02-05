@@ -1,16 +1,27 @@
 <template lang='pug'>
 
 .app
-  navigation
-  router-view
-  event-feed
+    contexts
+    sun
+    helm
+    bull
+    loader
+    event-feed
+    status
+    task-create
+    router-view
 </template>
 
 <script>
 
-import Navigation from './components/Navigation'
-import MobileHeading from './components/MobileHeading'
-import EventFeed from './components/slotUtils/EventFeed'
+import EventFeed from './components/EventFeed'
+import Sun from './components/Sun'
+import Bull from './components/Bull'
+import Loader from './components/Loader'
+import Helm from './components/Helm'
+import Status from './components/Status'
+import Contexts from './components/Contexts'
+import TaskCreate from './components/TaskCreate'
 
 export default {
     mounted() {
@@ -25,10 +36,9 @@ export default {
         }
     },
     components: {
-        Navigation, MobileHeading, EventFeed
+        EventFeed, Sun, Bull, Loader, Helm, Status, TaskCreate, Contexts
     },
 }
-
 
 </script>
 

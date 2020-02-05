@@ -64,23 +64,12 @@ fi
 NODEVERSION=`nvm current`
 
 # install node
-if [ $(echo $NODEVERSION | grep -c "v11") -eq 1 ];
+if [ $(echo $NODEVERSION) -eq 1 ];
 then
 	echo node $NODEVERSION already installed
 else
-	nvm install 11
-fi
-
-#install yarn
-if [ $(yarn --version | grep -c "1\.21\.1") -eq 1 ];
-then
-	echo yarn v1.21.1 already installed
-else
-	cd ~
-	curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-	echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-	sudo apt-get update && sudo apt-get install -y --no-install-recommends yarn
-	yarn cache clean
+	nvm install stable
+	nvm use stable
 fi
 
 # install c-lightning
@@ -283,12 +272,7 @@ fi
 
 # install project dependencies
 cd ao
-if [ $(yarn check --integrity | grep -c "success") -eq 1 ];
-then
-	echo 'yarn install' already complete
-else
-	yarn install --network-timeout 10000000
-fi
+npm install
 
 # create configuration.js
 if [ -f "$HOME/ao/configuration.js" ];

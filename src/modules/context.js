@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import SoundFX from '../utils/sounds'
-import _ from 'lodash'
-
-// const modes = ["boat", "badge", "bounty", "timecube"]
+const Vue = require( 'vue')
+const _ = require( 'lodash')
 const payments = ["bitcoin", "lightning"]
 
 const state = {
@@ -12,41 +9,9 @@ const state = {
     completed: false,
     action: false,
     loading: false,
-    // memory: {},
-    // topRed: 0,
-    // topYellow: 0,
-    // topGreen: 0,
-    // topPurple: 0,
-    // topBlue: 0,
 }
 
 const mutations = {
-    // addMemory(state){
-    //   Vue.set(state.memory, state.panel[state.top], {
-    //     topRed: state.topRed,
-    //     topYellow: state.topYellow,
-    //     topGreen: state.topGreen,
-    //     topPurple: state.topPurple,
-    //     topBlue: state.topBlue,
-    //   })
-    // },
-    // retrieveMemory(state, taskId){
-    //     let memory = state.memory[taskId]
-    //     console.log({memory})
-    //     if (memory){
-    //       state.topRed = memory.topRed
-    //       state.topYellow = memory.topYellow
-    //       state.topGreen = memory.topGreen
-    //       state.topPurple = memory.topPurple
-    //       state.topBlue = memory.topBlue
-    //     } else {
-    //       state.topRed = 0
-    //       state.topYellow = 0
-    //       state.topGreen = 0
-    //       state.topPurple = 0
-    //       state.topBlue = 0
-    //     }
-    // },
     toggleCompleted(state){
         state.completed = !state.completed
     },
@@ -62,15 +27,6 @@ const mutations = {
     setAction(state, a){
         state.action = a
     },
-    // last(state){
-    //     state.top = (this.top - 1) % state.panel.length
-    //     if (state.top === -1) {
-    //         state.top = state.panel.length - 1
-    //     }
-    // },
-    // next(state){
-    //     state.top = (state.top + 1) % state.panel.length
-    // },
     addParent(state, pId){
         state.parent = _.filter(state.parent, p => p !== pId)
         state.parent.push(pId)
@@ -91,18 +47,13 @@ const mutations = {
 
 const actions = {
     goIn({commit, state, getters}, pContext ){
-        SoundFX.playPageTurn()
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
         pContext.parents.forEach(p => {
             commit("addParent", p)
         })
-        // if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
-            // this.$store.commit("setMode", 1)
-        // }
     },
     goUp({commit, state}, pContext){
-        SoundFX.playPageTurn()
         commit("goToParent", pContext.target)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
@@ -111,7 +62,7 @@ const actions = {
 
 const getters = {}
 
-export default {
+module.exports = {
     state,
     mutations,
     actions,

@@ -3,23 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-Vue.config.productionTip = false
-
-// for using vue-perf-devtools Chrome/Firefox optimization plugin
-Vue.config.devtools = true
-Vue.config.performance = true
-
-// no work
-// router.beforeEach = (to, from, next) => {
-//     console.log("route guarded?????????!", {to, from})
-//
-//     // store.commit("")
-//     next()
-// }
-
-
 new Vue({
   router,
   store,
   render: h => h(App),
-}).$mount('#app')
+}).$mount('#ao')
