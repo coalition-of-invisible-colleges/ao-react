@@ -14,7 +14,6 @@ const { watchSpot } = require('./exchangeRate')
 const Kefir = require('kefir')
 const cronStarter = require('./crons')
 const lightning = require('./lightning')
-const connector = require(  './connector')
 const { watchAos } = require(  './peerState')
 
 const app = express()

@@ -6,24 +6,18 @@
         img.logindicator(v-if='isLoggedIn', src='../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../assets/images/loggedOut.svg')
         label.hackername(:class='{ spacer: $store.state.upgrades.mode !== "doge" || $store.getters.contextCard.priorities.length < 1 }') {{ m.name }}
-    .bottomleft(@click='goChest')
+    .bottomleft
+      div(@click='goChest')
         img.smallguild(src='../assets/images/chest.svg')
         label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
         label.stash(v-else) 0
+        div(v-if='m.active > 0') active
+        div(v-else) inactive
     not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
-    .bottomright
-      .tooltip
-        img.dogecoin.adjtooltip(src='../assets/images/doge_in_circle.png'  :class='{ faded : m.active <= 0 }'  @click='toggleActivated')
-        .tooltiptext.membertooltip
-            p.suggest(v-if='m.active > 0 && m.memberId === $store.getters.member.memberId') click to deactivate
-            p.suggest(v-if='m.active <= 0 && m.memberId === $store.getters.member.memberId') click to activate
-            .gui.title(v-if='nameList.length > 0') vouches
-            ul.left(v-if='nameList.length > 0')
-                li(v-for='n in nameList')
-                    vouch.gui(:memberId='n'  :b='b'  :inId='ugly')
-            h2 {{ deckSize }} cards
-            .gui(v-if='m.active > 0') account is active
-            .gui(v-else) account is inactive cannot use resources, will not be included in rent.
+    .bottomright.membertooltip
+        div(@click='goBadge')
+            div.title {{nameList.length}} vouches
+        h2 {{ deckSize }} cards
     .clearboth
 </template>
 
@@ -66,6 +60,9 @@ export default {
         },
     },
     methods: {
+        goBadge(){
+            this.$router.push('/badge')
+        },
         goChest(){
             this.$router.push('/chest')
         },
@@ -134,51 +131,6 @@ label
     text-align: center
     position: relative
 
-.agedwrapper
-    position: relative
-
-.agedbackground
-    background-image: url('../assets/images/paper.jpg')
-    background-repeat: no-repeat
-    background-position: center center
-    background-size: cover
-    top: 0
-    left: 0
-    bottom: 0
-    right: 0
-    position: absolute
-    width: 100%
-    height: 100%
-    pointer-events: none
-    //border-radius: 12px
-    z-index: -1
-
-.freshpaper
-    background-image: url('../assets/images/paper.jpg')
-    opacity: 0.3
-
-.weekoldpaper
-    background-image: url('../assets/images/paper_aged_1.png')
-    opacity: 0.3
-
-.montholdpaper
-    background-image: url('../assets/images/paper_aged_2.png')
-    opacity: 0.3
-
-.threemontholdpaper
-    background-image: url('../assets/images/paper_aged_3.png')
-    opacity: 0.3
-
-.smallcaps
-    color: #fff
-    width: 100%
-    border-radius: 50%
-    opacity: 0.75
-    padding: 0.5em
-    border-style: solid
-    border-color: white
-    border-width: 2px
-
 .smallguild
     height: 2em
 
@@ -206,11 +158,8 @@ label
 .clearboth
     clear: both
 
-.gui
-    font-size: 1.7em
-    cursor: pointer
-
 .title
+    cursor: pointer
     text-align: center
     font-size: 1.8em
     margin-top: 0.5em
@@ -231,11 +180,7 @@ label
 .faded
     opacity: 0.39
 
-.tooltiptext.membertooltip
-    width: 20em
-    z-index: 151
-    left: 6.5em
-    top: -10.1em
+.membertooltip
     font-size: 0.7em
 
 ul.left

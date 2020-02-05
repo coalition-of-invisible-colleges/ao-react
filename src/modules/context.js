@@ -1,7 +1,5 @@
 const Vue = require( 'vue')
 const _ = require( 'lodash')
-
-// const modes = ["boat", "badge", "bounty", "timecube"]
 const payments = ["bitcoin", "lightning"]
 
 const state = {
@@ -11,12 +9,6 @@ const state = {
     completed: false,
     action: false,
     loading: false,
-    // memory: {},
-    // topRed: 0,
-    // topYellow: 0,
-    // topGreen: 0,
-    // topPurple: 0,
-    // topBlue: 0,
 }
 
 const mutations = {
@@ -60,9 +52,6 @@ const actions = {
         pContext.parents.forEach(p => {
             commit("addParent", p)
         })
-        // if(state.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
-            // commit("setMode", 1)
-        // }
     },
     goUp({commit, state}, pContext){
         commit("goToParent", pContext.target)
