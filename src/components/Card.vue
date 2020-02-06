@@ -53,7 +53,6 @@ import Linky from './Linky'
 import SimplePriorities from './SimplePriorities'
 import Current from './Current'
 
-
 export default {
     props: ['b', 'inId', 'c'],
     data(){
@@ -131,14 +130,11 @@ export default {
           })
         },
         copyCardToClipboard(){
-
-          console.log('attemt to copy, ', this.b.name)
           navigator.clipboard.writeText(this.b.name)
               .then(x => console.log('success', x))
               .catch(err => console.log('fail', err))
         },
         deaction(){
-
           this.$store.commit("setAction", false)
         },
     },

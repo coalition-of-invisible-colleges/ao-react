@@ -2,9 +2,6 @@ const _ = require( 'lodash')
 const state = require( './state')
 
 module.exports = {
-  isName(val, errRes){
-      return true
-  },
   isAmount(val, errRes){
       let parsed = parseFloat(val)
       if (parsed !== 0 && !parsed) {
@@ -30,23 +27,17 @@ module.exports = {
       }
       return isField
   },
-  isId(val, errRes){
-      //XXX not in use
-      return true
-  },
-  isFob(val, errRes){
-      // let regex = /^[0-9]{10}$/
-      // let result = regex.test(val)
-      // if (!result){
-      //   errRes.push('invalid fob format')
-      // }
-      return true
-  },
-  isMultisigAddress(val, errRes){
-      return true // XXX
-  },
   isAddress(val, errRes){
-      return true // XXX
+      let result = false
+      state.pubState.ao.forEach(ao =>{
+          if (val === ao.address){
+            result = true
+          }
+      })
+      if (!result) {
+          errRes.push('invalid address')
+      }
+      return result
   },
   isMemberId(val, errRes){
       let result = false
@@ -76,11 +67,6 @@ module.exports = {
       let result = false
       state.pubState.tasks.forEach(task =>{
           if (val == task.taskId){
-            result = true
-          }
-      })
-      state.pubState.members.forEach(m =>{
-          if (val == m.memberId){
             result = true
           }
       })
@@ -133,9 +119,6 @@ module.exports = {
       return isBool
   },
   isNotes(val, errRes){
-      return true
-  },
-  isSupplyType(val, errRes){
       return true
   }
 }

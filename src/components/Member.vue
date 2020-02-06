@@ -14,10 +14,11 @@
         div(v-if='m.active > 0') active
         div(v-else) inactive
     not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
-    .bottomright.membertooltip
+    .bottomright
         div(@click='goBadge')
-            div.title {{nameList.length}} vouches
-        h2 {{ deckSize }} cards
+            img.smallguild(src='../assets/images/badge.svg')
+            div.stash {{nameList.length}}
+        div(@click='goArchive') {{ deckSize }} cards
     .clearboth
 </template>
 
@@ -60,6 +61,9 @@ export default {
         },
     },
     methods: {
+        goArchive(){
+            this.$router.push('/archive')
+        },
         goBadge(){
             this.$router.push('/badge')
         },
@@ -147,7 +151,7 @@ label
     right: 1em
     bottom: 0.65em
     float: right
-    margin-top: -3em
+    cursor: pointer
 
 .stash
     display: inline

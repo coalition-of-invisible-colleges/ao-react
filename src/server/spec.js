@@ -1,4 +1,5 @@
 const express = require( 'express')
+const uuidV1 = require( 'uuid/v1')
 const state = require( './state')
 const utils = require( './utils')
 const validators = require( './validators')
@@ -6,7 +7,6 @@ const calculations = require( '../calculations')
 const events = require( './events')
 const connector = require( './connector')
 const lightning = require( './lightning')
-const uuidV1 = require( 'uuid/v1')
 
 const router = express.Router()
 
@@ -159,8 +159,8 @@ router.post('/events', (req, res, next)=>{
           break
       case 'member-created':
           if (
-            validators.isName(req.body.name, errRes) &&
-            validators.isFob(req.body.fob, errRes) &&
+            validators.isNotes(req.body.name, errRes) &&
+            validators.isNotes(req.body.fob, errRes) &&
             validators.isNotes(req.body.secret)
           ){
             events.memberCreated(
@@ -229,7 +229,7 @@ router.post('/events', (req, res, next)=>{
       case 'badge-added':
           if (
             validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes( req.body.badge )
+            validators.isNotes(req.body.badge)
           ){
             events.badgeAdded(
               req.body.memberId,
@@ -301,7 +301,6 @@ router.post('/events', (req, res, next)=>{
           }
           break
       case 'doge-migrated':
-          // XXX out connector
           let tasks = []
           let memberCard
           let taskIds = []
@@ -379,7 +378,6 @@ router.post('/events', (req, res, next)=>{
           break
       case 'resource-used':
           if (
-              // XXX check member balance
               validators.isActiveMemberId(req.body.memberId, errRes) &&
               validators.isResourceId(req.body.resourceId, errRes) &&
               validators.isAmount(req.body.amount, errRes) &&
@@ -432,8 +430,8 @@ router.post('/events', (req, res, next)=>{
           break
       case 'resource-booked':
           if (
-            // validators.isTas(req.body.resourceId, errRes) &&
-            validators.isId(req.body.memberId, errRes) &&
+            validators.isTaskId(req.body.resourceId, errRes) &&
+            validators.isMemberId(req.body.blame, errRes) &&
             validators.isNotes(req.body.startTs, errRes) &&
             validators.isNotes(req.body.endTs, errRes) &&
             validators.isNotes(req.body.eventType, errRes) &&
@@ -442,7 +440,7 @@ router.post('/events', (req, res, next)=>{
           ){
             events.resourceBooked(
               req.body.resourceId,
-              req.body.memberId,
+              req.body.blame,
               req.body.startTs,
               req.body.endTs,
               req.body.eventType,
@@ -495,7 +493,7 @@ router.post('/events', (req, res, next)=>{
           break
       case 'task-created':
           if (
-            validators.isName(req.body.name, errRes) &&
+            validators.isNotes(req.body.name, errRes) &&
             validators.isNotes(req.body.color, errRes) &&
             validators.isNotes(req.body.deck, errRes) &&
             validators.isTaskId(req.body.inId)
@@ -513,7 +511,7 @@ router.post('/events', (req, res, next)=>{
           break
       case 'task-guilded':
           if (
-              validators.isNotes(req.body.taskId, errRes) &&
+              validators.isTaskId(req.body.taskId, errRes) &&
               validators.isNotes(req.body.guild, errRes)
           ){
               events.taskGuilded(
@@ -527,8 +525,8 @@ router.post('/events', (req, res, next)=>{
           break
       case 'task-sub-tasked':
           if (
-            validators.isNotes(req.body.taskId, errRes) &&
-            validators.isNotes(req.body.subTask, errRes)
+            validators.isTaskId(req.body.taskId, errRes) &&
+            validators.isTaskId(req.body.subTask, errRes)
           ){
             events.taskSubTasked(
               req.body.taskId,
@@ -542,8 +540,8 @@ router.post('/events', (req, res, next)=>{
           break
       case 'task-de-sub-tasked':
           if (
-            validators.isNotes(req.body.taskId, errRes) &&
-            validators.isNotes(req.body.subTask, errRes)
+            validators.isTaskId(req.body.taskId, errRes) &&
+            validators.isTaskId(req.body.subTask, errRes)
           ){
             events.taskDeSubTasked(
               req.body.taskId,
