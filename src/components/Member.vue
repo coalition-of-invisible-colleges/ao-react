@@ -6,6 +6,7 @@
         img.logindicator(v-if='isLoggedIn', src='../assets/images/loggedIn.svg')
         img.logindicator(v-else, src='../assets/images/loggedOut.svg')
         label.hackername(:class='{ spacer: $store.state.upgrades.mode !== "doge" || $store.getters.contextCard.priorities.length < 1 }') {{ m.name }}
+    not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
     .bottomleft
       div(@click='goChest')
         img.smallguild(src='../assets/images/chest.svg')
@@ -13,7 +14,6 @@
         label.stash(v-else) 0
         div(v-if='m.active > 0') active
         div(v-else) inactive
-    not-zen(v-if='$store.state.upgrades.mode !== "boat" && dukkha >= 1')
     .bottomright
         div(@click='goBadge')
             img.smallguild(src='../assets/images/badge.svg')

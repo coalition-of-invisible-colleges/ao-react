@@ -25,4 +25,8 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../styles/title'
+
+h1
+    color: yellow
+
 </style>

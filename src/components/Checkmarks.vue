@@ -2,18 +2,18 @@
 
 .upgrades
     projects
-    current.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'    :inId='ugly'  :completions='n.contextCompletions'  :key='$store.getters.hodlersByCompletions')
-    current(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :inId='ugly')
+    current-checks.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :completions='n.contextCompletions'  :key='n.taskId')
+    current-checks(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :key='n')
 </template>
 
 <script>
-import Current from './CurrentChecks'
+import CurrentChecks from './CurrentChecks'
 import Linky from './Linky'
 import Projects from './Projects'
 
 export default {
     components:{
-        Linky, Current, Projects
+        Linky, CurrentChecks, Projects
     },
     mounted() {
         this.$store.commit('setMode' , 2)

@@ -6,9 +6,7 @@
         img.doge(v-else-if='!$store.state.upgrades.barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
-            p(v-if='$store.state.upgrades.warp > -1') {{ $store.getters.warpDrive.alias }}
-            p(v-else) {{ $store.state.cash.alias }}
-            p
+            p(v-if='$store.state.loader.lastPing > 1')
                 span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
                 span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
                 span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
@@ -18,15 +16,8 @@
                 span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
                 span.pong ({{ $store.state.loader.lastPing }} ms pong)
             p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
-            h3(v-if='liveConnections.length > 0') Connected AOs
-            h3(v-else) no connected AOs
-            div(v-for='r in liveConnections')
-                ul
-                    li {{ r.state.cash.alias }}
-            p.suggest(v-if='$store.getters.member.muted') you are in Bread Doge Mode. while in Bread Doge Mode, sounds will be muted and tutorial tooltips will be displayed.
-            p.suggest(v-if='$store.getters.member.muted') double-dab to switch to Doge Radar Mode
-            p.suggest(v-if='!$store.getters.member.muted') Doge Radar - long dab to bark
-            p.suggest(v-if='!$store.getters.member.muted') double-dab to mute sounds and show tooltips
+            p.suggest(v-if='$store.getters.member.muted') double click to unmute
+            p.suggest(v-if='!$store.getters.member.muted') double click to mute
     .wowdar(v-if='!$store.getters.member.muted')
         .ringbase.ring1
         .ringbase.ring2
@@ -73,15 +64,9 @@ export default {
         dogemc.add(dogeSwipeRight)
         dogemc.on('swiperight', (e) => {
             if(this.$store.state.ao.length < 1) {
-
                 return
             }
-            console.log("swiperight")
-            console.log("warp is ", this.$store.state.upgrades.warp + 1)
-            console.log("ao length is", this.$store.state.ao.length)
             let both = (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
-            console.log("both is ", both)
-            console.log("ao state is ", this.$store.state.ao[both].state)
             this.$store.commit('setWarp', (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length)
         })
     },

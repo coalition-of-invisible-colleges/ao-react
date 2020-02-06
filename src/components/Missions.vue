@@ -2,8 +2,7 @@
 
 .missions
     .endpadtwo
-      .title.yellowtx missions
-      ul.none
+        ul.none
           template(v-for='g in (showAllGuilds ? missions : missions.slice(0, 5))')
               li.spaced
                   span(@click='goIn(g.taskId)')
@@ -117,7 +116,7 @@ export default {
                               }
                           }
                       })
-                      if(!g.guilds) { // XXX seems bad to mutate like this?
+                      if(!g.guilds) { 
                           g.guilds = []
                       }
                       if(g.guilds.indexOf(task) === -1) {
