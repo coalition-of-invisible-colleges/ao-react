@@ -98,7 +98,6 @@ export default {
         doubleTap.requireFailure(tripleTap)
 
         mc.on('singletap', (e) => {
-
             this.toggleGive()
             e.stopPropagation()
         })
@@ -313,7 +312,6 @@ export default {
                     others.push(t)
                 }
             })
-            console.log("others is ", others)
             others = others.slice(index).concat(others.slice(0, index))
             return others
         },

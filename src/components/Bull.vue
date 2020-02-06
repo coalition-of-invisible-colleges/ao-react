@@ -2,7 +2,7 @@
 div
     div(ref='bull')
         img.r(src="../assets/images/bull.svg"    :class='{ bigger : isBull }')
-    .bullmenu(v-if='isBull')
+    .bullmenu(v-if='isBull && $store.getters.member.muted')
         p(@click='goDash("doge")'  :class='{ dabstination : $store.state.upgrades.mode === "doge" }')
             img.lil(src='../assets/images/buddadoge.svg')
             span Access
@@ -161,10 +161,12 @@ p:hover
     p
         cursor: pointer
         padding: 0.7654321
+
 .satspot
     position: fixed
     top: 1em
-    left: 3.7em
+    left: 4em
+    z-index: 9000
 
 .logout
     position: fixed

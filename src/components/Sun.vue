@@ -1,7 +1,7 @@
 <template lang='pug'>
 div
   img.l(src="../assets/images/sun.svg"  ref='sun'  :class='{ bigger : isSun }')
-  div.sunmenu(v-if='isSun')
+  div.sunmenu(v-if='isSun && $store.getters.member.muted')
       p(@click='goFront("doge")'  :class='{ dabstination : $store.state.upgrades.mode === "doge" }')
           img.lil(src='../assets/images/buddadoge.svg')
           span Oracle

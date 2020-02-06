@@ -12,11 +12,11 @@
         span {{ totalGuilds.toFixed(0) }} on missions
         img(src='../assets/images/coin.svg')
         span {{ totalCards.toFixed(0) }} on cards
-    template(v-for='n in cards')
-        p {{ n.boost }} - {{ n.name }}
     div(v-for='n in members')
         span {{ n.boost.toFixed(0) }}
         current(:memberId='n.taskId')
+    template(v-for='n in cards')
+        p {{ n.boost }} - {{ n.name }}
     div(v-for='n in resources')
         span {{ n.boost.toFixed(0) }}
         currentr(:resourceId='n.taskId')
