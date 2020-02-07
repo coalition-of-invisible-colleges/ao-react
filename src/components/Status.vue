@@ -6,18 +6,12 @@
         img.doge(v-else-if='!$store.state.upgrades.barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         img.doge.flip(v-else  src='../assets/images/bark.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
+            span.dot(:class='dotClass')
+            span {{ $store.state.loader.connected }}
             p(v-if='$store.state.loader.lastPing > 1')
-                span.dot.redwx(v-if="$store.state.loader.connected == 'disconnected'")
-                span.dot.yellowwx(v-else-if="$store.state.loader.connected == 'connecting'")
-                span.dot.greenwx(v-else-if="$store.state.loader.connected == 'connected'")
-                span.dot.purplewx(v-else="$store.state.loader.connectionError")
-                span(v-if="$store.state.loader.connected == 'connecting'") connecting
-                span(v-else-if="$store.state.loader.connected == 'connected'") connected
-                span(v-else-if="$store.state.loader.connected == 'disconnected'") disconnected
-                span.pong ({{ $store.state.loader.lastPing }} ms pong)
+                span ({{ $store.state.loader.lastPing }} ms pong)
             p(v-if="$store.state.loader.connectionError") {{ $store.state.loader.connectionError }}
-            p.suggest(v-if='$store.getters.member.muted') double click to unmute
-            p.suggest(v-if='!$store.getters.member.muted') double click to mute
+            p.suggest(v-if='$store.getters.member.muted') double click toggles sound, tooltips
     .wowdar(v-if='!$store.getters.member.muted')
         .ringbase.ring1
         .ringbase.ring2
@@ -89,6 +83,14 @@ export default {
         liveConnections(){
             return this.$store.state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
         },
+        dotClass(){
+            return {
+                redwx: this.$store.state.loader.connected === 'disconnected',
+                yellowwx: this.$store.state.loader.connected === 'connecting',
+                greenwx: this.$store.state.loader.connected === 'connected',
+                purplewx: !!this.$store.state.loader.connectionError
+            }
+        }
     }
 }
 </script>
@@ -98,6 +100,13 @@ export default {
 @import '../styles/colours'
 @import '../styles/grid'
 @import '../styles/tooltips'
+
+.dot
+  height: 0.5em
+  width: 0.5em
+  border-radius: 50%
+  display: inline-block
+  margin-right: 0.5em
 
 .small.always.left
     position: fixed

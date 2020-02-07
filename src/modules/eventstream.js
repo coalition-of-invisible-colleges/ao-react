@@ -58,7 +58,6 @@ const actions = {
     displayEvent({commit, getters}, ev){
         console.log("ev type is ", ev.type)
         if(!getters.member.muted && (ev.type === 'doge-barked' || ev.type === 'resource-used')) {
-
             commit('bark')
             return
         }
