@@ -22,7 +22,7 @@
             .serverLabel on {{ $store.getters.warpDrive.alias }}
         select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
-            template(v-for='g in $store.getters.sendableGuilds'  :key='$store.getters.sendableGuilds')
+            template(v-for='g in $store.getters.sendableGuilds')
                 option(:value="g.taskId") {{ g.guild }}
                 template(v-for='p in g.guilds')
                     option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
@@ -31,7 +31,7 @@
         form-box.small(btntxt="give"  event='task-passed' v-bind:data='playInfo')
     .give(v-if='showGive')
         div(v-if='$store.state.upgrades.warp > -1')
-            select.shorten(v-model='toMemberWarp'  :key='$store.getters.warpDrive.address')
+            select.shorten(v-model='toMemberWarp')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
             //- button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send

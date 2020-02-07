@@ -3,7 +3,7 @@
 .priorities
     .empty(v-if='isUni && taskId === $store.getters.contextCard.taskId && priorities.length >= 1')
         not-zen(:taskId='taskId')
-    template.clearboth(v-else  v-for='(t, i) of priorities.slice(0, 5)'  :key='priorities')
+    div.clearboth(v-else  v-for='(t, i) of priorities.slice(0, 5)'  :key='priorities')
         simple-hyperpriority.front(:taskId='t'  :c='priorities'  :inId='taskId')
         .centerer
             .more(v-if='i === 4 && priorities.length > 5') +{{ priorities.length - 5 }}

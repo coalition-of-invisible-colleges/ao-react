@@ -78,7 +78,7 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/button'
-
+@import '../styles/input'
 #auth
     background-color:accent5
     margin: 50px auto 50px auto

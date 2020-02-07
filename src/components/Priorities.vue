@@ -2,7 +2,7 @@
 
 .priorities
     img.bdoge(v-if='priorities.length < 1'  src='../assets/images/buddadoge.svg'  @click='$router.push("/doge")')
-    template.clearboth(v-for='(t, i) of priorities'  :key='t')
+    .clearboth(v-for='(t, i) of priorities'  :key='t')
       .row.priority
           .allocated(v-if='allocated(t) > 0'  :class='{ openallocated : $store.state.context.action }') {{ allocated(t) }}
           img.singleship(@click='allocate(t)'  src='../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')

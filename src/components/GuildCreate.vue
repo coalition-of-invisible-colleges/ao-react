@@ -59,6 +59,10 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../styles/button'
+@import '../styles/input'
+
+button
+    width: 90%
 
 .guildcreate
     background: transparent
