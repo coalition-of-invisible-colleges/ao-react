@@ -94,10 +94,7 @@ const mutations = {
     }
 }
 
-const actions = {
-
-
-}
+const actions = {}
 const getters = {}
 
 module.exports = {

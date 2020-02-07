@@ -4,17 +4,13 @@
     .row.ptr(v-if="topCard"  ref='swipebar')
         .three.grid.tooltip(ref='previous')
             span &nbsp;
-            img.fl(v-if='!open && topCard.color === "red"', src='../assets/images/backRed.svg')
-            img.fl(v-if='!open && topCard.color === "yellow"', src='../assets/images/backYellow.svg')
-            img.fl(v-if='!open && topCard.color === "green"', src='../assets/images/backGreen.svg')
-            img.fl(v-if='!open && topCard.color === "purple"', src='../assets/images/backPurple.svg')
-            img.fl(v-if='!open && topCard.color === "blue"', src='../assets/images/backBlue.svg')
+            img.fl(src='../assets/images/back.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
                 p.suggest previous
-        .one.grid.horizcenter(:class='panelSty')
+        .one.grid.horizcenter()
             .box.verticalcenter
                 h3(v-if='!open') {{ top + 1 }}
-        .four.grid.horizcenter(:class='panelSty')
+        .four.grid.horizcenter()
             .mandalign.tooltip(ref='mandelorb')
                 img(v-if='open && $store.state.upgrades.stacks === 5', src='../assets/images/openRed.svg'  draggable='false')
                 img(v-else-if='$store.state.upgrades.stacks === 5'  src='../assets/images/open.svg'  draggable='false')
@@ -22,17 +18,13 @@
                 img.iris(v-else  src='../assets/images/mandelorb_linear.svg'  draggable='false')
                 .tooltiptext(v-if='$store.getters.member.muted')
                     p.suggest long press to split
-        .one.grid.horizcenter(:class='panelSty')
+        .one.grid.horizcenter()
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
                 h3(v-else) all
         .three.grid.tooltip(ref='next')
             span &nbsp;
-            img.fr(v-if='!open && topCard.color === "red"', , src='../assets/images/forwardRed.svg')
-            img.fr(v-if='!open && topCard.color === "yellow"', src='../assets/images/forwardYellow.svg')
-            img.fr(v-if='!open && topCard.color === "green"', src='../assets/images/forwardGreen.svg')
-            img.fr(v-if='!open && topCard.color === "purple"', src='../assets/images/forwardPurple.svg')
-            img.fr(v-if='!open && topCard.color === "blue"', src='../assets/images/forwardBlue.svg')
+            img.fr(src='../assets/images/forward.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
                 p.suggest next
     .row.fadey(v-else)
@@ -47,7 +39,7 @@
           img.fr(src='../assets/images/forward.svg')
     .open(v-if='open')
         hypercard(v-for='b in c'  :b="b"  :key="b.taskId"  :inId='taskId'  :c='panelIds')
-    .box(v-else  :class='panelSty')
+    .box(v-else  )
         hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId'  :c='panelIds')
 </template>
 
@@ -230,16 +222,6 @@ export default {
         }
         return false
     },
-    panelSty(){
-        return {
-            redtx : this.topCard.color == 'red',
-            bluetx : this.topCard.color == 'blue',
-            greentx : this.topCard.color == 'green',
-            yellowtx : this.topCard.color == 'yellow',
-            purpletx : this.topCard.color == 'purple',
-            blacktx : this.topCard.color == 'black',
-        }
-    },
     panelIds() {
         return this.c.map(g => g.taskId)
     }
@@ -258,11 +240,9 @@ export default {
 @import '../styles/button'
 @import '../styles/tooltips'
 
-button
-    background: darkteal
-
 #tasks
     width: 100%
+    color: lightGrey
 
 tr
     border-color: accent4
@@ -332,7 +312,7 @@ img
     margin: 1em 0 0.5em 0
     background-color: rgba(51, 51, 51, 0.3)
     border-radius: 40px
-
+    opacity: 0.77
 .fr
     float: right
     margin-left: 0.5em
