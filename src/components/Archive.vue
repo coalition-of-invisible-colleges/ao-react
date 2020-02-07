@@ -47,7 +47,7 @@ export default {
       GenPanels,
   },
   mounted() {
-      this.$store.commit('stopLoading')
+      this.$store.dispatch('loaded')
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {

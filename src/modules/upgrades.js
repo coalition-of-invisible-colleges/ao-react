@@ -7,7 +7,7 @@ const dimensions = ["unicorn", "sun", "bull"]
 const state = {
     mode: modes[0],
     payment: false,
-    dimension: "unicorn",
+    dimension: dimensions[0],
     bird: false,
     stacks: 1,
     warp: -1,
@@ -80,16 +80,24 @@ const mutations = {
     bark(state) {
         state.barking = true
         state.pinging = true
+        // XXX - should be sync? Works
         setTimeout(()=> {
             state.barking = false
         }, 1000)
         setTimeout(()=> {
             state.pinging = false
         }, 2000)
+        // XXX if not muted checked b4 seems bad
+        let flip = new Audio(require('../assets/sounds/ping.wav'))
+        flip.volume = flip.volume * 0.33
+        flip.play()
     }
 }
 
-const actions = {}
+const actions = {
+
+
+}
 const getters = {}
 
 module.exports = {

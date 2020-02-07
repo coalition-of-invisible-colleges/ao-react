@@ -90,11 +90,10 @@ export default {
   mounted(){
       this.$store.commit('setMode' , 3)
       this.$store.commit('setDimension' , 1)
-      this.$store.commit('stopLoading')
+      this.$store.dispatch('loaded')
   },
   methods:{
       goInBounty(t){
-          this.playPageTurn()
           let taskId = t.funders[0]
           let panel = [taskId]
           let top = 0
@@ -115,11 +114,6 @@ export default {
       },
       getGuild(taskId){
           return this.$store.getters.hashMap[taskId].guild
-      },
-      playPageTurn(){
-          var flip = new Audio(require('../assets/sounds/myst158.wav'))
-          flip.volume = flip.volume * 0.3
-          flip.play()
       },
   },
 }

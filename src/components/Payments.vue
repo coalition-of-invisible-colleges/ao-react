@@ -32,7 +32,7 @@ export default {
     mounted() {
         this.$store.commit('setMode' , 3)
         this.$store.commit('setDimension' , 0)
-        this.$store.commit('stopLoading')
+        this.$store.dispatch('loaded')
     },
     data(){
         return {

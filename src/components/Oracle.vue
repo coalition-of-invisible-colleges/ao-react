@@ -18,7 +18,7 @@ export default {
   mounted(){
       this.$store.commit('setMode' , 0)
       this.$store.commit('setDimension' , 1)
-      this.$store.commit('stopLoading')
+      this.$store.dispatch('loaded')
   },
   methods:{
       goInNews(t){

@@ -14,7 +14,7 @@ export default {
       HyperDeck,
   },
   mounted() {
-      this.$store.commit('stopLoading')
+      this.$store.dispatch('loaded')
   },
 }
 

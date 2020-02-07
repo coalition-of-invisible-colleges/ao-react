@@ -61,7 +61,6 @@ const actions = {
             commit('bark')
             return
         }
-
         commit('show', ev)
         setTimeout(()=>{
             commit('hide')

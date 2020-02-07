@@ -29,7 +29,7 @@ export default {
         Linky,  Current,
     },
     mounted() {
-        this.$store.commit('stopLoading')
+        this.$store.dispatch('loaded')
     },
     data(){
         return {

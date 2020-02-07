@@ -16,7 +16,7 @@ export default {
   mounted(){
       this.$store.commit('setMode' , 1)
       this.$store.commit('setDimension' , 1)
-      this.$store.commit('stopLoading')
+      this.$store.dispatch('loaded')
   },
   computed: {
       topten(){

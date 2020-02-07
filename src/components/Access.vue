@@ -15,7 +15,7 @@ export default {
     mounted() {
         this.$store.commit('setMode' , 0)
         this.$store.commit('setDimension' , 2)
-        this.$store.commit('stopLoading')
+        this.$store.dispatch('loaded')
     }
 }
 
