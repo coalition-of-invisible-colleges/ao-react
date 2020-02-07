@@ -6,9 +6,6 @@
 
 <script>
 
-import FormBox from './FormBox'
-
-
 export default {
     props: ['b'],
     methods: {

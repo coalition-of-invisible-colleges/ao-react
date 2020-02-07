@@ -62,7 +62,6 @@ export default {
             },
         }
     },
-    components: { FormBox },
     methods: {
         discon(address){
             console.log("try diconnection", address)

@@ -10,7 +10,6 @@
 <script>
 
 import calculations from '../calculations'
-import FormBox from './FormBox'
 
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'

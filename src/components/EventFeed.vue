@@ -4,7 +4,7 @@ transition(name='fade' v-for='(e, i) in eventstream')
     .feed.wiggle(v-if='e.showEvent'  v-bind:style="{ left: e.randomX }")
         img.doge(src='../assets/images/doge_faded.png')
         //- <input v-model.number="randomWiggle">
-        img.bubble(src='../assets/images/bubble.png')
+        img.bubble(src='/bubble.png')
         .float(:style='{ color: e.randomColors[0], left: e.randomXs[0], top: e.randomYs[0] }') {{ e.type.replace('-', ' ') }}
         .float(:style='{ color: e.randomColors[1], left: e.randomXs[1], top: e.randomYs[1] }') {{ e.meme }}
         .float(v-if='e.type==="task-created"') {{ e.name }}

@@ -15,7 +15,6 @@
 
 <script>
 import cryptoUtils from '../crypto'
-
 import FormBox from './FormBox'
 import FancyInput from './FancyInput'
 

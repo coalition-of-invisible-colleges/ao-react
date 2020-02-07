@@ -28,14 +28,11 @@ div.totop(v-if='b.passed.length > 0')
 import request from 'superagent'
 import Current from './Current'
 
-const buddadoge = require('../assets/images/buddadoge.svg')
-
 export default {
     props: ['b'],
     components: { Current },
     methods:{
         toggleBird(){
-            console.log('toggle trig')
             this.$store.commit('toggleBird')
         },
         accept(){

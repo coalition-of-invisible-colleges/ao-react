@@ -110,7 +110,7 @@ img
     z-index: 1
 
 .hyperpaper
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -125,19 +125,19 @@ img
     position: absolute
 
 .freshpaper
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     opacity: 0.2
 
 .weekoldpaper
-    background-image: url('../assets/images/paper_aged_1.png')
+    background-image: url('/paper_aged_1.png')
     opacity: 0.25
 
 .montholdpaper
-    background-image: url('../assets/images/paper_aged_2.png')
+    background-image: url('/paper_aged_2.png')
     opacity: 0.3
 
 .threemontholdpaper
-    background-image: url('../assets/images/paper_aged_3.png')
+    background-image: url('/paper_aged_3.png')
     opacity: 0.35
 
 .popup

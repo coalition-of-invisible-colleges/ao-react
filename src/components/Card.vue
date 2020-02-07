@@ -31,7 +31,7 @@
     div
         scroll.faded(:b='b', :inId='inId')
         vine.faded(:b='b')
-        hodlcoin(:b='b')
+        coin(:b='b')
 </template>
 
 <script>
@@ -39,13 +39,12 @@ import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 
 import calculations from '../calculations'
-import FormBox from './FormBox'
 import PreviewDeck from './PreviewDeck'
 import Bird from './Bird'
 import Flag from './Flag'
 import Scroll from './Scroll'
 import Vine from './Vine'
-import Hodlcoin from './Coin'
+import Coin from './Coin'
 import Passed from './Passed'
 import Shipped from './Shipped'
 import Tally from './Tally'
@@ -58,7 +57,7 @@ export default {
     data(){
         return { active: false }
     },
-    components: { FormBox, PreviewDeck, Bird, Flag, Scroll, Vine, Hodlcoin, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
+    components: { PreviewDeck, Bird, Flag, Scroll, Vine, Coin, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
     mounted() {
         let el = this.$refs.wholeCard
         if(!el) return
@@ -302,7 +301,7 @@ export default {
     position: relative
 
 .agedbackground
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -316,19 +315,19 @@ export default {
     pointer-events: none
 
 .freshpaper
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     opacity: 0.2
 
 .weekoldpaper
-    background-image: url('../assets/images/paper_aged_1.png')
+    background-image: url('/paper_aged_1.png')
     opacity: 0.25
 
 .montholdpaper
-    background-image: url('../assets/images/paper_aged_2.png')
+    background-image: url('/paper_aged_2.png')
     opacity: 0.3
 
 .threemontholdpaper
-    background-image: url('../assets/images/paper_aged_3.png')
+    background-image: url('/paper_aged_3.png')
     opacity: 0.35
 
 .smallguild

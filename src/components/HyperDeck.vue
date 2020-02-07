@@ -217,7 +217,7 @@ export default {
     justify-content: center
 
 .agedbackground
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -231,22 +231,22 @@ export default {
     pointer-events: none
 
 .freshpaperbg
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     opacity: 0.2
     z-index: -2
 
 .weekoldpaperbg
-    background-image: url('../assets/images/paper_aged_1.png')
+    background-image: url('/paper_aged_1.png')
     opacity: 0.25
     z-index: -2
 
 .montholdpaperbg
-    background-image: url('../assets/images/paper_aged_2.png')
+    background-image: url('/paper_aged_2.png')
     opacity: 0.3
     z-index: -2
 
 .threemontholdpaperbg
-    background-image: url('../assets/images/paper_aged_3.png')
+    background-image: url('/paper_aged_3.png')
     opacity: 0.35
     z-index: -2
 

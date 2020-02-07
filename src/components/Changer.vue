@@ -23,7 +23,6 @@ import FormBox from './FormBox'
 import cryptoUtils from '../crypto'
 import FancyInput from './FancyInput'
 
-
 export default {
     components: {
         FormBox, FancyInput

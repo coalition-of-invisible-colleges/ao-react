@@ -4,7 +4,6 @@ div.input-container
   slot
   label(v-bind:for='gen') {{labelText}}
   span.focus-border
-
 </template>
 
 <script>

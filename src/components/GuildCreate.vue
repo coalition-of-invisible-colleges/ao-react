@@ -7,10 +7,6 @@
 
 <script>
 
-
-import FormBox from './FormBox'
-
-
 export default {
     props: ['b', 'editing'],
     data() {
@@ -55,9 +51,6 @@ export default {
             }
             return "mission"
         }
-    },
-    components: {
-         FormBox
     },
 }
 

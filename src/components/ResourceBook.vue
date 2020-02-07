@@ -28,7 +28,6 @@
 <script>
 
 import FormBox from './FormBox'
-import FancyInput from './FancyInput'
 
 const HOUR = 1000 * 60 * 60
 const HALFDAY = HOUR * 12
@@ -36,7 +35,7 @@ const HALFDAY = HOUR * 12
 export default {
     props:['tId'],
     components: {
-         FormBox, FancyInput
+         FormBox
     },
     mounted(){
         let i = this.$router.currentRoute.path.split('/')[2]
@@ -104,12 +103,13 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/grid'
+@import '../styles/input'
 
 #newresource
     position: relative
     top: 2em
     margin-bottom: 1em
-    
+
 .br
   padding-top: 1.9em
 

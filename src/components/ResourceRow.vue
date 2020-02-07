@@ -200,7 +200,7 @@ label
     position: relative
 
 .agedbackground
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
@@ -216,19 +216,19 @@ label
     z-index: -1
 
 .freshpaper
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     opacity: 0.3
 
 .weekoldpaper
-    background-image: url('../assets/images/paper_aged_1.png')
+    background-image: url('/paper_aged_1.png')
     opacity: 0.3
 
 .montholdpaper
-    background-image: url('../assets/images/paper_aged_2.png')
+    background-image: url('/paper_aged_2.png')
     opacity: 0.3
 
 .threemontholdpaper
-    background-image: url('../assets/images/paper_aged_3.png')
+    background-image: url('/paper_aged_3.png')
     opacity: 0.3
 
 .smallcaps

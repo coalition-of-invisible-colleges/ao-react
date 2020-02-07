@@ -321,6 +321,7 @@ export default {
 @import '../styles/colours'
 @import '../styles/button'
 @import '../styles/breakpoints'
+@import '../styles/input'
 
 #createtask
   width: fit-content
@@ -445,7 +446,7 @@ p
     position: relative
 
 .agedbackground
-    background-image: url('../assets/images/paper.jpg')
+    background-image: url('/paper.jpg')
     background-repeat: no-repeat
     background-position: center center
     background-size: cover
