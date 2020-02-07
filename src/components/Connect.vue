@@ -128,6 +128,7 @@ export default {
 @import '../styles/grid'
 @import '../styles/button'
 @import '../styles/title'
+@import '../styles/input'
 
 h6
     text-align: center

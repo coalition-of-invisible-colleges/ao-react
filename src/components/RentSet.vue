@@ -4,7 +4,7 @@
     form-box(btntxt="Update Fixed Costs"  event='rent-set' v-bind:data='details')
         div.input-container
           input#rentInput.input-effect(v-model='details.amount' type='text')
-          label(for='rentInput') Set Node Cost
+          label(for='rentInput') Set Monthly Cost
           span.focus-border
 </template>
 
@@ -31,6 +31,7 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../styles/colours'
+@import '../styles/input'
 
 
 </style>

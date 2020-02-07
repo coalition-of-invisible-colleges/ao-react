@@ -5,8 +5,8 @@
     h1 Reserve
     .row.center
         .seven.grid
-            p.underline.padd Node Cost - {{ parseInt($store.state.cash.rent) }}
-            p  {{ activeMembers }} Active Doges
+            p.underline.padd Monthly Cost - {{ parseInt($store.state.cash.rent) }}
+            p  {{ activeMembers }} Active
         .one.grid
             .equals =
         .four.grid.equals2
@@ -14,7 +14,7 @@
             p.redtx.equals2 [{{ $store.state.cash.cap }} max]
     .row
         .six.columns
-          p.input-instructions Set Node Cost
+          p.input-instructions Set Monthly Cost
           rent-set
         .six.columns
           p.input-instructions Set Maximum

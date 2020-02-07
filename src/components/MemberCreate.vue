@@ -59,6 +59,7 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/skeleton'
+@import '../styles/input'
 
 #projects
     color:accent1

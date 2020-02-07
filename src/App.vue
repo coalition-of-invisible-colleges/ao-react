@@ -45,10 +45,7 @@ export default {
 <style lang="stylus">
 
 @import "./styles/normalize"
-@import "./styles/breakpoints"
-@import "./styles/skeleton"
 @import "./styles/colours"
-@import "./styles/input"
 
 .app
     color: accent1

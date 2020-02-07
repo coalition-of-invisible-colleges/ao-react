@@ -88,6 +88,7 @@ export default {
 @import '../styles/colours'
 @import '../styles/button'
 @import '../styles/skeleton'
+@import '../styles/input'
 
 img
     float: left
