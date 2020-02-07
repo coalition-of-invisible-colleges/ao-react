@@ -10,7 +10,7 @@
                 span(v-for='g in rowsGuilds')
                     router-link.yellowtx(:to='"/task/" + g.taskId'  @click='goIn(g.taskId)') {{ g.guild }} -
         .two.grid(v-if='isVulnerable')
-            img.btn.goldengun(src='../assets/gifs/golden_gun.gif' @click='purgeAccount')
+            img.btn.goldengun(src='../assets/images/goodbye.svg' @click='purgeAccount')
         .one.grid
             img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../assets/images/coin.svg' @click='toggleGrab')
             p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
