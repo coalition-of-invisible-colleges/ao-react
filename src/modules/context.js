@@ -2,8 +2,6 @@ const Vue = require( 'vue')
 const _ = require( 'lodash')
 const payments = ["bitcoin", "lightning"]
 
-
-
 const state = {
     parent: [],
     panel: [],
@@ -52,9 +50,11 @@ const actions = {
         commit('stopLoading')
         let isMuted = getters.member.muted
         if (!isMuted){
-          	let flip = new Audio(require('../assets/sounds/pageturn.wav'))
-          	flip.volume = flip.volume * 0.33
+          try {
+            let flip = new Audio(require('../assets/sounds/pageturn.wav'))
+            flip.volume = flip.volume * 0.33
             flip.play()
+          } catch (err){}
         }
     },
     goIn({commit, state, getters}, pContext ){

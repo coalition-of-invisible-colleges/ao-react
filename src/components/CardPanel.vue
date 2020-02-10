@@ -138,8 +138,8 @@ export default {
         nextmc.add(nextPress)
         nextmc.on('press', (e) => {
 
-            this.last()
-            e.stopPropagation()
+        this.last()
+        e.stopPropagation()
         })
   },
   data(){
@@ -164,7 +164,7 @@ export default {
         this.top = 0
     },
     previous(){
-
+        this.playSound()
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
@@ -172,7 +172,7 @@ export default {
         this.componentKey ++
     },
     next(){
-
+        this.playSound()
         this.top = (this.top + 1) % this.c.length
         this.componentKey ++
     },
@@ -201,6 +201,15 @@ export default {
             swapId2: this.c[swapIndex].taskId,
             direction: 'up',
         })
+    },
+    playSound(){
+      if (!this.$store.getters.member.muted){
+        try {
+          let flip = new Audio(require('../assets/sounds/pageturn.wav'))
+          flip.volume = flip.volume * 0.33
+          flip.play()
+        } catch (err){}
+      }
     },
     toggleStacks(){
         if(this.$store.state.upgrades.stacks === 1) {

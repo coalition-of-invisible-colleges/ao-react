@@ -268,9 +268,9 @@ export default {
             try {
                 let regex = new RegExp(this.task.search, 'i')
                 this.$store.state.tasks.forEach(t => {
-                    if(t.guild && regex.test(t.guild) && t.deck.length > 0) {
+                    if(t.guild && regex.test(t.guild)) {
                         guildmatches.push(t)
-                    } else if(regex.test(t.name) && t.deck.length > 0) {
+                    } else if(regex.test(t.name)) {
                         matches.push(t)
                     }
                 })

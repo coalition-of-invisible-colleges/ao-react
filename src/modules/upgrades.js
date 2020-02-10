@@ -1,5 +1,4 @@
 const Vue = require( 'vue')
-
 const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
 const dimensions = ["unicorn", "sun", "bull"]
@@ -80,21 +79,46 @@ const mutations = {
     bark(state) {
         state.barking = true
         state.pinging = true
-        // XXX - should be sync? Works
+        // XXX - should be sync? Works!?
         setTimeout(()=> {
             state.barking = false
         }, 1000)
         setTimeout(()=> {
             state.pinging = false
         }, 2000)
-        // XXX if not muted checked b4 seems bad
         let flip = new Audio(require('../assets/sounds/ping.wav'))
         flip.volume = flip.volume * 0.33
         flip.play()
     }
 }
 
-const actions = {}
+const actions = {
+    nextUpgradeMode({commit, state}, router) {
+        commit("nextMode")
+        commit('startLoading', state.mode)
+
+        if(state.dimension === 'sun'){
+            return router.push('/front/' + state.mode)
+        }
+        if(state.dimension === 'bull'){
+            return router.push('/dash/' + state.mode)
+        }
+        router.push('/' + state.mode)
+    },
+    previousUpgradeMode({commit, state}, router) {
+        commit("previousMode")
+        commit('startLoading', state.mode)
+
+        if(state.dimension === 'sun'){
+            return router.push('/front/' + state.mode)
+        }
+        if(state.dimension === 'bull'){
+            return router.push('/dash/' + state.mode)
+        }
+        router.push('/' + state.mode)
+  }
+
+}
 const getters = {}
 
 module.exports = {

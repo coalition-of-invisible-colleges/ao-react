@@ -24,7 +24,6 @@ import PayReq from './PayReq'
 import PayAddress from './PayAddress'
 import Tag from './Tag'
 import ResourceBook from './ResourceBook'
-import HelmControl from '../utils/helm'
 
 import GuildCreate from './GuildCreate'
 
@@ -103,16 +102,12 @@ export default {
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
-            HelmControl.flashHelm()
-
-            HelmControl.previousUpgradeMode(this.$router)
+            this.$store.dispatch('previousUpgradeMode')
             e.stopPropagation()
         })
 
         mc.on('swiperight', (e) => {
-            HelmControl.flashHelm()
-
-            HelmControl.nextUpgradeMode(this.$router)
+            this.$store.dispatch('nextUpgradeMode', this.$router)
             e.stopPropagation()
         })
     },
