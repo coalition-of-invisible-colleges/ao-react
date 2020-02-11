@@ -43,6 +43,7 @@ export default {
             type: "session-killed",
             session: this.$store.state.loader.session
         })
+        window.location.replace('/')
     },
     goDash(mode) {
         if(!mode) {
@@ -85,7 +86,6 @@ export default {
     bullQuadrupleTap.requireFailure(bullQuintupleTap)
 
     bullmc.on('tap', (e) => {
-        console.log("single click bull")
         if(!this.isBull) {
             this.goDash(false)
         } else {
@@ -96,13 +96,11 @@ export default {
     })
 
     bullmc.on('doubletap', (e) => {
-        console.log("double click")
         this.goDash('boat')
         e.stopPropagation()
     })
 
     bullmc.on('tripletap', (e) => {
-        console.log("triple click")
         this.goDash('badge')
         e.stopPropagation()
     })

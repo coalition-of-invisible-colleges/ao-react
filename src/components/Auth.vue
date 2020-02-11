@@ -63,10 +63,11 @@ export default {
           })
           window.localStorage.removeItem("token")
           window.localStorage.removeItem("session")
+          window.localStorage.clear()
           this.$store.commit('setAuth', {
               token: '', session: ''
           })
-          window.location.reload()
+          window.location.replace('/')
       }
   }
 }

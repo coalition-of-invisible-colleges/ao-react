@@ -16,7 +16,7 @@
     .buffertop
       preview-deck(:task='b')
       .cardbody
-          .cardhud(v-if='calcVal >= 1')
+          .cardhud(v-if='calcVal > 0.01')
               img.smallguild(src='../assets/images/chest.svg')
               span {{ calcVal }}
           .cardhud(v-if='cardStart')
@@ -168,7 +168,7 @@ export default {
         },
         calcVal(){
             let v = calculations.calculateTaskPayout(this.b)
-            return parseInt(v)
+            return v.toFixed(2)
         },
         countClass(){
             return {
