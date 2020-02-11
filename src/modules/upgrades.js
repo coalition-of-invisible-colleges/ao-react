@@ -14,9 +14,33 @@ const state = {
     sierpinski: true,
     barking: false,
     pinging: false,
+    flashClasses: {
+        flash: false,
+        half: false,
+        twice: false,
+        five: false
+    },
 }
 
 const mutations = {
+    flash(state){
+        state.flashClasses.flash = true
+    },
+    flashHalf(state){
+        state.flashClasses.half = true
+    },
+    flashTwice(state){
+        state.flashClasses.twice = true
+    },
+    flashFive(state){
+        state.flashClasses.five = true
+    },
+    flashOff(state){
+        state.flashClasses.flash = false
+        state.flashClasses.half = false
+        state.flashClasses.twice = false
+        state.flashClasses.five = false
+    },
     toggleBird(state){
         state.bird = !state.bird
     },
@@ -64,12 +88,9 @@ const mutations = {
     toggleHighlight(state, args) {
         let valence = args.valence
         let memberId = args.memberId
-        console.log("upgrades togglehighlight")
         if(state.highlights.hasOwnProperty(memberId) && (state.highlights[memberId] === valence || valence === true)) {
-            console.log("removing highlight")
             Vue.delete(state.highlights, memberId)
         } else {
-            console.log("setting highlight")
             Vue.set(state.highlights, memberId, valence)
         }
     },
@@ -116,6 +137,24 @@ const actions = {
             return router.push('/dash/' + state.mode)
         }
         router.push('/' + state.mode)
+  },
+  flashHelm({commit, state}, flashes){
+      commit('flash')
+      let ms = 350
+      if(flashes < 1) {
+          commit('flashHalf')
+          ms *= 0.7
+      } else if(flashes === 2) {
+          commit('flashTwice')
+          ms *= flashes
+      } else if(flashes === 5) {
+          commit('flashFive')
+          ms *= flashes
+      }
+      setTimeout( () => {
+          commit('flashOff')
+      }, ms)
+
   }
 
 }

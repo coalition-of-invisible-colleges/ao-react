@@ -1,19 +1,19 @@
 isUni<template lang='pug'>
 
 .helm(@contextmenu.prevent)
-    button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='flash(1)')
+    button.modeleft(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn'  id='helmleft'  :class='{ boat : $store.state.upgrades.mode === "badge" }'  @mousedown='$store.dispatch("flashHelm",1)')
         img.upg(v-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/bounty.svg')
         img.upg.timecube(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/buddadoge.svg')
-    button.topcenter.adjtooltip(id='helm'  :class='flashClasses'  @mousedown='flash(1)')
+    button.topcenter.adjtooltip(id='helm'  :class='$store.state.upgrades.flashClasses'  @mousedown='$store.dispatch("flashHelm",1)')
         // XXX :class='{ closed : $store.state.upgrades.mode === "doge" && $store.getters.isLoggedIn }'
         img.upg(v-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/boatblack.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "chest"'  src='../assets/images/bounty.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/timecube.svg')
         img.upg(v-else  src='../assets/images/buddadoge.svg')
-    button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='flash(1)')
+    button.moderight(v-if='$store.state.upgrades.mode || !$store.getters.isLoggedIn' id='helmright'  @mousedown='$store.dispatch("flashHelm",1)')
         img.upg(v-if='$store.state.upgrades.mode === "timecube"'  src='../assets/images/buddadoge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "boat"'  src='../assets/images/badge.svg')
         img.upg(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/bounty.svg')
@@ -28,16 +28,6 @@ import Propagating from 'propagating-hammerjs'
 import Status from './Status'
 
 export default {
-    data(){
-        return {
-          flashClasses: {
-            flash: false,
-            half: false,
-            twice: false,
-            five: false
-          }
-        }
-    },
     mounted() {
         let el = document.getElementById('helm')
         let mc = Propagating(new Hammer.Manager(el))
@@ -96,26 +86,26 @@ export default {
 
         mc.on('doubletap', (e) => {
             console.log("double click")
-            this.flash(0.5)
+            this.$store.dispatch('flashHelm', 0.5)
             this.goUni('boat')
             e.stopPropagation()
         })
 
         mc.on('tripletap', (e) => {
             console.log("triple click")
-            this.flash(0.5)
+            this.$store.dispatch('flashHelm', 0.5)
             this.goUni('badge')
             e.stopPropagation()
         })
 
         mc.on('quadrupletap', (e) => {
-            this.flash(0.5)
+            this.$store.dispatch('flashHelm', 0.5)
             this.goUni('chest')
             e.stopPropagation()
         })
 
         mc.on('quintupletap', (e) => {
-            this.flash(0.5)
+            this.$store.dispatch('flashHelm', 0.5)
             this.goUni('timecube')
             e.stopPropagation()
         })
@@ -123,17 +113,17 @@ export default {
         mc.on('press', (e) => {
             if(this.isUni){
                 if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.taskId === this.$store.getters.memberCard.taskId) {
-                    this.flash(5)
+                    this.$store.dispatch('flashHelm', 5)
                     this.goFront('doge')
                 } else {
-                    this.flash(2)
+                    this.$store.dispatch('flashHelm', 2)
                     this.goUni('doge', true)
                     if(this.$store.getters.contextCard.taskId !== this.$store.getters.memberCard.taskId) {
                         this.goHome()
                     }
                 }
             } else {
-                this.flash(2)
+                this.$store.dispatch('flashHelm', 2)
                 this.goUni('doge')
                 if(this.$store.getters.contextCard.taskId !== this.$store.getters.memberCard.taskId) {
                     this.goHome()
@@ -169,26 +159,6 @@ export default {
             this.$store.commit('startLoading', 'sun')
             this.$router.push('/front/' + mode)
         },
-        flash(flashes) {
-            let ms = 350
-            this.flashClasses.flash = true
-            if(flashes < 1) {
-                this.flashClasses.half = true
-                ms *= 0.7
-            } else if(flashes === 2) {
-                this.flashClasses.twice = true
-                ms *= flashes
-            } else if(flashes === 5) {
-                this.flashClasses.five = true
-                ms *= flashes
-            }
-          setTimeout( () => {
-              this.flashClasses.flash = false
-              this.flashClasses.half = false
-              this.flashClasses.twice = false
-              this.flashClasses.five = false
-          }, ms)
-        },
         goHome(taskId){
             let parents = []
             if (this.$store.getters.contextCard.taskId){
@@ -211,27 +181,6 @@ export default {
         },
     }
 }
-
-//
-// XXX
-// function flashHelm(flashes = 1) {
-//     let ms = 350
-//     let helm = document.getElementById('helm')
-//     let addedClasses = ' flash'
-//     if(flashes < 1) {
-//         addedClasses += ' half'
-//         ms *= 0.7
-//     } else if(flashes === 2) {
-//         addedClasses += ' twice'
-//         ms *= flashes
-//     } else if(flashes === 5) {
-//         addedClasses += ' five'
-//         ms *= flashes
-//     }
-//
-//     helm.className += addedClasses
-//     setTimeout( () => { helm.className = helm.className.replace(addedClasses, '') }, ms)
-// }
 
 </script>
 
