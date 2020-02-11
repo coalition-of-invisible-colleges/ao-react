@@ -49,7 +49,6 @@ const actions = {
     loaded({commit, state, getters, dispatch}){
         commit('stopLoading')
         dispatch('flashHelm', 1)
-
         let isMuted = getters.member.muted
         if (!isMuted){
           try {

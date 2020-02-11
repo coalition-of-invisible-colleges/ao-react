@@ -34,7 +34,6 @@
             select.shorten(v-model='toMemberWarp')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            //- button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
             button.small(@click='migrate') send entire deck
             span.sierpinskiwrapper
                 sierpinski(v-if='this.b.taskId !== this.$store.getters.member.memberId'  :b='b')

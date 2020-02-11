@@ -57,17 +57,16 @@ export default {
               })
       },
       killSession(){
-          //XXX TODO tell server to remove session
           this.$store.dispatch("makeEvent", {
               type: "session-killed",
               session: this.$store.state.loader.session
           })
-
           window.localStorage.removeItem("token")
           window.localStorage.removeItem("session")
           this.$store.commit('setAuth', {
               token: '', session: ''
           })
+          window.location.reload()
       }
   }
 }

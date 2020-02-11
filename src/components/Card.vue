@@ -83,7 +83,6 @@ export default {
     },
     methods: {
         goIn(){
-
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -144,7 +143,6 @@ export default {
             if ( this.b.book.startTs ){
               let now = Date.now()
               let msTill = this.b.book.startTs - now
-              // XXX TODO
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0

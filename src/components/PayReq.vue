@@ -1,13 +1,14 @@
 <template lang='pug'>
 
 .payreq
-    h3 lightning payment request
+    h3 payment request for
         span.yellowtx {{ satAmount.toLocaleString() }} &#12471;
         span - {{ cadAmount }}
+    div.small {{ bolt11 }}
     span(v-html='imgTag')
-    span.small {{ bolt11 }}
-    a(:href='"lightning:" + (this.bolt11)')
-      button Open Wallet
+    span
+        a(:href='"lightning:" + (this.bolt11)')
+            button Open Wallet
 </template>
 
 <script>
@@ -54,6 +55,7 @@ export default {
 @import '../styles/skeleton'
 
 .payreq
+    text-align: center
     color: wrexblue
     background-color: rgba(0,0,0,0)
     border-radius: 0.5em
@@ -75,9 +77,12 @@ a
     font-size: 5em
 
 .small
-    font-size: .82em
+    font-size: .892em
     word-wrap: break-word
     word-break: break-all
-
+    background: lightGrey
+    color: main
+    padding: 1em
+    border-radius: 1em
 
 </style>
