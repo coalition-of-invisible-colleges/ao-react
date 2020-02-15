@@ -30,60 +30,43 @@ import calculations from '../calculations'
 import Hypercard from "./Card"
 
 export default {
-  data(){
-      let bountyList = []
-      let bounties = {}
-      let guilds = {}
-      this.$store.state.tasks.forEach( t => {
-          if (Array.isArray(t.allocations)){
-              t.allocations.forEach( al => {
-                  if ( bounties[al.allocatedId] ) {
-                      if (t.guild){
-                          bounties[al.allocatedId] += parseInt(al.amount)
-                          guilds[al.allocatedId].push(t.taskId)
-                      }
-                  } else {
-                      if (t.guild){
-                          bounties[al.allocatedId] = parseInt(al.amount)
-                          guilds[al.allocatedId] = [t.taskId]
-                      }
-                  }
-              })
-          }
-      })
+    data(){
+        // let bountyList = []
+        // let bounties = {}
+        // let guilds = {}
 
-      Object.keys(bounties).forEach(b => {
-          let card = this.$store.getters.hashMap[b]
-          let amount =  bounties[b]
-          if (amount >= 1){
-              Vue.set( card, 'currentAmount', amount )
-              Vue.set( card, 'funders', guilds[b] )
-              bountyList.push(card)
-          }
-      })
-      bountyList.sort((a, b) => parseInt(a.currentAmount) < parseInt(b.currentAmount))
+        // Object.keys(bounties).forEach(b => {
+        //     let card = this.$store.getters.hashMap[b]
+        //     let amount =  bounties[b]
+        //     if (amount >= 1){
+        //         Vue.set( card, 'currentAmount', amount )
+        //         Vue.set( card, 'funders', guilds[b] )
+        //         bountyList.push(card)
+        //     }
+        // })
+        // bountyList.sort((a, b) => parseInt(a.currentAmount) < parseInt(b.currentAmount))
 
-      let row1 = []
-      let row2 = []
-      let row3 = []
-      let row4 = []
-      bountyList.forEach( (a, i) => {
-          let row = i % 4
-          if (row === 0){
-              row1.push(a)
-          }
-          if (row === 1){
-              row2.push(a)
-          }
-          if (row === 2){
-              row3.push(a)
-          }
-          if (row === 3){
-              row4.push(a)
-          }
-      })
-      return { row1, row2, row3, row4 }
-  },
+        let row1 = []
+        let row2 = []
+        let row3 = []
+        let row4 = []
+        // bountyList.forEach( (a, i) => {
+        //     let row = i % 4
+        //     if (row === 0){
+        //         row1.push(a)
+        //     }
+        //     if (row === 1){
+        //         row2.push(a)
+        //     }
+        //     if (row === 2){
+        //         row3.push(a)
+        //     }
+        //     if (row === 3){
+        //         row4.push(a)
+        //     }
+        // })
+        return { row1, row2, row3, row4 }
+    },
   components:{
       Hypercard,
   },

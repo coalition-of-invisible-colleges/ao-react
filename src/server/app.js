@@ -14,7 +14,6 @@ const { watchSpot } = require('./exchangeRate')
 const Kefir = require('kefir')
 const cronStarter = require('./crons')
 const lightning = require('./lightning')
-const { watchAos } = require(  './peerState')
 
 const app = express()
 applyRouter(app)
@@ -31,7 +30,6 @@ function startDctrlAo(){
 
       watchSpot()
       cronStarter()
-      watchAos()
       lightning.recordEveryInvoice(state.pubState.cash.pay_index)
       lightning.watchOnChain()
 

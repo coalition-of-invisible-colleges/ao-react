@@ -5,7 +5,6 @@
     h2(v-if='liveConnections.length > 0'  ) Connected to
     div(v-for='r in liveConnections')
         h4 {{ r.state.cash.alias }} connected - {{ uptimePercent(r.successfuls, r.fails) }}% uptime ({{ r.successfuls + r.fails }} attempts) -
-        span.conn(@click='pollState(r.address)') update
         span.discon(@click='discon(r.address)') delete
     h2(v-if='brokeConnections.length > 0'  ) Broken from
     div(v-for='r in brokeConnections')
@@ -68,13 +67,6 @@ export default {
             this.$store.dispatch("makeEvent", {
                 type: 'ao-disconnected',
                 address,
-            })
-        },
-        pollState(address) {
-            console.log("pollstate")
-            this.$store.dispatch("makeEvent", {
-                type: 'ao-updated',
-                address
             })
         },
         toggleGive(){

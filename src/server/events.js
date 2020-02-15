@@ -40,15 +40,6 @@ function aoRelayAttempted(address, successful, callback) {
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoUpdated(address, state, callback){
-    let newEvent = {
-        type: "ao-updated",
-        address,
-        state,
-    }
-    dctrlDb.triggerShadow(newEvent, callback)
-}
-
 function aoNamed(alias, callback){
     let newEvent = {
         type: "ao-named",
@@ -506,13 +497,11 @@ function taskPassed(taskId, fromMemberId, toMemberId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskClaimed(taskId, memberId, paid, notes, blame, callback) {
+function taskClaimed(taskId, memberId, blame, callback) {
   let newEvent = {
     type: "task-claimed",
     taskId,
     memberId,
-    paid,
-    notes,
     blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
@@ -608,16 +597,6 @@ function tasksReceived(tasks, blame, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskAllocated(taskId, allocatedId, memberId, callback) {
-  let newEvent = {
-     type: "task-allocated",
-     taskId,
-     allocatedId,
-     memberId
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
 function invoiceCreated(taskId, bolt11, payment_hash, callback){
     let newEvent = {
         type: "invoice-created",
@@ -631,7 +610,6 @@ function invoiceCreated(taskId, bolt11, payment_hash, callback){
 module.exports = {
     aoConnected,
     aoDisconnected,
-    aoUpdated,
     aoNamed,
     aoSubscribed,
     aoRelayAttempted,
@@ -685,7 +663,6 @@ module.exports = {
     taskGuilded,
     taskSubTasked,
     taskDeSubTasked,
-    taskAllocated,
     addressUpdated,
     invoiceCreated,
     taskBoostedLightning,

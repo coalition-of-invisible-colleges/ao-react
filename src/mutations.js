@@ -41,13 +41,6 @@ function aoMuts(aos, ev) {
                 }
             })
             break
-        case "ao-updated":
-            aos.forEach( (ao, i) => {
-                if (ao.address === ev.address) {
-                    ao.state = ev.state
-                }
-            })
-            break
     }
 }
 
@@ -362,7 +355,6 @@ function tasksMuts(tasks, ev) {
             newEv.deck = []
             newEv.color = "red"
             newEv.address = ''
-            newEv.allocations = []
             newEv.bolt11 = ''
             newEv.payment_hash = ''
             newEv.boost = 0
@@ -384,7 +376,6 @@ function tasksMuts(tasks, ev) {
             newEv.deck = []
             newEv.color = "blue"
             newEv.address = ''
-            newEv.allocations = []
             newEv.bolt11 = ''
             newEv.payment_hash = ''
             newEv.boost = 0
@@ -408,7 +399,6 @@ function tasksMuts(tasks, ev) {
             newEv.boost = 0
             newEv.monthlyValue = 0
             newEv.cap = 0
-            newEv.allocations = []
             if(newEv.name) {
                 newEv.name = newEv.name.trim()
                 tasks.push(newEv)
@@ -575,11 +565,10 @@ function tasksMuts(tasks, ev) {
         case "task-prioritized":
             tasks.forEach( task => {
               if (task.taskId === ev.inId){
-                  if (task.priorities.indexOf(ev.taskId) === -1){
-                      task.priorities.push(ev.taskId)
-                      task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
-                      task.completed = _.filter(task.completed, st => st !== ev.taskId)
-                  }
+                  task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
+                  task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId )
+                  task.completed = _.filter(task.completed, taskId => taskId !== ev.taskId )
+                  task.priorities.push(ev.taskId)
               }
             })
             break
@@ -599,16 +588,6 @@ function tasksMuts(tasks, ev) {
                     } else {
                         task.subTasks.push(ev.taskId)
                     }
-                    if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
-
-                    task.allocations = _.filter(task.allocations, al => {
-                        if (al.allocatedId !== ev.taskId) {
-                            return true
-                        } else {
-                            task.boost = task.boost + al.amount
-                            return false
-                        }
-                    })
                 }
             })
             break
@@ -681,16 +660,6 @@ function tasksMuts(tasks, ev) {
                         task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
                         task.completed.push(ev.taskId)
                     }
-                    let alloc = false
-                    if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
-                    task.allocations = _.filter(task.allocations, al => {
-
-                        if (al.allocatedId === ev.taskId) {
-                            alloc = al.amount
-                            return false
-                        }
-                        return true
-                    })
                 }
                 if (task.taskId === ev.taskId) {
                     task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
@@ -836,32 +805,6 @@ function tasksMuts(tasks, ev) {
                     }
                 })) {
                     tasks.push(calculations.safeClone(p))
-                }
-            })
-            break
-        case "task-allocated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    if (task.boost >= 1){
-                        task.boost --
-                        if(!task.allocations || !Array.isArray(task.allocations)) {
-                            task.allocations = []
-                        }
-                        let alreadyPointed = task.allocations.some(als => {
-                          if (als.allocatedId === ev.allocatedId){
-                            als.amount += 1
-                            return true
-                          }
-                        })
-                        if (!alreadyPointed){
-                          ev.amount = 1
-                          task.allocations.push(ev)
-                        }
-                    }
-
-                    let reprioritized = _.filter( task.priorities, d => d !== ev.allocatedId )
-                    reprioritized.push(ev.allocatedId)
-                    task.priorities = reprioritized
                 }
             })
             break

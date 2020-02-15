@@ -124,21 +124,6 @@ router.post('/events', (req, res, next)=>{
               next()
           }
           break
-      case "ao-updated":
-          state.serverState.ao.forEach(a => {
-              if (a.address === req.body.address){
-                  console.log("matched address")
-                  connector.getState(a.address, a.secret, (err, state) => {
-                      if (err){
-                          return events.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
-                      }
-                      console.log("adding state for:", {state})
-                      events.aoUpdated(a.address, state, utils.buildResCallback(res))
-                  })
-
-              }
-          })
-          break
       case 'invoice-created':
           if (
               validators.isTaskId(req.body.taskId, errRes) &&
@@ -553,27 +538,13 @@ router.post('/events', (req, res, next)=>{
           }
           break
       case 'task-claimed':
-          let paid = 0
-          state.pubState.tasks.forEach( task => {
-              if (task.allocations && Array.isArray(task.allocations) ){
-                task.allocations.forEach( al => {
-                  if (al.allocatedId === req.body.taskId){
-                    paid = paid + al.amount
-                  }
-                })
-              }
-          })
-
           if (
             validators.isTaskId(req.body.taskId, errRes) &&
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes(req.body.notes, errRes)
+            validators.isMemberId(req.body.memberId, errRes)
           ){
             events.taskClaimed(
               req.body.taskId,
               req.body.memberId,
-              paid,
-              req.body.notes,
               req.body.blame,
               utils.buildResCallback(res)
             )
@@ -728,21 +699,6 @@ router.post('/events', (req, res, next)=>{
               )
           } else {
               res.status(200).send(errRes)
-          }
-          break
-      case 'task-allocated':
-          if (
-              validators.isTaskId(req.body.taskId, errRes) &&
-              validators.isTaskId(req.body.allocatedId, errRes)
-          ) {
-              events.taskAllocated(
-                req.body.taskId,
-                req.body.allocatedId,
-                req.body.blame,
-                utils.buildResCallback(res)
-              )
-          } else {
-            res.status(200).send(errRes)
           }
           break
       case 'tasks-received':
