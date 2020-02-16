@@ -1,19 +1,20 @@
 <template lang='pug'>
 
-#resource
-    .list(v-if='isLoggedIn')
+#resource.container
+    .list(v-if='isLoggedIn  && resources.length > 0')
         row(v-for="r in resources", :r="r", :c='panel')
     .padding(v-else)
         h5 dctrl fobtap points
         ol
             li Raspberry pi running fobtap rfid scan point.
             li Door, vending machine, ... many possibilities
+            button(@click='createTest') create test resource
 </template>
 
 <script>
 
 import Row from "./ResourceRow"
-
+import uuidV1 from 'uuid/v1'
 
 export default {
     computed: {
@@ -28,9 +29,22 @@ export default {
         }
     },
     components:{
-        
+
         Row,
         // CrazyBtn
+    },
+    methods: {
+        createTest(letter){
+            let newEv = {
+                type: 'resource-created',
+                resourceId: uuidV1(),
+                name: 'teste',
+                charged: 0,
+                secret: 'asd',
+                trackStock: true
+            }
+            this.$store.dispatch("makeEvent", newEv)
+        },
     }
 }
 
@@ -39,6 +53,8 @@ export default {
 <style lang='stylus' scoped>
 
 @import '../styles/colours'
+@import '../styles/button'
+@import '../styles/skeleton'
 
 #resource
     width: 100%
