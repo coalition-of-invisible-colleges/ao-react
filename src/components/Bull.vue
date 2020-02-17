@@ -13,7 +13,7 @@ div
             img.lil(src='../assets/images/badge.svg')
             span Accounts
         p(@click='goDash("chest")'  :class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-            img.lil(src='../assets/images/bounty.svg')
+            img.lil(src='../assets/images/chest.svg')
             span Lightning
         p(@click='goDash("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
             img.lil(src='../assets/images/timecube.svg')

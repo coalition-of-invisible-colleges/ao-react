@@ -58,14 +58,15 @@ const actions = {
           } catch (err){}
         }
     },
-    goIn({commit, state, getters}, pContext ){
+    goIn({commit}, pContext ){
+        console.log('goIn hit', pContext)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
         pContext.parents.forEach(p => {
             commit("addParent", p)
         })
     },
-    goUp({commit, state}, pContext){
+    goUp({commit}, pContext){
         commit("goToParent", pContext.target)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)

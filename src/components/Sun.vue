@@ -12,7 +12,7 @@ div
           img.lil(src='../assets/images/badge.svg')
           span Recent
       p(@click='goFront("chest")'  :class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-          img.lil(src='../assets/images/bounty.svg')
+          img.lil(src='../assets/images/chest.svg')
           span Bounties
       p(@click='goFront("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
           img.lil(src='../assets/images/timecube.svg')

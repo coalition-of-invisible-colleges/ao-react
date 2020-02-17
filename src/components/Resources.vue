@@ -29,9 +29,7 @@ export default {
         }
     },
     components:{
-
         Row,
-        // CrazyBtn
     },
     methods: {
         createTest(letter){

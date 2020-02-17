@@ -5,11 +5,11 @@
         row(v-for="m in showingPanel"  :m='m')
         .row.menu(v-if='sortedMembers.length > 5')
             .inline(@click='showBack')
-                img(src='../assets/images/left.svg')
+                img(src='../assets/images/back.svg')
             .inline
                 p.mt {{showStart + 1}} - {{showStart + 5}}  of {{ showTotal }}
             .inline(@click='showNext')
-                img(src='../assets/images/right.svg')
+                img(src='../assets/images/forward.svg')
 </template>
 
 <script>

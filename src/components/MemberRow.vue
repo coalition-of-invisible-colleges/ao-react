@@ -85,7 +85,6 @@ export default {
     computed:{
         isVulnerable(){
             let v = !this.hasAnyVouches || this.$router.currentRoute.path === "/dash/slayer"
-            console.log({v}, this.$router.currentRoute.path)
             return v
         },
         isLoggedIn(){
