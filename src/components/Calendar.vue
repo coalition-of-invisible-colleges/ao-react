@@ -71,7 +71,6 @@ export default {
     },
     eventsByDay(){
         let evs = {}
-
         if (this.inId){
             this.todaysEvents.forEach(t => {
                 if (t && t.book && t.book.startTs){

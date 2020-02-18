@@ -113,7 +113,6 @@ export default {
     },
     methods: {
         complete(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 inId: this.inId,
@@ -123,7 +122,6 @@ export default {
             })
         },
         uncheck(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-unclaimed',
                 taskId: this.b.taskId,
@@ -163,7 +161,6 @@ export default {
                 }
             } else {
                 if (this.inId){
-
                     this.$store.dispatch("makeEvent", {
                       type: 'task-refocused',
                       taskId: this.b.taskId,
@@ -176,14 +173,12 @@ export default {
         },
         dogeIt(){
             if(this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) === -1) {
-
                 this.$store.dispatch("makeEvent", {
                   type: 'task-prioritized',
                   taskId: this.b.taskId,
                   inId: this.$store.getters.memberCard.taskId,
                 })
             } else {
-
                 this.$store.dispatch("makeEvent", {
                   type: 'task-refocused',
                   taskId: this.b.taskId,

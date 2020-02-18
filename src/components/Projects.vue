@@ -221,7 +221,6 @@ h2
 ul
     margin-block-end: 0
 
-
 .projects
     float: right
     max-width: 33%

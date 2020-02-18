@@ -4,7 +4,7 @@
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
-    div(v-for='c in checkmarks'  :key='$store.state.upgrades.highlights')
+    span(v-for='c in checkmarks'  :key='$store.state.upgrades.highlights')
         span.tooltip.plain(@click='goIn(c.taskId)')
             span.checkmark(:class="{ ...cardInputSty(c.color), highlight : c.highlight === 1, lowdark : c.highlight === -1, lilypad : c.highlight === 2 }"  :key='checkmarks') ☑
             linky.tooltiptext.bigger(:x='c.name')
@@ -20,7 +20,6 @@ export default {
   components: { Linky },
   methods: {
     goIn(taskId){
-
         if (!this.$store.state.context.completed){
             this.$store.commit("toggleCompleted")
         }
