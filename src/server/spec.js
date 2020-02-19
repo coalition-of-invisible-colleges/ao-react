@@ -211,48 +211,6 @@ router.post('/events', (req, res, next)=>{
               res.status(400).send(errRes)
           }
           break
-      case 'badge-added':
-          if (
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes(req.body.badge)
-          ){
-            events.badgeAdded(
-              req.body.memberId,
-              req.body.badge,
-              utils.buildResCallback(res)
-            )
-          } else {
-            res.status(400).send(errRes)
-          }
-          break
-      case 'badge-removed':
-          if (
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes( req.body.badge )
-          ){
-            events.badgeRemoved(
-              req.body.memberId,
-              req.body.badge,
-              utils.buildResCallback(res)
-            )
-          } else {
-            res.status(400).send(errRes)
-          }
-          break
-      case 'badge-hidden':
-          if (
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes( req.body.badge )
-          ){
-            events.badgeHidden(
-              req.body.memberId,
-              req.body.badge,
-              utils.buildResCallback(res)
-            )
-          } else {
-            res.status(400).send(errRes)
-          }
-          break
       case 'doge-barked':
           if (
             validators.isMemberId(req.body.memberId, errRes)
@@ -396,18 +354,6 @@ router.post('/events', (req, res, next)=>{
                 req.body.paid,
                 req.body.notes,
                 utils.buildResCallback(res)
-            )
-          } else {
-            res.status(200).send(errRes)
-          }
-          break
-      case 'resource-removed':
-          if (
-            validators.isResourceId(req.body.resourceId, errRes)
-          ){
-            events.resourceRemoved(
-              req.body.resourceId,
-              utils.buildResCallback(res)
             )
           } else {
             res.status(200).send(errRes)

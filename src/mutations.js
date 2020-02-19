@@ -59,20 +59,6 @@ function cashMuts(cash, ev){
 			case "ao-named":
 				cash.alias = ev.alias
 				break
-			case "cash-increased":
-				cash.cash += parseFloat(ev.amount)
-				break
-			case "cash-decreased":
-				cash.cash -= parseFloat(ev.amount)
-				break
-			case "member-paid":
-				if (ev.isCash) {
-					cash.cash += parseFloat(ev.paid)
-				}
-				break
-			case "task-claimed":
-			 	cash.variable += parseFloat(ev.paid)
-				break
 			case "spot-updated":
 				cash.spot = ev.spot
 				break
@@ -84,9 +70,6 @@ function cashMuts(cash, ev){
 				break
 			case "cap-set":
 				cash.cap = ev.amount
-				break
-			case "variable-set":
-				cash.variable = ev.amount
 				break
 			case "funds-set":
 				cash.outputs = ev.outputs
@@ -180,45 +163,6 @@ function membersMuts(members, ev){
           })
           break
 
-      case "badge-added":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId){
-                  member.badges.push( ev )
-              }
-          })
-          break
-
-      case "badge-removed":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId) {
-                  member.badges.forEach((b, i) => {
-                      if (ev.badge === b.badge) {
-                          member.badges.splice(i, 1)
-                      }
-                  })
-              }
-          })
-          break
-
-      case "badge-hidden":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId) {
-                  if(!member.hiddenBadges) member.hiddenBadges = [] //add hiddenBadges property if it doesn't exist
-                  if(member.hiddenBadges.includes(ev.badge)){ //if the badge is currently in the hidden list, remove it
-                    member.hiddenBadges = member.hiddenBadges.filter( badge => { //We need to remove all references, since bugs could create multiples
-                        if(badge == ev.badge){
-                            return false
-                        }
-                        return true
-                    })
-                  } else { //We don't have the badge in our hidden list, so let's add it
-                      member.hiddenBadges.push(ev.badge)
-                  }
-              }
-
-          })
-          break
-
       case "doge-barked":
           members.forEach( member => {
               // this should only bump up for mutual doges
@@ -278,13 +222,6 @@ function resourcesMuts(resources, ev){
 				}
 			})
 			break
-		case "resource-removed":
-				resources.forEach( (r, i) => {
-						if (r.resourceId == ev.resourceId){
-								resources.splice(i, 1)
-						}
-				})
-				break
 		case "channel-created":
 				resources.forEach((r, i) => {
 						if (r.resourceId == ev.resourceId){
@@ -561,13 +498,6 @@ function tasksMuts(tasks, ev) {
                 if(task.taskId === ev.taskId) {
                     task.guild = ev.guild
                 }
-            })
-            break
-        case "task-bountied":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                        _.merge(task, ev)
-                    }
             })
             break
         case "task-claimed":

@@ -56,24 +56,6 @@ function getNodeInfo(info, callback){
     dctrlDb.triggerShadow(newEvent)
 }
 
-function cashIncreased(amount, notes, callback) {
-  let newEvent = {
-      type: "cash-increased",
-      amount,
-      notes,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function cashDecreased(amount, notes, callback) {
-  let newEvent = {
-    type: "cash-decreased",
-    amount,
-    notes,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
 function rentSet(amount, callback){
     let newEvent = {
       type: "rent-set",
@@ -85,14 +67,6 @@ function rentSet(amount, callback){
 function capSet(amount, callback){
     let newEvent = {
       type: "cap-set",
-      amount
-    }
-    dctrlDb.insertEvent(newEvent, callback)
-}
-
-function variableSet(amount, callback){
-    let newEvent = {
-      type: "variable-set",
       amount
     }
     dctrlDb.insertEvent(newEvent, callback)
@@ -114,14 +88,6 @@ function currencySwitched(currency, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function forex(currency, callback) {
-  let newEvent = {
-      type: "forexed",
-      currency
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
 function fundsSet(outputs, channels, callback) {
   let newEvent = {
       type: "funds-set",
@@ -130,8 +96,6 @@ function fundsSet(outputs, channels, callback) {
   }
   dctrlDb.triggerShadow(newEvent)
 }
-
-const NESTED_PUBKEY_HASH = 1
 
 function memberCreated(name, fob, secret, callback) {
       let memberId = uuidV1()
@@ -148,27 +112,6 @@ function memberCreated(name, fob, secret, callback) {
           lastActivated: 7
       }
       dctrlDb.insertEvent(newEvent, callback)
-}
-
-function memberPaid(memberId, paid, isCash, notes, callback) {
-  let newEvent = {
-      type: "member-paid",
-      memberId,
-      paid,
-      isCash,
-      notes
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function memberCharged(memberId, charged, notes, callback) {
-    let newEvent = {
-        type: "member-charged",
-        memberId,
-        charged,
-        notes,
-    }
-    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberDeactivated(memberId, callback) {
@@ -206,33 +149,6 @@ function memberFieldUpdated(memberId, field, newfield, callback){
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function badgeAdded(memberId, badge, callback) {
-  let newEvent = {
-      type: "badge-added",
-      memberId,
-      badge,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function badgeRemoved(memberId, badge, callback) {
-  let newEvent = {
-      type: "badge-removed",
-      memberId,
-      badge,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function badgeHidden(memberId, badge, callback) {
-    let newEvent = {
-        type: "badge-hidden",
-        memberId,
-        badge,
-    }
-    dctrlDb.insertEvent(newEvent, callback)
-}
-
 function dogeBarked(memberId, callback) {
     let newEvent ={
         type: "doge-barked",
@@ -256,7 +172,6 @@ function dogeUnmuted(memberId, callback) {
     }
     dctrlDb.insertEvent(newEvent, callback)
 }
-
 
 function resourceCreated(resourceId, name, charged, secret, trackStock, callback) {
     let newEvent = {
@@ -293,14 +208,6 @@ function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
       amount,
       charged,
       notes
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function resourceRemoved(resourceId, callback) {
-  let newEvent = {
-      type: 'resource-removed',
-      resourceId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -388,20 +295,6 @@ function addressUpdated(taskId, address, callback){
           taskId,
           address,
       }, callback)
-}
-
-function taskBountied(taskId, instructions, boost, monthlyValue, cap, oneTime, blame, callback){
-    let newEvent = {
-        type: "task-bountied",
-        taskId,
-        instructions,
-        boost,
-        monthlyValue,
-        cap,
-        oneTime: !!oneTime,
-        blame,
-    }
-    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskGuilded(taskId, guild, callback){
@@ -577,30 +470,33 @@ function invoiceCreated(taskId, bolt11, payment_hash, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
+function memberCharged(memberId, charged, notes, callback) {
+    let newEvent = {
+        type: "member-charged",
+        memberId,
+        charged,
+        notes,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
 module.exports = {
+    memberCharged,
     aoConnected,
     aoDisconnected,
     aoNamed,
     aoSubscribed,
     aoRelayAttempted,
-    cashIncreased,
-    cashDecreased,
     spotUpdated,
     rentSet,
     capSet,
-    variableSet,
     fundsSet,
     getNodeInfo,
     memberCreated,
-    memberPaid,
-    memberCharged,
     memberDeactivated,
     memberPurged,
     memberActivated,
     memberFieldUpdated,
-    badgeAdded,
-    badgeRemoved,
-    badgeHidden,
     dogeBarked,
     dogeMuted,
     dogeUnmuted,
@@ -609,12 +505,10 @@ module.exports = {
     resourceStocked,
     resourceBooked,
     bookCancelled,
-    resourceRemoved,
     resourcePurged,
     sessionCreated,
     sessionKilled,
     taskCreated,
-    taskBountied,
     taskBoosted,
     taskClaimed,
     taskUnclaimed,
