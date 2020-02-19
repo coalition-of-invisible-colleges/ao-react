@@ -333,7 +333,6 @@ function sessionsMuts(sessions, ev){
 	}
 }
 
-
 function tasksMuts(tasks, ev) {
     switch (ev.type) {
         case "ao-connected":
@@ -634,20 +633,6 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
-        case "task-cap-updated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    task.cap = parseFloat(ev.amount)
-                }
-            })
-            break
-        case "task-rate-updated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    task.monthlyValue = parseFloat(ev.amount)
-                }
-            })
-            break
         case "task-boosted":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
@@ -670,13 +655,6 @@ function tasksMuts(tasks, ev) {
                           task.bolt11 = ""
                           task.payment_hash = ""
                         }
-                }
-            })
-            break
-        case "task-instructions-updated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    task.instructions = ev.newInstructions
                 }
             })
             break

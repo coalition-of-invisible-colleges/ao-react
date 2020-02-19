@@ -538,36 +538,6 @@ function taskBoostedLightning(taskId, amount, payment_hash, pay_index, callback)
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskRateUpdated(taskId, amount, blame, callback) {
-  let newEvent = {
-    type: "task-rate-updated",
-    taskId,
-    amount,
-    blame,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function taskCapUpdated(taskId, amount, blame, callback) {
-  let newEvent = {
-    type: "task-cap-updated",
-    taskId,
-    amount,
-    blame,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function taskInstructionsUpdated(taskId, newInstructions, blame, callback){
-  let newEvent = {
-    type: "task-instructions-updated",
-    taskId,
-    newInstructions,
-    blame,
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
 function taskRemoved(taskId, blame, callback){
   let newEvent = {
     type: "task-removed",
@@ -649,9 +619,6 @@ module.exports = {
     taskClaimed,
     taskUnclaimed,
     taskRefocused,
-    taskInstructionsUpdated,
-    taskRateUpdated,
-    taskCapUpdated,
     taskRemoved,
     taskSwapped,
     taskGrabbed,
