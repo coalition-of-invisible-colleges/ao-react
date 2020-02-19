@@ -175,6 +175,7 @@ label
 
 .bottomright
     right: 0
+    cursor:pointer
     float: right
 
 .stash
