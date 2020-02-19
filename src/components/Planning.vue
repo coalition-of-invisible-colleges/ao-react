@@ -23,8 +23,8 @@ export default {
     },
     computed: {
         calcTime(){
-            if (this.b.book.startTs){
-                let now = new Date(this.b.book.startTs)
+            if (this.$store.getters.contextCard.book.startTs){
+                let now = new Date(this.$store.getters.contextCard.book.startTs)
                 return now.toString()
             }
         },

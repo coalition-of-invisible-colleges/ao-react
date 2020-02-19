@@ -94,7 +94,7 @@ const actions = {
             .set("Authorization", state.token)
             .end((err, res)=>{
                 if (err || !res.body) {
-                    commit("setReqStatus", "failed")
+                    commit("setReqStatus", "failed", res.body)
                     console.log("event req failed")
                   } else {
                     commit("setPing", Date.now() - startTs)

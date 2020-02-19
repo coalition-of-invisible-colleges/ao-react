@@ -10,7 +10,6 @@ const state = {
     bird: false,
     stacks: 1,
     warp: -1,
-    highlights: {},
     sierpinski: true,
     barking: false,
     pinging: false,
@@ -84,15 +83,6 @@ const mutations = {
     },
     closeWarp(state){
         state.warp = -1
-    },
-    toggleHighlight(state, args) {
-        let valence = args.valence
-        let memberId = args.memberId
-        if(state.highlights.hasOwnProperty(memberId) && (state.highlights[memberId] === valence || valence === true)) {
-            Vue.delete(state.highlights, memberId)
-        } else {
-            Vue.set(state.highlights, memberId, valence)
-        }
     },
     toggleSierpinski(state, primed) {
         state.sierpinski = !state.sierpinski

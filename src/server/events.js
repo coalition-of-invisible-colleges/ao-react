@@ -5,6 +5,16 @@ const crypto = require('crypto')
 const { pubState } = require('./state')
 const dctrlDb = require('./dctrlDb')
 
+function highlighted(taskId, memberId, valence, callback){
+    let newEvent = {
+        type: "highlighted",
+        taskId,
+        memberId,
+        valence
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
 function aoSubscribed(address, secret, callback){
     let newEvent = {
         type: "ao-subscribed",
@@ -481,6 +491,7 @@ function memberCharged(memberId, charged, notes, callback) {
 }
 
 module.exports = {
+    highlighted,
     memberCharged,
     aoConnected,
     aoDisconnected,

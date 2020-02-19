@@ -21,8 +21,18 @@ router.post('/events', (req, res, next) => {
 
 router.post('/events', (req, res, next)=>{
   let errRes = []
-
   switch (req.body.type){
+      case 'highlighted':
+          if (
+              validators.isTaskId(req.body.taskId, errRes) &&
+              validators.isMemberId(req.body.memberId, errRes) &&
+              validators.isBool(req.body.valence, errRes)
+          ){
+              events.highlighted(req.body.taskId, req.body.memberId, req.body.valence, utils.buildResCallback(res))
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
       case 'ao-disconnected':
           if (validators.isAddress(req.body.address, errRes)){
               events.aoDisconnected(

@@ -1,6 +1,8 @@
 // Mutations are state builders.
 // The current state is the result of all the events in the system fed through the mutation functions.
 // `server/state.js` for server; `modules/*` for vue client.
+
+const Vue = require('vue')
 const _ = require( 'lodash')
 const uuidv1 = require( 'uuid/v1')
 const cryptoUtils = require( './crypto')
@@ -272,6 +274,29 @@ function sessionsMuts(sessions, ev){
 
 function tasksMuts(tasks, ev) {
     switch (ev.type) {
+        case "highlighted":
+            tasks.forEach( task => {
+                if (task.taskId === ev.taskId){
+                    if(task.highlights.hasOwnProperty(ev.memberId) && (task.highlights[ev.memberId] === ev.valence)) {
+                      // XXX
+                      try {
+                          Vue.delete(task.highlights, ev.memberId)
+                      }catch(err){
+                          console.log('vue got err', err)
+                          delete task.highlights[ev.memberId]
+                      }
+                    } else {
+                      // XXX
+                      try {
+                          Vue.set(task.highlights, ev.memberId, ev.valence)
+                      } catch (err){
+                          console.log('vue got err', err)
+                          task.highlights[ev.memberId] = ev.valance
+                      }
+                    }
+                }
+            })
+            break
         case "ao-connected":
             break
         case "ao-disconnected":

@@ -4,9 +4,9 @@
     span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
     span.checkmark.clickable(v-else  @click='complete') ☐
     span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
-    span(v-for='c in checkmarks'  :key='$store.state.upgrades.highlights')
+    span(v-for='c in checkmarks'  :key='c.taskId')
         span.tooltip.plain(@click='goIn(c.taskId)')
-            span.checkmark(:class="{ ...cardInputSty(c.color), highlight : c.highlight === 1, lowdark : c.highlight === -1, lilypad : c.highlight === 2 }"  :key='checkmarks') ☑
+            span.checkmark(:class="{ ...cardInputSty(c.color), highlight : c.highlight === 1, lowdark : c.highlight === -1, lilypad : c.highlight === 2 }") ☑
             linky.tooltiptext.bigger(:x='c.name')
 </template>
 
@@ -77,8 +77,15 @@ export default {
         }
     },
     toggleHighlight(invert = false) {
-        if(!this.isHighlighted && !this.isLowdarked && (!this.completions || this.completions.length < 1)) return
-        this.$store.commit("toggleHighlight", { memberId: this.memberId, valence: !invert })
+        // XXX not sure about this abort
+        // if(!this.isHighlighted && !this.isLowdarked && (!this.completions || this.completions.length < 1)) return
+
+        this.$store.dispatch("makeEvent", {
+            type: 'highlighted',
+            taskId: this.b.taskId,
+            memberId: this.memberId,
+            valence: !invert
+        })
     },
   },
   computed:{
@@ -96,10 +103,10 @@ export default {
         return this.b.claimed.indexOf(this.memberId) > -1
     },
     isHighlighted() {
-        return this.$store.state.upgrades.highlights[this.memberId] === true
+        return this.$store.getters.contextCard.highlights[this.memberId] === true
     },
     isLowdarked() {
-        return this.$store.state.upgrades.highlights[this.memberId] === false
+        return this.$store.getters.contextCard.highlights[this.memberId] === false
     },
     checkmarks() {
         let checkmarks = this.$store.getters.hodlersByCompletions.find(m => m.taskId === this.memberId)
@@ -113,7 +120,7 @@ export default {
         checkmarks.forEach(c => {
             delete c.highlight
         })
-        Object.entries(this.$store.state.upgrades.highlights).forEach((arr) => {
+        Object.entries(this.$store.getters.contextCard.highlights).forEach((arr) => {
             checkmarks.forEach((c, i) => {
                 if(arr[1]) {
                     if(c.claimed.indexOf(arr[0]) >= 0) {
