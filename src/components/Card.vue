@@ -16,9 +16,6 @@
     .buffertop
       preview-deck(:task='b')
       .cardbody
-          .cardhud(v-if='calcVal > 0.01')
-              img.smallguild(src='../assets/images/chest.svg')
-              span {{ calcVal }}
           .cardhud(v-if='cardStart')
               img.smallguild(src='../assets/images/timecube.svg')
               span {{ cardStart.days.toFixed(1) }} days
@@ -165,24 +162,6 @@ export default {
               purplewx : this.b.color == 'purple',
               blackwx : this.b.color == 'black',
           }
-        },
-        calcVal(){
-            let v = calculations.calculateTaskPayout(this.b)
-            return v.toFixed(2)
-        },
-        countClass(){
-            return {
-                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
-            }
-        },
-        parent(){
-          let task
-          this.$store.state.tasks.forEach( t => {
-              if(t.taskId === this.inId) {
-                  task = t
-              }
-          })
-          return task
         },
         cardAge(){
           let now = Date.now()

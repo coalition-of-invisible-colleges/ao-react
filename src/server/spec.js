@@ -305,7 +305,7 @@ router.post('/events', (req, res, next)=>{
                   let name = m.name
               }
           })
-          let envelope = calculations.blankCard(name)
+          let envelope = calculations.blankCard(uuidV1(), name, 'blue')
           envelope.name = memberCard.name
           envelope.subTasks = [...new Set(taskIds)]
           envelope.passed = [[req.body.address, req.body.toMemberId]]

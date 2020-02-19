@@ -49,12 +49,11 @@ export default {
     },
     computed: {
         isCared(){
-            return this.b.deck.length > 0 || this.b.guild || calculations.calculateTaskPayout(this.b) > 0.1
+            return this.b.deck.length > 0
         }
     },
     methods: {
         rollsafeIt(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-de-sub-tasked',
                 taskId: this.inId,

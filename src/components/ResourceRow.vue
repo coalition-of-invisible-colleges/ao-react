@@ -3,10 +3,6 @@
 .memberrow.membershipcard(@dblclick='goIn')
     .row.center
         label.hackername {{ r.name }}
-            span
-                img.smallguild(src='../assets/images/chest.svg')
-                label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
-                label.stash(v-else) 0
         button(v-if='!isAnyOptions' @click='resourcePurged')
         button(v-for='o in optionList'  @click='use(o[0])'  :class='cardInputSty(o[2])') {{ o[1] }}
     .bottomleft(v-if='card.boost')

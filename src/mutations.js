@@ -335,82 +335,25 @@ function sessionsMuts(sessions, ev){
 
 
 function tasksMuts(tasks, ev) {
-    let newEv = {}
     switch (ev.type) {
         case "ao-connected":
             break
         case "ao-disconnected":
             break
         case "resource-created":
-            newEv.taskId = ev.resourceId
-            newEv.name = ev.resourceId
-            newEv.claimed = []
-            newEv.completed = []
-            newEv.passed = []
-            newEv.guild = false
-            newEv.subTasks = []
-            newEv.lastClaimed = 0
-            newEv.book = {}
-            newEv.priorities = []
-            newEv.deck = []
-            newEv.color = "red"
-            newEv.address = ''
-            newEv.bolt11 = ''
-            newEv.payment_hash = ''
-            newEv.boost = 0
-            newEv.monthlyValue = 0
-            newEv.cap = 0
-            tasks.push(newEv)
+            tasks.push(calculations.blankCard(ev.resourceId, ev.resourceId, 'red'))
             break
         case "member-created":
-            newEv.taskId = ev.memberId
-            newEv.name = ev.memberId
-            newEv.claimed = []
-            newEv.completed = []
-            newEv.passed = []
-            newEv.guild = false
-            newEv.subTasks = []
-            newEv.lastClaimed = 0
-            newEv.book = {}
-            newEv.priorities = []
-            newEv.deck = []
-            newEv.color = "blue"
-            newEv.address = ''
-            newEv.bolt11 = ''
-            newEv.payment_hash = ''
-            newEv.boost = 0
-            newEv.monthlyValue = 0
-            newEv.cap = 0
-            tasks.push(newEv)
+            tasks.push(calculations.blankCard(ev.memberId, ev.memberId, 'blue'))
             break
         case "task-created":
-            newEv = Object.assign({}, ev)
-            newEv.claimed = []
-            newEv.completed = []
-            newEv.passed = []
-            newEv.guild = false
-            newEv.subTasks = []
-            newEv.lastClaimed = 0
-            newEv.book = {}
-            newEv.priorities = []
-            newEv.address = ''
-            newEv.bolt11 = ''
-            newEv.payment_hash = ''
-            newEv.boost = 0
-            newEv.monthlyValue = 0
-            newEv.cap = 0
-            if(newEv.name) {
-                newEv.name = newEv.name.trim()
-                tasks.push(newEv)
-            }
-            if (newEv.inId){
-                tasks.forEach(task => {
-                    if (task.taskId === newEv.inId) {
-                        task.subTasks = _.filter(task.subTasks, tId => tId !== newEv.taskId)
-                        task.subTasks.push(newEv.taskId)
-                    }
-                })
-            }
+            tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color))
+            tasks.forEach(task => {
+                if (task.taskId === ev.inId) {
+                    task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+                    task.subTasks.push(ev.taskId)
+                }
+            })
             break
         case "address-updated":
             tasks.forEach( t => {

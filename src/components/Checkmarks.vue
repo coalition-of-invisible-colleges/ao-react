@@ -2,8 +2,11 @@
 
 .upgrades
     projects
-    current-checks.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :completions='n.contextCompletions'  :key='n.taskId')
-    current-checks(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :key='n')
+    div(v-if='isDoge')
+        
+    div(v-else)
+        current-checks.clickable(v-for='n in $store.getters.hodlersByCompletions'  :memberId='n.taskId'  :b='b'  :completions='n.contextCompletions'  :key='n.taskId')
+        current-checks(v-for='n in holdOrSent'  :memberId='n'  :b='b'  :key='n')
 </template>
 
 <script>
@@ -119,45 +122,6 @@ export default {
         },
     },
     computed: {
-        missions(){
-            let missions = []
-            if(this.isDoge) {
-                if (this.isDoge.memberId === this.$store.getters.member.memberId) {
-                    let guilds = this.$store.getters.myGuilds
-                    guilds.forEach(g => {
-                        g.subTasks.concat(g.priorities, g.completed).forEach(p => {
-                            let task = this.$store.getters.hashMap[p]
-                            if(!task) {
-                                console.log("null taskId found, this means cleanup is not happening elsewhere and is very bad")
-                            } else if(task.guild) {
-                                task.subTasks.concat(task.priorities, task.completed).forEach(sp => {
-                                    let subtask = this.$store.getters.hashMap[sp]
-                                    if(!subtask) {
-                                        console.log("null subtaskId found, this means cleanup is not happening elsewhere and is very bad")
-                                    } else if(subtask.guild) {
-                                        if(!task.guilds) {
-                                            task.guilds = []
-                                        }
-                                        if(task.guilds.indexOf(subtask) === -1) {
-                                            task.guilds.push(subtask)
-                                        }
-                                    }
-                                })
-                                if(!g.guilds) {
-                                    g.guilds = []
-                                }
-                                if(g.guilds.indexOf(task) === -1) {
-                                    g.guilds.push(task)
-                                }
-                            }
-                        })
-                    })
-                    return guilds
-                } else {
-                    return this.$store.state.tasks.filter(g => g.guild && g.deck.indexOf(this.isDoge.memberId) > -1)
-                }
-            }
-        },
         holdOrSent(){
             let deck = this.b.deck
             let passedTo = this.b.passed.map(p => p[1])
