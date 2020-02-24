@@ -49,12 +49,10 @@ export default {
                   return 1
               } else if(a.weight && !b.weight) {
                   return -1
-              } else if(b.weight && a.weight) {
-                  if(b.weight !== a.weight) {
-                      return b.weight - a.weight
-                  } else {
-                      return bHodls - aHodls
-                  }
+              } else if((b.weight && a.weight) && (b.weight !== a.weight)) {
+                    return b.weight - a.weight
+              } else {
+                  return bHodls - aHodls
               }
           })
 
