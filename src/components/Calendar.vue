@@ -87,19 +87,6 @@ export default {
             })
         }
 
-        this.$store.getters.pubguildEvents.forEach(t => {
-            console.log('looking through pubguildEvents')
-            let date = getDMY(t.book.startTs)
-            if (date.month === this.month && date.year === this.year){
-                if (!evs[date.day]){
-                    evs[date.day] = []
-                }
-                if(evs[date.day].indexOf(t) === -1) {
-                    evs[date.day].push(t)
-                }
-            }
-        })
-
         return evs
     },
     card(){

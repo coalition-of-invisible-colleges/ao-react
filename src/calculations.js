@@ -43,7 +43,7 @@ function blankCard(taskId, name, color) {
         lastClaimed: 0,
         monthlyValue: 0,
         payment_hash: '',
-        highlights: {}
+        highlights: []
     }
     return newCard
 }

@@ -12,11 +12,10 @@
 
 <script>
 
-
 import Linky from './Linky'
 
 export default {
-  props: ['memberId', 'b', 'inId', 'completions'],
+  props: ['memberId'],
   components: { Linky },
   methods: {
     goIn(taskId){
@@ -53,7 +52,7 @@ export default {
     complete(){
         this.$store.dispatch("makeEvent", {
             type: 'task-claimed',
-            taskId: this.b.taskId,
+            taskId: this.$store.getters.contextCard.taskId,
             memberId: this.memberId,
             notes: 'checked by ' + this.$store.getters.member.memberId
         })
@@ -61,7 +60,7 @@ export default {
     uncheck(){
         this.$store.dispatch("makeEvent", {
             type: 'task-unclaimed',
-            taskId: this.b.taskId,
+            taskId: this.$store.getters.contextCard.taskId,
             memberId: this.memberId,
             notes: ''
         })
@@ -82,7 +81,7 @@ export default {
 
         this.$store.dispatch("makeEvent", {
             type: 'highlighted',
-            taskId: this.b.taskId,
+            taskId: this.$store.getters.contextCard.taskId,
             memberId: this.memberId,
             valence: !invert
         })
@@ -100,50 +99,23 @@ export default {
         return name
     },
     isCompleted(){
-        return this.b.claimed.indexOf(this.memberId) > -1
+        return this.$store.getters.contextCard.claimed.indexOf(this.memberId) > -1
     },
+
     isHighlighted() {
-        return this.$store.getters.contextCard.highlights[this.memberId] === true
+        return this.$store.getters.contextCard.highlights.some(h => {
+            return (h.valence && h.memberId === this.memberId)
+        })
     },
     isLowdarked() {
-        return this.$store.getters.contextCard.highlights[this.memberId] === false
+        return this.$store.getters.contextCard.highlights.some(h => {
+            return (!h.valence && h.memberId === this.memberId)
+        })
     },
+
     checkmarks() {
-        let checkmarks = this.$store.getters.hodlersByCompletions.find(m => m.taskId === this.memberId)
-        if(!checkmarks || !checkmarks.contextCompletions) {
-            console.log("null contextpletions")
-            return []
-        }
-        checkmarks = checkmarks.contextCompletions
-        // remove duplicates, shouldn't be possible
-        checkmarks = [...new Set(checkmarks)]
-        checkmarks.forEach(c => {
-            delete c.highlight
-        })
-        Object.entries(this.$store.getters.contextCard.highlights).forEach((arr) => {
-            checkmarks.forEach((c, i) => {
-                if(arr[1]) {
-                    if(c.claimed.indexOf(arr[0]) >= 0) {
-                        if(!c.hasOwnProperty('highlight')) {
-                            c.highlight = 1
-                        }
-                    } else {
-                        c.highlight = 0
-                    }
-                } else if(!arr[1]) {
-                    if(c.claimed.indexOf(arr[0]) === -1) {
-                        if(!c.hasOwnProperty('highlight')) {
-                            c.highlight = -1
-                        } else {
-                            c.highlight *= -1
-                        }
-                    } else {
-                        c.highlight = 0
-                    }
-                }
-            })
-        })
-        return checkmarks
+        
+        return []
     },
   }
 }

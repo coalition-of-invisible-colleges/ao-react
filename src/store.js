@@ -1,6 +1,6 @@
-import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import _ from 'lodash'
 import modules from './modules'
 import loader from './modules/loader'
 import eventstream from './modules/eventstream'
@@ -60,24 +60,20 @@ export default new Vuex.Store({
         })
         return contextRes
       },
-      hodlersByCompletions(state, getters){
-          let checkmarks = getters.contextCompleted
-          let hodlers = {}
-          let holds = []
-          checkmarks.forEach(c => {
+      contextRelevantMembers(state, getters){
+          let byCompletion = []
+          getters.contextCompleted.forEach(c => {
               c.claimed.forEach(mId => {
-                  if(!hodlers[mId]){
-                      hodlers[mId] = []
-                  }
-                  hodlers[mId].push(c)
+                  byCompletion.push(mId)
               })
           })
-          Object.keys(hodlers).forEach(mId => {
-              let member = getters.hashMap[mId]
-              member.contextCompletions = hodlers[mId]
-              holds.push(member)
+          getters.contextCard.deck.forEach(mId => {
+              byCompletion.push(mId)
           })
-          return holds
+          getters.contextCard.passed.map(p => {
+              byCompletion.push(p[1])
+          })
+          return _.uniq(byCompletion)
       },
       all(state, getters){
           if (state.context.completed){
@@ -114,13 +110,6 @@ export default new Vuex.Store({
               return getters.contextCompleted.filter(d => d.color === 'blue')
           }
           return getters.contextDeck.filter(d => d.color === 'blue')
-      },
-      totalBounties(state,getters){
-          let total = 0
-          getters.bounties.forEach(t => {
-              total += parseFloat( t.currentAmount )
-          })
-          return total
       },
       hashMap(state){
           let hashMap = {}
@@ -229,29 +218,8 @@ export default new Vuex.Store({
                   }
               })
           })
+          console.log('sendableGuilds ', guilds)
           return guilds
-      },
-      pubguildEvents(state, getters){
-          let allTasks = []
-          let fullTasks = []
-          getters.pubguilds.forEach(p => {
-              let guildsSubs = p.subTasks.concat(p.priorities).concat(p.completed)
-
-              fullTasks.push(p)
-              fullTasks = fullTasks.concat( guildsSubs.map(tId => {
-                  let t = getters.hashMap[tId]
-                  if(!t) {
-                  } else {
-                    t.funderGuild = p.guild
-                  }
-                  return t
-                  })
-              )
-          })
-          let evs = fullTasks.filter(t => {
-              return (t && t.book && t.book.startTs)
-          })
-          return evs
       },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId
