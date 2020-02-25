@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.context.paperwrapper(:class="cardInputSty"  @click='goToParent(taskId)')
+.context.paperwrapper(:class="cardInputSty")
     .popup
         .here
             span.front(v-if='isMember')  {{ isMember }}
@@ -75,18 +75,6 @@ export default {
             return days
         },
     },
-    methods: {
-        goToParent(target){
-            if (this.$store.state.upgrades.dimension !== "unicorn"){
-                this.$router.push('/' + this.$store.state.upgrades.mode)
-            }
-            this.$store.dispatch("goUp", {
-                target,
-                panel: [target],
-                top: 0
-            })
-        },
-    }
 }
 
 </script>

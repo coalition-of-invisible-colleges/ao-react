@@ -67,6 +67,7 @@ const actions = {
         })
     },
     goUp({commit}, pContext){
+        console.log('goUp called')
         commit("goToParent", pContext.target)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)

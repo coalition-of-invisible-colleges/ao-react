@@ -112,7 +112,6 @@ export default {
             return (!h.valence && h.memberId === this.memberId)
         })
     },
-
     checkmarks() {
         return this.$store.getters.contextCompleted.filter(t => t.claimed.indexOf(this.memberId) > -1)
     },

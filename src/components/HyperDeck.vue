@@ -51,9 +51,9 @@ export default {
   },
   methods:{
       goWithinPanel(n){
-
           let i = this.$store.state.context.panel.indexOf(n)
           if (i > -1){
+              console.log('all that should happen is set top!')
               this.$store.commit("setTop", i)
           }
       },

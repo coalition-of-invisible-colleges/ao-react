@@ -2,9 +2,8 @@
 .contexts
     div(:class='{suncontext: isSun, bullcontext: isBull}')
         .transparentsides
-    template(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)')
-        .narrow
-            context-row(:taskId ='n')
+    .narrow(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)')
+        context-row(:taskId ='n')
 </template>
 
 <script>
@@ -32,6 +31,19 @@ export default {
           return this.$store.state.upgrades.dimension === 'bull'
         },
     },
+    methods:{
+      goToParent(target){
+          console.log('gotopar', target)
+          if (this.$store.state.upgrades.dimension !== "unicorn"){
+              this.$router.push('/' + this.$store.state.upgrades.mode)
+          }
+          this.$store.dispatch("goUp", {
+              target,
+              panel: [target],
+              top: 0
+          })
+      },
+    }
 }
 
 </script>

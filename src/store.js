@@ -25,15 +25,11 @@ export default new Vuex.Store({
           return getters.liveConnections[state.upgrades.warp]
       },
       memberCard(state, getters){
-          let memberCard = _.merge({
-              taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
-          }, getters.hashMap[getters.member.memberId])
+          let memberCard = _.merge(calculations.blankCard('', '', ''), getters.hashMap[getters.member.memberId])
           return memberCard
       },
       contextCard(state, getters){
-          let contextCard = _.merge({
-              taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
-          }, getters.hashMap[state.context.panel[state.context.top]])
+          let contextCard = _.merge(calculations.blankCard('', '', ''), getters.hashMap[state.context.panel[state.context.top]])
           return contextCard
       },
       contextDeck(state, getters){
