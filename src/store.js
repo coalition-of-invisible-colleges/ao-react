@@ -40,7 +40,22 @@ export default new Vuex.Store({
           return getters.contextCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
       },
       contextCompleted(state, getters){
-          return getters.contextCard.completed.map(t => getters.hashMap[t])
+          let upValence = []
+          let downValence = []
+          getters.contextCard.highlights.forEach(h => {
+            if (h.valence){
+              upValence.push(h.memberId)
+            } else {
+              downValence.push(h.memberId)
+            }
+          })
+
+          return getters.contextCard.completed.map(tId => getters.hashMap[tId]).filter(t => {
+              return (
+                  upValence.every(mId => t.claimed.indexOf(mId) > -1) &&
+                  downValence.every(mId => t.claimed.indexOf(mId) === -1)
+              )
+          })
       },
       contextMember(state, getters){
           let contextMem = false

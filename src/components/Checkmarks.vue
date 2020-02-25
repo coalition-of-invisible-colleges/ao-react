@@ -3,7 +3,7 @@
 .upgrades
     projects
     div(v-if='$store.getters.contextMember')
-        current(v-for='n in $store.getters.contextMember.deck'  :memberId='n')
+        current(v-for='n in $store.getters.contextCard.deck'  :memberId='n')
     div(v-else)
         current-checks(v-for='n in $store.getters.contextRelevantMembers'  :memberId='n'  :key='n')
 </template>

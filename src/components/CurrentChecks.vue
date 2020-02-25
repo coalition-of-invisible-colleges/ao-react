@@ -114,8 +114,7 @@ export default {
     },
 
     checkmarks() {
-        
-        return []
+        return this.$store.getters.contextCompleted.filter(t => t.claimed.indexOf(this.memberId) > -1)
     },
   }
 }
