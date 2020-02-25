@@ -1,35 +1,31 @@
 <template lang='pug'>
 
 .changer
-  form-box(event='member-field-updated', :data='changeReq', :btntxt='"change your " + change.field')
-      h2 Update {{$store.getters.member.name}}:
-          select(v-model='change.field', @change='empty')
-              option(value='name') hackername
-              option(value='secret') password
-              option(value='fob') fob
-      .input-container
-          input.input-effect(:type='inputType' v-model='change.newfield'  :class='{"has-content":!!change.newfield}')
-          label {{"new " + change.field}}
-          span.focus-border
-      br
-      .input-container(v-if='inputType === "password"')
-          input.input-effect(:type='inputType', v-model='change.confirmNewfield'  :class='{"has-content":!!change.confirmNewfield}')
-          label repeat
-          span.focus-border
-      .check(v-if='inputType === "password"')
-          img(v-if='matched', src='../assets/images/check.svg')
-          img(v-else, src='../assets/images/warn.svg')
+    h2 Update {{$store.getters.member.name}}:
+        select(v-model='change.field', @change='empty')
+            option(value='name') hackername
+            option(value='secret') password
+            option(value='fob') fob
+    .input-container
+        input.input-effect(:type='inputType' v-model='change.newfield'  :class='{"has-content":!!change.newfield}')
+        label {{"new " + change.field}}
+        span.focus-border
+    br
+    .input-container(v-if='inputType === "password"')
+        input.input-effect(:type='inputType', v-model='change.confirmNewfield'  :class='{"has-content":!!change.confirmNewfield}')
+        label repeat
+        span.focus-border
+    .check(v-if='inputType === "password"')
+        img(v-if='matched', src='../assets/images/check.svg')
+        img(v-else, src='../assets/images/warn.svg')
+    button(@click='update') update account
 </template>
 
 <script>
 
-import FormBox from './FormBox'
 import cryptoUtils from '../crypto'
 
 export default {
-    components: {
-        FormBox
-    },
     computed: {
         matched(){
             let x = this.change.newfield
@@ -80,6 +76,9 @@ export default {
         empty(){
             this.change.newfield = ''
             this.change.confirmNewfield = ''
+        },
+        update(){
+            this.$store.dispatch('makeEvent', this.changeReq)
         }
     }
 }

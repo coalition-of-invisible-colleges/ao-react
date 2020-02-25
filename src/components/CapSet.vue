@@ -1,18 +1,21 @@
 <template lang='pug'>
 
 #cashexpense
-    form-box(btntxt="Update Maximum Monthly Charge"  event='cap-set' v-bind:data='details')
-        div.input-container
-            input#capInput.input-effect(v-model='details.amount' type='text')
-            label(for="capInput") Set Monthly Cap
-            span.focus-borders
+    div.input-container
+        input#capInput.input-effect(v-model='details.amount' type='text'  :class='{"has-content": !!details.amount}')
+        label(for="capInput") Set Monthly Cap
+        span.focus-borders
+    button(@click='setCap') Set Cap
 </template>
 
 <script>
 
-import FormBox from './FormBox'
-
 export default {
+    methods: {
+        setCap(){
+            this.$store.dispatch('makeEvent', this.details)
+        }
+    },
     data(){
         return {
             details: {
@@ -20,9 +23,6 @@ export default {
                 amount: ''
             }
         }
-    },
-    components: {
-         FormBox
     }
 }
 
@@ -32,5 +32,6 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/input'
+@import '../styles/button'
 
 </style>

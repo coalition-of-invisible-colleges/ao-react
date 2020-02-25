@@ -16,15 +16,13 @@
         span.conn {{ s.address }}
         span.discon(@click='discon(s.address)').discon delete
     h3 Connect to another AO:
-    form-box(btntxt="connect"  event='ao-connected' v-bind:data='ao')
-        label(for="aoAddressInput") address:
-        input#aoAddressInput(v-model='ao.address' type='text')
-        label(for="aoSecretInput")  connection secret:
-        input#aoSecretInput(v-model='ao.secret' type='text')
-    h3 Update AO name (currently called {{ $store.state.cash.alias }})
-    form-box.topspace(btntxt="rename"  event='ao-named'  v-bind:data='aoNamed')
-        label(for="aoAliasInput") change ao alias:
-        input#aoAliasInput(v-model='aoNamed.alias' type='text')
+    .input-container
+        input.input-effect(v-model='ao.address' type='text'  :class='{"has-content":!!ao.address}')
+        label address
+    .input-container
+        input.input-effect(v-model='ao.secret' type='text'  :class='{"has-content":!!ao.secret}')
+        label.input-effect secret
+    button(@click='connect') connect
     .ourinfo
         h4 Put this information into another AO to allow it to send cards here.
         h4 Address:
@@ -32,21 +30,20 @@
             code(v-else) set an alias for this AO to display address
         h4 Connection Secret:
             code {{ $store.state.loader.token }}
+    h3 Update AO label ({{ $store.state.cash.alias }})
+    .input-container
+        input.input-effect(v-model='aoNamed.alias' type='text'  :class='{"has-content":!!aoNamed.alias}')
+        label(for="aoAliasInput") change ao alias:
+    button(@click='name') rename
 </template>
 
 <script>
-
-import FormBox from './FormBox'
 
 export default {
     mounted() {
         this.$store.commit('setMode' , 1)
         this.$store.commit('setDimension' , 2)
         this.$store.dispatch('loaded')
-    },
-    props: ['b', 'inId'],
-    components: {
-        FormBox
     },
     data() {
         return {
@@ -62,15 +59,18 @@ export default {
         }
     },
     methods: {
+        name(){
+            this.$store.dispatch('makeEvent', this.aoNamed)
+        },
+        connect(){
+            this.$store.dispatch('makeEvent', this.ao)
+        },
         discon(address){
             console.log("try diconnection", address)
             this.$store.dispatch("makeEvent", {
                 type: 'ao-disconnected',
                 address,
             })
-        },
-        toggleGive(){
-            this.showGive = !this.showGive
         },
         uptimePercent(successes, fails) {
             return ((successes / (successes + fails)) * 100).toFixed(1)
@@ -91,21 +91,6 @@ export default {
             })
             console.log('unmatched ', un)
             return un
-        },
-        playInfo(){
-            return {
-                type: 'task-sub-tasked',
-                taskId:  this.toGuild,
-                subTask: this.b.taskId,
-            }
-        },
-        passInfo(){
-            return {
-                type: 'task-passed',
-                taskId: this.b.taskId,
-                fromMemberId: this.$store.getters.member.memberId,
-                toMemberId: this.toMember,
-            }
         },
     },
 }

@@ -1,8 +1,7 @@
 <template lang='pug'>
 
 #newmember
-	h1 Add new
-	form-box(btntxt="Register New Doge"  event='member-created' v-bind:data='memberReq')
+		h1 Add new
 		.input-container
 				input.input-effect(v-model='member.name' type='text'  :class='{"has-content":!!member.name}')
 				label new account
@@ -12,13 +11,13 @@
 				label fob
 				span.focus-border
 		ul
-			li initial password is chosen name
-			li tell them the important stuff
+				li initial password is chosen name
+				li tell them the important stuff
+		button(@click='newMember') create account
 </template>
 
 <script>
 import cryptoUtils from '../crypto'
-import FormBox from './FormBox'
 
 export default {
   data() {
@@ -46,13 +45,10 @@ export default {
 		}
 	},
 	methods: {
-		reset() {
-			this.member.name = ''
+		newMember() {
+				this.$store.dispatch('makeEvent', this.memberReq)
 		}
 	},
-  components: {
-     FormBox
-  }
 }
 </script>
 
@@ -61,6 +57,7 @@ export default {
 @import '../styles/colours'
 @import '../styles/skeleton'
 @import '../styles/input'
+@import '../styles/button'
 
 #projects
     color:accent1
