@@ -45,13 +45,14 @@ export default new Vuex.Store({
               downValence.push(h.memberId)
             }
           })
-
-          return getters.contextCard.completed.map(tId => getters.hashMap[tId]).filter(t => {
-              return (
-                  upValence.every(mId => t.claimed.indexOf(mId) > -1) &&
-                  downValence.every(mId => t.claimed.indexOf(mId) === -1)
-              )
-          })
+          return getters.contextCard.completed
+              .map(tId => getters.hashMap[tId])
+              .filter(t => {
+                  return (
+                      upValence.every(mId => t.claimed.indexOf(mId) > -1) &&
+                      downValence.every(mId => t.claimed.indexOf(mId) === -1)
+                  )
+              })
       },
       contextMember(state, getters){
           let contextMem = false
@@ -62,6 +63,11 @@ export default new Vuex.Store({
           })
           return contextMem
       },
+      // contextGuilds(state, getters){
+      //     if (getters.contextMember){
+      //         return state.tasks.filter(t => t.deck.indexOf(getters.contextMember.memberId) > -1)
+      //     }
+      // },
       contextResource(state, getters){
         let contextRes = false
         state.resources.some(r => {
@@ -290,7 +296,10 @@ export default new Vuex.Store({
           return parseInt( getters.totalLocal ) +  parseInt( getters.confirmedBalance )
       },
       satPointSpot(state, getters){
-          return calculations.cadToSats(1, state.cash.spot)
+          if (state.cash.spot > 0){
+              return calculations.cadToSats(1, state.cash.spot)
+          }
+          return 1000
       },
       membersVouches(state, getters){
           let members = state.members.slice()

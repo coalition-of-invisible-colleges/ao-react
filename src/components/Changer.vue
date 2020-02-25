@@ -7,11 +7,15 @@
               option(value='name') hackername
               option(value='secret') password
               option(value='fob') fob
-      fancy-input(:labelText='"new " + change.field')
-          input.input-effect(:type='inputType' v-model='change.newfield')
+      .input-container
+          input.input-effect(:type='inputType' v-model='change.newfield'  :class='{"has-content":!!change.newfield}')
+          label {{"new " + change.field}}
+          span.focus-border
       br
-      fancy-input(v-if='inputType === "password"', labelText='repeat')
-          input.input-effect(:type='inputType', v-model='change.confirmNewfield')
+      .input-container(v-if='inputType === "password"')
+          input.input-effect(:type='inputType', v-model='change.confirmNewfield'  :class='{"has-content":!!change.confirmNewfield}')
+          label repeat
+          span.focus-border
       .check(v-if='inputType === "password"')
           img(v-if='matched', src='../assets/images/check.svg')
           img(v-else, src='../assets/images/warn.svg')
@@ -21,11 +25,10 @@
 
 import FormBox from './FormBox'
 import cryptoUtils from '../crypto'
-import FancyInput from './FancyInput'
 
 export default {
     components: {
-        FormBox, FancyInput
+        FormBox
     },
     computed: {
         matched(){

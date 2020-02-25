@@ -42,7 +42,6 @@ import Panels from './Panels'
 import GiftBox from './GiftBox'
 import Auth from './Auth'
 
-
 export default {
   components:{
       Hypercard,

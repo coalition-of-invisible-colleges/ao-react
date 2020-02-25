@@ -6,7 +6,7 @@
     span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
     span(v-for='c in checkmarks'  :key='c.taskId')
         span.tooltip.plain(@click='goIn(c.taskId)')
-            span.checkmark(:class="{ ...cardInputSty(c.color), highlight : c.highlight === 1, lowdark : c.highlight === -1, lilypad : c.highlight === 2 }") ☑
+            span.checkmark(:class="cardInputSty(c.color)") ☑
             linky.tooltiptext.bigger(:x='c.name')
 </template>
 
@@ -19,35 +19,10 @@ export default {
   components: { Linky },
   methods: {
     goIn(taskId){
-        if (!this.$store.state.context.completed){
-            this.$store.commit("toggleCompleted")
-        }
+        let parents = [this.memberId]
         let panel = [taskId]
         let top = 0
-        let parents = []
-        setTimeout(()=>{
-            let t = this.$store.getters.hashMap[taskId]
-            let panelColor = this.$store.getters[t.color]
-            let panelColorIds = panelColor.map(d => d.taskId)
-
-            let topColor = panelColorIds.indexOf(taskId)
-            if (topColor > -1){
-                panel = panelColorIds
-                top = topColor
-            }
-
-            if (this.$store.getters.contextCard.taskId){
-                parents.push(this.$store.getters.contextCard.taskId)
-            } else if (this.$store.getters.memberCard.taskId){
-                parents.push(this.$store.getters.memberCard.taskId)
-            }
-
-            this.$store.dispatch("goIn", {taskId, panel, top, parents})
-
-            if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
-                this.$store.commit("setMode", 1)
-            }
-        }, 5)
+        this.$store.dispatch("goIn", {panel, top, parents})
     },
     complete(){
         this.$store.dispatch("makeEvent", {
@@ -76,9 +51,6 @@ export default {
         }
     },
     toggleHighlight(invert = false) {
-        // XXX not sure about this abort
-        // if(!this.isHighlighted && !this.isLowdarked && (!this.completions || this.completions.length < 1)) return
-
         this.$store.dispatch("makeEvent", {
             type: 'highlighted',
             taskId: this.$store.getters.contextCard.taskId,
