@@ -27,7 +27,7 @@ module.exports = function applyRouter(app){
     })
     // XXX restrict to only memberIds not ao or resourceIds
     app.post('/tasks/:taskId', (req, res) => {
-        // XXX filter by req id
+        // XXX filter by req id req.params.taskId
         res.json(state.serverState.tasks)
     })
 }

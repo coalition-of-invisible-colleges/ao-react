@@ -32,6 +32,7 @@ const getIdSecret = function(identifier){
         }
     })
 
+    // XXX - Do not think auths under cash.subscr is a good idea
     state.serverState.cash.subscribed.forEach(sub => {
         if (sub.address === identifier) {
             ownerId = sub.resourceId
