@@ -69,6 +69,20 @@ const actions = {
             socket.connect()
         }
         request
+            .post('/tasks/gg')
+            .set("Authorization", state.token)
+            .end((err, res)=> {
+                if (err || !res.body) {
+
+                } else {
+                    console.log('got ', res.body.length, 'tasks from tasks endpoint')
+                    commit('applyEvent', {
+                        type: 'tasks-received',
+                        tasks: res.body
+                    })
+                }
+            })
+        request
             .post('/state')
             .set("Authorization", state.token)
             .end((err, res)=>{

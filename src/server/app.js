@@ -33,10 +33,7 @@ function startDctrlAo(){
       lightning.recordEveryInvoice(state.serverState.cash.pay_index)
       lightning.watchOnChain()
 
-      const cleanupHeartbeat = Kefir.interval(12345678, {type: 'cleanup'})
-      const evStream = Kefir.merge([dctrlDb.changeFeed, cleanupHeartbeat])
-
-      const serverReactions = evStream.onValue( ev => {
+      const serverReactions = dctrlDb.changeFeed.onValue( ev => {
           state.applyEvent(state.serverState, ev)
       })
       .onValue(reactions)
@@ -51,8 +48,7 @@ function startDctrlAo(){
             timeout: 2000,
         })
 
-        const filteredStream = evStream
-            .map(state.removeSensitive)
+        const filteredStream = dctrlDb.changeFeed.map(state.removeSensitive)
 
         const fullEvStream = Kefir.merge([filteredStream, dctrlDb.shadowFeed])
 

@@ -89,8 +89,6 @@ function initialize(callback) {
                   applyEvent(serverState, Object.assign({}, ev) )
                   applyEvent(pubState, removeSensitive( Object.assign({}, ev) ))
               })
-              applyEvent(serverState, {type: 'cleanup'})
-              applyEvent(pubState, {type: 'cleanup'})
               callback(null)
           })
     })

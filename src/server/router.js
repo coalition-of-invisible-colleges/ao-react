@@ -8,19 +8,15 @@ const { serverAuth } = require( './auth')
 const { lightningRouter } = require('./lightning')
 
 module.exports = function applyRouter(app){
-
     app.use(express.static(path.join(__dirname, '../../dist')))
     app.use(express.static(path.join(__dirname, '../../public')))
-
     app.get('/*', (req, res) => {
         res.sendFile(path.join(__dirname, '../../dist/index.html'))
     })
-
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({
         extended: true
     }))
-
     app.use(serverAuth) // below here requires auth token
     app.use(spec)   // handles event creation
     app.use(fobtap) // handles rfid scan devices
@@ -29,11 +25,9 @@ module.exports = function applyRouter(app){
     app.post('/state', (req, res) => {
         res.json(state.pubState)
     })
-
     // XXX restrict to only memberIds not ao or resourceIds
     app.post('/tasks/:taskId', (req, res) => {
-        
+        // XXX filter by req id
+        res.json(state.serverState.tasks)
     })
-
-
 }

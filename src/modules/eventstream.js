@@ -55,15 +55,12 @@ const mutations = {
 
 const actions = {
     displayEvent({commit, getters}, ev){
-        console.log("ev type is ", ev.type)
         if(!getters.member.muted && (ev.type === 'doge-barked' || ev.type === 'resource-used')) {
             commit('bark')
             return
         }
-        console.log('calling show for ', ev)
         commit('show', ev)
         setTimeout(()=>{
-            console.log('calling hide')
             commit('hide')
         }, 3567)
     }
