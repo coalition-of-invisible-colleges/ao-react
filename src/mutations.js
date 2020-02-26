@@ -11,6 +11,13 @@ const calculations = require( './calculations')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
+        case "ao-updated":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    ao.state = ev.state
+                }
+            })
+            break
         case "ao-connected":
             let newEv = {
                 address: ev.address,

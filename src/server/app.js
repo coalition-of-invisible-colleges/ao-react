@@ -30,7 +30,7 @@ function startDctrlAo(){
 
       watchSpot()
       cronStarter()
-      lightning.recordEveryInvoice(state.pubState.cash.pay_index)
+      lightning.recordEveryInvoice(state.serverState.cash.pay_index)
       lightning.watchOnChain()
 
       const cleanupHeartbeat = Kefir.interval(12345678, {type: 'cleanup'})

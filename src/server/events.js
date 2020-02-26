@@ -2,7 +2,7 @@ const uuidV1 = require('uuid/v1')
 const _ = require('lodash')
 const crypto = require('crypto')
 
-const { pubState } = require('./state')
+const { serverState } = require('./state')
 const dctrlDb = require('./dctrlDb')
 
 function highlighted(taskId, memberId, valence, callback){
@@ -278,7 +278,7 @@ function taskCreated(name, color, deck, inId, callback) {
   let hash = h.digest('hex')
   let isExist = false
 
-  pubState.tasks.forEach( t => {
+  serverState.tasks.forEach( t => {
       if (t.hash === hash){
           isExist = true
       }
@@ -490,7 +490,17 @@ function memberCharged(memberId, charged, notes, callback) {
     dctrlDb.insertEvent(newEvent, callback)
 }
 
+function aoUpdated(address, state, callback){
+    let newEvent = {
+        type: "ao-updated",
+        address,
+        state,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
 module.exports = {
+    aoUpdated,
     highlighted,
     memberCharged,
     aoConnected,

@@ -30,5 +30,10 @@ module.exports = function applyRouter(app){
         res.json(state.pubState)
     })
 
+    // XXX restrict to only memberIds not ao or resourceIds
+    app.post('/tasks/:taskId', (req, res) => {
+        
+    })
+
 
 }

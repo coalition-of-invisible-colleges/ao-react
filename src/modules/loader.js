@@ -68,7 +68,6 @@ const actions = {
         if (state.connected !== "connected"){
             socket.connect()
         }
-
         request
             .post('/state')
             .set("Authorization", state.token)
@@ -95,11 +94,9 @@ const actions = {
             .end((err, res)=>{
                 if (err || !res.body) {
                     commit("setReqStatus", "failed", res.body)
-                    console.log("event req failed")
-                  } else {
+                } else {
                     commit("setPing", Date.now() - startTs)
                     commit("setReqStatus", "ready")
-                    console.log("event req succ")
                 }
             })
     }

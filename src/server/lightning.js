@@ -5,7 +5,7 @@ const lightningRouter = express.Router()
 const allEvents = require('./events')
 const calculations = require( '../calculations')
 const LightningClient = require( 'lightning-client')
-const {serverState, pubState} = require( './state')
+const {serverState} = require( './state')
 const client = new LightningClient(config.clightning.dir, true);
 
 lightningRouter.post('/lightning/channel',(req, res) => {
@@ -43,10 +43,10 @@ function checkFunds(){
             try {
                 allEvents.fundsSet(result.outputs, result.channels)
                 result.outputs.forEach( o => {
-                    if (o.status === 'confirmed' && pubState.cash.usedTxIds.indexOf(o.txid) === -1){
-                        pubState.tasks.forEach( t => {
+                    if (o.status === 'confirmed' && serverState.cash.usedTxIds.indexOf(o.txid) === -1){
+                        serverState.tasks.forEach( t => {
                             if (t.address === o.address){
-                                let cadAmt = calculations.satsToCad(o.value, pubState.cash.spot)
+                                let cadAmt = calculations.satsToCad(o.value, serverState.cash.spot)
                                 allEvents.taskBoosted(t.taskId, cadAmt, o.txid)
                             }
                         })
@@ -91,9 +91,9 @@ function recordEveryInvoice(start){
     client.waitanyinvoice(start)
         .then(invoice => {
             let satoshis = invoice.msatoshi / 1000
-            let spot = pubState.cash.spot
+            let spot = serverState.cash.spot
             let cadAmt = calculations.satsToCad(satoshis, spot)
-            pubState.tasks.forEach( t => {
+            serverState.tasks.forEach( t => {
                 if (t.payment_hash === invoice.payment_hash){
                     allEvents.taskBoostedLightning(t.taskId, cadAmt, invoice.payment_hash, invoice.pay_index)
                 }

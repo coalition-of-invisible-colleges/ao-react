@@ -22,6 +22,22 @@ router.post('/events', (req, res, next) => {
 router.post('/events', (req, res, next)=>{
   let errRes = []
   switch (req.body.type){
+      case "ao-updated":
+          if (validators.isAddress(req.body.address, errRes)){
+              state.serverState.ao.forEach(a => {
+                  if (a.address === req.body.address){
+                      connector.getState(a.address, a.secret, (err, state) => {
+                          if (err){
+                              return events.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
+                          }
+                          events.aoUpdated(a.address, state, utils.buildResCallback(res))
+                      })
+                  }
+              })
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
       case 'highlighted':
           if (
               validators.isTaskId(req.body.taskId, errRes) &&

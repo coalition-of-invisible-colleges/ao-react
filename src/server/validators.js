@@ -29,7 +29,7 @@ module.exports = {
   },
   isAddress(val, errRes){
       let result = false
-      state.pubState.ao.forEach(ao =>{
+      state.serverState.ao.forEach(ao =>{
           if (val === ao.address){
             result = true
           }
@@ -41,7 +41,7 @@ module.exports = {
   },
   isMemberId(val, errRes){
       let result = false
-      state.pubState.members.forEach(member =>{
+      state.serverState.members.forEach(member =>{
           if (val === member.memberId){
             result = true
           }
@@ -53,7 +53,7 @@ module.exports = {
   },
   isActiveMemberId(val, errRes){
       let result = false
-      state.pubState.members.forEach(member =>{
+      state.serverState.members.forEach(member =>{
           if (val === member.memberId && member.active >= 0){
             result = true
           }
@@ -65,7 +65,7 @@ module.exports = {
   },
   isTaskId(val, errRes){
       let result = false
-      state.pubState.tasks.forEach(task =>{
+      state.serverState.tasks.forEach(task =>{
           if (val == task.taskId){
             result = true
           }
@@ -77,7 +77,7 @@ module.exports = {
   },
   isSession(val, errRes){
       let result = false
-      state.pubState.sessions.forEach(s => {
+      state.serverState.sessions.forEach(s => {
           if (val === s.session){
             result = true
           }
@@ -89,7 +89,7 @@ module.exports = {
   },
   isResourceId(val, errRes){
       let result = false
-      state.pubState.resources.forEach(resource =>{
+      state.serverState.resources.forEach(resource =>{
           if (val === resource.resourceId){
             result = true
           }
@@ -101,7 +101,7 @@ module.exports = {
   },
   isNewResourceId(val, errRes){
       let isNew = true
-      state.pubState.resources.forEach(resource =>{
+      state.serverState.resources.forEach(resource =>{
           if (val == resource.resourceId){
             isNew = false
           }
