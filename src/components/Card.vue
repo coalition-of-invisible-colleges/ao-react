@@ -90,7 +90,7 @@ export default {
             let top = panel.indexOf(this.b.taskId)
 
             if (top > -1){
-
+                return 
             } else {
                 top = 0
             }

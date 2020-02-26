@@ -81,7 +81,6 @@ export default {
           let panel = [taskId]
           let top = 0
           let parents = [this.$store.getters.member.memberId]
-
           this.$store.dispatch("goIn", {
               parents,
               top,

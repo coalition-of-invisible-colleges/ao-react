@@ -22,10 +22,6 @@ export default {
     },
     methods: {
         goTo(ev){
-            console.log('go to got click', ev)
-            // if (ev.type === 'resource-used' || ev.type === 'doge-barked'){ // wont get hit because bark not bubble
-            //     return this.$router.push('/front/badge')
-            // }
             if (ev.inId){
                 this.$store.dispatch('goIn', {
                     parents: [],
@@ -42,8 +38,7 @@ export default {
                 })
                 return this.$router.push('/boat') // may be there already?
             }
-
-            // xxx - pop bubble, go to place card was made, recent if task used, ...
+            // XXX should switch mode / location more specifically on events such as resource-booked
         }
     }
 }
