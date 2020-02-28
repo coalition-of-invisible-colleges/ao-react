@@ -2,8 +2,8 @@
 .flag(v-if="$store.getters.memberCard")
     .flaggy(:id='uuid'  :class='{ boat : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isDoged, doge : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged, chest : $store.state.upgrades.mode === "chest", timecube : $store.state.upgrades.mode === "timecube", nolightning : $store.state.upgrades.mode === "chest" && !$store.state.cash.info.alias  }')
         img(v-if='!$store.state.context.panel[$store.state.context.top]'  src='../assets/images/scroll.svg')
-        span.checkmark(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && isCompleted') ☑
-        span.checkmark(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && !isCompleted') ☐
+        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && isCompleted' src='../assets/images/completed.svg' )
+        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && !isCompleted'  src='../assets/images/uncompleted.svg')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/doge_faded.png')
         img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && inId && !isFlagged', src='../assets/images/boatwhite.svg')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../assets/images/boatbtnselected.svg')
@@ -18,13 +18,11 @@
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import uuidv1 from 'uuid/v1'
-
 import calcs from '../calculations'
 import PayReq from './PayReq'
 import PayAddress from './PayAddress'
 import Tag from './Tag'
 import ResourceBook from './ResourceBook'
-
 import GuildCreate from './GuildCreate'
 
 export default {
@@ -266,15 +264,6 @@ export default {
 
 .faded:hover
     opacity: 1
-
-.checkmark
-    font-size: 1.58em
-    float: right
-    margin-top: -.3em
-    margin-right: -.3em
-    opacity: 0.5
-    cursor: pointer
-    color: white
 
 .svgwhite
     fill: white

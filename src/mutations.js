@@ -678,7 +678,6 @@ function tasksMuts(tasks, ev) {
                     task.completed = newCompleted
                 }
             }
-
             break
         case "tasks-received":
             ev.tasks.forEach(p => {

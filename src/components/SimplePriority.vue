@@ -9,8 +9,8 @@
       img.front.nopad(v-if='card.guild'  src="../assets/images/badge.svg")
       span.front.nudge(v-if='card.guild')  {{ card.guild }}
       img.left.front(v-if='isMember' src="../assets/images/loggedIn.svg")
-      span.checkmark.right.front(v-if='isCompleted'  ref='checkbox') ☑
-      span.checkmark.right.front(v-else-if='!isCompleted'  ref='checkbox') ☐
+      img.checkmark.right.front(v-if='isCompleted' src='../assets/images/completed.svg' ref='checkbox')
+      img.checkmark.right.front(v-else-if='!isCompleted' src='../assets/images/uncompleted.svg' ref='checkbox')
       tally.right.front.lesspadding(:b='card')
       span.right.front(v-if='card.book.startTs') {{ cardStart.days.toFixed(1) }} days
       img.right.front(v-if='card.book.startTs' src="../assets/images/timecube.svg")
@@ -272,15 +272,16 @@ img
     max-width: 100%
 
 .checkmark
-    font-size: 1.58em
     float: right
+    opacity: 0.5
+    cursor: pointer
+    z-index: 105
+
+img.checkmark
+    height: 1.58em
     margin-top: -.15em
     margin-bottom: -0.25em
     margin-left: 0.25em
-    opacity: 0.5
-    cursor: pointer
-    color: white
-    z-index: 105
 
 .tally.right.front.lesspadding
     padding-right: 0

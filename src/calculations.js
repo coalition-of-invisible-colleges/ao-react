@@ -41,7 +41,7 @@ function blankCard(taskId, name, color) {
         passed: [],
         guild: false,
         lastClaimed: 0,
-        monthlyValue: 0,
+        completeValue: 0,
         payment_hash: '',
         highlights: []
     }

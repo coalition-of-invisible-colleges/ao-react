@@ -1,11 +1,9 @@
 <template lang='pug'>
 
-#giftbox
-    img.fw(src='../assets/images/pins.svg')
+#giftbox(v-if='$store.getters.inbox.length > 0')
     img.gift(src='../assets/images/gifts.svg')
-    span Gifts
+    span {{$store.getters.inbox.length}} Gifts
     card-panel(:c="$store.getters.inbox")
-    img.fw(src='../assets/images/pins.svg')
 </template>
 
 <script>

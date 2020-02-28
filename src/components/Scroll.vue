@@ -10,7 +10,6 @@
 <script>
 
 import calculations from '../calculations'
-
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'

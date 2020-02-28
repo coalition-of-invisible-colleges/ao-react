@@ -7,7 +7,7 @@
         button(v-for='o in optionList'  @click='use(o[0])'  :class='cardInputSty(o[2])') {{ o[1] }}
     .bottomleft(v-if='card.boost')
     .bottomright(@click='goIn')
-        img.smallguild(src='../assets/images/open.svg')
+        img.smallguild(src='../assets/images/orb.svg')
     .clearboth
 </template>
 

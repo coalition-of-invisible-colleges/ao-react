@@ -1,7 +1,7 @@
 <template lang='pug'>
 .checkbox(ref='checkbox'  :id='uuid')
-    span.checkmark(v-if='isCompleted') ☑
-    span.checkmark(v-else) ☐
+    img.checkmark(v-if='isCompleted'  src='../assets/images/completed.svg')
+    img.checkmark(v-else  src='../assets/images/uncompleted.svg')
 </template>
 
 <script>
@@ -79,10 +79,6 @@ export default {
 @import '../styles/colours'
 
 .checkbox
-    font-size: 1.58em
-    // margin-top: -.15em
-    margin-bottom: -0.25em
-    margin-left: 0.25em
     opacity: 0.5
     cursor: pointer
     color: white
@@ -90,9 +86,13 @@ export default {
     position: absolute
     right: 0.25em
     top: 0.15em
-    height: 100%
     display: block
     min-width: 0.75em
+
+img.checkmark
+    margin-bottom: -0.25em
+    margin-left: 0.25em
+    height: 1.58em
 
 .checkmark
     position: relative

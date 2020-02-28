@@ -30,4 +30,13 @@ module.exports = function applyRouter(app){
         // XXX filter by req id req.params.taskId
         res.json(state.serverState.tasks)
     })
+
+    app.post('/member/:memberId', (req, res) => {
+        res.json(
+            state.serverState.tasks.filter(t => t.deck.indexOf(req.params.taskId) > -1)
+        )
+    })
+
+
+
 }

@@ -200,7 +200,6 @@ export default new Vuex.Store({
           if (guilds.length > 11){
               return guilds.slice(0,11)
           }
-
           return guilds
       },
       sendableGuilds(state, getters) {

@@ -144,9 +144,6 @@ h2
     display: inline-block
     cursor: pointer
 
-.plain.checkmark .tooltiptext
-    font-size: 0.65em
-
 .plain
     text-decoration: none
 

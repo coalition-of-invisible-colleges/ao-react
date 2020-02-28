@@ -51,9 +51,6 @@ import Current from './Current'
 
 export default {
     props: ['b', 'inId', 'c'],
-    data(){
-        return { active: false }
-    },
     components: { PreviewDeck, Bird, Flag, Scroll, Vine, Coin, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
     mounted() {
         let el = this.$refs.wholeCard
@@ -69,6 +66,7 @@ export default {
         longPress.requireFailure([doubleTap])
 
         mc.on('doubletap', (e) => {
+            console.log('goin triggered by doubletap')
             this.goIn()
             e.stopPropagation()
         })
@@ -90,33 +88,28 @@ export default {
             let top = panel.indexOf(this.b.taskId)
 
             if (top > -1){
-                return 
+
             } else {
                 top = 0
             }
 
             let parents = []
 
-            if (this.$store.state.context.panel[this.$store.state.context.top]){
-                parents.push(this.$store.getters.contextCard.taskId)
-            }
-
+            parents.push(this.$store.getters.contextCard.taskId)
             if (this.inId && parents.indexOf(this.inId) < 0){
                 parents.push(this.inId)
             }
-
             this.$store.dispatch("goIn", {
                 parents,
                 top,
                 panel,
-                mode: this.$store.state.upgrades.mode,
             })
-
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
-
-            this.$router.push("/" + this.$store.state.upgrades.mode)
+            if (this.$store.state.upgrades.dimension !== 'unicorn'){
+                this.$router.push("/" + this.$store.state.upgrades.mode)
+            }
         },
         purge(){
           this.$store.dispatch("makeEvent", {

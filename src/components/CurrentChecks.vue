@@ -1,13 +1,14 @@
 <template lang='pug'>
 
 .current(v-if='memberId')
-    span.checkmark.clickable(v-if='isCompleted'  @click='uncheck') ☑
-    span.checkmark.clickable(v-else  @click='complete') ☐
-    span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
-    span(v-for='c in checkmarks'  :key='c.taskId')
-        span.tooltip.plain(@click='goIn(c.taskId)')
-            span.checkmark(:class="cardInputSty(c.color)") ☑
-            linky.tooltiptext.bigger(:x='c.name')
+    img.checkmark.clickable(v-if='isCompleted' src='../assets/images/completed.svg'   @click='uncheck')
+    img.checkmark.clickable(v-else  src='../assets/images/uncompleted.svg'  @click='complete')
+    span.completedmarks
+        span.name(@click.exact.stop='toggleHighlight()'  @click.ctrl.exact.stop='toggleHighlight(true)'  :class='{ highlight : isHighlighted, lowdark : isLowdarked }') {{ name }}
+        span(v-for='c in checkmarks'  :key='c.taskId')
+            span.tooltip.plain(@click='goIn(c.taskId)'  :class='cardInputSty(c.color)')
+                img.completedcheckmark(src='../assets/images/completed.svg')
+                linky.tooltiptext.bigger(:x='c.name')
 </template>
 
 <script>
@@ -42,12 +43,12 @@ export default {
     },
     cardInputSty(c){
         return {
-            redtx : c === 'red',
-            bluetx : c === 'blue',
-            greentx : c === 'green',
-            yellowtx : c === 'yellow',
-            purpletx : c === 'purple',
-            blacktx : c === 'black',
+            redwx : c === 'red',
+            bluewx : c === 'blue',
+            greenwx : c === 'green',
+            yellotwx : c === 'yellow',
+            purplewx : c === 'purple',
+            blackwx : c === 'black',
         }
     },
     toggleHighlight(invert = false) {
@@ -105,12 +106,20 @@ img
     font-size: 1.2em
     margin-right: 1em
     position: relative
-    top: -0.3em
     user-select: none
 
+
 .checkmark
-    font-size: 2em
     margin-right: 0.25em
+
+img.checkmark
+    height: 2em
+
+img.completedcheckmark
+    height: 1.5em
+
+.completedcheckmarks
+    min-height: 1.5em
 
 .clickable
     cursor: pointer
