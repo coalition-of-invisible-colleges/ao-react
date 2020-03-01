@@ -23,17 +23,17 @@ function cardColorCSS(color) {
     }
 }
 
-function blankCard(taskId, name, color) {
+function blankCard(taskId, name, color, deck = []) {
     let newCard = {
         taskId,
         color,
+        deck,
         name: name.trim(),
         address: '',
         bolt11: '',
         book: {},
         boost: 0,
         cap: 0,
-        deck: [],
         priorities: [],
         subTasks: [],
         completed: [],

@@ -3,20 +3,23 @@
 .upgrades
     projects
     div(v-if='$store.getters.contextMember')
-        current(v-for='n in $store.getters.contextCard.deck'  :memberId='n')
+        div(v-for='n in $store.getters.contextCard.deck' )
+            current(:memberId='n')
+            //- coin(:b='$store.getters.hashMap[n]') XXX absolute wrong place
     div(v-else)
-        current-checks(v-for='n in $store.getters.contextRelevantMembers'  :memberId='n'  :key='n')
+      div(v-for='n in $store.getters.contextRelevantMembers'   :key='n')
+        current-checks(:memberId='n')
 </template>
 
 <script>
 import CurrentChecks from './CurrentChecks'
 import Current from './Current'
 import Projects from './Projects'
-
+import Coin from './Coin'
 
 export default {
     components:{
-        CurrentChecks, Projects, Current
+        CurrentChecks, Projects, Current, Coin
     },
     mounted() {
         this.$store.commit('setMode' , 2)

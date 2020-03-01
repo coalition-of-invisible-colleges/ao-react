@@ -3,10 +3,8 @@
 .upgrades
     div(v-if='$store.state.cash.info.alias')
         .togglepayments
-            button.submode.marg(@click='togglePayment(0)', :class='{thickborder: $store.state.upgrades.payment === "bitcoin" }')
-                img.max(src='../assets/images/bitcoin.svg')
-            button.submode(@click='togglePayment(1)', :class='{thickborder: $store.state.upgrades.payment === "lightning" }')
-                img.max(src='../assets/images/lightning.svg')
+            img.max(@click='togglePayment(0)'  src='../assets/images/bitcoin.svg'  :class='{thickborder: $store.state.upgrades.payment === "bitcoin"}')
+            img.max(@click='togglePayment(1)'  src='../assets/images/lightning.svg'  :class='{thickborder: $store.state.upgrades.payment === "lightning"}')
         div(v-show='$store.state.upgrades.payment === "bitcoin"')
             div(v-if='b.address')
                 pay-address(:address='b.address')
@@ -100,6 +98,9 @@ export default {
 @import '../styles/tooltips'
 @import '../styles/spinners'
 
+.thickborder
+    background: main
+
 .marg
     margin-right: 1.97em
 
@@ -112,8 +113,11 @@ export default {
 
 .togglepayments
     margin: 0
-    padding: 0
+    padding: 1em 0 1em 0
     text-align: center
+    img
+        margin: 0 3em 0 3em
+        padding: .77em
 
 .submode
     height: 6em
@@ -123,8 +127,9 @@ export default {
     background-color: rgba(0, 0, 0, 0)
 
 .max
-    height: 100%
-    width: 100%
+    margin: 3em
+    height: 5.3333em
+    width: 5.333em
 
 .suggest
     color: rgba(255, 255, 255, 0.4)

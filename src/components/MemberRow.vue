@@ -12,10 +12,8 @@
         .two.grid(v-if='isVulnerable')
             img.btn.goldengun(src='../assets/images/goodbye.svg' @click='purgeAccount')
         .one.grid
-            img.btn.dogepepecoin.spinslow(:class="{ungrabbedcoin : !isVouched, nopointer: m.memberId === $store.getters.member.memberId }" src='../assets/images/coin.svg' @click='toggleGrab')
-            p.hodlcount(:class="{grabbedhodlcount: isVouched > 0}") {{ b.deck.length }}
-            span.counts.iceblue(v-if='$router.currentRoute.path === "/dash"') {{ vouchCount }}
-        .grid(:class='{ eight: isVulnerable, six: !isVulnerable }')
+            coin(:b='b')
+        .grid(:class='{ eight: !isVulnerable, six: isVulnerable }')
             simple-priorities(:taskId='m.memberId')
 </template>
 
@@ -23,11 +21,12 @@
 
 import PreviewDeck from './PreviewDeck'
 import SimplePriorities from './SimplePriorities'
+import Coin from './Coin'
 
 
 export default {
     props: ['m'],
-    components: {PreviewDeck, SimplePriorities},
+    components: {PreviewDeck, SimplePriorities, Coin},
     methods:{
         isBull(){
             let mainroute = this.$router.currentRoute.path.split('/')[1]

@@ -316,7 +316,7 @@ function tasksMuts(tasks, ev) {
             tasks.push(calculations.blankCard(ev.memberId, ev.memberId, 'blue'))
             break
         case "task-created":
-            tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color))
+            tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck))
             tasks.forEach(task => {
                 if (task.taskId === ev.inId) {
                     task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)

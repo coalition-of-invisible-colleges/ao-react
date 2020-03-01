@@ -23,7 +23,6 @@ export default {
     components: { Current },
     methods: {
         claim(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 taskId: this.b.taskId,
@@ -33,7 +32,6 @@ export default {
             this.$store.commit('setAction', false)
         },
         refocus(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-refocused',
                 inId: this.inId,

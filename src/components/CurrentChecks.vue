@@ -100,11 +100,11 @@ export default {
 
 img
     height: 0.7em
-    float: left
 .name
     color: white
     font-size: 1.2em
     margin-right: 1em
+    padding-bottom: .321em
     position: relative
     user-select: none
 
