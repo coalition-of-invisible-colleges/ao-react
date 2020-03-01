@@ -2,7 +2,6 @@
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper.padsides
         .card(:class='{ adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge", openwidth : $store.state.upgrades.mode !== "doge" }')
-            gift-box
             auth(v-if='!$store.getters.isLoggedIn')
             member-row(v-else-if='$store.getters.contextMember', :m='$store.getters.contextMember'  :key='card.taskId')
             resource-row(v-if='$store.getters.contextResource'   :r='$store.getters.contextResource'  :key='card.taskId')
@@ -18,6 +17,7 @@
             .centerer
                 .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
         .upgradesbar(v-show='$store.state.upgrades.mode !== "doge"')
+            gift-box
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         panels

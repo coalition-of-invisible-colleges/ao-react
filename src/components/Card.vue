@@ -23,7 +23,6 @@
           .cardhud(v-if='dogeCard') {{ dogeCard.name }}
     simple-priorities(:taskId="b.taskId", :inId='b.taskId')
     passed(:b='b')
-    shipped(:b='b', :inId='inId')
     .spacer
     div
         scroll.faded(:b='b', :inId='inId')
@@ -43,7 +42,6 @@ import Scroll from './Scroll'
 import Vine from './Vine'
 import Coin from './Coin'
 import Passed from './Passed'
-import Shipped from './Shipped'
 import Tally from './Tally'
 import Linky from './Linky'
 import SimplePriorities from './SimplePriorities'
@@ -51,7 +49,7 @@ import Current from './Current'
 
 export default {
     props: ['b', 'inId', 'c'],
-    components: { PreviewDeck, Bird, Flag, Scroll, Vine, Coin, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
+    components: { PreviewDeck, Bird, Flag, Scroll, Vine, Coin, Passed, Linky, SimplePriorities, Current, Tally},
     mounted() {
         let el = this.$refs.wholeCard
         if(!el) return

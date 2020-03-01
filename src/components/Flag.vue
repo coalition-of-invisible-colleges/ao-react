@@ -1,8 +1,8 @@
 <template lang='pug'>
 .flag(v-if="$store.getters.memberCard")
     .flaggy(:id='uuid'  :class='flagClass')
-        img(v-if='(isOracle || $store.state.upgrades.mode === "chest") && isCompleted' src='../assets/images/completed.svg' )
-        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle) && !isCompleted'  src='../assets/images/uncompleted.svg')
+        img(v-if='(isOracle || $store.state.upgrades.mode === "chest" || $store.state.context.action === b.taskId) && isCompleted' src='../assets/images/completed.svg' )
+        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle || $store.state.context.action === b.taskId) && !isCompleted'  src='../assets/images/uncompleted.svg')
         img(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../assets/images/timecube.svg')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/sun.svg')

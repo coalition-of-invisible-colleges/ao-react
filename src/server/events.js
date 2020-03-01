@@ -353,11 +353,12 @@ function taskSubTasked(taskId, subTask, memberId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskDeSubTasked(taskId, subTask, callback){
+function taskDeSubTasked(taskId, subTask, memberId, callback){
     let newEvent = {
       type: "task-de-sub-tasked",
       taskId,
       subTask,
+      memberId,
     }
     dctrlDb.insertEvent(newEvent, callback)
 }

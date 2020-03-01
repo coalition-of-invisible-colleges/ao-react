@@ -503,6 +503,7 @@ router.post('/events', (req, res, next)=>{
             events.taskDeSubTasked(
               req.body.taskId,
               req.body.subTask,
+              req.body.blame,
               utils.buildResCallback(res)
             )
           } else {

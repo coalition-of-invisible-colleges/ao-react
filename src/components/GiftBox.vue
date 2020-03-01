@@ -1,9 +1,12 @@
 <template lang='pug'>
 
 #giftbox(v-if='$store.getters.inbox.length > 0')
-    img.gift(src='../assets/images/gifts.svg')
-    span {{$store.getters.inbox.length}} Gifts
-    card-panel(:c="$store.getters.inbox")
+  .row
+    .two.grid
+      img.gift(src='../assets/images/gifts.svg')
+      span {{$store.getters.inbox.length}} Gifts
+    .eight.grid
+      card-panel(:c="$store.getters.inbox")
 </template>
 
 <script>

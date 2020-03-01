@@ -26,14 +26,21 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            let taskId = this.inId
-            let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
 
-            if (taskId){
+            if (this.$store.state.context.action === this.b.taskId){
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-refocused',
+                    inId: this.$store.getters.contextCard.taskId,
+                    taskId: this.b.taskId,
+                })
+                this.$store.commit('setAction', false)
+                let inId = this.inId
+            } else if (inId){
+                let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
                 this.$store.dispatch("makeEvent", {
                   type: 'task-de-sub-tasked',
                   subTask: this.b.taskId,
-                  taskId,
+                  taskId: inId,
                 })
             } else if (parentId) {
               this.$store.dispatch("makeEvent", {
@@ -54,8 +61,12 @@ export default {
                     top: 0
                   })
               }
-
-
+            } else {
+                this.$store.dispatch("makeEvent", {
+                  type: 'task-de-sub-tasked',
+                  subTask: this.b.taskId,
+                  taskId: this.b.taskId,
+                })
             }
             e.stopPropagation()
         })
