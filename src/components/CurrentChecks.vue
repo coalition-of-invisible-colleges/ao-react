@@ -108,7 +108,6 @@ img
     position: relative
     user-select: none
 
-
 .checkmark
     margin-right: 0.25em
 

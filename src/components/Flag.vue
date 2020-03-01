@@ -1,14 +1,12 @@
 <template lang='pug'>
 .flag(v-if="$store.getters.memberCard")
-    .flaggy(:id='uuid'  :class='{ boat : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isDoged, doge : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged, chest : $store.state.upgrades.mode === "chest", timecube : $store.state.upgrades.mode === "timecube", nolightning : $store.state.upgrades.mode === "chest" && !$store.state.cash.info.alias  }')
-        img(v-if='!$store.state.context.panel[$store.state.context.top]'  src='../assets/images/scroll.svg')
-        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && isCompleted' src='../assets/images/completed.svg' )
-        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && !isCompleted'  src='../assets/images/uncompleted.svg')
-        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/doge_faded.png')
-        img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && inId && !isFlagged', src='../assets/images/boatwhite.svg')
-        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../assets/images/boatbtnselected.svg')
+    .flaggy(:id='uuid'  :class='flagClass')
+        img(v-if='(isOracle || $store.state.upgrades.mode === "chest") && isCompleted' src='../assets/images/completed.svg' )
+        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle) && !isCompleted'  src='../assets/images/uncompleted.svg')
         img(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../assets/images/timecube.svg')
+        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/sun.svg')
+        img.svgwhite.faded(v-else, src='../assets/images/boatwhite.svg')
     .opened
         resource-book(v-if='isCubeOpen'  :tId='b.taskId')
         guild-create(:editing='isPayOpen'  :b='b' )
@@ -134,7 +132,6 @@ export default {
             this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
@@ -184,11 +181,19 @@ export default {
                 })
             }
         },
-        isOracle() {
-            return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
-        },
     },
     computed: {
+        isOracle() {
+          return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
+        },
+        flagClass(){
+            return {
+                boat : (this.$store.state.upgrades.mode === "boat" || this.$store.state.upgrades.mode === "doge") && !this.isDoged,
+                doge : (this.$store.state.upgrades.mode === "boat" || this.$store.state.upgrades.mode === "doge") && this.isDoged,
+                chest : this.$store.state.upgrades.mode === "chest",
+                timecube : this.$store.state.upgrades.mode === "timecube"
+            }
+        },
         isFlagged(){
             if(!this.inId) {
                 return false
@@ -270,10 +275,6 @@ export default {
 
 .svgwhite:hover
     transform: rotate(-30deg)
-
-.nolightning
-    opacity: 0.15
-    cursor: default
 
 .opened
     float: left

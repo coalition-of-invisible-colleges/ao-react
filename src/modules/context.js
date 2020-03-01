@@ -18,7 +18,7 @@ const mutations = {
     setParent(state, p){
         state.parent = p
     },
-    setPanel(state, panel, top){
+    setPanel(state, panel){
           state.panel = panel
     },
     setTop(state, top){

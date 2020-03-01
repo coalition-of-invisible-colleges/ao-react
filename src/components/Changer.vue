@@ -3,7 +3,7 @@
 .changer
     h2 Update {{$store.getters.member.name}}:
         select(v-model='change.field', @change='empty')
-            option(value='name') hackername
+            option(value='name') name
             option(value='secret') password
             option(value='fob') fob
     .input-container
@@ -16,8 +16,9 @@
         label repeat
         span.focus-border
     .check(v-if='inputType === "password"')
-        img(v-if='matched', src='../assets/images/check.svg')
-        img(v-else, src='../assets/images/warn.svg')
+        img.checkmark(v-if='matched', src='../assets/images/completed.svg')
+        img.checkmark(v-else, src='../assets/images/uncompleted.svg')
+        span - repeat correctly
     button(@click='update') update account
 </template>
 
@@ -66,7 +67,7 @@ export default {
     data(){
         return {
             change: {
-                field: 'secret',
+                field: 'name',
                 newfield: '',
                 confirmNewfield: ''
             }
@@ -96,6 +97,11 @@ img
     height: 3em
     position: relative
     right: 0
+
+.checkmark
+    height: 1.58em
+.check
+    padding: 0.5em
 
 input, select
     z-index:123123
