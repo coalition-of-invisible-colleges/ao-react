@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.scroll
+.scroll(v-if='this.$store.state.upgrades.dimension === "unicorn"')
     img.scrolly(src='../assets/images/downboatwhite.svg'  :id='uuid')
 </template>
 
@@ -27,6 +27,7 @@ export default {
         mc.add(Tap)
         mc.on('tap', (e) => {
 
+            let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
             if (this.$store.state.context.action === this.b.taskId){
                 this.$store.dispatch("makeEvent", {
                     type: 'task-refocused',
@@ -34,13 +35,11 @@ export default {
                     taskId: this.b.taskId,
                 })
                 this.$store.commit('setAction', false)
-                let inId = this.inId
-            } else if (inId){
-                let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
+            } else if (this.inId){
                 this.$store.dispatch("makeEvent", {
                   type: 'task-de-sub-tasked',
                   subTask: this.b.taskId,
-                  taskId: inId,
+                  taskId: this.inId,
                 })
             } else if (parentId) {
               this.$store.dispatch("makeEvent", {

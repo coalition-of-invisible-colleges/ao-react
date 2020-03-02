@@ -16,15 +16,11 @@
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import uuidv1 from 'uuid/v1'
-import calcs from '../calculations'
-import PayReq from './PayReq'
-import PayAddress from './PayAddress'
-import Tag from './Tag'
 import ResourceBook from './ResourceBook'
 import GuildCreate from './GuildCreate'
 
 export default {
-    components: { PayReq, PayAddress, Tag, ResourceBook, GuildCreate },
+    components: { ResourceBook, GuildCreate },
     data(){
         return {
             isPayOpen: false,
@@ -43,16 +39,14 @@ export default {
         mc.on('tap', (e) => {
             switch(this.$store.state.upgrades.mode) {
                 case 'doge':
-                    if(this.isOracle()) {
+                case 'boat':
+                    if(this.isOracle) {
                         if(!this.isCompleted) {
                             this.complete()
                         } else {
                             this.uncheck()
                         }
-                        break
-                    }
-                case 'boat':
-                    if(this.isDoged) {
+                    } else if (this.isTop){
                         this.dogeIt()
                     } else {
                         this.flagIt()
@@ -139,35 +133,29 @@ export default {
             })
         },
         flagIt(){
-            if (!this.isFlagged) {
+                let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
+
                 if (this.inId){
-                    if(this.inId === this.$store.getters.memberCard.taskId) {
-
-                    } else {
-
-                    }
                     this.$store.dispatch("makeEvent", {
                       type: 'task-prioritized',
                       taskId: this.b.taskId,
                       inId: this.inId,
                     })
-                } else {
-                    this.deckIt()
-                }
-            } else {
-                if (this.inId){
+                } else if (parentId) {
                     this.$store.dispatch("makeEvent", {
-                      type: 'task-refocused',
+                      type: 'task-prioritized',
                       taskId: this.b.taskId,
-                      inId: this.inId,
+                      inId: parentId,
                     })
-                } else {
-                    this.deckIt()
+                    this.$store.dispatch('goUp', {
+                        target: parentId,
+                        panel: [parentId],
+                        top: 0
+                    })
                 }
-            }
         },
         dogeIt(){
-            if(this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) === -1) {
+            if(!this.isDoged) {
                 this.$store.dispatch("makeEvent", {
                   type: 'task-prioritized',
                   taskId: this.b.taskId,
@@ -180,11 +168,14 @@ export default {
                   inId: this.$store.getters.memberCard.taskId,
                 })
             }
-        },
+        }
     },
     computed: {
         isOracle() {
           return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
+        },
+        isTop() {
+          return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'boat'
         },
         flagClass(){
             return {
