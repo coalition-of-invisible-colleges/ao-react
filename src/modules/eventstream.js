@@ -1,3 +1,4 @@
+const _ = require( 'lodash')
 
 let memes = [
     'very database',
@@ -36,15 +37,13 @@ const mutations = {
             randomXs: [],
             randomYs: []
         }
-
+        _.assign(newBubble, ev)
         newBubble.meme = bestMeme()
-        newBubble.type = ev.type
         newBubble.showEvent = true
         newBubble.randomX = Math.random().toFixed(2) * 91 + '%'
         for(let i = 0; i < 2; i++) newBubble.randomColors.push(colors[Math.floor(Math.random() * colors.length)])
         for(let i = 0; i < 2; i++) newBubble.randomXs.push(Math.floor(Math.random() * 100) + '%')
         for(let i = 0; i < 2; i++) newBubble.randomYs.push(Math.floor(Math.random() * 100) + '%')
-        //newBubble.wiggleFactor = Math.random().toFixed(2) * 10
 
         state.push(newBubble)
     },
@@ -56,7 +55,6 @@ const mutations = {
 
 const actions = {
     displayEvent({commit, getters}, ev){
-        console.log("ev type is ", ev.type)
         if(!getters.member.muted && (ev.type === 'doge-barked' || ev.type === 'resource-used')) {
             commit('bark')
             return
@@ -64,7 +62,7 @@ const actions = {
         commit('show', ev)
         setTimeout(()=>{
             commit('hide')
-        }, 4567)
+        }, 3567)
     }
 }
 

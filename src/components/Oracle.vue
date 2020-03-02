@@ -22,7 +22,6 @@ export default {
   },
   methods:{
       goInNews(t){
-          this.playPageTurn()
           let taskId = t
           let panel = [ taskId ]
           let top = panel.indexOf(t)

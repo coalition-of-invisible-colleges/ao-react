@@ -144,9 +144,6 @@ h2
     display: inline-block
     cursor: pointer
 
-.plain.checkmark .tooltiptext
-    font-size: 0.65em
-
 .plain
     text-decoration: none
 
@@ -220,7 +217,6 @@ h2
 
 ul
     margin-block-end: 0
-
 
 .projects
     float: right

@@ -23,34 +23,33 @@ function cardColorCSS(color) {
     }
 }
 
-function blankCard(name) {
-    name = name.trim()
+function blankCard(taskId, name, color, deck = []) {
     let newCard = {
-        name: name,
-        taskId: cryptoUtils.createHash(name),
+        taskId,
+        color,
+        deck,
+        name: name.trim(),
         address: '',
-        allocations: [],
         bolt11: '',
         book: {},
         boost: 0,
         cap: 0,
-        claimed: [],
-        color: 'purple',
-        completed: [],
-        deck: [],
-        guild: false,
-        lastClaimed: 0,
-        monthlyValue: 0,
-        passed: [],
-        payment_hash: '',
         priorities: [],
         subTasks: [],
+        completed: [],
+        claimed: [],
+        passed: [],
+        guild: false,
+        lastClaimed: 0,
+        completeValue: 0,
+        payment_hash: '',
+        highlights: []
     }
     return newCard
 }
 
 function safeClone(card) {
-    // type check all this
+    // XXX type check all this
     let safeClone = {
         taskId: card.taskId,
         name: card.name,
@@ -65,14 +64,12 @@ function safeClone(card) {
         deck: [],
         color: card.color,
         address: card.address,
-        allocations: [],
         bolt11: card.bolt11,
         payment_hash: '',
         boost: 0,
     }
     return safeClone
 }
-
 
 function isString(x) {
   return Object.prototype.toString.call(x) === "[object String]"
@@ -112,20 +109,6 @@ function calculateMsThisMonth(){
     return daysThisMonth * 24 * 60 * 60 * 1000
 }
 
-function calculateTaskPayout(task){
-    let msThisMonth = calculateMsThisMonth()
-    let msSince = Date.now() - parseFloat(task.lastClaimed)
-    let payout = (msSince / msThisMonth) * parseFloat(task.monthlyValue) || 0
-    let cap = parseFloat(task.cap) || 0
-    let boost = parseFloat(task.boost) || 0
-    if (cap > 0){
-        return Math.min(payout, cap) + boost
-    }
-    else {
-        return payout + boost
-    }
-}
-
 function getMeridienTime(ts){
 
     let d = new Date( parseInt(ts) )
@@ -157,7 +140,6 @@ function getMeridienTime(ts){
 }
 
 module.exports = {
-  calculateTaskPayout,
   cadToSats,
   satsToCad,
   getMeridienTime,

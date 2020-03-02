@@ -68,7 +68,20 @@ const actions = {
         if (state.connected !== "connected"){
             socket.connect()
         }
+        request
+            .post('/tasks/gg')
+            .set("Authorization", state.token)
+            .end((err, res)=> {
+                if (err || !res.body) {
 
+                } else {
+                    console.log('got ', res.body.length, 'tasks from tasks endpoint')
+                    commit('applyEvent', {
+                        type: 'tasks-received',
+                        tasks: res.body
+                    })
+                }
+            })
         request
             .post('/state')
             .set("Authorization", state.token)
@@ -94,12 +107,10 @@ const actions = {
             .set("Authorization", state.token)
             .end((err, res)=>{
                 if (err || !res.body) {
-                    commit("setReqStatus", "failed")
-                    console.log("event req failed")
-                  } else {
+                    commit("setReqStatus", "failed", res.body)
+                } else {
                     commit("setPing", Date.now() - startTs)
                     commit("setReqStatus", "ready")
-                    console.log("event req succ")
                 }
             })
     }

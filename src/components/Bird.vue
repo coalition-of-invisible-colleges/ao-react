@@ -15,7 +15,7 @@
             select.shorten(v-model='toGuildWarp')
                 option(disabled, value='') to mission
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            form-box.small(v-if='toGuildWarp' btntxt="give"  event='task-passed' v-bind:data='relayInfoM')
+            button.small(v-if='toGuildWarp'  @click='dispatchMakeEvent(relayInfoM)') give
             span.sierpinskiwrapper
                 sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
@@ -28,13 +28,12 @@
                     option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
                     template(v-for='sp in p.guilds')
                         option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
-        form-box.small(btntxt="give"  event='task-passed' v-bind:data='playInfo')
+        button.small(@click='dispatchMakeEvent(playInfo)') give
     .give(v-if='showGive')
         div(v-if='$store.state.upgrades.warp > -1')
             select.shorten(v-model='toMemberWarp')
                 option(disabled, value='') to people
                 option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            //- button.small(v-if='this.b.taskId !== this.$store.getters.member.memberId'  @click='give') send
             button.small(@click='migrate') send entire deck
             span.sierpinskiwrapper
                 sierpinski(v-if='this.b.taskId !== this.$store.getters.member.memberId'  :b='b')
@@ -43,7 +42,7 @@
             select(v-model='toMember')
                 option(disabled, value='') to people
                 option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-            form-box.small(btntxt="give"  event='task-passed' v-bind:data='passInfo')
+            button.small(@click='dispatchMakeEvent(passInfo)') give
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
@@ -57,7 +56,6 @@
 <script>
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-import FormBox from './FormBox'
 import GuildCreate from './GuildCreate'
 import calculations from '../calculations'
 import Sierpinski from './Sierpinski'
@@ -65,7 +63,7 @@ import Sierpinski from './Sierpinski'
 export default {
     props: ['b', 'inId'],
     components: {
-        FormBox, GuildCreate, Sierpinski
+        GuildCreate, Sierpinski
     },
     data() {
         return {
@@ -147,6 +145,9 @@ export default {
         })
     },
     methods: {
+        dispatchMakeEvent(ev){
+            this.$store.dispatch('makeEvent', ev)
+        },
         toggleGive(){
             if(this.showGuildCreate) {
                 this.toggleGuildCreate()

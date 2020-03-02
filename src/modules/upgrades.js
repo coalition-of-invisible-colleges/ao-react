@@ -1,5 +1,4 @@
 const Vue = require( 'vue')
-
 const modes = ["doge", "boat", "badge", "chest", "timecube"]
 const payments = ["bitcoin", "lightning"]
 const dimensions = ["unicorn", "sun", "bull"]
@@ -11,13 +10,36 @@ const state = {
     bird: false,
     stacks: 1,
     warp: -1,
-    highlights: {},
     sierpinski: true,
     barking: false,
     pinging: false,
+    flashClasses: {
+        flash: false,
+        half: false,
+        twice: false,
+        five: false
+    },
 }
 
 const mutations = {
+    flash(state){
+        state.flashClasses.flash = true
+    },
+    flashHalf(state){
+        state.flashClasses.half = true
+    },
+    flashTwice(state){
+        state.flashClasses.twice = true
+    },
+    flashFive(state){
+        state.flashClasses.five = true
+    },
+    flashOff(state){
+        state.flashClasses.flash = false
+        state.flashClasses.half = false
+        state.flashClasses.twice = false
+        state.flashClasses.five = false
+    },
     toggleBird(state){
         state.bird = !state.bird
     },
@@ -62,39 +84,70 @@ const mutations = {
     closeWarp(state){
         state.warp = -1
     },
-    toggleHighlight(state, args) {
-        let valence = args.valence
-        let memberId = args.memberId
-        console.log("upgrades togglehighlight")
-        if(state.highlights.hasOwnProperty(memberId) && (state.highlights[memberId] === valence || valence === true)) {
-            console.log("removing highlight")
-            Vue.delete(state.highlights, memberId)
-        } else {
-            console.log("setting highlight")
-            Vue.set(state.highlights, memberId, valence)
-        }
-    },
     toggleSierpinski(state, primed) {
         state.sierpinski = !state.sierpinski
     },
     bark(state) {
         state.barking = true
         state.pinging = true
-        // XXX - should be sync? Works
+        // XXX - should be sync? Works!?
         setTimeout(()=> {
             state.barking = false
         }, 1000)
         setTimeout(()=> {
             state.pinging = false
         }, 2000)
-        // XXX if not muted checked b4 seems bad
         let flip = new Audio(require('../assets/sounds/ping.wav'))
         flip.volume = flip.volume * 0.33
         flip.play()
     }
 }
 
-const actions = {}
+const actions = {
+    nextUpgradeMode({commit, state}, router) {
+        commit("nextMode")
+        commit('startLoading', state.mode)
+
+        if(state.dimension === 'sun'){
+            return router.push('/front/' + state.mode)
+        }
+        if(state.dimension === 'bull'){
+            return router.push('/dash/' + state.mode)
+        }
+        router.push('/' + state.mode)
+    },
+    previousUpgradeMode({commit, state}, router) {
+        commit("previousMode")
+        commit('startLoading', state.mode)
+
+        if(state.dimension === 'sun'){
+            return router.push('/front/' + state.mode)
+        }
+        if(state.dimension === 'bull'){
+            return router.push('/dash/' + state.mode)
+        }
+        router.push('/' + state.mode)
+  },
+  flashHelm({commit, state}, flashes){
+      commit('flash')
+      let ms = 350
+      if(flashes < 1) {
+          commit('flashHalf')
+          ms *= 0.7
+      } else if(flashes === 2) {
+          commit('flashTwice')
+          ms *= flashes
+      } else if(flashes === 5) {
+          commit('flashFive')
+          ms *= flashes
+      }
+      setTimeout( () => {
+          commit('flashOff')
+      }, ms)
+
+  }
+
+}
 const getters = {}
 
 module.exports = {

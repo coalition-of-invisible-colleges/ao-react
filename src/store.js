@@ -1,6 +1,6 @@
-import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
+import _ from 'lodash'
 import modules from './modules'
 import loader from './modules/loader'
 import eventstream from './modules/eventstream'
@@ -25,22 +25,34 @@ export default new Vuex.Store({
           return getters.liveConnections[state.upgrades.warp]
       },
       memberCard(state, getters){
-          let memberCard = _.merge({
-              taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
-          }, getters.hashMap[getters.member.memberId])
+          let memberCard = _.merge(calculations.blankCard('', '', ''), getters.hashMap[getters.member.memberId])
           return memberCard
       },
       contextCard(state, getters){
-          let contextCard = _.merge({
-              taskId: '', name: '', completed: [], subTasks: [], priorities: [], book: {}, deck: [], passed: [], claimed: []
-          }, getters.hashMap[state.context.panel[state.context.top]])
+          let contextCard = _.merge(calculations.blankCard('', '', ''), getters.hashMap[state.context.panel[state.context.top]])
           return contextCard
       },
       contextDeck(state, getters){
           return getters.contextCard.subTasks.slice().reverse().map(t => getters.hashMap[t]).filter(t => !!t && t.color )
       },
       contextCompleted(state, getters){
-          return getters.contextCard.completed.map(t => getters.hashMap[t])
+          let upValence = []
+          let downValence = []
+          getters.contextCard.highlights.forEach(h => {
+            if (h.valence){
+              upValence.push(h.memberId)
+            } else {
+              downValence.push(h.memberId)
+            }
+          })
+          return getters.contextCard.completed
+              .map(tId => getters.hashMap[tId])
+              .filter(t => {
+                  return (
+                      upValence.every(mId => t.claimed.indexOf(mId) > -1) &&
+                      downValence.every(mId => t.claimed.indexOf(mId) === -1)
+                  )
+              })
       },
       contextMember(state, getters){
           let contextMem = false
@@ -51,6 +63,11 @@ export default new Vuex.Store({
           })
           return contextMem
       },
+      // contextGuilds(state, getters){
+      //     if (getters.contextMember){
+      //         return state.tasks.filter(t => t.deck.indexOf(getters.contextMember.memberId) > -1)
+      //     }
+      // },
       contextResource(state, getters){
         let contextRes = false
         state.resources.some(r => {
@@ -60,24 +77,20 @@ export default new Vuex.Store({
         })
         return contextRes
       },
-      hodlersByCompletions(state, getters){
-          let checkmarks = getters.contextCompleted
-          let hodlers = {}
-          let holds = []
-          checkmarks.forEach(c => {
+      contextRelevantMembers(state, getters){
+          let byCompletion = []
+          getters.contextCompleted.forEach(c => {
               c.claimed.forEach(mId => {
-                  if(!hodlers[mId]){
-                      hodlers[mId] = []
-                  }
-                  hodlers[mId].push(c)
+                  byCompletion.push(mId)
               })
           })
-          Object.keys(hodlers).forEach(mId => {
-              let member = getters.hashMap[mId]
-              member.contextCompletions = hodlers[mId]
-              holds.push(member)
+          getters.contextCard.deck.forEach(mId => {
+              byCompletion.push(mId)
           })
-          return holds
+          getters.contextCard.passed.map(p => {
+              byCompletion.push(p[1])
+          })
+          return _.uniq(byCompletion)
       },
       all(state, getters){
           if (state.context.completed){
@@ -114,13 +127,6 @@ export default new Vuex.Store({
               return getters.contextCompleted.filter(d => d.color === 'blue')
           }
           return getters.contextDeck.filter(d => d.color === 'blue')
-      },
-      totalBounties(state,getters){
-          let total = 0
-          getters.bounties.forEach(t => {
-              total += parseFloat( t.currentAmount )
-          })
-          return total
       },
       hashMap(state){
           let hashMap = {}
@@ -194,7 +200,6 @@ export default new Vuex.Store({
           if (guilds.length > 11){
               return guilds.slice(0,11)
           }
-
           return guilds
       },
       sendableGuilds(state, getters) {
@@ -229,29 +234,8 @@ export default new Vuex.Store({
                   }
               })
           })
+          console.log('sendableGuilds ', guilds)
           return guilds
-      },
-      pubguildEvents(state, getters){
-          let allTasks = []
-          let fullTasks = []
-          getters.pubguilds.forEach(p => {
-              let guildsSubs = p.subTasks.concat(p.priorities).concat(p.completed)
-
-              fullTasks.push(p)
-              fullTasks = fullTasks.concat( guildsSubs.map(tId => {
-                  let t = getters.hashMap[tId]
-                  if(!t) {
-                  } else {
-                    t.funderGuild = p.guild
-                  }
-                  return t
-                  })
-              )
-          })
-          let evs = fullTasks.filter(t => {
-              return (t && t.book && t.book.startTs)
-          })
-          return evs
       },
       isLoggedIn(state, getters){
           let isLoggedIn = !!getters.member.memberId
@@ -311,7 +295,10 @@ export default new Vuex.Store({
           return parseInt( getters.totalLocal ) +  parseInt( getters.confirmedBalance )
       },
       satPointSpot(state, getters){
-          return calculations.cadToSats(1, state.cash.spot)
+          if (state.cash.spot > 0){
+              return calculations.cadToSats(1, state.cash.spot)
+          }
+          return 1000
       },
       membersVouches(state, getters){
           let members = state.members.slice()

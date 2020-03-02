@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .vine(@click='goIn')
-    img.viney(src='../assets/images/open.svg')
+    img.viney(src='../assets/images/orb.svg')
 </template>
 
 <script>

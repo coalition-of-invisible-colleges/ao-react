@@ -3,7 +3,7 @@
 span.current
     img.onlineicon(v-if='isLoggedIn', src='../assets/images/loggedIn.svg')
     img.onlineicon(v-else src='../assets/images/loggedOut.svg')
-    span(v-if='memberId && name') {{ name }}
+    span.clickable(v-if='memberId && name'  @click='goIn') {{ name }}
     img.onlineicon(v-if='!memberId', src='../assets/images/lightning.svg')
 </template>
 
@@ -11,6 +11,15 @@ span.current
 
 export default {
   props: ['memberId'],
+  methods:{
+      goIn(){
+          this.$store.dispatch('goIn', {
+              top: 0,
+              panel: [this.memberId],
+              parents: []
+          })
+      }
+  },
   computed:{
     name(){
         let memberId = this.memberId
@@ -59,5 +68,7 @@ a
 .result .onlineicon
     top: 0.1em
     height: 1em
-    
+
+.clickable
+    cursor: pointer
 </style>

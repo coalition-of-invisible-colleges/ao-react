@@ -15,10 +15,8 @@ const serverState = {
     address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
-    cash: 0,
     spot: 0,
     rent: 0,
-    variable: 0,
     cap: 75,
     pay_index: 0,
     usedTxIds: [],
@@ -39,10 +37,8 @@ const pubState = {
     address: config.tor.hostname,
     alias: '',
     currency: 'CAD',
-    cash: 0,
     spot: 0,
     rent: 0,
-    variable: 0,
     cap: 75,
     pay_index: 0,
     usedTxIds: [],
@@ -93,8 +89,6 @@ function initialize(callback) {
                   applyEvent(serverState, Object.assign({}, ev) )
                   applyEvent(pubState, removeSensitive( Object.assign({}, ev) ))
               })
-              applyEvent(serverState, {type: 'cleanup'})
-              applyEvent(pubState, {type: 'cleanup'})
               callback(null)
           })
     })
@@ -105,7 +99,7 @@ function backupState(){
 }
 
 function removeSensitive(ev){
-      let secretStuff = ['fob', 'secret', 'token', 'email']
+      let secretStuff = ['fob', 'secret', 'token', 'email', 'payment_hash']
       if (ev.type === 'member-field-updated'){
           ['fob', 'secret', 'email'].forEach( str => {
               if (ev.field === str){

@@ -16,15 +16,18 @@
                 context(:taskId='n')
             .centerer
                 .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
-            gift-box(v-if="$store.getters.inbox.length > 0")
         .upgradesbar(v-show='$store.state.upgrades.mode !== "doge"')
+            gift-box
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         panels
-        .completed.adjtooltip(v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }') ☑
-        .tooltiptext.correctspot(v-if='$store.getters.member.muted && ($store.getters.contextCompleted.length > 0  || $store.state.context.completed)')
-            p.suggest(v-if='!$store.state.context.completed') show completed cards
-            p.suggest(v-else) show uncompleted cards
+        .faded
+            span(@click='toggleStacks')
+                img.toggleStack(src='../assets/images/orb.svg')
+            img.completed.adjtooltip(src='../assets/images/completed.svg'  v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }')
+            .tooltiptext.correctspot(v-if='$store.getters.member.muted && ($store.getters.contextCompleted.length > 0  || $store.state.context.completed)')
+                p.suggest(v-if='!$store.state.context.completed') show completed cards
+                p.suggest(v-else) show uncompleted cards
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')
     .agedbackground.weekoldpaperbg(v-else-if='cardAge < 30')
@@ -42,7 +45,6 @@ import Panels from './Panels'
 import GiftBox from './GiftBox'
 import Auth from './Auth'
 
-
 export default {
   components:{
       Hypercard,
@@ -51,15 +53,18 @@ export default {
   },
   methods:{
       goWithinPanel(n){
-
           let i = this.$store.state.context.panel.indexOf(n)
           if (i > -1){
+              console.log('all that should happen is set top!')
               this.$store.commit("setTop", i)
           }
       },
       toggleShowComplete(){
           this.$store.commit("toggleCompleted")
       },
+      toggleStacks(){
+          this.$store.commit('toggleStacks')
+      }
   },
   computed: {
       panelSplit(){
@@ -259,12 +264,19 @@ export default {
     color: white
     float: right
     cursor: pointer
-    font-size: 1.35em
+    height: 1.35em
     font-weight: bold
     position: absolute
     right: 0.5em
     bottom: 0.25em
 
+.toggleStack
+    height: 1.35em
+    cursor: pointer
+    position: absolute
+    left: 0.5em
+    bottom: 0.25em
+    color: main
 
 .upgrademode
     float: left

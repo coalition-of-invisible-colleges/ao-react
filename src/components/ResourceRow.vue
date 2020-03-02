@@ -3,19 +3,11 @@
 .memberrow.membershipcard(@dblclick='goIn')
     .row.center
         label.hackername {{ r.name }}
-            span
-                img.smallguild(src='../assets/images/chest.svg')
-                label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
-                label.stash(v-else) 0
-        button(v-if='resourcePriorities.optionList.A' @click='use("A")'  :class='cardInputSty(resourcePriorities.colorList.A)') {{resourcePriorities.optionList.A}}
-        button(v-if='resourcePriorities.optionList.B' @click='use("B")'  :class='cardInputSty(resourcePriorities.colorList.B)') {{resourcePriorities.optionList.B}}
-        button(v-if='resourcePriorities.optionList.C' @click='use("C")'  :class='cardInputSty(resourcePriorities.colorList.C)') {{resourcePriorities.optionList.C}}
-        button(v-if='resourcePriorities.optionList.D' @click='use("D")'  :class='cardInputSty(resourcePriorities.colorList.D)') {{resourcePriorities.optionList.D}}
-        button(v-if='resourcePriorities.optionList.E' @click='use("E")'  :class='cardInputSty(resourcePriorities.colorList.E)') {{resourcePriorities.optionList.E}}
-        button(v-if='resourcePriorities.optionList.F' @click='use("F")'  :class='cardInputSty(resourcePriorities.colorList.F)') {{resourcePriorities.optionList.F}}
         button(v-if='!isAnyOptions' @click='resourcePurged')
+        button(v-for='o in optionList'  @click='use(o[0])'  :class='cardInputSty(o[2])') {{ o[1] }}
     .bottomleft(v-if='card.boost')
-    .bottomright
+    .bottomright(@click='goIn')
+        img.smallguild(src='../assets/images/orb.svg')
     .clearboth
 </template>
 
@@ -25,60 +17,24 @@ export default {
     props: ['r', 'c'],
     components: { },
     computed:{
-
         isAnyOptions(){
-            return this.resourcePriorities.optionList.A || this.resourcePriorities.optionList.B || this.resourcePriorities.optionList.C || this.resourcePriorities.optionList.D || this.resourcePriorities.optionList.E || this.resourcePriorities.optionList.F
+            return this.optionList.length > 0
         },
         card(){
             return this.$store.getters.hashMap[this.r.resourceId]
         },
-        resourcePriorities(){
-            let optionList = {
-                  A: '',
-                  B: '',
-                  C: '',
-                  D: '',
-                  E: '',
-                  F: ''
-            }
-            let colorList = {
-                A: '',
-                B: '',
-                C: '',
-                D: '',
-                E: '',
-                F: ''
-            }
-            this.card.priorities.forEach( taskId => {
+        optionList(){
+            let ol = this.card.priorities.map(taskId => {
                 let option = this.$store.getters.hashMap[taskId]
-                if(/^A/.test(option.name)) {
-                    optionList.A = option.name.slice(2)
-                    colorList.A = option.color
-                }
-                if(/^B/.test(option.name)) {
-                    optionList.B = option.name.slice(2)
-                    colorList.B = option.color
-                }
-                if(/^C/.test(option.name)) {
-                    optionList.C = option.name.slice(2)
-                    colorList.C = option.color
-                }
-                if(/^D/.test(option.name)) {
-                    optionList.D = option.name.slice(2)
-                    colorList.D = option.color
-                }
-                if(/^E/.test(option.name)) {
-                    optionList.E = option.name.slice(2)
-                    colorList.E = option.color
-                }
-                if(/^F/.test(option.name)) {
-                    optionList.F = option.name.slice(2)
-                    colorList.F = option.color
+                let split = option.name.split(':')
+                if (split.length >= 2){
+                    return [split[0], split[1], option.color] // notes, name, color
                 }
             })
-
-            return {optionList, colorList}
-        }
+            return ol.filter(list => {
+                return !!list
+            })
+        },
     },
     methods: {
         cardInputSty(color){
@@ -96,7 +52,6 @@ export default {
                 type: 'resource-purged',
                 resourceId: this.r.resourceId,
             }
-            console.log('kill triggered:', newEv)
             this.$store.dispatch("makeEvent", newEv)
         },
         use(letter){
@@ -108,12 +63,10 @@ export default {
                 charged:this.r.charged,
                 notes:letter,
             }
-            console.log('use triggered:', newEv)
             this.$store.dispatch("makeEvent", newEv)
         },
         goIn(){
             let top = this.c.indexOf(this.r.resourceId)
-            console.log("goIn called with TOP: ", top)
             if (top > -1){
                 this.$store.dispatch("goIn", {
                     parents: [],
@@ -126,39 +79,6 @@ export default {
                 this.$router.push('/' + this.$store.state.upgrades.mode)
             }
         },
-        getName(taskId){
-            let name
-            this.$store.state.tasks.some(t => {
-                if (taskId === t.taskId){
-                    name = t.name
-                    return true
-                }
-            })
-            return name
-        },
-        toggleActivated() {
-            if(this.m.memberId !== this.$store.getters.member.memberId) {
-                return
-            }
-            if(this.$store.getters.member.active > 0) {
-                this.deactivate()
-            } else {
-                this.activate()
-            }
-        },
-        deactivate() {
-            this.$store.dispatch("makeEvent", {
-                type: 'member-deactivated',
-                memberId: this.$store.getters.member.memberId,
-            })
-        },
-        activate() {
-            this.$store.dispatch("makeEvent", {
-                type: 'member-activated',
-                memberId: this.$store.getters.member.memberId,
-            })
-        }
-
     }
 }
 
@@ -255,6 +175,7 @@ label
 
 .bottomright
     right: 0
+    cursor:pointer
     float: right
 
 .stash

@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #accounts
-  h1 Accounts
+  h1 {{activeAccounts}} Accounts
   .container
     .row
         member-create.six.columns

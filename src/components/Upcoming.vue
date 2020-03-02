@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-#frontcalendar
+#frontcalendar.container
     h1 Upcoming
     calendar(inId='g')
 </template>
@@ -25,6 +25,7 @@ export default {
 <style lang="stylus" scoped>
 
 @import '../styles/title'
+@import '../styles/skeleton'
 
 h1
     color: yellow

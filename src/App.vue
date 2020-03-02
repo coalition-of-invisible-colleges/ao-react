@@ -31,9 +31,7 @@ export default {
             this.$store.commit('setAuth', {token, session})
         }
         this.$store.dispatch("connectSocket")
-        if(this.$store.getters.member) {
-            this.$store.dispatch('loadCurrent')
-        }
+        this.$store.dispatch('loadCurrent')
     },
     components: {
         EventFeed, Sun, Bull, Loader, Helm, Status, TaskCreate, Contexts

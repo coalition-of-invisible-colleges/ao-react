@@ -24,20 +24,15 @@ function rent(){
         return (m.active > 0 && !isAdmin)
     })
     let fixed = parseFloat(serverState.cash.rent)
-    let variable = parseFloat(serverState.cash.variable)
     let numActiveMembers = activeMembers.length
-    let perMonth = ( fixed + variable ) / numActiveMembers
+    let perMonth = fixed / numActiveMembers
     let charged = Math.min(perMonth, parseFloat( serverState.cash.cap ))
     let notes = ''
-
-
-    console.log("rent ran: ", {fixed, variable, numActiveMembers, perMonth, charged})
 
     activeMembers.forEach( m => {
         events.memberCharged(m.memberId, charged, notes)
     })
 
-    events.variableSet(0) // XXX not used anymore?
     dctrlDb.insertBackup(serverState)
 }
 
@@ -50,7 +45,6 @@ function deactivate(){
 }
 
 module.exports = function (){
-    console.log('starting crons')
     rentJob.start()
     deactivateJob.start()
 }

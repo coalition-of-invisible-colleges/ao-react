@@ -9,9 +9,9 @@
                       img.floatleft(src='../assets/images/badge.svg')
                   span(@click='goIn(g.taskId)')
                       span.nl.gui.yellowtx {{ g.guild }}
-                  span(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
-                      .plain.checkmark.tooltip(:class="cardInputSty(c.color)") ☑
-                          linky.tooltiptext(:x='c.name')
+                  span.tooltip(v-for='c in completions(g)'  @click='goIn(c.taskId, g.taskId)'  :class='{ padleft : getSubPriorities(g.taskId).length > 0 }')
+                      img.plain.checkmark(src='../assets/images/completed.svg'  :class="cardInputSty(c.color)")
+                      linky.tooltiptext(:x='c.name')
                   .description
                       linky(:x='g.name')
                       span.projectlist.aproject(v-if='g.guilds && g.guilds.length >= 1'  v-for='(p, i) in g.guilds'  @click='goIn(p.taskId, g.taskId)')
@@ -58,6 +58,9 @@ export default {
             this.$store.dispatch("goIn", {panel, top, parents})
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
+            }
+            if (this.$store.state.upgrades.dimension !== 'unicorn'){
+                this.$router.push("/" + this.$store.state.upgrades.mode)
             }
         },
         completions(guild){
@@ -116,7 +119,7 @@ export default {
                               }
                           }
                       })
-                      if(!g.guilds) { 
+                      if(!g.guilds) {
                           g.guilds = []
                       }
                       if(g.guilds.indexOf(task) === -1) {
@@ -307,11 +310,14 @@ h2
     width: 100%
 
 .plain.checkmark
-    font-size: 2em
+    height: 1.78em
     display: inline-block
     cursor: pointer
 
-.plain.checkmark .tooltiptext
+img.checkmark
+    height: 1em
+
+.tooltiptext
     font-size: 0.65em
 
 .plain

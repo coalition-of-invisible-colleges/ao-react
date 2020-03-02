@@ -1,11 +1,12 @@
 <template lang='pug'>
 
-#giftbox
-    img.fw(src='../assets/images/pins.svg')
-    img.gift(src='../assets/images/gifts.svg')
-    span Gifts
-    card-panel(:c="$store.getters.inbox")
-    img.fw(src='../assets/images/pins.svg')
+#giftbox(v-if='$store.getters.inbox.length > 0')
+  .row
+    .two.grid
+      img.gift(src='../assets/images/gifts.svg')
+      span {{$store.getters.inbox.length}} Gifts
+    .eight.grid
+      card-panel(:c="$store.getters.inbox")
 </template>
 
 <script>

@@ -2,43 +2,45 @@
 
 .eventfeed
   transition(name='fade' v-for='(e, i) in eventstream'  :key="i")
-      .feed.wiggle(v-if='e.showEvent'  v-bind:style="{ left: e.randomX }")
+      .feed.wiggle(v-if='e.showEvent'  v-bind:style="{ left: e.randomX }"  @click='goTo(e)')
           img.doge(src='../assets/images/doge_faded.png')
           //- <input v-model.number="randomWiggle">
           img.bubble(src='/bubble.png')
           .float(:style='{ color: e.randomColors[0], left: e.randomXs[0], top: e.randomYs[0] }') {{ e.type.replace('-', ' ') }}
           .float(:style='{ color: e.randomColors[1], left: e.randomXs[1], top: e.randomYs[1] }') {{ e.meme }}
           .float(v-if='e.type==="task-created"') {{ e.name }}
+      div(v-else) test
 </template>
 
 <script>
 
 export default {
-    data() {
-        let hodlphrases = ["hodled",
-                        "much hodl",
-                        "this card is safe",
-                        "hodled forever",
-                        "such hodling",
-                        "hodl",
-                        "hodling",
-                        "wow",
-                        "hodled",
-                        "hodled",
-                        "hodled",
-                        "hodled",
-                        "hodl",
-                        "hodl",
-                        "wow such hodl",
-                        "in ur holochains",
-                        "hodl"]
-        return { hodlphrases, }
-    },
     computed:{
         eventstream(){
             return this.$store.state.eventstream
         },
     },
+    methods: {
+        goTo(ev){
+            if (ev.inId){
+                this.$store.dispatch('goIn', {
+                    parents: [],
+                    panel: [ev.inId],
+                    top: 0
+                })
+                return this.$router.push('/boat') // may be there already?
+            }
+            if (ev.taskId){
+                this.$store.dispatch('goIn', {
+                    parents: [],
+                    panel: [ev.taskId],
+                    top: 0
+                })
+                return this.$router.push('/boat') // may be there already?
+            }
+            // XXX should switch mode / location more specifically on events such as resource-booked
+        }
+    }
 }
 </script>
 
@@ -63,7 +65,7 @@ label
 .feed
     position: fixed
     color: white
-    top: -11em
+    top: 100vh - 20em
     left: 45%
     height: 10em
     width: 10em
@@ -84,13 +86,13 @@ img
 
 .fade-leave-active
     transition: top 10s
-    top: -30em
+    top: -11em
 
 .fade-enter
     top: calc(100% + 10em)
 
 .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-    top: -30em
+    top: -10em
 
 @keyframes wiggle {
     0%, 100% { transform: translate(-16px, 0) }

@@ -12,15 +12,6 @@ div.totop(v-if='b.passed.length > 0')
                 current(:memberId='n[0]')
                 img.send(src='../assets/images/birdbtn.svg')
                 current(:memberId='n[1]')
-    .row.pad(v-if='toMe.length > 0')
-       .six.grid
-           button.accept(@click='accept')
-               img.arrow.fr(src='../assets/images/buddadoge.svg')
-               span I Accept
-       .six.grid
-           button.dontaccept(@click='refuse')
-               img.arrow.fl(:src="require('../assets/images/buddadoge.svg')")
-               span I Do Not Accept
 </template>
 
 <script>
@@ -35,33 +26,6 @@ export default {
         toggleBird(){
             this.$store.commit('toggleBird')
         },
-        accept(){
-          let sending = {
-              type: 'task-sub-tasked',
-              taskId: this.$store.getters.member.memberId,
-              subTask: this.b.taskId,
-          }
-
-          request
-              .post('/events')
-              .set('Authorization', this.$store.state.loader.token)
-              .send(sending)
-              .end((err,res)=>{
-                  this.$store.dispatch("makeEvent", {
-                    type: 'task-grabbed',
-                    taskId: this.b.taskId,
-                    memberId: this.$store.getters.member.memberId,
-                  })
-          })
-
-        },
-        refuse(){
-            this.$store.dispatch("makeEvent", {
-                type: 'task-dropped',
-                taskId: this.b.taskId,
-                memberId: this.$store.getters.member.memberId,
-            })
-        }
     },
     computed: {
         toMe(){

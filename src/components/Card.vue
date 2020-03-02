@@ -8,17 +8,14 @@
     flag(:b='b', :inId='inId')
     tally(:b='b')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0'  :key='dogers')
-        img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../assets/images/doge_in_circle.png')
-        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../assets/images/doge_in_circle.png'  :key='dogers')
+        img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../assets/images/sun.svg')
+        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../assets/images/sun.svg'  :key='dogers')
         .tooltiptext
             p prioritized by:
             current(v-for='doger in b.dogers'  :memberId='doger'  :key='dogers')
     .buffertop
       preview-deck(:task='b')
       .cardbody
-          .cardhud(v-if='calcVal >= 1')
-              img.smallguild(src='../assets/images/chest.svg')
-              span {{ calcVal }}
           .cardhud(v-if='cardStart')
               img.smallguild(src='../assets/images/timecube.svg')
               span {{ cardStart.days.toFixed(1) }} days
@@ -26,7 +23,6 @@
           .cardhud(v-if='dogeCard') {{ dogeCard.name }}
     simple-priorities(:taskId="b.taskId", :inId='b.taskId')
     passed(:b='b')
-    shipped(:b='b', :inId='inId')
     .spacer
     div
         scroll.faded(:b='b', :inId='inId')
@@ -46,7 +42,6 @@ import Scroll from './Scroll'
 import Vine from './Vine'
 import Coin from './Coin'
 import Passed from './Passed'
-import Shipped from './Shipped'
 import Tally from './Tally'
 import Linky from './Linky'
 import SimplePriorities from './SimplePriorities'
@@ -54,10 +49,7 @@ import Current from './Current'
 
 export default {
     props: ['b', 'inId', 'c'],
-    data(){
-        return { active: false }
-    },
-    components: { PreviewDeck, Bird, Flag, Scroll, Vine, Coin, Passed, Shipped, Linky, SimplePriorities, Current, Tally},
+    components: { PreviewDeck, Bird, Flag, Scroll, Vine, Coin, Passed, Linky, SimplePriorities, Current, Tally},
     mounted() {
         let el = this.$refs.wholeCard
         if(!el) return
@@ -72,6 +64,7 @@ export default {
         longPress.requireFailure([doubleTap])
 
         mc.on('doubletap', (e) => {
+            console.log('goin triggered by doubletap')
             this.goIn()
             e.stopPropagation()
         })
@@ -83,7 +76,6 @@ export default {
     },
     methods: {
         goIn(){
-
             let panel = this.c
             if (panel && panel.length && panel.length > 0){
 
@@ -101,26 +93,21 @@ export default {
 
             let parents = []
 
-            if (this.$store.state.context.panel[this.$store.state.context.top]){
-                parents.push(this.$store.getters.contextCard.taskId)
-            }
-
+            parents.push(this.$store.getters.contextCard.taskId)
             if (this.inId && parents.indexOf(this.inId) < 0){
                 parents.push(this.inId)
             }
-
             this.$store.dispatch("goIn", {
                 parents,
                 top,
                 panel,
-                mode: this.$store.state.upgrades.mode,
             })
-
             if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
                 this.$store.commit("setMode", 1)
             }
-
-            this.$router.push("/" + this.$store.state.upgrades.mode)
+            if (this.$store.state.upgrades.dimension !== 'unicorn'){
+                this.$router.push("/" + this.$store.state.upgrades.mode)
+            }
         },
         purge(){
           this.$store.dispatch("makeEvent", {
@@ -144,7 +131,6 @@ export default {
             if ( this.b.book.startTs ){
               let now = Date.now()
               let msTill = this.b.book.startTs - now
-              // XXX TODO
               let days = msTill / (1000 * 60 * 60 * 24)
               let hours = 0
               let minutes = 0
@@ -167,24 +153,6 @@ export default {
               purplewx : this.b.color == 'purple',
               blackwx : this.b.color == 'black',
           }
-        },
-        calcVal(){
-            let v = calculations.calculateTaskPayout(this.b)
-            return parseInt(v)
-        },
-        countClass(){
-            return {
-                grabbed : this.b.deck.indexOf(this.$store.getters.member.memberId) !== -1,
-            }
-        },
-        parent(){
-          let task
-          this.$store.state.tasks.forEach( t => {
-              if(t.taskId === this.inId) {
-                  task = t
-              }
-          })
-          return task
         },
         cardAge(){
           let now = Date.now()

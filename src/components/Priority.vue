@@ -46,9 +46,6 @@ export default {
         doubleTap.recognizeWith(singleTap)
         singleTap.requireFailure(doubleTap)
 
-        // checkTap.recognizeWith(singleTap)
-        // singleTap.requireFailure(checkTap)
-
         mc.on('singletap', (e) => {
             console.log("tap on priority")
             if(this.$store.state.context.action === this.taskId) {
@@ -146,7 +143,6 @@ export default {
     },
     methods: {
         deaction(){
-
             this.$store.commit("setAction", false)
         },
         setAction(){
@@ -188,15 +184,13 @@ export default {
             this.$router.push("/" + this.$store.state.upgrades.mode)
         },
         copyCardToClipboard(){
-
             navigator.clipboard.writeText(this.name)
         },
         allocate(){
-
           this.$store.dispatch("makeEvent", {
-            type: 'task-allocated',
-            taskId: this.$store.getters.contextCard.taskId,
-            allocatedId: this.taskId,
+            type: 'task-prioritized',
+            taskId: this.taskId,
+            inId: this.$store.getters.contextCard.taskId,
           })
         },
         refocus(){

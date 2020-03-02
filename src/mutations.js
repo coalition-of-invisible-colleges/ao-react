@@ -1,6 +1,9 @@
 // Mutations are state builders.
 // The current state is the result of all the events in the system fed through the mutation functions.
 // `server/state.js` for server; `modules/*` for vue client.
+
+
+// const Vue = require('vue')
 const _ = require( 'lodash')
 const uuidv1 = require( 'uuid/v1')
 const cryptoUtils = require( './crypto')
@@ -8,6 +11,13 @@ const calculations = require( './calculations')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
+        case "ao-updated":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    ao.state = ev.state
+                }
+            })
+            break
         case "ao-connected":
             let newEv = {
                 address: ev.address,
@@ -41,13 +51,6 @@ function aoMuts(aos, ev) {
                 }
             })
             break
-        case "ao-updated":
-            aos.forEach( (ao, i) => {
-                if (ao.address === ev.address) {
-                    ao.state = ev.state
-                }
-            })
-            break
     }
 }
 
@@ -66,20 +69,6 @@ function cashMuts(cash, ev){
 			case "ao-named":
 				cash.alias = ev.alias
 				break
-			case "cash-increased":
-				cash.cash += parseFloat(ev.amount)
-				break
-			case "cash-decreased":
-				cash.cash -= parseFloat(ev.amount)
-				break
-			case "member-paid":
-				if (ev.isCash) {
-					cash.cash += parseFloat(ev.paid)
-				}
-				break
-			case "task-claimed":
-			 	cash.variable += parseFloat(ev.paid)
-				break
 			case "spot-updated":
 				cash.spot = ev.spot
 				break
@@ -91,9 +80,6 @@ function cashMuts(cash, ev){
 				break
 			case "cap-set":
 				cash.cap = ev.amount
-				break
-			case "variable-set":
-				cash.variable = ev.amount
 				break
 			case "funds-set":
 				cash.outputs = ev.outputs
@@ -187,45 +173,6 @@ function membersMuts(members, ev){
           })
           break
 
-      case "badge-added":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId){
-                  member.badges.push( ev )
-              }
-          })
-          break
-
-      case "badge-removed":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId) {
-                  member.badges.forEach((b, i) => {
-                      if (ev.badge === b.badge) {
-                          member.badges.splice(i, 1)
-                      }
-                  })
-              }
-          })
-          break
-
-      case "badge-hidden":
-          members.forEach( member => {
-              if (member.memberId === ev.memberId) {
-                  if(!member.hiddenBadges) member.hiddenBadges = [] //add hiddenBadges property if it doesn't exist
-                  if(member.hiddenBadges.includes(ev.badge)){ //if the badge is currently in the hidden list, remove it
-                    member.hiddenBadges = member.hiddenBadges.filter( badge => { //We need to remove all references, since bugs could create multiples
-                        if(badge == ev.badge){
-                            return false
-                        }
-                        return true
-                    })
-                  } else { //We don't have the badge in our hidden list, so let's add it
-                      member.hiddenBadges.push(ev.badge)
-                  }
-              }
-
-          })
-          break
-
       case "doge-barked":
           members.forEach( member => {
               // this should only bump up for mutual doges
@@ -285,13 +232,6 @@ function resourcesMuts(resources, ev){
 				}
 			})
 			break
-		case "resource-removed":
-				resources.forEach( (r, i) => {
-						if (r.resourceId == ev.resourceId){
-								resources.splice(i, 1)
-						}
-				})
-				break
 		case "channel-created":
 				resources.forEach((r, i) => {
 						if (r.resourceId == ev.resourceId){
@@ -340,87 +280,49 @@ function sessionsMuts(sessions, ev){
 	}
 }
 
-
 function tasksMuts(tasks, ev) {
-    let newEv = {}
     switch (ev.type) {
+        case "highlighted":
+            tasks.forEach( task => {
+                if (task.taskId === ev.taskId){
+                    let didUpdateInline = false
+                    task.highlights.forEach((h, i) => {
+                        if (h.memberId === ev.memberId){
+                            didUpdateInline = true
+                            if (h.valence === ev.valence){
+                                task.highlights.splice(i, 1)
+                            } else {
+                                h.valence = ev.valence
+                            }
+                        }
+                    })
+                    if (!didUpdateInline){
+                        task.highlights.push({
+                          memberId: ev.memberId,
+                          valence: ev.valence
+                        })
+                    }
+                }
+            })
+            break
         case "ao-connected":
             break
         case "ao-disconnected":
             break
         case "resource-created":
-            newEv.taskId = ev.resourceId
-            newEv.name = ev.resourceId
-            newEv.claimed = []
-            newEv.completed = []
-            newEv.passed = []
-            newEv.guild = false
-            newEv.subTasks = []
-            newEv.lastClaimed = 0
-            newEv.book = {}
-            newEv.priorities = []
-            newEv.deck = []
-            newEv.color = "red"
-            newEv.address = ''
-            newEv.allocations = []
-            newEv.bolt11 = ''
-            newEv.payment_hash = ''
-            newEv.boost = 0
-            newEv.monthlyValue = 0
-            newEv.cap = 0
-            tasks.push(newEv)
+            tasks.push(calculations.blankCard(ev.resourceId, ev.resourceId, 'red'))
             break
         case "member-created":
-            newEv.taskId = ev.memberId
-            newEv.name = ev.memberId
-            newEv.claimed = []
-            newEv.completed = []
-            newEv.passed = []
-            newEv.guild = false
-            newEv.subTasks = []
-            newEv.lastClaimed = 0
-            newEv.book = {}
-            newEv.priorities = []
-            newEv.deck = []
-            newEv.color = "blue"
-            newEv.address = ''
-            newEv.allocations = []
-            newEv.bolt11 = ''
-            newEv.payment_hash = ''
-            newEv.boost = 0
-            newEv.monthlyValue = 0
-            newEv.cap = 0
-            tasks.push(newEv)
+            tasks.push(calculations.blankCard(ev.memberId, ev.memberId, 'blue'))
             break
         case "task-created":
-            newEv = Object.assign({}, ev)
-            newEv.claimed = []
-            newEv.completed = []
-            newEv.passed = []
-            newEv.guild = false
-            newEv.subTasks = []
-            newEv.lastClaimed = 0
-            newEv.book = {}
-            newEv.priorities = []
-            newEv.address = ''
-            newEv.bolt11 = ''
-            newEv.payment_hash = ''
-            newEv.boost = 0
-            newEv.monthlyValue = 0
-            newEv.cap = 0
-            newEv.allocations = []
-            if(newEv.name) {
-                newEv.name = newEv.name.trim()
-                tasks.push(newEv)
-            }
-            if (newEv.inId){
-                tasks.forEach(task => {
-                    if (task.taskId === newEv.inId) {
-                        task.subTasks = _.filter(task.subTasks, tId => tId !== newEv.taskId)
-                        task.subTasks.push(newEv.taskId)
-                    }
-                })
-            }
+            tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck))
+            tasks.forEach(task => {
+                if (task.taskId === ev.inId) {
+                    task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+                    task.subTasks.push(ev.taskId)
+                }
+            })
             break
         case "address-updated":
             tasks.forEach( t => {
@@ -500,7 +402,6 @@ function tasksMuts(tasks, ev) {
         case "task-dropped":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
-                    task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
                     task.deck = _.filter(task.deck, d => d !== ev.memberId)
                 }
             })
@@ -575,11 +476,10 @@ function tasksMuts(tasks, ev) {
         case "task-prioritized":
             tasks.forEach( task => {
               if (task.taskId === ev.inId){
-                  if (task.priorities.indexOf(ev.taskId) === -1){
-                      task.priorities.push(ev.taskId)
-                      task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
-                      task.completed = _.filter(task.completed, st => st !== ev.taskId)
-                  }
+                  task.priorities = _.filter(task.priorities, taskId => taskId !== ev.taskId )
+                  task.subTasks = _.filter(task.subTasks, taskId => taskId !== ev.taskId )
+                  task.completed = _.filter(task.completed, taskId => taskId !== ev.taskId )
+                  task.priorities.push(ev.taskId)
               }
             })
             break
@@ -599,22 +499,13 @@ function tasksMuts(tasks, ev) {
                     } else {
                         task.subTasks.push(ev.taskId)
                     }
-                    if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
-
-                    task.allocations = _.filter(task.allocations, al => {
-                        if (al.allocatedId !== ev.taskId) {
-                            return true
-                        } else {
-                            task.boost = task.boost + al.amount
-                            return false
-                        }
-                    })
                 }
             })
             break
         case "task-sub-tasked":
             tasks.forEach(task => {
                 if(task.taskId === ev.subTask) {
+                    task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
                     if(ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
                         if(ev.subTask !== ev.memberId) {
                             task.deck.push(ev.memberId)
@@ -630,9 +521,11 @@ function tasksMuts(tasks, ev) {
         case "task-de-sub-tasked":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
+                    task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
                     task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask )
                     task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
                 }
+
             })
             break
         case "task-guilded":
@@ -640,13 +533,6 @@ function tasksMuts(tasks, ev) {
                 if(task.taskId === ev.taskId) {
                     task.guild = ev.guild
                 }
-            })
-            break
-        case "task-bountied":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                        _.merge(task, ev)
-                    }
             })
             break
         case "task-claimed":
@@ -681,16 +567,6 @@ function tasksMuts(tasks, ev) {
                         task.completed = _.filter(task.completed, tId => tId !== ev.subTask )
                         task.completed.push(ev.taskId)
                     }
-                    let alloc = false
-                    if (!task.allocations || !Array.isArray(task.allocations)) { task.allocations = [] }
-                    task.allocations = _.filter(task.allocations, al => {
-
-                        if (al.allocatedId === ev.taskId) {
-                            alloc = al.amount
-                            return false
-                        }
-                        return true
-                    })
                 }
                 if (task.taskId === ev.taskId) {
                     task.passed = _.filter( task.passed, d => d[1] !== ev.memberId )
@@ -722,20 +598,6 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
-        case "task-cap-updated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    task.cap = parseFloat(ev.amount)
-                }
-            })
-            break
-        case "task-rate-updated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    task.monthlyValue = parseFloat(ev.amount)
-                }
-            })
-            break
         case "task-boosted":
             tasks.forEach(task => {
                 if (task.taskId === ev.taskId) {
@@ -758,13 +620,6 @@ function tasksMuts(tasks, ev) {
                           task.bolt11 = ""
                           task.payment_hash = ""
                         }
-                }
-            })
-            break
-        case "task-instructions-updated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    task.instructions = ev.newInstructions
                 }
             })
             break
@@ -825,7 +680,6 @@ function tasksMuts(tasks, ev) {
                     task.completed = newCompleted
                 }
             }
-
             break
         case "tasks-received":
             ev.tasks.forEach(p => {
@@ -836,32 +690,6 @@ function tasksMuts(tasks, ev) {
                     }
                 })) {
                     tasks.push(calculations.safeClone(p))
-                }
-            })
-            break
-        case "task-allocated":
-            tasks.forEach(task => {
-                if (task.taskId === ev.taskId) {
-                    if (task.boost >= 1){
-                        task.boost --
-                        if(!task.allocations || !Array.isArray(task.allocations)) {
-                            task.allocations = []
-                        }
-                        let alreadyPointed = task.allocations.some(als => {
-                          if (als.allocatedId === ev.allocatedId){
-                            als.amount += 1
-                            return true
-                          }
-                        })
-                        if (!alreadyPointed){
-                          ev.amount = 1
-                          task.allocations.push(ev)
-                        }
-                    }
-
-                    let reprioritized = _.filter( task.priorities, d => d !== ev.allocatedId )
-                    reprioritized.push(ev.allocatedId)
-                    task.priorities = reprioritized
                 }
             })
             break

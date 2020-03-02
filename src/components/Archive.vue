@@ -74,13 +74,6 @@ export default {
 #archive
     width: 100%
 
-.floater
-    position: relative;
-    top: 0
-    left: 0
-    width: 100%
-    min-height: 500px
-
 .shipwrapper
     position: relative
     min-height: 76vh

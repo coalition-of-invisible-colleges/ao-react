@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #tasks(@contextmenu.capture.prevent)
-    .row.ptr(v-if="topCard"  ref='swipebar')
+    .row.ptr(v-if="topCard  &&  c.length > 1"  ref='swipebar')
         .three.grid.tooltip(ref='previous')
             span &nbsp;
             img.fl(src='../assets/images/back.svg')
@@ -12,12 +12,10 @@
                 h3(v-if='!open') {{ top + 1 }}
         .four.grid.horizcenter()
             .mandalign.tooltip(ref='mandelorb')
-                img(v-if='open && $store.state.upgrades.stacks === 5', src='../assets/images/openRed.svg'  draggable='false')
-                img(v-else-if='$store.state.upgrades.stacks === 5'  src='../assets/images/open.svg'  draggable='false')
-                img.iris(v-else-if='open && $store.state.upgrades.stacks === 1'  src='../assets/images/mandelorb_sequential.svg'  draggable='false')
-                img.iris(v-else  src='../assets/images/mandelorb_linear.svg'  draggable='false')
+                img(src='../assets/images/orb.svg')
                 .tooltiptext(v-if='$store.getters.member.muted')
-                    p.suggest long press to split
+                    p(v-if='!open').suggest show all
+                    p(v-else).suggest show stack
         .one.grid.horizcenter()
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
@@ -27,19 +25,9 @@
             img.fr(src='../assets/images/forward.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
                 p.suggest next
-    .row.fadey(v-else)
-      .three.grid
-          img.fl(src='../assets/images/back.svg')
-      .six.grid
-          .fr
-              img(src='../assets/images/open.svg')
-          .box
-              h3 0 / 0
-      .three.grid
-          img.fr(src='../assets/images/forward.svg')
     .open(v-if='open')
         hypercard(v-for='b in c'  :b="b"  :key="b.taskId"  :inId='taskId'  :c='panelIds')
-    .box(v-else  )
+    .box(v-else)
         hypercard(:b="c[top]"  :key="componentKey"  :inId='taskId'  :c='panelIds')
 </template>
 
@@ -138,8 +126,8 @@ export default {
         nextmc.add(nextPress)
         nextmc.on('press', (e) => {
 
-            this.last()
-            e.stopPropagation()
+        this.last()
+        e.stopPropagation()
         })
   },
   data(){
@@ -164,7 +152,7 @@ export default {
         this.top = 0
     },
     previous(){
-
+        this.playSound()
         this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
             this.top = this.c.length - 1
@@ -172,7 +160,7 @@ export default {
         this.componentKey ++
     },
     next(){
-
+        this.playSound()
         this.top = (this.top + 1) % this.c.length
         this.componentKey ++
     },
@@ -201,6 +189,15 @@ export default {
             swapId2: this.c[swapIndex].taskId,
             direction: 'up',
         })
+    },
+    playSound(){
+      if (!this.$store.getters.member.muted){
+        try {
+          let flip = new Audio(require('../assets/sounds/pageturn.wav'))
+          flip.volume = flip.volume * 0.33
+          flip.play()
+        } catch (err){}
+      }
     },
     toggleStacks(){
         if(this.$store.state.upgrades.stacks === 1) {
@@ -264,9 +261,6 @@ td
 li
     text-align: left
 
-img
-    height: 3.9em
-
 table
     text-align:center
     width: 100%
@@ -306,6 +300,12 @@ li
 
 img
     height: 3em
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 
 .ptr
     margin-bottom: 0
@@ -348,6 +348,10 @@ img
 .mandalign
     margin-top: 5px
     cursor: pointer
+    padding: 0.77em
+    user-drag:none
+    img
+        height: 1.7em
 
 .center
     text-align: center

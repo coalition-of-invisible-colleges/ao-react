@@ -2,8 +2,6 @@ const Vue = require( 'vue')
 const _ = require( 'lodash')
 const payments = ["bitcoin", "lightning"]
 
-
-
 const state = {
     parent: [],
     panel: [],
@@ -20,7 +18,7 @@ const mutations = {
     setParent(state, p){
         state.parent = p
     },
-    setPanel(state, panel, top){
+    setPanel(state, panel){
           state.panel = panel
     },
     setTop(state, top){
@@ -48,23 +46,28 @@ const mutations = {
 }
 
 const actions = {
-    loaded({commit, state, getters}){
+    loaded({commit, state, getters, dispatch}){
         commit('stopLoading')
+        dispatch('flashHelm', 1)
         let isMuted = getters.member.muted
         if (!isMuted){
-          	let flip = new Audio(require('../assets/sounds/pageturn.wav'))
-          	flip.volume = flip.volume * 0.33
+          try {
+            let flip = new Audio(require('../assets/sounds/pageturn.wav'))
+            flip.volume = flip.volume * 0.33
             flip.play()
+          } catch (err){}
         }
     },
-    goIn({commit, state, getters}, pContext ){
+    goIn({commit}, pContext ){
+        console.log('goIn hit', pContext)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)
         pContext.parents.forEach(p => {
             commit("addParent", p)
         })
     },
-    goUp({commit, state}, pContext){
+    goUp({commit}, pContext){
+        console.log('goUp called')
         commit("goToParent", pContext.target)
         commit("setPanel", pContext.panel)
         commit("setTop", pContext.top)

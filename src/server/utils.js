@@ -10,16 +10,6 @@ function buildResCallback(res){
     }
 }
 
-function memberIdFromFob(fob){
-  let memberId
-  state.serverState.members.filter(m => m.active > 0).forEach(member => {
-      if (member.fob == fob){
-          memberId = member.memberId
-      }
-  })
-  return memberId
-}
-
 function memberFromFob(fob){
   let m
   state.serverState.members.filter(m => m.active > 0).forEach(member => {
@@ -28,16 +18,6 @@ function memberFromFob(fob){
       }
   })
   return m
-}
-
-function taskFromFob(fob){
-  let task
-  state.serverState.tasks.forEach(t => {
-      if (t.fob == fob){
-          task = t
-      }
-  })
-  return task
 }
 
 function getResource(resourceId){
@@ -52,8 +32,6 @@ function getResource(resourceId){
 
 module.exports = {
   buildResCallback,
-  memberIdFromFob,
   memberFromFob,
-  taskFromFob,
   getResource
 }

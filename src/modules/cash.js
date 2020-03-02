@@ -4,12 +4,10 @@ const state = {
     subscribed: [],
     alias: "",
     address: "",
-    cash: 0,
     spot: 123456,
     currency: 'CAD',
     rent: 0,
     cap: 0,
-    variable: 0,
     usedTxIds: [],
     outputs: [],
     channels: [],
@@ -23,12 +21,10 @@ const mutations = {
         state.subscribed = current.cash.subscribed
         state.alias = current.cash.alias
         state.address = current.cash.address
-        state.cash = current.cash.cash
         state.spot = current.cash.spot
         state.currency = current.cash.currency
         state.rent = current.cash.rent
         state.cap = current.cash.cap
-        state.variable = current.cash.variable
         state.usedTxIds = current.cash.usedTxIds
         state.outputs = current.cash.outputs
         state.channels = current.cash.channels

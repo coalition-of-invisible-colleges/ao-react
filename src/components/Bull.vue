@@ -13,7 +13,7 @@ div
             img.lil(src='../assets/images/badge.svg')
             span Accounts
         p(@click='goDash("chest")'  :class='{ dabstination : $store.state.upgrades.mode === "chest" }')
-            img.lil(src='../assets/images/bounty.svg')
+            img.lil(src='../assets/images/chest.svg')
             span Lightning
         p(@click='goDash("timecube")'  :class='{ dabstination : $store.state.upgrades.mode === "timecube" }')
             img.lil(src='../assets/images/timecube.svg')
@@ -43,6 +43,13 @@ export default {
             type: "session-killed",
             session: this.$store.state.loader.session
         })
+        window.localStorage.removeItem("token")
+        window.localStorage.removeItem("session")
+        window.localStorage.clear()
+        this.$store.commit('setAuth', {
+            token: '', session: ''
+        })
+        window.location.replace('/')
     },
     goDash(mode) {
         if(!mode) {
@@ -85,7 +92,6 @@ export default {
     bullQuadrupleTap.requireFailure(bullQuintupleTap)
 
     bullmc.on('tap', (e) => {
-        console.log("single click bull")
         if(!this.isBull) {
             this.goDash(false)
         } else {
@@ -96,13 +102,11 @@ export default {
     })
 
     bullmc.on('doubletap', (e) => {
-        console.log("double click")
         this.goDash('boat')
         e.stopPropagation()
     })
 
     bullmc.on('tripletap', (e) => {
-        console.log("triple click")
         this.goDash('badge')
         e.stopPropagation()
     })

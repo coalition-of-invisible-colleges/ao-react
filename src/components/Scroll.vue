@@ -1,16 +1,12 @@
 <template lang='pug'>
 
-.scroll(v-if='!($store.state.upgrades.mode === "doge" && $router.currentRoute.path.split("/")[1] === "front") && $store.state.context.action !== b.taskId')
-    div(v-if='inId'  :id='uuid')
-        img.scrolly(src='../assets/images/downboatwhite.svg')
-    div(v-else)
-        img(v-if='!isCared'  src='../assets/images/garbage.svg').scrolly
+.scroll(v-if='this.$store.state.upgrades.dimension === "unicorn"')
+    img.scrolly(src='../assets/images/downboatwhite.svg'  :id='uuid')
 </template>
 
 <script>
 
 import calculations from '../calculations'
-
 import uuidv1 from 'uuid/v1'
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
@@ -30,10 +26,46 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-            if(!this.inId) {
-                this.canIt()
+
+            let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
+            if (this.$store.state.context.action === this.b.taskId){
+                this.$store.dispatch("makeEvent", {
+                    type: 'task-refocused',
+                    inId: this.$store.getters.contextCard.taskId,
+                    taskId: this.b.taskId,
+                })
+                this.$store.commit('setAction', false)
+            } else if (this.inId){
+                this.$store.dispatch("makeEvent", {
+                  type: 'task-de-sub-tasked',
+                  subTask: this.b.taskId,
+                  taskId: this.inId,
+                })
+            } else if (parentId) {
+              this.$store.dispatch("makeEvent", {
+                type: 'task-de-sub-tasked',
+                subTask: this.b.taskId,
+                taskId: parentId,
+              })
+              let newPanel = _.filter(this.$store.state.context.panel, tId => tId !== this.b.taskId)
+              let newTop = Math.min(this.$store.state.context.top, newPanel.length -1)
+              console.log({newPanel, newTop})
+              if (newPanel.length > 0){
+                  this.$store.commit('setPanel', newPanel)
+                  this.$store.commit('setTop', newTop)
+              } else {
+                  this.$store.dispatch('goUp', {
+                    target: parentId,
+                    panel: [parentId],
+                    top: 0
+                  })
+              }
             } else {
-                this.rollsafeIt()
+                this.$store.dispatch("makeEvent", {
+                  type: 'task-de-sub-tasked',
+                  subTask: this.b.taskId,
+                  taskId: this.b.taskId,
+                })
             }
             e.stopPropagation()
         })
@@ -41,33 +73,10 @@ export default {
         let Press = new Hammer.Press({ time: 500 })
         mc.add(Press)
         mc.on('press', (e) => {
-
             this.$router.push('/archive')
             window.scrollTo(0, 0)
             e.stopPropagation()
         })
-    },
-    computed: {
-        isCared(){
-            return this.b.deck.length > 0 || this.b.guild || calculations.calculateTaskPayout(this.b) > 0.1
-        }
-    },
-    methods: {
-        rollsafeIt(){
-
-            this.$store.dispatch("makeEvent", {
-                type: 'task-de-sub-tasked',
-                taskId: this.inId,
-                subTask: this.b.taskId,
-            })
-        },
-        canIt(){
-
-            this.$store.dispatch("makeEvent", {
-                type: 'task-removed',
-                taskId: this.b.taskId,
-            })
-        }
     },
 }
 

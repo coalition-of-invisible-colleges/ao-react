@@ -6,7 +6,6 @@
         h5 upboat to create priority
     .clearboth(v-for='(t, i) of priorities'  :key='t')
       .row.priority
-          .allocated(v-if='allocated(t) > 0'  :class='{ openallocated : $store.state.context.action }') {{ allocated(t) }}
           img.singleship(@click='allocate(t)'  src='../assets/images/singleship.svg'  :class='{ openboat : $store.state.context.action === t }')
           hyperpriority.closedcard(:taskId='t'  :inId='$store.getters.contextCard.taskId')
       .row.subpriority(v-for='(st, j) of getSubPriorities(t)'   :key='st')
@@ -23,7 +22,6 @@
 import Hypercard from './Card'
 import Hyperpriority from './Priority'
 import _ from 'lodash'
-
 
 export default {
   mounted() {
@@ -44,28 +42,14 @@ export default {
       }
     },
     allocate(taskId){
-
       this.$store.dispatch("makeEvent", {
-        type: 'task-allocated',
-        taskId: this.$store.getters.contextCard.taskId,
-        allocatedId: taskId
+        type: 'task-prioritized',
+        inId: this.$store.getters.contextCard.taskId,
+        taskId,
       })
     },
     getCard(taskId){
         return this.$store.getters.hashMap[taskId]
-    },
-    allocated(taskId){
-      let allocatedAmount = 0
-      this.$store.state.tasks.forEach(t => {
-          if(Array.isArray(t.allocations)) {
-            t.allocations.forEach(als => {
-                if (als.allocatedId === taskId){
-                    allocatedAmount += als.amount
-                }
-            })
-          }
-      })
-      return allocatedAmount
     },
   },
   computed:{

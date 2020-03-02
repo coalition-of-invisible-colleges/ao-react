@@ -2,9 +2,9 @@
 .contexts
     div(:class='{suncontext: isSun, bullcontext: isBull}')
         .transparentsides
-    template(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)')
-        .narrow
-            context-row(:taskId ='n')
+    .spacer
+    .narrow(v-for='(n, i) in $store.state.context.parent'  @click='goToParent(n)'  :style="{ marginLeft: (($store.state.context.parent.length - i) * 0.5) + 'em', marginRight: (($store.state.context.parent.length - i) * 0.5) + 'em' }")
+        context-row(:taskId ='n')
 </template>
 
 <script>
@@ -32,6 +32,19 @@ export default {
           return this.$store.state.upgrades.dimension === 'bull'
         },
     },
+    methods:{
+      goToParent(target){
+          console.log('gotopar', target)
+          if (this.$store.state.upgrades.dimension !== "unicorn"){
+              this.$router.push('/' + this.$store.state.upgrades.mode)
+          }
+          this.$store.dispatch("goUp", {
+              target,
+              panel: [target],
+              top: 0
+          })
+      },
+    }
 }
 
 </script>
@@ -48,6 +61,9 @@ export default {
     opacity: 0.9
     z-index: 9009
     background: transparent
+    min-height: 3.35em
+    display: flex
+    flex-direction: column
 
 .suncontext
     background-image: url('../assets/images/sunbean.svg')
@@ -66,4 +82,8 @@ export default {
 
 h4
     padding-left: 3.655em
+
+.spacer
+    flex-grow:1
+
 </style>

@@ -22,9 +22,11 @@
     ul
       li Each month the node cost is split between accounts
       li Activate account at the treasure chest on your deck
-    div(v-if='pendingDeactivations.length > 0')
+    div(v-if='pendingDeactivations.length > 0  && $store.state.cash.rent > 0')
         h4 Pending Deactivation:
-        current(v-for='mId in pendingDeactivations'  :memberId='mId')
+        span(v-for='(mId, i) in pendingDeactivations')
+            current(:memberId='mId')
+            br(v-if='i % 3 === 2')
     points
 </template>
 

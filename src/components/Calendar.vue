@@ -3,12 +3,12 @@
 #calendar(:key='inId')
     .row.menu
         .inline(@click='prevMonth')
-            img(src='../assets/images/left.svg')
+            img(src='../assets/images/back.svg')
         .inline
             //- .yellowtx(v-if='card.guild') {{card.guild}}
             .soft {{ monthName }} - {{year}}
         .inline(@click='nextMonth')
-            img(src='../assets/images/right.svg')
+            img(src='../assets/images/forward.svg')
     .calmonth
         .weekday(v-for='day in DAYS_OF_WEEK') {{ day }}
         .placeholder(v-for='placeholder in firstDay')
@@ -71,7 +71,6 @@ export default {
     },
     eventsByDay(){
         let evs = {}
-
         if (this.inId){
             this.todaysEvents.forEach(t => {
                 if (t && t.book && t.book.startTs){
@@ -87,19 +86,6 @@ export default {
                 }
             })
         }
-
-        this.$store.getters.pubguildEvents.forEach(t => {
-            console.log('looking through pubguildEvents')
-            let date = getDMY(t.book.startTs)
-            if (date.month === this.month && date.year === this.year){
-                if (!evs[date.day]){
-                    evs[date.day] = []
-                }
-                if(evs[date.day].indexOf(t) === -1) {
-                    evs[date.day].push(t)
-                }
-            }
-        })
 
         return evs
     },

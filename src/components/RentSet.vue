@@ -1,18 +1,21 @@
 <template lang='pug'>
 
 #cashexpense
-    form-box(btntxt="Update Fixed Costs"  event='rent-set' v-bind:data='details')
-        div.input-container
-          input#rentInput.input-effect(v-model='details.amount' type='text')
-          label(for='rentInput') Set Monthly Cost
-          span.focus-border
+    .input-container
+        input#rentInput.input-effect(v-model='details.amount' type='text'  :class='{"has-content": !!details.amount}')
+        label(for='rentInput') Monthly Rent
+        span.focus-border
+    button(@click='setRent') Set Rent
 </template>
 
 <script>
 
-import FormBox from './FormBox'
-
 export default {
+    methods: {
+        setRent(){
+            this.$store.dispatch('makeEvent', this.details)
+        }
+    },
     data(){
         return {
             details: {
@@ -20,9 +23,6 @@ export default {
                 amount: ''
             }
         }
-    },
-    components: {
-         FormBox
     }
 }
 
@@ -32,6 +32,6 @@ export default {
 
 @import '../styles/colours'
 @import '../styles/input'
-
+@import '../styles/button'
 
 </style>

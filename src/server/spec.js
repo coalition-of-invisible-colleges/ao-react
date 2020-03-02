@@ -21,8 +21,34 @@ router.post('/events', (req, res, next) => {
 
 router.post('/events', (req, res, next)=>{
   let errRes = []
-
   switch (req.body.type){
+      case "ao-updated":
+          if (validators.isAddress(req.body.address, errRes)){
+              state.serverState.ao.forEach(a => {
+                  if (a.address === req.body.address){
+                      connector.getState(a.address, a.secret, (err, state) => {
+                          if (err){
+                              return events.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
+                          }
+                          events.aoUpdated(a.address, state, utils.buildResCallback(res))
+                      })
+                  }
+              })
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
+      case 'highlighted':
+          if (
+              validators.isTaskId(req.body.taskId, errRes) &&
+              validators.isMemberId(req.body.memberId, errRes) &&
+              validators.isBool(req.body.valence, errRes)
+          ){
+              events.highlighted(req.body.taskId, req.body.memberId, req.body.valence, utils.buildResCallback(res))
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
       case 'ao-disconnected':
           if (validators.isAddress(req.body.address, errRes)){
               events.aoDisconnected(
@@ -124,21 +150,6 @@ router.post('/events', (req, res, next)=>{
               next()
           }
           break
-      case "ao-updated":
-          state.serverState.ao.forEach(a => {
-              if (a.address === req.body.address){
-                  console.log("matched address")
-                  connector.getState(a.address, a.secret, (err, state) => {
-                      if (err){
-                          return events.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
-                      }
-                      console.log("adding state for:", {state})
-                      events.aoUpdated(a.address, state, utils.buildResCallback(res))
-                  })
-
-              }
-          })
-          break
       case 'invoice-created':
           if (
               validators.isTaskId(req.body.taskId, errRes) &&
@@ -226,48 +237,6 @@ router.post('/events', (req, res, next)=>{
               res.status(400).send(errRes)
           }
           break
-      case 'badge-added':
-          if (
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes(req.body.badge)
-          ){
-            events.badgeAdded(
-              req.body.memberId,
-              req.body.badge,
-              utils.buildResCallback(res)
-            )
-          } else {
-            res.status(400).send(errRes)
-          }
-          break
-      case 'badge-removed':
-          if (
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes( req.body.badge )
-          ){
-            events.badgeRemoved(
-              req.body.memberId,
-              req.body.badge,
-              utils.buildResCallback(res)
-            )
-          } else {
-            res.status(400).send(errRes)
-          }
-          break
-      case 'badge-hidden':
-          if (
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes( req.body.badge )
-          ){
-            events.badgeHidden(
-              req.body.memberId,
-              req.body.badge,
-              utils.buildResCallback(res)
-            )
-          } else {
-            res.status(400).send(errRes)
-          }
-          break
       case 'doge-barked':
           if (
             validators.isMemberId(req.body.memberId, errRes)
@@ -320,7 +289,7 @@ router.post('/events', (req, res, next)=>{
                   let name = m.name
               }
           })
-          let envelope = calculations.blankCard(name)
+          let envelope = calculations.blankCard(uuidV1(), name, 'blue')
           envelope.name = memberCard.name
           envelope.subTasks = [...new Set(taskIds)]
           envelope.passed = [[req.body.address, req.body.toMemberId]]
@@ -411,18 +380,6 @@ router.post('/events', (req, res, next)=>{
                 req.body.paid,
                 req.body.notes,
                 utils.buildResCallback(res)
-            )
-          } else {
-            res.status(200).send(errRes)
-          }
-          break
-      case 'resource-removed':
-          if (
-            validators.isResourceId(req.body.resourceId, errRes)
-          ){
-            events.resourceRemoved(
-              req.body.resourceId,
-              utils.buildResCallback(res)
             )
           } else {
             res.status(200).send(errRes)
@@ -546,6 +503,7 @@ router.post('/events', (req, res, next)=>{
             events.taskDeSubTasked(
               req.body.taskId,
               req.body.subTask,
+              req.body.blame,
               utils.buildResCallback(res)
             )
           } else {
@@ -553,27 +511,13 @@ router.post('/events', (req, res, next)=>{
           }
           break
       case 'task-claimed':
-          let paid = 0
-          state.pubState.tasks.forEach( task => {
-              if (task.allocations && Array.isArray(task.allocations) ){
-                task.allocations.forEach( al => {
-                  if (al.allocatedId === req.body.taskId){
-                    paid = paid + al.amount
-                  }
-                })
-              }
-          })
-
           if (
             validators.isTaskId(req.body.taskId, errRes) &&
-            validators.isMemberId(req.body.memberId, errRes) &&
-            validators.isNotes(req.body.notes, errRes)
+            validators.isMemberId(req.body.memberId, errRes)
           ){
             events.taskClaimed(
               req.body.taskId,
               req.body.memberId,
-              paid,
-              req.body.notes,
               req.body.blame,
               utils.buildResCallback(res)
             )
@@ -728,21 +672,6 @@ router.post('/events', (req, res, next)=>{
               )
           } else {
               res.status(200).send(errRes)
-          }
-          break
-      case 'task-allocated':
-          if (
-              validators.isTaskId(req.body.taskId, errRes) &&
-              validators.isTaskId(req.body.allocatedId, errRes)
-          ) {
-              events.taskAllocated(
-                req.body.taskId,
-                req.body.allocatedId,
-                req.body.blame,
-                utils.buildResCallback(res)
-              )
-          } else {
-            res.status(200).send(errRes)
           }
           break
       case 'tasks-received':

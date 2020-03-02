@@ -1,22 +1,23 @@
 <template lang='pug'>
 
 #newmember
-	h1 Add new
-	form-box(btntxt="Register New Doge"  event='member-created' v-bind:data='memberReq')
-		fancy-input(labelText='new hackername')
-			input.input-effect(v-model='member.name' type='text' )
-		fancy-input(labelText='fob')
-			input.input-effect(v-model='member.fob' type='text')
+		h1 Add new
+		.input-container
+				input.input-effect(v-model='member.name' type='text'  :class='{"has-content":!!member.name}')
+				label new account
+				span.focus-border
+		.input-container
+				input.input-effect(v-model='member.fob' type='text'  :class='{"has-content":!!member.fob}')
+				label fob
+				span.focus-border
 		ul
-			li The new accounts initial password is the name
-			li Instruct the new member to log in.
-			li Also tell them all the important stuff.
+				li initial password is chosen name
+				li tell them the important stuff
+		button(@click='newMember') create account
 </template>
 
 <script>
 import cryptoUtils from '../crypto'
-import FormBox from './FormBox'
-import FancyInput from './FancyInput'
 
 export default {
   data() {
@@ -44,13 +45,10 @@ export default {
 		}
 	},
 	methods: {
-		reset() {
-			this.member.name = ''
+		newMember() {
+				this.$store.dispatch('makeEvent', this.memberReq)
 		}
 	},
-  components: {
-     FormBox, FancyInput
-  }
 }
 </script>
 
@@ -59,6 +57,7 @@ export default {
 @import '../styles/colours'
 @import '../styles/skeleton'
 @import '../styles/input'
+@import '../styles/button'
 
 #projects
     color:accent1

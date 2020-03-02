@@ -1,14 +1,12 @@
 <template lang='pug'>
 .flag(v-if="$store.getters.memberCard")
-    .flaggy(:id='uuid'  :class='{ boat : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && !isDoged, doge : ($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged, chest : $store.state.upgrades.mode === "chest", timecube : $store.state.upgrades.mode === "timecube", nolightning : $store.state.upgrades.mode === "chest" && !$store.state.cash.info.alias  }')
-        img(v-if='!$store.state.context.panel[$store.state.context.top]'  src='../assets/images/scroll.svg')
-        span.checkmark(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && isCompleted') ☑
-        span.checkmark(v-else-if='($store.state.upgrades.mode === "chest" || isOracle()) && !isCompleted') ☐
-        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/doge_faded.png')
-        img.svgwhite.faded(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && inId && !isFlagged', src='../assets/images/boatwhite.svg')
-        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isFlagged', src='../assets/images/boatbtnselected.svg')
+    .flaggy(:id='uuid'  :class='flagClass')
+        img(v-if='(isOracle || $store.state.upgrades.mode === "chest" || $store.state.context.action === b.taskId) && isCompleted' src='../assets/images/completed.svg' )
+        img(v-else-if='($store.state.upgrades.mode === "chest" || isOracle || $store.state.context.action === b.taskId) && !isCompleted'  src='../assets/images/uncompleted.svg')
         img(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../assets/images/timecube.svg')
+        img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/sun.svg')
+        img.svgwhite.faded(v-else, src='../assets/images/boatwhite.svg')
     .opened
         resource-book(v-if='isCubeOpen'  :tId='b.taskId')
         guild-create(:editing='isPayOpen'  :b='b' )
@@ -18,18 +16,11 @@
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import uuidv1 from 'uuid/v1'
-
-import calcs from '../calculations'
-import PayReq from './PayReq'
-import PayAddress from './PayAddress'
-import Tag from './Tag'
 import ResourceBook from './ResourceBook'
-import HelmControl from '../utils/helm'
-
 import GuildCreate from './GuildCreate'
 
 export default {
-    components: { PayReq, PayAddress, Tag, ResourceBook, GuildCreate },
+    components: { ResourceBook, GuildCreate },
     data(){
         return {
             isPayOpen: false,
@@ -48,16 +39,14 @@ export default {
         mc.on('tap', (e) => {
             switch(this.$store.state.upgrades.mode) {
                 case 'doge':
-                    if(this.isOracle()) {
+                case 'boat':
+                    if(this.isOracle) {
                         if(!this.isCompleted) {
                             this.complete()
                         } else {
                             this.uncheck()
                         }
-                        break
-                    }
-                case 'boat':
-                    if(this.isDoged) {
+                    } else if (this.isTop){
                         this.dogeIt()
                     } else {
                         this.flagIt()
@@ -103,22 +92,17 @@ export default {
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
-            HelmControl.flashHelm()
-
-            HelmControl.previousUpgradeMode(this.$router)
+            this.$store.dispatch('previousUpgradeMode')
             e.stopPropagation()
         })
 
         mc.on('swiperight', (e) => {
-            HelmControl.flashHelm()
-
-            HelmControl.nextUpgradeMode(this.$router)
+            this.$store.dispatch('nextUpgradeMode', this.$router)
             e.stopPropagation()
         })
     },
     methods: {
         complete(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-claimed',
                 inId: this.inId,
@@ -128,7 +112,6 @@ export default {
             })
         },
         uncheck(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-unclaimed',
                 taskId: this.b.taskId,
@@ -143,7 +126,6 @@ export default {
             this.isCubeOpen = !this.isCubeOpen
         },
         deckIt(){
-
             this.$store.dispatch("makeEvent", {
                 type: 'task-sub-tasked',
                 subTask: this.b.taskId,
@@ -151,56 +133,58 @@ export default {
             })
         },
         flagIt(){
-            if (!this.isFlagged) {
+                let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
+
                 if (this.inId){
-                    if(this.inId === this.$store.getters.memberCard.taskId) {
-
-                    } else {
-
-                    }
                     this.$store.dispatch("makeEvent", {
                       type: 'task-prioritized',
                       taskId: this.b.taskId,
                       inId: this.inId,
                     })
-                } else {
-                    this.deckIt()
-                }
-            } else {
-                if (this.inId){
-
+                } else if (parentId) {
                     this.$store.dispatch("makeEvent", {
-                      type: 'task-refocused',
+                      type: 'task-prioritized',
                       taskId: this.b.taskId,
-                      inId: this.inId,
+                      inId: parentId,
                     })
-                } else {
-                    this.deckIt()
+                    this.$store.dispatch('goUp', {
+                        target: parentId,
+                        panel: [parentId],
+                        top: 0
+                    })
                 }
-            }
         },
         dogeIt(){
-            if(this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) === -1) {
-
+            if(!this.isDoged) {
                 this.$store.dispatch("makeEvent", {
                   type: 'task-prioritized',
                   taskId: this.b.taskId,
                   inId: this.$store.getters.memberCard.taskId,
                 })
             } else {
-
                 this.$store.dispatch("makeEvent", {
                   type: 'task-refocused',
                   taskId: this.b.taskId,
                   inId: this.$store.getters.memberCard.taskId,
                 })
             }
-        },
-        isOracle() {
-            return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
-        },
+        }
     },
     computed: {
+        isOracle() {
+          return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
+        },
+        isTop() {
+          return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'boat'
+        },
+        flagClass(){
+            return {
+                boat : (this.$store.state.upgrades.mode === "boat" || this.$store.state.upgrades.mode === "doge") && !this.isDoged,
+                doge : (this.$store.state.upgrades.mode === "boat" || this.$store.state.upgrades.mode === "doge") && this.isDoged,
+                chest : this.$store.state.upgrades.mode === "chest",
+                timecube : this.$store.state.upgrades.mode === "timecube"
+            }
+        },
         isFlagged(){
             if(!this.inId) {
                 return false
@@ -277,24 +261,11 @@ export default {
 .faded:hover
     opacity: 1
 
-.checkmark
-    font-size: 1.58em
-    float: right
-    margin-top: -.3em
-    margin-right: -.3em
-    opacity: 0.5
-    cursor: pointer
-    color: white
-
 .svgwhite
     fill: white
 
 .svgwhite:hover
     transform: rotate(-30deg)
-
-.nolightning
-    opacity: 0.15
-    cursor: default
 
 .opened
     float: left

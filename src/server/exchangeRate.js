@@ -40,7 +40,7 @@ function createBitcoinAverageSignature(){
 
 function getPrice(callback){
     request
-        .get('https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC' + state.pubState.cash.currency)
+        .get('https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC' + state.serverState.cash.currency)
         // Something seemed to break api keys? Use free / unauthed account
         // .set('X-signature', createBitcoinAverageSignature())
         .end((err, res)=> {
