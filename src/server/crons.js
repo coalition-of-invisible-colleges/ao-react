@@ -20,8 +20,7 @@ const deactivateJob = new cron.CronJob({
 
 function rent(){
     let activeMembers = serverState.members.filter(m => {
-        let isAdmin = (m.badges.indexOf('admin') !== -1)
-        return (m.active > 0 && !isAdmin)
+        return (m.active > 0)
     })
     let fixed = parseFloat(serverState.cash.rent)
     let numActiveMembers = activeMembers.length

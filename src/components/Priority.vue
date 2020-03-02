@@ -146,7 +146,6 @@ export default {
             this.$store.commit("setAction", false)
         },
         setAction(){
-
             this.$store.commit("setAction", this.taskId)
         },
         goIn(){

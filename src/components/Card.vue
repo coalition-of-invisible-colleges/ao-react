@@ -9,7 +9,7 @@
     tally(:b='b')
     .dogecoin.tooltip(v-if='b.weight && b.weight > 0'  :key='dogers')
         img(v-for='n in parseInt(Math.floor(b.weight))'  :key='n'  src='../assets/images/sun.svg')
-        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="[ 'sixteenth' + fractionalReserveDoge ]"  src='../assets/images/sun.svg'  :key='dogers')
+        img(v-if='b.weight % 1 > 0 || b.weight < 1'  :class="['sixteenth' + fractionalReserveDoge]"  src='../assets/images/sun.svg'  :key='dogers')
         .tooltiptext
             p prioritized by:
             current(v-for='doger in b.dogers'  :memberId='doger'  :key='dogers')
