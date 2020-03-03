@@ -31,7 +31,6 @@ import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import GuildCreate from './GuildCreate'
 import calculations from '../calculations'
-// import Sierpinski from './Sierpinski'
 
 export default {
     props: ['b', 'inId'],
@@ -250,7 +249,4 @@ label
     position: relative
     top: -0.07em
 
-.sierpinskiwrapper
-    padding-top: 0.2em
-    padding-left: 1em
 </style>

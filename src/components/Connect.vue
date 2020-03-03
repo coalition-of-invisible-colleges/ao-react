@@ -11,10 +11,6 @@
         h4 {{ r.address.slice(0, 11) }} - {{ uptimePercent(r.successfuls, r.fails) }}% uptime ({{ r.successfuls + r.fails }} attempts) -
         span.conn(@click='pollState(r.address)') update
         span.discon(@click='discon(r.address)') delete
-    h2(v-if='unmatchedSubs.length > 0') Feed to
-    div(v-for='s in unmatchedSubs')
-        span.conn {{ s.address }}
-        span.discon(@click='discon(s.address)').discon delete
     h3 Connect to another AO:
     .input-container
         input.input-effect(v-model='ao.address' type='text'  :class='{"has-content":!!ao.address}')
@@ -82,15 +78,6 @@ export default {
         },
         brokeConnections(){
             return this.$store.state.ao.filter(r => !r.state)
-        },
-        unmatchedSubs(){
-            let addresses = this.$store.state.ao.map(r => r.address)
-            console.log("connected addresses:" , {addresses})
-            let un = this.$store.state.cash.subscribed.filter(s => {
-                return addresses.indexOf(s.address) === -1
-            })
-            console.log('unmatched ', un)
-            return un
         },
     },
 }

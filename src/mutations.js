@@ -11,6 +11,9 @@ const calculations = require( './calculations')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
+  			case "ao-subscribed":
+          // XXX
+  				break
         case "ao-updated":
             aos.forEach( (ao, i) => {
                 if (ao.address === ev.address) {
@@ -56,16 +59,6 @@ function aoMuts(aos, ev) {
 
 function cashMuts(cash, ev){
 		switch (ev.type) {
-			case "ao-disconnected":
-				cash.subscribed.forEach( (ao, i) => {
-					if (ao.address === ev.address) {
-							cash.subscribed.splice(i, 1)
-					}
-				})
-				break
-			case "ao-subscribed":
-				cash.subscribed.push(ev)
-				break
 			case "ao-named":
 				cash.alias = ev.alias
 				break
