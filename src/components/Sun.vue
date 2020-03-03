@@ -6,7 +6,7 @@ div
           img.lil(src='../assets/images/buddadoge.svg')
           span Oracle
       p(@click='goFront("boat")'  :class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-          img.lil(src='../assets/images/boatblack.svg')
+          img.lil(src='../assets/images/boat.svg')
           span Top
       p(@click='goFront("badge")'  :class='{ dabstination : $store.state.upgrades.mode === "badge" }')
           img.lil(src='../assets/images/badge.svg')

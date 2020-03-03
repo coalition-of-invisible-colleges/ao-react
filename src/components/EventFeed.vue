@@ -3,7 +3,7 @@
 .eventfeed
   transition(name='fade' v-for='(e, i) in eventstream'  :key="i")
       .feed.wiggle(v-if='e.showEvent'  v-bind:style="{ left: e.randomX }"  @click='goTo(e)')
-          img.doge(src='../assets/images/doge_faded.png')
+          img.doge(src='/doge_faded.png')
           //- <input v-model.number="randomWiggle">
           img.bubble(src='/bubble.png')
           .float(:style='{ color: e.randomColors[0], left: e.randomXs[0], top: e.randomYs[0] }') {{ e.type.replace('-', ' ') }}

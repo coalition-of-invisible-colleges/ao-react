@@ -22,6 +22,7 @@ export default {
     },
     methods: {
         goBoat() {
+            this.$store.commit('setMode', 1)
             this.$router.push("/boat")
         }
     }

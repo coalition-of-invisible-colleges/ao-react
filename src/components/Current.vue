@@ -16,7 +16,7 @@ export default {
           this.$store.dispatch('goIn', {
               top: 0,
               panel: [this.memberId],
-              parents: []
+              parents: [this.$store.getters.contextCard.taskId]
           })
       }
   },

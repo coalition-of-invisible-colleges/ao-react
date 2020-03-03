@@ -7,7 +7,7 @@ div
             img.lil(src='../assets/images/buddadoge.svg')
             span Access
         p(@click='goDash("boat")'  :class='{ dabstination : $store.state.upgrades.mode === "boat" }')
-            img.lil(src='../assets/images/boatblack.svg')
+            img.lil(src='../assets/images/boat.svg')
             span Connect
         p(@click='goDash("badge")'  :class='{ dabstination : $store.state.upgrades.mode === "badge" }')
             img.lil(src='../assets/images/badge.svg')

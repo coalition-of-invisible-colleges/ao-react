@@ -16,6 +16,7 @@
                 context(:taskId='n')
             .centerer
                 .more.aftermore(v-if='panelSplit.after.length > 5') +{{ panelSplit.after.length - 5 }}
+            gift-box(v-if='$store.state.upgrades.mode === "doge"')
         .upgradesbar(v-show='$store.state.upgrades.mode !== "doge"')
             gift-box
             slot
