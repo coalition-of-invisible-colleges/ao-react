@@ -26,12 +26,11 @@ export default {
         let Tap = new Hammer.Tap({ time: 400 })
         mc.add(Tap)
         mc.on('tap', (e) => {
-
             let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
             if (this.$store.state.context.action === this.b.taskId){
                 this.$store.dispatch("makeEvent", {
                     type: 'task-refocused',
-                    inId: this.$store.getters.contextCard.taskId,
+                    inId: this.inId,
                     taskId: this.b.taskId,
                 })
                 this.$store.commit('setAction', false)
@@ -49,7 +48,6 @@ export default {
               })
               let newPanel = _.filter(this.$store.state.context.panel, tId => tId !== this.b.taskId)
               let newTop = Math.min(this.$store.state.context.top, newPanel.length -1)
-              console.log({newPanel, newTop})
               if (newPanel.length > 0){
                   this.$store.commit('setPanel', newPanel)
                   this.$store.commit('setTop', newTop)
