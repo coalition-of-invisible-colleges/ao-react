@@ -22,22 +22,6 @@ router.post('/events', (req, res, next) => {
 router.post('/events', (req, res, next)=>{
   let errRes = []
   switch (req.body.type){
-      case "ao-updated":
-          if (validators.isAddress(req.body.address, errRes)){
-              state.serverState.ao.forEach(a => {
-                  if (a.address === req.body.address){
-                      connector.getState(a.address, a.secret, (err, state) => {
-                          if (err){
-                              return events.aoRelayAttempted(a.address, false, utils.buildResCallback(res))
-                          }
-                          events.aoUpdated(a.address, state, utils.buildResCallback(res))
-                      })
-                  }
-              })
-          } else {
-              res.status(200).send(errRes)
-          }
-          break
       case 'highlighted':
           if (
               validators.isTaskId(req.body.taskId, errRes) &&
@@ -123,6 +107,7 @@ router.post('/events', (req, res, next)=>{
           break
       case 'ao-relay':
           // move to validators .isAoAddress
+
           let secret
           state.serverState.ao.forEach(a => {
               if (a.address == req.body.address){
@@ -130,21 +115,9 @@ router.post('/events', (req, res, next)=>{
               }
           })
           if (secret){
-            connector.postEvent(req.body.address, secret, req.body.ev, (connectorRes) => {
-                if (connectorRes.lastInsertRowid){
-                    events.aoRelayAttempted(
-                      req.body.address,
-                      true,
-                      utils.buildResCallback(res)
-                    )
-                } else {
-                    events.aoRelayAttempted(
-                      req.body.address,
-                      false,
-                      utils.buildResCallback(res)
-                    )
-                }
-            })
+              connector.postEvent(req.body.address, secret, req.body.ev, (connectorRes) => {
+                  console.log("ao relay response", {connectorRes})
+              })
           } else {
               console.log("no connection for ", req.body.address)
               next()
@@ -314,11 +287,8 @@ router.post('/events', (req, res, next)=>{
                   tasks: next100,
               }
               setTimeout(() => {
-                  connector.postEvent(serverAddress, serverSecret, newEvent, (err, state) => {
-                      if (err){
-                          return events.aoRelayAttempted(serverAddress, false)
-                      }
-                      events.aoRelayAttempted(serverAddress, true)
+                  connector.postEvent(serverAddress, serverSecret, newEvent, (connectorRes) => {
+                      console.log('migrate connection response', {connectorRes})
                   })
               }, delay)
               next100 = tasks.splice(0, 50)

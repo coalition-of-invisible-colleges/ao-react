@@ -1,3 +1,5 @@
+let PORT = process.env.PORT || 8003
+
 const Kefir = require('kefir')
 const _ = require('lodash')
 const uuidV1 = require('uuid/v1')
@@ -78,7 +80,6 @@ function recover(callback){
     }
 }
 
-
 function getAll(timestamp, callback) {
     try {
       let all = [];
@@ -132,7 +133,12 @@ function insertBackup(state, callback) {
 }
 
 function startDb(callback){
-    conn = dbengine(config.sqlite3.file, { });
+
+    dblocation = config.sqlite3.file
+    if (PORT !== 8003){
+        dblocation = dblocation.replace('database', PORT)
+    }
+    conn = dbengine(dblocation, { });
     var checkTable = conn.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='events'");
 
     if(checkTable.all().length == 0){

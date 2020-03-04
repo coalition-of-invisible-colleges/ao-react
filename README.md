@@ -42,7 +42,7 @@ Each of the dimensions is augmented by the current mode to make 15 different pla
 
 #### Cards
 
-When in Unicorn, the main dimension, you view, add to, adjust, organize and navigate arounds decks. The current context is the card currently being viewed; you see its upgrades and its panel of contained cards. Click on the five color bar at the bottom center of the page to add a card to the panel of this context. Double click on a card and you go into it. The card becomes the new context and the color bar now creates cards within this card. To be clear, ao is card inception.
+When in Unicorn - the main dimension - you view, add to, adjust, organize and navigate arounds cards. The current context is the card currently being viewed; you see its upgrades and its panel of contained cards. Click on the five color bar at the bottom center of the page to add a card to the panel of this context. Double click on a card and you go into it. The card becomes the new context and the color bar now creates cards within this card. To be clear, ao is card inception.
 
 Cards are units of text that render markdown and can include links, images, and other embedded content. Cards have clickies at each corner and in the bottom center middle. Top left (bird) allows you to send to other accounts. Cards send to you display in front of the upgrades panel and take one attention. Bottom left (downboat or scuttle) is the 'go away' or 'not now' interaction and will remove it from the present context. Bottom right is the same as a double click and will (go in) make that card the current context.
 
@@ -62,7 +62,7 @@ On the card the top right interaction depends on the mode:
 
 #### Accounts, Holds, Vouches, and Checkmarks
 
-When you initialize your ao the first thing you will want to do is change the initial account details from name:dctrl/password:dctrl and add accounts for anyone you intend to invite to collaborate with you. The account management tools are on the Bull-badge, three clicks on the top right bull will get you there. Each account is a powerful demigod. They have as much power to move cards, organize lists, create new accounts, etc... as your account does.
+When you initialize your ao the first thing you will want to do is change the initial account details from name:dctrl/password:dctrl and add accounts for anyone you intend to invite to collaborate with you. The account management tools are on the Bull-badge, three clicks on the top right bull will get you there. Each account is a powerful demigod. They have as much power to see and move cards, organize lists, create new accounts, etc... as your account does.
 
 Each account can only hold a card once, be relevant to it, be on the badge list, and be elegable for checkmarks with that context. On the sun pages cards with the most holds come to the top. When you create a card you automatically become the first holder of it. Click the center middle circle to toggle your hold.
 
