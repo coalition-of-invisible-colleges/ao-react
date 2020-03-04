@@ -20,16 +20,4 @@ npm-debug.log*
 *.sln
 configuration.js
 
-# Docker stuff.
-docker/bitcoind/bitcoin_data/*
-!docker/bitcoind/bitcoin_data/.gitkeep
-
-docker/lnd/lnd_data/*
-!docker/lnd/lnd_data/.gitkeep
-
-docker/rethink/rethink_data/*
-!docker/rethink/rethink_data/.gitkeep
-
-docker/ao/ao_data/*
-!docker/ao/ao_data/.gitkeep
 package-lock.json

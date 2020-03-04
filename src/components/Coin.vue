@@ -1,9 +1,9 @@
 <template lang='pug'>
 .dogepepecoin.tooltip(ref='hodlcoin')
     img.dogepepecoin.spinslow(:class="{ ungrabbedcoin : !isGrabbed, highlight: inHand }" src='../assets/images/coin.svg'  draggable='false')
-    .tooltiptext
+    .tooltiptext(v-if='b.deck.length > 0')
         current.block(v-for='memberId in b.deck'  :memberId='memberId')
-    p.hodlcount(:class="{ grabbedhodlcount: isGrabbed }") {{ b.deck.length }}
+    p.hodlcount(:class="{ grabbedhodlcount: isGrabbed }") {{ (b.deck.length > 1) ? b.deck.length : '' }}
 </template>
 
 <script>
