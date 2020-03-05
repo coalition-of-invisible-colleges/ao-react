@@ -24,16 +24,16 @@ export default {
         goTo(ev){
             if (ev.inId){
                 this.$store.dispatch('goIn', {
-                    parents: [],
+                    parents: [this.$store.getters.contextCard.taskId],
                     panel: [ev.inId],
                     top: 0
                 })
                 if (this.$store.state.upgrades.dimension !== 'unicorn'){
                     this.$router.push("/" + this.$store.state.upgrades.mode)
-                }            }
-            if (ev.taskId){
+                }
+            } else if (ev.taskId){
                 this.$store.dispatch('goIn', {
-                    parents: [],
+                    parents: [this.$store.getters.contextCard.taskId],
                     panel: [ev.taskId],
                     top: 0
                 })

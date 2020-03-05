@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 #tasks(@contextmenu.capture.prevent)
-    .row.ptr(v-if="topCard  &&  c.length > 1"  ref='swipebar')
+    .row.ptr(v-show="topCard  &&  c.length > 1"  ref='swipebar')
         .three.grid.tooltip(ref='previous')
             span &nbsp;
             img.fl(v-if='!open'  src='../assets/images/back.svg')
