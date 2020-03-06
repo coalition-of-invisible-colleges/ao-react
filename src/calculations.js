@@ -156,6 +156,6 @@ module.exports = {
   shortName,
   cardColorCSS,
   blankCard,
-  safeClone,
+  // safeClone,
   safeMerge,
 }

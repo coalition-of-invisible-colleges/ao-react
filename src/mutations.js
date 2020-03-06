@@ -659,14 +659,14 @@ function tasksMuts(tasks, ev) {
             }
             break
         case "tasks-received":
-            ev.tasks.forEach(in => {
+            ev.tasks.forEach(newT => {
                 if(!tasks.some((cur, i) => {
-                    if(cur.taskId === in.taskId) {
-                        calculations.safeMerge(cur, in)
+                    if(cur.taskId === newT.taskId) {
+                        calculations.safeMerge(cur, newT)
                         return true
                     }
                 })) {
-                    tasks.push(in) /// XXX safeclone?
+                    tasks.push(newT) /// XXX safeclone?
                 }
             })
             break
