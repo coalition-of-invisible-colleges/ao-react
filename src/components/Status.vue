@@ -1,10 +1,12 @@
-<template lang='pug'>
+<template lang="pug">
 
 .status.small.always.left
     .tooltip
         img.doge(v-if='$store.getters.member.muted'  src='../assets/images/silent.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-        img.doge(v-else-if='!$store.state.upgrades.barking'  src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-        img.doge.flip(v-else  src='../assets/images/bark.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+        div(v-else-if='!$store.state.upgrades.barking')
+            img.doge(src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+            .fullscreen(v-if='$store.getters.isLoggedIn') Disconnected - Please Refresh
+        img.doge.flip(v-else src='../assets/images/bark.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
             span.dot(:class='dotClass')
             span {{ $store.state.loader.connected }}
@@ -24,75 +26,80 @@
 </template>
 
 <script>
-
-import Hammer from 'hammerjs'
-import Propagating from 'propagating-hammerjs'
+import Hammer from "hammerjs";
+import Propagating from "propagating-hammerjs";
 
 export default {
-    name: 'status',
-    mounted() {
-        let dogeel = document.getElementById('dogecomm')
-        let dogemc = Propagating(new Hammer.Manager(dogeel))
+	name: "status",
+	mounted() {
+		let dogeel = document.getElementById("dogecomm");
+		let dogemc = Propagating(new Hammer.Manager(dogeel));
 
-        let Press2 = new Hammer.Press({
-            time: 800
-        })
-        dogemc.add(Press2)
-        dogemc.on('press', (e) => {
-            if(this.$store.getters.member.muted) {
-                return
-            }
-            this.$store.dispatch("makeEvent", {
-                type: "doge-barked",
-                memberId: this.$store.getters.member.memberId
-            })
-        })
+		let Press2 = new Hammer.Press({
+			time: 800
+		});
+		dogemc.add(Press2);
+		dogemc.on("press", e => {
+			if (this.$store.getters.member.muted) {
+				return;
+			}
+			this.$store.dispatch("makeEvent", {
+				type: "doge-barked",
+				memberId: this.$store.getters.member.memberId
+			});
+		});
 
-        let Tap4 = new Hammer.Tap({ taps: 2, time: 400, interval: 400 })
-        dogemc.add(Tap4)
-        dogemc.on('tap', (e) => {
-            this.toggleMute()
-        })
+		let Tap4 = new Hammer.Tap({ taps: 2, time: 400, interval: 400 });
+		dogemc.add(Tap4);
+		dogemc.on("tap", e => {
+			this.toggleMute();
+		});
 
-        let dogeSwipeRight = new Hammer.Swipe()
-        dogemc.add(dogeSwipeRight)
-        dogemc.on('swiperight', (e) => {
-            if(this.$store.state.ao.length < 1) {
-                return
-            }
-            let both = (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
-            this.$store.commit('setWarp', (this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length)
-        })
-    },
-    methods: {
-        toggleMute() {
-            if(this.$store.getters.member.muted) {
-                this.$store.dispatch("makeEvent", {
-                    type: "doge-unmuted",
-                    memberId: this.$store.getters.member.memberId
-                })
-            } else {
-                this.$store.dispatch("makeEvent", {
-                    type: "doge-muted",
-                    memberId: this.$store.getters.member.memberId
-                })
-            }
-        },
-    },
-    computed: {
-        liveConnections(){
-            return this.$store.state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
-        },
-        dotClass(){
-            return {
-                redwx: this.$store.state.loader.connected === 'disconnected',
-                yellowwx: this.$store.state.loader.connected === 'connecting',
-                greenwx: this.$store.state.loader.connected === 'connected',
-                purplewx: !!this.$store.state.loader.connectionError
-            }
-        }
-    }
-}
+		let dogeSwipeRight = new Hammer.Swipe();
+		dogemc.add(dogeSwipeRight);
+		dogemc.on("swiperight", e => {
+			if (this.$store.state.ao.length < 1) {
+				return;
+			}
+			let both =
+				(this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length;
+			this.$store.commit(
+				"setWarp",
+				(this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
+			);
+		});
+	},
+	methods: {
+		toggleMute() {
+			if (this.$store.getters.member.muted) {
+				this.$store.dispatch("makeEvent", {
+					type: "doge-unmuted",
+					memberId: this.$store.getters.member.memberId
+				});
+			} else {
+				this.$store.dispatch("makeEvent", {
+					type: "doge-muted",
+					memberId: this.$store.getters.member.memberId
+				});
+			}
+		}
+	},
+	computed: {
+		liveConnections() {
+			return this.$store.state.ao.filter(
+				r => r.state && r.state.cash && r.state.cash.alias
+			);
+		},
+		dotClass() {
+			return {
+				redwx: this.$store.state.loader.connected === "disconnected",
+				yellowwx: this.$store.state.loader.connected === "connecting",
+				greenwx: this.$store.state.loader.connected === "connected",
+				purplewx: !!this.$store.state.loader.connectionError
+			};
+		}
+	}
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -367,4 +374,18 @@ body
 .tooltiptext.bottom.breadpad
     left: 4em
     bottom: 0.25em
+
+.fullscreen
+    padding: 40vh 0 0 0;
+    color:#fff;
+    text-align:center;
+    text-justify: center;
+    font-size: 5rem;
+    position: fixed
+    top:0
+    left:0
+    width:100vw
+    height:100vh
+    background-color:rgba(22,22,22,0.6)
+    z-index:9999999999
 </style>
