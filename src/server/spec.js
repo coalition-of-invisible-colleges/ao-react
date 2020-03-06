@@ -22,6 +22,16 @@ router.post('/events', (req, res, next) => {
 router.post('/events', (req, res, next)=>{
   let errRes = []
   switch (req.body.type){
+      case 'ao-linked':
+          if (
+              validators.isAddress(req.body.address, errRes) &&
+              validators.isTaskId(req.body.taskId)
+          ){
+              events.aoLinked(req.body.address, req.body.taskId, utils.buildResCallback(res))
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
       case 'highlighted':
           if (
               validators.isTaskId(req.body.taskId, errRes) &&

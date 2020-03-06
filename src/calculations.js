@@ -12,6 +12,26 @@ function shortName(name) {
     return shortened
 }
 
+// function crawler(){
+//   tasks.forEach(task => {
+//       if(task.taskId === ev.taskId) {
+//           let crawler = [ev.taskId]
+//           let history = []
+//           let newCards = []
+//           do {
+//               newCards = []
+//               crawler = crawler.forEach(t => {
+//                   if(history.indexOf(t) >= 0) return
+//                   let subTask = tasks.filter(pst => pst.taskId === t)
+//                   history.push(t)
+//                   newCards = newCards.concat(subTask.subTasks).concat(subTask.priorities).concat(subTask.completed)
+//               })
+//               crawler = newCards
+//           } while(crawler.length > 0)
+//       }
+//   })
+// }
+
 function cardColorCSS(color) {
     return {
         redwx : color == 'red',
@@ -33,7 +53,6 @@ function blankCard(taskId, name, color, deck = []) {
         bolt11: '',
         book: {},
         boost: 0,
-        cap: 0,
         priorities: [],
         subTasks: [],
         completed: [],
@@ -48,49 +67,40 @@ function blankCard(taskId, name, color, deck = []) {
     return newCard
 }
 
-function safeClone(card) {
-    // XXX type check all this
-    let safeClone = {
-        taskId: card.taskId,
-        name: card.name,
-        claimed: [],
-        completed: card.completed,
-        passed: [],
-        guild: card.guild,
-        subTasks: card.subTasks,
-        lastClaimed: 0,
-        book: card.book,
-        priorities: card.priorities,
-        deck: [],
-        color: card.color,
-        address: card.address,
-        bolt11: card.bolt11,
-        payment_hash: '',
-        boost: 0,
-    }
-    return safeClone
-}
+// function safeClone(card) {
+//     // XXX type check all this
+//     let safeClone = {
+//         taskId: card.taskId,
+//         name: card.name,
+//         claimed: [],
+//         completed: card.completed,
+//         passed: [],
+//         guild: card.guild,
+//         subTasks: card.subTasks,
+//         lastClaimed: 0,
+//         book: card.book,
+//         priorities: card.priorities,
+//         deck: [],
+//         color: card.color,
+//         address: card.address,
+//         bolt11: card.bolt11,
+//         payment_hash: '',
+//         boost: 0,
+//     }
+//     return safeClone
+// }
 
 function isString(x) {
   return Object.prototype.toString.call(x) === "[object String]"
 }
 
 function safeMerge(cardA, cardZ) {
-    if(isString(cardZ.color) && !_.isEmpty(cardZ.color.trim())) {
-        Vue.set(cardA, 'color', cardZ.color )
-    }
-
-    if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
-        Vue.set(cardA, 'guild', cardZ.guild )
-    }
-
-    Vue.set(cardA, 'book', cardZ.guild )
-    Vue.set(cardA, 'address', cardZ.guild )
-    Vue.set(cardA, 'bolt11', cardZ.guild )
-    Vue.set(cardA, 'subTasks', [...new Set(cardA.subTasks.concat(cardZ.subTasks))])
-    Vue.set(cardA, 'priorities', [...new Set(cardA.priorities.concat(cardZ.priorities))])
-    Vue.set(cardA, 'completed', [...new Set(cardA.completed.concat(cardZ.completed))])
-    Vue.set(cardA, 'passed', [...new Set(cardA.passed.concat(cardZ.passed))])
+    cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
+    cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
+    cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]
+    // XXX only add in merge for now
+    // XXX bolt11 / address need to clearly indicate origin ao
+    // XXX book should be a list?
 }
 
 function cadToSats(cadAmt, spot){

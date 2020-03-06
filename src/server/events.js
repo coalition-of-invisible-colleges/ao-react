@@ -24,6 +24,15 @@ function aoSubscribed(address, secret, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
+function aoLinked(address, taskId, callback){
+    let newEvent = {
+        type: "ao-linked",
+        address,
+        taskId,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
 function aoConnected(address, secret, callback) {
     let newEvent = {
         type: "ao-connected",
@@ -486,6 +495,7 @@ module.exports = {
     highlighted,
     memberCharged,
     aoConnected,
+    aoLinked,
     aoDisconnected,
     aoNamed,
     aoSubscribed,

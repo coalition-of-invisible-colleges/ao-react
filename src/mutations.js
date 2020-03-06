@@ -11,6 +11,13 @@ const calculations = require( './calculations')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
+        case "ao-linked":
+            aos.forEach( (ao, i) => {
+                if (ao.address === ev.address) {
+                    ao.links.push(ev.taskId)
+                }
+            })
+            break
   			case "ao-subscribed":
             // XXX
   				  break
@@ -652,14 +659,14 @@ function tasksMuts(tasks, ev) {
             }
             break
         case "tasks-received":
-            ev.tasks.forEach(p => {
-                if(!tasks.some((t, i) => {
-                    if(cryptoUtils.createHash(p.name.trim()) === cryptoUtils.createHash(t.name.trim())) {
-                        calculations.safeMerge(t, p)
+            ev.tasks.forEach(in => {
+                if(!tasks.some((cur, i) => {
+                    if(cur.taskId === in.taskId) {
+                        calculations.safeMerge(cur, in)
                         return true
                     }
                 })) {
-                    tasks.push(calculations.safeClone(p))
+                    tasks.push(in) /// XXX safeclone?
                 }
             })
             break
