@@ -4,7 +4,7 @@
       transition(name="slide-fade")
         .cc(v-show='showCreate')
             textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
-            button(@click='createOrFindTask').fwi create card
+            button(@click='createOrFindTask'  :disabled='$store.state.loader.connected !== "connected"').fwi create card
       .label
         .btnpanel
             div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
@@ -175,6 +175,7 @@ export default {
             })
         },
         createOrFindTask(){
+            if(this.$store.state.loader.connected !== "connected") return
             let foundId = this.matchCard
             let potentialCard = this.task.name.trim()
             if(!foundId) {
@@ -331,7 +332,7 @@ export default {
   padding: 0.5em
   position: fixed
   left: 1em
-  z-index: 149
+  z-index: 152
   bottom: 0
   left: 50%
   transform: translateX(-50%)
@@ -342,6 +343,9 @@ button
     margin-bottom: 0.5em
     margin-top: 0.2em
 
+button:disabled
+    background: darkgreen
+    
 .lit
     opacity: 0.69
 
