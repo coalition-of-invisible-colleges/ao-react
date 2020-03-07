@@ -22,7 +22,7 @@
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         .boatContainer
             img.boatAll(src='../assets/images/downboatwhite.svg')
-            img.boatAll(src='../assets/images/boatblack.svg' @click='tasksPrioritized')
+            img.boatAll(src='../assets/images/boatblack.svg'  @click='tasksPrioritized')
         //- img(src='../assets/images/boatwhite.svg')
         //- img(src='../assets/images/boatwhite.svg')
         panels
