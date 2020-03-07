@@ -483,6 +483,14 @@ function tasksMuts(tasks, ev) {
               }
             })
             break
+        case "tasks-prioritized":
+                tasks.forEach( task => {
+                    if (task.taskId === ev.inId){
+                        task.priorities = task.priorities.concat(task.subTasks)
+                        task.subTasks = []
+                    }
+                  })
+                  break
         case "task-refocused":
             let claimed
             tasks.forEach( task => {

@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #resource.container
     h1 Access
@@ -13,48 +13,46 @@
 </template>
 
 <script>
-
-import Row from "./ResourceRow"
-import uuidV1 from 'uuid/v1'
+import Row from "./ResourceRow";
+import uuidV1 from "uuid/v1";
 
 export default {
-    mounted() {
-        this.$store.commit('setMode' , 0)
-        this.$store.commit('setDimension' , 2)
-        this.$store.dispatch('loaded')
-    },
-    computed: {
-        resources(){
-            return this.$store.state.resources.slice().filter(r => !r.pubkey )
-        },
-        isLoggedIn(){
-            return this.$store.getters.isLoggedIn
-        },
-        panel(){
-            return this.resources.map(r => r.resourceId)
-        }
-    },
-    components:{
-        Row,
-    },
-    methods: {
-        createTest(letter){
-            let newEv = {
-                type: 'resource-created',
-                resourceId: uuidV1(),
-                name: 'teste',
-                charged: 0,
-                secret: 'asd',
-                trackStock: true
-            }
-            this.$store.dispatch("makeEvent", newEv)
-        },
-    }
-}
-
+	mounted() {
+		this.$store.commit("setMode", 0);
+		this.$store.commit("setDimension", 2);
+		this.$store.dispatch("loaded");
+	},
+	computed: {
+		resources() {
+			return this.$store.state.resources.slice().filter(r => !r.pubkey);
+		},
+		isLoggedIn() {
+			return this.$store.getters.isLoggedIn;
+		},
+		panel() {
+			return this.resources.map(r => r.resourceId);
+		}
+	},
+	components: {
+		Row
+	},
+	methods: {
+		createTest(letter) {
+			let newEv = {
+				type: "resource-created",
+				resourceId: uuidV1(),
+				name: "teste",
+				charged: 0,
+				secret: "asd",
+				trackStock: true
+			};
+			this.$store.dispatch("makeEvent", newEv);
+		}
+	}
+};
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
 @import '../styles/colours'
 @import '../styles/button'
@@ -68,5 +66,4 @@ export default {
     padding: 1.987654321em
 li
     margin-left: 1em
-
 </style>

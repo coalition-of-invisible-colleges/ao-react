@@ -674,6 +674,18 @@ router.post('/events', (req, res, next)=>{
               res.status(200).send(errRes)
           }
           break
+      case 'tasks-prioritized':
+          console.log("spec runs")
+          if (validators.isTaskId(req.body.inId, errRes)){
+              console.log("spec success")
+              events.tasksPrioritized(
+                req.body.inId,
+                utils.buildResCallback(res)
+              )
+          } else {
+            console.log("spec fails")
+            res.status(200).send(errRes)
+          }
       case 'tasks-received':
           if (true) { // XXX
               events.tasksReceived(
