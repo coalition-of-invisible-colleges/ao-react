@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 .contexts
     div(:class='{suncontext: isSun, bullcontext: isBull}')
         .transparentsides
@@ -8,48 +8,46 @@
 </template>
 
 <script>
-
-import ContextRow from './ContextRow'
+import ContextRow from "./ContextRow";
 
 export default {
-    components: { ContextRow },
-    computed: {
-        cardInputSty() {
-          let color = this.$store.getters.contextCard.color
-          return {
-              redwx : color == 'red',
-              bluewx : color == 'blue',
-              greenwx : color == 'green',
-              yellowwx : color == 'yellow',
-              purplewx : color == 'purple',
-              blackwx : color == 'black',
-          }
-        },
-        isSun() {
-          return this.$store.state.upgrades.dimension === 'sun'
-        },
-        isBull() {
-          return this.$store.state.upgrades.dimension === 'bull'
-        },
-    },
-    methods:{
-      goToParent(target){
-          console.log('gotopar', target)
-          if (this.$store.state.upgrades.dimension !== "unicorn"){
-              this.$router.push('/' + this.$store.state.upgrades.mode)
-          }
-          this.$store.dispatch("goUp", {
-              target,
-              panel: [target],
-              top: 0
-          })
-      },
-    }
-}
-
+	components: { ContextRow },
+	computed: {
+		cardInputSty() {
+			let color = this.$store.getters.contextCard.color;
+			return {
+				redwx: color == "red",
+				bluewx: color == "blue",
+				greenwx: color == "green",
+				yellowwx: color == "yellow",
+				purplewx: color == "purple",
+				blackwx: color == "black"
+			};
+		},
+		isSun() {
+			return this.$store.state.upgrades.dimension === "sun";
+		},
+		isBull() {
+			return this.$store.state.upgrades.dimension === "bull";
+		}
+	},
+	methods: {
+		goToParent(target) {
+			console.log("gotopar", target);
+			if (this.$store.state.upgrades.dimension !== "unicorn") {
+				this.$router.push("/" + this.$store.state.upgrades.mode);
+			}
+			this.$store.dispatch("goUp", {
+				target,
+				panel: [target],
+				top: 0
+			});
+		}
+	}
+};
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
 @import '../styles/colours'
 
@@ -85,5 +83,4 @@ h4
 
 .spacer
     flex-grow:1
-
 </style>

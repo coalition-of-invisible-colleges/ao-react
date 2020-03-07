@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 .deck(:key='$store.getters.contextCard.taskId')
     .paperwrapper.padsides
         .card(:class='{ adjustwidth : !$store.getters.contextMember, closedwidth : $store.state.upgrades.mode === "doge", openwidth : $store.state.upgrades.mode !== "doge" }')
@@ -20,6 +20,11 @@
             gift-box
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
+        .boatContainer
+            img.boatAll(src='../assets/images/downboatwhite.svg')
+            img.boatAll(src='../assets/images/boatblack.svg' @click='tasksPrioritized')
+        //- img(src='../assets/images/boatwhite.svg')
+        //- img(src='../assets/images/boatwhite.svg')
         panels
         .faded
             span(@click='toggleStacks')
@@ -36,81 +41,93 @@
 </template>
 
 <script>
-import calculations from '../calculations'
-import MemberRow from './Member'
-import ResourceRow from './ResourceRow'
-import Context from './ContextRow'
-import Hypercard from "./Card"
-import Panels from './Panels'
-import GiftBox from './GiftBox'
-import Auth from './Auth'
+import calculations from "../calculations";
+import MemberRow from "./Member";
+import ResourceRow from "./ResourceRow";
+import Context from "./ContextRow";
+import Hypercard from "./Card";
+import Panels from "./Panels";
+import GiftBox from "./GiftBox";
+import Auth from "./Auth";
 
 export default {
-  components:{
-      Hypercard,
-      Panels, MemberRow,
-      ResourceRow, Context, Auth, GiftBox
-  },
-  methods:{
-      goWithinPanel(n){
-          let i = this.$store.state.context.panel.indexOf(n)
-          if (i > -1){
-              console.log('all that should happen is set top!')
-              this.$store.commit("setTop", i)
-          }
-      },
-      toggleShowComplete(){
-          this.$store.commit("toggleCompleted")
-      },
-      toggleStacks(){
-          this.$store.commit('toggleStacks')
-      }
-  },
-  computed: {
-      panelSplit(){
-          let before = []
-          let after = []
-          let top = this.$store.state.context.top
-          this.$store.state.context.panel.forEach((n, i) => {
-              if (i < top){
-                  before.push(n)
-              }
-              if (i > top){
-                after.push(n)
-              }
-          })
+	components: {
+		Hypercard,
+		Panels,
+		MemberRow,
+		ResourceRow,
+		Context,
+		Auth,
+		GiftBox
+	},
+	methods: {
+		goWithinPanel(n) {
+			let i = this.$store.state.context.panel.indexOf(n);
+			if (i > -1) {
+				console.log("all that should happen is set top!");
+				this.$store.commit("setTop", i);
+			}
+		},
+		toggleShowComplete() {
+			this.$store.commit("toggleCompleted");
+		},
+		toggleStacks() {
+			this.$store.commit("toggleStacks");
+		},
+		tasksPrioritized() {
+			console.log("test");
+			console.log(this.$store.getters.contextCard.taskId);
+			this.$store.dispatch("makeEvent", {
+				type: "tasks-prioritized",
+				inId: this.$store.getters.contextCard.taskId
+			});
+			console.log("test2");
+		}
+	},
+	computed: {
+		panelSplit() {
+			let before = [];
+			let after = [];
+			let top = this.$store.state.context.top;
+			this.$store.state.context.panel.forEach((n, i) => {
+				if (i < top) {
+					before.push(n);
+				}
+				if (i > top) {
+					after.push(n);
+				}
+			});
 
-          return {before, after}
-      },
-      card(){
-          if (!this.$store.getters.contextCard){
-              return {
-                  taskId: 'test',
-                  name: 'hello, world',
-              }
-          }
-          return this.$store.getters.contextCard
-      },
-      cardInputSty(){
-          if (this.card) return {
-              redwx : this.card.color == 'red',
-              bluewx : this.card.color == 'blue',
-              greenwx : this.card.color == 'green',
-              yellowwx : this.card.color == 'yellow',
-              purplewx : this.card.color == 'purple',
-              blackwx : this.card.color == 'black',
-          }
-      },
-      cardAge(){
-          let now = Date.now()
-          let msSince = now - this.card.timestamp
-          let days = msSince / (1000 * 60 * 60 * 24)
-          return days
-      },
-  },
-
-}
-
+			return { before, after };
+		},
+		card() {
+			if (!this.$store.getters.contextCard) {
+				return {
+					taskId: "test",
+					name: "hello, world"
+				};
+			}
+			return this.$store.getters.contextCard;
+		},
+		cardInputSty() {
+			if (this.card)
+				return {
+					redwx: this.card.color == "red",
+					bluewx: this.card.color == "blue",
+					greenwx: this.card.color == "green",
+					yellowwx: this.card.color == "yellow",
+					purplewx: this.card.color == "purple",
+					blackwx: this.card.color == "black"
+				};
+		},
+		cardAge() {
+			let now = Date.now();
+			let msSince = now - this.card.timestamp;
+			let days = msSince / (1000 * 60 * 60 * 24);
+			return days;
+		}
+	}
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -180,6 +197,22 @@ export default {
     margin-top: 1em
     margin-bottom: 1em
     clear: both
+
+.boatContainer
+    display: flex;
+    justify-content: space-between;
+    width:100%;
+
+.boatAll
+    margin: 0 1em 0 1em
+    height: 20px;
+    position: relative
+    margin-top: 1em
+    margin-bottom: 1em
+    opacity: .3
+    z-index:9999999999999
+
+
 
 .completedfadey
     background: repeating-radial-gradient(
