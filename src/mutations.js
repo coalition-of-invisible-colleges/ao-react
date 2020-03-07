@@ -597,9 +597,9 @@ function tasksMuts(tasks, ev) {
                     if(task.claimed.length < 1) {
                         tasks.forEach(p => {
                             if(p.priorities.indexOf(ev.taskId) === -1 && p.completed.indexOf(ev.taskId) > -1) {
-                                task.completed = task.completed.filter(taskId => taskId !== ev.taskId)
-                                task.subTasks = task.subTasks.filter(taskId => taskId !== ev.taskId)
-                                task.subTasks.push(ev.taskId)
+                                p.completed = p.completed.filter(taskId => taskId !== ev.taskId)
+                                p.subTasks = p.subTasks.filter(taskId => taskId !== ev.taskId)
+                                p.subTasks.push(ev.taskId)
                             }
                         })
                     }

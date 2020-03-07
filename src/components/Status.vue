@@ -5,7 +5,7 @@
         img.doge(v-if='$store.getters.member.muted'  src='../assets/images/silent.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         div(v-else-if='!$store.state.upgrades.barking')
             img.doge(src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-            .fullscreen(v-if='$store.getters.isLoggedIn') Disconnected - Please Refresh
+            .fullscreen(v-if='$store.getters.isLoggedIn && $store.state.loader.connected !== "connected"') Disconnected - Please Refresh
         img.doge.flip(v-else src='../assets/images/bark.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
             span.dot(:class='dotClass')
@@ -387,5 +387,5 @@ body
     width:100vw
     height:100vh
     background-color:rgba(22,22,22,0.6)
-    z-index:9999999999
+    z-index: 148
 </style>
