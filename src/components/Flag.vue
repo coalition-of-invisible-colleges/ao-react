@@ -9,7 +9,8 @@
         img.svgwhite.faded(v-else, src='../assets/images/boatwhite.svg')
     .opened
         resource-book(v-if='isCubeOpen'  :tId='b.taskId')
-        guild-create(:editing='isPayOpen'  :b='b' )
+        guild-create(v-if='isPayOpen'  :b='b'  @closeit='toggleGuildCreate')
+        points-set(v-if='isChestOpen'  :b='b'  @closeit='toggleChest')
 </template>
 
 <script>
@@ -18,13 +19,15 @@ import Propagating from 'propagating-hammerjs'
 import uuidv1 from 'uuid/v1'
 import ResourceBook from './ResourceBook'
 import GuildCreate from './GuildCreate'
+import PointsSet from './PointsSet'
 
 export default {
-    components: { ResourceBook, GuildCreate },
+    components: { ResourceBook, GuildCreate, PointsSet},
     data(){
         return {
             isPayOpen: false,
             isCubeOpen: false,
+            isChestOpen: false,
             uuid: uuidv1(),
         }
     },
@@ -82,7 +85,8 @@ export default {
                 case 'badge':
                     return
                 case 'chest':
-                    return
+                    this.toggleChest()
+                    break
                 case 'timecube':
                     return
             }
@@ -121,9 +125,24 @@ export default {
         },
         togglePay(){
             this.isPayOpen = !this.isPayOpen
+            if(this.isPayOpen) {
+                this.isCubeOpen = false
+                this.isChestOpen = false
+            }
         },
         toggleCube(){
             this.isCubeOpen = !this.isCubeOpen
+            if(this.isCubeOpen) {
+                this.isPayOpen = false
+                this.isChestOpen = false
+            }
+        },
+        toggleChest(){
+            this.isChestOpen = !this.isChestOpen
+            if(this.isChestOpen) {
+                this.isPayOpen = false
+                this.isCubeOpen = false
+            }
         },
         deckIt(){
             this.$store.dispatch("makeEvent", {
@@ -209,8 +228,11 @@ export default {
 @import '../styles/grid';
 @import '../styles/button';
 
-.flag, .opened
+.flag
     width: 100%
+    
+.opened
+    width: calc(100% - 7em)
 
 .count
     float: right
@@ -268,5 +290,7 @@ export default {
     transform: rotate(-30deg)
 
 .opened
-    float: left
+    position: absolute
+    top: 0.65em
+    left: 29%
 </style>

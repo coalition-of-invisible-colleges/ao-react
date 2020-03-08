@@ -1,33 +1,33 @@
 <template lang='pug'>
 
-.pointsset(:class='{ bumpup : editing }')
-    input#titlebox(v-if='editing'  v-model='task.guild'  type='text'  placeholder='code name'  @keypress.enter='titleIt(false)')
-    button(v-if='editing'  @click='titleIt') {{ detectRename }}
+.pointsset
+    input(v-model='task.points'  type='text'  placeholder='points'  @keypress.enter='setValue(false)')
+    button(@click='setValue') {{ detectChange }}
 </template>
 
 <script>
 
 export default {
-    props: ['b', 'editing'],
+    props: ['b'],
     data() {
         return {
             task: {
-                guild: this.b.guild? this.b.guild : '',
+                points: this.b.points? this.b.points : 1,
             }
         }
     },
     methods: {
-        titleIt(clear = true) {
-            if(this.b.guild === this.task.guild) {
+        setValue(clear = true) {
+            if(this.b.completeValue === this.task.points) {
                 if(!clear) {
                     this.$emit('closeit')
                     return
                 }
-                this.task.guild = ''
+                this.task.points = 0
                 this.$store.dispatch("makeEvent", {
-                    type: 'task-guilded',
+                    type: 'task-valued',
                     taskId: this.b.taskId,
-                    guild: false,
+                    value: 0,
                 })
 
                 this.$emit('closeit')
@@ -36,20 +36,20 @@ export default {
             this.$emit('closeit')
 
             this.$store.dispatch("makeEvent", {
-                type: 'task-guilded',
+                type: 'task-valued',
                 taskId: this.b.taskId,
-                guild: this.task.guild,
+                value: this.task.points,
             })
         }
     },
     computed: {
-        detectRename(){
-            if(this.b.guild === this.task.guild) {
+        detectChange(){
+            if(this.b.points === this.task.points) {
                 return "clear"
-            } else if(this.b.guild && this.task.guild) {
-                return "rename"
+            } else if(this.b.points && this.task.points) {
+                return "revalue"
             }
-            return "mission"
+            return "value"
         }
     },
 }
@@ -70,19 +70,15 @@ button
     color: white
     height: 2.2em
 
-.guildcreate button
-    width: 40%
+.pointsset button
+    width: 20%
     height: 2.2em
     padding: 0
 
-.guildcreate input
+.pointsset input
     border-color: rgba(22, 22, 22, 1)
     border-width: 1px
     background-color: rgba(22, 22, 22, 0.3)
     height: 2.2em
-    width: 60%
-
-.guildcreate.bumpup
-    top: 0.6em
-    width: calc(100% - 7em)
+    width: 30%
 </style>

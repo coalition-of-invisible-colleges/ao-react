@@ -1,9 +1,9 @@
-const uuidV1 = require("uuid/v1");
-const _ = require("lodash");
-const crypto = require("crypto");
+const uuidV1 = require("uuid/v1")
+const _ = require("lodash")
+const crypto = require("crypto")
 
-const { serverState } = require("./state");
-const dctrlDb = require("./dctrlDb");
+const { serverState } = require("./state")
+const dctrlDb = require("./dctrlDb")
 
 function highlighted(taskId, memberId, valence, callback) {
 	let newEvent = {
@@ -11,8 +11,8 @@ function highlighted(taskId, memberId, valence, callback) {
 		taskId,
 		memberId,
 		valence
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoSubscribed(address, secret, callback) {
@@ -20,8 +20,8 @@ function aoSubscribed(address, secret, callback) {
 		type: "ao-subscribed",
 		address,
 		secret
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoConnected(address, secret, callback) {
@@ -29,16 +29,16 @@ function aoConnected(address, secret, callback) {
 		type: "ao-connected",
 		address,
 		secret
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoDisconnected(address, callback) {
 	let newEvent = {
 		type: "ao-disconnected",
 		address
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoRelayAttempted(address, successful, callback) {
@@ -46,56 +46,56 @@ function aoRelayAttempted(address, successful, callback) {
 		type: "ao-relay-attempted",
 		address,
 		successful
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoNamed(alias, callback) {
 	let newEvent = {
 		type: "ao-named",
 		alias
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function getNodeInfo(info, callback) {
 	let newEvent = {
 		type: "get-node-info",
 		info
-	};
-	dctrlDb.triggerShadow(newEvent);
+	}
+	dctrlDb.triggerShadow(newEvent)
 }
 
 function rentSet(amount, callback) {
 	let newEvent = {
 		type: "rent-set",
 		amount
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function capSet(amount, callback) {
 	let newEvent = {
 		type: "cap-set",
 		amount
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function spotUpdated(spot, callback) {
 	let newEvent = {
 		type: "spot-updated",
 		spot
-	};
-	dctrlDb.triggerShadow(newEvent);
+	}
+	dctrlDb.triggerShadow(newEvent)
 }
 
 function currencySwitched(currency, callback) {
 	let newEvent = {
 		type: "currency-switched",
 		currency
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function fundsSet(outputs, channels, callback) {
@@ -103,12 +103,12 @@ function fundsSet(outputs, channels, callback) {
 		type: "funds-set",
 		outputs,
 		channels
-	};
-	dctrlDb.triggerShadow(newEvent);
+	}
+	dctrlDb.triggerShadow(newEvent)
 }
 
 function memberCreated(name, fob, secret, callback) {
-	let memberId = uuidV1();
+	let memberId = uuidV1()
 	let newEvent = {
 		type: "member-created",
 		memberId,
@@ -120,16 +120,16 @@ function memberCreated(name, fob, secret, callback) {
 		badges: [],
 		info: {},
 		lastActivated: 7
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberDeactivated(memberId, callback) {
 	let newEvent = {
 		type: "member-deactivated",
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberPurged(memberId, blame, callback) {
@@ -137,16 +137,16 @@ function memberPurged(memberId, blame, callback) {
 		type: "member-purged",
 		memberId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberActivated(memberId, callback) {
 	let newEvent = {
 		type: "member-activated",
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberFieldUpdated(memberId, field, newfield, callback) {
@@ -155,32 +155,32 @@ function memberFieldUpdated(memberId, field, newfield, callback) {
 		memberId,
 		field,
 		newfield
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeBarked(memberId, callback) {
 	let newEvent = {
 		type: "doge-barked",
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeMuted(memberId, callback) {
 	let newEvent = {
 		type: "doge-muted",
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeUnmuted(memberId, callback) {
 	let newEvent = {
 		type: "doge-unmuted",
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceCreated(
@@ -198,11 +198,11 @@ function resourceCreated(
 		charged,
 		secret,
 		info: {}
-	};
-	if (trackStock) {
-		newEvent.stock = 0;
 	}
-	dctrlDb.insertEvent(newEvent, callback);
+	if (trackStock) {
+		newEvent.stock = 0
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceStocked(resourceId, memberId, amount, paid, notes, callback) {
@@ -213,8 +213,8 @@ function resourceStocked(resourceId, memberId, amount, paid, notes, callback) {
 		amount,
 		paid,
 		notes
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
@@ -225,8 +225,8 @@ function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
 		amount,
 		charged,
 		notes
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceBooked(
@@ -248,8 +248,8 @@ function resourceBooked(
 		eventType,
 		charge,
 		notes
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function bookCancelled(resourceId, bookTime, callback) {
@@ -257,8 +257,8 @@ function bookCancelled(resourceId, bookTime, callback) {
 		type: "book-cancelled",
 		resourceId,
 		bookTime
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourcePurged(resourceId, blame, callback) {
@@ -266,8 +266,8 @@ function resourcePurged(resourceId, blame, callback) {
 		type: "resource-purged",
 		resourceId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function sessionCreated(ownerId, session, token, callback) {
@@ -276,29 +276,29 @@ function sessionCreated(ownerId, session, token, callback) {
 		session,
 		token,
 		ownerId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function sessionKilled(session, callback) {
 	let newEvent = {
 		type: "session-killed",
 		session
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskCreated(name, color, deck, inId, callback) {
-	let h = crypto.createHash("sha256");
-	h.update(name);
-	let hash = h.digest("hex");
-	let isExist = false;
+	let h = crypto.createHash("sha256")
+	h.update(name)
+	let hash = h.digest("hex")
+	let isExist = false
 
 	serverState.tasks.forEach(t => {
 		if (t.hash === hash) {
-			isExist = true;
+			isExist = true
 		}
-	});
+	})
 
 	if (!isExist) {
 		let newEvent = {
@@ -310,8 +310,8 @@ function taskCreated(name, color, deck, inId, callback) {
 			deck,
 			hash,
 			inId
-		};
-		dctrlDb.insertEvent(newEvent, callback);
+		}
+		dctrlDb.insertEvent(newEvent, callback)
 	}
 }
 
@@ -323,7 +323,7 @@ function addressUpdated(taskId, address, callback) {
 			address
 		},
 		callback
-	);
+	)
 }
 
 function taskGuilded(taskId, guild, callback) {
@@ -331,8 +331,8 @@ function taskGuilded(taskId, guild, callback) {
 		type: "task-guilded",
 		taskId,
 		guild
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskGrabbed(taskId, memberId, callback) {
@@ -340,8 +340,8 @@ function taskGrabbed(taskId, memberId, callback) {
 		type: "task-grabbed",
 		taskId,
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function pileGrabbed(taskId, memberId, callback) {
@@ -349,8 +349,8 @@ function pileGrabbed(taskId, memberId, callback) {
 		type: "pile-grabbed",
 		taskId,
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function pileDropped(taskId, memberId, callback) {
@@ -358,8 +358,8 @@ function pileDropped(taskId, memberId, callback) {
 		type: "pile-dropped",
 		taskId,
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskSubTasked(taskId, subTask, memberId, callback) {
@@ -368,8 +368,8 @@ function taskSubTasked(taskId, subTask, memberId, callback) {
 		taskId,
 		subTask,
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskDeSubTasked(taskId, subTask, memberId, callback) {
@@ -378,8 +378,8 @@ function taskDeSubTasked(taskId, subTask, memberId, callback) {
 		taskId,
 		subTask,
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskPrioritized(taskId, inId, callback) {
@@ -387,16 +387,16 @@ function taskPrioritized(taskId, inId, callback) {
 		type: "task-prioritized",
 		taskId,
 		inId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
-function tasksPrioritized(inId, callback) {
+function pilePrioritized(inId, callback) {
 	let newEvent = {
-		type: "tasks-prioritized",
+		type: "pile-prioritized",
 		inId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskRefocused(taskId, inId, blame, callback) {
@@ -405,17 +405,17 @@ function taskRefocused(taskId, inId, blame, callback) {
 		taskId,
 		inId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
-function tasksRefocused(inId, blame, callback) {
+function pileRefocused(inId, blame, callback) {
 	let newEvent = {
-		type: "tasks-refocused",
+		type: "pile-refocused",
 		inId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskDropped(taskId, memberId, callback) {
@@ -423,8 +423,8 @@ function taskDropped(taskId, memberId, callback) {
 		type: "task-dropped",
 		taskId,
 		memberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskPassed(taskId, fromMemberId, toMemberId, callback) {
@@ -433,8 +433,18 @@ function taskPassed(taskId, fromMemberId, toMemberId, callback) {
 		taskId,
 		fromMemberId,
 		toMemberId
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
+}
+
+function taskValued(taskId, value, blame, callback) {
+	let newEvent = {
+		type: "task-valued",
+		taskId,
+		value,
+		blame
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskClaimed(taskId, memberId, blame, callback) {
@@ -443,8 +453,8 @@ function taskClaimed(taskId, memberId, blame, callback) {
 		taskId,
 		memberId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskUnclaimed(taskId, memberId, blame, callback) {
@@ -453,8 +463,8 @@ function taskUnclaimed(taskId, memberId, blame, callback) {
 		taskId,
 		memberId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskBoosted(taskId, amount, txid, callback) {
@@ -463,8 +473,8 @@ function taskBoosted(taskId, amount, txid, callback) {
 		taskId,
 		amount,
 		txid
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskBoostedLightning(
@@ -480,8 +490,8 @@ function taskBoostedLightning(
 		amount,
 		payment_hash,
 		pay_index
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskRemoved(taskId, blame, callback) {
@@ -489,8 +499,8 @@ function taskRemoved(taskId, blame, callback) {
 		type: "task-removed",
 		taskId,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
@@ -500,8 +510,8 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
 		swapId1,
 		swapId2,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function tasksReceived(tasks, blame, callback) {
@@ -509,8 +519,8 @@ function tasksReceived(tasks, blame, callback) {
 		type: "tasks-received",
 		tasks,
 		blame
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function invoiceCreated(taskId, bolt11, payment_hash, callback) {
@@ -519,8 +529,8 @@ function invoiceCreated(taskId, bolt11, payment_hash, callback) {
 		taskId,
 		bolt11,
 		payment_hash
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberCharged(memberId, charged, notes, callback) {
@@ -529,8 +539,8 @@ function memberCharged(memberId, charged, notes, callback) {
 		memberId,
 		charged,
 		notes
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoUpdated(address, state, callback) {
@@ -538,8 +548,8 @@ function aoUpdated(address, state, callback) {
 		type: "ao-updated",
 		address,
 		state
-	};
-	dctrlDb.insertEvent(newEvent, callback);
+	}
+	dctrlDb.insertEvent(newEvent, callback)
 }
 
 module.exports = {
@@ -574,17 +584,18 @@ module.exports = {
 	sessionKilled,
 	taskCreated,
 	taskBoosted,
+	taskValued,
 	taskClaimed,
 	taskUnclaimed,
 	taskRefocused,
-	tasksRefocused,
+	pileRefocused,
 	taskRemoved,
 	taskSwapped,
 	taskGrabbed,
 	pileGrabbed,
 	pileDropped,
 	taskPrioritized,
-	tasksPrioritized,
+	pilePrioritized,
 	taskDropped,
 	taskPassed,
 	taskGuilded,
@@ -594,4 +605,4 @@ module.exports = {
 	invoiceCreated,
 	taskBoostedLightning,
 	tasksReceived
-};
+}

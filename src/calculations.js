@@ -1,4 +1,4 @@
-const Vue = require( 'vue')
+const Vue = require('vue')
 const satsPerBtc = 100000000 // one hundred million per btc
 const _ = require('lodash')
 const cryptoUtils = require('./crypto')
@@ -76,6 +76,16 @@ function isString(x) {
 }
 
 function safeMerge(cardA, cardZ) {
+    if(!cardA || !cardZ) {
+        console.log("attempt to merge nonexistent")
+        return
+    }
+
+    if(!cardZ.color) {
+        console.log("attempt to merge card without a color")
+        return
+    }
+
     if(isString(cardZ.color) && !_.isEmpty(cardZ.color.trim())) {
         Vue.set(cardA, 'color', cardZ.color )
     }

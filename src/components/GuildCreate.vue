@@ -1,14 +1,14 @@
 <template lang='pug'>
 
-.guildcreate(:class='{ bumpup : editing }')
-    input#titlebox(v-if='editing'  v-model='task.guild'  type='text'  placeholder='code name'  @keypress.enter='titleIt(false)')
-    button(v-if='editing'  @click='titleIt') {{ detectRename }}
+.guildcreate
+    input(v-model='task.guild'  type='text'  placeholder='code name'  @keypress.enter='titleIt(false)')
+    button(@click='titleIt') {{ detectRename }}
 </template>
 
 <script>
 
 export default {
-    props: ['b', 'editing'],
+    props: ['b'],
     data() {
         return {
             task: {
@@ -81,8 +81,4 @@ button
     background-color: rgba(22, 22, 22, 0.3)
     height: 2.2em
     width: 60%
-
-.guildcreate.bumpup
-    top: 0.6em
-    width: calc(100% - 7em)
 </style>

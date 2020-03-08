@@ -9,7 +9,7 @@
     h2(v-if='brokeConnections.length > 0'  ) Broken from
     div(v-for='r in brokeConnections')
         h4 {{ r.address.slice(0, 11) }} - {{ uptimePercent(r.successfuls, r.fails) }}% uptime ({{ r.successfuls + r.fails }} attempts) -
-        span.conn(@click='pollState(r.address)') update
+        //- span.conn(@click='pollState(r.address)') update
         span.discon(@click='discon(r.address)') delete
     h2(v-if='unmatchedSubs.length > 0') Feed to
     div(v-for='s in unmatchedSubs')

@@ -510,6 +510,21 @@ router.post('/events', (req, res, next)=>{
             res.status(200).send(errRes)
           }
           break
+      case 'task-valued':
+          if (
+            validators.isTaskId(req.body.taskId, errRes) &&
+            validators.isAmount(req.body.value, errRes)
+          ){
+            events.taskValued(
+              req.body.taskId,
+              req.body.value,
+              req.body.blame,
+              utils.buildResCallback(res)
+            )
+          } else {
+              res.status(400).send(errRes)
+          }
+          break
       case 'task-claimed':
           if (
             validators.isTaskId(req.body.taskId, errRes) &&
@@ -556,10 +571,10 @@ router.post('/events', (req, res, next)=>{
               res.status(400).send(errRes)
           }
           break
-      case 'tasks-refocused':
+      case 'pile-refocused':
           if (
             validators.isTaskId(req.body.inId, errRes)){
-            events.tasksRefocused(
+            events.pileRefocused(
               req.body.inId,
               req.body.blame,
               utils.buildResCallback(res)
@@ -686,11 +701,11 @@ router.post('/events', (req, res, next)=>{
               res.status(200).send(errRes)
           }
           break
-      case 'tasks-prioritized':
+      case 'pile-prioritized':
           console.log("spec runs")
           if (validators.isTaskId(req.body.inId, errRes)){
               console.log("spec success")
-              events.tasksPrioritized(
+              events.pilePrioritized(
                 req.body.inId,
                 utils.buildResCallback(res)
               )

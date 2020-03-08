@@ -19,7 +19,7 @@
             span.sierpinskiwrapper
                 sierpinski(:b='b')
             .serverLabel on {{ $store.getters.warpDrive.address }}
-            .serverLabel on {{ $store.getters.warpDrive.alias }}
+            //- .serverLabel on {{ $store.getters.warpDrive.alias }}
         select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
             template(v-for='g in $store.getters.sendableGuilds')
@@ -46,11 +46,11 @@
     .warp(v-if='showWarp')
         select(v-model='toAo')
             option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.getters.liveConnections', :value='i') {{ n.state.cash.alias }}
+            option(v-for='(n, i) in $store.getters.liveConnections', :value='i') {{ n.address }}
         button.small(@click='setWarp') set
     .theTitle(v-if='b.guild') {{ b.guild }}
     .count
-        guild-create(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
+        guild-create(v-if='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
 </template>
 
 <script>

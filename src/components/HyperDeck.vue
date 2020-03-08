@@ -21,8 +21,8 @@
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         .boatContainer
-            img.boatAll.faded(v-if='this.$store.getters.contextCard.priorities.length !== 0'  src='../assets/images/downboatwhite.svg'  @click='tasksRefocused')
-            img.boatAll.boatR.faded(v-if='this.$store.getters.contextCard.subTasks.length !== 0'  src='../assets/images/boatwhite.svg'  @click='tasksPrioritized')
+            img.boatAll.faded(v-if='this.$store.getters.contextCard.priorities.length !== 0'  src='../assets/images/downboatwhite.svg'  @click='pileRefocused')
+            img.boatAll.boatR.faded(v-if='this.$store.getters.contextCard.subTasks.length !== 0'  src='../assets/images/boatwhite.svg'  @click='pilePrioritized')
         panels
         .faded
             span(@click='toggleStacks')
@@ -72,15 +72,15 @@ export default {
 		toggleStacks() {
 			this.$store.commit("toggleStacks");
 		},
-		tasksPrioritized() {
+		pilePrioritized() {
 			this.$store.dispatch("makeEvent", {
-				type: "tasks-prioritized",
+				type: "pile-prioritized",
 				inId: this.$store.getters.contextCard.taskId
 			});
 		},
-		tasksRefocused() {
+		pileRefocused() {
 			this.$store.dispatch("makeEvent", {
-				type: "tasks-refocused",
+				type: "pile-refocused",
 				inId: this.$store.getters.contextCard.taskId
 			});
 		}
