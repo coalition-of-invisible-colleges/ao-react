@@ -144,7 +144,6 @@ export default {
 
 .tooltip
     position: relative
-    z-index: 153
 
 .tooltip .tooltiptext
     font-size: 1em
