@@ -409,6 +409,15 @@ function taskRefocused(taskId, inId, blame, callback) {
 	dctrlDb.insertEvent(newEvent, callback);
 }
 
+function tasksRefocused(inId, blame, callback) {
+	let newEvent = {
+		type: "tasks-refocused",
+		inId,
+		blame
+	};
+	dctrlDb.insertEvent(newEvent, callback);
+}
+
 function taskDropped(taskId, memberId, callback) {
 	let newEvent = {
 		type: "task-dropped",
@@ -568,6 +577,7 @@ module.exports = {
 	taskClaimed,
 	taskUnclaimed,
 	taskRefocused,
+	tasksRefocused,
 	taskRemoved,
 	taskSwapped,
 	taskGrabbed,

@@ -510,6 +510,27 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
+        case "tasks-refocused":
+            console.log("tasks-refocused")
+            tasks.forEach( task => {
+                if (task.taskId === ev.inId){
+                    console.log("taskId is ", task.name)
+                    task.priorities.forEach(stId => {
+                        tasks.forEach(st => {
+                            if (st.taskId === stId){
+                                if(st.claimed && (st.claimed.length >= 1)){
+                                    console.log("st.name is ", st.name)
+                                    task.completed.push(stId)
+                                } else {
+                                    task.subTasks.push(stId)
+                                }
+                            }
+                        })
+                        task.priorities = []
+                    })
+                }
+            })
+            break
         case "task-sub-tasked":
             tasks.forEach(task => {
                 if(task.taskId === ev.subTask) {

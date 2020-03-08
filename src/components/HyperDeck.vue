@@ -21,10 +21,8 @@
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         .boatContainer
-            img.boatAll(src='../assets/images/downboatwhite.svg')
-            img.boatAll(src='../assets/images/boatblack.svg'  @click='tasksPrioritized')
-        //- img(src='../assets/images/boatwhite.svg')
-        //- img(src='../assets/images/boatwhite.svg')
+            img.boatAll.faded(v-if='this.$store.getters.contextCard.priorities.length !== 0'  src='../assets/images/downboatwhite.svg'  @click='tasksRefocused')
+            img.boatAll.boatR.faded(v-if='this.$store.getters.contextCard.subTasks.length !== 0'  src='../assets/images/boatwhite.svg'  @click='tasksPrioritized')
         panels
         .faded
             span(@click='toggleStacks')
@@ -75,13 +73,16 @@ export default {
 			this.$store.commit("toggleStacks");
 		},
 		tasksPrioritized() {
-			console.log("test");
-			console.log(this.$store.getters.contextCard.taskId);
 			this.$store.dispatch("makeEvent", {
 				type: "tasks-prioritized",
 				inId: this.$store.getters.contextCard.taskId
 			});
-			console.log("test2");
+		},
+		tasksRefocused() {
+			this.$store.dispatch("makeEvent", {
+				type: "tasks-refocused",
+				inId: this.$store.getters.contextCard.taskId
+			});
 		}
 	},
 	computed: {
@@ -201,7 +202,8 @@ export default {
 .boatContainer
     display: flex;
     justify-content: space-between;
-    width:100%;
+    width:100%
+    height:45px
 
 .boatAll
     margin: 0 1em 0 1em
@@ -211,6 +213,15 @@ export default {
     margin-bottom: 1em
     opacity: .3
     z-index:9999999999999
+    cursor: pointer
+
+.boatR
+    position: absolute
+    right: 0px
+    height:20px
+
+.faded
+    opacity: 0.235654
 
 
 

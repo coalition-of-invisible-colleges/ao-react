@@ -556,6 +556,18 @@ router.post('/events', (req, res, next)=>{
               res.status(400).send(errRes)
           }
           break
+      case 'tasks-refocused':
+          if (
+            validators.isTaskId(req.body.inId, errRes)){
+            events.tasksRefocused(
+              req.body.inId,
+              req.body.blame,
+              utils.buildResCallback(res)
+            )
+          } else {
+              res.status(400).send(errRes)
+          }
+          break
       case 'task-removed':
           if (
             validators.isTaskId(req.body.taskId, errRes)
