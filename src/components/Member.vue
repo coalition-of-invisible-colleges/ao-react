@@ -10,8 +10,8 @@
     .bottomleft
       div(@click='goChest')
         img.smallguild(src='../assets/images/chest.svg')
-        label.stash(v-if='card.boost') {{ card.boost.toFixed(2) }}
-        label.stash(v-else) 0
+        label.stash {{ card.boost? card.boost.toFixed(2) : 0 }}
+            span.padleft(v-if='pointsFromCards > 0') (+{{ pointsFromCards }})
         div(v-if='m.active > 0') active
         div(v-else) inactive
     .bottomright
@@ -58,6 +58,23 @@ export default {
             return this.$store.state.tasks.filter(t => {
                 return t.deck.indexOf(this.m.memberId) >= 0
             }).length
+        },
+        pointsFromCards() {
+            let points = 0
+            this.$store.state.tasks.forEach(t => {
+                if(t.deck.indexOf(this.m.memberId) === -1) {
+                    return
+                }
+                if(t.claimed.some(c => {
+                    return c.indexOf(this.m.memberId) >= 0
+                })) {
+                    console.log("we have a checkmark! points is ", t.completeValue)
+                    if(t.completeValue && t.completeValue > 0) {
+                        points += t.completeValue
+                    }
+                }
+            })
+            return points
         },
     },
     methods: {
@@ -195,4 +212,8 @@ ul.left
 
 .pullup
     margin-bottom: -2em
+    
+span.padleft
+    margin-left: 0.5em
+    
 </style>

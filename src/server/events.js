@@ -585,6 +585,7 @@ module.exports = {
     taskPrioritized,
     taskDropped,
     taskPassed,
+    taskValued,
     taskGuilded,
     taskSubTasked,
     taskDeSubTasked,

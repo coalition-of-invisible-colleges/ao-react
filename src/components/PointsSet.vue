@@ -38,7 +38,7 @@ export default {
             this.$store.dispatch("makeEvent", {
                 type: 'task-valued',
                 taskId: this.b.taskId,
-                value: this.task.points,
+                value: Number(this.task.points),
             })
         }
     },

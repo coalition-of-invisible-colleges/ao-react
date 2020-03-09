@@ -541,7 +541,7 @@ function tasksMuts(tasks, ev) {
         case "task-valued":
             tasks.forEach(task => {
                 if(task.taskId === ev.taskId) {
-                    task.completeValue = ev.value
+                    task.completeValue = Number(ev.value)
                 }
             })
             break
