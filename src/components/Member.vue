@@ -68,7 +68,6 @@ export default {
                 if(t.claimed.some(c => {
                     return c.indexOf(this.m.memberId) >= 0
                 })) {
-                    console.log("we have a checkmark! points is ", t.completeValue)
                     if(t.completeValue && t.completeValue > 0) {
                         points += t.completeValue
                     }

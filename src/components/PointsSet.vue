@@ -12,7 +12,7 @@ export default {
     data() {
         return {
             task: {
-                points: this.b.points? this.b.points : 1,
+                points: this.b.completeValue? this.b.completeValue : 1,
             }
         }
     },
@@ -44,9 +44,9 @@ export default {
     },
     computed: {
         detectChange(){
-            if(this.b.points === this.task.points) {
+            if(this.b.completeValue === this.task.points) {
                 return "clear"
-            } else if(this.b.points && this.task.points) {
+            } else if(this.b.completeValue && this.task.points) {
                 return "revalue"
             }
             return "value"
