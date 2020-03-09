@@ -1,6 +1,6 @@
 <template lang='pug'>
 
-.vine(@click='goIn')
+.vine(v-if='b.taskId !== $store.getters.contextCard.taskId'  @click='goIn')
     img.viney(src='../assets/images/orb.svg')
 </template>
 

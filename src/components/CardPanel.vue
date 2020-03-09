@@ -1,10 +1,10 @@
 <template lang='pug'>
 
 #tasks(@contextmenu.capture.prevent)
-    .row.ptr(v-if="topCard  &&  c.length > 1"  ref='swipebar')
+    .row.ptr(v-show="topCard  &&  c.length > 1"  ref='swipebar')
         .three.grid.tooltip(ref='previous')
             span &nbsp;
-            img.fl(src='../assets/images/back.svg')
+            img.fl(v-if='!open'  src='../assets/images/back.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
                 p.suggest previous
         .one.grid.horizcenter()
@@ -19,10 +19,9 @@
         .one.grid.horizcenter()
             .box.verticalcenter
                 h3(v-if='!open') {{ c.length }}
-                h3(v-else) all
         .three.grid.tooltip(ref='next')
             span &nbsp;
-            img.fr(src='../assets/images/forward.svg')
+            img.fr(v-if='!open'  src='../assets/images/forward.svg')
             .tooltiptext(v-if='$store.getters.member.muted')
                 p.suggest next
     .open(v-if='open')

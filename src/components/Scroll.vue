@@ -1,7 +1,7 @@
 <template lang='pug'>
 
 .scroll(v-if='this.$store.state.upgrades.dimension === "unicorn"')
-    img.scrolly(src='../assets/images/downboatwhite.svg'  :id='uuid')
+    img.scrolly(src='../assets/images/downboat.svg'  :id='uuid')
 </template>
 
 <script>
@@ -28,6 +28,11 @@ export default {
         mc.on('tap', (e) => {
             let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
             if (this.$store.state.context.action === this.b.taskId){
+
+                if (this.$store.getters.contextCard.priorities.length <= 1){
+                    this.$store.commit('setMode', 0)
+                    this.$router.push('/doge')
+                }
                 this.$store.dispatch("makeEvent", {
                     type: 'task-refocused',
                     inId: this.inId,

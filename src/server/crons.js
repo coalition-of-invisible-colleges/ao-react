@@ -25,7 +25,7 @@ function rent(){
     let fixed = parseFloat(serverState.cash.rent)
     let numActiveMembers = activeMembers.length
     let perMonth = fixed / numActiveMembers
-    let charged = Math.min(perMonth, parseFloat( serverState.cash.cap ))
+    let charged = Math.min(perMonth, parseFloat(serverState.cash.cap))
     let notes = ''
 
     activeMembers.forEach( m => {

@@ -1,6 +1,6 @@
 <template lang="pug">
 
-#calendar(:key='inId')
+#calendar(:key='inId'  v-if='areEvs')
     .row.menu
         .inline(@click='prevMonth')
             img(src='../assets/images/back.svg')
@@ -68,6 +68,9 @@ export default {
   computed: {
     today(){
         return getDMY(Date.now())
+    },
+    areEvs(){
+        return Object.keys(this.eventsByDay).length > 0
     },
     eventsByDay(){
         let evs = {}

@@ -6,7 +6,7 @@
         img(v-else-if='$store.state.upgrades.mode === "badge"'  src='../assets/images/badge.svg')
         img(v-else-if='$store.state.upgrades.mode === "timecube"' src='../assets/images/timecube.svg')
         img(v-else-if='($store.state.upgrades.mode === "boat" || $store.state.upgrades.mode === "doge") && isDoged'  src='../assets/images/sun.svg')
-        img.svgwhite.faded(v-else, src='../assets/images/boatwhite.svg')
+        img.svgwhite.faded(v-else, src='../assets/images/upboat.svg')
     .opened
         resource-book(v-if='isCubeOpen'  :tId='b.taskId')
         guild-create(v-if='isPayOpen'  :b='b'  @closeit='toggleGuildCreate')
@@ -171,6 +171,10 @@ export default {
                         panel: [parentId],
                         top: 0
                     })
+                }
+                if(this.$store.state.upgrades.mode === 'doge') {
+                    this.$store.commit("setMode", 1)
+                    this.$router.push("/boat")
                 }
         },
         dogeIt(){

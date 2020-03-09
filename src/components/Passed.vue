@@ -5,12 +5,12 @@ div.totop(v-if='b.passed.length > 0')
     div(@click='toggleBird')
         .singlebird(v-if='!$store.state.upgrades.bird')
             .row.pad.centered
-                img.send(src='../assets/images/birdbtn.svg')
+                img.send(src='../assets/images/send.svg')
                 span {{ b.passed.length}}
         template(v-else  v-for='n in b.passed'  @click='toggleBird')
             .row.pad.centered
                 current(:memberId='n[0]')
-                img.send(src='../assets/images/birdbtn.svg')
+                img.send(src='../assets/images/send.svg')
                 current(:memberId='n[1]')
 </template>
 

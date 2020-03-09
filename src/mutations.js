@@ -11,22 +11,22 @@ const calculations = require( './calculations')
 
 function aoMuts(aos, ev) {
     switch (ev.type) {
-        case "ao-updated":
+        case "ao-linked":
             aos.forEach( (ao, i) => {
                 if (ao.address === ev.address) {
-                    ao.state = ev.state
+                    ao.links.push(ev.taskId)
                 }
             })
             break
+  			case "ao-subscribed":
+            // XXX
+  				  break
         case "ao-connected":
             let newEv = {
                 address: ev.address,
                 secret: ev.secret,
-                attempts: 0,
-                successfuls: 0,
-                fails: 0,
-                lastAttemptSuccess: true,
-                state: false
+                lastSyncMs: Date.now(),
+                links: [ev.address]
             }
             aos.push(newEv)
             break
@@ -37,35 +37,11 @@ function aoMuts(aos, ev) {
                 }
             })
             break
-        case "ao-relay-attempted":
-            aos.forEach( (ao, i) => {
-                if (ao.address === ev.address) {
-                    ao.attempts ++
-                    if (ev.successful){
-                        ao.successfuls ++
-                        ao.lastAttemptSuccess = true
-                    } else {
-                        ao.fails ++
-                        ao.lastAttemptSuccess = false
-                    }
-                }
-            })
-            break
     }
 }
 
 function cashMuts(cash, ev){
 		switch (ev.type) {
-			case "ao-disconnected":
-				cash.subscribed.forEach( (ao, i) => {
-					if (ao.address === ev.address) {
-							cash.subscribed.splice(i, 1)
-					}
-				})
-				break
-			case "ao-subscribed":
-				cash.subscribed.push(ev)
-				break
 			case "ao-named":
 				cash.alias = ev.alias
 				break
@@ -306,6 +282,7 @@ function tasksMuts(tasks, ev) {
             })
             break
         case "ao-connected":
+            tasks.push(calculations.blankCard(ev.address, ev.address, 'purple'))
             break
         case "ao-disconnected":
             break
@@ -715,14 +692,14 @@ function tasksMuts(tasks, ev) {
             }
             break
         case "tasks-received":
-            ev.tasks.forEach(p => {
-                if(!tasks.some((t, i) => {
-                    if(cryptoUtils.createHash(p.name.trim()) === cryptoUtils.createHash(t.name.trim())) {
-                        calculations.safeMerge(t, p)
+            ev.tasks.forEach(newT => {
+                if(!tasks.some((cur, i) => {
+                    if(cur.taskId === newT.taskId) {
+                        calculations.safeMerge(cur, newT)
                         return true
                     }
                 })) {
-                    tasks.push(calculations.safeClone(p))
+                    tasks.push(newT) /// XXX safeclone?
                 }
             })
             break

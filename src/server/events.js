@@ -24,30 +24,30 @@ function aoSubscribed(address, secret, callback) {
 	dctrlDb.insertEvent(newEvent, callback)
 }
 
+function aoLinked(address, taskId, callback){
+    let newEvent = {
+        type: "ao-linked",
+        address,
+        taskId,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
+}
+
 function aoConnected(address, secret, callback) {
-	let newEvent = {
-		type: "ao-connected",
-		address,
-		secret
-	}
-	dctrlDb.insertEvent(newEvent, callback)
+    let newEvent = {
+        type: "ao-connected",
+        address,
+        secret,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoDisconnected(address, callback) {
-	let newEvent = {
-		type: "ao-disconnected",
-		address
-	}
-	dctrlDb.insertEvent(newEvent, callback)
-}
-
-function aoRelayAttempted(address, successful, callback) {
-	let newEvent = {
-		type: "ao-relay-attempted",
-		address,
-		successful
-	}
-	dctrlDb.insertEvent(newEvent, callback)
+    let newEvent = {
+        type: "ao-disconnected",
+        address,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoNamed(alias, callback) {
@@ -543,66 +543,53 @@ function memberCharged(memberId, charged, notes, callback) {
 	dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoUpdated(address, state, callback) {
-	let newEvent = {
-		type: "ao-updated",
-		address,
-		state
-	}
-	dctrlDb.insertEvent(newEvent, callback)
-}
-
 module.exports = {
-	aoUpdated,
-	highlighted,
-	memberCharged,
-	aoConnected,
-	aoDisconnected,
-	aoNamed,
-	aoSubscribed,
-	aoRelayAttempted,
-	spotUpdated,
-	rentSet,
-	capSet,
-	fundsSet,
-	getNodeInfo,
-	memberCreated,
-	memberDeactivated,
-	memberPurged,
-	memberActivated,
-	memberFieldUpdated,
-	dogeBarked,
-	dogeMuted,
-	dogeUnmuted,
-	resourceCreated,
-	resourceUsed,
-	resourceStocked,
-	resourceBooked,
-	bookCancelled,
-	resourcePurged,
-	sessionCreated,
-	sessionKilled,
-	taskCreated,
-	taskBoosted,
-	taskValued,
-	taskClaimed,
-	taskUnclaimed,
-	taskRefocused,
-	pileRefocused,
-	taskRemoved,
-	taskSwapped,
-	taskGrabbed,
-	pileGrabbed,
-	pileDropped,
-	taskPrioritized,
-	pilePrioritized,
-	taskDropped,
-	taskPassed,
-	taskGuilded,
-	taskSubTasked,
-	taskDeSubTasked,
-	addressUpdated,
-	invoiceCreated,
-	taskBoostedLightning,
-	tasksReceived
+    highlighted,
+    memberCharged,
+    aoConnected,
+    aoLinked,
+    aoDisconnected,
+    aoNamed,
+    aoSubscribed,
+    spotUpdated,
+    rentSet,
+    capSet,
+    fundsSet,
+    getNodeInfo,
+    memberCreated,
+    memberDeactivated,
+    memberPurged,
+    memberActivated,
+    memberFieldUpdated,
+    dogeBarked,
+    dogeMuted,
+    dogeUnmuted,
+    resourceCreated,
+    resourceUsed,
+    resourceStocked,
+    resourceBooked,
+    bookCancelled,
+    resourcePurged,
+    sessionCreated,
+    sessionKilled,
+    taskCreated,
+    taskBoosted,
+    taskClaimed,
+    taskUnclaimed,
+    taskRefocused,
+    taskRemoved,
+    taskSwapped,
+    taskGrabbed,
+    pileGrabbed,
+    pileDropped,
+    taskPrioritized,
+    taskDropped,
+    taskPassed,
+    taskGuilded,
+    taskSubTasked,
+    taskDeSubTasked,
+    addressUpdated,
+    invoiceCreated,
+    taskBoostedLightning,
+    tasksReceived,
 }

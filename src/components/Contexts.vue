@@ -64,10 +64,10 @@ export default {
     flex-direction: column
 
 .suncontext
-    background-image: url('../assets/images/sunbean.svg')
+    background-image: url('../assets/images/sunbanner.svg')
 
 .bullcontext
-    background-image: url('../assets/images/bullleg.svg')
+    background-image: url('../assets/images/bullbanner.svg')
 
 .bullcontext, .suncontext
     margin-top: 2.571111em

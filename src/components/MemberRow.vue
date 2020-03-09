@@ -83,8 +83,8 @@ export default {
     },
     computed:{
         isVulnerable(){
-            let v = !this.hasAnyVouches || this.$router.currentRoute.path === "/dash/slayer"
-            return v
+            let v = !this.hasAnyVouches && this.$store.state.members.length > 1
+            return v || this.$router.currentRoute.path === "/dash/slayer"
         },
         isLoggedIn(){
             let isLoggedIn

@@ -4,23 +4,9 @@
     div(ref='bird')
         div(v-if='$store.state.upgrades.warp === -1')
             div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
-            img.birdy.faded(v-else-if='!showGive && !b.guild' src='../assets/images/birdbtn.svg')
-            img.birdy(v-else  src='../assets/images/birdbtnselected.svg')
-        div(v-else)
-            div.birdy.faded.smallguild.red(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
-            img.birdy.faded(v-else-if='!showGive && !b.guild' src='../assets/images/birdbtn_red.svg')
-            img.birdy(v-else  src='../assets/images/birdbtnselected_red.svg')
+            img.birdy.faded(v-else-if='!showGive && !b.guild' src='../assets/images/send.svg')
+            img.birdy(v-else  src='../assets/images/sendselected.svg')
     .play(v-if='showPlay')
-        div(v-if='$store.state.upgrades.warp > -1')
-            select.shorten(v-model='toGuildWarp')
-                option(disabled, value='') to mission
-                option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            button.small(v-if='toGuildWarp'  @click='dispatchMakeEvent(relayInfoM)') give
-            span.sierpinskiwrapper
-                sierpinski(:b='b')
-            .serverLabel on {{ $store.getters.warpDrive.address }}
-            //- .serverLabel on {{ $store.getters.warpDrive.alias }}
-        select(v-else  v-model='toGuild')
             option(disabled, value='') to mission
             template(v-for='g in $store.getters.sendableGuilds')
                 option(:value="g.taskId") {{ g.guild }}
@@ -30,24 +16,10 @@
                         option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
         button.small(@click='dispatchMakeEvent(playInfo)') give
     .give(v-if='showGive')
-        div(v-if='$store.state.upgrades.warp > -1')
-            select.shorten(v-model='toMemberWarp')
-                option(disabled, value='') to people
-                option(v-for='n in $store.getters.warpDrive.state.members', :value="n.memberId") {{ n.name }}
-            button.small(@click='migrate') send entire deck
-            span.sierpinskiwrapper
-                sierpinski(v-if='this.b.taskId !== this.$store.getters.member.memberId'  :b='b')
-            .serverLabel on {{ $store.getters.warpDrive.address }}
-        div(v-else)
-            select(v-model='toMember')
-                option(disabled, value='') to people
-                option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
-            button.small(@click='dispatchMakeEvent(passInfo)') give
-    .warp(v-if='showWarp')
-        select(v-model='toAo')
-            option(disabled  value='') to AO
-            option(v-for='(n, i) in $store.getters.liveConnections', :value='i') {{ n.address }}
-        button.small(@click='setWarp') set
+        select(v-model='toMember')
+            option(disabled, value='') to people
+            option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
+        button.small(@click='dispatchMakeEvent(passInfo)') give
     .theTitle(v-if='b.guild') {{ b.guild }}
     .count
         guild-create(v-if='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
@@ -58,21 +30,17 @@ import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
 import GuildCreate from './GuildCreate'
 import calculations from '../calculations'
-import Sierpinski from './Sierpinski'
 
 export default {
     props: ['b', 'inId'],
     components: {
-        GuildCreate, Sierpinski
+        GuildCreate
     },
     data() {
         return {
-            toMemberWarp: '',
-            toGuildWarp: '',
             showGive: false,
             showGuildCreate: false,
             showPlay: false,
-            showWarp: false,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -107,12 +75,6 @@ export default {
             e.stopPropagation()
         })
 
-        mc.on('tripletap', (e) => {
-
-            this.toggleWarp()
-            e.stopPropagation()
-        })
-
         mc.on('press', (e) => {
             if(this.b.taskId === this.$store.getters.member.memberId) return
 
@@ -120,15 +82,13 @@ export default {
             e.stopPropagation()
         })
 
+        // XXX
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
-            console.log(this.phaseShift)
             e.stopPropagation()
         })
-
         mc.on('swiperight', (e) => {
-            console.log(this.phaseShift)
             e.stopPropagation()
         })
 
@@ -157,17 +117,12 @@ export default {
                 this.togglePlay()
                 return
             }
-            if(this.showWarp) {
-                this.toggleWarp()
-                return
-            }
             this.showGive = !this.showGive
         },
         toggleGuildCreate(){
             if(!this.showGuildCreate) {
                 this.showGive = false
                 this.showPlay = false
-                this.showWarp = false
             }
             this.showGuildCreate = !this.showGuildCreate
             if(this.showGuildCreate) {
@@ -178,86 +133,8 @@ export default {
             if(!this.showPlay) {
                 this.showGive = false
                 this.showGuildCreate = false
-                this.showWarp = false
             }
             this.showPlay = !this.showPlay
-        },
-        toggleWarp(){
-            if(!this.showWarp) {
-                this.showGive = false
-                this.showGuildCreate = false
-                this.showPlay = false
-            }
-            this.showWarp = !this.showWarp
-        },
-        setWarp() {
-            console.log("this.toAo is ", this.toAo)
-            this.$store.commit('setWarp', this.toAo)
-            this.toggleWarp()
-        },
-        sendAllHodls() {
-            let all = this.$store.tasks.filter(t => t.deck.indexOf(this.$store.member.memberId) > -1)
-            all.forEach(t => {
-                t.deck.length = 0
-            })
-            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: { type: 'task-received', tasks: all} })
-        },
-        testCreate() {
-            let tasks = [Object.assign({}, this.b)]
-            tasks[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
-            tasks[0].deck = []
-            this.$store.dispatch('makeEvent', { type: 'ao-relay', address: this.$store.getters.warpDrive.address, ev: {
-                type: 'tasks-received', tasks }
-            })
-        },
-        migrate() {
-            let found = []
-            this.$store.dispatch('makeEvent', {
-                type: 'doge-migrated',
-                address: this.$store.getters.warpDrive.address,
-                memberId: this.b.taskId,
-                toMemberId: this.toMemberWarp,
-            })
-        },
-        give() {
-            let found = []
-            if(this.$store.state.upgrades.sierpinski) {
-                let crawler = [ this.b.taskId ]
-                let newCards = []
-                do {
-                    newCards = []
-                    crawler = _.filter(crawler, t => {
-                        if(found.some(t2 => {
-                            if(!t2 || !t2.taskId) return false
-                            return t2.taskId === t
-                        })) {
-                            return false
-                        }
-                        let task = this.$store.getters.hashMap[t]
-                        if(task === undefined || task.subTasks === undefined || task.priorities === undefined || task.completed === undefined) return false
-
-                        found.push(calculations.safeClone(task))
-                        newCards = newCards.concat(task.subTasks, task.priorities, task.completed)
-                        return true
-                    })
-                    crawler = newCards
-                } while(crawler.length > 0)
-            } else {
-                found = [ this.b ]
-            }
-            found[0].passed = [[this.$store.state.cash.address, this.toMemberWarp, this.$store.getters.member.memberId]]
-            let next100 = found.splice(0, 20)
-            while(next100.length > 0 || found.length > 0) {
-                this.$store.dispatch('makeEvent', {
-                    type: 'ao-relay',
-                    address: this.$store.getters.warpDrive.address,
-                    ev: {
-                        type: 'tasks-received',
-                        tasks: next100,
-                    }
-                })
-                next100 = found.splice(0, 20)
-            }
         },
     },
     computed: {
@@ -275,46 +152,6 @@ export default {
                 fromMemberId: this.$store.getters.member.memberId,
                 toMemberId: this.toMember,
             }
-        },
-        relayInfoM(){
-            return {
-                type: "ao-relay",
-                address: this.$store.getters.warpAddress,
-                ev: {
-                    type: "task-created",
-                    name: this.b.name,
-                    inId: this.toMemberWarp,
-                    color: this.b.color,
-                    deck: [],
-                }
-            }
-        },
-        relayInfoG(){
-            return {
-                type: "ao-relay",
-                address: this.$store.getters.warpAddress,
-                ev: {
-                    type: "task-created",
-                    name: this.b.name,
-                    inId: this.toGuildWarp,
-                    color: this.b.color,
-                    deck: [],
-                }
-            }
-        },
-        phaseShift(delta = 1){
-            let others = []
-            let index = 0
-            this.$store.state.tasks.forEach((t, i) => {
-                if(t.subTasks.indexOf(this.b.taskId) !== -1) {
-                    if(t.taskId === this.inId) {
-                        index = i
-                    }
-                    others.push(t)
-                }
-            })
-            others = others.slice(index).concat(others.slice(0, index))
-            return others
         },
     },
 }
@@ -392,16 +229,6 @@ label
     position: relative
     z-index: 10
 
-.smallguild:hover, .smallguild.open
-    background-image: url('../assets/images/badge_white.svg')
-
-.smallguild.red
-    background-image: url('../assets/images/badge_red.svg')
-    opacity: 0.55
-
-.smallguild.red:hover, .smallguild.red.open
-    background-image: url('../assets/images/badge_white_red.svg')
-
 .give, .play, .warp
     position: relative
     top: 2em
@@ -421,7 +248,4 @@ label
     position: relative
     top: -0.07em
 
-.sierpinskiwrapper
-    padding-top: 0.2em
-    padding-left: 1em
 </style>

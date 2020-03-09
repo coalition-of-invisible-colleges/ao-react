@@ -32,14 +32,6 @@ const getIdSecret = function(identifier){
         }
     })
 
-    // XXX - Do not think auths under cash.subscr is a good idea
-    state.serverState.cash.subscribed.forEach(sub => {
-        if (sub.address === identifier) {
-            ownerId = sub.resourceId
-            secret = sub.secret
-        }
-    })
-
     return {ownerId, secret}
 }
 // Used in socketio-auth creation, checks token (https://www.npmjs.com/package/socketio-auth)
