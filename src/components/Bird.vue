@@ -26,6 +26,7 @@
             option(disabled, value='') to ao
             option(v-for='n in $store.state.ao', :value="n.address") {{ n.address }}
         button.small(@click='dispatchMakeEvent(relayInfo)') give
+        button(@click='dispatchMakeEvent(aoLink)') link card
     .theTitle(v-if='b.guild') {{ b.guild }}
     .count
         guild-create(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
@@ -158,6 +159,13 @@ export default {
                 type: 'task-sub-tasked',
                 taskId:  this.toGuild,
                 subTask: this.b.taskId,
+            }
+        },
+        aoLink(){
+            return {
+                type: 'ao-linked',
+                address: this.toAo,
+                taskId: this.b.taskId,
             }
         },
         relayInfo(){
