@@ -28,15 +28,18 @@ export default {
                     panel: [ev.inId],
                     top: 0
                 })
-                return this.$router.push('/boat') // may be there already?
-            }
+                if (this.$store.state.upgrades.dimension !== 'unicorn'){
+                    this.$router.push("/" + this.$store.state.upgrades.mode)
+                }            }
             if (ev.taskId){
                 this.$store.dispatch('goIn', {
                     parents: [],
                     panel: [ev.taskId],
                     top: 0
                 })
-                return this.$router.push('/boat') // may be there already?
+                if (this.$store.state.upgrades.dimension !== 'unicorn'){
+                    this.$router.push("/" + this.$store.state.upgrades.mode)
+                }
             }
             // XXX should switch mode / location more specifically on events such as resource-booked
         }
