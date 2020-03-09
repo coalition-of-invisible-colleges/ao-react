@@ -35,12 +35,12 @@ then
 fi
 
 # install npm
-if [ $(dpkg-query -W -f='${Status}' npm 2>/dev/null | grep -c "ok installed") -eq 1 ];
+if [ $(npm --v  2>/dev/null | grep -c "6\.13\.4") -eq 1 ];
 then
 	NPMVERSION=`npm -v`
 	echo npm v$NPMVERSION already installed
 else
-	sudo apt install -y npm
+	curl -L https://www.npmjs.com/install.sh | sh
 fi
 
 # install nvm
@@ -64,7 +64,7 @@ fi
 NODEVERSION=`nvm current`
 
 # install node
-if [ $(echo $NODEVERSION) -eq 1 ];
+if [ $(echo $NODEVERSION | grep -c "11.15") -eq 1 ];
 then
 	echo node $NODEVERSION already installed
 else
@@ -151,9 +151,9 @@ else
 	sudo apt install -y libsodium-dev
 fi
 
-if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.8\.0") -eq 1 ];
+if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.8\.1") -eq 1 ];
 then
-	echo c-lightning v0.8.0 already installed
+	echo c-lightning v0.8.1 already installed
 else
 	cd ~
 	git clone https://github.com/ElementsProject/lightning.git
@@ -272,7 +272,13 @@ fi
 
 # install project dependencies
 cd ao
-npm install
+
+if [ $(npm list --depth 0 AutonomousOrganization | grep AutonomousOrganization) -eq 0 ];
+then
+	npm install
+else
+	echo ao node module already installed.
+fi
 
 # create configuration.js
 if [ -f "$HOME/ao/configuration.js" ];
@@ -360,7 +366,7 @@ else
 Description=ao-daemon
 
 [Service]
-ExecStart=$HOME/.nvm/versions/node/v11.15.0/bin/node $HOME/ao/production/server/app.js
+ExecStart=/usr/local/lib/nodejs/node-v12.16.1-linux-x64/bin/node $HOME/ao/src/server/app.js
 User=$USER
 Type=simple
 Restart=always
