@@ -4,9 +4,9 @@
     .tooltip
         img.doge(v-if='$store.getters.member.muted'  src='../assets/images/silent.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         div(v-else-if='!$store.state.upgrades.barking')
-            img.doge(src='../assets/images/doge_faded.png'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+            img.doge(src='../assets/images/loud.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
             .fullscreen(v-if='$store.getters.isLoggedIn && $store.state.loader.connected !== "connected"') Disconnected - Please Refresh
-        img.doge.flip(v-else src='../assets/images/bark.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
+        img.doge.flip(v-else src='../assets/images/loud.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
             span.dot(:class='dotClass')
             span {{ $store.state.loader.connected }}

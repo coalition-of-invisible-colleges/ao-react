@@ -22,8 +22,8 @@
             slot
     .fadey(:class='{ cardInputSty, onestack : $store.state.upgrades.stacks === 1, completedfadey : $store.state.context.completed }')
         .boatContainer
-            img.boatAll.faded(v-if='this.$store.getters.contextCard.priorities.length !== 0'  src='../assets/images/downboatwhite.svg'  @click='pileRefocused')
-            img.boatAll.boatR.faded(v-if='this.$store.getters.contextCard.subTasks.length !== 0'  src='../assets/images/boatwhite.svg'  @click='pilePrioritized')
+            img.boatAll.faded(v-if='this.$store.getters.contextCard.priorities.length !== 0'  src='../assets/images/downboat.svg'  @click='pileRefocused')
+            img.boatAll.boatR.faded(v-if='this.$store.getters.contextCard.subTasks.length !== 0'  src='../assets/images/upboat.svg'  @click='pilePrioritized')
         panels
         .faded
             span(@click='toggleStacks')
