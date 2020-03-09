@@ -119,7 +119,7 @@ router.post('/events', (req, res, next)=>{
           let secret
           state.serverState.ao.forEach(a => {
               if (a.address == req.body.address){
-                  secret = a.secret
+                  secret = a.outboundSecret
               }
           })
           if (secret){

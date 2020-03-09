@@ -21,6 +21,11 @@
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
         button.small(@click='dispatchMakeEvent(passInfo)') give
+    .give(v-if='showRelay')
+        select(v-model='toAo')
+            option(disabled, value='') to ao
+            option(v-for='n in $store.state.ao', :value="n.address") {{ n.address }}
+        button.small(@click='dispatchMakeEvent(relayInfo)') give
     .theTitle(v-if='b.guild') {{ b.guild }}
     .count
         guild-create(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
@@ -42,6 +47,7 @@ export default {
             showGive: false,
             showGuildCreate: false,
             showPlay: false,
+            showRelay: true,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -139,6 +145,14 @@ export default {
         },
     },
     computed: {
+        passInfo(){
+            return {
+              type: 'task-passed',
+              taskId: this.b.taskId,
+              fromMemberId: this.$store.getters.member.memberId,
+              toMemberId: this.toMember,
+            }
+        },
         playInfo(){
             return {
                 type: 'task-sub-tasked',
@@ -146,12 +160,17 @@ export default {
                 subTask: this.b.taskId,
             }
         },
-        passInfo(){
+        relayInfo(){
             return {
-                type: 'task-passed',
-                taskId: this.b.taskId,
-                fromMemberId: this.$store.getters.member.memberId,
-                toMemberId: this.toMember,
+                type: 'ao-relay',
+                address: this.toAo,
+                ev: {
+                    type: 'task-created',
+                    name: this.b.name,
+                    color: this.b.color,
+                    deck: [],
+                    inId: this.$store.state.cash.address,
+                }
             }
         },
     },
