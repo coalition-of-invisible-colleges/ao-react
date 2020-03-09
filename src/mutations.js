@@ -18,17 +18,41 @@ function aoMuts(aos, ev) {
                 }
             })
             break
-  			case "ao-subscribed":
-            // XXX
-  				  break
-        case "ao-connected":
-            let newEv = {
-                address: ev.address,
-                secret: ev.secret,
-                lastSyncMs: Date.now(),
-                links: [ev.address]
+  			case "ao-inbound-connected":
+            let inAddressConnect = aos.some(a => {
+                if (a.address === ev.address){
+                    a.inboundSecret = ev.secret
+                    a.lastContact = Date.now()
+                }
+            })
+            if (!inAddressConnect){
+                let newEv = {
+                    address: ev.address,
+                    outboundSecret: false,
+                    inboundSecret: ev.secret,
+                    lastContact: Date.now(),
+                    links: [ev.address]
+                }
+                aos.push(newEv)
             }
-            aos.push(newEv)
+  				  break
+        case "ao-outbound-connected":
+            let outAddressConnect = aos.some(a => {
+                if (a.address === ev.address){
+                    a.outboundSecret = ev.secret
+                    a.lastContact = Date.now()
+                }
+            })
+            if (!outAddressConnect){
+                let newEv = {
+                    address: ev.address,
+                    outboundSecret: ev.secret,
+                    inboundSecret: false,
+                    lastContact: Date.now(),
+                    links: [ev.address]
+                }
+                aos.push(newEv)
+            }
             break
         case "ao-disconnected":
             aos.forEach( (ao, i) => {
@@ -75,7 +99,7 @@ function cashMuts(cash, ev){
 
 function membersMuts(members, ev){
   switch (ev.type){
-      case "ao-connected":
+      case "ao-outbound-connected":
           break
       case "ao-disconnected":
           break
@@ -246,7 +270,7 @@ function sessionsMuts(sessions, ev){
 								}
 						})
 						break
-				case "ao-connected":
+				case "ao-outbound-connected":
 						sessions.push({
 								ownerId: ev.address,
 								token: ev.secret,
@@ -281,7 +305,7 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
-        case "ao-connected":
+        case "ao-outbound-connected":
             tasks.push(calculations.blankCard(ev.address, ev.address, 'purple'))
             break
         case "ao-disconnected":

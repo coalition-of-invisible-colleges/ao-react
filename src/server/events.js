@@ -15,9 +15,9 @@ function highlighted(taskId, memberId, valence, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoSubscribed(address, secret, callback){
+function aoInboundConnected(address, secret, callback){
     let newEvent = {
-        type: "ao-subscribed",
+        type: "ao-inbound-connected",
         address,
         secret
     }
@@ -33,9 +33,9 @@ function aoLinked(address, taskId, callback){
     dctrlDb.insertEvent(newEvent, callback)
 }
 
-function aoConnected(address, secret, callback) {
+function aoOutboundConnected(address, secret, callback) {
     let newEvent = {
-        type: "ao-connected",
+        type: "ao-outbound-connected",
         address,
         secret,
     }
@@ -494,11 +494,11 @@ function memberCharged(memberId, charged, notes, callback) {
 module.exports = {
     highlighted,
     memberCharged,
-    aoConnected,
+    aoOutboundConnected,
     aoLinked,
     aoDisconnected,
     aoNamed,
-    aoSubscribed,
+    aoInboundConnected,
     spotUpdated,
     rentSet,
     capSet,

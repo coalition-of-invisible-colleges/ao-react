@@ -84,9 +84,9 @@ router.post('/events', (req, res, next)=>{
               res.status(200).send(errRes)
           }
           break
-      case 'ao-connected':
+      case 'ao-outbound-connected':
           connector.postEvent(req.body.address, req.body.secret, {
-              type: 'ao-subscribed',
+              type: 'ao-inbound-connected',
               address: state.serverState.cash.address,
               secret: req.body.secret, //
           }, (subscriptionResponse) => {
@@ -94,19 +94,19 @@ router.post('/events', (req, res, next)=>{
                   return res.status(200).send(['ao-connect failed'])
               }
               console.log('subscribe success, attempt ao connect')
-              events.aoConnected(
+              events.aoOutboundConnected(
                 req.body.address,
                 req.body.secret,
                 utils.buildResCallback(res)
               )
           })
           break
-      case 'ao-subscribed':
+      case 'ao-inbound-connected':
           if (
               validators.isNotes(req.body.address, errRes) &&
               validators.isNotes(req.body.secret, errRes)
           ){
-              events.aoSubscribed(
+              events.aoInboundConnected(
                 req.body.address,
                 req.body.secret,
                 utils.buildResCallback(res)

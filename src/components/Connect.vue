@@ -2,14 +2,8 @@
 
 .Connect.container
     h1 Connect
-    h2(v-if='liveConnections.length > 0'  ) Connected to
-    div(v-for='r in liveConnections')
-        h4 {{ r.state.cash.alias }} connected - {{ uptimePercent(r.successfuls, r.fails) }}% uptime ({{ r.successfuls + r.fails }} attempts) -
-        span.discon(@click='discon(r.address)') delete
-    h2(v-if='brokeConnections.length > 0'  ) Broken from
-    div(v-for='r in brokeConnections')
-        h4 {{ r.address.slice(0, 11) }} - {{ uptimePercent(r.successfuls, r.fails) }}% uptime ({{ r.successfuls + r.fails }} attempts) -
-        span.conn(@click='pollState(r.address)') update
+    div(v-for='r in $store.state.ao')
+        h6 {{ r }}
         span.discon(@click='discon(r.address)') delete
     h3 Connect to another AO:
     .input-container
@@ -48,7 +42,7 @@ export default {
                 alias: ''
             },
             ao: {
-                type: "ao-connected",
+                type: "ao-outbound-connected",
                 address: '',
                 secret: '',
             },
@@ -67,17 +61,6 @@ export default {
                 type: 'ao-disconnected',
                 address,
             })
-        },
-        uptimePercent(successes, fails) {
-            return ((successes / (successes + fails)) * 100).toFixed(1)
-        },
-    },
-    computed: {
-        liveConnections(){
-            return this.$store.state.ao.filter(r => r.state && r.state.cash && r.state.cash.alias)
-        },
-        brokeConnections(){
-            return this.$store.state.ao.filter(r => !r.state)
         },
     },
 }
