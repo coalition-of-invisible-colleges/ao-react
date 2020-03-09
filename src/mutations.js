@@ -1,7 +1,6 @@
 // Mutations are state builders.
 // The current state is the result of all the events in the system fed through the mutation functions.
-// `server/state.js` for server; `modules/*` for vue client.
-
+// `server/state.js` for server; `modules/*` for vuex.
 
 // const Vue = require('vue')
 const _ = require( 'lodash')
@@ -23,6 +22,7 @@ function aoMuts(aos, ev) {
                 if (a.address === ev.address){
                     a.inboundSecret = ev.secret
                     a.lastContact = Date.now()
+                    return true
                 }
             })
             if (!inAddressConnect){
@@ -41,6 +41,7 @@ function aoMuts(aos, ev) {
                 if (a.address === ev.address){
                     a.outboundSecret = ev.secret
                     a.lastContact = Date.now()
+                    return true
                 }
             })
             if (!outAddressConnect){

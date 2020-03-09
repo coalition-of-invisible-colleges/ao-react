@@ -116,8 +116,6 @@ router.post('/events', (req, res, next)=>{
           }
           break
       case 'ao-relay':
-          // move to validators .isAoAddress
-
           let secret
           state.serverState.ao.forEach(a => {
               if (a.address == req.body.address){
