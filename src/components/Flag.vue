@@ -104,6 +104,12 @@ export default {
             this.$store.dispatch('nextUpgradeMode', this.$router)
             e.stopPropagation()
         })
+
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+        mc.add(doubleTap)
+        mc.on('doubletap', (e) => {
+            e.stopPropagation()
+        })
     },
     methods: {
         complete(){

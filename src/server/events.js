@@ -514,6 +514,17 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
 	dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskBumped(taskId, bumpId, direction, blame, callback) {
+	let newEvent = {
+		type: "task-bumped",
+		taskId,
+		bumpId,
+		direction,
+		blame
+	}
+	dctrlDb.insertEvent(newEvent, callback)
+}
+
 function tasksReceived(tasks, blame, callback) {
 	let newEvent = {
 		type: "tasks-received",
@@ -577,12 +588,15 @@ module.exports = {
     taskClaimed,
     taskUnclaimed,
     taskRefocused,
+    pileRefocused,
     taskRemoved,
     taskSwapped,
+    taskBumped,
     taskGrabbed,
     pileGrabbed,
     pileDropped,
     taskPrioritized,
+    pilePrioritized,
     taskDropped,
     taskPassed,
     taskValued,

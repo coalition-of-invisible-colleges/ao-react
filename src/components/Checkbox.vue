@@ -1,7 +1,7 @@
 <template lang='pug'>
 .checkbox(ref='checkbox'  :id='uuid')
-    img.checkmark(v-if='isCompleted'  src='../assets/images/completed.svg')
-    img.checkmark(v-else  src='../assets/images/uncompleted.svg')
+    img.checkmark(v-if='isCompleted'  src='../assets/images/completed.svg'  draggable='false')
+    img.checkmark(v-else  src='../assets/images/uncompleted.svg'  draggable='false')
 </template>
 
 <script>
@@ -31,7 +31,6 @@ export default {
         checkTap.requireFailure(checkDoubleTap)
 
         checkmc.on('singletap', (e) => {
-            console.log("checkbox tap")
             if(!this.isCompleted) {
                 this.complete()
             } else {
@@ -43,7 +42,6 @@ export default {
         checkmc.on('doubletap', (e) => {
             e.stopPropagation()
         })
-        console.log("checkbox mounted")
     },
     computed: {
         isCompleted(){
@@ -88,6 +86,7 @@ export default {
     top: 0.15em
     display: block
     min-width: 0.75em
+    user-drag: none
 
 img.checkmark
     margin-bottom: -0.25em

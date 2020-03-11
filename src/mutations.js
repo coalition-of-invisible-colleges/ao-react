@@ -691,6 +691,30 @@ function tasksMuts(tasks, ev) {
                 }
             }
             break
+        case "task-bumped":
+            let taskB
+            tasks.forEach((t) => {
+                if (t.taskId === ev.taskId) {
+                    taskB = t
+                }
+            })
+
+            if(taskB){
+                let originalIndex = taskB.subTasks.indexOf(ev.bumpId)
+                let originalIndexCompleted = taskB.completed.indexOf(ev.bumpId)
+                if ( originalIndex === taskB.subTasks.length - 1 && ev.direction === -1 ){
+                    let newST = [ev.bumpId]
+                    newST = newST.concat(taskB.subTasks.slice(0, taskB.subTasks.length - 1))
+                    taskB.subTasks = newST
+                }
+
+                if ( originalIndex === 0 && ev.direction === 1 ){
+                    let newST = taskB.subTasks.slice(1)
+                    newST.push(ev.bumpId)
+                    taskB.subTasks = newST
+                }
+            }
+            break
         case "tasks-received":
             ev.tasks.forEach(newT => {
                 if(!tasks.some((cur, i) => {

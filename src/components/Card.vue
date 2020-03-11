@@ -33,7 +33,6 @@
 <script>
 import Hammer from 'hammerjs'
 import Propagating from 'propagating-hammerjs'
-
 import calculations from '../calculations'
 import PreviewDeck from './PreviewDeck'
 import Bird from './Bird'

@@ -654,7 +654,7 @@ router.post('/events', (req, res, next)=>{
           if (
               validators.isTaskId(req.body.taskId, errRes) &&
               validators.isTaskId(req.body.swapId1, errRes) &&
-              validators.isTaskId(req.body.swapId2, errRes)
+              (validators.isTaskId(req.body.swapId2, errRes) || req.body.swapId2 === -1)
           ) {
               events.taskSwapped(
                 req.body.taskId,
@@ -667,6 +667,24 @@ router.post('/events', (req, res, next)=>{
             res.status(200).send(errRes)
           }
           break
+      case 'task-bumped':
+          if (
+              validators.isTaskId(req.body.taskId, errRes) &&
+              validators.isTaskId(req.body.bumpId, errRes) &&
+              ( req.body.direction === -1 || req.body.direction === 1)
+          ) {
+              events.taskBumped(
+                req.body.taskId,
+                req.body.bumpId,
+                req.body.direction,
+                req.body.blame,
+                utils.buildResCallback(res)
+              )
+          } else {
+            res.status(200).send(errRes)
+          }
+          break
+      
       case 'task-prioritized':
           if (
               validators.isTaskId(req.body.inId, errRes) &&

@@ -74,7 +74,6 @@ export default {
 
         orbmc.on('swipeup', (e) => {
             this.swap(-1)
-            this.previous()
             e.stopPropagation()
         })
 
@@ -174,20 +173,25 @@ export default {
             cardIndex = i
           }
         })
-        let swapIndex = (cardIndex + direction) % this.c.length
-        if (swapIndex === -1) {
-            swapIndex = this.c.length - 1
-        } else if (swapIndex > this.c.length - 1) {
-            swapIndex = 0
+        if ((cardIndex === 0 && direction === -1) || (cardIndex === this.c.length - 1 && direction === 1)) {
+            this.$store.dispatch("makeEvent", {
+                type: 'task-bumped',
+                taskId: this.taskId,
+                bumpId: this.topCard.taskId,
+                direction: direction,
+            })
+        } else {
+            let swapIndex = (cardIndex + direction) % this.c.length
+            this.$store.dispatch("makeEvent", {
+                type: 'task-swapped',
+                taskId: this.taskId,
+                swapId1: this.topCard.taskId,
+                swapId2: this.c[swapIndex].taskId,
+            })
+            if(direction === -1) {
+                this.previous()
+            }
         }
-
-        this.$store.dispatch("makeEvent", {
-            type: 'task-swapped',
-            taskId: this.taskId,
-            swapId1: this.topCard.taskId,
-            swapId2: this.c[swapIndex].taskId,
-            direction: 'up',
-        })
     },
     playSound(){
       if (!this.$store.getters.member.muted){

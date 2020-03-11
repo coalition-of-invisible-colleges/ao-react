@@ -1,11 +1,13 @@
 <template lang='pug'>
 
-.pointsset
+.pointsset(ref='wholeForm')
     input(v-model='task.points'  type='text'  placeholder='points'  @keypress.enter='setValue(false)')
-    button(@click='setValue') {{ detectChange }}
+    button(@click.stop='setValue') {{ detectChange }}
 </template>
 
 <script>
+import Hammer from 'hammerjs'
+import Propagating from 'propagating-hammerjs'
 
 export default {
     props: ['b'],
@@ -15,6 +17,27 @@ export default {
                 points: this.b.completeValue? this.b.completeValue : 1,
             }
         }
+    },
+    mounted() {
+        let el = this.$refs.wholeForm
+        if(!el) return
+        let mc = Propagating(new Hammer.Manager(el))
+
+        let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
+        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
+
+        mc.add([doubleTap, singleTap])
+
+        singleTap.recognizeWith([doubleTap])
+        singleTap.requireFailure([doubleTap])
+
+        mc.on('doubletap', (e) => {
+            e.stopPropagation()
+        })
+
+        mc.on('singletap', (e) => {
+            e.stopPropagation()
+        })
     },
     methods: {
         setValue(clear = true) {
@@ -40,7 +63,7 @@ export default {
                 taskId: this.b.taskId,
                 value: Number(this.task.points),
             })
-        }
+        },
     },
     computed: {
         detectChange(){
