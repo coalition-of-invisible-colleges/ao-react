@@ -8,15 +8,15 @@
       .label
         .btnpanel
             div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
-              button.lit(@click='switchColor("red")'  :class='{ currentColor : showCreate && task.color === "red" }').redwx.paperwrapper
+              button.lit(@click='switchColor("red")'  :class='{ currentColor : task.color === "red" }').redwx.paperwrapper
                 img.agedbackground
-              button.lit(@click='switchColor("yellow")'  :class='{ currentColor : showCreate && task.color === "yellow" }').yellowwx.paperwrapper
+              button.lit(@click='switchColor("yellow")'  :class='{ currentColor : task.color === "yellow" }').yellowwx.paperwrapper
                 img.agedbackground
-              button.lit(@click='switchColor("green")'  :class='{ currentColor : showCreate && task.color === "green" }').greenwx.paperwrapper
+              button.lit(@click='switchColor("green")'  :class='{ currentColor : task.color === "green" }').greenwx.paperwrapper
                 img.agedbackground
-              button.lit(@click='switchColor("purple")'  :class='{ currentColor : showCreate && task.color === "purple" }').purplewx.paperwrapper
+              button.lit(@click='switchColor("purple")'  :class='{ currentColor : task.color === "purple" }').purplewx.paperwrapper
                 img.agedbackground
-              button.lit(@click='switchColor("blue")'  :class='{ currentColor : showCreate && task.color === "blue" }').bluewx.paperwrapper
+              button.lit(@click='switchColor("blue")'  :class='{ currentColor : task.color === "blue" }').bluewx.paperwrapper
                 img.agedbackground
       .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
           .searchresults
@@ -352,12 +352,18 @@ button:disabled
 .btnwrapper:hover > .lit
     opacity: 0.83
 
-.btnwrapper:hover > .lit:hover
+.btnwrapper:hover > .lit:hover, .opaque > button.lit:hover
     opacity: 1
 
 .opaque > button.lit
-    opacity: 1
+    opacity: 0.83
 
+button.lit.currentColor
+    opacity: 0.83
+
+.opaque > button.lit.currentColor
+    opacity: 1
+    
 .onetime
     display: inline
 
@@ -462,9 +468,6 @@ p
     height: 100%
     pointer-events: none
     opacity: 0.2
-
-.currentColor
-    opacity: 1
 
 .closeit
     position: fixed
