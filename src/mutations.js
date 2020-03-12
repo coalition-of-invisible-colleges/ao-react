@@ -31,7 +31,7 @@ function aoMuts(aos, ev) {
                     outboundSecret: false,
                     inboundSecret: ev.secret,
                     lastContact: Date.now(),
-                    links: [ev.address]
+                    links: []
                 }
                 aos.push(newEv)
             }
@@ -50,7 +50,7 @@ function aoMuts(aos, ev) {
                     outboundSecret: ev.secret,
                     inboundSecret: false,
                     lastContact: Date.now(),
-                    links: [ev.address]
+                    links: []
                 }
                 aos.push(newEv)
             }

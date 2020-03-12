@@ -1,18 +1,19 @@
 
 let PORT = process.env.PORT || 8003
 
+const Kefir = require('kefir')
 const express = require('express')
-const dctrlDb = require('./dctrlDb')
 const path = require("path")
-const socketProtector = require('socketio-auth')
 const socketIo = require('socket.io')
+const socketProtector = require('socketio-auth')
+const dctrlDb = require('./dctrlDb')
 const state = require('./state')
 const reactions = require('./reactions')
 const applyRouter = require('./router')
 const { socketAuth } = require('./auth')
 const { watchSpot } = require('./exchangeRate')
-const Kefir = require('kefir')
-const cronStarter = require('./crons')
+const rent = require('./rent')
+const link = require('./link')
 const lightning = require('./lightning')
 
 const app = express()
@@ -26,10 +27,10 @@ function startDctrlAo(){
     let start = Date.now()
     state.initialize( err => {
       if (err) return console.log('state initialize failed:', err)
-      console.log(Date.now() - start, ' ms to initialize')
 
       watchSpot()
-      cronStarter()
+      rent()
+      link()
       lightning.recordEveryInvoice(state.serverState.cash.pay_index)
       lightning.watchOnChain()
 

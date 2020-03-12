@@ -9,8 +9,6 @@ const state = {
     dimension: dimensions[0],
     bird: false,
     stacks: 1,
-    warp: -1,
-    sierpinski: true,
     barking: false,
     pinging: false,
     flashClasses: {
@@ -77,15 +75,6 @@ const mutations = {
     },
     closeDimension(state) {
         state.dimension = false
-    },
-    setWarp(state, i){
-        state.warp = i
-    },
-    closeWarp(state){
-        state.warp = -1
-    },
-    toggleSierpinski(state, primed) {
-        state.sierpinski = !state.sierpinski
     },
     bark(state) {
         state.barking = true
