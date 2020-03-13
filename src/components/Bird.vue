@@ -24,8 +24,7 @@
         select(v-model='toAo')
             option(disabled, value='') to ao
             option(v-for='n in $store.state.ao', :value="n.address") {{ n.address }}
-        button.small(@click='dispatchMakeEvent(relayInfo)') give
-        button(@click='dispatchMakeEvent(aoLink)') link card
+        button.small(@click='dispatchMakeEvent(aoLink)') link
     .theTitle(v-if='b.guild') {{ b.guild }}
     .count
         guild-create(:editing='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
@@ -145,19 +144,6 @@ export default {
                 type: 'ao-linked',
                 address: this.toAo,
                 taskId: this.b.taskId,
-            }
-        },
-        relayInfo(){
-            return {
-                type: 'ao-relay',
-                address: this.toAo,
-                ev: {
-                    type: 'task-created',
-                    name: this.b.name,
-                    color: this.b.color,
-                    deck: [],
-                    inId: this.$store.state.cash.address,
-                }
             }
         },
     },
