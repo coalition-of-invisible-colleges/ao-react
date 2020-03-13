@@ -79,8 +79,9 @@ Optionally, you can set an amount of points to divide monthly between active acc
 
 Using the gpio pins of a raspberry pi and the [repo pi](https://github.com/autonomousorganization/pi). Physical objects - such as maglock doors and vending machines - can be hooked up then triggered by fob or by button. The resource will only respond for accounts that are active.
 
-<!-- #### Ao 2 Ao
-*work in progress* -->
+#### Ao 2 Ao
+
+Ao allows you or others to access from anywhere using a tor .onion location. You can connect two ao servers together, then mark cards that you would like to share. Ao will periodically keep the contents of the linked cards synced between servers. 
 
 #### Customize
 I suggest starting by swapping the images in `src/assets/images/*`  and hex codes in `src/styles/colours.styl` to suit your mojo.
