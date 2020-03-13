@@ -1,124 +1,133 @@
-const _ = require( 'lodash')
-const state = require( './state')
+const _ = require("lodash");
+const state = require("./state");
 
 module.exports = {
-  isAmount(val, errRes){
-      let parsed = parseFloat(val)
-      if (parsed !== 0 && !parsed) {
-          errRes.push('amount must be a number')
-          return false
-      }
-      if (parsed < 0){
-          errRes.push('amount must be positive')
-          return false
-      }
-      return true
+  isAmount(val, errRes) {
+    let parsed = parseFloat(val);
+    if (parsed !== 0 && !parsed) {
+      errRes.push("amount must be a number");
+      return false;
+    }
+    if (parsed < 0) {
+      errRes.push("amount must be positive");
+      return false;
+    }
+    return true;
   },
-  isField(val, errRes){
-      let isField = (
-          val === 'name' ||
-          val === 'email' ||
-          val === 'secret' ||
-          val === 'fob'
-      )
-      if (!isField) {
-          errRes.push('invalid field')
-          return false
-      }
-      return isField
+  isField(val, errRes) {
+    let isField =
+      val === "name" || val === "email" || val === "secret" || val === "fob";
+    if (!isField) {
+      errRes.push("invalid field");
+      return false;
+    }
+    return isField;
   },
-  isAddress(val, errRes){
-      let result = false
-      state.serverState.ao.forEach(ao =>{
-          if (val === ao.address){
-            result = true
-          }
-      })
-      if (!result) {
-          errRes.push('invalid address')
+  isAddress(val, errRes) {
+    let result = false;
+    state.serverState.ao.forEach(ao => {
+      if (val === ao.address) {
+        result = true;
       }
-      return result
+    });
+    if (!result) {
+      errRes.push("invalid address");
+    }
+    return result;
   },
-  isMemberId(val, errRes){
-      let result = false
-      state.serverState.members.forEach(member =>{
-          if (val === member.memberId){
-            result = true
-          }
-      })
-      if (!result) {
-          errRes.push('invalid member')
+  isMemberId(val, errRes) {
+    let result = false;
+    state.serverState.members.forEach(member => {
+      if (val === member.memberId) {
+        result = true;
       }
-      return result
+    });
+    if (!result) {
+      errRes.push("invalid member");
+    }
+    return result;
   },
-  isActiveMemberId(val, errRes){
-      let result = false
-      state.serverState.members.forEach(member =>{
-          if (val === member.memberId && member.active >= 0){
-            result = true
-          }
-      })
-      if (!result) {
-          errRes.push('invalid member')
+  isActiveMemberId(val, errRes) {
+    let result = false;
+    state.serverState.members.forEach(member => {
+      if (val === member.memberId && member.active >= 0) {
+        result = true;
       }
-      return result
+    });
+    if (!result) {
+      errRes.push("invalid member");
+    }
+    return result;
   },
-  isTaskId(val, errRes){
-      let result = false
-      state.serverState.tasks.forEach(task =>{
-          if (val == task.taskId){
-            result = true
-          }
-      })
-      if (!result) {
-          errRes.push('invalid task')
+  isTaskId(val, errRes) {
+    let result = false;
+    state.serverState.tasks.forEach(task => {
+      if (val == task.taskId) {
+        result = true;
       }
-      return result
+    });
+    if (!result) {
+      errRes.push("invalid task");
+    }
+    return result;
   },
-  isSession(val, errRes){
-      let result = false
-      state.serverState.sessions.forEach(s => {
-          if (val === s.session){
-            result = true
-          }
-      })
-      if (!result) {
-          errRes.push('invalid session')
+  isSession(val, errRes) {
+    let result = false;
+    state.serverState.sessions.forEach(s => {
+      if (val === s.session) {
+        result = true;
       }
-      return result
+    });
+    if (!result) {
+      errRes.push("invalid session");
+    }
+    return result;
   },
-  isResourceId(val, errRes){
-      let result = false
-      state.serverState.resources.forEach(resource =>{
-          if (val === resource.resourceId){
-            result = true
-          }
-      })
-      if (!result) {
-          errRes.push('invalid resource')
+  isResourceId(val, errRes) {
+    let result = false;
+    state.serverState.resources.forEach(resource => {
+      if (val === resource.resourceId) {
+        result = true;
       }
-      return result
+    });
+    if (!result) {
+      errRes.push("invalid resource");
+    }
+    return result;
   },
-  isNewResourceId(val, errRes){
-      let isNew = true
-      state.serverState.resources.forEach(resource =>{
-          if (val == resource.resourceId){
-            isNew = false
-          }
-      })
-      if (!isNew){
-          errRes.push('resourceId exists')
+  isNewResourceId(val, errRes) {
+    let isNew = true;
+    state.serverState.resources.forEach(resource => {
+      if (val == resource.resourceId) {
+        isNew = false;
       }
-      return isNew
+    });
+    if (!isNew) {
+      errRes.push("resourceId exists");
+    }
+    return isNew;
   },
-  isBool(val, errRes){
-      let isBool = (typeof val === 'boolean')
-      if (!isBool){
-          errRes.push('field requires boolean')
-      }
-      return isBool
+  isBool(val, errRes) {
+    let isBool = typeof val === "boolean";
+    if (!isBool) {
+      errRes.push("field requires boolean");
+    }
+    return isBool;
   },
-  isNotes(val, errRes){
-      return true
+  isNotes(val, errRes) {
+    return true;
+  },
+  isCoord(val, errRes) {
+    let result = true;
+    const w = 200;
+    let bx =
+      val.x === 0 || (0 < val.x && val.x < w) || (val.x < 0 && -w < val.x);
+    let by =
+      val.y === 0 || (0 < val.y && val.y < w) || (val.y < 0 && -w < val.y);
+    if (!(by && bx) && Number.isInteger(val.x) && Number.isInteger(val.y)) {
+      result = false;
+      // errRes.push("invalid grid coord");
+    }
+    return result;
   }
-}
+};
