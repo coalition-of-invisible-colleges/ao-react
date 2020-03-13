@@ -101,7 +101,7 @@ const actions = {
     makeEvent({commit, state, getters, dispatch}, newEv){
         let startTs = Date.now()
         commit("setReqStatus", "pending")
-        request
+        return request
             .post('/events')
             .send(newEv)
             .set("Authorization", state.token)

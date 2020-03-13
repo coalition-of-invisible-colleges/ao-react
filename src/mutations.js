@@ -743,6 +743,9 @@ function tasksMuts(tasks, ev) {
 function gridMuts(grid, ev) {
   switch(ev.type) {
     case 'grid-add':
+      if(!grid.hasOwnProperty(ev.coord.y)) {
+        grid[ev.coord.y] = {}
+      }
       grid[ev.coord.y][ev.coord.x] = ev.taskId
       break
     case 'grid-del':

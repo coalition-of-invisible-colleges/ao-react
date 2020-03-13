@@ -123,9 +123,6 @@ export default {
 		});
 	},
 	methods: {
-		createGridMeme() {
-			console.log("create grid meme");
-		},
 		toCardMode() {
 			this.$store.commit("setDimension", 0);
 			this.$router.push("/" + this.$store.state.upgrades.mode);
@@ -203,6 +200,46 @@ export default {
 			}
 			this.resetCard();
 		},
+		createGridMeme() {
+			if (this.$store.state.loader.connected !== "connected") return
+			let foundId = this.matchCard
+			let potentialCard = this.task.name.trim()
+			if (!foundId) {
+				request
+					.post("/events")
+					.set("Authorization", this.$store.state.loader.token)
+					.send({
+						type: "task-created",
+						name: potentialCard,
+						color: this.task.color,
+						deck: [this.$store.getters.member.memberId],
+						inId: this.$store.getters.memberCard.taskId
+					})
+					.then(() => {
+		            	this.$store.dispatch("makeEvent", {
+			                type: 'grid-add',
+			                taskId: this.taskId,
+			                coord: {
+			                    x: this.$store.state.upgrades.grid.selX,
+			                    y: this.$store.state.upgrades.grid.selY
+			                },
+		            	})
+		            	request.end((err, res) => {
+							if (err) return console.log(err);
+						})
+		            })
+			} else {
+				this.$store.dispatch("makeEvent", {
+	                type: 'grid-add',
+	                taskId: foundId,
+	                coord: {
+	                    x: this.$store.state.upgrades.grid.selX,
+	                    y: this.$store.state.upgrades.grid.selY
+	                },
+            	})
+			}
+			this.resetCard();            
+        },
 		isGrabbed(taskId) {
 			return (
 				this.$store.getters.hashMap[taskId].deck.indexOf(

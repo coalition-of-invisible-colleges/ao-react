@@ -1,7 +1,7 @@
 <template lang="pug">
 
 .portal(ref='memeportal')
-    img.pepe(src='../assets/images/loud.svg'  :class='{ highlight : isMemed }')
+    img.pepe(src='../assets/images/pepe.svg'  :class='{ highlight : isMemed }'  :key='$store.getters.contextCard')
 </template>
 
 <script>
@@ -29,6 +29,7 @@ export default {
 		singleTap.requireFailure([doubleTap]);
 
 		mc.on("singletap", e => {
+			this.goPepe();
 			e.stopPropagation();
 		});
 
@@ -45,18 +46,26 @@ export default {
 	},
 	methods: {
 		goPepe() {
-			this.$router.push("/grid/");
+			this.$router.push("/grid");
 		},
 		meme() {
-			// add a meme to a predetermined spot on the grid
+			// add a meme to the empty spot nearest the center
 		}
 	},
 	computed: {
 		isMemed() {
-			return true;
+			// for some reason this isn't being called; :key above seems wrong
+			return Object.values(this.$store.state.grid).some(row => {
+				if(!row) return false
+				return Object.values(row).some(tId => {
+					if(tId === this.$store.getters.contextCard.taskId) {
+						return true
+					}
+				})
+			})
 		}
 	}
-};
+}
 </script>
 
 <style lang="stylus" scoped>

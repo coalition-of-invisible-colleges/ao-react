@@ -118,14 +118,15 @@ module.exports = {
     return true;
   },
   isCoord(val, errRes) {
+    console.log("val is ", val)
     let result = true;
     const lbx = 0;
     const lby = 0;
     const ubx = 16;
     const uby = 16;
 
-    let bx = lbx <= x && x <= ubx;
-    let by = lby <= y && y <= uby;
+    let bx = lbx <= val.x && val.x <= ubx;
+    let by = lby <= val.y && val.y <= uby;
     if (!(by && bx) && Number.isInteger(val.x) && Number.isInteger(val.y)) {
       result = false;
       // errRes.push("invalid grid coord");

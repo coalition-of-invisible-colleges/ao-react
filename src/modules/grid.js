@@ -17,21 +17,21 @@ const mutations = {
 };
 
 const actions = {
-  addGrid() {
-    request
-      .post("/events")
-      .set("Authorization", this.$store.state.loader.token)
-      .send({
-        type: "task-created",
-        name: potentialCard,
-        color: this.task.color,
-        deck: [this.$store.getters.member.memberId],
-        inId: this.taskId
-      })
-      .end((err, res) => {
-        if (err) return console.log(err);
-      });
-  }
+  // addGrid() {
+  //   request
+  //     .post("/events")
+  //     .set("Authorization", this.$store.state.loader.token)
+  //     .send({
+  //       type: "task-created",
+  //       name: potentialCard,
+  //       color: this.task.color,
+  //       deck: [this.$store.getters.member.memberId],
+  //       inId: this.taskId
+  //     })
+  //     .end((err, res) => {
+  //       if (err) return console.log(err);
+  //     });
+  // }
 };
 
 module.exports = {

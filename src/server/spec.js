@@ -733,12 +733,14 @@ router.post("/events", (req, res, next) => {
       } else {
         res.status(200).send(errRes);
       }
+      break
     case "grid-del":
       if (validators.isCoord(req.body.coord, errRes)) {
         events.gridDel(req.body.coord, utils.buildResCallback(res));
       } else {
         res.status(200).send(errRes);
       }
+      break
     default:
       next();
 

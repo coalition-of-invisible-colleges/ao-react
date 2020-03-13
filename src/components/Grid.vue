@@ -2,14 +2,13 @@
     
 .gridContainer
     .grid
-        .gridTwo(v-for="y in 17") 
-            .box(v-for="x in 17"  :style="{ gridColumnStart: x+1, gridRowStart: y+1 }"  @click="select(x,y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }") 
-
+        .gridTwo(v-for="y in 17"  :key='$store.state.grid') 
+            .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
+                grid-card(v-if="getCard(getTaskId(x, y))"  :b="getCard(getTaskId(x, y))")
 
     //- .start(v-if="$store.state.grid === {}")
     //- div(v-else  v-for="(row, x) in Object.keys($store.state.grid)")
     //-     .gridItem(v-for="(tId, y) in Object.keys(row)") {{getCard(tId).name}} 
-    //-         hypercard(v-for='y in Object.keys(x)'  :b="getCard(y)"  :key="y")
     //-         .addCard.left(v-if="$store.state.grid[x][y-1] === undefined"  @click="selectSpace()")
     //-         .addCard.right(v-if="$store.state.grid[x][y+1] === undefined"  @click="selectSpace()")
     //-         .addCard.top(v-if="$store.state.grid[x+1][y] === undefined"  @click="selectSpace()")
@@ -28,23 +27,31 @@
 </template>
 
 <script>
-import Hypercard from "./Card";
+import GridCard from "./GridCard";
 
 export default {
-	components: {},
+	components: { GridCard },
 
 	methods: {
 		select(x, y) {
-			this.$store.commit("selectGridMeme", { x, y });
+			this.$store.commit("selectGridMeme", { x, y })
 		},
-
-		addCard() {},
-
-		createCard() {},
-
+        getTaskId(x, y) {
+            if(this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
+                return this.$store.state.grid[y][x]
+            }
+            return false
+        },
 		getCard(taskId) {
-			return this.$store.getters.hashMap[taskId];
-		}
+            if(!taskId) return false
+			return this.$store.getters.hashMap[taskId]
+		},
+        cardName(x, y) {
+            let taskId = this.getTaskId(x, y)
+            if(taskId) {
+                return this.getCard(taskId).name
+            }
+        },
 	},
 
 	computed: {}
@@ -53,7 +60,7 @@ export default {
 
 <style lang="stylus" scoped>
 
-.start
+@import '../styles/colours'
 
 .gridContainer
     height:100%
@@ -61,13 +68,14 @@ export default {
 
 .grid
     display: grid
-    grid-template-rows: repeat(17, 25px)
-    grid-template-columns: (25px)
+    grid-template-rows: repeat(17, 5em)
+    grid-template-columns: (5em)
+    margin-top: -1.5em
 
 .gridTwo
     display:grid
-    grid-template-columns: repeat(17, 25px)
-    grid-template-rows: (25px)
+    grid-template-columns: repeat(17, 5em)
+    grid-template-rows: (5em)
 
 .gridItem
     height:75px
@@ -98,16 +106,16 @@ export default {
     width: 75px
 
 .box
-    height: 25x
-    width: 25px
-    border: 1px solid purple
-    background-color: yellow
-    min-height: 25px
-    min-width: 25px
+    height: 5em
+    width: 5em
+    border: 1px solid wrexpurple
+    background-color: rgba(22, 22, 22, 0.3)
+    min-height: 5em
+    min-width: 5em
 
 .box:hover
-    background-color: blue
+    background-color: rgba(28, 78, 176, 0.5)
 
 .box.selected
-    background-color: green
+    background-color: rgba(39, 107, 22, 0.5)
 </style>
