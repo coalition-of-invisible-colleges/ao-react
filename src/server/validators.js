@@ -119,11 +119,13 @@ module.exports = {
   },
   isCoord(val, errRes) {
     let result = true;
-    const w = 200;
-    let bx =
-      val.x === 0 || (0 < val.x && val.x < w) || (val.x < 0 && -w < val.x);
-    let by =
-      val.y === 0 || (0 < val.y && val.y < w) || (val.y < 0 && -w < val.y);
+    const lbx = 0;
+    const lby = 0;
+    const ubx = 16;
+    const uby = 16;
+
+    let bx = lbx <= x && x <= ubx;
+    let by = lby <= y && y <= uby;
     if (!(by && bx) && Number.isInteger(val.x) && Number.isInteger(val.y)) {
       result = false;
       // errRes.push("invalid grid coord");

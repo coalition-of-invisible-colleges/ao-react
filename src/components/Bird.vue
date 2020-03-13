@@ -7,13 +7,14 @@
             img.birdy.faded(v-else-if='!showGive && !b.guild' src='../assets/images/send.svg')
             img.birdy(v-else  src='../assets/images/sendselected.svg')
     .play(v-if='showPlay')
-        option(disabled, value='') to mission
-        template(v-for='g in $store.getters.sendableGuilds')
-            option(:value="g.taskId") {{ g.guild }}
-            template(v-for='p in g.guilds')
-                option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
-                template(v-for='sp in p.guilds')
-                    option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
+        select(v-model='toGuild')
+            option(disabled, value='') to mission
+            template(v-for='g in $store.getters.sendableGuilds')
+                option(:value="g.taskId") {{ g.guild }}
+                template(v-for='p in g.guilds')
+                    option(:value="p.taskId") &nbsp;&nbsp;&nbsp;&nbsp;{{ p.guild }}
+                    template(v-for='sp in p.guilds')
+                        option(:value="sp.taskId") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ sp.guild }}
         button.small(@click='dispatchMakeEvent(playInfo)') give
     .give(v-if='showGive')
         select(v-model='toMember')
