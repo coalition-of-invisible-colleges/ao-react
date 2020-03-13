@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const tr = require('tor-request');
 const crypto = require('../crypto')
+const calculations = require('../calculations')
 
 function postEvent(address, secret, body, callback){
   tr.request({
@@ -9,6 +10,21 @@ function postEvent(address, secret, body, callback){
       headers: {"Authorization": secret},
       method: 'post',
       body,
+      json: true,
+    }, function (err, res, resBody) {
+          if (err){
+              console.log("error res", err)
+              return callback(err)
+          }
+          callback(resBody)
+  })
+}
+
+function checkHash(address, secret, taskId, callback){
+  tr.request({
+      url: 'http://' + address + '/taskhash/' + taskId,
+      headers: {"Authorization": secret},
+      method: 'post',
       json: true,
     }, function (err, res, resBody) {
           if (err){
@@ -37,5 +53,6 @@ function getState(address, secret, callback){
 
 module.exports = {
     postEvent,
-    getState
+    getState,
+    checkHash,
 }
