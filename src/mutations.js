@@ -740,6 +740,17 @@ function tasksMuts(tasks, ev) {
     }
 }
 
+function gridMuts(grid, ev) {
+  switch(ev.type) {
+    case 'grid-add':
+      grid[ev.coord.x][ev.coord.y] = ev.taskId
+      break
+    case 'grid-del':
+      delete grid[ev.coord.x][ev.coord.y]
+      break
+  }
+}
+
 module.exports = {
     aoMuts,
     cashMuts,
@@ -747,4 +758,5 @@ module.exports = {
     resourcesMuts,
     sessionsMuts,
     tasksMuts,
+    gridMuts
 }
