@@ -742,8 +742,6 @@ router.post("/events", (req, res, next) => {
     default:
       next();
 
-    default:
-      next();
   }
 });
 
