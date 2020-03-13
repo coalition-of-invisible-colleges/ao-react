@@ -1,10 +1,11 @@
-<template lang='pug'>
+<template lang="pug">
 #createtask(ref="closeable")
   div(v-if='isCard')
       transition(name="slide-fade")
         .cc(v-show='showCreate')
             textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
-            button(@click='createOrFindTask'  :disabled='$store.state.loader.connected !== "connected"').fwi create card
+            button(v-if="isPepe"  @click='createGridMeme'  :disabled='$store.state.loader.connected !== "connected" || !isMemeSelected').fwi {{isMemeSelected ? 'place card' :'select square' }}
+            button(v-else @click='createOrFindTask'  :disabled='$store.state.loader.connected !== "connected"').fwi create card
       .label
         .btnpanel
             div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
@@ -32,291 +33,323 @@
 </template>
 
 <script>
-
-import _ from 'lodash'
-import request from "superagent"
-import Current from './Current'
-import calculations from '../calculations'
+import _ from "lodash";
+import request from "superagent";
+import Current from "./Current";
+import calculations from "../calculations";
 
 export default {
-    data(){
-        return {
-            showCreate: false,
-            task: {
-                name: '',
-                search: '',
-                color: 'green',
-            },
-            swipeTimeout: 0,
-            searchResults: [],
-            exploring: false,
-            inDebounce: false,
-        }
-    },
-    components: {
-        Current
-    },
-    mounted() {
-        var el = document.getElementById('createtask')
-        var mc = new Hammer.Manager(el)
+	data() {
+		return {
+			showCreate: false,
+			task: {
+				name: "",
+				search: "",
+				color: "green"
+			},
+			swipeTimeout: 0,
+			searchResults: [],
+			exploring: false,
+			inDebounce: false
+		};
+	},
+	components: {
+		Current
+	},
+	mounted() {
+		var el = document.getElementById("createtask");
+		var mc = new Hammer.Manager(el);
 
-        var Swipe = new Hammer.Swipe()
-        mc.add(Swipe)
-        mc.on('swipeleft', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.previousColor()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		var Swipe = new Hammer.Swipe();
+		mc.add(Swipe);
+		mc.on("swipeleft", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.previousColor();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        mc.on('swiperight', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.nextColor()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		mc.on("swiperight", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.nextColor();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        mc.on('swipedown', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.closeCreate()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		mc.on("swipedown", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.closeCreate();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        mc.on('swipeup', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.openCreate()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		mc.on("swipeup", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.openCreate();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        var ca = document.getElementById('card')
-        var mc2 = new Hammer.Manager(ca)
-        var Swipe2 = new Hammer.Swipe()
-        mc2.add(Swipe2)
-        mc2.on('swipeleft', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.previousColor()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		var ca = document.getElementById("card");
+		var mc2 = new Hammer.Manager(ca);
+		var Swipe2 = new Hammer.Swipe();
+		mc2.add(Swipe2);
+		mc2.on("swipeleft", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.previousColor();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        mc2.on('swiperight', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.nextColor()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		mc2.on("swiperight", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.nextColor();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        mc2.on('swipedown', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.closeCreate()
-                this.swipeTimeout = Date.now()
-            }
-        });
+		mc2.on("swipedown", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.closeCreate();
+				this.swipeTimeout = Date.now();
+			}
+		});
 
-        mc2.on('swipeup', (e) => {
-            if(Date.now() - this.swipeTimeout > 100) {
-                this.openCreate()
-                this.swipeTimeout = Date.now()
-            }
-        });
-    },
-    methods: {
-        toCardMode(){
-            this.$store.commit("setDimension", 0)
-            this.$router.push('/' + this.$store.state.upgrades.mode)
-        },
-        goIn(taskId){
-            clearTimeout(this.inDebounce)
-            let panel = [taskId]
-            let parents = [  ]
-            let top = 0
+		mc2.on("swipeup", e => {
+			if (Date.now() - this.swipeTimeout > 100) {
+				this.openCreate();
+				this.swipeTimeout = Date.now();
+			}
+		});
+	},
+	methods: {
+		createGridMeme() {
+			console.log("create grid meme");
+		},
+		toCardMode() {
+			this.$store.commit("setDimension", 0);
+			this.$router.push("/" + this.$store.state.upgrades.mode);
+		},
+		goIn(taskId) {
+			clearTimeout(this.inDebounce);
+			let panel = [taskId];
+			let parents = [];
+			let top = 0;
 
-            if (this.$store.getters.contextCard.taskId){
-                parents.push(this.$store.getters.contextCard.taskId)
-            } else if (this.$store.getters.memberCard.taskId){
-                parents.push(this.$store.getters.memberCard.taskId)
-            }
-            this.$store.dispatch("goIn", {
-                parents,
-                top,
-                panel
-            })
-            if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.priorities.length > 0) {
-                this.$store.commit("setMode", 1)
-            }
-            this.$router.push("/" + this.$store.state.upgrades.mode)
-        },
-        switchColor(color, refocus = true){
-            if (this.task.color === color){
-                this.showCreate = !this.showCreate
-            } else if (this.showCreate) {
-                // don't close, switch
-            } else {
-                this.showCreate = !this.showCreate
-            }
-            this.task.color = color
-            if(refocus) {
-                setTimeout(()=>{
-                    document.getElementById('card').focus()
-                }, 1)
-            }
-        },
-        resetCard(){
-            this.task.name = ''
-        },
-        subTaskTask(taskId) {
-            this.$store.dispatch("makeEvent", {
-                type: 'task-sub-tasked',
-                taskId: this.taskId,
-                subTask: taskId,
-                memberId: this.$store.getters.member.memberId,
-            })
-        },
-        createOrFindTask(){
-            if(this.$store.state.loader.connected !== "connected") return
-            let foundId = this.matchCard
-            let potentialCard = this.task.name.trim()
-            if(!foundId) {
-                request
-                    .post('/events')
-                    .set('Authorization', this.$store.state.loader.token)
-                    .send({
-                        type: 'task-created',
-                        name: potentialCard,
-                        color: this.task.color,
-                        deck: [this.$store.getters.member.memberId],
-                        inId: this.taskId,
-                    })
-                    .end((err,res)=>{
-                        if (err) return console.log(err);
-                    })
-            } else {
-                this.subTaskTask(foundId)
-            }
-            this.resetCard()
-        },
-        isGrabbed(taskId){
-            return this.$store.getters.hashMap[taskId].deck.indexOf( this.$store.getters.member.memberId ) > -1
-        },
-        nextColor() {
-            let colors = ['red', 'yellow', 'green', 'purple', 'blue']
-            let color = colors.indexOf(this.task.color)
-            color++
-            this.switchColor(colors[color > 4 ? 0 : color], false)
-        },
-        previousColor() {
-            let colors = ['red', 'yellow', 'green', 'purple', 'blue']
-            let color = colors.indexOf(this.task.color)
-            color--
-            this.switchColor(colors[color < 0 ? 4 : color], false)
-        },
-        openCreate() {
-            this.showCreate = !this.showCreate
-        },
-        closeCreate() {
-            this.showCreate = false
-        },
-        resultInputSty(card) {
-          return {
-              redtx : card.color == 'red',
-              bluetx : card.color == 'blue',
-              greentx : card.color == 'green',
-              yellowtx : card.color == 'yellow',
-              purpletx : card.color == 'purple',
-              blacktx : card.color == 'black',
-          }
-        },
-        loadResult(t) {
-            this.exploring = true
-            this.task.name = t.name.trim()
-            this.task.color = t.color
-        },
-        debounce(func, delay) {
-            const context = this
-            const args = arguments
-            clearTimeout(this.inDebounce)
-            this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
-        },
-        shortName(theName) {
-            return calculations.shortName(theName)
-        },
-    },
-    computed: {
-        isCard(){
-            return this.$store.state.upgrades.dimension === 'unicorn'
-        },
-        taskId(){
-            return this.$store.getters.contextCard.taskId
-        },
-        matchCard(){
-            let foundId
-            this.$store.state.tasks.filter(t => {
-                if(t.name === this.task.name.trim()) {
-                    foundId = t.taskId
-                }
-            })
-            return foundId
-        },
-        matchCards() {
-            if(this.task.search.length < 1) return []
-            if(this.exploring) return this.searchResults
-            let matches = []
-            let guildmatches = []
-            let dogematches = []
-            try {
-                let regex = new RegExp(this.task.search, 'i')
-                this.$store.state.tasks.forEach(t => {
-                    if(t.guild && regex.test(t.guild)) {
-                        guildmatches.push(t)
-                    } else if(regex.test(t.name)) {
-                        matches.push(t)
-                    }
-                })
-                this.$store.state.members.forEach(member => {
-                    if(regex.test(member.name)) {
-                        let result = this.$store.getters.hashMap[member.memberId]
-                        result.name = member.name
-                        dogematches.push(result)
-                    }
-                })
-            } catch (err){
-                console.log("regex search terminated in error: ", err)
-            }
-            this.searchResults = { guilds: guildmatches, doges: dogematches, cards: matches }
-            return this.searchResults
-        },
-        colorWord(){
-            switch (this.task.color) {
-                case "blue": return 'info'
-                case "red": return 'challenge'
-                case "green": return 'do'
-                case "purple": return 'dream'
-                case "yellow": return 'align'
-                case "black": return 'bark'
-            }
-        },
-        cardInputSty() {
-            return calculations.cardColorCSS(this.task.color)
-        },
-        debouncedName: {
-            get() {
-                return this.task.name
-            },
-            set(newValue) {
-                this.task.name = newValue
-                this.debounce(() => {
-                    this.task.search = newValue
-                }, 400)
-            }
-        },
-    }
-}
+			if (this.$store.getters.contextCard.taskId) {
+				parents.push(this.$store.getters.contextCard.taskId);
+			} else if (this.$store.getters.memberCard.taskId) {
+				parents.push(this.$store.getters.memberCard.taskId);
+			}
+			this.$store.dispatch("goIn", {
+				parents,
+				top,
+				panel
+			});
+			if (
+				this.$store.state.upgrades.mode === "doge" &&
+				this.$store.getters.contextCard.priorities.length > 0
+			) {
+				this.$store.commit("setMode", 1);
+			}
+			this.$router.push("/" + this.$store.state.upgrades.mode);
+		},
+		switchColor(color, refocus = true) {
+			if (this.task.color === color) {
+				this.showCreate = !this.showCreate;
+			} else if (this.showCreate) {
+				// don't close, switch
+			} else {
+				this.showCreate = !this.showCreate;
+			}
+			this.task.color = color;
+			if (refocus) {
+				setTimeout(() => {
+					document.getElementById("card").focus();
+				}, 1);
+			}
+		},
+		resetCard() {
+			this.task.name = "";
+		},
+		subTaskTask(taskId) {
+			this.$store.dispatch("makeEvent", {
+				type: "task-sub-tasked",
+				taskId: this.taskId,
+				subTask: taskId,
+				memberId: this.$store.getters.member.memberId
+			});
+		},
+		createOrFindTask() {
+			if (this.$store.state.loader.connected !== "connected") return;
+			let foundId = this.matchCard;
+			let potentialCard = this.task.name.trim();
+			if (!foundId) {
+				request
+					.post("/events")
+					.set("Authorization", this.$store.state.loader.token)
+					.send({
+						type: "task-created",
+						name: potentialCard,
+						color: this.task.color,
+						deck: [this.$store.getters.member.memberId],
+						inId: this.taskId
+					})
+					.end((err, res) => {
+						if (err) return console.log(err);
+					});
+			} else {
+				this.subTaskTask(foundId);
+			}
+			this.resetCard();
+		},
+		isGrabbed(taskId) {
+			return (
+				this.$store.getters.hashMap[taskId].deck.indexOf(
+					this.$store.getters.member.memberId
+				) > -1
+			);
+		},
+		nextColor() {
+			let colors = ["red", "yellow", "green", "purple", "blue"];
+			let color = colors.indexOf(this.task.color);
+			color++;
+			this.switchColor(colors[color > 4 ? 0 : color], false);
+		},
+		previousColor() {
+			let colors = ["red", "yellow", "green", "purple", "blue"];
+			let color = colors.indexOf(this.task.color);
+			color--;
+			this.switchColor(colors[color < 0 ? 4 : color], false);
+		},
+		openCreate() {
+			this.showCreate = !this.showCreate;
+		},
+		closeCreate() {
+			this.showCreate = false;
+		},
+		resultInputSty(card) {
+			return {
+				redtx: card.color == "red",
+				bluetx: card.color == "blue",
+				greentx: card.color == "green",
+				yellowtx: card.color == "yellow",
+				purpletx: card.color == "purple",
+				blacktx: card.color == "black"
+			};
+		},
+		loadResult(t) {
+			this.exploring = true;
+			this.task.name = t.name.trim();
+			this.task.color = t.color;
+		},
+		debounce(func, delay) {
+			const context = this;
+			const args = arguments;
+			clearTimeout(this.inDebounce);
+			this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay);
+		},
+		shortName(theName) {
+			return calculations.shortName(theName);
+		}
+	},
+	computed: {
+		isPepe() {
+			return this.$router.currentRoute.path.split("/")[1] === "grid";
+		},
+		isCard() {
+			return this.$store.state.upgrades.dimension === "unicorn";
+		},
+		taskId() {
+			return this.$store.getters.contextCard.taskId;
+		},
+		matchCard() {
+			let foundId;
+			this.$store.state.tasks.filter(t => {
+				if (t.name === this.task.name.trim()) {
+					foundId = t.taskId;
+				}
+			});
+			return foundId;
+		},
+		matchCards() {
+			if (this.task.search.length < 1) return [];
+			if (this.exploring) return this.searchResults;
+			let matches = [];
+			let guildmatches = [];
+			let dogematches = [];
+			try {
+				let regex = new RegExp(this.task.search, "i");
+				this.$store.state.tasks.forEach(t => {
+					if (t.guild && regex.test(t.guild)) {
+						guildmatches.push(t);
+					} else if (regex.test(t.name)) {
+						matches.push(t);
+					}
+				});
+				this.$store.state.members.forEach(member => {
+					if (regex.test(member.name)) {
+						let result = this.$store.getters.hashMap[member.memberId];
+						result.name = member.name;
+						dogematches.push(result);
+					}
+				});
+			} catch (err) {
+				console.log("regex search terminated in error: ", err);
+			}
+			this.searchResults = {
+				guilds: guildmatches,
+				doges: dogematches,
+				cards: matches
+			};
+			return this.searchResults;
+		},
+		colorWord() {
+			switch (this.task.color) {
+				case "blue":
+					return "info";
+				case "red":
+					return "challenge";
+				case "green":
+					return "do";
+				case "purple":
+					return "dream";
+				case "yellow":
+					return "align";
+				case "black":
+					return "bark";
+			}
+		},
+		cardInputSty() {
+			return calculations.cardColorCSS(this.task.color);
+		},
+		debouncedName: {
+			get() {
+				return this.task.name;
+			},
+			set(newValue) {
+				this.task.name = newValue;
+				this.debounce(() => {
+					this.task.search = newValue;
+				}, 400);
+			}
+		},
 
+		isMemeSelected() {
+			return !(
+				!this.$store.state.upgrades.grid.selX ||
+				this.$store.state.upgrades.grid.selX < 0 ||
+				this.$store.state.upgrades.grid.selX > 16 ||
+				!this.$store.state.upgrades.grid.selY ||
+				this.$store.state.upgrades.grid.selY < 0 ||
+				this.$store.state.upgrades.grid.selY > 16
+			);
+		}
+	}
+};
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
 @import '../styles/colours'
 @import '../styles/button'
@@ -345,7 +378,7 @@ button
 
 button:disabled
     background: darkgreen
-    
+
 .lit
     opacity: 0.69
 
@@ -363,7 +396,7 @@ button.lit.currentColor
 
 .opaque > button.lit.currentColor
     opacity: 1
-    
+
 .onetime
     display: inline
 
