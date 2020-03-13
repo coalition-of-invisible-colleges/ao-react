@@ -743,10 +743,10 @@ function tasksMuts(tasks, ev) {
 function gridMuts(grid, ev) {
   switch(ev.type) {
     case 'grid-add':
-      grid[ev.coord.x][ev.coord.y] = ev.taskId
+      grid[ev.coord.y][ev.coord.x] = ev.taskId
       break
     case 'grid-del':
-      delete grid[ev.coord.x][ev.coord.y]
+      delete grid[ev.coord.y][ev.coord.x]
       break
   }
 }
