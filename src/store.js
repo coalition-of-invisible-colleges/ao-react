@@ -22,7 +22,7 @@ export default new Vuex.Store({
     resources: modules.resources,
     cash: modules.cash,
     sessions: modules.sessions,
-    grid: module.grid
+    grid: modules.grid
   },
   getters: {
     warpDrive(state, getters) {
