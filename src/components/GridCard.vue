@@ -1,17 +1,16 @@
-<template lang='pug'>
+<template lang="pug">
 .meme(ref='wholeCard')
     linky(:x='b.name' v-if='!dogeCard')
     div(v-else) {{ dogeCard.name }}
 </template>
 
 <script>
-import Linky from './Linky'
+import Linky from "./Linky";
 
 export default {
-    props: ['b'],
-    components: { Linky },
-}
-
+	props: ["b"],
+	components: { Linky }
+};
 </script>
 
 <style lang="stylus" scoped>
@@ -26,5 +25,14 @@ export default {
   align-items: center
   width: 100%
   height: 100%
-  overflow: hidden
+  max-height:100%
+  max-width:100%
+
+.linky
+  max-height: 15em
+  max-width: 15em
+  object-fit: fill
+
+.linky .noheight
+  max-height: 15em
 </style>

@@ -34,24 +34,24 @@ export default {
 
 	methods: {
 		select(x, y) {
-			this.$store.commit("selectGridMeme", { x, y })
+			this.$store.commit("selectGridMeme", { x, y });
 		},
-        getTaskId(x, y) {
-            if(this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
-                return this.$store.state.grid[y][x]
-            }
-            return false
-        },
+		getTaskId(x, y) {
+			if (this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
+				return this.$store.state.grid[y][x];
+			}
+			return false;
+		},
 		getCard(taskId) {
-            if(!taskId) return false
-			return this.$store.getters.hashMap[taskId]
+			if (!taskId) return false;
+			return this.$store.getters.hashMap[taskId];
 		},
-        cardName(x, y) {
-            let taskId = this.getTaskId(x, y)
-            if(taskId) {
-                return this.getCard(taskId).name
-            }
-        },
+		cardName(x, y) {
+			let taskId = this.getTaskId(x, y);
+			if (taskId) {
+				return this.getCard(taskId).name;
+			}
+		}
 	},
 
 	computed: {}
@@ -63,19 +63,17 @@ export default {
 @import '../styles/colours'
 
 .gridContainer
-    height:100%
-    width:100%
 
 .grid
     display: grid
-    grid-template-rows: repeat(17, 5em)
-    grid-template-columns: (5em)
+    grid-template-rows: repeat(17, 15em)
+    grid-template-columns: (15em)
     margin-top: -1.5em
 
 .gridTwo
     display:grid
-    grid-template-columns: repeat(17, 5em)
-    grid-template-rows: (5em)
+    grid-template-columns: repeat(17, 15em)
+    grid-template-rows: (15em)
 
 .gridItem
     height:75px
@@ -106,12 +104,12 @@ export default {
     width: 75px
 
 .box
-    height: 5em
-    width: 5em
+    height: 15em
+    width: 15em
     border: 1px solid wrexpurple
     background-color: rgba(22, 22, 22, 0.3)
-    min-height: 5em
-    min-width: 5em
+    min-height: 15em
+    min-width: 15em
 
 .box:hover
     background-color: rgba(28, 78, 176, 0.5)
