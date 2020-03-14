@@ -3,7 +3,7 @@
   div(v-if='isCard')
       transition(name="slide-fade")
         .cc(v-show='showCreate')
-            textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='createOrFindTask'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
+            textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='enterKey'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
             button(v-if="isPepe"  @click='createGridMeme'  :disabled='$store.state.loader.connected !== "connected" || !isMemeSelected').fwi {{isMemeSelected ? 'place card' :'select square' }}
             button(v-else @click='createOrFindTask'  :disabled='$store.state.loader.connected !== "connected"').fwi create card
       .label
@@ -33,10 +33,11 @@
 </template>
 
 <script>
-import _ from "lodash";
-import request from "superagent";
-import Current from "./Current";
-import calculations from "../calculations";
+import _ from "lodash"
+import request from "superagent"
+import Current from "./Current"
+import calculations from "../calculations"
+import Vue from "vue"
 
 export default {
 	data() {
@@ -177,6 +178,13 @@ export default {
 				memberId: this.$store.getters.member.memberId
 			});
 		},
+		enterKey() {
+			if(this.isPepe) {
+				this.createGridMeme()
+			} else {
+				createOrFindTask()
+			}
+		},
 		createOrFindTask() {
 			if (this.$store.state.loader.connected !== "connected") return;
 			let foundId = this.matchCard;
@@ -216,9 +224,16 @@ export default {
 						inId: this.$store.getters.memberCard.taskId
 					})
 					.then(() => {
+						console.log("then")
+						foundId = this.matchCard
+						if(!foundId) {
+							console.log("a promise was broken. this is very bad.")
+							return
+						}
+						console.log("foundId is ", foundId)
 		            	this.$store.dispatch("makeEvent", {
 			                type: 'grid-add',
-			                taskId: this.taskId,
+			                taskId: foundId,
 			                coord: {
 			                    x: this.$store.state.upgrades.grid.selX,
 			                    y: this.$store.state.upgrades.grid.selY
@@ -376,10 +391,10 @@ export default {
 			return !(
 				!this.$store.state.upgrades.grid.selX ||
 				this.$store.state.upgrades.grid.selX < 0 ||
-				this.$store.state.upgrades.grid.selX > 16 ||
+				this.$store.state.upgrades.grid.selX > 17 ||
 				!this.$store.state.upgrades.grid.selY ||
 				this.$store.state.upgrades.grid.selY < 0 ||
-				this.$store.state.upgrades.grid.selY > 16
+				this.$store.state.upgrades.grid.selY > 17
 			);
 		}
 	}
