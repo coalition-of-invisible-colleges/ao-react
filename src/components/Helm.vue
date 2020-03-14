@@ -103,7 +103,7 @@ export default {
         })
 
         mc.on('press', (e) => {
-            if(this.isUni || this.isPepe){
+            if(this.isUni && !this.isPepe){
                 if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.taskId === this.$store.getters.memberCard.taskId) {
                     this.$store.dispatch('flashHelm', 5)
                     this.goFront('doge')
