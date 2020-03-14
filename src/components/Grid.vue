@@ -1,10 +1,10 @@
 <template lang="pug">
     
-.gridContainer
+#theGrid
     .grid
-        .gridTwo(v-for="y in 17"  :key='$store.state.grid') 
+        .gridTwo(v-for="y in 17") 
             .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
-                grid-card(v-if="getCard(getTaskId(x, y))"  :b="getCard(getTaskId(x, y))")
+                grid-card(:x='x'  :y='y')
 
     //- .start(v-if="$store.state.grid === {}")
     //- div(v-else  v-for="(row, x) in Object.keys($store.state.grid)")
@@ -31,7 +31,15 @@ import GridCard from "./GridCard";
 
 export default {
 	components: { GridCard },
-
+    beforeCreate() {
+        console.log("grid premount")
+    },
+    created() {
+        console.log("grid created")
+    },
+    mounted() {
+        console.log("grid mounted")
+    },
 	methods: {
 		select(x, y) {
 			this.$store.commit("selectGridMeme", { x, y });
@@ -42,6 +50,7 @@ export default {
 			}
 			return false;
 		},
+<<<<<<< HEAD
 		getCard(taskId) {
 			if (!taskId) return false;
 			return this.$store.getters.hashMap[taskId];
@@ -52,10 +61,10 @@ export default {
 				return this.getCard(taskId).name;
 			}
 		}
+=======
+>>>>>>> 888dc030b030e13564ca1f0abafb306ee1d44116
 	},
-
-	computed: {}
-};
+}
 </script>
 
 <style lang="stylus" scoped>

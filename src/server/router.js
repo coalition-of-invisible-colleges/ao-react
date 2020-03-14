@@ -37,6 +37,12 @@ module.exports = function applyRouter(app){
         )
     })
 
+    app.post('/grid', (req, res) => {
+        // XXX filter by req id req.params.taskId
+        res.json(state.serverState.grid)
+    })
+
+
 
 
 }

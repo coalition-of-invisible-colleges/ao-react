@@ -73,7 +73,7 @@ export default {
             e.stopPropagation()
         })
 
-        let Press = new Hammer.Press({ time: 500 })
+        let Press = new Hammer.Press({ time: 600 })
         mc.add(Press)
         mc.on('press', (e) => {
             this.$router.push('/archive')
