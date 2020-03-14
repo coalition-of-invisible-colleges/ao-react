@@ -46,14 +46,6 @@ export default {
 
         mc.on('swipeup', (e) => {
             this.$store.commit("closeUpgrades")
-            // XXX dont understand what this was doing swipe up change places?
-            // if(this.$router.currentRoute.path.split("/")[1] === 'front') {
-            //     this.$router.push('/front/doge')
-            // } else if(this.$router.currentRoute.path.split("/")[1] === 'dash') {
-            //     this.$router.push('/dash/doge')
-            // } else {
-            //     this.$router.push('/doge')
-            // }
             e.stopPropagation()
         })
 
@@ -111,7 +103,7 @@ export default {
         })
 
         mc.on('press', (e) => {
-            if(this.isUni){
+            if(this.isUni || this.isPepe){
                 if(this.$store.state.upgrades.mode === 'doge' && this.$store.getters.contextCard.taskId === this.$store.getters.memberCard.taskId) {
                     this.$store.dispatch('flashHelm', 5)
                     this.goFront('doge')
@@ -178,6 +170,9 @@ export default {
     computed: {
         isUni() {
             return this.$store.state.upgrades.dimension === "unicorn"
+        },
+        isPepe() {
+            return this.$router.currentRoute.path.split("/")[1] === "grid";
         },
     }
 }

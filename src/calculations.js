@@ -1,4 +1,3 @@
-const Vue = require('vue')
 const satsPerBtc = 100000000 // one hundred million per btc
 const _ = require('lodash')
 const cryptoUtils = require('./crypto')
@@ -106,20 +105,20 @@ function safeMerge(cardA, cardZ) {
     }
 
     if(isString(cardZ.color) && !_.isEmpty(cardZ.color.trim())) {
-        Vue.set(cardA, 'color', cardZ.color )
+        cardA.color = cardZ.color
     }
 
     if(isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
-        Vue.set(cardA, 'guild', cardZ.guild )
+        cardA.guild = cardZ.guild
     }
 
-    Vue.set(cardA, 'book', cardZ.guild )
-    Vue.set(cardA, 'address', cardZ.guild )
-    Vue.set(cardA, 'bolt11', cardZ.guild )
-    Vue.set(cardA, 'subTasks', [...new Set(cardA.subTasks.concat(cardZ.subTasks))])
-    Vue.set(cardA, 'priorities', [...new Set(cardA.priorities.concat(cardZ.priorities))])
-    Vue.set(cardA, 'completed', [...new Set(cardA.completed.concat(cardZ.completed))])
-    Vue.set(cardA, 'passed', [...new Set(cardA.passed.concat(cardZ.passed))])
+    cardA.book = cardZ.guild
+    cardA.address = cardZ.guild
+    cardA.bolt11 = cardZ.guild
+    cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
+    cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
+    cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]
+    cardA.passed = [...new Set(cardA.passed.concat(cardZ.passed))]
     cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
     cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
     cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]

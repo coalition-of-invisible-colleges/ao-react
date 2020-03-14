@@ -1,5 +1,5 @@
-const Vue = require( 'vue')
-const _ = require( 'lodash')
+const Vue = require('vue')
+const _ = require('lodash')
 const payments = ["bitcoin", "lightning"]
 
 const state = {
