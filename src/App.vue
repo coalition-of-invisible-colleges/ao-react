@@ -8,7 +8,7 @@
     loader
     event-feed
     status
-    task-create
+    task-create(:key='$router.currentRoute.path')
     portal
     router-view
 </template>

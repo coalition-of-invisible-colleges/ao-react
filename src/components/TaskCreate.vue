@@ -209,6 +209,7 @@ export default {
 			this.resetCard();
 		},
 		createGridMeme() {
+			console.log('do we stop here?????')
 			if (this.$store.state.loader.connected !== "connected") return
 			let foundId = this.matchCard
 			let potentialCard = this.task.name.trim()
@@ -223,25 +224,19 @@ export default {
 						deck: [this.$store.getters.member.memberId],
 						inId: this.$store.getters.memberCard.taskId
 					})
-					.then(() => {
-						console.log("then")
-						foundId = this.matchCard
-						if(!foundId) {
-							console.log("a promise was broken. this is very bad.")
-							return
-						}
-						console.log("foundId is ", foundId)
+					.then((res) => {
+						console.log('GRID RES', res)
+						const taskId = JSON.parse(res.text).event.taskId
 		            	this.$store.dispatch("makeEvent", {
 			                type: 'grid-add',
-			                taskId: foundId,
+			                taskId,
 			                coord: {
 			                    x: this.$store.state.upgrades.grid.selX,
 			                    y: this.$store.state.upgrades.grid.selY
 			                },
 		            	})
-		            	request.end((err, res) => {
-							if (err) return console.log(err);
-						})
+		            }).catch(err => {
+		            	console.log('task-create ERR',err)
 		            })
 			} else {
 				this.$store.dispatch("makeEvent", {
@@ -307,7 +302,9 @@ export default {
 	},
 	computed: {
 		isPepe() {
-			return this.$router.currentRoute.path.split("/")[1] === "grid";
+			const pepehuh = this.$router.currentRoute.path.split("/")[1] === "grid";
+			console.log('ISPEPE?', pepehuh)
+			return pepehuh
 		},
 		isCard() {
 			return this.$store.state.upgrades.dimension === "unicorn";
