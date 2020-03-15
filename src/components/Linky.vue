@@ -54,10 +54,13 @@ export default {
 .linky .noheight img
     max-width: 100%
 
-.meme .noheight img
+.gridTwo .box .meme .noheight p img
     max-height: 15em
 
-.cardname.front .linky .noheight img
+.gridTwoS .box .meme .noheight p img
+	object-fit:contain
+
+.cardname.front .linky .noheight p img
     max-width: 100%
 
 .priority .closedcard .linky img, .priority.closedcard .linky img

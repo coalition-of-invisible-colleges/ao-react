@@ -13,6 +13,7 @@ const state = {
 	sierpinski: true,
 	barking: false,
 	pinging: false,
+	zoom: false,
 	flashClasses: {
 		flash: false,
 		half: false,
@@ -88,8 +89,8 @@ const mutations = {
 	closeWarp(state) {
 		state.warp = -1;
 	},
-	toggleSierpinski(state, primed) {
-		state.sierpinski = !state.sierpinski;
+	zoom(state) {
+		state.zoom = !state.zoom;
 	},
 	bark(state) {
 		state.barking = true;

@@ -1,10 +1,18 @@
 <template lang="pug">
-    
-#theGrid
-    .grid
-        .gridTwo(v-for="y in 17") 
-            .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
-                grid-card(:x='x'  :y='y')
+
+#gridContainer
+    button(@click="zoom()") Zoom!
+    #theGrid(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
+        .grid
+            .gridTwo(v-for="y in 17") 
+                .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
+                    grid-card(:x='x'  :y='y')
+    #theGridTwo(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
+        .gridS
+            .gridTwoS(v-for="y in 17") 
+                .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
+                    grid-card(:x='x'  :y='y')
+        
 
     //- .start(v-if="$store.state.grid === {}")
     //- div(v-else  v-for="(row, x) in Object.keys($store.state.grid)")
@@ -31,15 +39,16 @@ import GridCard from "./GridCard";
 
 export default {
 	components: { GridCard },
-    beforeCreate() {
-        console.log("grid premount")
-    },
-    created() {
-        console.log("grid created")
-    },
-    mounted() {
-        console.log("grid mounted")
-    },
+	beforeCreate() {
+		console.log("grid premount");
+	},
+	created() {
+		console.log("grid created");
+	},
+	mounted() {
+		console.log("grid mounted");
+	},
+
 	methods: {
 		select(x, y) {
 			this.$store.commit("selectGridMeme", { x, y });
@@ -50,28 +59,21 @@ export default {
 			}
 			return false;
 		},
-<<<<<<< HEAD
-		getCard(taskId) {
-			if (!taskId) return false;
-			return this.$store.getters.hashMap[taskId];
-		},
-		cardName(x, y) {
-			let taskId = this.getTaskId(x, y);
-			if (taskId) {
-				return this.getCard(taskId).name;
-			}
+
+		zoom() {
+			this.$store.commit("zoom");
 		}
-=======
->>>>>>> 888dc030b030e13564ca1f0abafb306ee1d44116
-	},
-}
+	}
+};
 </script>
 
 <style lang="stylus" scoped>
 
 @import '../styles/colours'
 
-.gridContainer
+#gridContainer
+    height:100%
+    width:100%
 
 .grid
     display: grid
@@ -83,10 +85,6 @@ export default {
     display:grid
     grid-template-columns: repeat(17, 15em)
     grid-template-rows: (15em)
-
-.gridItem
-    height:75px
-    width:75px
 
 .addCard
     background-color: #AAA;
@@ -120,9 +118,40 @@ export default {
     min-height: 15em
     min-width: 15em
 
+#theGridTwo
+    height:100%
+    width:100%
+
+.gridS
+    height:100%
+    width:100%
+    display: grid
+    grid-template-rows: repeat(17, 5.88vw)
+    grid-template-columns: (5.88vw)
+    margin-top: -1.5em
+
+.gridTwoS
+    display:grid
+    grid-template-columns: repeat(17, 5.88vw)
+    grid-template-rows: (5.88vw)
+
+.boxS
+    height: 5.88vw
+    width: 5.88vw
+    border: 1px solid wrexpurple
+    background-color: rgba(22, 22, 22, 0.3)
+    min-height: 5.88vw
+    min-width: 5.88vw
+
 .box:hover
     background-color: rgba(28, 78, 176, 0.5)
 
 .box.selected
+    background-color: rgba(39, 107, 22, 0.5)
+
+.boxS:hover
+    background-color: rgba(28, 78, 176, 0.5)
+
+.boxS.selected
     background-color: rgba(39, 107, 22, 0.5)
 </style>

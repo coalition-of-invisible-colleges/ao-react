@@ -1,58 +1,50 @@
-<<<<<<< HEAD
 <template lang="pug">
-.meme(ref='wholeCard')
-    linky(:x='b.name' v-if='!dogeCard')
-    div(v-else) {{ dogeCard.name }}
-=======
-<template lang='pug'>
-.meme
+.meme(:class="$store.state.upgrades.zoom")
     linky(:x='card.name' v-if='!dogeName')
     div(v-else) {{ dogeName }}
->>>>>>> 888dc030b030e13564ca1f0abafb306ee1d44116
 </template>
 
 <script>
 import Linky from "./Linky";
 
 export default {
-<<<<<<< HEAD
-	props: ["b"],
-	components: { Linky }
+	props: ["x", "y"],
+	components: { Linky },
+	mounted() {
+		console.log("grid card mounted");
+		let test = this.card;
+	},
+	computed: {
+		taskId() {
+			// console.log("taskId function x is ", this.x, " y ", this.y)
+			if (
+				this.$store.state.grid[this.y] &&
+				this.$store.state.grid[this.y][this.x]
+			) {
+				console.log(
+					"returning taskId ",
+					this.$store.state.grid[this.y][this.x]
+				);
+				return this.$store.state.grid[this.y][this.x];
+			}
+			return false;
+		},
+		card() {
+			if (!this.taskId) return false;
+			console.log("returning card ", this.taskId);
+			return this.$store.getters.hashMap[this.taskId];
+		},
+		dogeName() {
+			let mc;
+			this.$store.state.members.forEach(m => {
+				if (this.taskId === m.memberId) {
+					mc = m;
+				}
+			});
+			return mc && mc.name ? mc.name : false;
+		}
+	}
 };
-=======
-    props: ['x', 'y'],
-    components: { Linky },
-    mounted() {
-        console.log("grid card mounted")
-        let test = this.card
-    },
-    computed: {
-        taskId() {
-            // console.log("taskId function x is ", this.x, " y ", this.y)
-            if(this.$store.state.grid[this.y] && this.$store.state.grid[this.y][this.x]) {
-                console.log("returning taskId ", this.$store.state.grid[this.y][this.x])
-                return this.$store.state.grid[this.y][this.x]
-            }
-            return false
-        },
-        card() {
-            if(!this.taskId) return false
-            console.log("returning card ", this.taskId)
-            return this.$store.getters.hashMap[this.taskId]
-        },
-        dogeName() {
-          let mc
-          this.$store.state.members.forEach( m => {
-              if (this.taskId === m.memberId ){
-                  mc = m
-              }
-          })
-          return mc && mc.name? mc.name : false
-        },
-    }
-}
-
->>>>>>> 888dc030b030e13564ca1f0abafb306ee1d44116
 </script>
 
 <style lang="stylus" scoped>
