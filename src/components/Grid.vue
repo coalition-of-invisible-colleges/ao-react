@@ -31,15 +31,15 @@ import GridCard from "./GridCard";
 
 export default {
 	components: { GridCard },
-    beforeCreate() {
-        console.log("grid premount")
-    },
-    created() {
-        console.log("grid created")
-    },
-    mounted() {
-        console.log("grid mounted")
-    },
+	beforeCreate() {
+		console.log("grid premount");
+	},
+	created() {
+		console.log("grid created");
+	},
+	mounted() {
+		console.log("grid mounted");
+	},
 	methods: {
 		select(x, y) {
 			this.$store.commit("selectGridMeme", { x, y });
@@ -49,22 +49,9 @@ export default {
 				return this.$store.state.grid[y][x];
 			}
 			return false;
-		},
-<<<<<<< HEAD
-		getCard(taskId) {
-			if (!taskId) return false;
-			return this.$store.getters.hashMap[taskId];
-		},
-		cardName(x, y) {
-			let taskId = this.getTaskId(x, y);
-			if (taskId) {
-				return this.getCard(taskId).name;
-			}
 		}
-=======
->>>>>>> 888dc030b030e13564ca1f0abafb306ee1d44116
-	},
-}
+	}
+};
 </script>
 
 <style lang="stylus" scoped>
