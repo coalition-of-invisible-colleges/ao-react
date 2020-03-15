@@ -1,5 +1,5 @@
 <template lang="pug">
-.meme
+.meme(:class="$store.state.upgrades.zoom")
     linky(:x='card.name' v-if='!dogeName')
     div(v-else) {{ dogeName }}
 </template>
