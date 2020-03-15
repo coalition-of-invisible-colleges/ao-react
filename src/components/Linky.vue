@@ -57,8 +57,8 @@ export default {
 .gridTwo .box .meme .noheight p img
     max-height: 15em
 
-.gridTwoS .box .meme .noheight p img
-	object-fit:contain
+.gridTwoS .boxS .meme .noheight p img
+	max-height: 5.88vw !important
 
 .cardname.front .linky .noheight p img
     max-width: 100%
