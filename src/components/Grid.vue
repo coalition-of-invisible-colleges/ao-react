@@ -6,12 +6,12 @@
         #theGrid(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
             .grid
                 .gridTwo(v-for="y in 17") 
-                    .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)") 
+                    .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }") 
                         grid-card(:x='x'  :y='y')
         #theGridTwo(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
             .gridS
                 .gridTwoS(v-for="y in 17") 
-                    .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)")
+                    .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }")
                         grid-card(:x='x'  :y='y')
     .bottomL(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
     .bottomS(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")      

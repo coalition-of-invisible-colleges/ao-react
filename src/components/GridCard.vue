@@ -1,9 +1,15 @@
 <template lang="pug">
-.meme(:class="{ selected: isSelected }"  ref="gridSquare")
-    .hint(v-if='!isSelected') click to type / search or drop file
-    textarea.paperwrapper(v-if='isSelected'  v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="type or search"  @keyup.enter.exact='createGridMeme'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='gridText')
-    linky(:x='card.name' v-if='!dogeName')
+.meme(:class="cardInputSty"  ref="gridSquare")
+    .hint(v-if='!isSelected && !taskId') click to type / search or drop file
+    .hint(v-if='!isSelected && card') replace
+    textarea(v-if='isSelected'  v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="type or search"  @keyup.enter.exact='createGridMeme'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='gridText')
+    linky.hideonhover(:x='card.name' v-if='!dogeName')
     div(v-else) {{ dogeName }}
+    template.hideonhover(v-if="card && card.name")
+        .agedbackground.freshpaper.hideonhover(v-if='cardAge < 8')
+        .agedbackground.weekoldpaper.hideonhover(v-else-if='cardAge < 30')
+        .agedbackground.montholdpaper.hideonhover(v-else-if='cardAge < 90')
+        .agedbackground.threemontholdpaper.hideonhover(v-else='cardAge >= 90')
 </template>
 
 <script>
@@ -58,24 +64,6 @@ export default {
         this.swipeTimeout = Date.now()
       }
     })
-
-    // var ca = document.getElementById("card")
-    // var mc2 = new Hammer.Manager(ca)
-    // var Swipe2 = new Hammer.Swipe()
-    // mc2.add(Swipe2)
-    // mc2.on("swipeleft", e => {
-    //   if (Date.now() - this.swipeTimeout > 100) {
-    //     this.previousColor()
-    //     this.swipeTimeout = Date.now()
-    //   }
-    // })
-
-    // mc2.on("swiperight", e => {
-    //   if (Date.now() - this.swipeTimeout > 100) {
-    //     this.nextColor()
-    //     this.swipeTimeout = Date.now()
-    //   }
-    // })
   },
   methods: {
     createGridMeme() {
@@ -132,7 +120,7 @@ export default {
         this.task.color = color;
         if (refocus) {
           setTimeout(() => {
-            document.getElementById("card").focus();
+            document.getElementById("cardbox").focus();
           }, 1);
         }
       },
@@ -205,7 +193,11 @@ export default {
       }
     },
     cardInputSty() {
-      return calculations.cardColorCSS(this.task.color)
+      if(this.card && this.card.color) {
+        return calculations.cardColorCSS(this.card.color)
+      } else if(this.isSelected) {
+        return calculations.cardColorCSS(this.task.color)
+      }
     },
     matchCard() {
       let foundId;
@@ -215,6 +207,12 @@ export default {
         }
       });
       return foundId;
+    },
+    cardAge(){
+      let now = Date.now()
+      let msSince = now - this.card.timestamp
+      let days = msSince / (1000 * 60 * 60 * 24)
+      return days
     },
 	}
 }
@@ -241,6 +239,7 @@ export default {
   max-height: 15em
   max-width: 15em
   object-fit: fill
+  color: white
 
 .linky .noheight
   max-height: 15em
@@ -251,19 +250,23 @@ export default {
   top: 50%
   width: 100%
   transform: translateY(-50%)
-  color: darkgrey
+  color: grey
   font-size: 1.25vw
   text-align: center
+  z-index: 75
 
 .meme:hover > .hint
   visibility: visible
   pointer-events: none
   
+.meme:hover .hideonhover
+  visibility: hidden
+  
 .meme:hover
-  background-color: rgba(28, 78, 176, 0.5)
+  background-color: rgba(28, 78, 176, 0.75)
 
 .meme.selected
-  background-color: rgba(39, 107, 22, 0.5)
+  background-color: rgba(39, 107, 22, 0.75)
     
 textarea
   width: 100%
@@ -272,4 +275,34 @@ textarea
   border: none
   resize: none
   text-align: center
+  
+.agedbackground
+    background-image: url('/paper.jpg')
+    background-repeat: no-repeat
+    background-position: center center
+    background-size: cover
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    position: absolute
+    width: 100%
+    height: 100%
+    pointer-events: none
+
+.freshpaper
+    background-image: url('/paper.jpg')
+    opacity: 0.2
+
+.weekoldpaper
+    background-image: url('/paper_aged_1.png')
+    opacity: 0.25
+
+.montholdpaper
+    background-image: url('/paper_aged_2.png')
+    opacity: 0.3
+
+.threemontholdpaper
+    background-image: url('/paper_aged_3.png')
+    opacity: 0.35
 </style>
