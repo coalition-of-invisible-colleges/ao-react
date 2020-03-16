@@ -81,8 +81,8 @@ export default {
     z-index: 151
 
 .pepe
-    left: -25px
-    bottom: 23px
+    left: -30px
+    bottom: 15px
     position: relative
     opacity: 0.5
     height: 35px

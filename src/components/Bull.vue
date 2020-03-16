@@ -174,8 +174,8 @@ p:hover
 
 .logout
     position: fixed
-    right: 1em
-    bottom: 1em
+    right: 5em
+    bottom: 1.5em
     color: teal
     font-size: 1.3em
     font-weight: bold
