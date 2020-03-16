@@ -4,7 +4,7 @@
     .hint(v-if='!isSelected && card') replace
     textarea(v-if='isSelected'  v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="type or search"  @keyup.enter.exact='createGridMeme'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='gridText')
     linky.toTop.hideonhover(:x='card.name' v-if='!dogeName')
-    div(v-else) {{ dogeName }}
+    .dogename.hideonhover(v-else) {{ dogeName }}
     template.hideonhover(v-if="card && card.name")
         .agedbackground.freshpaper.hideonhover(v-if='cardAge < 8')
         .agedbackground.weekoldpaper.hideonhover(v-else-if='cardAge < 30')
@@ -308,4 +308,7 @@ textarea
     
 .toTop
     z-index: 1
+
+.dogename
+    color: white
 </style>

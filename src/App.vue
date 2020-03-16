@@ -54,7 +54,6 @@ export default {
 @import "./styles/colours"
 
 .app
-    color: accent1
     font-weight: lighter
 
 body
