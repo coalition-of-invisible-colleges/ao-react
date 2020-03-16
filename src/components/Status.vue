@@ -381,7 +381,7 @@ body
     color: #fff
     text-align: center
     text-justify: center
-    font-size: 4rem
+    font-size: 4.5rem
     position: fixed
     top:0
     left:0

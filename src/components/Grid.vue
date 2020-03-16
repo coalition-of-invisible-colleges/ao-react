@@ -2,7 +2,7 @@
 
 #page
     #gridContainer
-        button(@click="zoom()") Zoom!
+        button.zoomIn(@click="zoom()") Zoom!
         #theGrid(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
             .grid
                 .gridTwo(v-for="y in 17") 
@@ -15,7 +15,7 @@
                         grid-card(:x='x'  :y='y')
     .bottomL(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
     .bottomS(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")      
-
+    search-panel(:key='searchUpdated')
     //- .start(v-if="$store.state.grid === {}")
     //- div(v-else  v-for="(row, x) in Object.keys($store.state.grid)")
     //-     .gridItem(v-for="(tId, y) in Object.keys(row)") {{getCard(tId).name}} 
@@ -38,9 +38,10 @@
 
 <script>
 import GridCard from "./GridCard";
+import SearchPanel from "./SearchPanel"
 
 export default {
-	components: { GridCard },
+	components: { GridCard, SearchPanel },
 	beforeCreate() {
 		console.log("grid premount");
 	},
@@ -62,7 +63,12 @@ export default {
 		zoom() {
 			this.$store.commit("zoom");
 		}
-	}
+	},
+    computed: {
+        searchUpdated() {
+            return this.$store.state.upgrades.search
+        }
+    }
 };
 </script>
 
@@ -130,7 +136,7 @@ export default {
     display: grid
     grid-template-rows: repeat(17, 5.7vw)
     grid-template-columns: (5.7vw)
-    margin-top: -1em
+    margin-top: -5em
 
 .gridTwoS
     display:grid
@@ -171,4 +177,10 @@ export default {
 
 #bodyMain
     overflow-x: scroll !important
+    
+.zoomIn
+    color: black
+    position: relative
+    top: -2.1em
+    left: 7em
 </style>

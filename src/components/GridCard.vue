@@ -2,8 +2,8 @@
 .meme(:class="cardInputSty"  ref="gridSquare")
     .hint(v-if='!isSelected && !taskId') click to type / search or drop file
     .hint(v-if='!isSelected && card') replace
-    textarea(v-if='isSelected'  v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="type or search"  @keyup.enter.exact='createGridMeme'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='gridText')
-    linky.toTop.hideonhover(:x='card.name' v-if='!dogeName')
+    textarea(v-if='isSelected'  v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="type or search"  @keyup.enter.exact='createGridMeme'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='gridText'  :key='searchResult')
+    linky.toTop.hideonhover(:x='card.name' v-if='!dogeName && !isSelected')
     .dogename.hideonhover(v-else) {{ dogeName }}
     template.hideonhover(v-if="card && card.name")
         .agedbackground.freshpaper.hideonhover(v-if='cardAge < 8')
@@ -23,25 +23,22 @@ import request from "superagent";
 export default {
 	props: ["x", "y"],
 	components: { Linky },
-	data() {
-		return {
-			showCreate: false,
-			task: {
-				name: "",
-				search: "",
-				color: "green"
-			},
-			swipeTimeout: 0,
-			searchResults: [],
-			exploring: false,
-			inDebounce: false
-		};
-	},
-	mounted() {
-		var el = this.$refs.gridSquare;
-		if (!el) return;
-		let mc = Propagating(new Hammer.Manager(el));
-
+  data() {
+    return {
+      showCreate: false,
+      task: {
+        name: "",
+        color: "green"
+      },
+      swipeTimeout: 0,
+      exploring: false,
+      inDebounce: false
+    }
+  },
+  mounted() {
+    var el = this.$refs.gridSquare
+    if (!el) return
+    let mc = Propagating(new Hammer.Manager(el))
 		let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
 		var swipe = new Hammer.Swipe();
 		mc.add([singleTap, swipe]);
@@ -187,39 +184,52 @@ export default {
 				this.$store.state.upgrades.grid.selY === this.y
 			);
 		},
-		debouncedName: {
-			get() {
-				return this.task.name;
-			},
-			set(newValue) {
-				this.task.name = newValue;
-				this.debounce(() => {
-					this.task.search = newValue;
-				}, 400);
-			}
-		},
-		cardInputSty() {
-			if (this.card && this.card.color) {
-				return calculations.cardColorCSS(this.card.color);
-			} else if (this.isSelected) {
-				return calculations.cardColorCSS(this.task.color);
-			}
-		},
-		matchCard() {
-			let foundId;
-			this.$store.state.tasks.filter(t => {
-				if (t.name === this.task.name.trim()) {
-					foundId = t.taskId;
-				}
-			});
-			return foundId;
-		},
-		cardAge() {
-			let now = Date.now();
-			let msSince = now - this.card.timestamp;
-			let days = msSince / (1000 * 60 * 60 * 24);
-			return days;
-		}
+    debouncedName: {
+      get() {
+        console.log("debouncedName Get function. searchResult is ", this.$store.state.upgrades.searchResult)
+        if(this.$store.state.upgrades.searchResult) {
+            console.log("there is a search result", this.searchResult)
+            this.task.name = this.$store.getters.hashMap[this.searchResult].name
+            this.task.color = this.$store.getters.hashMap[this.searchResult].color
+            console.log("this.task.name set to ", this.task.name)
+            this.$store.commit("searchSelectionReceived")
+            setTimeout(()=>{ this.$refs.gridText.focus() }, 1)
+        }
+        return this.task.name
+      },
+      set(newValue) {
+        this.task.name = newValue
+        this.debounce(() => {
+          this.$store.commit("search", newValue)
+        }, 400)
+      }
+    },
+    cardInputSty() {
+      if(this.card && this.card.color) {
+        return calculations.cardColorCSS(this.card.color)
+      } else if(this.isSelected) {
+        return calculations.cardColorCSS(this.task.color)
+      }
+    },
+    matchCard() {
+      let foundId;
+      this.$store.state.tasks.filter(t => {
+        if (t.name === this.task.name.trim()) {
+          foundId = t.taskId;
+        }
+      });
+      return foundId;
+    },
+    cardAge(){
+      let now = Date.now()
+      let msSince = now - this.card.timestamp
+      let days = msSince / (1000 * 60 * 60 * 24)
+      return days
+    },
+    searchResult() {
+      console.log("searchResult function, result is  ", this.$store.state.upgrades.searchResult)
+      return this.$store.state.upgrades.searchResult
+    },
 	}
 };
 </script>
@@ -281,7 +291,12 @@ textarea
   border: none
   resize: none
   text-align: center
+<<<<<<< HEAD
 
+=======
+  z-index: 1
+  
+>>>>>>> 0c8c95f... search panel works on the Grid including click to load results
 .agedbackground
     background-image: url('/paper.jpg')
     background-repeat: no-repeat

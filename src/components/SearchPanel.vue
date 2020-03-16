@@ -1,5 +1,5 @@
 <template lang="pug">
-#searchPanel.scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
+#searchPanel.scrollbarwrapper(v-show='$store.state.upgrades.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0')
     .searchresults
         .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
             img.smallguild(src='../assets/images/badge.svg')
@@ -11,88 +11,115 @@
 </template>
 
 <script>
+import calculations from "../calculations"
 
 export default {
 	props: ["x", "y"],
-  data() {
-    return {
-      showCreate: false,
-      task: {
-        name: "",
-        search: "",
-        color: "green"
-      },
-      swipeTimeout: 0,
-      searchResults: [],
-      exploring: false,
-      inDebounce: false
-    }
-  },
+    data() {
+        return {
+          searchResults: [],
+          exploring: false,
+        }
+    },
+    methods: {
+        resultInputSty(card) {
+            return {
+                redtx: card.color == "red",
+                bluetx: card.color == "blue",
+                greentx: card.color == "green",
+                yellowtx: card.color == "yellow",
+                purpletx: card.color == "purple",
+                blacktx: card.color == "black"
+            };
+        },
+        shortName(theName) {
+            return calculations.shortName(theName);
+        },
+        loadResult(t) {
+            console.log("loading search result")
+            this.exploring = true;
+            this.$store.commit("selectSearchResult", t.taskId)
+            console.log("search result loaded")
+        },
+        debounce(func, delay) {
+            const context = this;
+            const args = arguments;
+            clearTimeout(this.inDebounce);
+            this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay);
+        },
+        goIn(taskId) {
+            clearTimeout(this.inDebounce);
+            let panel = [taskId];
+            let parents = [];
+            let top = 0;
+
+            if (this.$store.getters.contextCard.taskId) {
+                parents.push(this.$store.getters.contextCard.taskId);
+            } else if (this.$store.getters.memberCard.taskId) {
+                parents.push(this.$store.getters.memberCard.taskId);
+            }
+            this.$store.dispatch("goIn", {
+                parents,
+                top,
+                panel
+            });
+            if (
+                this.$store.state.upgrades.mode === "doge" &&
+                this.$store.getters.contextCard.priorities.length > 0
+            ) {
+                this.$store.commit("setMode", 1);
+            }
+            this.$router.push("/" + this.$store.state.upgrades.mode);
+        },
+    },
 	computed: {
-    debouncedName: {
-      get() {
-        return this.task.name
-      },
-      set(newValue) {
-        this.task.name = newValue
-        this.debounce(() => {
-          this.task.search = newValue
-        }, 400)
-      }
-    },
-    matchCard() {
-      let foundId;
-      this.$store.state.tasks.filter(t => {
-        if (t.name === this.task.name.trim()) {
-          foundId = t.taskId;
-        }
-      });
-      return foundId;
-    },
-    matchCards() {
-        if (this.task.search.length < 1) return [];
-        if (this.exploring) return this.searchResults;
-        let matches = [];
-        let guildmatches = [];
-        let dogematches = [];
-        try {
-            let regex = new RegExp(this.task.search, "i");
-            this.$store.state.tasks.forEach(t => {
-                if (t.guild && regex.test(t.guild)) {
-                    guildmatches.push(t);
-                } else if (regex.test(t.name)) {
-                    matches.push(t);
-                }
-            });
-            this.$store.state.members.forEach(member => {
-                if (regex.test(member.name)) {
-                    let result = this.$store.getters.hashMap[member.memberId];
-                    result.name = member.name;
-                    dogematches.push(result);
-                }
-            });
-        } catch (err) {
-            console.log("regex search terminated in error: ", err);
-        }
-        this.searchResults = {
-            guilds: guildmatches,
-            doges: dogematches,
-            cards: matches
-        };
-        return this.searchResults;
-    },
+        matchCards() {
+            if (this.$store.state.upgrades.search.length < 1) return [];
+            if (this.exploring) return this.searchResults;
+            let matches = [];
+            let guildmatches = [];
+            let dogematches = [];
+            try {
+                let regex = new RegExp(this.$store.state.upgrades.search, "i");
+                this.$store.state.tasks.forEach(t => {
+                    if (t.guild && regex.test(t.guild)) {
+                        guildmatches.push(t);
+                    } else if (regex.test(t.name)) {
+                        matches.push(t);
+                    }
+                });
+                this.$store.state.members.forEach(member => {
+                    if (regex.test(member.name)) {
+                        let result = this.$store.getters.hashMap[member.memberId];
+                        result.name = member.name;
+                        dogematches.push(result);
+                    }
+                });
+            } catch (err) {
+                console.log("regex search terminated in error: ", err);
+            }
+            this.searchResults = {
+                guilds: guildmatches,
+                doges: dogematches,
+                cards: matches
+            };
+            return this.searchResults;
+        },
 	}
 }
 </script>
 
 <style lang="stylus" scoped>
 
+#searchPanel
+    z-index: 100
+    
 .scrollbarwrapper
-    width: 37vw
-    height: calc(100% - 2em)
+    width: 80vw
+    height: 40vh
     position: fixed
-    top: 0
-    left: 22em
+    bottom: 0
+    left: 10vw
     background: rgba(22, 22, 22, 0.8)
     padding: 1em 0
     border-radius: 20px

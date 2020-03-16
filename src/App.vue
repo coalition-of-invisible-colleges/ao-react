@@ -60,4 +60,8 @@ body
     background: main
     overflow-x: hidden
     color: white
+    
+p
+	margin-top: 0
+	margin-bottom: 0
 </style>

@@ -11,6 +11,13 @@ const state = {
     stacks: 1,
     barking: false,
     pinging: false,
+	zoom: false,
+	search: false,
+    searchResult: false,
+	grid: {
+		selX: false,
+		selY: false
+	},
     flashClasses: {
         flash: false,
         half: false,
@@ -98,8 +105,21 @@ const mutations = {
 		console.log("x,y ", coord);
 		state.grid.selX = coord.x;
 		state.grid.selY = coord.y;
-	}
-};
+	},
+	zoom(state) {
+		state.zoom = !state.zoom;
+	},
+    search(state, query) {
+        state.search = query
+    },
+    selectSearchResult(state, taskId) {
+        state.searchResult = taskId
+        console.log("search result loaded ", taskId)
+    },
+    searchSelectionReceived(state, taskId) {
+        state.searchResult = false
+    }
+}
 
 const actions = {
 	nextUpgradeMode({ commit, state }, router) {

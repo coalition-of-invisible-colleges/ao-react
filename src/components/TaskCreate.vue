@@ -93,6 +93,10 @@ export default {
         });
 
         var ca = this.$refs.cardBox
+        if(!ca) {
+            console.log("can't find cardBox")
+            return
+        }
         var mc2 = new Hammer.Manager(ca);
         var Swipe2 = new Hammer.Swipe();
         mc2.add(Swipe2);
