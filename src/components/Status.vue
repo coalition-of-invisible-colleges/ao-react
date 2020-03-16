@@ -5,7 +5,7 @@
         img.doge(v-if='$store.getters.member.muted'  src='../assets/images/silent.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         div(v-else-if='!$store.state.upgrades.barking')
             img.doge(src='../assets/images/loud.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
-            .fullscreen(v-if='$store.getters.isLoggedIn && $store.state.loader.connected !== "connected"') Disconnected - Please Refresh
+            .fullscreen(v-if='$store.getters.isLoggedIn && $store.state.loader.connected !== "connected"') disconnected - please refresh
         img.doge.flip(v-else src='../assets/images/loud.svg'  id='dogecomm'  :class='{ red : $store.state.loader.connected !== "connected" }')
         .tooltiptext.bottom(:class='{ breadpad : $store.getters.member.muted }')
             span.dot(:class='dotClass')
@@ -26,48 +26,48 @@
 </template>
 
 <script>
-import Hammer from "hammerjs";
-import Propagating from "propagating-hammerjs";
+import Hammer from "hammerjs"
+import Propagating from "propagating-hammerjs"
 
 export default {
 	name: "status",
 	mounted() {
-		let dogeel = document.getElementById("dogecomm");
-		let dogemc = Propagating(new Hammer.Manager(dogeel));
+		let dogeel = document.getElementById("dogecomm")
+		let dogemc = Propagating(new Hammer.Manager(dogeel))
 
 		let Press2 = new Hammer.Press({
 			time: 800
-		});
-		dogemc.add(Press2);
+		})
+		dogemc.add(Press2)
 		dogemc.on("press", e => {
 			if (this.$store.getters.member.muted) {
-				return;
+				return
 			}
 			this.$store.dispatch("makeEvent", {
 				type: "doge-barked",
 				memberId: this.$store.getters.member.memberId
-			});
-		});
+			})
+		})
 
-		let Tap4 = new Hammer.Tap({ taps: 2, time: 400, interval: 400 });
-		dogemc.add(Tap4);
+		let Tap4 = new Hammer.Tap({ taps: 2, time: 400, interval: 400 })
+		dogemc.add(Tap4)
 		dogemc.on("tap", e => {
-			this.toggleMute();
-		});
+			this.toggleMute()
+		})
 
-		let dogeSwipeRight = new Hammer.Swipe();
-		dogemc.add(dogeSwipeRight);
+		let dogeSwipeRight = new Hammer.Swipe()
+		dogemc.add(dogeSwipeRight)
 		dogemc.on("swiperight", e => {
 			if (this.$store.state.ao.length < 1) {
-				return;
+				return
 			}
 			let both =
-				(this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length;
+				(this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
 			this.$store.commit(
 				"setWarp",
 				(this.$store.state.upgrades.warp + 1) % this.$store.state.ao.length
-			);
-		});
+			)
+		})
 	},
 	methods: {
 		toggleMute() {
@@ -75,12 +75,12 @@ export default {
 				this.$store.dispatch("makeEvent", {
 					type: "doge-unmuted",
 					memberId: this.$store.getters.member.memberId
-				});
+				})
 			} else {
 				this.$store.dispatch("makeEvent", {
 					type: "doge-muted",
 					memberId: this.$store.getters.member.memberId
-				});
+				})
 			}
 		}
 	},
@@ -88,7 +88,7 @@ export default {
 		liveConnections() {
 			return this.$store.state.ao.filter(
 				r => r.state && r.state.cash && r.state.cash.alias
-			);
+			)
 		},
 		dotClass() {
 			return {
@@ -96,10 +96,10 @@ export default {
 				yellowwx: this.$store.state.loader.connected === "connecting",
 				greenwx: this.$store.state.loader.connected === "connected",
 				purplewx: !!this.$store.state.loader.connectionError
-			};
+			}
 		}
 	}
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -376,11 +376,12 @@ body
     bottom: 0.25em
 
 .fullscreen
-    padding: 40vh 0 0 0;
-    color:#fff;
-    text-align:center;
-    text-justify: center;
-    font-size: 5rem;
+    font-family: monospace
+    padding: 40vh 0 0 0
+    color: #fff
+    text-align: center
+    text-justify: center
+    font-size: 4rem
     position: fixed
     top:0
     left:0

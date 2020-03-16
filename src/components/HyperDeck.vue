@@ -28,9 +28,10 @@
         .faded
             span(@click='toggleStacks')
                 img.toggleStack(src='../assets/images/orb.svg')
-            img.completed.adjtooltip(src='../assets/images/completed.svg'  v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ faded : !$store.state.context.completed, completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }')
+            img.completed.adjtooltip(src='../assets/images/completed.svg'  v-if='$store.getters.contextCompleted.length > 0  || $store.state.context.completed'  @click='toggleShowComplete'  :class='{ completedtabbed : $store.state.context.completed, normaltopmargin : $store.getters.red.length + $store.getters.green.length + $store.getters.blue.length + $store.getters.yellow.length + $store.getters.purple.length === 0 }'  :disabled='$store.getters.contextCompleted.length < 1')
             .tooltiptext.correctspot(v-if='$store.getters.member.muted && ($store.getters.contextCompleted.length > 0  || $store.state.context.completed)')
-                p.suggest(v-if='!$store.state.context.completed') show completed cards
+                p.suggest(v-if='!$store.getters.contextCompleted.length < 1') no completed cards here
+                p.suggest(v-else-if='!$store.state.context.completed') show {{ $store.getters.contextCompleted.length }} completed cards
                 p.suggest(v-else) show uncompleted cards
     .agedbackground.translucent(:class='cardInputSty')
     .agedbackground.freshpaperbg(v-if='cardAge < 8')

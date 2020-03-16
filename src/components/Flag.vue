@@ -96,7 +96,7 @@ export default {
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
-            this.$store.dispatch('previousUpgradeMode')
+            this.$store.dispatch('previousUpgradeMode', this.$router)
             e.stopPropagation()
         })
 

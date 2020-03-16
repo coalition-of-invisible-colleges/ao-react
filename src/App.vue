@@ -59,4 +59,5 @@ export default {
 body
     background: main
     overflow-x: hidden
+    color: white
 </style>
