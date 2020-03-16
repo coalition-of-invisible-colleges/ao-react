@@ -1,17 +1,20 @@
 <template lang="pug">
 
-#gridContainer
-    button(@click="zoom()") Zoom!
-    #theGrid(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
-        .grid
-            .gridTwo(v-for="y in 17") 
-                .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
-                    grid-card(:x='x'  :y='y')
-    #theGridTwo(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
-        .gridS
-            .gridTwoS(v-for="y in 17") 
-                .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
-                    grid-card(:x='x'  :y='y')
+#page
+    #gridContainer
+        button(@click="zoom()") Zoom!
+        #theGrid(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
+            .grid
+                .gridTwo(v-for="y in 17") 
+                    .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }") 
+                        grid-card(:x='x'  :y='y')
+        #theGridTwo(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
+            .gridS
+                .gridTwoS(v-for="y in 17") 
+                    .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
+                        grid-card(:x='x'  :y='y')
+    .bottomL(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
+    .bottomS(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
         
 
     //- .start(v-if="$store.state.grid === {}")
@@ -71,9 +74,14 @@ export default {
 
 @import '../styles/colours'
 
+#page
+    display:flex
+    flex-direction:column
+
 #gridContainer
-    height:100%
-    width:100%
+    left:0
+    margin-bottom: 2em
+
 
 .grid
     display: grid
@@ -119,29 +127,27 @@ export default {
     min-width: 15em
 
 #theGridTwo
-    height:100%
     width:100%
 
 .gridS
-    height:100%
-    width:100%
+    margin-left: -4.5vw
     display: grid
-    grid-template-rows: repeat(17, 5.88vw)
-    grid-template-columns: (5.88vw)
-    margin-top: -1.5em
+    grid-template-rows: repeat(17, 5.7vw)
+    grid-template-columns: (5.7vw)
+    margin-top: -1em
 
 .gridTwoS
     display:grid
-    grid-template-columns: repeat(17, 5.88vw)
-    grid-template-rows: (5.88vw)
+    grid-template-columns: repeat(17, 5.7vw)
+    grid-template-rows: (5.7vw)
 
 .boxS
-    height: 5.88vw
-    width: 5.88vw
+    height: 5.7vw
+    width: 5.7vw
     border: 1px solid wrexpurple
     background-color: rgba(22, 22, 22, 0.3)
-    min-height: 5.88vw
-    min-width: 5.88vw
+    min-height: 5.7vw
+    min-width: 5.7vw
 
 .box:hover
     background-color: rgba(28, 78, 176, 0.5)
@@ -154,4 +160,19 @@ export default {
 
 .boxS.selected
     background-color: rgba(39, 107, 22, 0.5)
+
+.bottomS
+    margin-top: 5em
+    height: 50px
+    width: 100%
+    background-color: blue
+
+.bottomL
+    margin-top: 15em
+    height: 50px
+    width: 100%
+    background-color: blue
+
+#bodyMain
+    overflow-x: scroll !important
 </style>

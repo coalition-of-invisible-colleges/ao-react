@@ -58,7 +58,7 @@ export default {
     max-height: 15em
 
 .gridTwoS .boxS .meme .noheight p img
-	max-height: 5.88vw !important
+	max-height: 5.7vw !important
 
 .cardname.front .linky .noheight p img
     max-width: 100%
