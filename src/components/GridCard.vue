@@ -3,7 +3,7 @@
     .hint(v-if='!isSelected && !taskId') click to type / search or drop file
     .hint(v-if='!isSelected && card') replace
     textarea(v-if='isSelected'  v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="type or search"  @keyup.enter.exact='createGridMeme'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='gridText')
-    linky.hideonhover(:x='card.name' v-if='!dogeName')
+    linky.toTop.hideonhover(:x='card.name' v-if='!dogeName')
     div(v-else) {{ dogeName }}
     template.hideonhover(v-if="card && card.name")
         .agedbackground.freshpaper.hideonhover(v-if='cardAge < 8')
@@ -305,4 +305,7 @@ textarea
 .threemontholdpaper
     background-image: url('/paper_aged_3.png')
     opacity: 0.35
+    
+.toTop
+    z-index: 1
 </style>
