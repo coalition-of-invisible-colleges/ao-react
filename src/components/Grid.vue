@@ -5,12 +5,12 @@
     #theGrid(v-if="$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
         .grid
             .gridTwo(v-for="y in 17") 
-                .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
+                .box(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }")
                     grid-card(:x='x'  :y='y')
     #theGridTwo(v-if="!$store.state.upgrades.zoom"  :key="$store.state.upgrades.zoom")
         .gridS
             .gridTwoS(v-for="y in 17") 
-                .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }"  @click="select(x, y)"  :class="{ selected: $store.state.upgrades.grid.selX === x && $store.state.upgrades.grid.selY === y }")
+                .boxS(v-for="x in 17"  :style="{ gridColumnStart: x + 1, gridRowStart: y + 1 }")
                     grid-card(:x='x'  :y='y')
         
 
@@ -50,9 +50,6 @@ export default {
 	},
 
 	methods: {
-		select(x, y) {
-			this.$store.commit("selectGridMeme", { x, y });
-		},
 		getTaskId(x, y) {
 			if (this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
 				return this.$store.state.grid[y][x];
@@ -142,16 +139,4 @@ export default {
     background-color: rgba(22, 22, 22, 0.3)
     min-height: 5.88vw
     min-width: 5.88vw
-
-.box:hover
-    background-color: rgba(28, 78, 176, 0.5)
-
-.box.selected
-    background-color: rgba(39, 107, 22, 0.5)
-
-.boxS:hover
-    background-color: rgba(28, 78, 176, 0.5)
-
-.boxS.selected
-    background-color: rgba(39, 107, 22, 0.5)
 </style>

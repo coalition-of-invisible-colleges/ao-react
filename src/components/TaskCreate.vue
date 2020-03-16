@@ -3,21 +3,20 @@
   div(v-if='isCard')
       transition(name="slide-fade")
         .cc(v-show='showCreate')
-            textarea#card(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='enterKey'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20').paperwrapper
-            button(v-if="isPepe"  @click='createGridMeme'  :disabled='$store.state.loader.connected !== "connected" || !isMemeSelected').fwi {{isMemeSelected ? 'place card' :'select square' }}
-            button(v-else @click='createOrFindTask'  :disabled='$store.state.loader.connected !== "connected"').fwi create card
+            textarea#card.paperwrapper(v-model='debouncedName' type='text'  :class='cardInputSty'  placeholder="idea here"  @keyup.enter.exact='enterKey'  @keydown.enter.exact.prevent  @keyup.esc='closeCreate'  @input='exploring = false' row='10' col='20'  ref='theCard')
+            button(@click='createOrFindTask'  :disabled='$store.state.loader.connected !== "connected"').fwi create card
       .label
         .btnpanel
             div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
-              button.lit(@click='switchColor("red")'  :class='{ currentColor : task.color === "red" }').redwx.paperwrapper
+              button.lit.redwx.paperwrapper(@click='switchColor("red")'  :class='{ currentColor : task.color === "red" }')
                 img.agedbackground
-              button.lit(@click='switchColor("yellow")'  :class='{ currentColor : task.color === "yellow" }').yellowwx.paperwrapper
+              button.lit.yellowwx.paperwrapper(@click='switchColor("yellow")'  :class='{ currentColor : task.color === "yellow" }')
                 img.agedbackground
-              button.lit(@click='switchColor("green")'  :class='{ currentColor : task.color === "green" }').greenwx.paperwrapper
+              button.lit.greenwx.paperwrapper(@click='switchColor("green")'  :class='{ currentColor : task.color === "green" }')
                 img.agedbackground
-              button.lit(@click='switchColor("purple")'  :class='{ currentColor : task.color === "purple" }').purplewx.paperwrapper
+              button.lit.purplewx.paperwrapper(@click='switchColor("purple")'  :class='{ currentColor : task.color === "purple" }')
                 img.agedbackground
-              button.lit(@click='switchColor("blue")'  :class='{ currentColor : task.color === "blue" }').bluewx.paperwrapper
+              button.lit.bluewx.paperwrapper(@click='switchColor("blue")'  :class='{ currentColor : task.color === "blue" }')
                 img.agedbackground
       .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
           .searchresults
@@ -58,7 +57,8 @@ export default {
 		Current
 	},
 	mounted() {
-		var el = document.getElementById("createtask");
+		var el = this.$refs.closeable;
+		if(!el) return
 		var mc = new Hammer.Manager(el);
 
 		var Swipe = new Hammer.Swipe();
@@ -91,7 +91,7 @@ export default {
 			}
 		});
 
-		var ca = document.getElementById("card");
+		var ca = this.$refs.theCard;
 		var mc2 = new Hammer.Manager(ca);
 		var Swipe2 = new Hammer.Swipe();
 		mc2.add(Swipe2);
@@ -179,11 +179,7 @@ export default {
 			});
 		},
 		enterKey() {
-			if(this.isPepe) {
-				this.createGridMeme()
-			} else {
-				createOrFindTask()
-			}
+			createOrFindTask()
 		},
 		createOrFindTask() {
 			if (this.$store.state.loader.connected !== "connected") return;
@@ -301,13 +297,11 @@ export default {
 		}
 	},
 	computed: {
-		isPepe() {
-			const pepehuh = this.$router.currentRoute.path.split("/")[1] === "grid";
-			console.log('ISPEPE?', pepehuh)
-			return pepehuh
-		},
 		isCard() {
-			return this.$store.state.upgrades.dimension === "unicorn";
+			return this.$store.state.upgrades.dimension === "unicorn" && !this.isPepe
+		},
+		isPepe() {
+			return this.$router.currentRoute.path.split("/")[1] === "grid";
 		},
 		taskId() {
 			return this.$store.getters.contextCard.taskId;
@@ -383,17 +377,6 @@ export default {
 				}, 400);
 			}
 		},
-
-		isMemeSelected() {
-			return !(
-				!this.$store.state.upgrades.grid.selX ||
-				this.$store.state.upgrades.grid.selX < 0 ||
-				this.$store.state.upgrades.grid.selX > 17 ||
-				!this.$store.state.upgrades.grid.selY ||
-				this.$store.state.upgrades.grid.selY < 0 ||
-				this.$store.state.upgrades.grid.selY > 17
-			);
-		}
 	}
 };
 </script>
