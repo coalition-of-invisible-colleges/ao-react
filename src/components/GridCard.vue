@@ -253,6 +253,7 @@ export default {
   transform: translateY(-50%)
   color: darkgrey
   font-size: 1.25vw
+  text-align: center
 
 .meme:hover > .hint
   visibility: visible

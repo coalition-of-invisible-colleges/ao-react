@@ -57,7 +57,7 @@ export default {
     color: accent1
     font-weight: lighter
 
-body
+#bodyMain
     background: main
     overflow-x: hidden
 </style>
