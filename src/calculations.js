@@ -2,6 +2,32 @@ const satsPerBtc = 100000000 // one hundred million per btc
 const _ = require('lodash')
 const cryptoUtils = require('./crypto')
 
+function crawlerHash(tasks, taskId){
+    return cryptoUtils.createHash(Buffer.from(crawler(tasks, taskId)))
+}
+
+function crawler(tasks, taskId){
+  let history = []
+  tasks.forEach(task => {
+      if(task.taskId === taskId) {
+          let crawler = [taskId]
+          do {
+              newCards = []
+              crawler.forEach(t => {
+                  if(history.indexOf(t) >= 0) return
+                  history.push(t)
+                  let subTask = tasks.filter(pst => pst.taskId === t)[0]
+                  if (subTask){
+                      newCards = newCards.concat(subTask.subTasks).concat(subTask.priorities).concat(subTask.completed)
+                  }
+              })
+              crawler = newCards
+          } while(crawler.length > 0)
+      }
+  })
+  return history
+}
+
 function shortName(name) {
     let limit = 280
     let shortened = name.substring(0, limit)
@@ -10,26 +36,6 @@ function shortName(name) {
     }
     return shortened
 }
-
-// function crawler(){
-//   tasks.forEach(task => {
-//       if(task.taskId === ev.taskId) {
-//           let crawler = [ev.taskId]
-//           let history = []
-//           let newCards = []
-//           do {
-//               newCards = []
-//               crawler = crawler.forEach(t => {
-//                   if(history.indexOf(t) >= 0) return
-//                   let subTask = tasks.filter(pst => pst.taskId === t)
-//                   history.push(t)
-//                   newCards = newCards.concat(subTask.subTasks).concat(subTask.priorities).concat(subTask.completed)
-//               })
-//               crawler = newCards
-//           } while(crawler.length > 0)
-//       }
-//   })
-// }
 
 function cardColorCSS(color) {
     return {
@@ -182,4 +188,6 @@ module.exports = {
   blankCard,
   // safeClone,
   safeMerge,
+  crawler,
+  crawlerHash,
 }

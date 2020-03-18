@@ -15,13 +15,13 @@ function highlighted(taskId, memberId, valence, callback) {
   dctrlDb.insertEvent(newEvent, callback);
 }
 
-function aoSubscribed(address, secret, callback) {
-  let newEvent = {
-    type: "ao-subscribed",
-    address,
-    secret
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+function aoInboundConnected(address, secret, callback){
+    let newEvent = {
+        type: "ao-inbound-connected",
+        address,
+        secret
+    }
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoLinked(address, taskId, callback) {
@@ -33,13 +33,13 @@ function aoLinked(address, taskId, callback) {
   dctrlDb.insertEvent(newEvent, callback);
 }
 
-function aoConnected(address, secret, callback) {
-  let newEvent = {
-    type: "ao-connected",
-    address,
-    secret
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+function aoOutboundConnected(address, secret, callback) {
+    let newEvent = {
+        type: "ao-outbound-connected",
+        address,
+        secret,
+    }
+    dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoDisconnected(address, callback) {
@@ -561,7 +561,7 @@ function gridAdd(coord, taskId, callback) {
     taskId
   };
   dctrlDb.insertEvent(newEvent, callback);
-}
+};
 
 function gridDel(coord, callback) {
   let newEvent = {
@@ -572,58 +572,54 @@ function gridDel(coord, callback) {
 }
 
 module.exports = {
-  highlighted,
-  memberCharged,
-  aoConnected,
-  aoLinked,
-  aoDisconnected,
-  aoNamed,
-  aoSubscribed,
-  spotUpdated,
-  rentSet,
-  capSet,
-  fundsSet,
-  getNodeInfo,
-  memberCreated,
-  memberDeactivated,
-  memberPurged,
-  memberActivated,
-  memberFieldUpdated,
-  dogeBarked,
-  dogeMuted,
-  dogeUnmuted,
-  resourceCreated,
-  resourceUsed,
-  resourceStocked,
-  resourceBooked,
-  bookCancelled,
-  resourcePurged,
-  sessionCreated,
-  sessionKilled,
-  taskCreated,
-  taskBoosted,
-  taskClaimed,
-  taskUnclaimed,
-  taskRefocused,
-  pileRefocused,
-  taskRemoved,
-  taskSwapped,
-  taskBumped,
-  taskGrabbed,
-  pileGrabbed,
-  pileDropped,
-  taskPrioritized,
-  pilePrioritized,
-  taskDropped,
-  taskPassed,
-  taskValued,
-  taskGuilded,
-  taskSubTasked,
-  taskDeSubTasked,
-  addressUpdated,
-  invoiceCreated,
-  taskBoostedLightning,
-  tasksReceived,
-  gridAdd,
-  gridDel
+    highlighted,
+    memberCharged,
+    aoOutboundConnected,
+    aoLinked,
+    aoDisconnected,
+    aoNamed,
+    aoInboundConnected,
+    spotUpdated,
+    rentSet,
+    capSet,
+    fundsSet,
+    getNodeInfo,
+    memberCreated,
+    memberDeactivated,
+    memberPurged,
+    memberActivated,
+    memberFieldUpdated,
+    dogeBarked,
+    dogeMuted,
+    dogeUnmuted,
+    resourceCreated,
+    resourceUsed,
+    resourceStocked,
+    resourceBooked,
+    bookCancelled,
+    resourcePurged,
+    sessionCreated,
+    sessionKilled,
+    taskCreated,
+    taskBoosted,
+    taskClaimed,
+    taskUnclaimed,
+    taskRefocused,
+    taskRemoved,
+    taskSwapped,
+    taskGrabbed,
+    pileGrabbed,
+    pileDropped,
+    taskPrioritized,
+    taskDropped,
+    taskPassed,
+    taskGuilded,
+    taskSubTasked,
+    taskDeSubTasked,
+    addressUpdated,
+    invoiceCreated,
+    taskBoostedLightning,
+    tasksReceived,
+    gridAdd,
+    gridDel
 };

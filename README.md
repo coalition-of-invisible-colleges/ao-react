@@ -52,8 +52,6 @@ Ao is a blank piece of infinite paper. It can be used for articulating goals, au
 
 To create a new card, click at the bottom center to reveal a text input box. As you type search results will appear if existing cards match (via regular expressions). On enter it will be placed on top of the panel inside the current card; parsed in markdown, it can include links, images, or embedded content.
 
-When in Unicorn - the main dimension - you view, add to, adjust, organize and navigate arounds cards. The current context is the card currently being viewed; you see its upgrades and its panel of contained cards. Click on the five color bar at the bottom center of the page to add a card to the panel of this context. Double click on a card and you go into it. The card becomes the new context and the color bar now creates cards within this card. To be clear, ao is card inception.
-
 Double click on a card it becomes the new context and more cards can be made within it. To be clear: ao is card inception.
 
 Cards have clickies at each corner. Top left (bird) opens a selection to send. Bottom left removes it from the present context; it can be found again or brought back with the search. Bottom right is the same as a double click and will go into it.
@@ -65,8 +63,6 @@ The top right adds to the priorities list, adds a mission title, claims as compl
 Depending on the mode there are four possible views: a priority list, accounts and their activity, an interface to add points, and a calendar.
 
 Upgrades are specific to the current card and reveal or summarize information about the contained cards or past activity. Upgrade interactions update in real time to other account on the ao.
-
-When you initialize your ao the first thing you will want to do is change the initial account details from name:dctrl/password:dctrl and add accounts for anyone you intend to invite to collaborate with you. The account management tools are on the Bull-badge, three clicks on the top right bull will get you there. Each account is a powerful demigod. They have as much power to see and move cards, organize lists, create new accounts, etc... as your account does.
 
 #### Accounts and Holds
 
@@ -83,8 +79,9 @@ Optionally, you can set an amount of points to divide monthly between active acc
 
 Using the gpio pins of a raspberry pi and the [repo pi](https://github.com/autonomousorganization/pi). Physical objects - such as maglock doors and vending machines - can be hooked up then triggered by fob or by button. The resource will only respond for accounts that are active.
 
-<!-- #### Ao 2 Ao
-*work in progress* -->
+#### Ao 2 Ao
+
+Ao allows you or others to access from anywhere using a tor .onion location. You can connect two ao servers together, then mark cards that you would like to share. Ao will periodically keep the contents of the linked cards synced between servers. 
 
 #### Customize
 I suggest starting by swapping the images in `src/assets/images/*`  and hex codes in `src/styles/colours.styl` to suit your mojo.

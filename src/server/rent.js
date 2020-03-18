@@ -2,7 +2,6 @@
 const cron = require('cron')
 const events = require('./events')
 const {serverState} = require('./state')
-const dctrlDb = require('./dctrlDb')
 
 const rentJob = new cron.CronJob({
   cronTime: '0 0 0 1 * *',
@@ -12,7 +11,7 @@ const rentJob = new cron.CronJob({
 })
 
 const deactivateJob = new cron.CronJob({
-  cronTime: '11 11 11 11 * *',
+  cronTime: '11 11 11 * * 0',
   onTick: deactivate,
   start: false,
   timeZone: 'America/Los_Angeles'
@@ -31,8 +30,6 @@ function rent(){
     activeMembers.forEach( m => {
         events.memberCharged(m.memberId, charged, notes)
     })
-
-    dctrlDb.insertBackup(serverState)
 }
 
 function deactivate(){

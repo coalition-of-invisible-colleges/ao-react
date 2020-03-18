@@ -13,8 +13,8 @@ const serverState = {
   grid: {},
   cash: {
     address: config.tor.hostname,
-    alias: "",
-    currency: "CAD",
+    alias: 'dctrl',
+    currency: 'CAD',
     spot: 0,
     rent: 0,
     cap: 75,
@@ -100,14 +100,14 @@ function backupState() {
   dctrlDb.insertBackup(serverState);
 }
 
-function removeSensitive(ev) {
-  let secretStuff = ["fob", "secret", "token", "email", "payment_hash"];
-  if (ev.type === "member-field-updated") {
-    ["fob", "secret", "email"].forEach(str => {
-      if (ev.field === str) {
-        secretStuff.push("newfield");
-      }
-    });
+function removeSensitive(ev){
+  let secretStuff = ['fob', 'secret', 'token', 'email', 'payment_hash', 'inboundSecret', 'outboundSecret']
+  if (ev.type === 'member-field-updated'){
+      ['fob', 'secret', 'email'].forEach( str => {
+          if (ev.field === str){
+              secretStuff.push('newfield')
+          }
+      })
   }
   return _.omit(ev, secretStuff);
 }

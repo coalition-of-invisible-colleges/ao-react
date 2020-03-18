@@ -19,143 +19,233 @@ router.post("/events", (req, res, next) => {
   next();
 });
 
-router.post("/events", (req, res, next) => {
-  let errRes = [];
-  switch (req.body.type) {
-    case "ao-linked":
-      if (
-        validators.isAddress(req.body.address, errRes) &&
-        validators.isTaskId(req.body.taskId)
-      ) {
-        events.aoLinked(
-          req.body.address,
-          req.body.taskId,
-          utils.buildResCallback(res)
-        );
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "highlighted":
-      if (
-        validators.isTaskId(req.body.taskId, errRes) &&
-        validators.isMemberId(req.body.memberId, errRes) &&
-        validators.isBool(req.body.valence, errRes)
-      ) {
-        events.highlighted(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.valence,
-          utils.buildResCallback(res)
-        );
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "ao-disconnected":
-      if (validators.isAddress(req.body.address, errRes)) {
-        events.aoDisconnected(req.body.address, utils.buildResCallback(res));
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "ao-named":
-      if (validators.isNotes(req.body.alias, errRes)) {
-        events.aoNamed(req.body.alias, utils.buildResCallback(res));
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "rent-set":
-      if (validators.isAmount(req.body.amount, errRes)) {
-        events.rentSet(req.body.amount, utils.buildResCallback(res));
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "cap-set":
-      if (validators.isAmount(req.body.amount, errRes)) {
-        events.capSet(req.body.amount, utils.buildResCallback(res));
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "ao-connected":
-      connector.postEvent(
-        req.body.address,
-        req.body.secret,
-        {
-          type: "ao-subscribed",
-          address: state.serverState.cash.address,
-          secret: req.body.secret //
-        },
-        subscriptionResponse => {
-          if (!subscriptionResponse.lastInsertRowid) {
-            return res.status(200).send(["ao-connect failed"]);
+router.post('/events', (req, res, next)=>{
+  let errRes = []
+  switch (req.body.type){
+      case 'ao-linked':
+          if (
+              validators.isAddress(req.body.address, errRes) &&
+              validators.isTaskId(req.body.taskId)
+          ){
+              events.aoLinked(req.body.address, req.body.taskId, utils.buildResCallback(res))
+          } else {
+              res.status(200).send(errRes)
           }
-          console.log("subscribe success, attempt ao connect");
-          events.aoConnected(
-            req.body.address,
-            req.body.secret,
-            utils.buildResCallback(res)
-          );
-        }
-      );
-      break;
-    case "ao-subscribed":
-      if (
-        validators.isNotes(req.body.address, errRes) &&
-        validators.isNotes(req.body.secret, errRes)
-      ) {
-        events.aoSubscribed(
-          req.body.address,
-          req.body.secret,
-          utils.buildResCallback(res)
-        );
-      } else {
-        res.status(200).send(errRes);
-      }
-      break;
-    case "ao-relay":
-      // move to validators .isAoAddress
-
-      let secret;
-      state.serverState.ao.forEach(a => {
-        if (a.address == req.body.address) {
-          secret = a.secret;
-        }
-      });
-      if (secret) {
-        connector.postEvent(
-          req.body.address,
-          secret,
-          req.body.ev,
-          connectorRes => {
-            console.log("ao relay response", { connectorRes });
+          break
+      case 'highlighted':
+          if (
+              validators.isTaskId(req.body.taskId, errRes) &&
+              validators.isMemberId(req.body.memberId, errRes) &&
+              validators.isBool(req.body.valence, errRes)
+          ){
+              events.highlighted(req.body.taskId, req.body.memberId, req.body.valence, utils.buildResCallback(res))
+          } else {
+              res.status(200).send(errRes)
           }
-        );
-      } else {
-        console.log("no connection for ", req.body.address);
-        next();
-      }
-      break;
-    case "invoice-created":
-      if (
-        validators.isTaskId(req.body.taskId, errRes) &&
-        validators.isAmount(req.body.amount, errRes)
-      ) {
-        lightning
-          .createInvoice(req.body.amount, "<3" + uuidV1(), "~", 3600)
-          .then(result => {
-            let addr = result["p2sh-segwit"];
-            events.invoiceCreated(
-              req.body.taskId,
-              result.bolt11,
-              result.payment_hash,
-              utils.buildResCallback(res)
-            );
+          break
+      case 'ao-disconnected':
+          if (validators.isAddress(req.body.address, errRes)){
+              events.aoDisconnected(
+                req.body.address,
+                utils.buildResCallback(res)
+              )
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
+      case 'ao-named':
+          if (validators.isNotes(req.body.alias, errRes)){
+              events.aoNamed(req.body.alias, utils.buildResCallback(res))
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
+      case 'rent-set':
+          if (
+              validators.isAmount(req.body.amount, errRes)
+          ){
+              events.rentSet(
+                req.body.amount,
+                utils.buildResCallback(res)
+              )
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
+      case 'cap-set':
+          if (
+              validators.isAmount(req.body.amount, errRes)
+          ){
+              events.capSet(
+                req.body.amount,
+                utils.buildResCallback(res)
+              )
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
+      case 'ao-outbound-connected':
+          connector.postEvent(req.body.address, req.body.secret, {
+              type: 'ao-inbound-connected',
+              address: state.serverState.cash.address,
+              secret: req.body.secret, //
+          }, (subscriptionResponse) => {
+              if (!subscriptionResponse.lastInsertRowid){
+                  return res.status(200).send(['ao-connect failed'])
+              }
+              console.log('subscribe success, attempt ao connect')
+              events.aoOutboundConnected(
+                req.body.address,
+                req.body.secret,
+                utils.buildResCallback(res)
+              )
           })
-          .catch(err => {
+          break
+      case 'ao-inbound-connected':
+          if (
+              validators.isNotes(req.body.address, errRes) &&
+              validators.isNotes(req.body.secret, errRes)
+          ){
+              events.aoInboundConnected(
+                req.body.address,
+                req.body.secret,
+                utils.buildResCallback(res)
+              )
+          } else {
+              res.status(200).send(errRes)
+          }
+          break
+      case 'ao-relay':
+          let secret
+          state.serverState.ao.forEach(a => {
+              if (a.address == req.body.address){
+                  secret = a.outboundSecret
+              }
+          })
+          if (secret){
+              connector.postEvent(req.body.address, secret, req.body.ev, (connectorRes) => {
+                  console.log("ao relay response", {connectorRes})
+              })
+          } else {
+              console.log("no connection for ", req.body.address)
+              next()
+          }
+          break
+      case 'invoice-created':
+          if (
+              validators.isTaskId(req.body.taskId, errRes) &&
+              validators.isAmount(req.body.amount, errRes)
+          ) {
+              lightning.createInvoice(req.body.amount, "<3" +  uuidV1(), '~', 3600)
+                  .then(result => {
+                      let addr = result['p2sh-segwit']
+                      events.invoiceCreated(req.body.taskId, result.bolt11, result.payment_hash, utils.buildResCallback(res))
+                  })
+                  .catch(err => {
+                      console.log({err})
+                      res.status(200).send("attempt failed")
+                  });
+          } else {
+            res.status(200).send(errRes)
+          }
+          break
+      case 'member-created':
+          if (
+            validators.isNotes(req.body.name, errRes) &&
+            validators.isNotes(req.body.fob, errRes) &&
+            validators.isNotes(req.body.secret)
+          ){
+            events.memberCreated(
+              req.body.name,
+              req.body.fob,
+              req.body.secret,
+              utils.buildResCallback(res)
+            )
+          } else {
+            res.status(400).send(errRes)
+          }
+          break
+      case 'member-activated':
+          if (
+            validators.isMemberId(req.body.memberId, errRes)
+          ){
+            events.memberActivated(
+              req.body.memberId,
+              utils.buildResCallback(res)
+            )
+          } else {
+            res.status(400).send(errRes)
+          }
+          break
+      case 'member-deactivated':
+          if (
+            validators.isMemberId(req.body.memberId, errRes)
+          ){
+            events.memberDeactivated(
+              req.body.memberId,
+              utils.buildResCallback(res)
+            )
+          } else {
+            res.status(400).send(errRes)
+          }
+          break
+      case 'member-purged':
+          if (
+              validators.isMemberId(req.body.memberId, errRes)
+          ){
+              events.memberPurged(
+                req.body.memberId,
+                req.body.blame,
+                utils.buildResCallback(res)
+              )
+          } else {
+              res.status(400).send(errRes)
+          }
+          break
+      case 'member-field-updated':
+          if (
+              validators.isMemberId(req.body.memberId, errRes) &&
+              validators.isField(req.body.field, errRes) &&
+              validators.isNotes(req.body.newfield, errRes)
+          ){
+              events.memberFieldUpdated(
+                  req.body.memberId,
+                  req.body.field,
+                  req.body.newfield,
+                  utils.buildResCallback(res)
+              )
+          } else {
+              res.status(400).send(errRes)
+          }
+          break
+      case 'doge-barked':
+          if (
+            validators.isMemberId(req.body.memberId, errRes)
+          ){
+            events.dogeBarked(
+              req.body.memberId,
+              utils.buildResCallback(res)
+            )
+          } else {
+            res.status(400).send(errRes)
+          }
+          break
+      case 'doge-muted':
+          if (validators.isMemberId(req.body.memberId, errRes)){
+            events.dogeMuted(
+              req.body.memberId,
+              utils.buildResCallback(res)
+            )
+          } else {
+            res.status(400).send(errRes)
+          }
+          break
+      case 'doge-unmuted':
+          if (validators.isMemberId(req.body.memberId, errRes)){
+            events.dogeUnmuted(
+              req.body.memberId,
+              utils.buildResCallback(res)
+            ).catch(err => {
             console.log({ err });
             res.status(200).send("attempt failed");
           });

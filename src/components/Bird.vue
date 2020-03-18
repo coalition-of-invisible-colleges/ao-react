@@ -2,10 +2,9 @@
 
 .bird(ref='wholeBird')
     div(ref='bird')
-        div(v-if='$store.state.upgrades.warp === -1')
-            div.birdy.faded.smallguild(v-if='!showGive && b.guild || showGive && b.guild'  :class='{ open : showGive }')
-            img.birdy.faded(v-else-if='!showGive && !b.guild' src='../assets/images/send.svg')
-            img.birdy(v-else  src='../assets/images/sendselected.svg')
+        div.birdy.faded.smallguild(v-if='!showSend && b.guild || showGive && b.guild'  :class='{ open : showSend }')
+        img.birdy.faded(v-else-if='!showSend && !b.guild' src='../assets/images/send.svg')
+        img.birdy(v-else  src='../assets/images/sendselected.svg')
     .play(v-if='showPlay')
         select(v-model='toGuild')
             option(disabled, value='') to mission
@@ -21,6 +20,11 @@
             option(disabled, value='') to people
             option(v-for='n in $store.state.members', :value="n.memberId") {{ n.name }}
         button.small(@click='dispatchMakeEvent(passInfo)') give
+    .give(v-if='showRelay')
+        select(v-model='toAo')
+            option(disabled, value='') to ao
+            option(v-for='n in $store.state.ao', :value="n.address") {{ n.address }}
+        button.small(@click='dispatchMakeEvent(aoLink)') link
     .theTitle(v-if='b.guild') {{ b.guild }}
     .count
         guild-create(v-if='showGuildCreate'  :b='b'  @closeit='toggleGuildCreate')
@@ -39,9 +43,8 @@ export default {
     },
     data() {
         return {
-            showGive: false,
             showGuildCreate: false,
-            showPlay: false,
+            showSend:false,
             toMember: '',
             toGuild: '',
             toAo:'',
@@ -65,43 +68,29 @@ export default {
         doubleTap.requireFailure(tripleTap)
 
         mc.on('singletap', (e) => {
-            this.toggleGive()
+            this.toggleSend()
             e.stopPropagation()
         })
 
         mc.on('doubletap', (e) => {
-            if(this.b.taskId === this.$store.getters.member.memberId) return
-
-            this.togglePlay()
+            this.toggleSend()
+            this.$store.commit('setMode', 2)
             e.stopPropagation()
         })
 
         mc.on('press', (e) => {
-            if(this.b.taskId === this.$store.getters.member.memberId) return
-
             this.toggleGuildCreate()
             e.stopPropagation()
         })
 
-        // XXX
         let Swipe = new Hammer.Swipe()
         mc.add(Swipe)
         mc.on('swipeleft', (e) => {
+            this.$store.commit('nextMode', 2)
             e.stopPropagation()
         })
         mc.on('swiperight', (e) => {
-            e.stopPropagation()
-        })
-
-        let wholeel = this.$refs.wholeBird
-        if(!wholeel) return
-        let wholemc = Propagating(new Hammer.Manager(wholeel))
-
-        let wholeLongPress = new Hammer.Press({ time: 400 })
-
-        wholemc.add([wholeLongPress])
-
-        wholemc.on('press', (e) => {
+            this.$store.commit('previousMode', 2)
             e.stopPropagation()
         })
     },
@@ -109,36 +98,40 @@ export default {
         dispatchMakeEvent(ev){
             this.$store.dispatch('makeEvent', ev)
         },
-        toggleGive(){
-            if(this.showGuildCreate) {
-                this.toggleGuildCreate()
-                return
-            }
-            if(this.showPlay) {
-                this.togglePlay()
-                return
-            }
-            this.showGive = !this.showGive
-        },
         toggleGuildCreate(){
             if(!this.showGuildCreate) {
-                this.showGive = false
-                this.showPlay = false
+                this.showSend = false
             }
             this.showGuildCreate = !this.showGuildCreate
             if(this.showGuildCreate) {
                 setTimeout(()=>{ document.getElementById('titlebox').focus() }, 1)
             }
         },
-        togglePlay(){
-            if(!this.showPlay) {
-                this.showGive = false
+        toggleSend(){
+            if(!this.showSend) {
                 this.showGuildCreate = false
             }
-            this.showPlay = !this.showPlay
+            this.showSend = !this.showSend
         },
     },
     computed: {
+        showGive(){
+            return this.showSend && (this.$store.state.upgrades.mode === 'doge' || this.$store.state.upgrades.mode === 'boat')
+        },
+        showPlay(){
+            return this.showSend && this.$store.state.upgrades.mode === 'badge'
+        },
+        showRelay(){
+            return this.showSend && (this.$store.state.upgrades.mode === 'chest' || this.$store.state.upgrades.mode === 'timecube')
+        },
+        passInfo(){
+            return {
+              type: 'task-passed',
+              taskId: this.b.taskId,
+              fromMemberId: this.$store.getters.member.memberId,
+              toMemberId: this.toMember,
+            }
+        },
         playInfo(){
             return {
                 type: 'task-sub-tasked',
@@ -146,12 +139,11 @@ export default {
                 subTask: this.b.taskId,
             }
         },
-        passInfo(){
+        aoLink(){
             return {
-                type: 'task-passed',
+                type: 'ao-linked',
+                address: this.toAo,
                 taskId: this.b.taskId,
-                fromMemberId: this.$store.getters.member.memberId,
-                toMemberId: this.toMember,
             }
         },
     },
