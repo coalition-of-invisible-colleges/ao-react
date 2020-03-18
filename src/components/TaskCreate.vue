@@ -9,15 +9,15 @@
       .label
         .btnpanel
             div(:class='{ opaque : showCreate, btnwrapper : !showCreate }')
-              button.lit.redwx.paperwrapper(@click='switchColor("red")'  :class='{ currentColor : task.color === "red" }')
+              button.lit.redwx.paperwrapper(:class='{ currentColor : task.color === "red" }'  ref='redButton')
                 img.agedbackground
-              button.lit.yellowwx.paperwrapper(@click='switchColor("yellow")'  :class='{ currentColor : task.color === "yellow" }')
+              button.lit.yellowwx.paperwrapper(:class='{ currentColor : task.color === "yellow" }'  ref='yellowButton')
                 img.agedbackground
-              button.lit.greenwx.paperwrapper(@click='switchColor("green")'  :class='{ currentColor : task.color === "green" }')
+              button.lit.greenwx.paperwrapper(:class='{ currentColor : task.color === "green" }'  ref='greenButton')
                 img.agedbackground
-              button.lit.purplewx.paperwrapper(@click='switchColor("purple")'  :class='{ currentColor : task.color === "purple" }')
+              button.lit.purplewx.paperwrapper(:class='{ currentColor : task.color === "purple" }'  ref='purpleButton')
                 img.agedbackground
-              button.lit.bluewx.paperwrapper(@click='switchColor("blue")'  :class='{ currentColor : task.color === "blue" }')
+              button.lit.bluewx.paperwrapper(:class='{ currentColor : task.color === "blue" }'  ref='blueButton')
                 img.agedbackground
       .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
           .searchresults
@@ -127,6 +127,35 @@ export default {
                 this.swipeTimeout = Date.now();
             }
         });
+
+        let colors = ["red", "yellow", "green", "purple", "blue"]
+        colors.forEach(color => {
+            console.log("creating ", color, " button")
+            var el = this.$refs[color + "Button"]
+            if (!el) return
+            let mc3 = new Hammer.Manager(el)
+
+            let singleTap = new Hammer.Tap({ event: "singletap", time: 400 })
+            let longPress = new Hammer.Press({ time: 600 })
+            
+            mc3.add([singleTap, longPress]);
+
+            longPress.recognizeWith([singleTap])
+            longPress.requireFailure([singleTap])
+
+            mc3.on('singletap', e => {
+                console.log("singleTap on button of color ", color)
+                this.switchColor(color);
+                // e.stopPropagation();
+            })
+
+            mc3.on('press', e => {
+                console.log("longpress triggering paint")
+                this.$store.commit('startPainting', color)
+                // e.stopPropagation()
+            })
+            console.log("done")
+        })
     },
     methods: {
         toCardMode() {

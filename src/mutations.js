@@ -570,6 +570,17 @@ function tasksMuts(tasks, ev) {
                 }
             })
             break
+        case "task-colored":
+            tasks.forEach(task => {
+                if(task.taskId === ev.taskId) {
+                    task.color = ev.color
+                }
+                if(task.taskId === ev.inId) {
+                    task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+                    task.subTasks.push(ev.taskId)
+                }
+            })
+            break
         case "task-claimed":
             let bounty = 0
             tasks.forEach(task => {

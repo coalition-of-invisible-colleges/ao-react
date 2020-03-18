@@ -1,5 +1,6 @@
 <template lang='pug'>
 .task(:class="cardInputSty"  ref='wholeCard').dont-break-out.agedwrapper
+    .paintbrushCanvas(v-if='wePaintin'  @click='paint'  :key='$store.state.upgrades.color')
     .agedbackground.freshpaper(v-if='cardAge < 8')
     .agedbackground.weekoldpaper(v-else-if='cardAge < 30')
     .agedbackground.montholdpaper(v-else-if='cardAge < 90')
@@ -126,6 +127,17 @@ export default {
         deaction(){
           this.$store.commit("setAction", false)
         },
+        paint() {
+          console.log("about to paint a card")
+          this.$store.dispatch("makeEvent", {
+                type: 'task-colored',
+                taskId: this.b.taskId,
+                inId: this.inId,
+                color: this.$store.state.upgrades.paintbrushColor,
+          })
+          this.$store.commit("stopPainting")
+          console.log("card painted")
+        }
     },
     computed: {
         cardStart(){
@@ -172,6 +184,9 @@ export default {
         },
         fractionalReserveDoge() {
             return Math.max(Math.floor((this.b.weight % 1) * 16), 1)
+        },
+        wePaintin() {
+            return this.$store.state.upgrades.paintbrushColor
         },
     },
 }
@@ -404,4 +419,13 @@ export default {
     position: absolute
     right: 2.5em
     top: 0.85em
+    
+.paintbrushCanvas
+    width: 100%
+    height: 100%
+    background-color: rgba(255, 255, 255, 0.35)
+    border: 4px rgba(255, 255, 255, 0.6)
+    position: absolute
+    top: 0
+    left: 0
 </style>

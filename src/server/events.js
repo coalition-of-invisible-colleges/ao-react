@@ -447,6 +447,17 @@ function taskValued(taskId, value, blame, callback) {
   dctrlDb.insertEvent(newEvent, callback);
 }
 
+function taskColored(taskId, inId, color, blame, callback) {
+  let newEvent = {
+    type: "task-colored",
+    taskId,
+    inId,
+    color,
+    blame
+  };
+  dctrlDb.insertEvent(newEvent, callback);
+}
+
 function taskClaimed(taskId, memberId, blame, callback) {
   let newEvent = {
     type: "task-claimed",
@@ -572,6 +583,7 @@ function gridDel(coord, callback) {
 }
 
 module.exports = {
+<<<<<<< HEAD
     highlighted,
     memberCharged,
     aoOutboundConnected,
@@ -622,4 +634,61 @@ module.exports = {
     tasksReceived,
     gridAdd,
     gridDel
+=======
+  highlighted,
+  memberCharged,
+  aoInboundConnected,
+  aoLinked,
+  aoOutboundConnected,
+  aoDisconnected,
+  aoNamed,
+  spotUpdated,
+  rentSet,
+  capSet,
+  fundsSet,
+  getNodeInfo,
+  memberCreated,
+  memberDeactivated,
+  memberPurged,
+  memberActivated,
+  memberFieldUpdated,
+  dogeBarked,
+  dogeMuted,
+  dogeUnmuted,
+  resourceCreated,
+  resourceUsed,
+  resourceStocked,
+  resourceBooked,
+  bookCancelled,
+  resourcePurged,
+  sessionCreated,
+  sessionKilled,
+  taskCreated,
+  taskBoosted,
+  taskClaimed,
+  taskUnclaimed,
+  taskRefocused,
+  pileRefocused,
+  taskRemoved,
+  taskSwapped,
+  taskBumped,
+  taskGrabbed,
+  pileGrabbed,
+  pileDropped,
+  taskPrioritized,
+  pilePrioritized,
+  taskDropped,
+  taskPassed,
+  taskValued,
+  taskColored,
+  taskGuilded,
+  taskSubTasked,
+  taskDeSubTasked,
+  addressUpdated,
+  invoiceCreated,
+  taskBoostedLightning,
+  tasksReceived,
+  gridAdd,
+  gridDel
+>>>>>>> 4d888f6... added paintball feature: long press to get crosshairs/paintbrush to change card color on next click
 };

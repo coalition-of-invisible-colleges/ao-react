@@ -1,6 +1,6 @@
 <template lang="pug">
 
-.app(v-bind:class="{ xAxis: !$store.state.upgrades.zoom }")
+.app(v-bind:class="{ xAxis: !$store.state.upgrades.zoom, paintbrush: $store.state.upgrades.paintbrushColor }")
 	contexts
 	sun
 	helm
@@ -56,6 +56,9 @@ export default {
 .app
     font-weight: lighter
 
+.app.paintbrush
+	cursor: crosshair
+		
 body
     background: main
 p

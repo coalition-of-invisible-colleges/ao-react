@@ -597,6 +597,23 @@ router.post('/events', (req, res, next)=>{
         res.status(400).send(errRes);
       }
       break;
+    case "task-colored":
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isTaskId(req.body.inId, errRes) &&
+        validators.isColor(req.body.color, errRes)
+      ) {
+        events.taskColored(
+          req.body.taskId,
+          req.body.inId,
+          req.body.color,
+          req.body.blame,
+          utils.buildResCallback(res)
+        );
+      } else {
+        res.status(400).send(errRes);
+      }
+      break;
     case "task-claimed":
       if (
         validators.isTaskId(req.body.taskId, errRes) &&

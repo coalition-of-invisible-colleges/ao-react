@@ -14,6 +14,7 @@ const state = {
 	zoom: false,
 	search: false,
     searchResult: false,
+    paintbrushColor: false,
 	grid: {
 		selX: false,
 		selY: false
@@ -118,7 +119,14 @@ const mutations = {
     },
     searchSelectionReceived(state, taskId) {
         state.searchResult = false
-    }
+    },
+    startPainting(state, color) {
+        console.log("starting painting")
+        state.paintbrushColor = color
+    },
+    stopPainting(state) {
+        state.paintbrushColor = false
+    },
 }
 
 const actions = {

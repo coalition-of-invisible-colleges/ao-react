@@ -132,5 +132,9 @@ module.exports = {
       // errRes.push("invalid grid coord");
     }
     return result;
-  }
+  },
+  isColor(val, errRes) {
+    let colors = ["red", "yellow", "green", "purple", "blue"]
+    return colors.indexOf(val) >= 0
+  },
 };
