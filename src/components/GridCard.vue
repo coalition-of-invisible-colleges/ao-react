@@ -47,7 +47,6 @@ export default {
 			this.openCreate();
 			e.stopPropagation();
 		});
-
 		mc.on("swipeleft", e => {
 			if (Date.now() - this.swipeTimeout > 100) {
 				this.previousColor();
@@ -291,12 +290,8 @@ textarea
   border: none
   resize: none
   text-align: center
-<<<<<<< HEAD
-
-=======
   z-index: 1
-  
->>>>>>> 0c8c95f... search panel works on the Grid including click to load results
+
 .agedbackground
     background-image: url('/paper.jpg')
     background-repeat: no-repeat

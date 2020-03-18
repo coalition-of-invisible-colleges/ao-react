@@ -1,16 +1,16 @@
 <template lang="pug">
 
-.app
-    contexts
-    sun
-    helm
-    bull
-    loader
-    event-feed
-    status
-    task-create(:key='$router.currentRoute.path')
-    portal
-    router-view
+.app(v-bind:class="{ xAxis: !$store.state.upgrades.zoom }")
+	contexts
+	sun
+	helm
+	bull
+	loader
+	event-feed
+	status
+	task-create(:key='$router.currentRoute.path')
+	portal
+	router-view
 </template>
 
 <script>
@@ -58,10 +58,11 @@ export default {
 
 body
     background: main
-    overflow-x: hidden
-    color: white
-    
 p
 	margin-top: 0
 	margin-bottom: 0
+
+.xAxis
+	overflow-X: hidden
+>>>>>>> ee3da04... added grid scroll on x-axis
 </style>

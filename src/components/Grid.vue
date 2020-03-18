@@ -174,9 +174,6 @@ export default {
     height: 50px
     width: 100%
     background-color: blue
-
-#bodyMain
-    overflow-x: scroll !important
     
 .zoomIn
     color: black
