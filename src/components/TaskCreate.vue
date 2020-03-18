@@ -156,6 +156,36 @@ export default {
             })
             console.log("done")
         })
+        // var mc2 = new Hammer.Manager(ca);
+        // var Swipe2 = new Hammer.Swipe();
+        // mc2.add(Swipe2);
+        // mc2.on("swipeleft", e => {
+        //     if (Date.now() - this.swipeTimeout > 100) {
+        //         this.previousColor();
+        //         this.swipeTimeout = Date.now();
+        //     }
+        // });
+
+        // mc2.on("swiperight", e => {
+        //     if (Date.now() - this.swipeTimeout > 100) {
+        //         this.nextColor();
+        //         this.swipeTimeout = Date.now();
+        //     }
+        // });
+
+        // mc2.on("swipedown", e => {
+        //     if (Date.now() - this.swipeTimeout > 100) {
+        //         this.closeCreate();
+        //         this.swipeTimeout = Date.now();
+        //     }
+        // });
+
+        // mc2.on("swipeup", e => {
+        //     if (Date.now() - this.swipeTimeout > 100) {
+        //         this.openCreate();
+        //         this.swipeTimeout = Date.now();
+        //     }
+        // });
     },
     methods: {
         toCardMode() {
@@ -567,17 +597,6 @@ p
     height: 100%
     pointer-events: none
     opacity: 0.2
-
-.closeit
-    position: fixed
-    width: 100%
-    height: 90%
-    background-color: rgba(22, 22, 22, 0.2)
-    z-index: 148
-    top: 0
-    left: 0
-    margin: 0
-    padding: 0
 
 .scrollbarwrapper
     width: 37vw

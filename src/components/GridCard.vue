@@ -10,6 +10,15 @@
         .agedbackground.weekoldpaper.hideonhover(v-else-if='cardAge < 30')
         .agedbackground.montholdpaper.hideonhover(v-else-if='cardAge < 90')
         .agedbackground.threemontholdpaper.hideonhover(v-else='cardAge >= 90')
+    .scrollbarwrapper(v-show='showCreate && task.search.length >= 2 && (matchCards.guilds.length + matchCards.doges.length + matchCards.cards.length) > 0'  v-model='task.search')
+        .searchresults
+            .result(v-for='t in matchCards.guilds'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+                img.smallguild(src='../assets/images/badge.svg')
+                span {{ t.guild }}
+                div {{ shortName(t.name) }}
+            .result(v-for='t in matchCards.doges'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)')
+                current(:memberId='t.taskId')
+            .result(v-for='t in matchCards.cards'  @click.stop='debounce(loadResult, 500, [t])'  :class='resultInputSty(t)'  @dblclick.stop='goIn(t.taskId)') {{ shortName(t.name) }}
 </template>
 
 <script>
@@ -290,8 +299,9 @@ textarea
   border: none
   resize: none
   text-align: center
-  z-index: 1
-
+  z-index: 2
+  color: white
+  
 .agedbackground
     background-image: url('/paper.jpg')
     background-repeat: no-repeat
@@ -327,4 +337,54 @@ textarea
 
 .dogename
     color: white
+    
+.scrollbarwrapper
+    width: 37vw
+    height: calc(100% - 2em)
+    position: fixed
+    top: 0
+    left: 22em
+    background: rgba(22, 22, 22, 0.8)
+    padding: 1em 0
+    border-radius: 20px
+
+@media only screen and (max-width: 68em)
+    .scrollbarwrapper
+        width: 100%
+        position: absolute
+        top: calc(-100% - 0.5em)
+        left: 0
+
+.searchresults
+    overflow: auto
+    color: white
+    font-size: 1.1em
+    height: 100%
+    padding: 0 1em
+    word-wrap: break-word
+
+::-webkit-scrollbar
+    background-color: rgba(22, 22, 22, 0.4)
+
+::-webkit-scrollbar-thumb
+    background-color: rgba(89, 89, 89, 0.4)
+
+::-webkit-scrollbar-thumb:hover
+    background-color: rgba(255, 255, 255, 0.75)
+
+.result
+    margin-bottom: 0.3em
+    cursor: pointer
+
+.smallguild
+    height: 1em
+    margin-right: 0.3em
+    position: relative
+    top: 0.16em
+
+.guildname
+    font-weight: bold
+
+.current.result
+    display: block
 </style>
