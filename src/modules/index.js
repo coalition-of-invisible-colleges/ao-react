@@ -8,11 +8,11 @@ const ao = require("./ao");
 const grid = require("./grid");
 
 module.exports = {
-  cash,
-  members,
-  tasks,
-  resources,
-  sessions,
-  ao,
-  grid
+    cash,
+    members,
+    tasks,
+    resources,
+    sessions,
+    ao,
+    grid
 };

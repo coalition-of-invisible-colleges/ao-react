@@ -15,13 +15,13 @@ function highlighted(taskId, memberId, valence, callback) {
   dctrlDb.insertEvent(newEvent, callback);
 }
 
-function aoInboundConnected(address, secret, callback){
-    let newEvent = {
-        type: "ao-inbound-connected",
-        address,
-        secret
-    }
-    dctrlDb.insertEvent(newEvent, callback)
+function aoInboundConnected(address, secret, callback) {
+  let newEvent = {
+    type: "ao-inbound-connected",
+    address,
+    secret
+  };
+  dctrlDb.insertEvent(newEvent, callback);
 }
 
 function aoLinked(address, taskId, callback) {
@@ -34,12 +34,12 @@ function aoLinked(address, taskId, callback) {
 }
 
 function aoOutboundConnected(address, secret, callback) {
-    let newEvent = {
-        type: "ao-outbound-connected",
-        address,
-        secret,
-    }
-    dctrlDb.insertEvent(newEvent, callback)
+  let newEvent = {
+    type: "ao-outbound-connected",
+    address,
+    secret
+  };
+  dctrlDb.insertEvent(newEvent, callback);
 }
 
 function aoDisconnected(address, callback) {
@@ -572,7 +572,7 @@ function gridAdd(coord, taskId, callback) {
     taskId
   };
   dctrlDb.insertEvent(newEvent, callback);
-};
+}
 
 function gridDel(coord, callback) {
   let newEvent = {
@@ -583,58 +583,6 @@ function gridDel(coord, callback) {
 }
 
 module.exports = {
-<<<<<<< HEAD
-    highlighted,
-    memberCharged,
-    aoOutboundConnected,
-    aoLinked,
-    aoDisconnected,
-    aoNamed,
-    aoInboundConnected,
-    spotUpdated,
-    rentSet,
-    capSet,
-    fundsSet,
-    getNodeInfo,
-    memberCreated,
-    memberDeactivated,
-    memberPurged,
-    memberActivated,
-    memberFieldUpdated,
-    dogeBarked,
-    dogeMuted,
-    dogeUnmuted,
-    resourceCreated,
-    resourceUsed,
-    resourceStocked,
-    resourceBooked,
-    bookCancelled,
-    resourcePurged,
-    sessionCreated,
-    sessionKilled,
-    taskCreated,
-    taskBoosted,
-    taskClaimed,
-    taskUnclaimed,
-    taskRefocused,
-    taskRemoved,
-    taskSwapped,
-    taskGrabbed,
-    pileGrabbed,
-    pileDropped,
-    taskPrioritized,
-    taskDropped,
-    taskPassed,
-    taskGuilded,
-    taskSubTasked,
-    taskDeSubTasked,
-    addressUpdated,
-    invoiceCreated,
-    taskBoostedLightning,
-    tasksReceived,
-    gridAdd,
-    gridDel
-=======
   highlighted,
   memberCharged,
   aoInboundConnected,
@@ -690,5 +638,4 @@ module.exports = {
   tasksReceived,
   gridAdd,
   gridDel
->>>>>>> 4d888f6... added paintball feature: long press to get crosshairs/paintbrush to change card color on next click
 };

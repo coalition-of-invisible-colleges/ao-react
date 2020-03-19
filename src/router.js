@@ -27,119 +27,119 @@ import Grid from "./components/Grid";
 Vue.use(VueRouter);
 
 const routes = [
-	{
-		path: "/",
-		component: Deck,
-		meta: { title: "DCTRL" },
-		children: [
-			{
-				path: "doge",
-				component: Zen
-			},
-			{
-				path: "boat",
-				component: Priorities,
-				meta: { title: "priorities" }
-			},
-			{
-				path: "badge",
-				component: Checkmarks,
-				meta: { title: "checkmarks" }
-			},
-			{
-				path: "chest",
-				component: Payments,
-				meta: { title: "checkmarks" }
-			},
-			{
-				path: "timecube",
-				component: Planning,
-				meta: { title: "planning" }
-			}
-		]
-	},
-	{
-		path: "/front",
-		component: Oracle,
-		meta: { title: "DCTRL" }
-	},
-	{
-		path: "/front/doge",
-		component: Oracle,
-		meta: { title: "newspaper" }
-	},
-	{
-		path: "/front/boat",
-		component: Top,
-		meta: { title: "top cards" }
-	},
-	{
-		path: "/front/badge",
-		component: Recent,
-		meta: { title: "recent" }
-	},
-	{
-		path: "/front/chest",
-		component: Bounties,
-		meta: { title: "bounties" }
-	},
-	{
-		path: "/front/timecube",
-		component: Upcoming,
-		meta: { title: "calendar" }
-	},
-	{
-		path: "/dash",
-		component: Access,
-		meta: { title: "dashboard" }
-	},
-	{
-		path: "/dash/doge",
-		component: Access,
-		meta: { title: "resources" }
-	},
-	{
-		path: "/dash/boat",
-		component: Connect,
-		meta: { title: "networking" }
-	},
-	{
-		path: "/dash/badge",
-		component: Accounts,
-		meta: { title: "manage accounts" }
-	},
-	{
-		path: "/dash/chest",
-		component: Lightning,
-		meta: { title: "lightning wallet" }
-	},
-	{
-		path: "/dash/timecube",
-		component: Reserve,
-		meta: { title: "central reserve" }
-	},
-	{
-		path: "/dash/slayer",
-		component: Accounts,
-		meta: { title: "dashboard" }
-	},
-	{
-		path: "/archive",
-		component: Archive,
-		meta: { title: "sunken ship" }
-	},
-	{
-		path: "/grid",
-		component: Grid,
-		meta: { title: "the Grid" }
-	}
+    {
+        path: "/",
+        component: Deck,
+        meta: { title: "DCTRL" },
+        children: [
+            {
+                path: "doge",
+                component: Zen
+            },
+            {
+                path: "boat",
+                component: Priorities,
+                meta: { title: "priorities" }
+            },
+            {
+                path: "badge",
+                component: Checkmarks,
+                meta: { title: "checkmarks" }
+            },
+            {
+                path: "chest",
+                component: Payments,
+                meta: { title: "checkmarks" }
+            },
+            {
+                path: "timecube",
+                component: Planning,
+                meta: { title: "planning" }
+            }
+        ]
+    },
+    {
+        path: "/front",
+        component: Oracle,
+        meta: { title: "DCTRL" }
+    },
+    {
+        path: "/front/doge",
+        component: Oracle,
+        meta: { title: "newspaper" }
+    },
+    {
+        path: "/front/boat",
+        component: Top,
+        meta: { title: "top cards" }
+    },
+    {
+        path: "/front/badge",
+        component: Recent,
+        meta: { title: "recent" }
+    },
+    {
+        path: "/front/chest",
+        component: Bounties,
+        meta: { title: "bounties" }
+    },
+    {
+        path: "/front/timecube",
+        component: Upcoming,
+        meta: { title: "calendar" }
+    },
+    {
+        path: "/dash",
+        component: Access,
+        meta: { title: "dashboard" }
+    },
+    {
+        path: "/dash/doge",
+        component: Access,
+        meta: { title: "resources" }
+    },
+    {
+        path: "/dash/boat",
+        component: Connect,
+        meta: { title: "networking" }
+    },
+    {
+        path: "/dash/badge",
+        component: Accounts,
+        meta: { title: "manage accounts" }
+    },
+    {
+        path: "/dash/chest",
+        component: Lightning,
+        meta: { title: "lightning wallet" }
+    },
+    {
+        path: "/dash/timecube",
+        component: Reserve,
+        meta: { title: "central reserve" }
+    },
+    {
+        path: "/dash/slayer",
+        component: Accounts,
+        meta: { title: "dashboard" }
+    },
+    {
+        path: "/archive",
+        component: Archive,
+        meta: { title: "sunken ship" }
+    },
+    {
+        path: "/grid",
+        component: Grid,
+        meta: { title: "the Grid" }
+    }
 ];
 
 const router = new VueRouter({
-	routes,
-	scrollBehavior: (to, from, savedPosition) => {
-		return { x: 0, y: 0 };
-	}
+    routes,
+    scrollBehavior: (to, from, savedPosition) => {
+        return { x: 0, y: 0 };
+    }
 });
 
 export default router;
