@@ -49,23 +49,27 @@
 </script>
 
 <style lang="stylus">
+  @import './styles/normalize';
+  @import './styles/colours';
 
-  @import "./styles/normalize"
-  @import "./styles/colours"
+  .app {
+    font-weight: lighter;
+  }
 
-  .app
-      font-weight: lighter
+  .app.paintbrush {
+    cursor: crosshair;
+  }
 
-  .app.paintbrush
-  	cursor: crosshair
+  body {
+    background: main;
+  }
 
-  body
-      background: main
-  p
-  	margin-top: 0
-  	margin-bottom: 0
+  p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 
-  .xAxis
-  	overflow-X: hidden
-  >>>>>>> ee3da04... added grid scroll on x-axis
+  .xAxis {
+    overflow-X: hidden;
+  }
 </style>
