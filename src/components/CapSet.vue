@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #cashexpense
     div.input-container
@@ -9,29 +9,26 @@
 </template>
 
 <script>
-
-export default {
+  export default {
     methods: {
-        setCap(){
-            this.$store.dispatch('makeEvent', this.details)
-        }
+      setCap() {
+        this.$store.dispatch("makeEvent", this.details);
+      }
     },
-    data(){
-        return {
-            details: {
-                type: 'cap-set',
-                amount: ''
-            }
+    data() {
+      return {
+        details: {
+          type: "cap-set",
+          amount: ""
         }
+      };
     }
-}
-
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/input'
-@import '../styles/button'
-
+  @import '../styles/colours'
+  @import '../styles/input'
+  @import '../styles/button'
 </style>

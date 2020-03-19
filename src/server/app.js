@@ -20,49 +20,44 @@ applyRouter(app);
 startDctrlAo();
 
 function startDctrlAo() {
-    console.log("starting db");
-    dctrlDb.startDb((err, conn) => {
-        let start = Date.now();
-        state.initialize(err => {
-            if (err) return console.log("state initialize failed:", err);
+  console.log("starting db");
+  dctrlDb.startDb((err, conn) => {
+    let start = Date.now();
+    state.initialize(err => {
+      if (err) return console.log("state initialize failed:", err);
 
-            watchSpot();
-            rent();
-            link();
-            lightning.recordEveryInvoice(state.serverState.cash.pay_index);
-            lightning.watchOnChain();
+      watchSpot();
+      rent();
+      link();
+      lightning.recordEveryInvoice(state.serverState.cash.pay_index);
+      lightning.watchOnChain();
 
-            const serverReactions = dctrlDb.changeFeed
-                .onValue(ev => {
-                    state.applyEvent(state.serverState, ev);
-                })
-                .onValue(reactions);
+      const serverReactions = dctrlDb.changeFeed
+        .onValue(ev => {
+          state.applyEvent(state.serverState, ev);
+        })
+        .onValue(reactions);
 
-            const server = app.listen(PORT, err => {
-                console.log("Listening on port", PORT);
+      const server = app.listen(PORT, err => {
+        console.log("Listening on port", PORT);
 
-                const io = socketIo(server);
+        const io = socketIo(server);
 
-                socketProtector(io, {
-                    authenticate: socketAuth,
-                    timeout: 2000
-                });
-
-                const filteredStream = dctrlDb.changeFeed.map(
-                    state.removeSensitive
-                );
-
-                const fullEvStream = Kefir.merge([
-                    filteredStream,
-                    dctrlDb.shadowFeed
-                ]);
-
-                fullEvStream.onValue(ev => {
-                    state.applyEvent(state.pubState, ev);
-                    io.emit("eventstream", ev);
-                    console.log("emitting:", ev);
-                });
-            });
+        socketProtector(io, {
+          authenticate: socketAuth,
+          timeout: 2000
         });
+
+        const filteredStream = dctrlDb.changeFeed.map(state.removeSensitive);
+
+        const fullEvStream = Kefir.merge([filteredStream, dctrlDb.shadowFeed]);
+
+        fullEvStream.onValue(ev => {
+          state.applyEvent(state.pubState, ev);
+          io.emit("eventstream", ev);
+          console.log("emitting:", ev);
+        });
+      });
     });
+  });
 }

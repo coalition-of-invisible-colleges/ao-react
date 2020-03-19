@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #nodes
   .container(v-if='$store.state.cash.info && $store.state.cash.info.blockheight')
@@ -37,154 +37,154 @@
 </template>
 
 <script>
-import calculations from '../calculations'
+  import calculations from "../calculations";
 
-import Tag from './Tag'
-import LocalRemoteBar from './LocalRemoteBar'
-import Payments from './Payments'
+  import Tag from "./Tag";
+  import LocalRemoteBar from "./LocalRemoteBar";
+  import Payments from "./Payments";
 
-import request from 'superagent'
+  import request from "superagent";
 
-export default {
-    mounted(){
-        this.$store.commit('setMode' , 3)
-        this.$store.commit('setDimension' , 2)
+  export default {
+    mounted() {
+      this.$store.commit("setMode", 3);
+      this.$store.commit("setDimension", 2);
     },
-    data(){
-        return {
-            selectedPeer: false
-        }
+    data() {
+      return {
+        selectedPeer: false
+      };
     },
-    components:{
-         Tag, LocalRemoteBar, Payments
+    components: {
+      Tag,
+      LocalRemoteBar,
+      Payments
     },
     computed: {
-        unchanneled(){
-            return this.$store.state.cash.info.peers.filter(p => !p.channels)
-        }
+      unchanneled() {
+        return this.$store.state.cash.info.peers.filter(p => !p.channels);
+      }
     },
-    methods:{
-        selectPeer(pId){
-            if (pId === this.selectedPeer){
-                return this.selectedPeer = false
-            }
-            this.selectedPeer = pId
-        },
-        requestChannel(){
-            request
-                .post('/lightning/channel')
-                .send({id : this.selectedPeer})
-                .set("Authorization", this.$store.state.loader.token)
-                .end((err, res)=>{
-                    console.log("response from channel", res.body)
-                })
+    methods: {
+      selectPeer(pId) {
+        if (pId === this.selectedPeer) {
+          return (this.selectedPeer = false);
         }
+        this.selectedPeer = pId;
+      },
+      requestChannel() {
+        request
+          .post("/lightning/channel")
+          .send({ id: this.selectedPeer })
+          .set("Authorization", this.$store.state.loader.token)
+          .end((err, res) => {
+            console.log("response from channel", res.body);
+          });
+      }
     }
-}
-
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/skeleton'
-@import '../styles/grid'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/skeleton'
+  @import '../styles/grid'
+  @import '../styles/button'
 
-.container
-    content-align: center
+  .container
+      content-align: center
 
-h3
-    text-align: center
+  h3
+      text-align: center
 
-option
-    // background: wrexblue
-    color: white
+  option
+      // background: wrexblue
+      color: white
 
-a
-    color: purple
+  a
+      color: purple
 
-h1
-    text-align: center
+  h1
+      text-align: center
 
-.h
-    height: 2em
+  .h
+      height: 2em
 
-.j
-    color: accent1
-    font-size: 1.5em
-    margin-bottom: 1.123em
-    background-color: main
+  .j
+      color: accent1
+      font-size: 1.5em
+      margin-bottom: 1.123em
+      background-color: main
 
-label
-    word-break: break-all
-
-
-#nodes
-    color:paleYellow
-    width: 100%
-
-.break
-    overflow-wrap: break-word;
-
-#worf
-    height: 23em
-
-#palm
-    width:110%
-
-.setupyourown
-    margin-top: 2.2345em
-    padding: 2em
-    color: purple
-    font-size: 1.12em
-
-.small
-    font-size: .68em
-    word-break: break-all
-
-p
-    text-align: center
-
-.fl
-    float: left
-.fr
-    float: right
+  label
+      word-break: break-all
 
 
-.local
-    margin: 0
-    background: wrexpurple
-    color: white
-    padding: 1em
+  #nodes
+      color:paleYellow
+      width: 100%
 
-.remote
-    margin: 0
-    background: wrexgreen
-    color: white
-    text-align: right
-    padding: 1em
+  .break
+      overflow-wrap: break-word;
 
-.chain
-    margin: 0
-    background: wrexyellow
-    color: white
-    padding: 1em
-    text-align: center
-    position: relative
+  #worf
+      height: 23em
+
+  #palm
+      width:110%
+
+  .setupyourown
+      margin-top: 2.2345em
+      padding: 2em
+      color: purple
+      font-size: 1.12em
+
+  .small
+      font-size: .68em
+      word-break: break-all
+
+  p
+      text-align: center
+
+  .fl
+      float: left
+  .fr
+      float: right
 
 
-.break
-    overflow-wrap: break-word;
+  .local
+      margin: 0
+      background: wrexpurple
+      color: white
+      padding: 1em
 
-#worf
-    float: right
+  .remote
+      margin: 0
+      background: wrexgreen
+      color: white
+      text-align: right
+      padding: 1em
 
-.lim
-  color: black
+  .chain
+      margin: 0
+      background: wrexyellow
+      color: white
+      padding: 1em
+      text-align: center
+      position: relative
 
-.block
-    float: right
-    font-size: .77em
 
+  .break
+      overflow-wrap: break-word;
+
+  #worf
+      float: right
+
+  .lim
+    color: black
+
+  .block
+      float: right
+      font-size: .77em
 </style>

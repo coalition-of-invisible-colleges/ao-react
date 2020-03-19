@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #newmember
 		h1 Add new
@@ -17,63 +17,61 @@
 </template>
 
 <script>
-import cryptoUtils from '../crypto'
+  import cryptoUtils from "../crypto";
 
-export default {
-  data() {
-    return {
-      member: {
-        name: '',
-        pass: '',
-        fob: '',
+  export default {
+    data() {
+      return {
+        member: {
+          name: "",
+          pass: "",
+          fob: ""
+        }
+      };
+    },
+    computed: {
+      memberReq() {
+        let name, secret;
+        name = this.member.name;
+        if (name) {
+          secret = cryptoUtils.createHash(name);
+        }
+        return {
+          type: "member-created",
+          name,
+          secret,
+          fob: this.member.fob
+        };
+      }
+    },
+    methods: {
+      newMember() {
+        this.$store.dispatch("makeEvent", this.memberReq);
       }
     }
-  },
-	computed: {
-		memberReq(){
-			let name, secret
-			name = this.member.name
-			if (name){
-					secret = cryptoUtils.createHash(name)
-			}
-			return {
-					type: "member-created",
-					name,
-					secret,
-					fob: this.member.fob,
-			}
-		}
-	},
-	methods: {
-		newMember() {
-				this.$store.dispatch('makeEvent', this.memberReq)
-		}
-	},
-}
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/skeleton'
-@import '../styles/input'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/skeleton'
+  @import '../styles/input'
+  @import '../styles/button'
 
-#projects
-    color:accent1
+  #projects
+      color:accent1
+      font-family: 'Open Sans', light, sans-serif;
+
+  li
+    color:white
+    font-size:18px
     font-family: 'Open Sans', light, sans-serif;
 
-li
-  color:white
-  font-size:18px
-  font-family: 'Open Sans', light, sans-serif;
+  h3
+    font-family: 'Open Sans', light, sans-serif;
+    font-size:1.6em
 
-h3
-  font-family: 'Open Sans', light, sans-serif;
-  font-size:1.6em
-
-a, input
-		margin-top: .5em
-
-
+  a, input
+  		margin-top: .5em
 </style>

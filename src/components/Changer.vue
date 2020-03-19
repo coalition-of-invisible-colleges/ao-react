@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 .changer
     h2 Update {{$store.getters.member.name}}:
@@ -23,87 +23,85 @@
 </template>
 
 <script>
+  import cryptoUtils from "../crypto";
 
-import cryptoUtils from '../crypto'
-
-export default {
+  export default {
     computed: {
-        matched(){
-            let x = this.change.newfield
-            let y = this.change.confirmNewfield
-            return x === y
-        },
-        changeReq(){
-            if (this.change.field === 'secret'){
-                  return {
-                      type: "member-field-updated",
-                      field: this.change.field,
-                      newfield: cryptoUtils.createHash( this.change.newfield),
-                      memberId: this.$store.getters.member.memberId
-                  }
-            }
-            return {
-                type: "member-field-updated",
-                field: this.change.field,
-                newfield: this.change.newfield,
-                memberId: this.$store.getters.member.memberId
-            }
-        },
-        secure(){
-            let secure = false
-            if ( this.$store.getters.member.badges ) {
-                secure = this.$store.getters.member.badges.some(b => b === 'secure')
-            }
-            return secure
-        },
-        inputType(){
-            if (this.change.field === 'secret'){
-                return 'password'
-            } else {
-                return 'text'
-            }
+      matched() {
+        let x = this.change.newfield;
+        let y = this.change.confirmNewfield;
+        return x === y;
+      },
+      changeReq() {
+        if (this.change.field === "secret") {
+          return {
+            type: "member-field-updated",
+            field: this.change.field,
+            newfield: cryptoUtils.createHash(this.change.newfield),
+            memberId: this.$store.getters.member.memberId
+          };
         }
-    },
-    data(){
         return {
-            change: {
-                field: 'name',
-                newfield: '',
-                confirmNewfield: ''
-            }
+          type: "member-field-updated",
+          field: this.change.field,
+          newfield: this.change.newfield,
+          memberId: this.$store.getters.member.memberId
+        };
+      },
+      secure() {
+        let secure = false;
+        if (this.$store.getters.member.badges) {
+          secure = this.$store.getters.member.badges.some(b => b === "secure");
         }
+        return secure;
+      },
+      inputType() {
+        if (this.change.field === "secret") {
+          return "password";
+        } else {
+          return "text";
+        }
+      }
+    },
+    data() {
+      return {
+        change: {
+          field: "name",
+          newfield: "",
+          confirmNewfield: ""
+        }
+      };
     },
     methods: {
-        empty(){
-            this.change.newfield = ''
-            this.change.confirmNewfield = ''
-        },
-        update(){
-            this.$store.dispatch('makeEvent', this.changeReq)
-        }
+      empty() {
+        this.change.newfield = "";
+        this.change.confirmNewfield = "";
+      },
+      update() {
+        this.$store.dispatch("makeEvent", this.changeReq);
+      }
     }
-}
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/button'
-@import '../styles/skeleton'
-@import '../styles/input'
+  @import '../styles/colours'
+  @import '../styles/button'
+  @import '../styles/skeleton'
+  @import '../styles/input'
 
-img
-    float: left
-    height: 3em
-    position: relative
-    right: 0
+  img
+      float: left
+      height: 3em
+      position: relative
+      right: 0
 
-.checkmark
-    height: 1.58em
-.check
-    padding: 0.5em
+  .checkmark
+      height: 1.58em
+  .check
+      padding: 0.5em
 
-input, select
-    z-index:123123
-
+  input, select
+      z-index:123123
 </style>

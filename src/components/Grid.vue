@@ -37,147 +37,147 @@
 </template>
 
 <script>
-import GridCard from "./GridCard"
-import SearchPanel from "./SearchPanel"
+  import GridCard from "./GridCard";
+  import SearchPanel from "./SearchPanel";
 
-export default {
-	components: { GridCard, SearchPanel },
-	beforeCreate() {
-		console.log("grid premount")
-	},
-	created() {
-		console.log("grid created")
-	},
-	mounted() {
-		console.log("grid mounted")
-	},
+  export default {
+    components: { GridCard, SearchPanel },
+    beforeCreate() {
+      console.log("grid premount");
+    },
+    created() {
+      console.log("grid created");
+    },
+    mounted() {
+      console.log("grid mounted");
+    },
 
-	methods: {
-		getTaskId(x, y) {
-			if (this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
-				return this.$store.state.grid[y][x]
-			}
-			return false
-		},
-
-		zoom() {
-			this.$store.commit("zoom")
-		}
-	},
-    computed: {
-        searchUpdated() {
-            return this.$store.state.upgrades.search
+    methods: {
+      getTaskId(x, y) {
+        if (this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
+          return this.$store.state.grid[y][x];
         }
+        return false;
+      },
+
+      zoom() {
+        this.$store.commit("zoom");
+      }
+    },
+    computed: {
+      searchUpdated() {
+        return this.$store.state.upgrades.search;
+      }
     }
-};
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
+  @import '../styles/colours'
 
-#page
-    display:flex
-    flex-direction:column
+  #page
+      display:flex
+      flex-direction:column
 
-#gridContainer
-    left:0
-    margin-bottom: 2em
+  #gridContainer
+      left:0
+      margin-bottom: 2em
 
 
-.grid
-    display: grid
-    grid-template-rows: repeat(17, 15em)
-    grid-template-columns: (15em)
-    margin-top: -1.5em
+  .grid
+      display: grid
+      grid-template-rows: repeat(17, 15em)
+      grid-template-columns: (15em)
+      margin-top: -1.5em
 
-.gridTwo
-    display:grid
-    grid-template-columns: repeat(17, 15em)
-    grid-template-rows: (15em)
+  .gridTwo
+      display:grid
+      grid-template-columns: repeat(17, 15em)
+      grid-template-rows: (15em)
 
-.addCard
-    background-color: #AAA
-    opacity: 0.3
+  .addCard
+      background-color: #AAA
+      opacity: 0.3
 
-.left
-    left: -25px
-    width: 25px
-    height: 75px
+  .left
+      left: -25px
+      width: 25px
+      height: 75px
 
-.right
-    right: 0px
-    width: 25px
-    height: 75px
+  .right
+      right: 0px
+      width: 25px
+      height: 75px
 
-.top
-    top: -25px
-    height: 25px
-    width: 75px
+  .top
+      top: -25px
+      height: 25px
+      width: 75px
 
-.bottom
-    bottom: 0px
-    height: 25px
-    width: 75px
+  .bottom
+      bottom: 0px
+      height: 25px
+      width: 75px
 
-.box
-    height: 15em
-    width: 15em
-    border: 1px solid wrexpurple
-    background-color: rgba(22, 22, 22, 0.3)
-    min-height: 15em
-    min-width: 15em
+  .box
+      height: 15em
+      width: 15em
+      border: 1px solid wrexpurple
+      background-color: rgba(22, 22, 22, 0.3)
+      min-height: 15em
+      min-width: 15em
 
-#theGridTwo
-    width:100%
+  #theGridTwo
+      width:100%
 
-.gridS
-    margin-left: -4.5vw
-    display: grid
-    grid-template-rows: repeat(17, 5.7vw)
-    grid-template-columns: (5.7vw)
-    margin-top: -5em
+  .gridS
+      margin-left: -4.5vw
+      display: grid
+      grid-template-rows: repeat(17, 5.7vw)
+      grid-template-columns: (5.7vw)
+      margin-top: -5em
 
-.gridTwoS
-    display:grid
-    grid-template-columns: repeat(17, 5.7vw)
-    grid-template-rows: (5.7vw)
+  .gridTwoS
+      display:grid
+      grid-template-columns: repeat(17, 5.7vw)
+      grid-template-rows: (5.7vw)
 
-.boxS
-    height: 5.7vw
-    width: 5.7vw
-    border: 1px solid wrexpurple
-    background-color: rgba(22, 22, 22, 0.3)
-    min-height: 5.7vw
-    min-width: 5.7vw
+  .boxS
+      height: 5.7vw
+      width: 5.7vw
+      border: 1px solid wrexpurple
+      background-color: rgba(22, 22, 22, 0.3)
+      min-height: 5.7vw
+      min-width: 5.7vw
 
-.box:hover
-    background-color: rgba(28, 78, 176, 0.5)
+  .box:hover
+      background-color: rgba(28, 78, 176, 0.5)
 
-.box.selected
-    background-color: rgba(39, 107, 22, 0.5)
+  .box.selected
+      background-color: rgba(39, 107, 22, 0.5)
 
-.boxS:hover
-    background-color: rgba(28, 78, 176, 0.5)
+  .boxS:hover
+      background-color: rgba(28, 78, 176, 0.5)
 
-.boxS.selected
-    background-color: rgba(39, 107, 22, 0.5)
+  .boxS.selected
+      background-color: rgba(39, 107, 22, 0.5)
 
-.bottomS
-    margin-top: 5em
-    height: 50px
-    width: 100%
-    background-color: blue
+  .bottomS
+      margin-top: 5em
+      height: 50px
+      width: 100%
+      background-color: blue
 
-.bottomL
-    margin-top: 15em
-    height: 50px
-    width: 100%
-    background-color: blue
-    
-.zoomIn
-    color: black
-    position: relative
-    top: -2.1em
-    left: 7em
+  .bottomL
+      margin-top: 15em
+      height: 50px
+      width: 100%
+      background-color: blue
+
+  .zoomIn
+      color: black
+      position: relative
+      top: -2.1em
+      left: 7em
 </style>

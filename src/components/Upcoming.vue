@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #frontcalendar.container
     h1 Upcoming
@@ -6,28 +6,25 @@
 </template>
 
 <script>
+  import Calendar from "./Calendar";
 
-import Calendar from './Calendar'
-
-export default {
-  mounted(){
-      this.$store.commit('setMode' , 4)
-      this.$store.commit('setDimension' , 1)
-      this.$store.dispatch('loaded')
-  },
-  components:{
-      Calendar,
-  }
-}
-
+  export default {
+    mounted() {
+      this.$store.commit("setMode", 4);
+      this.$store.commit("setDimension", 1);
+      this.$store.dispatch("loaded");
+    },
+    components: {
+      Calendar
+    }
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/title'
-@import '../styles/skeleton'
+  @import '../styles/title'
+  @import '../styles/skeleton'
 
-h1
-    color: yellow
-
+  h1
+      color: yellow
 </style>

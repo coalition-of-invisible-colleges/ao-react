@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #giftbox(v-if='$store.getters.inbox.length > 0')
   .row
@@ -10,40 +10,37 @@
 </template>
 
 <script>
+  import Hypercard from "./Card";
+  import CardPanel from "./CardPanel";
 
-import Hypercard from "./Card"
-import CardPanel from './CardPanel'
-
-export default {
-  components:{
+  export default {
+    components: {
       Hypercard,
-      CardPanel,
-  },
-}
-
+      CardPanel
+    }
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/skeleton'
-@import '../styles/grid'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/skeleton'
+  @import '../styles/grid'
+  @import '../styles/button'
 
-#giftbox
-    width: 100%
+  #giftbox
+      width: 100%
 
-.fw
-    width: 100%
-    height: auto
+  .fw
+      width: 100%
+      height: auto
 
-.gift
-    display: inline
-    height: 5em
-    clear: none
+  .gift
+      display: inline
+      height: 5em
+      clear: none
 
-span
-    font-size: 1.321em
-    padding: .5em
-
+  span
+      font-size: 1.321em
+      padding: .5em
 </style>

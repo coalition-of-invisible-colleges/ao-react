@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 .panel
     .row(v-if='red.length + green.length + blue.length > 0')
@@ -18,56 +18,52 @@
 </template>
 
 <script>
+  import CardPanel from "./CardPanel";
 
-import CardPanel from './CardPanel'
-
-export default {
-  props: ['c'],
-  computed:{
-      red(){
-          return this.c.filter(f => f.color === "red")
+  export default {
+    props: ["c"],
+    computed: {
+      red() {
+        return this.c.filter(f => f.color === "red");
       },
-      yellow(){
-          return this.c.filter(f => f.color === "yellow")
+      yellow() {
+        return this.c.filter(f => f.color === "yellow");
       },
-      green(){
-          return this.c.filter(f => f.color === "green")
+      green() {
+        return this.c.filter(f => f.color === "green");
       },
-      purple(){
-          return this.c.filter(f => f.color === "purple")
+      purple() {
+        return this.c.filter(f => f.color === "purple");
       },
-      blue(){
-          return this.c.filter(f => f.color === "blue")
-      },
-  },
-  components:{
-      CardPanel,
-  },
-}
-
+      blue() {
+        return this.c.filter(f => f.color === "blue");
+      }
+    },
+    components: {
+      CardPanel
+    }
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/skeleton'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/skeleton'
+  @import '../styles/button'
 
-.panel
-    width: (100% - 2em)
-    margin: 0 1em 0 -1em
-    padding: 0 2em
+  .panel
+      width: (100% - 2em)
+      margin: 0 1em 0 -1em
+      padding: 0 2em
 
-.card
-    padding: 2em
-    color: white
-    text-align: center
-    font-size:1.3em
-    color:white
+  .card
+      padding: 2em
+      color: white
+      text-align: center
+      font-size:1.3em
+      color:white
 
-#cyber
-    width: 100%
-    opacity: 0.5
-
-
+  #cyber
+      width: 100%
+      opacity: 0.5
 </style>

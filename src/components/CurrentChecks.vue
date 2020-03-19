@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 .current(v-if='memberId')
     img.checkmark.clickable(v-if='isCompleted' src='../assets/images/completed.svg'   @click='uncheck')
@@ -12,131 +12,133 @@
 </template>
 
 <script>
+  import Linky from "./Linky";
 
-import Linky from './Linky'
-
-export default {
-  props: ['memberId'],
-  components: { Linky },
-  methods: {
-    goIn(taskId){
-        let parents = [this.memberId]
-        let panel = [taskId]
-        let top = 0
-        this.$store.dispatch("goIn", {panel, top, parents})
-    },
-    complete(){
+  export default {
+    props: ["memberId"],
+    components: { Linky },
+    methods: {
+      goIn(taskId) {
+        let parents = [this.memberId];
+        let panel = [taskId];
+        let top = 0;
+        this.$store.dispatch("goIn", { panel, top, parents });
+      },
+      complete() {
         this.$store.dispatch("makeEvent", {
-            type: 'task-claimed',
-            taskId: this.$store.getters.contextCard.taskId,
-            memberId: this.memberId,
-            notes: 'checked by ' + this.$store.getters.member.memberId
-        })
-    },
-    uncheck(){
+          type: "task-claimed",
+          taskId: this.$store.getters.contextCard.taskId,
+          memberId: this.memberId,
+          notes: "checked by " + this.$store.getters.member.memberId
+        });
+      },
+      uncheck() {
         this.$store.dispatch("makeEvent", {
-            type: 'task-unclaimed',
-            taskId: this.$store.getters.contextCard.taskId,
-            memberId: this.memberId,
-            notes: ''
-        })
-    },
-    cardInputSty(c){
+          type: "task-unclaimed",
+          taskId: this.$store.getters.contextCard.taskId,
+          memberId: this.memberId,
+          notes: ""
+        });
+      },
+      cardInputSty(c) {
         return {
-            redwx : c === 'red',
-            bluewx : c === 'blue',
-            greenwx : c === 'green',
-            yellotwx : c === 'yellow',
-            purplewx : c === 'purple',
-            blackwx : c === 'black',
-        }
-    },
-    toggleHighlight(invert = false) {
+          redwx: c === "red",
+          bluewx: c === "blue",
+          greenwx: c === "green",
+          yellotwx: c === "yellow",
+          purplewx: c === "purple",
+          blackwx: c === "black"
+        };
+      },
+      toggleHighlight(invert = false) {
         this.$store.dispatch("makeEvent", {
-            type: 'highlighted',
-            taskId: this.$store.getters.contextCard.taskId,
-            memberId: this.memberId,
-            valence: !invert
-        })
+          type: "highlighted",
+          taskId: this.$store.getters.contextCard.taskId,
+          memberId: this.memberId,
+          valence: !invert
+        });
+      }
     },
-  },
-  computed:{
-    name(){
-        let memberId = this.memberId
-        let name = false
+    computed: {
+      name() {
+        let memberId = this.memberId;
+        let name = false;
         this.$store.state.members.forEach(member => {
-            if (member.memberId == memberId){
-                name = member.name
-            }
-        })
-        return name
-    },
-    isCompleted(){
-        return this.$store.getters.contextCard.claimed.indexOf(this.memberId) > -1
-    },
+          if (member.memberId == memberId) {
+            name = member.name;
+          }
+        });
+        return name;
+      },
+      isCompleted() {
+        return (
+          this.$store.getters.contextCard.claimed.indexOf(this.memberId) > -1
+        );
+      },
 
-    isHighlighted() {
+      isHighlighted() {
         return this.$store.getters.contextCard.highlights.some(h => {
-            return (h.valence && h.memberId === this.memberId)
-        })
-    },
-    isLowdarked() {
+          return h.valence && h.memberId === this.memberId;
+        });
+      },
+      isLowdarked() {
         return this.$store.getters.contextCard.highlights.some(h => {
-            return (!h.valence && h.memberId === this.memberId)
-        })
-    },
-    checkmarks() {
-        return this.$store.getters.contextCompleted.filter(t => t.claimed.indexOf(this.memberId) > -1)
-    },
-  }
-}
-
+          return !h.valence && h.memberId === this.memberId;
+        });
+      },
+      checkmarks() {
+        return this.$store.getters.contextCompleted.filter(
+          t => t.claimed.indexOf(this.memberId) > -1
+        );
+      }
+    }
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/tooltips'
+  @import '../styles/colours'
+  @import '../styles/tooltips'
 
-img
-    height: 0.7em
-.name
-    color: white
-    font-size: 1.2em
-    margin-right: 1em
-    padding-bottom: .321em
-    position: relative
-    user-select: none
+  img
+      height: 0.7em
+  .name
+      color: white
+      font-size: 1.2em
+      margin-right: 1em
+      padding-bottom: .321em
+      position: relative
+      user-select: none
 
-.checkmark
-    margin-right: 0.25em
+  .checkmark
+      margin-right: 0.25em
 
-img.checkmark
-    height: 2em
+  img.checkmark
+      height: 2em
 
-img.completedcheckmark
-    height: 1.5em
+  img.completedcheckmark
+      height: 1.5em
 
-.completedcheckmarks
-    min-height: 1.5em
+  .completedcheckmarks
+      min-height: 1.5em
 
-.clickable
-    cursor: pointer
-    color: white
+  .clickable
+      cursor: pointer
+      color: white
 
-.plain
-    text-decoration: none
+  .plain
+      text-decoration: none
 
-.tooltiptext.bigger
-    z-index: 153
-    font-size: 1.2em
+  .tooltiptext.bigger
+      z-index: 153
+      font-size: 1.2em
 
-.highlight
-    text-shadow: 0 0 20px yellow, 0 0 20px yellow, 0 0 20px yellow
+  .highlight
+      text-shadow: 0 0 20px yellow, 0 0 20px yellow, 0 0 20px yellow
 
-.lowdark
-    text-shadow: 0 0 20px red, 0 0 20px red, 0 0 20px red
+  .lowdark
+      text-shadow: 0 0 20px red, 0 0 20px red, 0 0 20px red
 
-.lilypad
-    text-shadow: 0 0 20px green, 0 0 20px green, 0 0 20px green
+  .lilypad
+      text-shadow: 0 0 20px green, 0 0 20px green, 0 0 20px green
 </style>

@@ -1,5 +1,4 @@
-
-<template lang='pug'>
+<template lang="pug">
 
 div.totop(v-if='b.passed.length > 0')
     div(@click='toggleBird')
@@ -15,67 +14,67 @@ div.totop(v-if='b.passed.length > 0')
 </template>
 
 <script>
+  import request from "superagent";
+  import Current from "./Current";
 
-import request from 'superagent'
-import Current from './Current'
-
-export default {
-    props: ['b'],
+  export default {
+    props: ["b"],
     components: { Current },
-    methods:{
-        toggleBird(){
-            this.$store.commit('toggleBird')
-        },
+    methods: {
+      toggleBird() {
+        this.$store.commit("toggleBird");
+      }
     },
     computed: {
-        toMe(){
-            let m = []
-            if (this.b && this.b.passed.length > 0){
-                m = this.b.passed.filter(p => p[1] === this.$store.getters.member.memberId)
-            }
-            return m
+      toMe() {
+        let m = [];
+        if (this.b && this.b.passed.length > 0) {
+          m = this.b.passed.filter(
+            p => p[1] === this.$store.getters.member.memberId
+          );
         }
+        return m;
+      }
     }
-}
-
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/grid';
-@import '../styles/colours';
+  @import '../styles/grid';
+  @import '../styles/colours';
 
-.row
-    width: 100%
+  .row
+      width: 100%
 
-.send
-    height: 1.5em
+  .send
+      height: 1.5em
 
-.accept, .dontaccept
-    width: 100%
-    background: accent5
-    padding: .789em
-    border-style: none
-    img
-        background: white
-        padding: .1em
-        border-radius: 3px
+  .accept, .dontaccept
+      width: 100%
+      background: accent5
+      padding: .789em
+      border-style: none
+      img
+          background: white
+          padding: .1em
+          border-radius: 3px
 
-.arrow
-    height: 3.35em
+  .arrow
+      height: 3.35em
 
-.fl
-    float: left
-.fr
-    float: right
+  .fl
+      float: left
+  .fr
+      float: right
 
-.totop
-    z-index: 1000
+  .totop
+      z-index: 1000
 
-.pad
-    margin-top: 1em
-    margin-bottom: 1em
+  .pad
+      margin-top: 1em
+      margin-bottom: 1em
 
-.centered
-    text-align: center
+  .centered
+      text-align: center
 </style>

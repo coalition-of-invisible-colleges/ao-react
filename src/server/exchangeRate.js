@@ -7,58 +7,58 @@ const state = require("./state");
 const validators = require("./validators");
 
 function watchSpot() {
-    getRecordSpot();
-    setInterval(getRecordSpot, 500000);
+  getRecordSpot();
+  setInterval(getRecordSpot, 500000);
 }
 
 function getRecordSpot() {
-    getPrice((err, spot) => {
-        if (!err) {
-            events.spotUpdated(spot);
-        }
-    });
+  getPrice((err, spot) => {
+    if (!err) {
+      events.spotUpdated(spot);
+    }
+  });
 }
 
 function createBitcoinAverageSignature() {
-    // Step 1 - Create a payload consisting of “timestamp.public_key”:
-    const msSince1970 = Date.now();
-    const unixTime = (Date.now() / 1000).toFixed(0);
-    const step1 = unixTime + "." + config.bitcoinAverage.pub;
+  // Step 1 - Create a payload consisting of “timestamp.public_key”:
+  const msSince1970 = Date.now();
+  const unixTime = (Date.now() / 1000).toFixed(0);
+  const step1 = unixTime + "." + config.bitcoinAverage.pub;
 
-    // Step 2 - The payload needs to be HMAC encrypted with the sha256 algorithm
-    // using your API secret key that corresponds to the given public key in the
-    // payload. This result is called a ‘digest_value’ and needs to be in hex
-    const hmac = crypto.createHmac("sha256", config.bitcoinAverage.secret);
-    hmac.update(step1);
-    const step2 = hmac.digest("hex");
+  // Step 2 - The payload needs to be HMAC encrypted with the sha256 algorithm
+  // using your API secret key that corresponds to the given public key in the
+  // payload. This result is called a ‘digest_value’ and needs to be in hex
+  const hmac = crypto.createHmac("sha256", config.bitcoinAverage.secret);
+  hmac.update(step1);
+  const step2 = hmac.digest("hex");
 
-    // Step 3 - Finally we can compose the value that needs to be used in the
-    // X-signature header. It’s contents need to be in the format:
-    // timestamp.public_key.digest_value (step1 cat step2)
-    return step1 + step2;
+  // Step 3 - Finally we can compose the value that needs to be used in the
+  // X-signature header. It’s contents need to be in the format:
+  // timestamp.public_key.digest_value (step1 cat step2)
+  return step1 + step2;
 }
 
 function getPrice(callback) {
-    request
-        .get(
-            "https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC" +
-                state.serverState.cash.currency
-        )
-        // Something seemed to break api keys? Use free / unauthed account
-        // .set('X-signature', createBitcoinAverageSignature())
-        .end((err, res) => {
-            if (err) return callback(err);
-            if (validators.isAmount(res.body.last)) {
-                callback(null, res.body.last);
-            } else {
-                callback("invalid res?");
-            }
-        });
+  request
+    .get(
+      "https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC" +
+        state.serverState.cash.currency
+    )
+    // Something seemed to break api keys? Use free / unauthed account
+    // .set('X-signature', createBitcoinAverageSignature())
+    .end((err, res) => {
+      if (err) return callback(err);
+      if (validators.isAmount(res.body.last)) {
+        callback(null, res.body.last);
+      } else {
+        callback("invalid res?");
+      }
+    });
 }
 
 module.exports = {
-    getPrice,
-    watchSpot
+  getPrice,
+  watchSpot
 };
 
 // success: {

@@ -18,217 +18,217 @@
 </template>
 
 <script>
-import Hypercard from "./Card";
-import Hyperpriority from "./Priority";
-import _ from "lodash";
+  import Hypercard from "./Card";
+  import Hyperpriority from "./Priority";
+  import _ from "lodash";
 
-export default {
-	components: {
-		Hypercard
-	},
+  export default {
+    components: {
+      Hypercard
+    },
 
-	mounted() {
-		this.$store.commit("setMode", 1);
-		this.$store.commit("setDimension", 0);
-		this.$store.dispatch("loaded");
-	},
-	data() {
-		return {
-			action: false
-		};
-	},
-	methods: {
-		getSubPriorities(taskId) {
-			let card = this.$store.getters.hashMap[taskId];
-			if (card && card.priorities) {
-				return card.priorities.slice().reverse();
-			}
-		},
-		allocate(taskId) {
-			this.$store.dispatch("makeEvent", {
-				type: "task-prioritized",
-				inId: this.$store.getters.contextCard.taskId,
-				taskId
-			});
-		},
-		getCard(taskId) {
-			return this.$store.getters.hashMap[taskId];
-		}
-	},
-	computed: {
-		priorities() {
-			return this.$store.getters.contextCard.priorities.slice().reverse();
-		}
-	},
-	components: {
-		Hyperpriority,
-		Hypercard
-	}
-};
+    mounted() {
+      this.$store.commit("setMode", 1);
+      this.$store.commit("setDimension", 0);
+      this.$store.dispatch("loaded");
+    },
+    data() {
+      return {
+        action: false
+      };
+    },
+    methods: {
+      getSubPriorities(taskId) {
+        let card = this.$store.getters.hashMap[taskId];
+        if (card && card.priorities) {
+          return card.priorities.slice().reverse();
+        }
+      },
+      allocate(taskId) {
+        this.$store.dispatch("makeEvent", {
+          type: "task-prioritized",
+          inId: this.$store.getters.contextCard.taskId,
+          taskId
+        });
+      },
+      getCard(taskId) {
+        return this.$store.getters.hashMap[taskId];
+      }
+    },
+    computed: {
+      priorities() {
+        return this.$store.getters.contextCard.priorities.slice().reverse();
+      }
+    },
+    components: {
+      Hyperpriority,
+      Hypercard
+    }
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/skeleton'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/skeleton'
+  @import '../styles/button'
 
-h5
-    text-align: center
-    color: lightGrey
+  h5
+      text-align: center
+      color: lightGrey
 
-.priorities
-    padding-bottom: 0.6em
-    padding-top: 0.1em
+  .priorities
+      padding-bottom: 0.6em
+      padding-top: 0.1em
 
-button
-    background: darkteal
+  button
+      background: darkteal
 
-tr
-    border-color: accent4
-    border-top-style: solid
-    border-bottom-style: solid
-    border-width: 3px
-    vertical-align:middle
+  tr
+      border-color: accent4
+      border-top-style: solid
+      border-bottom-style: solid
+      border-width: 3px
+      vertical-align:middle
 
-thead
-    tr
-        text-align: center
+  thead
+      tr
+          text-align: center
 
-td
-    vertical-align: middle
-    color: accent2
-    font-size: 1.34em
-    text-align: center
+  td
+      vertical-align: middle
+      color: accent2
+      font-size: 1.34em
+      text-align: center
 
-li
-    text-align: left
+  li
+      text-align: left
 
-img
-    height: 3.9em
+  img
+      height: 3.9em
 
-table
-    text-align:center
-    width: 100%
-th
-    font-family: sans-serif
-    font-weight: lighter
-    font-size: 1.1em
-    color: accent1
-    border-color: accent1
+  table
+      text-align:center
+      width: 100%
+  th
+      font-family: sans-serif
+      font-weight: lighter
+      font-size: 1.1em
+      color: accent1
+      border-color: accent1
 
-td
-    color: accent3
+  td
+      color: accent3
 
-.padding
-    padding: 1.987654321em
+  .padding
+      padding: 1.987654321em
 
-li
-    margin-left: 1em
+  li
+      margin-left: 1em
 
-.bounce-enter-active {
-  animation: bounce-in .5s;
-}
-.bounce-leave-active {
-  animation: bounce-in .5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
+  .bounce-enter-active {
+    animation: bounce-in .5s;
   }
-  50% {
-    transform: scale(1.5);
+  .bounce-leave-active {
+    animation: bounce-in .5s reverse;
   }
-  100% {
-    transform: scale(1);
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
-}
 
-img
-    height: 3em
+  img
+      height: 3em
 
-.ptr
-    cursor: pointer
+  .ptr
+      cursor: pointer
 
-.fr
-    float: right
+  .fr
+      float: right
 
-.fl
-    float: left
+  .fl
+      float: left
 
-.clearboth
-    clear: both
+  .clearboth
+      clear: both
 
-.shipcontainer
-    // position: absolute
-    // display: inline
+  .shipcontainer
+      // position: absolute
+      // display: inline
 
-.allocated
-    position: absolute
-    left: -3.05em
-    width: 3.3724em
-    text-align: center
-    color: white
-    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
-    font-size: 1.5em
-    pointer-events: none
-    z-index: 7
-    margin-top: 0.1em
+  .allocated
+      position: absolute
+      left: -3.05em
+      width: 3.3724em
+      text-align: center
+      color: white
+      text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5)
+      font-size: 1.5em
+      pointer-events: none
+      z-index: 7
+      margin-top: 0.1em
 
-.openallocated
-    margin-top: 0.3em
+  .openallocated
+      margin-top: 0.3em
 
-.onelinecard
-    width: 100%
-    margin-left: 3em
-    padding: 0.5em
+  .onelinecard
+      width: 100%
+      margin-left: 3em
+      padding: 0.5em
 
-.top
-    z-index: 9001
+  .top
+      z-index: 9001
 
-.empty
-    height: 3em
-    padding-top: 0.6em
-    padding-bottom: 0.2em
+  .empty
+      height: 3em
+      padding-top: 0.6em
+      padding-bottom: 0.2em
 
-.bdoge
-    width: 100%
-    opacity: 0.77
-    height: 7em
-    margin-top: 1em
+  .bdoge
+      width: 100%
+      opacity: 0.77
+      height: 7em
+      margin-top: 1em
 
-.priority
-    margin-left: 4em
-    width: calc(100% - 4em)
-    position: relative
+  .priority
+      margin-left: 4em
+      width: calc(100% - 4em)
+      position: relative
 
-.subpriority
-    margin-left: calc(3.3724em * 2)
-    width: calc(100% - (3.3724em* 2))
+  .subpriority
+      margin-left: calc(3.3724em * 2)
+      width: calc(100% - (3.3724em* 2))
 
-.subsubpriority
-    margin-left: 3.3724em
-    width: calc(100% - 3.3724em)
+  .subsubpriority
+      margin-left: 3.3724em
+      width: calc(100% - 3.3724em)
 
-.singleship
-    position: absolute
-    width: 3.3724em
-    margin-left: -4em
-    cursor: pointer
-    top: -0.3em
+  .singleship
+      position: absolute
+      width: 3.3724em
+      margin-left: -4em
+      cursor: pointer
+      top: -0.3em
 
-.openboat
-    top: 50%
-    transform: translateY(-50%)
+  .openboat
+      top: 50%
+      transform: translateY(-50%)
 
-.opencard
-    width: calc(100% - 4.5em)
-    margin-top: 0.5em
+  .opencard
+      width: calc(100% - 4.5em)
+      margin-top: 0.5em
 
-.opensubcard
-    width: calc(100% - 0.5em)
-    margin-top: 0.5em
+  .opensubcard
+      width: calc(100% - 0.5em)
+      margin-top: 0.5em
 
-.open
-    top: 36%
+  .open
+      top: 36%
 </style>

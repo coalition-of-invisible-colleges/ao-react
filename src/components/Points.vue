@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #points
     .center
@@ -26,98 +26,100 @@
 </template>
 
 <script>
+  import Current from "./Current";
+  import Currentr from "./Currentr";
 
-import Current from './Current'
-import Currentr from './Currentr'
-
-export default {
+  export default {
     components: { Current, Currentr },
     methods: {
-        burn(taskId){
-            this.$store.dispatch('makeEvent', {
-                type: 'task-removed', taskId
-            })
-        }
+      burn(taskId) {
+        this.$store.dispatch("makeEvent", {
+          type: "task-removed",
+          taskId
+        });
+      }
     },
     computed: {
-        funded(){
-            let members = []
-            let guilds = []
-            let resources = []
-            let cards = []
-            this.$store.state.tasks.forEach(t => {
-                if( t.boost > 0 ){
-                    if (this.$store.getters.memberIds.indexOf(t.taskId) > -1){
-                      members.push(t)
-                    } else if (this.$store.getters.resourceIds.indexOf(t.taskId) > -1) {
-                      resources.push(t)
-                    } else if (t.guild) {
-                      guilds.push(t)
-                    } else {
-                      cards.push(t)
-                    }
-                }
-            })
-            return {members, guilds, resources, cards}
-        },
-        totalMembers(){
-            let totalMembers = 0
-            this.funded.members.forEach(t => {
-                totalMembers += parseFloat( t.boost )
-            })
-            return totalMembers
-        },
-        totalGuilds(){
-            let totalGuilds = 0
-            this.funded.guilds.forEach(t => {
-                totalGuilds += parseFloat( t.boost )
-            })
-            return totalGuilds
-        },
-        totalCards(){
-            let totalCards = 0
-            this.funded.cards.forEach(t => {
-                totalCards += parseFloat( t.boost )
-            })
-            return totalCards
-        },
-        totalResources(){
-            let totalResources = 0
-            this.funded.resources.forEach(t => {
-                totalResources += parseFloat( t.boost )
-            })
-            return totalResources
-        },
-        totalPointsSum(){
-            return this.totalMembers + this.totalGuilds + this.totalResources + this.totalCards
-        },
-        satPoint(){
-            let sp = this.$store.getters.totalWallet / this.totalPointsSum
-            console.log({sp})
-            return sp ? sp : 0
-        }
+      funded() {
+        let members = [];
+        let guilds = [];
+        let resources = [];
+        let cards = [];
+        this.$store.state.tasks.forEach(t => {
+          if (t.boost > 0) {
+            if (this.$store.getters.memberIds.indexOf(t.taskId) > -1) {
+              members.push(t);
+            } else if (this.$store.getters.resourceIds.indexOf(t.taskId) > -1) {
+              resources.push(t);
+            } else if (t.guild) {
+              guilds.push(t);
+            } else {
+              cards.push(t);
+            }
+          }
+        });
+        return { members, guilds, resources, cards };
+      },
+      totalMembers() {
+        let totalMembers = 0;
+        this.funded.members.forEach(t => {
+          totalMembers += parseFloat(t.boost);
+        });
+        return totalMembers;
+      },
+      totalGuilds() {
+        let totalGuilds = 0;
+        this.funded.guilds.forEach(t => {
+          totalGuilds += parseFloat(t.boost);
+        });
+        return totalGuilds;
+      },
+      totalCards() {
+        let totalCards = 0;
+        this.funded.cards.forEach(t => {
+          totalCards += parseFloat(t.boost);
+        });
+        return totalCards;
+      },
+      totalResources() {
+        let totalResources = 0;
+        this.funded.resources.forEach(t => {
+          totalResources += parseFloat(t.boost);
+        });
+        return totalResources;
+      },
+      totalPointsSum() {
+        return (
+          this.totalMembers +
+          this.totalGuilds +
+          this.totalResources +
+          this.totalCards
+        );
+      },
+      satPoint() {
+        let sp = this.$store.getters.totalWallet / this.totalPointsSum;
+        console.log({ sp });
+        return sp ? sp : 0;
+      }
     }
-}
-
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/grid'
+  @import '../styles/colours'
+  @import '../styles/grid'
 
-img
-    height: 3em
+  img
+      height: 3em
 
-.burn
-    height: 1em
-    transform: rotate(180deg)
+  .burn
+      height: 1em
+      transform: rotate(180deg)
 
-.fr
-    float: right
+  .fr
+      float: right
 
-.center
-    text-align: center
-
-
+  .center
+      text-align: center
 </style>

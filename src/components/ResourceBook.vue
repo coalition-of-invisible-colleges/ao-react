@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #newresource
     label select day
@@ -25,95 +25,93 @@
 </template>
 
 <script>
+  const HOUR = 1000 * 60 * 60;
+  const HALFDAY = HOUR * 12;
 
-const HOUR = 1000 * 60 * 60
-const HALFDAY = HOUR * 12
-
-export default {
-    props:['tId'],
+  export default {
+    props: ["tId"],
     methods: {
-        book(){
-            this.$store.dispatch('makeEvent', {
-                type: 'resource-booked',
-                resourceId: this.tId,
-                memberId: this.$store.getters.member.memberId,
-                startTs: this.calcTime.start,
-                endTs: this.calcTime.end,
-            })
-        }
+      book() {
+        this.$store.dispatch("makeEvent", {
+          type: "resource-booked",
+          resourceId: this.tId,
+          memberId: this.$store.getters.member.memberId,
+          startTs: this.calcTime.start,
+          endTs: this.calcTime.end
+        });
+      }
     },
-    mounted(){
-        let i = this.$router.currentRoute.path.split('/')[2]
-        if (i){
-            this.urlId = i
-        }
+    mounted() {
+      let i = this.$router.currentRoute.path.split("/")[2];
+      if (i) {
+        this.urlId = i;
+      }
     },
-    data(){
-        let d = new Date()
-        return {
-            ymd: '',
-            hour: 1,
-            meridiem : 'pm',
-            duration : 3,
-            urlId: '',
-        }
+    data() {
+      let d = new Date();
+      return {
+        ymd: "",
+        hour: 1,
+        meridiem: "pm",
+        duration: 3,
+        urlId: ""
+      };
     },
     computed: {
-        calcTime(){
-            const HOUR = 60 * 60 * 1000
-            let d = new Date(this.ymd)
+      calcTime() {
+        const HOUR = 60 * 60 * 1000;
+        let d = new Date(this.ymd);
 
-            let pmAmOffset
-            switch (this.meridiem) {
-                case 'am':
-                    pmAmOffset = 0
-                    break
-                case 'pm':
-                    pmAmOffset = 12 * HOUR
-                    break
-            }
-
-            let tzOffset = d.getTimezoneOffset()
-            let timezoneOffset = ( tzOffset / 60 ) * HOUR
-
-            let durationOffset = parseInt(this.duration) * HOUR
-            let hourOffset = parseInt(this.hour) * HOUR
-
-            let start = d.getTime() + pmAmOffset + hourOffset + timezoneOffset
-
-            return {
-                start,
-                end: start + durationOffset
-            }
+        let pmAmOffset;
+        switch (this.meridiem) {
+          case "am":
+            pmAmOffset = 0;
+            break;
+          case "pm":
+            pmAmOffset = 12 * HOUR;
+            break;
         }
-    }
-}
 
+        let tzOffset = d.getTimezoneOffset();
+        let timezoneOffset = (tzOffset / 60) * HOUR;
+
+        let durationOffset = parseInt(this.duration) * HOUR;
+        let hourOffset = parseInt(this.hour) * HOUR;
+
+        let start = d.getTime() + pmAmOffset + hourOffset + timezoneOffset;
+
+        return {
+          start,
+          end: start + durationOffset
+        };
+      }
+    }
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/grid'
-@import '../styles/input'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/grid'
+  @import '../styles/input'
+  @import '../styles/button'
 
-#newresource
-    position: relative
-    top: 2em
-    margin-bottom: 1em
+  #newresource
+      position: relative
+      top: 2em
+      margin-bottom: 1em
 
-.br
-  padding-top: 1.9em
+  .br
+    padding-top: 1.9em
 
-// TODO: fix strange style stuff going on padding/margin on label not having effect
-label
-    padding-top: 1em
-    margin-top: 1em
+  // TODO: fix strange style stuff going on padding/margin on label not having effect
+  label
+      padding-top: 1em
+      margin-top: 1em
 
-.padd
-    padding-bottom: 1.1em
+  .padd
+      padding-bottom: 1.1em
 
-.centerform
-    margin: 0 auto 1em auto
+  .centerform
+      margin: 0 auto 1em auto
 </style>

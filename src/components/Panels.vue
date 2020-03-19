@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 .panel(:class='{ fullwidth : $store.state.upgrades.stacks === 1 }')
     div(v-if='$store.state.upgrades.stacks === 5')
@@ -20,52 +20,48 @@
 </template>
 
 <script>
+  import CardPanel from "./CardPanel";
 
-import CardPanel from './CardPanel'
-
-export default {
-  components:{
-      CardPanel,
-  },
-  computed: {
-    
-  }
-}
-
+  export default {
+    components: {
+      CardPanel
+    },
+    computed: {}
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/skeleton'
-@import '../styles/button'
+  @import '../styles/colours'
+  @import '../styles/skeleton'
+  @import '../styles/button'
 
-.panel
-    margin: 0 1em 1em 1em
-    clear: both
-    padding-bottom: 1.5em
+  .panel
+      margin: 0 1em 1em 1em
+      clear: both
+      padding-bottom: 1.5em
 
-.card
-    padding: 2em
-    color: white
-    text-align: center
-    font-size:1.3em
-    color:white
+  .card
+      padding: 2em
+      color: white
+      text-align: center
+      font-size:1.3em
+      color:white
 
-#cyber
-    width: 100%
-    opacity: 0.5
+  #cyber
+      width: 100%
+      opacity: 0.5
 
-.minheight
-    min-height: 0.5em
+  .minheight
+      min-height: 0.5em
 
-.padonestack
-    padding-top: 0.001em
-    max-width: calc(100vw - 4em)
+  .padonestack
+      padding-top: 0.001em
+      max-width: calc(100vw - 4em)
 
-.fullwidth
-    width: 100%
+  .fullwidth
+      width: 100%
 
-.minheight
-    min-height: 0.001em
+  .minheight
+      min-height: 0.001em
 </style>

@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #cashexpense
     .input-container
@@ -9,29 +9,26 @@
 </template>
 
 <script>
-
-export default {
+  export default {
     methods: {
-        setRent(){
-            this.$store.dispatch('makeEvent', this.details)
-        }
+      setRent() {
+        this.$store.dispatch("makeEvent", this.details);
+      }
     },
-    data(){
-        return {
-            details: {
-                type: 'rent-set',
-                amount: ''
-            }
+    data() {
+      return {
+        details: {
+          type: "rent-set",
+          amount: ""
         }
+      };
     }
-}
-
+  };
 </script>
 
-<style lang='stylus' scoped>
+<style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/input'
-@import '../styles/button'
-
+  @import '../styles/colours'
+  @import '../styles/input'
+  @import '../styles/button'
 </style>

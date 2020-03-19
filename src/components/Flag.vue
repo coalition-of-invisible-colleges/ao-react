@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 .flag(v-if="$store.getters.memberCard")
     .flaggy(:id='uuid'  :class='flagClass')
         img(v-if='(isOracle || $store.state.upgrades.mode === "chest" || $store.state.context.action === b.taskId) && isCompleted' src='../assets/images/completed.svg' )
@@ -14,293 +14,317 @@
 </template>
 
 <script>
-import Hammer from 'hammerjs'
-import Propagating from 'propagating-hammerjs'
-import uuidv1 from 'uuid/v1'
-import ResourceBook from './ResourceBook'
-import GuildCreate from './GuildCreate'
-import PointsSet from './PointsSet'
+  import Hammer from "hammerjs";
+  import Propagating from "propagating-hammerjs";
+  import uuidv1 from "uuid/v1";
+  import ResourceBook from "./ResourceBook";
+  import GuildCreate from "./GuildCreate";
+  import PointsSet from "./PointsSet";
 
-export default {
-    components: { ResourceBook, GuildCreate, PointsSet},
-    data(){
-        return {
-            isPayOpen: false,
-            isCubeOpen: false,
-            isChestOpen: false,
-            uuid: uuidv1(),
-        }
+  export default {
+    components: { ResourceBook, GuildCreate, PointsSet },
+    data() {
+      return {
+        isPayOpen: false,
+        isCubeOpen: false,
+        isChestOpen: false,
+        uuid: uuidv1()
+      };
     },
-    props: ['b', 'inId'],
+    props: ["b", "inId"],
     mounted() {
-        let el = document.getElementById(this.uuid)
-        if(!el) return
-        let mc = Propagating(new Hammer.Manager(el))
+      let el = document.getElementById(this.uuid);
+      if (!el) return;
+      let mc = Propagating(new Hammer.Manager(el));
 
-        let Tap = new Hammer.Tap({ time: 400 })
-        mc.add(Tap)
-        mc.on('tap', (e) => {
-            switch(this.$store.state.upgrades.mode) {
-                case 'doge':
-                case 'boat':
-                    if(this.isOracle) {
-                        if(!this.isCompleted) {
-                            this.complete()
-                        } else {
-                            this.uncheck()
-                        }
-                    } else if (this.isTop){
-                        this.dogeIt()
-                    } else {
-                        this.flagIt()
-                    }
-                    break
-                case 'chest':
-                    if(!this.isCompleted) {
-                        this.complete()
-                    } else {
-                        this.uncheck()
-                    }
-                    break
-                case 'badge':
-                    this.togglePay()
-                    break
-                case 'timecube':
-                    this.toggleCube()
-                    break
+      let Tap = new Hammer.Tap({ time: 400 });
+      mc.add(Tap);
+      mc.on("tap", e => {
+        switch (this.$store.state.upgrades.mode) {
+          case "doge":
+          case "boat":
+            if (this.isOracle) {
+              if (!this.isCompleted) {
+                this.complete();
+              } else {
+                this.uncheck();
+              }
+            } else if (this.isTop) {
+              this.dogeIt();
+            } else {
+              this.flagIt();
             }
-            e.stopPropagation()
-        })
-
-        let Press = new Hammer.Press({ time: 400 })
-        mc.add(Press)
-        mc.on('press', (e) => {
-            switch(this.$store.state.upgrades.mode) {
-                case false:
-                    return
-                case 'doge':
-                case 'boat':
-                    this.dogeIt()
-                    break
-                case 'badge':
-                    return
-                case 'chest':
-                    this.toggleChest()
-                    break
-                case 'timecube':
-                    return
+            break;
+          case "chest":
+            if (!this.isCompleted) {
+              this.complete();
+            } else {
+              this.uncheck();
             }
-            e.stopPropagation()
-        })
+            break;
+          case "badge":
+            this.togglePay();
+            break;
+          case "timecube":
+            this.toggleCube();
+            break;
+        }
+        e.stopPropagation();
+      });
 
-        let Swipe = new Hammer.Swipe()
-        mc.add(Swipe)
-        mc.on('swipeleft', (e) => {
-            this.$store.dispatch('previousUpgradeMode', this.$router)
-            e.stopPropagation()
-        })
+      let Press = new Hammer.Press({ time: 400 });
+      mc.add(Press);
+      mc.on("press", e => {
+        switch (this.$store.state.upgrades.mode) {
+          case false:
+            return;
+          case "doge":
+          case "boat":
+            this.dogeIt();
+            break;
+          case "badge":
+            return;
+          case "chest":
+            this.toggleChest();
+            break;
+          case "timecube":
+            return;
+        }
+        e.stopPropagation();
+      });
 
-        mc.on('swiperight', (e) => {
-            this.$store.dispatch('nextUpgradeMode', this.$router)
-            e.stopPropagation()
-        })
+      let Swipe = new Hammer.Swipe();
+      mc.add(Swipe);
+      mc.on("swipeleft", e => {
+        this.$store.dispatch("previousUpgradeMode", this.$router);
+        e.stopPropagation();
+      });
 
-        let doubleTap = new Hammer.Tap({ event: 'doubletap', taps: 2, time: 400, interval: 400 })
-        mc.add(doubleTap)
-        mc.on('doubletap', (e) => {
-            e.stopPropagation()
-        })
+      mc.on("swiperight", e => {
+        this.$store.dispatch("nextUpgradeMode", this.$router);
+        e.stopPropagation();
+      });
+
+      let doubleTap = new Hammer.Tap({
+        event: "doubletap",
+        taps: 2,
+        time: 400,
+        interval: 400
+      });
+      mc.add(doubleTap);
+      mc.on("doubletap", e => {
+        e.stopPropagation();
+      });
     },
     methods: {
-        complete(){
-            this.$store.dispatch("makeEvent", {
-                type: 'task-claimed',
-                inId: this.inId,
-                taskId: this.b.taskId,
-                memberId: this.$store.getters.member.memberId,
-                notes: 'checked by ' + this.$store.getters.member.memberId
-            })
-        },
-        uncheck(){
-            this.$store.dispatch("makeEvent", {
-                type: 'task-unclaimed',
-                taskId: this.b.taskId,
-                memberId:  this.$store.getters.member.memberId,
-                notes: ''
-            })
-        },
-        togglePay(){
-            this.isPayOpen = !this.isPayOpen
-            if(this.isPayOpen) {
-                this.isCubeOpen = false
-                this.isChestOpen = false
-            }
-        },
-        toggleCube(){
-            this.isCubeOpen = !this.isCubeOpen
-            if(this.isCubeOpen) {
-                this.isPayOpen = false
-                this.isChestOpen = false
-            }
-        },
-        toggleChest(){
-            this.isChestOpen = !this.isChestOpen
-            if(this.isChestOpen) {
-                this.isPayOpen = false
-                this.isCubeOpen = false
-            }
-        },
-        deckIt(){
-            this.$store.dispatch("makeEvent", {
-                type: 'task-sub-tasked',
-                subTask: this.b.taskId,
-                taskId: this.$store.getters.memberCard.taskId,
-            })
-        },
-        flagIt(){
-                let parentId = this.$store.state.context.parent[this.$store.state.context.parent.length-1]
-
-                if (this.inId){
-                    this.$store.dispatch("makeEvent", {
-                      type: 'task-prioritized',
-                      taskId: this.b.taskId,
-                      inId: this.inId,
-                    })
-                } else if (parentId) {
-                    this.$store.dispatch("makeEvent", {
-                      type: 'task-prioritized',
-                      taskId: this.b.taskId,
-                      inId: parentId,
-                    })
-                    this.$store.dispatch('goUp', {
-                        target: parentId,
-                        panel: [parentId],
-                        top: 0
-                    })
-                }
-                if(this.$store.state.upgrades.mode === 'doge') {
-                    this.$store.commit("setMode", 1)
-                    this.$router.push("/boat")
-                }
-        },
-        dogeIt(){
-            if(!this.isDoged) {
-                this.$store.dispatch("makeEvent", {
-                  type: 'task-prioritized',
-                  taskId: this.b.taskId,
-                  inId: this.$store.getters.memberCard.taskId,
-                })
-            } else {
-                this.$store.dispatch("makeEvent", {
-                  type: 'task-refocused',
-                  taskId: this.b.taskId,
-                  inId: this.$store.getters.memberCard.taskId,
-                })
-            }
+      complete() {
+        this.$store.dispatch("makeEvent", {
+          type: "task-claimed",
+          inId: this.inId,
+          taskId: this.b.taskId,
+          memberId: this.$store.getters.member.memberId,
+          notes: "checked by " + this.$store.getters.member.memberId
+        });
+      },
+      uncheck() {
+        this.$store.dispatch("makeEvent", {
+          type: "task-unclaimed",
+          taskId: this.b.taskId,
+          memberId: this.$store.getters.member.memberId,
+          notes: ""
+        });
+      },
+      togglePay() {
+        this.isPayOpen = !this.isPayOpen;
+        if (this.isPayOpen) {
+          this.isCubeOpen = false;
+          this.isChestOpen = false;
         }
+      },
+      toggleCube() {
+        this.isCubeOpen = !this.isCubeOpen;
+        if (this.isCubeOpen) {
+          this.isPayOpen = false;
+          this.isChestOpen = false;
+        }
+      },
+      toggleChest() {
+        this.isChestOpen = !this.isChestOpen;
+        if (this.isChestOpen) {
+          this.isPayOpen = false;
+          this.isCubeOpen = false;
+        }
+      },
+      deckIt() {
+        this.$store.dispatch("makeEvent", {
+          type: "task-sub-tasked",
+          subTask: this.b.taskId,
+          taskId: this.$store.getters.memberCard.taskId
+        });
+      },
+      flagIt() {
+        let parentId = this.$store.state.context.parent[
+          this.$store.state.context.parent.length - 1
+        ];
+
+        if (this.inId) {
+          this.$store.dispatch("makeEvent", {
+            type: "task-prioritized",
+            taskId: this.b.taskId,
+            inId: this.inId
+          });
+        } else if (parentId) {
+          this.$store.dispatch("makeEvent", {
+            type: "task-prioritized",
+            taskId: this.b.taskId,
+            inId: parentId
+          });
+          this.$store.dispatch("goUp", {
+            target: parentId,
+            panel: [parentId],
+            top: 0
+          });
+        }
+        if (this.$store.state.upgrades.mode === "doge") {
+          this.$store.commit("setMode", 1);
+          this.$router.push("/boat");
+        }
+      },
+      dogeIt() {
+        if (!this.isDoged) {
+          this.$store.dispatch("makeEvent", {
+            type: "task-prioritized",
+            taskId: this.b.taskId,
+            inId: this.$store.getters.memberCard.taskId
+          });
+        } else {
+          this.$store.dispatch("makeEvent", {
+            type: "task-refocused",
+            taskId: this.b.taskId,
+            inId: this.$store.getters.memberCard.taskId
+          });
+        }
+      }
     },
     computed: {
-        isOracle() {
-          return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'doge'
-        },
-        isTop() {
-          return this.$store.state.upgrades.dimension === 'sun' && this.$store.state.upgrades.mode === 'boat'
-        },
-        flagClass(){
-            return {
-                boat : (this.$store.state.upgrades.mode === "boat" || this.$store.state.upgrades.mode === "doge") && !this.isDoged,
-                doge : (this.$store.state.upgrades.mode === "boat" || this.$store.state.upgrades.mode === "doge") && this.isDoged,
-                chest : this.$store.state.upgrades.mode === "chest",
-                timecube : this.$store.state.upgrades.mode === "timecube"
-            }
-        },
-        isFlagged(){
-            if(!this.inId) {
-                return false
-            }
-            return this.$store.getters.hashMap[this.inId].priorities.indexOf(this.b.taskId) > -1
-        },
-        isCompleted(){
-            return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1
-        },
-        isDoged() {
-            return this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) > -1
-        },
-    },
-}
-
+      isOracle() {
+        return (
+          this.$store.state.upgrades.dimension === "sun" &&
+          this.$store.state.upgrades.mode === "doge"
+        );
+      },
+      isTop() {
+        return (
+          this.$store.state.upgrades.dimension === "sun" &&
+          this.$store.state.upgrades.mode === "boat"
+        );
+      },
+      flagClass() {
+        return {
+          boat:
+            (this.$store.state.upgrades.mode === "boat" ||
+              this.$store.state.upgrades.mode === "doge") &&
+            !this.isDoged,
+          doge:
+            (this.$store.state.upgrades.mode === "boat" ||
+              this.$store.state.upgrades.mode === "doge") &&
+            this.isDoged,
+          chest: this.$store.state.upgrades.mode === "chest",
+          timecube: this.$store.state.upgrades.mode === "timecube"
+        };
+      },
+      isFlagged() {
+        if (!this.inId) {
+          return false;
+        }
+        return (
+          this.$store.getters.hashMap[this.inId].priorities.indexOf(
+            this.b.taskId
+          ) > -1
+        );
+      },
+      isCompleted() {
+        return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1;
+      },
+      isDoged() {
+        return (
+          this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) > -1
+        );
+      }
+    }
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours';
-@import '../styles/skeleton';
-@import '../styles/grid';
-@import '../styles/button';
+  @import '../styles/colours';
+  @import '../styles/skeleton';
+  @import '../styles/grid';
+  @import '../styles/button';
 
-.flag
-    width: 100%
-    
-.opened
-    width: calc(100% - 7em)
+  .flag
+      width: 100%
 
-.count
-    float: right
+  .opened
+      width: calc(100% - 7em)
 
-.activated
-    border-style: solid
-    border-width: thick
-    border-color: white
+  .count
+      float: right
 
-.upgrade
-    height: 3em
+  .activated
+      border-style: solid
+      border-width: thick
+      border-color: white
 
-.task
-    color: white
-    margin:10px 0
-    padding:20px
+  .upgrade
+      height: 3em
 
-.flaggy
-    position: absolute
-    right: 1em
-    top: 1em
-    height: 1em
-    cursor: pointer
-    z-index: 99
+  .task
+      color: white
+      margin:10px 0
+      padding:20px
 
-.flaggy img
-    pointer-events: none
-    height: 100%
+  .flaggy
+      position: absolute
+      right: 1em
+      top: 1em
+      height: 1em
+      cursor: pointer
+      z-index: 99
 
-.doge
-    height: 1.3em
-    margin-top: -0.1em
-    margin-right: -0.1em
+  .flaggy img
+      pointer-events: none
+      height: 100%
 
-.chest, .timecube
-    height: 1.1em
-    margin-top: -0.2em
-    margin-right: -0.2em
+  .doge
+      height: 1.3em
+      margin-top: -0.1em
+      margin-right: -0.1em
 
-.boat
-    height: 1em
-    margin-top: -0.2em
-    margin-right: -0.4em
+  .chest, .timecube
+      height: 1.1em
+      margin-top: -0.2em
+      margin-right: -0.2em
 
-.faded
-    opacity: 0.235654
+  .boat
+      height: 1em
+      margin-top: -0.2em
+      margin-right: -0.4em
 
-.faded:hover
-    opacity: 1
+  .faded
+      opacity: 0.235654
 
-.svgwhite
-    fill: white
+  .faded:hover
+      opacity: 1
 
-.svgwhite:hover
-    transform: rotate(-30deg)
+  .svgwhite
+      fill: white
 
-.opened
-    position: absolute
-    top: 0.65em
-    left: 29%
+  .svgwhite:hover
+      transform: rotate(-30deg)
+
+  .opened
+      position: absolute
+      top: 0.65em
+      left: 29%
 </style>

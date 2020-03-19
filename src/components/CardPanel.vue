@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
 
 #tasks(@contextmenu.capture.prevent)
     .row.ptr(v-show="topCard  &&  c.length > 1"  ref='swipebar')
@@ -31,331 +31,323 @@
 </template>
 
 <script>
-import uuidv1 from 'uuid/v1'
-import Hammer from 'hammerjs'
-import Propagating from 'propagating-hammerjs'
+  import uuidv1 from "uuid/v1";
+  import Hammer from "hammerjs";
+  import Propagating from "propagating-hammerjs";
 
-import Hypercard from "./Card"
+  import Hypercard from "./Card";
 
+  export default {
+    props: ["c", "taskId"],
+    mounted() {
+      let orbel = this.$refs.mandelorb;
+      if (!orbel) return;
+      let orbmc = Propagating(new Hammer.Manager(orbel));
 
-export default {
-  props: ['c', 'taskId'],
-  mounted(){
-        let orbel = this.$refs.mandelorb
-        if(!orbel) return
-        let orbmc = Propagating(new Hammer.Manager(orbel))
+      let orbTap = new Hammer.Tap({ time: 400 });
+      orbmc.add(orbTap);
+      orbmc.on("tap", e => {
+        this.toggleOpen();
+        e.stopPropagation();
+      });
 
-        let orbTap = new Hammer.Tap({ time: 400 })
-        orbmc.add(orbTap)
-        orbmc.on('tap', (e) => {
-            this.toggleOpen()
-            e.stopPropagation()
-        })
+      let barel = this.$refs.swipebar;
+      if (!barel) return;
+      let barmc = Propagating(new Hammer.Manager(barel));
 
-        let barel = this.$refs.swipebar
-        if(!barel) return
-        let barmc = Propagating(new Hammer.Manager(barel))
+      let barSwipe = new Hammer.Swipe({ threshold: 50 });
+      barmc.add(barSwipe);
 
-        let barSwipe = new Hammer.Swipe({ threshold: 50 })
-        barmc.add(barSwipe)
+      barmc.on("swipeleft", e => {
+        this.previous();
+        e.stopPropagation();
+      });
 
-        barmc.on('swipeleft', (e) => {
-          this.previous()
-          e.stopPropagation()
-        })
+      barmc.on("swiperight", e => {
+        this.next();
+        e.stopPropagation();
+      });
 
-        barmc.on('swiperight', (e) => {
-          this.next()
-          e.stopPropagation()
-        })
+      let orbSwipe = new Hammer.Swipe({ threshold: 50 });
+      orbmc.add(orbSwipe);
 
-        let orbSwipe = new Hammer.Swipe({ threshold: 50 })
-        orbmc.add(orbSwipe)
+      orbmc.on("swipeup", e => {
+        this.swap(-1);
+        e.stopPropagation();
+      });
 
-        orbmc.on('swipeup', (e) => {
-            this.swap(-1)
-            e.stopPropagation()
-        })
+      orbmc.on("swipedown", e => {
+        this.swap(1);
+        e.stopPropagation();
+      });
 
-        orbmc.on('swipedown', (e) => {
-            this.swap(1)
-            e.stopPropagation()
-        });
+      let orbPress = new Hammer.Press({ time: 400 });
+      orbmc.add(orbPress);
+      orbmc.on("press", e => {
+        this.toggleStacks();
+        e.stopPropagation();
+      });
 
-        let orbPress = new Hammer.Press({ time: 400 })
-        orbmc.add(orbPress)
-        orbmc.on('press', (e) => {
+      let prevel = this.$refs.previous;
+      if (!prevel) return;
+      let prevmc = Propagating(new Hammer.Manager(prevel));
 
-            this.toggleStacks()
-            e.stopPropagation()
-        })
+      let prevTap = new Hammer.Tap({ time: 400 });
+      prevmc.add(prevTap);
+      prevmc.on("tap", e => {
+        this.previous();
+        e.stopPropagation();
+      });
 
-        let prevel = this.$refs.previous
-        if(!prevel) return
-        let prevmc = Propagating(new Hammer.Manager(prevel))
+      let prevPress = new Hammer.Press({ time: 400 });
+      prevmc.add(prevPress);
+      prevmc.on("press", e => {
+        this.first();
+        e.stopPropagation();
+      });
 
-        let prevTap = new Hammer.Tap({ time: 400 })
-        prevmc.add(prevTap)
-        prevmc.on('tap', (e) => {
-            this.previous()
-            e.stopPropagation()
-        })
+      let nextel = this.$refs.next;
+      if (!nextel) return;
+      let nextmc = Propagating(new Hammer.Manager(nextel));
 
-        let prevPress = new Hammer.Press({ time: 400 })
-        prevmc.add(prevPress)
-        prevmc.on('press', (e) => {
+      let nextTap = new Hammer.Tap({ time: 400 });
+      nextmc.add(nextTap);
+      nextmc.on("tap", e => {
+        this.next();
+        e.stopPropagation();
+      });
 
-            this.first()
-            e.stopPropagation()
-        })
-
-        let nextel = this.$refs.next
-        if(!nextel) return
-        let nextmc = Propagating(new Hammer.Manager(nextel))
-
-        let nextTap = new Hammer.Tap({ time: 400 })
-        nextmc.add(nextTap)
-        nextmc.on('tap', (e) => {
-            this.next()
-            e.stopPropagation()
-        })
-
-        let nextPress = new Hammer.Press({ time: 400 })
-        nextmc.add(nextPress)
-        nextmc.on('press', (e) => {
-
-        this.last()
-        e.stopPropagation()
-        })
-  },
-  data(){
+      let nextPress = new Hammer.Press({ time: 400 });
+      nextmc.add(nextPress);
+      nextmc.on("press", e => {
+        this.last();
+        e.stopPropagation();
+      });
+    },
+    data() {
       return {
-          open: false,
-          top: 0,
-          orbuuid: uuidv1(),
-          componentKey: 0,
-      }
-  },
-  methods:{
-    toggleOpen(){
-        if(!this.open) {
-
+        open: false,
+        top: 0,
+        orbuuid: uuidv1(),
+        componentKey: 0
+      };
+    },
+    methods: {
+      toggleOpen() {
+        if (!this.open) {
         } else {
-
         }
-        this.open = !this.open
-    },
-    first() {
-
-        this.top = 0
-    },
-    previous(){
-        this.playSound()
-        this.top = (this.top - 1) % this.c.length
+        this.open = !this.open;
+      },
+      first() {
+        this.top = 0;
+      },
+      previous() {
+        this.playSound();
+        this.top = (this.top - 1) % this.c.length;
         if (this.top === -1) {
-            this.top = this.c.length - 1
+          this.top = this.c.length - 1;
         }
-        this.componentKey ++
-    },
-    next(){
-        this.playSound()
-        this.top = (this.top + 1) % this.c.length
-        this.componentKey ++
-    },
-    last() {
-
-        this.top = this.c.length - 1
-    },
-    swap(direction){
-        let cardIndex
+        this.componentKey++;
+      },
+      next() {
+        this.playSound();
+        this.top = (this.top + 1) % this.c.length;
+        this.componentKey++;
+      },
+      last() {
+        this.top = this.c.length - 1;
+      },
+      swap(direction) {
+        let cardIndex;
         this.c.forEach((t, i) => {
-          if(t.taskId === this.topCard.taskId) {
-            cardIndex = i
+          if (t.taskId === this.topCard.taskId) {
+            cardIndex = i;
           }
-        })
-        if ((cardIndex === 0 && direction === -1) || (cardIndex === this.c.length - 1 && direction === 1)) {
-            this.$store.dispatch("makeEvent", {
-                type: 'task-bumped',
-                taskId: this.taskId,
-                bumpId: this.topCard.taskId,
-                direction: direction,
-            })
+        });
+        if (
+          (cardIndex === 0 && direction === -1) ||
+          (cardIndex === this.c.length - 1 && direction === 1)
+        ) {
+          this.$store.dispatch("makeEvent", {
+            type: "task-bumped",
+            taskId: this.taskId,
+            bumpId: this.topCard.taskId,
+            direction: direction
+          });
         } else {
-            let swapIndex = (cardIndex + direction) % this.c.length
-            this.$store.dispatch("makeEvent", {
-                type: 'task-swapped',
-                taskId: this.taskId,
-                swapId1: this.topCard.taskId,
-                swapId2: this.c[swapIndex].taskId,
-            })
-            if(direction === -1) {
-                this.previous()
-            }
+          let swapIndex = (cardIndex + direction) % this.c.length;
+          this.$store.dispatch("makeEvent", {
+            type: "task-swapped",
+            taskId: this.taskId,
+            swapId1: this.topCard.taskId,
+            swapId2: this.c[swapIndex].taskId
+          });
+          if (direction === -1) {
+            this.previous();
+          }
         }
-    },
-    playSound(){
-      if (!this.$store.getters.member.muted){
-        try {
-          let flip = new Audio(require('../assets/sounds/pageturn.wav'))
-          flip.volume = flip.volume * 0.33
-          flip.play()
-        } catch (err){}
+      },
+      playSound() {
+        if (!this.$store.getters.member.muted) {
+          try {
+            let flip = new Audio(require("../assets/sounds/pageturn.wav"));
+            flip.volume = flip.volume * 0.33;
+            flip.play();
+          } catch (err) {}
+        }
+      },
+      toggleStacks() {
+        if (this.$store.state.upgrades.stacks === 1) {
+        } else {
+        }
+        this.$store.commit("toggleStacks");
       }
     },
-    toggleStacks(){
-        if(this.$store.state.upgrades.stacks === 1) {
-
-        } else {
-
-        }
-        this.$store.commit('toggleStacks')
-    },
-  },
-  computed: {
-    topCard(){
-        this.componentKey ++
-        if(this.top >= this.c.length) {
-            this.top = 0
+    computed: {
+      topCard() {
+        this.componentKey++;
+        if (this.top >= this.c.length) {
+          this.top = 0;
         }
         if (this.c.length > 0) {
-            return this.c[this.top]
+          return this.c[this.top];
         }
-        return false
+        return false;
+      },
+      panelIds() {
+        return this.c.map(g => g.taskId);
+      }
     },
-    panelIds() {
-        return this.c.map(g => g.taskId)
+    components: {
+      Hypercard
     }
-  },
-  components:{
-      Hypercard,
-  },
-}
-
+  };
 </script>
 
 <style lang="stylus" scoped>
 
-@import '../styles/colours'
-@import '../styles/grid'
-@import '../styles/button'
-@import '../styles/tooltips'
+  @import '../styles/colours'
+  @import '../styles/grid'
+  @import '../styles/button'
+  @import '../styles/tooltips'
 
-#tasks
-    width: 100%
-    color: lightGrey
+  #tasks
+      width: 100%
+      color: lightGrey
 
-tr
-    border-color: accent4
-    border-top-style: solid
-    border-bottom-style: solid
-    border-width: 3px
-    vertical-align:middle
+  tr
+      border-color: accent4
+      border-top-style: solid
+      border-bottom-style: solid
+      border-width: 3px
+      vertical-align:middle
 
-thead
-    tr
-        text-align: center
+  thead
+      tr
+          text-align: center
 
-td
-    vertical-align: middle
-    color: accent2
-    font-size: 1.34em
-    text-align: center
+  td
+      vertical-align: middle
+      color: accent2
+      font-size: 1.34em
+      text-align: center
 
-li
-    text-align: left
+  li
+      text-align: left
 
-table
-    text-align:center
-    width: 100%
-th
-    font-family: sans-serif
-    font-weight: lighter
-    font-size: 1.1em
-    color: accent1
-    border-color: accent1
+  table
+      text-align:center
+      width: 100%
+  th
+      font-family: sans-serif
+      font-weight: lighter
+      font-size: 1.1em
+      color: accent1
+      border-color: accent1
 
-td
-    color: accent3
+  td
+      color: accent3
 
-.padding
-    padding: 1.987654321em
+  .padding
+      padding: 1.987654321em
 
-li
-    margin-left: 1em
+  li
+      margin-left: 1em
 
-.bounce-enter-active {
-  animation: bounce-in .5s;
-}
-.bounce-leave-active {
-  animation: bounce-in .5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
+  .bounce-enter-active {
+    animation: bounce-in .5s;
   }
-  50% {
-    transform: scale(1.5);
+  .bounce-leave-active {
+    animation: bounce-in .5s reverse;
   }
-  100% {
-    transform: scale(1);
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
-}
 
-img
-    height: 3em
-    user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-drag: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+  img
+      height: 3em
+      user-drag: none;
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-drag: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
 
-.ptr
-    margin-bottom: 0
-    margin: 1em 0 0.5em 0
-    background-color: rgba(51, 51, 51, 0.3)
-    border-radius: 40px
-    opacity: 0.77
-.fr
-    float: right
-    margin-left: 0.5em
-    margin-top: 0.5em
-    //margin-bottom: 0.8em
-    margin-right: 0.5em
-    cursor: pointer
+  .ptr
+      margin-bottom: 0
+      margin: 1em 0 0.5em 0
+      background-color: rgba(51, 51, 51, 0.3)
+      border-radius: 40px
+      opacity: 0.77
+  .fr
+      float: right
+      margin-left: 0.5em
+      margin-top: 0.5em
+      //margin-bottom: 0.8em
+      margin-right: 0.5em
+      cursor: pointer
 
-.fl
-    float: left
-    margin-right: 0.5em
-    margin-top: 0.5em
-    //margin-bottom: 0.8em
-    margin-left: 0.5em
-    cursor: pointer
+  .fl
+      float: left
+      margin-right: 0.5em
+      margin-top: 0.5em
+      //margin-bottom: 0.8em
+      margin-left: 0.5em
+      cursor: pointer
 
-.fadey
-    opacity: 0.36
+  .fadey
+      opacity: 0.36
 
-.box
-    min-height: 1em
+  .box
+      min-height: 1em
 
-.bar
-    min-height: 1em
-    background: softGrey
+  .bar
+      min-height: 1em
+      background: softGrey
 
-.verticalcenter
-    margin-top: 1em
+  .verticalcenter
+      margin-top: 1em
 
-.horizcenter
-    text-align: center
+  .horizcenter
+      text-align: center
 
-.mandalign
-    margin-top: 5px
-    cursor: pointer
-    padding: 0.77em
-    user-drag:none
-    img
-        height: 1.7em
+  .mandalign
+      margin-top: 5px
+      cursor: pointer
+      padding: 0.77em
+      user-drag:none
+      img
+          height: 1.7em
 
-.center
-    text-align: center
+  .center
+      text-align: center
 </style>
