@@ -9,14 +9,15 @@
   "compile": "npm run buildFront && npm run start",
   "setup": "chmod u+x install.sh && ./install.sh",
   "start": "node src/server/app.js",
-  "pretty": "prettier --write \"src/**/*.js\"",
+  "pretty": "npm run pretty-js && npm run pretty-vue",
+  "pretty-js": "prettier --write \"src/**/*.js\"",
   "pretty-vue": "prettier --parser \"vue\" --write \"src/**/*.vue\"",
   "precommit": "lint-staged",
   "prepush": "lint-staged"
  },
  "lint-staged": {
   "*.js": [
-   "npm run pretty"
+   "npm run pretty-js"
   ],
   "*.vue": [
    "npm run pretty-view"
