@@ -10,7 +10,8 @@
     "setup": "chmod u+x install.sh && ./install.sh",
     "start": "node src/server/app.js",
     "pretty": "prettier --write --tab-width 4 \"src/**/*.js\"",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prepush": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
