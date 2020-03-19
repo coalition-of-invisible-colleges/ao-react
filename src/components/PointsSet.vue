@@ -6,81 +6,81 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
   export default {
-    props: ["b"],
+    props: ['b'],
     data() {
       return {
         task: {
           points: this.b.completeValue ? this.b.completeValue : 1
         }
-      };
+      }
     },
     mounted() {
-      let el = this.$refs.wholeForm;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = this.$refs.wholeForm
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
-      let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
+      let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
+      })
 
-      mc.add([doubleTap, singleTap]);
+      mc.add([doubleTap, singleTap])
 
-      singleTap.recognizeWith([doubleTap]);
-      singleTap.requireFailure([doubleTap]);
+      singleTap.recognizeWith([doubleTap])
+      singleTap.requireFailure([doubleTap])
 
-      mc.on("doubletap", e => {
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        e.stopPropagation()
+      })
 
-      mc.on("singletap", e => {
-        e.stopPropagation();
-      });
+      mc.on('singletap', e => {
+        e.stopPropagation()
+      })
     },
     methods: {
       setValue(clear = true) {
         if (this.b.completeValue === this.task.points) {
           if (!clear) {
-            this.$emit("closeit");
-            return;
+            this.$emit('closeit')
+            return
           }
-          this.task.points = 0;
-          this.$store.dispatch("makeEvent", {
-            type: "task-valued",
+          this.task.points = 0
+          this.$store.dispatch('makeEvent', {
+            type: 'task-valued',
             taskId: this.b.taskId,
             value: 0
-          });
+          })
 
-          this.$emit("closeit");
-          return;
+          this.$emit('closeit')
+          return
         }
-        this.$emit("closeit");
+        this.$emit('closeit')
 
-        this.$store.dispatch("makeEvent", {
-          type: "task-valued",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-valued',
           taskId: this.b.taskId,
           value: Number(this.task.points)
-        });
+        })
       }
     },
     computed: {
       detectChange() {
         if (this.b.completeValue === this.task.points) {
-          return "clear";
+          return 'clear'
         } else if (this.b.completeValue && this.task.points) {
-          return "revalue";
+          return 'revalue'
         }
-        return "value";
+        return 'value'
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -28,79 +28,79 @@ div
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
   export default {
     computed: {
       isBull() {
-        return this.$store.state.upgrades.dimension === "bull";
+        return this.$store.state.upgrades.dimension === 'bull'
       }
     },
     methods: {
       killSession() {
-        this.$store.dispatch("makeEvent", {
-          type: "session-killed",
+        this.$store.dispatch('makeEvent', {
+          type: 'session-killed',
           session: this.$store.state.loader.session
-        });
-        window.localStorage.removeItem("token");
-        window.localStorage.removeItem("session");
-        window.localStorage.clear();
-        this.$store.commit("setAuth", {
-          token: "",
-          session: ""
-        });
-        window.location.replace("/");
+        })
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('session')
+        window.localStorage.clear()
+        this.$store.commit('setAuth', {
+          token: '',
+          session: ''
+        })
+        window.location.replace('/')
       },
       goDash(mode) {
         if (!mode) {
-          mode = this.$store.state.upgrades.mode;
+          mode = this.$store.state.upgrades.mode
         }
-        this.$store.commit("setDimension", 2);
-        this.$store.commit("startLoading", "bull-" + mode);
+        this.$store.commit('setDimension', 2)
+        this.$store.commit('startLoading', 'bull-' + mode)
 
-        this.$router.push("/dash/" + mode);
+        this.$router.push('/dash/' + mode)
       },
       close(mode) {
         if (!mode) {
-          mode = this.$store.state.upgrades.mode;
+          mode = this.$store.state.upgrades.mode
         }
-        this.$store.commit("setDimension", 0);
-        this.$router.push("/" + mode);
+        this.$store.commit('setDimension', 0)
+        this.$router.push('/' + mode)
       },
       nextMode() {
-        this.$store.commit("nextMode");
+        this.$store.commit('nextMode')
       }
     },
     mounted() {
-      let bullel = this.$refs.bull;
-      let bullmc = Propagating(new Hammer.Manager(bullel));
-      let bullTap = new Hammer.Tap({ time: 400 });
+      let bullel = this.$refs.bull
+      let bullmc = Propagating(new Hammer.Manager(bullel))
+      let bullTap = new Hammer.Tap({ time: 400 })
       let bullDoubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
+      })
       let bullTripleTap = new Hammer.Tap({
-        event: "tripletap",
+        event: 'tripletap',
         taps: 3,
         time: 400,
         interval: 400
-      });
+      })
       let bullQuadrupleTap = new Hammer.Tap({
-        event: "quadrupletap",
+        event: 'quadrupletap',
         taps: 4,
         time: 400,
         interval: 400
-      });
+      })
       let bullQuintupleTap = new Hammer.Tap({
-        event: "quintupletap",
+        event: 'quintupletap',
         taps: 5,
         time: 400,
         interval: 400
-      });
-      let bullPress = new Hammer.Press({ time: 600 });
+      })
+      let bullPress = new Hammer.Press({ time: 600 })
       bullmc.add([
         bullPress,
         bullQuintupleTap,
@@ -108,77 +108,77 @@ div
         bullTripleTap,
         bullDoubleTap,
         bullTap
-      ]);
+      ])
       bullPress.recognizeWith([
         bullQuintupleTap,
         bullQuadrupleTap,
         bullTripleTap,
         bullDoubleTap,
         bullTap
-      ]);
+      ])
       bullTap.recognizeWith([
         bullQuintupleTap,
         bullQuadrupleTap,
         bullTripleTap,
         bullDoubleTap
-      ]);
+      ])
       bullTap.requireFailure([
         bullQuintupleTap,
         bullQuadrupleTap,
         bullTripleTap,
         bullDoubleTap
-      ]);
+      ])
       bullDoubleTap.recognizeWith([
         bullQuintupleTap,
         bullQuadrupleTap,
         bullTripleTap
-      ]);
+      ])
       bullDoubleTap.requireFailure([
         bullQuintupleTap,
         bullQuadrupleTap,
         bullTripleTap
-      ]);
-      bullTripleTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap]);
-      bullTripleTap.requireFailure([bullQuintupleTap, bullQuadrupleTap]);
-      bullQuadrupleTap.recognizeWith(bullQuintupleTap);
-      bullQuadrupleTap.requireFailure(bullQuintupleTap);
+      ])
+      bullTripleTap.recognizeWith([bullQuintupleTap, bullQuadrupleTap])
+      bullTripleTap.requireFailure([bullQuintupleTap, bullQuadrupleTap])
+      bullQuadrupleTap.recognizeWith(bullQuintupleTap)
+      bullQuadrupleTap.requireFailure(bullQuintupleTap)
 
-      bullmc.on("tap", e => {
+      bullmc.on('tap', e => {
         if (!this.isBull) {
-          this.goDash(false);
+          this.goDash(false)
         } else {
-          this.nextMode();
-          this.goDash(false);
+          this.nextMode()
+          this.goDash(false)
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      bullmc.on("doubletap", e => {
-        this.goDash("boat");
-        e.stopPropagation();
-      });
+      bullmc.on('doubletap', e => {
+        this.goDash('boat')
+        e.stopPropagation()
+      })
 
-      bullmc.on("tripletap", e => {
-        this.goDash("badge");
-        e.stopPropagation();
-      });
+      bullmc.on('tripletap', e => {
+        this.goDash('badge')
+        e.stopPropagation()
+      })
 
-      bullmc.on("quadrupletap", e => {
-        this.goDash("chest");
-        e.stopPropagation();
-      });
+      bullmc.on('quadrupletap', e => {
+        this.goDash('chest')
+        e.stopPropagation()
+      })
 
-      bullmc.on("quintupletap", e => {
-        this.goDash("timecube");
-        e.stopPropagation();
-      });
+      bullmc.on('quintupletap', e => {
+        this.goDash('timecube')
+        e.stopPropagation()
+      })
 
-      bullmc.on("press", e => {
-        this.goDash("doge");
-        e.stopPropagation();
-      });
+      bullmc.on('press', e => {
+        this.goDash('doge')
+        e.stopPropagation()
+      })
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

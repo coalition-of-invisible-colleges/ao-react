@@ -22,128 +22,128 @@
 </template>
 
 <script>
-  import Current from "./CurrentChecks";
-  import Linky from "./Linky";
+  import Current from './CurrentChecks'
+  import Linky from './Linky'
   export default {
     components: {
       Linky,
       Current
     },
     mounted() {
-      this.$store.dispatch("loaded");
+      this.$store.dispatch('loaded')
     },
     data() {
       return {
         showAllGuilds: false
-      };
+      }
     },
     methods: {
       goIn(taskId, guild = undefined) {
-        let parents = [];
-        let panel = [taskId];
-        let top = 0;
-        let t = this.$store.getters.hashMap[taskId];
-        let panelColor = this.$store.getters[t.color];
-        let topColor = panelColor.indexOf(taskId);
+        let parents = []
+        let panel = [taskId]
+        let top = 0
+        let t = this.$store.getters.hashMap[taskId]
+        let panelColor = this.$store.getters[t.color]
+        let topColor = panelColor.indexOf(taskId)
         if (topColor > -1) {
-          panel = panelColor;
-          top = topColor;
+          panel = panelColor
+          top = topColor
         }
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
-        if (guild) parents.push(guild);
+        if (guild) parents.push(guild)
 
-        this.$store.dispatch("goIn", { panel, top, parents });
+        this.$store.dispatch('goIn', { panel, top, parents })
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        if (this.$store.state.upgrades.dimension !== "unicorn") {
-          this.$router.push("/" + this.$store.state.upgrades.mode);
+        if (this.$store.state.upgrades.dimension !== 'unicorn') {
+          this.$router.push('/' + this.$store.state.upgrades.mode)
         }
       },
       completions(guild) {
-        let completions = [];
+        let completions = []
         let allTasks = guild.subTasks
           .concat(guild.priorities)
-          .concat(guild.completed);
+          .concat(guild.completed)
         allTasks.forEach(t => {
-          let task = this.$store.getters.hashMap[t];
-          if (!task || !task.claimed) return;
+          let task = this.$store.getters.hashMap[t]
+          if (!task || !task.claimed) return
           if (task.claimed.indexOf(this.$store.getters.member.memberId) > -1) {
             if (completions.indexOf(task) === -1) {
-              completions.push(task);
+              completions.push(task)
             }
           }
-        });
-        return completions;
+        })
+        return completions
       },
       getSubPriorities(taskId) {
-        let card = this.$store.getters.hashMap[taskId];
+        let card = this.$store.getters.hashMap[taskId]
         if (card && card.priorities) {
-          return card.priorities.slice().reverse();
+          return card.priorities.slice().reverse()
         }
       },
       cardInputSty(c) {
         return {
-          redtx: c === "red",
-          bluetx: c === "blue",
-          greentx: c === "green",
-          yellowtx: c === "yellow",
-          purpletx: c === "purple",
-          blacktx: c === "black"
-        };
+          redtx: c === 'red',
+          bluetx: c === 'blue',
+          greentx: c === 'green',
+          yellowtx: c === 'yellow',
+          purpletx: c === 'purple',
+          blacktx: c === 'black'
+        }
       },
       toggleGuilds() {
-        this.showAllGuilds = !this.showAllGuilds;
+        this.showAllGuilds = !this.showAllGuilds
       }
     },
     computed: {
       missions() {
-        let guilds = this.$store.getters.myGuilds;
+        let guilds = this.$store.getters.myGuilds
         guilds.forEach(g => {
           g.subTasks.concat(g.priorities, g.completed).forEach(p => {
-            let task = this.$store.getters.hashMap[p];
+            let task = this.$store.getters.hashMap[p]
             if (!task) {
               console.log(
-                "null taskId found, this means cleanup is not happening elsewhere and is very bad"
-              );
+                'null taskId found, this means cleanup is not happening elsewhere and is very bad'
+              )
             } else if (task.guild) {
               task.subTasks
                 .concat(task.priorities, task.completed)
                 .forEach(sp => {
-                  let subtask = this.$store.getters.hashMap[sp];
+                  let subtask = this.$store.getters.hashMap[sp]
                   if (!subtask) {
                     console.log(
-                      "null subtaskId found, this means cleanup is not happening elsewhere and is very bad"
-                    );
+                      'null subtaskId found, this means cleanup is not happening elsewhere and is very bad'
+                    )
                   } else if (subtask.guild) {
                     if (!task.guilds) {
-                      task.guilds = [];
+                      task.guilds = []
                     }
                     if (task.guilds.indexOf(subtask) === -1) {
-                      task.guilds.push(subtask);
+                      task.guilds.push(subtask)
                     }
                   }
-                });
+                })
               if (!g.guilds) {
-                g.guilds = [];
+                g.guilds = []
               }
               if (g.guilds.indexOf(task) === -1) {
-                g.guilds.push(task);
+                g.guilds.push(task)
               }
             }
-          });
-        });
-        return guilds;
+          })
+        })
+        return guilds
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

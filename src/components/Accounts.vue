@@ -10,9 +10,9 @@
 </template>
 
 <script>
-  import MemberCreate from "./MemberCreate";
-  import Changer from "./Changer";
-  import Members from "./Members";
+  import MemberCreate from './MemberCreate'
+  import Changer from './Changer'
+  import Members from './Members'
 
   export default {
     components: {
@@ -21,22 +21,22 @@
       Members
     },
     mounted() {
-      this.$store.commit("setMode", 2);
-      this.$store.commit("setDimension", 2);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 2)
+      this.$store.commit('setDimension', 2)
+      this.$store.dispatch('loaded')
     },
     computed: {
       activeAccounts() {
-        let a = 0;
+        let a = 0
         this.$store.state.members.forEach(m => {
           if (m.active > 0) {
-            a++;
+            a++
           }
-        });
-        return a;
+        })
+        return a
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

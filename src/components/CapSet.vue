@@ -12,18 +12,18 @@
   export default {
     methods: {
       setCap() {
-        this.$store.dispatch("makeEvent", this.details);
+        this.$store.dispatch('makeEvent', this.details)
       }
     },
     data() {
       return {
         details: {
-          type: "cap-set",
-          amount: ""
+          type: 'cap-set',
+          amount: ''
         }
-      };
+      }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

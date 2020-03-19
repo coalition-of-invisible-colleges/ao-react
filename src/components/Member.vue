@@ -23,104 +23,104 @@
 </template>
 
 <script>
-  import PreviewDeck from "./PreviewDeck";
-  import Vouch from "./Vouch";
-  import Bird from "./Bird";
-  import NotZen from "./NotZen";
-  import GiftBox from "./GiftBox";
+  import PreviewDeck from './PreviewDeck'
+  import Vouch from './Vouch'
+  import Bird from './Bird'
+  import NotZen from './NotZen'
+  import GiftBox from './GiftBox'
 
   export default {
-    props: ["m"],
+    props: ['m'],
     components: { PreviewDeck, Vouch, Bird, NotZen, GiftBox },
     computed: {
       card() {
-        return this.$store.getters.hashMap[this.m.memberId];
+        return this.$store.getters.hashMap[this.m.memberId]
       },
       isLoggedIn() {
-        let isLoggedIn;
+        let isLoggedIn
         this.$store.state.sessions.forEach(s => {
           if (s.ownerId === this.m.memberId) {
-            isLoggedIn = true;
+            isLoggedIn = true
           }
-        });
-        return isLoggedIn;
+        })
+        return isLoggedIn
       },
       nameList() {
         return this.$store.getters.contextCard.deck.map(mId => {
-          return mId;
-        });
+          return mId
+        })
       },
       dukkha() {
-        return this.$store.getters.contextCard.priorities.length;
+        return this.$store.getters.contextCard.priorities.length
       },
       deckSize() {
         return this.$store.state.tasks.filter(t => {
-          return t.deck.indexOf(this.m.memberId) >= 0;
-        }).length;
+          return t.deck.indexOf(this.m.memberId) >= 0
+        }).length
       },
       pointsFromCards() {
-        let points = 0;
+        let points = 0
         this.$store.state.tasks.forEach(t => {
           if (t.deck.indexOf(this.m.memberId) === -1) {
-            return;
+            return
           }
           if (
             t.claimed.some(c => {
-              return c.indexOf(this.m.memberId) >= 0;
+              return c.indexOf(this.m.memberId) >= 0
             })
           ) {
             if (t.completeValue && t.completeValue > 0) {
-              points += t.completeValue;
+              points += t.completeValue
             }
           }
-        });
-        return points;
+        })
+        return points
       }
     },
     methods: {
       goArchive() {
-        this.$router.push("/archive");
+        this.$router.push('/archive')
       },
       goBadge() {
-        this.$router.push("/badge");
+        this.$router.push('/badge')
       },
       goChest() {
-        this.$router.push("/chest");
+        this.$router.push('/chest')
       },
       getName(taskId) {
-        let name;
+        let name
         this.$store.state.tasks.some(t => {
           if (taskId === t.taskId) {
-            name = t.name;
-            return true;
+            name = t.name
+            return true
           }
-        });
-        return name;
+        })
+        return name
       },
       toggleActivated() {
         if (this.m.memberId !== this.$store.getters.member.memberId) {
-          return;
+          return
         }
         if (this.$store.getters.member.active > 0) {
-          this.deactivate();
+          this.deactivate()
         } else {
-          this.activate();
+          this.activate()
         }
       },
       deactivate() {
-        this.$store.dispatch("makeEvent", {
-          type: "member-deactivated",
+        this.$store.dispatch('makeEvent', {
+          type: 'member-deactivated',
           memberId: this.$store.getters.member.memberId
-        });
+        })
       },
       activate() {
-        this.$store.dispatch("makeEvent", {
-          type: "member-activated",
+        this.$store.dispatch('makeEvent', {
+          type: 'member-activated',
           memberId: this.$store.getters.member.memberId
-        });
+        })
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

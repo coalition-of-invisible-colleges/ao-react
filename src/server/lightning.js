@@ -1,38 +1,38 @@
-const config = require("../../configuration.js");
-const uuidV1 = require("uuid/v1");
-const express = require("express");
-const lightningRouter = express.Router();
-const allEvents = require("./events");
-const calculations = require("../calculations");
-const LightningClient = require("lightning-client");
-const { serverState } = require("./state");
-const client = new LightningClient(config.clightning.dir, true);
+const config = require('../../configuration.js')
+const uuidV1 = require('uuid/v1')
+const express = require('express')
+const lightningRouter = express.Router()
+const allEvents = require('./events')
+const calculations = require('../calculations')
+const LightningClient = require('lightning-client')
+const { serverState } = require('./state')
+const client = new LightningClient(config.clightning.dir, true)
 
-lightningRouter.post("/lightning/channel", (req, res) => {
-  client.fundchannel(req.body.id, "all").then(channel => {
-    console.log(channel);
-    res.send(true);
-  });
-});
+lightningRouter.post('/lightning/channel', (req, res) => {
+  client.fundchannel(req.body.id, 'all').then(channel => {
+    console.log(channel)
+    res.send(true)
+  })
+})
 
 function createInvoice(amount, label, description, expiresInSec) {
-  return client.invoice(amount * 1000, label, description, expiresInSec);
+  return client.invoice(amount * 1000, label, description, expiresInSec)
 }
 
 function newAddress() {
-  return client.newaddr("p2sh-segwit");
+  return client.newaddr('p2sh-segwit')
 }
 
 function updateAll() {
-  checkFunds();
-  getInfo();
+  checkFunds()
+  getInfo()
 }
 
 function watchOnChain() {
-  setInterval(updateAll, 1000 * 60 * 10);
+  setInterval(updateAll, 1000 * 60 * 10)
   setTimeout(() => {
-    updateAll();
-  }, 560);
+    updateAll()
+  }, 560)
 }
 
 function checkFunds() {
@@ -40,10 +40,10 @@ function checkFunds() {
     .listfunds()
     .then(result => {
       try {
-        allEvents.fundsSet(result.outputs, result.channels);
+        allEvents.fundsSet(result.outputs, result.channels)
         result.outputs.forEach(o => {
           if (
-            o.status === "confirmed" &&
+            o.status === 'confirmed' &&
             serverState.cash.usedTxIds.indexOf(o.txid) === -1
           ) {
             serverState.tasks.forEach(t => {
@@ -51,19 +51,19 @@ function checkFunds() {
                 let cadAmt = calculations.satsToCad(
                   o.value,
                   serverState.cash.spot
-                );
-                allEvents.taskBoosted(t.taskId, cadAmt, o.txid);
+                )
+                allEvents.taskBoosted(t.taskId, cadAmt, o.txid)
               }
-            });
+            })
           }
-        });
+        })
       } catch (err) {
         console.log(
-          "lighting error; maybe lightningd (c-lightning) is not running"
-        );
+          'lighting error; maybe lightningd (c-lightning) is not running'
+        )
       }
     })
-    .catch(console.log);
+    .catch(console.log)
 }
 
 function getInfo() {
@@ -78,28 +78,28 @@ function getInfo() {
               return {
                 id: p.id,
                 channels: p.channels.length > 0
-              };
-            });
-            console.log("lightning client result:", result);
+              }
+            })
+            console.log('lightning client result:', result)
           } catch (err) {}
           try {
-            allEvents.getNodeInfo(result);
+            allEvents.getNodeInfo(result)
           } catch (err) {
-            console.log("getNodeInfo error:  ", err);
+            console.log('getNodeInfo error:  ', err)
           }
         })
-        .catch(err => {});
+        .catch(err => {})
     })
-    .catch(console.log);
+    .catch(console.log)
 }
 
 function recordEveryInvoice(start) {
   client
     .waitanyinvoice(start)
     .then(invoice => {
-      let satoshis = invoice.msatoshi / 1000;
-      let spot = serverState.cash.spot;
-      let cadAmt = calculations.satsToCad(satoshis, spot);
+      let satoshis = invoice.msatoshi / 1000
+      let spot = serverState.cash.spot
+      let cadAmt = calculations.satsToCad(satoshis, spot)
       serverState.tasks.forEach(t => {
         if (t.payment_hash === invoice.payment_hash) {
           allEvents.taskBoostedLightning(
@@ -107,12 +107,12 @@ function recordEveryInvoice(start) {
             cadAmt,
             invoice.payment_hash,
             invoice.pay_index
-          );
+          )
         }
-      });
-      recordEveryInvoice(start + 1);
+      })
+      recordEveryInvoice(start + 1)
     })
-    .catch(console.log);
+    .catch(console.log)
 }
 
 module.exports = {
@@ -121,4 +121,4 @@ module.exports = {
   recordEveryInvoice,
   watchOnChain,
   lightningRouter
-};
+}

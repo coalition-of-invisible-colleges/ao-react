@@ -20,14 +20,14 @@
 </template>
 
 <script>
-  import CardPanel from "./CardPanel";
+  import CardPanel from './CardPanel'
 
   export default {
     components: {
       CardPanel
     },
     computed: {}
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

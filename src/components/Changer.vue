@@ -23,65 +23,65 @@
 </template>
 
 <script>
-  import cryptoUtils from "../crypto";
+  import cryptoUtils from '../crypto'
 
   export default {
     computed: {
       matched() {
-        let x = this.change.newfield;
-        let y = this.change.confirmNewfield;
-        return x === y;
+        let x = this.change.newfield
+        let y = this.change.confirmNewfield
+        return x === y
       },
       changeReq() {
-        if (this.change.field === "secret") {
+        if (this.change.field === 'secret') {
           return {
-            type: "member-field-updated",
+            type: 'member-field-updated',
             field: this.change.field,
             newfield: cryptoUtils.createHash(this.change.newfield),
             memberId: this.$store.getters.member.memberId
-          };
+          }
         }
         return {
-          type: "member-field-updated",
+          type: 'member-field-updated',
           field: this.change.field,
           newfield: this.change.newfield,
           memberId: this.$store.getters.member.memberId
-        };
+        }
       },
       secure() {
-        let secure = false;
+        let secure = false
         if (this.$store.getters.member.badges) {
-          secure = this.$store.getters.member.badges.some(b => b === "secure");
+          secure = this.$store.getters.member.badges.some(b => b === 'secure')
         }
-        return secure;
+        return secure
       },
       inputType() {
-        if (this.change.field === "secret") {
-          return "password";
+        if (this.change.field === 'secret') {
+          return 'password'
         } else {
-          return "text";
+          return 'text'
         }
       }
     },
     data() {
       return {
         change: {
-          field: "name",
-          newfield: "",
-          confirmNewfield: ""
+          field: 'name',
+          newfield: '',
+          confirmNewfield: ''
         }
-      };
+      }
     },
     methods: {
       empty() {
-        this.change.newfield = "";
-        this.change.confirmNewfield = "";
+        this.change.newfield = ''
+        this.change.confirmNewfield = ''
       },
       update() {
-        this.$store.dispatch("makeEvent", this.changeReq);
+        this.$store.dispatch('makeEvent', this.changeReq)
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

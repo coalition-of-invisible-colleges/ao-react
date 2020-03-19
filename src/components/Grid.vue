@@ -37,39 +37,39 @@
 </template>
 
 <script>
-  import GridCard from "./GridCard";
-  import SearchPanel from "./SearchPanel";
+  import GridCard from './GridCard'
+  import SearchPanel from './SearchPanel'
 
   export default {
     components: { GridCard, SearchPanel },
     beforeCreate() {
-      console.log("grid premount");
+      console.log('grid premount')
     },
     created() {
-      console.log("grid created");
+      console.log('grid created')
     },
     mounted() {
-      console.log("grid mounted");
+      console.log('grid mounted')
     },
 
     methods: {
       getTaskId(x, y) {
         if (this.$store.state.grid[y] && this.$store.state.grid[y][x]) {
-          return this.$store.state.grid[y][x];
+          return this.$store.state.grid[y][x]
         }
-        return false;
+        return false
       },
 
       zoom() {
-        this.$store.commit("zoom");
+        this.$store.commit('zoom')
       }
     },
     computed: {
       searchUpdated() {
-        return this.$store.state.upgrades.search;
+        return this.$store.state.upgrades.search
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

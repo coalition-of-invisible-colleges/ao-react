@@ -13,76 +13,76 @@
 
 <script>
   export default {
-    props: ["r", "c"],
+    props: ['r', 'c'],
     components: {},
     computed: {
       isAnyOptions() {
-        return this.optionList.length > 0;
+        return this.optionList.length > 0
       },
       card() {
-        return this.$store.getters.hashMap[this.r.resourceId];
+        return this.$store.getters.hashMap[this.r.resourceId]
       },
       optionList() {
         let ol = this.card.priorities.map(taskId => {
-          let option = this.$store.getters.hashMap[taskId];
-          let split = option.name.split(":");
+          let option = this.$store.getters.hashMap[taskId]
+          let split = option.name.split(':')
           if (split.length >= 2) {
-            return [split[0], split[1], option.color]; // notes, name, color
+            return [split[0], split[1], option.color] // notes, name, color
           }
-        });
+        })
         return ol.filter(list => {
-          return !!list;
-        });
+          return !!list
+        })
       }
     },
     methods: {
       cardInputSty(color) {
         return {
-          redwx: color == "red",
-          bluewx: color == "blue",
-          greenwx: color == "green",
-          yellowwx: color == "yellow",
-          purplewx: color == "purple",
-          blackwx: color == "black"
-        };
+          redwx: color == 'red',
+          bluewx: color == 'blue',
+          greenwx: color == 'green',
+          yellowwx: color == 'yellow',
+          purplewx: color == 'purple',
+          blackwx: color == 'black'
+        }
       },
       resourcePurged() {
         let newEv = {
-          type: "resource-purged",
+          type: 'resource-purged',
           resourceId: this.r.resourceId
-        };
-        this.$store.dispatch("makeEvent", newEv);
+        }
+        this.$store.dispatch('makeEvent', newEv)
       },
       use(letter) {
         let newEv = {
-          type: "resource-used",
+          type: 'resource-used',
           resourceId: this.r.resourceId,
           memberId: this.$store.getters.member.memberId,
           amount: 1,
           charged: this.r.charged,
           notes: letter
-        };
-        this.$store.dispatch("makeEvent", newEv);
+        }
+        this.$store.dispatch('makeEvent', newEv)
       },
       goIn() {
-        let top = this.c.indexOf(this.r.resourceId);
+        let top = this.c.indexOf(this.r.resourceId)
         if (top > -1) {
-          this.$store.dispatch("goIn", {
+          this.$store.dispatch('goIn', {
             parents: [],
             panel: this.c,
             top
-          });
+          })
           if (
-            this.$store.state.upgrades.mode === "doge" &&
+            this.$store.state.upgrades.mode === 'doge' &&
             this.$store.getters.contextCard.priorities.length > 0
           ) {
-            this.$store.commit("setMode", 1);
+            this.$store.commit('setMode', 1)
           }
-          this.$router.push("/" + this.$store.state.upgrades.mode);
+          this.$router.push('/' + this.$store.state.upgrades.mode)
         }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

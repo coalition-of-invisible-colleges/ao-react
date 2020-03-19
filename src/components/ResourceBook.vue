@@ -25,68 +25,68 @@
 </template>
 
 <script>
-  const HOUR = 1000 * 60 * 60;
-  const HALFDAY = HOUR * 12;
+  const HOUR = 1000 * 60 * 60
+  const HALFDAY = HOUR * 12
 
   export default {
-    props: ["tId"],
+    props: ['tId'],
     methods: {
       book() {
-        this.$store.dispatch("makeEvent", {
-          type: "resource-booked",
+        this.$store.dispatch('makeEvent', {
+          type: 'resource-booked',
           resourceId: this.tId,
           memberId: this.$store.getters.member.memberId,
           startTs: this.calcTime.start,
           endTs: this.calcTime.end
-        });
+        })
       }
     },
     mounted() {
-      let i = this.$router.currentRoute.path.split("/")[2];
+      let i = this.$router.currentRoute.path.split('/')[2]
       if (i) {
-        this.urlId = i;
+        this.urlId = i
       }
     },
     data() {
-      let d = new Date();
+      let d = new Date()
       return {
-        ymd: "",
+        ymd: '',
         hour: 1,
-        meridiem: "pm",
+        meridiem: 'pm',
         duration: 3,
-        urlId: ""
-      };
+        urlId: ''
+      }
     },
     computed: {
       calcTime() {
-        const HOUR = 60 * 60 * 1000;
-        let d = new Date(this.ymd);
+        const HOUR = 60 * 60 * 1000
+        let d = new Date(this.ymd)
 
-        let pmAmOffset;
+        let pmAmOffset
         switch (this.meridiem) {
-          case "am":
-            pmAmOffset = 0;
-            break;
-          case "pm":
-            pmAmOffset = 12 * HOUR;
-            break;
+          case 'am':
+            pmAmOffset = 0
+            break
+          case 'pm':
+            pmAmOffset = 12 * HOUR
+            break
         }
 
-        let tzOffset = d.getTimezoneOffset();
-        let timezoneOffset = (tzOffset / 60) * HOUR;
+        let tzOffset = d.getTimezoneOffset()
+        let timezoneOffset = (tzOffset / 60) * HOUR
 
-        let durationOffset = parseInt(this.duration) * HOUR;
-        let hourOffset = parseInt(this.hour) * HOUR;
+        let durationOffset = parseInt(this.duration) * HOUR
+        let hourOffset = parseInt(this.hour) * HOUR
 
-        let start = d.getTime() + pmAmOffset + hourOffset + timezoneOffset;
+        let start = d.getTime() + pmAmOffset + hourOffset + timezoneOffset
 
         return {
           start,
           end: start + durationOffset
-        };
+        }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

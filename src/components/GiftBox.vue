@@ -10,15 +10,15 @@
 </template>
 
 <script>
-  import Hypercard from "./Card";
-  import CardPanel from "./CardPanel";
+  import Hypercard from './Card'
+  import CardPanel from './CardPanel'
 
   export default {
     components: {
       Hypercard,
       CardPanel
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

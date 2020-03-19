@@ -5,48 +5,48 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
   export default {
     mounted() {
-      let el = this.$refs.memeportal;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = this.$refs.memeportal
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
-      let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
+      let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
-      let longPress = new Hammer.Press({ time: 400 });
+      })
+      let longPress = new Hammer.Press({ time: 400 })
 
-      mc.add([doubleTap, singleTap, longPress]);
+      mc.add([doubleTap, singleTap, longPress])
 
-      doubleTap.recognizeWith(singleTap);
-      singleTap.requireFailure([doubleTap]);
+      doubleTap.recognizeWith(singleTap)
+      singleTap.requireFailure([doubleTap])
 
-      mc.on("singletap", e => {
-        this.goPepe();
-        e.stopPropagation();
-      });
+      mc.on('singletap', e => {
+        this.goPepe()
+        e.stopPropagation()
+      })
 
-      mc.on("doubletap", e => {
-        this.goPepe();
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        this.goPepe()
+        e.stopPropagation()
+      })
 
-      mc.on("press", e => {
-        this.meme();
-        this.goPepe();
-        e.stopPropagation();
-      });
+      mc.on('press', e => {
+        this.meme()
+        this.goPepe()
+        e.stopPropagation()
+      })
     },
     methods: {
       goPepe() {
-        this.$router.push("/grid");
+        this.$router.push('/grid')
       },
       meme() {
         // add a meme to the empty spot nearest the center
@@ -56,16 +56,16 @@
       isMemed() {
         // for some reason this isn't being called; :key above seems wrong
         return Object.values(this.$store.state.grid).some(row => {
-          if (!row) return false;
+          if (!row) return false
           return Object.values(row).some(tId => {
             if (tId === this.$store.getters.contextCard.taskId) {
-              return true;
+              return true
             }
-          });
-        });
+          })
+        })
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

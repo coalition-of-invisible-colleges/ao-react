@@ -7,51 +7,51 @@
 
 <script>
   export default {
-    props: ["b"],
+    props: ['b'],
     data() {
       return {
         task: {
-          guild: this.b.guild ? this.b.guild : ""
+          guild: this.b.guild ? this.b.guild : ''
         }
-      };
+      }
     },
     methods: {
       titleIt(clear = true) {
         if (this.b.guild === this.task.guild) {
           if (!clear) {
-            this.$emit("closeit");
-            return;
+            this.$emit('closeit')
+            return
           }
-          this.task.guild = "";
-          this.$store.dispatch("makeEvent", {
-            type: "task-guilded",
+          this.task.guild = ''
+          this.$store.dispatch('makeEvent', {
+            type: 'task-guilded',
             taskId: this.b.taskId,
             guild: false
-          });
+          })
 
-          this.$emit("closeit");
-          return;
+          this.$emit('closeit')
+          return
         }
-        this.$emit("closeit");
+        this.$emit('closeit')
 
-        this.$store.dispatch("makeEvent", {
-          type: "task-guilded",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-guilded',
           taskId: this.b.taskId,
           guild: this.task.guild
-        });
+        })
       }
     },
     computed: {
       detectRename() {
         if (this.b.guild === this.task.guild) {
-          return "clear";
+          return 'clear'
         } else if (this.b.guild && this.task.guild) {
-          return "rename";
+          return 'rename'
         }
-        return "mission";
+        return 'mission'
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -1,116 +1,116 @@
-const uuidV1 = require("uuid/v1");
-const _ = require("lodash");
-const crypto = require("crypto");
+const uuidV1 = require('uuid/v1')
+const _ = require('lodash')
+const crypto = require('crypto')
 
-const { serverState } = require("./state");
-const dctrlDb = require("./dctrlDb");
+const { serverState } = require('./state')
+const dctrlDb = require('./dctrlDb')
 
 function highlighted(taskId, memberId, valence, callback) {
   let newEvent = {
-    type: "highlighted",
+    type: 'highlighted',
     taskId,
     memberId,
     valence
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoInboundConnected(address, secret, callback) {
   let newEvent = {
-    type: "ao-inbound-connected",
+    type: 'ao-inbound-connected',
     address,
     secret
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoLinked(address, taskId, callback) {
   let newEvent = {
-    type: "ao-linked",
+    type: 'ao-linked',
     address,
     taskId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoOutboundConnected(address, secret, callback) {
   let newEvent = {
-    type: "ao-outbound-connected",
+    type: 'ao-outbound-connected',
     address,
     secret
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoDisconnected(address, callback) {
   let newEvent = {
-    type: "ao-disconnected",
+    type: 'ao-disconnected',
     address
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function aoNamed(alias, callback) {
   let newEvent = {
-    type: "ao-named",
+    type: 'ao-named',
     alias
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function getNodeInfo(info, callback) {
   let newEvent = {
-    type: "get-node-info",
+    type: 'get-node-info',
     info
-  };
-  dctrlDb.triggerShadow(newEvent);
+  }
+  dctrlDb.triggerShadow(newEvent)
 }
 
 function rentSet(amount, callback) {
   let newEvent = {
-    type: "rent-set",
+    type: 'rent-set',
     amount
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function capSet(amount, callback) {
   let newEvent = {
-    type: "cap-set",
+    type: 'cap-set',
     amount
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function spotUpdated(spot, callback) {
   let newEvent = {
-    type: "spot-updated",
+    type: 'spot-updated',
     spot
-  };
-  dctrlDb.triggerShadow(newEvent);
+  }
+  dctrlDb.triggerShadow(newEvent)
 }
 
 function currencySwitched(currency, callback) {
   let newEvent = {
-    type: "currency-switched",
+    type: 'currency-switched',
     currency
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function fundsSet(outputs, channels, callback) {
   let newEvent = {
-    type: "funds-set",
+    type: 'funds-set',
     outputs,
     channels
-  };
-  dctrlDb.triggerShadow(newEvent);
+  }
+  dctrlDb.triggerShadow(newEvent)
 }
 
 function memberCreated(name, fob, secret, callback) {
-  let memberId = uuidV1();
+  let memberId = uuidV1()
   let newEvent = {
-    type: "member-created",
+    type: 'member-created',
     memberId,
     fob,
     name,
@@ -120,67 +120,67 @@ function memberCreated(name, fob, secret, callback) {
     badges: [],
     info: {},
     lastActivated: 7
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberDeactivated(memberId, callback) {
   let newEvent = {
-    type: "member-deactivated",
+    type: 'member-deactivated',
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberPurged(memberId, blame, callback) {
   let newEvent = {
-    type: "member-purged",
+    type: 'member-purged',
     memberId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberActivated(memberId, callback) {
   let newEvent = {
-    type: "member-activated",
+    type: 'member-activated',
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberFieldUpdated(memberId, field, newfield, callback) {
   let newEvent = {
-    type: "member-field-updated",
+    type: 'member-field-updated',
     memberId,
     field,
     newfield
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeBarked(memberId, callback) {
   let newEvent = {
-    type: "doge-barked",
+    type: 'doge-barked',
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeMuted(memberId, callback) {
   let newEvent = {
-    type: "doge-muted",
+    type: 'doge-muted',
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function dogeUnmuted(memberId, callback) {
   let newEvent = {
-    type: "doge-unmuted",
+    type: 'doge-unmuted',
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceCreated(
@@ -192,41 +192,41 @@ function resourceCreated(
   callback
 ) {
   let newEvent = {
-    type: "resource-created",
+    type: 'resource-created',
     resourceId,
     name,
     charged,
     secret,
     info: {}
-  };
-  if (trackStock) {
-    newEvent.stock = 0;
   }
-  dctrlDb.insertEvent(newEvent, callback);
+  if (trackStock) {
+    newEvent.stock = 0
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceStocked(resourceId, memberId, amount, paid, notes, callback) {
   let newEvent = {
-    type: "resource-stocked",
+    type: 'resource-stocked',
     resourceId,
     memberId,
     amount,
     paid,
     notes
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
   let newEvent = {
-    type: "resource-used",
+    type: 'resource-used',
     resourceId,
     memberId,
     amount,
     charged,
     notes
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourceBooked(
@@ -240,7 +240,7 @@ function resourceBooked(
   callback
 ) {
   let newEvent = {
-    type: "resource-booked",
+    type: 'resource-booked',
     resourceId,
     memberId,
     startTs,
@@ -248,61 +248,61 @@ function resourceBooked(
     eventType,
     charge,
     notes
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function bookCancelled(resourceId, bookTime, callback) {
   let newEvent = {
-    type: "book-cancelled",
+    type: 'book-cancelled',
     resourceId,
     bookTime
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function resourcePurged(resourceId, blame, callback) {
   let newEvent = {
-    type: "resource-purged",
+    type: 'resource-purged',
     resourceId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function sessionCreated(ownerId, session, token, callback) {
   let newEvent = {
-    type: "session-created",
+    type: 'session-created',
     session,
     token,
     ownerId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function sessionKilled(session, callback) {
   let newEvent = {
-    type: "session-killed",
+    type: 'session-killed',
     session
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskCreated(name, color, deck, inId, callback) {
-  let h = crypto.createHash("sha256");
-  h.update(name);
-  let hash = h.digest("hex");
-  let isExist = false;
+  let h = crypto.createHash('sha256')
+  h.update(name)
+  let hash = h.digest('hex')
+  let isExist = false
 
   serverState.tasks.forEach(t => {
     if (t.hash === hash) {
-      isExist = true;
+      isExist = true
     }
-  });
+  })
 
   if (!isExist) {
     let newEvent = {
-      type: "task-created",
+      type: 'task-created',
       taskId: uuidV1(),
       lastClaimed: Date.now(),
       name,
@@ -310,182 +310,182 @@ function taskCreated(name, color, deck, inId, callback) {
       deck,
       hash,
       inId
-    };
-    dctrlDb.insertEvent(newEvent, callback);
+    }
+    dctrlDb.insertEvent(newEvent, callback)
   }
 }
 
 function addressUpdated(taskId, address, callback) {
   dctrlDb.insertEvent(
     {
-      type: "address-updated",
+      type: 'address-updated',
       taskId,
       address
     },
     callback
-  );
+  )
 }
 
 function taskGuilded(taskId, guild, callback) {
   let newEvent = {
-    type: "task-guilded",
+    type: 'task-guilded',
     taskId,
     guild
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskGrabbed(taskId, memberId, callback) {
   let newEvent = {
-    type: "task-grabbed",
+    type: 'task-grabbed',
     taskId,
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function pileGrabbed(taskId, memberId, callback) {
   let newEvent = {
-    type: "pile-grabbed",
+    type: 'pile-grabbed',
     taskId,
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function pileDropped(taskId, memberId, callback) {
   let newEvent = {
-    type: "pile-dropped",
+    type: 'pile-dropped',
     taskId,
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskSubTasked(taskId, subTask, memberId, callback) {
   let newEvent = {
-    type: "task-sub-tasked",
+    type: 'task-sub-tasked',
     taskId,
     subTask,
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskDeSubTasked(taskId, subTask, memberId, callback) {
   let newEvent = {
-    type: "task-de-sub-tasked",
+    type: 'task-de-sub-tasked',
     taskId,
     subTask,
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskPrioritized(taskId, inId, callback) {
   let newEvent = {
-    type: "task-prioritized",
+    type: 'task-prioritized',
     taskId,
     inId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function pilePrioritized(inId, callback) {
   let newEvent = {
-    type: "pile-prioritized",
+    type: 'pile-prioritized',
     inId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskRefocused(taskId, inId, blame, callback) {
   let newEvent = {
-    type: "task-refocused",
+    type: 'task-refocused',
     taskId,
     inId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function pileRefocused(inId, blame, callback) {
   let newEvent = {
-    type: "pile-refocused",
+    type: 'pile-refocused',
     inId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskDropped(taskId, memberId, callback) {
   let newEvent = {
-    type: "task-dropped",
+    type: 'task-dropped',
     taskId,
     memberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskPassed(taskId, fromMemberId, toMemberId, callback) {
   let newEvent = {
-    type: "task-passed",
+    type: 'task-passed',
     taskId,
     fromMemberId,
     toMemberId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskValued(taskId, value, blame, callback) {
   let newEvent = {
-    type: "task-valued",
+    type: 'task-valued',
     taskId,
     value,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskColored(taskId, inId, color, blame, callback) {
   let newEvent = {
-    type: "task-colored",
+    type: 'task-colored',
     taskId,
     inId,
     color,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskClaimed(taskId, memberId, blame, callback) {
   let newEvent = {
-    type: "task-claimed",
+    type: 'task-claimed',
     taskId,
     memberId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskUnclaimed(taskId, memberId, blame, callback) {
   let newEvent = {
-    type: "task-unclaimed",
+    type: 'task-unclaimed',
     taskId,
     memberId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskBoosted(taskId, amount, txid, callback) {
   let newEvent = {
-    type: "task-boosted",
+    type: 'task-boosted',
     taskId,
     amount,
     txid
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskBoostedLightning(
@@ -496,90 +496,90 @@ function taskBoostedLightning(
   callback
 ) {
   let newEvent = {
-    type: "task-boosted-lightning",
+    type: 'task-boosted-lightning',
     taskId,
     amount,
     payment_hash,
     pay_index
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskRemoved(taskId, blame, callback) {
   let newEvent = {
-    type: "task-removed",
+    type: 'task-removed',
     taskId,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
   let newEvent = {
-    type: "task-swapped",
+    type: 'task-swapped',
     taskId,
     swapId1,
     swapId2,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function taskBumped(taskId, bumpId, direction, blame, callback) {
   let newEvent = {
-    type: "task-bumped",
+    type: 'task-bumped',
     taskId,
     bumpId,
     direction,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function tasksReceived(tasks, blame, callback) {
   let newEvent = {
-    type: "tasks-received",
+    type: 'tasks-received',
     tasks,
     blame
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function invoiceCreated(taskId, bolt11, payment_hash, callback) {
   let newEvent = {
-    type: "invoice-created",
+    type: 'invoice-created',
     taskId,
     bolt11,
     payment_hash
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function memberCharged(memberId, charged, notes, callback) {
   let newEvent = {
-    type: "member-charged",
+    type: 'member-charged',
     memberId,
     charged,
     notes
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function gridAdd(coord, taskId, callback) {
   let newEvent = {
-    type: "grid-add",
+    type: 'grid-add',
     coord,
     taskId
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 function gridDel(coord, callback) {
   let newEvent = {
-    type: "grid-del",
+    type: 'grid-del',
     coord
-  };
-  dctrlDb.insertEvent(newEvent, callback);
+  }
+  dctrlDb.insertEvent(newEvent, callback)
 }
 
 module.exports = {
@@ -638,4 +638,4 @@ module.exports = {
   tasksReceived,
   gridAdd,
   gridDel
-};
+}

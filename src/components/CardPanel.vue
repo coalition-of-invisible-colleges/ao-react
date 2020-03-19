@@ -31,98 +31,98 @@
 </template>
 
 <script>
-  import uuidv1 from "uuid/v1";
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import uuidv1 from 'uuid/v1'
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
-  import Hypercard from "./Card";
+  import Hypercard from './Card'
 
   export default {
-    props: ["c", "taskId"],
+    props: ['c', 'taskId'],
     mounted() {
-      let orbel = this.$refs.mandelorb;
-      if (!orbel) return;
-      let orbmc = Propagating(new Hammer.Manager(orbel));
+      let orbel = this.$refs.mandelorb
+      if (!orbel) return
+      let orbmc = Propagating(new Hammer.Manager(orbel))
 
-      let orbTap = new Hammer.Tap({ time: 400 });
-      orbmc.add(orbTap);
-      orbmc.on("tap", e => {
-        this.toggleOpen();
-        e.stopPropagation();
-      });
+      let orbTap = new Hammer.Tap({ time: 400 })
+      orbmc.add(orbTap)
+      orbmc.on('tap', e => {
+        this.toggleOpen()
+        e.stopPropagation()
+      })
 
-      let barel = this.$refs.swipebar;
-      if (!barel) return;
-      let barmc = Propagating(new Hammer.Manager(barel));
+      let barel = this.$refs.swipebar
+      if (!barel) return
+      let barmc = Propagating(new Hammer.Manager(barel))
 
-      let barSwipe = new Hammer.Swipe({ threshold: 50 });
-      barmc.add(barSwipe);
+      let barSwipe = new Hammer.Swipe({ threshold: 50 })
+      barmc.add(barSwipe)
 
-      barmc.on("swipeleft", e => {
-        this.previous();
-        e.stopPropagation();
-      });
+      barmc.on('swipeleft', e => {
+        this.previous()
+        e.stopPropagation()
+      })
 
-      barmc.on("swiperight", e => {
-        this.next();
-        e.stopPropagation();
-      });
+      barmc.on('swiperight', e => {
+        this.next()
+        e.stopPropagation()
+      })
 
-      let orbSwipe = new Hammer.Swipe({ threshold: 50 });
-      orbmc.add(orbSwipe);
+      let orbSwipe = new Hammer.Swipe({ threshold: 50 })
+      orbmc.add(orbSwipe)
 
-      orbmc.on("swipeup", e => {
-        this.swap(-1);
-        e.stopPropagation();
-      });
+      orbmc.on('swipeup', e => {
+        this.swap(-1)
+        e.stopPropagation()
+      })
 
-      orbmc.on("swipedown", e => {
-        this.swap(1);
-        e.stopPropagation();
-      });
+      orbmc.on('swipedown', e => {
+        this.swap(1)
+        e.stopPropagation()
+      })
 
-      let orbPress = new Hammer.Press({ time: 400 });
-      orbmc.add(orbPress);
-      orbmc.on("press", e => {
-        this.toggleStacks();
-        e.stopPropagation();
-      });
+      let orbPress = new Hammer.Press({ time: 400 })
+      orbmc.add(orbPress)
+      orbmc.on('press', e => {
+        this.toggleStacks()
+        e.stopPropagation()
+      })
 
-      let prevel = this.$refs.previous;
-      if (!prevel) return;
-      let prevmc = Propagating(new Hammer.Manager(prevel));
+      let prevel = this.$refs.previous
+      if (!prevel) return
+      let prevmc = Propagating(new Hammer.Manager(prevel))
 
-      let prevTap = new Hammer.Tap({ time: 400 });
-      prevmc.add(prevTap);
-      prevmc.on("tap", e => {
-        this.previous();
-        e.stopPropagation();
-      });
+      let prevTap = new Hammer.Tap({ time: 400 })
+      prevmc.add(prevTap)
+      prevmc.on('tap', e => {
+        this.previous()
+        e.stopPropagation()
+      })
 
-      let prevPress = new Hammer.Press({ time: 400 });
-      prevmc.add(prevPress);
-      prevmc.on("press", e => {
-        this.first();
-        e.stopPropagation();
-      });
+      let prevPress = new Hammer.Press({ time: 400 })
+      prevmc.add(prevPress)
+      prevmc.on('press', e => {
+        this.first()
+        e.stopPropagation()
+      })
 
-      let nextel = this.$refs.next;
-      if (!nextel) return;
-      let nextmc = Propagating(new Hammer.Manager(nextel));
+      let nextel = this.$refs.next
+      if (!nextel) return
+      let nextmc = Propagating(new Hammer.Manager(nextel))
 
-      let nextTap = new Hammer.Tap({ time: 400 });
-      nextmc.add(nextTap);
-      nextmc.on("tap", e => {
-        this.next();
-        e.stopPropagation();
-      });
+      let nextTap = new Hammer.Tap({ time: 400 })
+      nextmc.add(nextTap)
+      nextmc.on('tap', e => {
+        this.next()
+        e.stopPropagation()
+      })
 
-      let nextPress = new Hammer.Press({ time: 400 });
-      nextmc.add(nextPress);
-      nextmc.on("press", e => {
-        this.last();
-        e.stopPropagation();
-      });
+      let nextPress = new Hammer.Press({ time: 400 })
+      nextmc.add(nextPress)
+      nextmc.on('press', e => {
+        this.last()
+        e.stopPropagation()
+      })
     },
     data() {
       return {
@@ -130,70 +130,70 @@
         top: 0,
         orbuuid: uuidv1(),
         componentKey: 0
-      };
+      }
     },
     methods: {
       toggleOpen() {
         if (!this.open) {
         } else {
         }
-        this.open = !this.open;
+        this.open = !this.open
       },
       first() {
-        this.top = 0;
+        this.top = 0
       },
       previous() {
-        this.playSound();
-        this.top = (this.top - 1) % this.c.length;
+        this.playSound()
+        this.top = (this.top - 1) % this.c.length
         if (this.top === -1) {
-          this.top = this.c.length - 1;
+          this.top = this.c.length - 1
         }
-        this.componentKey++;
+        this.componentKey++
       },
       next() {
-        this.playSound();
-        this.top = (this.top + 1) % this.c.length;
-        this.componentKey++;
+        this.playSound()
+        this.top = (this.top + 1) % this.c.length
+        this.componentKey++
       },
       last() {
-        this.top = this.c.length - 1;
+        this.top = this.c.length - 1
       },
       swap(direction) {
-        let cardIndex;
+        let cardIndex
         this.c.forEach((t, i) => {
           if (t.taskId === this.topCard.taskId) {
-            cardIndex = i;
+            cardIndex = i
           }
-        });
+        })
         if (
           (cardIndex === 0 && direction === -1) ||
           (cardIndex === this.c.length - 1 && direction === 1)
         ) {
-          this.$store.dispatch("makeEvent", {
-            type: "task-bumped",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-bumped',
             taskId: this.taskId,
             bumpId: this.topCard.taskId,
             direction: direction
-          });
+          })
         } else {
-          let swapIndex = (cardIndex + direction) % this.c.length;
-          this.$store.dispatch("makeEvent", {
-            type: "task-swapped",
+          let swapIndex = (cardIndex + direction) % this.c.length
+          this.$store.dispatch('makeEvent', {
+            type: 'task-swapped',
             taskId: this.taskId,
             swapId1: this.topCard.taskId,
             swapId2: this.c[swapIndex].taskId
-          });
+          })
           if (direction === -1) {
-            this.previous();
+            this.previous()
           }
         }
       },
       playSound() {
         if (!this.$store.getters.member.muted) {
           try {
-            let flip = new Audio(require("../assets/sounds/pageturn.wav"));
-            flip.volume = flip.volume * 0.33;
-            flip.play();
+            let flip = new Audio(require('../assets/sounds/pageturn.wav'))
+            flip.volume = flip.volume * 0.33
+            flip.play()
           } catch (err) {}
         }
       },
@@ -201,28 +201,28 @@
         if (this.$store.state.upgrades.stacks === 1) {
         } else {
         }
-        this.$store.commit("toggleStacks");
+        this.$store.commit('toggleStacks')
       }
     },
     computed: {
       topCard() {
-        this.componentKey++;
+        this.componentKey++
         if (this.top >= this.c.length) {
-          this.top = 0;
+          this.top = 0
         }
         if (this.c.length > 0) {
-          return this.c[this.top];
+          return this.c[this.top]
         }
-        return false;
+        return false
       },
       panelIds() {
-        return this.c.map(g => g.taskId);
+        return this.c.map(g => g.taskId)
       }
     },
     components: {
       Hypercard
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

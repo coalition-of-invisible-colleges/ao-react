@@ -37,23 +37,23 @@
 </template>
 
 <script>
-  import calculations from "../calculations";
+  import calculations from '../calculations'
 
-  import Tag from "./Tag";
-  import LocalRemoteBar from "./LocalRemoteBar";
-  import Payments from "./Payments";
+  import Tag from './Tag'
+  import LocalRemoteBar from './LocalRemoteBar'
+  import Payments from './Payments'
 
-  import request from "superagent";
+  import request from 'superagent'
 
   export default {
     mounted() {
-      this.$store.commit("setMode", 3);
-      this.$store.commit("setDimension", 2);
+      this.$store.commit('setMode', 3)
+      this.$store.commit('setDimension', 2)
     },
     data() {
       return {
         selectedPeer: false
-      };
+      }
     },
     components: {
       Tag,
@@ -62,27 +62,27 @@
     },
     computed: {
       unchanneled() {
-        return this.$store.state.cash.info.peers.filter(p => !p.channels);
+        return this.$store.state.cash.info.peers.filter(p => !p.channels)
       }
     },
     methods: {
       selectPeer(pId) {
         if (pId === this.selectedPeer) {
-          return (this.selectedPeer = false);
+          return (this.selectedPeer = false)
         }
-        this.selectedPeer = pId;
+        this.selectedPeer = pId
       },
       requestChannel() {
         request
-          .post("/lightning/channel")
+          .post('/lightning/channel')
           .send({ id: this.selectedPeer })
-          .set("Authorization", this.$store.state.loader.token)
+          .set('Authorization', this.$store.state.loader.token)
           .end((err, res) => {
-            console.log("response from channel", res.body);
-          });
+            console.log('response from channel', res.body)
+          })
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -31,10 +31,10 @@
 </template>
 
 <script>
-  import Points from "./Points";
-  import RentSet from "./RentSet";
-  import CapSet from "./CapSet";
-  import Current from "./Current";
+  import Points from './Points'
+  import RentSet from './RentSet'
+  import CapSet from './CapSet'
+  import Current from './Current'
 
   export default {
     components: {
@@ -50,27 +50,27 @@
             m =>
               m.active > 0 && this.$store.getters.hashMap[m.memberId].boost <= 0
           )
-          .map(m => m.memberId);
+          .map(m => m.memberId)
       },
       activeMembers() {
-        let a = 0;
+        let a = 0
         this.$store.state.members.forEach(m => {
           if (m.active > 0) {
-            a++;
+            a++
           }
-        });
-        return a;
+        })
+        return a
       },
       perMonth() {
-        return this.$store.state.cash.rent / this.activeMembers;
+        return this.$store.state.cash.rent / this.activeMembers
       }
     },
     mounted() {
-      this.$store.commit("setMode", 4);
-      this.$store.commit("setDimension", 2);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 4)
+      this.$store.commit('setDimension', 2)
+      this.$store.dispatch('loaded')
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

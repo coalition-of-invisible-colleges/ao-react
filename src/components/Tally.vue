@@ -10,12 +10,12 @@
 </template>
 
 <script>
-  import Current from "./Current";
+  import Current from './Current'
 
   export default {
-    props: ["b"],
+    props: ['b'],
     components: { Current }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

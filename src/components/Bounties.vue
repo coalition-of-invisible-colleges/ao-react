@@ -25,9 +25,9 @@
 </template>
 
 <script>
-  import Vue from "vue";
-  import calculations from "../calculations";
-  import Hypercard from "./Card";
+  import Vue from 'vue'
+  import calculations from '../calculations'
+  import Hypercard from './Card'
 
   export default {
     data() {
@@ -46,10 +46,10 @@
       // })
       // bountyList.sort((a, b) => parseInt(a.currentAmount) < parseInt(b.currentAmount))
 
-      let row1 = [];
-      let row2 = [];
-      let row3 = [];
-      let row4 = [];
+      let row1 = []
+      let row2 = []
+      let row3 = []
+      let row4 = []
       // bountyList.forEach( (a, i) => {
       //     let row = i % 4
       //     if (row === 0){
@@ -65,43 +65,43 @@
       //         row4.push(a)
       //     }
       // })
-      return { row1, row2, row3, row4 };
+      return { row1, row2, row3, row4 }
     },
     components: {
       Hypercard
     },
     mounted() {
-      this.$store.commit("setMode", 3);
-      this.$store.commit("setDimension", 1);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 3)
+      this.$store.commit('setDimension', 1)
+      this.$store.dispatch('loaded')
     },
     methods: {
       goInBounty(t) {
-        let taskId = t.funders[0];
-        let panel = [taskId];
-        let top = 0;
-        let parents = [this.$store.getters.member.memberId];
-        this.$store.dispatch("goIn", {
+        let taskId = t.funders[0]
+        let panel = [taskId]
+        let top = 0
+        let parents = [this.$store.getters.member.memberId]
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
-        this.$store.commit("setMode", 1);
-        this.$store.commit("setAction", t.taskId);
-        this.$store.commit("startLoading", "unicorn");
+        })
+        this.$store.commit('setMode', 1)
+        this.$store.commit('setAction', t.taskId)
+        this.$store.commit('startLoading', 'unicorn')
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       getGuild(taskId) {
-        return this.$store.getters.hashMap[taskId].guild;
+        return this.$store.getters.hashMap[taskId].guild
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

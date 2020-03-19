@@ -9,38 +9,38 @@ span.current
 
 <script>
   export default {
-    props: ["memberId"],
+    props: ['memberId'],
     methods: {
       goIn() {
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           top: 0,
           panel: [this.memberId],
           parents: [this.$store.getters.contextCard.taskId]
-        });
+        })
       }
     },
     computed: {
       name() {
-        let memberId = this.memberId;
-        let name = false;
+        let memberId = this.memberId
+        let name = false
         this.$store.state.members.forEach(member => {
           if (member.memberId == memberId) {
-            name = member.name;
+            name = member.name
           }
-        });
-        return name;
+        })
+        return name
       },
       isLoggedIn() {
-        let isLoggedIn;
+        let isLoggedIn
         this.$store.state.sessions.forEach(s => {
           if (s.ownerId === this.memberId) {
-            isLoggedIn = true;
+            isLoggedIn = true
           }
-        });
-        return isLoggedIn;
+        })
+        return isLoggedIn
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

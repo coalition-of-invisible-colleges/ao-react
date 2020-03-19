@@ -12,10 +12,10 @@
 </template>
 
 <script>
-  import CurrentChecks from "./CurrentChecks";
-  import Current from "./Current";
-  import Projects from "./Projects";
-  import Coin from "./Coin";
+  import CurrentChecks from './CurrentChecks'
+  import Current from './Current'
+  import Projects from './Projects'
+  import Coin from './Coin'
 
   export default {
     components: {
@@ -25,11 +25,11 @@
       Coin
     },
     mounted() {
-      this.$store.commit("setMode", 2);
-      this.$store.commit("setDimension", 0);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 2)
+      this.$store.commit('setDimension', 0)
+      this.$store.dispatch('loaded')
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped></style>

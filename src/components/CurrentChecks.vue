@@ -12,87 +12,87 @@
 </template>
 
 <script>
-  import Linky from "./Linky";
+  import Linky from './Linky'
 
   export default {
-    props: ["memberId"],
+    props: ['memberId'],
     components: { Linky },
     methods: {
       goIn(taskId) {
-        let parents = [this.memberId];
-        let panel = [taskId];
-        let top = 0;
-        this.$store.dispatch("goIn", { panel, top, parents });
+        let parents = [this.memberId]
+        let panel = [taskId]
+        let top = 0
+        this.$store.dispatch('goIn', { panel, top, parents })
       },
       complete() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-claimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-claimed',
           taskId: this.$store.getters.contextCard.taskId,
           memberId: this.memberId,
-          notes: "checked by " + this.$store.getters.member.memberId
-        });
+          notes: 'checked by ' + this.$store.getters.member.memberId
+        })
       },
       uncheck() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-unclaimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-unclaimed',
           taskId: this.$store.getters.contextCard.taskId,
           memberId: this.memberId,
-          notes: ""
-        });
+          notes: ''
+        })
       },
       cardInputSty(c) {
         return {
-          redwx: c === "red",
-          bluewx: c === "blue",
-          greenwx: c === "green",
-          yellotwx: c === "yellow",
-          purplewx: c === "purple",
-          blackwx: c === "black"
-        };
+          redwx: c === 'red',
+          bluewx: c === 'blue',
+          greenwx: c === 'green',
+          yellotwx: c === 'yellow',
+          purplewx: c === 'purple',
+          blackwx: c === 'black'
+        }
       },
       toggleHighlight(invert = false) {
-        this.$store.dispatch("makeEvent", {
-          type: "highlighted",
+        this.$store.dispatch('makeEvent', {
+          type: 'highlighted',
           taskId: this.$store.getters.contextCard.taskId,
           memberId: this.memberId,
           valence: !invert
-        });
+        })
       }
     },
     computed: {
       name() {
-        let memberId = this.memberId;
-        let name = false;
+        let memberId = this.memberId
+        let name = false
         this.$store.state.members.forEach(member => {
           if (member.memberId == memberId) {
-            name = member.name;
+            name = member.name
           }
-        });
-        return name;
+        })
+        return name
       },
       isCompleted() {
         return (
           this.$store.getters.contextCard.claimed.indexOf(this.memberId) > -1
-        );
+        )
       },
 
       isHighlighted() {
         return this.$store.getters.contextCard.highlights.some(h => {
-          return h.valence && h.memberId === this.memberId;
-        });
+          return h.valence && h.memberId === this.memberId
+        })
       },
       isLowdarked() {
         return this.$store.getters.contextCard.highlights.some(h => {
-          return !h.valence && h.memberId === this.memberId;
-        });
+          return !h.valence && h.memberId === this.memberId
+        })
       },
       checkmarks() {
         return this.$store.getters.contextCompleted.filter(
           t => t.claimed.indexOf(this.memberId) > -1
-        );
+        )
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

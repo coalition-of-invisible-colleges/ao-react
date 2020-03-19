@@ -22,144 +22,144 @@
 </template>
 
 <script>
-  import Linky from "./Linky";
-  import calculations from "../calculations";
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
-  import Vue from "vue";
-  import request from "superagent";
+  import Linky from './Linky'
+  import calculations from '../calculations'
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
+  import Vue from 'vue'
+  import request from 'superagent'
 
   export default {
-    props: ["x", "y"],
+    props: ['x', 'y'],
     components: { Linky },
     data() {
       return {
         showCreate: false,
         task: {
-          name: "",
-          color: "green"
+          name: '',
+          color: 'green'
         },
         swipeTimeout: 0,
         exploring: false,
         inDebounce: false
-      };
+      }
     },
     mounted() {
-      var el = this.$refs.gridSquare;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
-      let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
-      var swipe = new Hammer.Swipe();
-      mc.add([singleTap, swipe]);
+      var el = this.$refs.gridSquare
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
+      let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
+      var swipe = new Hammer.Swipe()
+      mc.add([singleTap, swipe])
 
-      mc.on("singletap", e => {
-        this.openCreate();
-        e.stopPropagation();
-      });
-      mc.on("swipeleft", e => {
+      mc.on('singletap', e => {
+        this.openCreate()
+        e.stopPropagation()
+      })
+      mc.on('swipeleft', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.previousColor();
-          this.swipeTimeout = Date.now();
+          this.previousColor()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc.on("swiperight", e => {
+      mc.on('swiperight', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.nextColor();
-          this.swipeTimeout = Date.now();
+          this.nextColor()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
     },
     methods: {
       createGridMeme() {
-        if (this.$store.state.loader.connected !== "connected") return;
-        let foundId = this.matchCard;
-        let potentialCard = this.task.name.trim();
+        if (this.$store.state.loader.connected !== 'connected') return
+        let foundId = this.matchCard
+        let potentialCard = this.task.name.trim()
         if (!foundId) {
-          console.log("card not found");
+          console.log('card not found')
           request
-            .post("/events")
-            .set("Authorization", this.$store.state.loader.token)
+            .post('/events')
+            .set('Authorization', this.$store.state.loader.token)
             .send({
-              type: "task-created",
+              type: 'task-created',
               name: potentialCard,
               color: this.task.color,
               deck: [this.$store.getters.member.memberId],
               inId: this.$store.getters.memberCard.taskId
             })
             .then(res => {
-              console.log("then");
-              const taskId = JSON.parse(res.text).event.taskId;
-              this.$store.dispatch("makeEvent", {
-                type: "grid-add",
+              console.log('then')
+              const taskId = JSON.parse(res.text).event.taskId
+              this.$store.dispatch('makeEvent', {
+                type: 'grid-add',
                 taskId,
                 coord: {
                   x: this.$store.state.upgrades.grid.selX,
                   y: this.$store.state.upgrades.grid.selY
                 }
-              });
-              console.log("done with gridAdd: ", taskId);
+              })
+              console.log('done with gridAdd: ', taskId)
             })
             .catch(err => {
-              console.log("task-create ERR", err);
-            });
+              console.log('task-create ERR', err)
+            })
         } else {
-          this.$store.dispatch("makeEvent", {
-            type: "grid-add",
+          this.$store.dispatch('makeEvent', {
+            type: 'grid-add',
             taskId: foundId,
             coord: {
               x: this.$store.state.upgrades.grid.selX,
               y: this.$store.state.upgrades.grid.selY
             }
-          });
+          })
         }
-        this.resetCard();
+        this.resetCard()
       },
       switchColor(color, refocus = true) {
         if (this.task.color === color) {
-          this.showCreate = !this.showCreate;
+          this.showCreate = !this.showCreate
         } else if (this.showCreate) {
           // don't close, switch
         } else {
-          this.showCreate = !this.showCreate;
+          this.showCreate = !this.showCreate
         }
-        this.task.color = color;
+        this.task.color = color
         if (refocus) {
           setTimeout(() => {
-            document.getElementById("cardbox").focus();
-          }, 1);
+            document.getElementById('cardbox').focus()
+          }, 1)
         }
       },
       resetCard() {
-        this.task.name = "";
-        this.closeCreate();
+        this.task.name = ''
+        this.closeCreate()
       },
       nextColor() {
-        let colors = ["red", "yellow", "green", "purple", "blue"];
-        let color = colors.indexOf(this.task.color);
-        color++;
-        this.switchColor(colors[color > 4 ? 0 : color], false);
+        let colors = ['red', 'yellow', 'green', 'purple', 'blue']
+        let color = colors.indexOf(this.task.color)
+        color++
+        this.switchColor(colors[color > 4 ? 0 : color], false)
       },
       previousColor() {
-        let colors = ["red", "yellow", "green", "purple", "blue"];
-        let color = colors.indexOf(this.task.color);
-        color--;
-        this.switchColor(colors[color < 0 ? 4 : color], false);
+        let colors = ['red', 'yellow', 'green', 'purple', 'blue']
+        let color = colors.indexOf(this.task.color)
+        color--
+        this.switchColor(colors[color < 0 ? 4 : color], false)
       },
       openCreate() {
-        this.$store.commit("selectGridMeme", { x: this.x, y: this.y });
+        this.$store.commit('selectGridMeme', { x: this.x, y: this.y })
         setTimeout(() => {
-          this.$refs.gridText.focus();
-        }, 1);
+          this.$refs.gridText.focus()
+        }, 1)
       },
       closeCreate() {
-        this.$store.commit("selectGridMeme", { x: false, y: false });
+        this.$store.commit('selectGridMeme', { x: false, y: false })
       },
       debounce(func, delay) {
-        const context = this;
-        const args = arguments;
-        clearTimeout(this.inDebounce);
-        this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay);
+        const context = this
+        const args = arguments
+        clearTimeout(this.inDebounce)
+        this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
       }
     },
     computed: {
@@ -169,89 +169,87 @@
           this.$store.state.grid[this.y] &&
           this.$store.state.grid[this.y][this.x]
         ) {
-          return this.$store.state.grid[this.y][this.x];
+          return this.$store.state.grid[this.y][this.x]
         }
-        return false;
+        return false
       },
       card() {
-        if (!this.taskId) return false;
-        return this.$store.getters.hashMap[this.taskId];
+        if (!this.taskId) return false
+        return this.$store.getters.hashMap[this.taskId]
       },
       dogeName() {
-        let mc;
+        let mc
         this.$store.state.members.forEach(m => {
           if (this.taskId === m.memberId) {
-            mc = m;
+            mc = m
           }
-        });
-        return mc && mc.name ? mc.name : false;
+        })
+        return mc && mc.name ? mc.name : false
       },
       isSelected() {
         return (
           this.$store.state.upgrades.grid.selX === this.x &&
           this.$store.state.upgrades.grid.selY === this.y
-        );
+        )
       },
       debouncedName: {
         get() {
           console.log(
-            "debouncedName Get function. searchResult is ",
+            'debouncedName Get function. searchResult is ',
             this.$store.state.upgrades.searchResult
-          );
+          )
           if (this.$store.state.upgrades.searchResult) {
-            console.log("there is a search result", this.searchResult);
-            this.task.name = this.$store.getters.hashMap[
-              this.searchResult
-            ].name;
+            console.log('there is a search result', this.searchResult)
+            this.task.name = this.$store.getters.hashMap[this.searchResult].name
             this.task.color = this.$store.getters.hashMap[
               this.searchResult
-            ].color;
-            console.log("this.task.name set to ", this.task.name);
-            this.$store.commit("searchSelectionReceived");
+            ].color
+            console.log('this.task.name set to ', this.task.name)
+            this.$store.commit('searchSelectionReceived')
             setTimeout(() => {
-              this.$refs.gridText.focus();
-            }, 1);
+              this.$refs.gridText.focus()
+            }, 1)
           }
-          return this.task.name;
+          return this.task.name
         },
         set(newValue) {
-          this.task.name = newValue;
+          this.task.name = newValue
           this.debounce(() => {
-            this.$store.commit("search", newValue);
-          }, 400);
+            this.$store.commit('search', newValue)
+          }, 400)
         }
       },
       cardInputSty() {
         if (this.card && this.card.color) {
-          return calculations.cardColorCSS(this.card.color);
+          return calculations.cardColorCSS(this.card.color)
         } else if (this.isSelected) {
-          return calculations.cardColorCSS(this.task.color);
+          return calculations.cardColorCSS(this.task.color)
         }
       },
       matchCard() {
-        let foundId;
+        let foundId
         this.$store.state.tasks.filter(t => {
           if (t.name === this.task.name.trim()) {
-            foundId = t.taskId;
+            foundId = t.taskId
           }
-        });
-        return foundId;
+        })
+        return foundId
       },
       cardAge() {
-        let now = Date.now();
-        let msSince = now - this.card.timestamp;
-        let days = msSince / (1000 * 60 * 60 * 24);
-        return days;
+        let now = Date.now()
+        let msSince = now - this.card.timestamp
+        let days = msSince / (1000 * 60 * 60 * 24)
+        return days
       },
       searchResult() {
         console.log(
-          "searchResult function, result is  ",
+          'searchResult function, result is  ',
           this.$store.state.upgrades.searchResult
-        );
-        return this.$store.state.upgrades.searchResult;
+        )
+        return this.$store.state.upgrades.searchResult
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

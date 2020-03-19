@@ -14,29 +14,29 @@ div.totop(v-if='b.passed.length > 0')
 </template>
 
 <script>
-  import request from "superagent";
-  import Current from "./Current";
+  import request from 'superagent'
+  import Current from './Current'
 
   export default {
-    props: ["b"],
+    props: ['b'],
     components: { Current },
     methods: {
       toggleBird() {
-        this.$store.commit("toggleBird");
+        this.$store.commit('toggleBird')
       }
     },
     computed: {
       toMe() {
-        let m = [];
+        let m = []
         if (this.b && this.b.passed.length > 0) {
           m = this.b.passed.filter(
             p => p[1] === this.$store.getters.member.memberId
-          );
+          )
         }
-        return m;
+        return m
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

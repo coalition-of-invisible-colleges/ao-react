@@ -33,129 +33,129 @@
 </template>
 
 <script>
-  import _ from "lodash";
-  import request from "superagent";
-  import Current from "./Current";
-  import calculations from "../calculations";
-  import Vue from "vue";
+  import _ from 'lodash'
+  import request from 'superagent'
+  import Current from './Current'
+  import calculations from '../calculations'
+  import Vue from 'vue'
 
   export default {
     data() {
       return {
         showCreate: false,
         task: {
-          name: "",
-          search: "",
-          color: "green"
+          name: '',
+          search: '',
+          color: 'green'
         },
         swipeTimeout: 0,
         searchResults: [],
         exploring: false,
         inDebounce: false
-      };
+      }
     },
     components: {
       Current
     },
     mounted() {
-      var el = this.$refs.closeable;
-      if (!el) return;
-      var mc = new Hammer.Manager(el);
+      var el = this.$refs.closeable
+      if (!el) return
+      var mc = new Hammer.Manager(el)
 
-      var Swipe = new Hammer.Swipe();
-      mc.add(Swipe);
-      mc.on("swipeleft", e => {
+      var Swipe = new Hammer.Swipe()
+      mc.add(Swipe)
+      mc.on('swipeleft', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.previousColor();
-          this.swipeTimeout = Date.now();
+          this.previousColor()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc.on("swiperight", e => {
+      mc.on('swiperight', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.nextColor();
-          this.swipeTimeout = Date.now();
+          this.nextColor()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc.on("swipedown", e => {
+      mc.on('swipedown', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.closeCreate();
-          this.swipeTimeout = Date.now();
+          this.closeCreate()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc.on("swipeup", e => {
+      mc.on('swipeup', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.openCreate();
-          this.swipeTimeout = Date.now();
+          this.openCreate()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      var ca = this.$refs.cardBox;
+      var ca = this.$refs.cardBox
       if (!ca) {
-        console.log("can't find cardBox");
-        return;
+        console.log("can't find cardBox")
+        return
       }
-      var mc2 = new Hammer.Manager(ca);
-      var Swipe2 = new Hammer.Swipe();
-      mc2.add(Swipe2);
-      mc2.on("swipeleft", e => {
+      var mc2 = new Hammer.Manager(ca)
+      var Swipe2 = new Hammer.Swipe()
+      mc2.add(Swipe2)
+      mc2.on('swipeleft', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.previousColor();
-          this.swipeTimeout = Date.now();
+          this.previousColor()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc2.on("swiperight", e => {
+      mc2.on('swiperight', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.nextColor();
-          this.swipeTimeout = Date.now();
+          this.nextColor()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc2.on("swipedown", e => {
+      mc2.on('swipedown', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.closeCreate();
-          this.swipeTimeout = Date.now();
+          this.closeCreate()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      mc2.on("swipeup", e => {
+      mc2.on('swipeup', e => {
         if (Date.now() - this.swipeTimeout > 100) {
-          this.openCreate();
-          this.swipeTimeout = Date.now();
+          this.openCreate()
+          this.swipeTimeout = Date.now()
         }
-      });
+      })
 
-      let colors = ["red", "yellow", "green", "purple", "blue"];
+      let colors = ['red', 'yellow', 'green', 'purple', 'blue']
       colors.forEach(color => {
-        console.log("creating ", color, " button");
-        var el = this.$refs[color + "Button"];
-        if (!el) return;
-        let mc3 = new Hammer.Manager(el);
+        console.log('creating ', color, ' button')
+        var el = this.$refs[color + 'Button']
+        if (!el) return
+        let mc3 = new Hammer.Manager(el)
 
-        let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
-        let longPress = new Hammer.Press({ time: 600 });
+        let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
+        let longPress = new Hammer.Press({ time: 600 })
 
-        mc3.add([singleTap, longPress]);
+        mc3.add([singleTap, longPress])
 
-        longPress.recognizeWith([singleTap]);
-        longPress.requireFailure([singleTap]);
+        longPress.recognizeWith([singleTap])
+        longPress.requireFailure([singleTap])
 
-        mc3.on("singletap", e => {
-          console.log("singleTap on button of color ", color);
-          this.switchColor(color);
+        mc3.on('singletap', e => {
+          console.log('singleTap on button of color ', color)
+          this.switchColor(color)
           // e.stopPropagation();
-        });
+        })
 
-        mc3.on("press", e => {
-          console.log("longpress triggering paint");
-          this.$store.commit("startPainting", color);
+        mc3.on('press', e => {
+          console.log('longpress triggering paint')
+          this.$store.commit('startPainting', color)
           // e.stopPropagation()
-        });
-        console.log("done");
-      });
+        })
+        console.log('done')
+      })
       // var mc2 = new Hammer.Manager(ca);
       // var Swipe2 = new Hammer.Swipe();
       // mc2.add(Swipe2);
@@ -189,263 +189,263 @@
     },
     methods: {
       toCardMode() {
-        this.$store.commit("setDimension", 0);
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$store.commit('setDimension', 0)
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       goIn(taskId) {
-        clearTimeout(this.inDebounce);
-        let panel = [taskId];
-        let parents = [];
-        let top = 0;
+        clearTimeout(this.inDebounce)
+        let panel = [taskId]
+        let parents = []
+        let top = 0
 
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
+        })
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       switchColor(color, refocus = true) {
         if (this.task.color === color) {
-          this.showCreate = !this.showCreate;
+          this.showCreate = !this.showCreate
         } else if (this.showCreate) {
           // don't close, switch
         } else {
-          this.showCreate = !this.showCreate;
+          this.showCreate = !this.showCreate
         }
-        this.task.color = color;
+        this.task.color = color
         if (refocus) {
           setTimeout(() => {
-            this.$refs.cardBox.focus();
-          }, 1);
+            this.$refs.cardBox.focus()
+          }, 1)
         }
       },
       resetCard() {
-        this.task.name = "";
+        this.task.name = ''
       },
       subTaskTask(taskId) {
-        this.$store.dispatch("makeEvent", {
-          type: "task-sub-tasked",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-sub-tasked',
           taskId: this.taskId,
           subTask: taskId,
           memberId: this.$store.getters.member.memberId
-        });
+        })
       },
       enterKey() {
-        this.createOrFindTask();
+        this.createOrFindTask()
       },
       createOrFindTask() {
-        if (this.$store.state.loader.connected !== "connected") return;
-        let foundId = this.matchCard;
-        let potentialCard = this.task.name.trim();
+        if (this.$store.state.loader.connected !== 'connected') return
+        let foundId = this.matchCard
+        let potentialCard = this.task.name.trim()
         if (!foundId) {
           request
-            .post("/events")
-            .set("Authorization", this.$store.state.loader.token)
+            .post('/events')
+            .set('Authorization', this.$store.state.loader.token)
             .send({
-              type: "task-created",
+              type: 'task-created',
               name: potentialCard,
               color: this.task.color,
               deck: [this.$store.getters.member.memberId],
               inId: this.taskId
             })
             .end((err, res) => {
-              if (err) return console.log(err);
-            });
+              if (err) return console.log(err)
+            })
         } else {
-          this.subTaskTask(foundId);
+          this.subTaskTask(foundId)
         }
-        this.resetCard();
+        this.resetCard()
       },
       createGridMeme() {
-        console.log("do we stop here?????");
-        if (this.$store.state.loader.connected !== "connected") return;
-        let foundId = this.matchCard;
-        let potentialCard = this.task.name.trim();
+        console.log('do we stop here?????')
+        if (this.$store.state.loader.connected !== 'connected') return
+        let foundId = this.matchCard
+        let potentialCard = this.task.name.trim()
         if (!foundId) {
           request
-            .post("/events")
-            .set("Authorization", this.$store.state.loader.token)
+            .post('/events')
+            .set('Authorization', this.$store.state.loader.token)
             .send({
-              type: "task-created",
+              type: 'task-created',
               name: potentialCard,
               color: this.task.color,
               deck: [this.$store.getters.member.memberId],
               inId: this.$store.getters.memberCard.taskId
             })
             .then(res => {
-              console.log("GRID RES", res);
-              const taskId = JSON.parse(res.text).event.taskId;
-              this.$store.dispatch("makeEvent", {
-                type: "grid-add",
+              console.log('GRID RES', res)
+              const taskId = JSON.parse(res.text).event.taskId
+              this.$store.dispatch('makeEvent', {
+                type: 'grid-add',
                 taskId,
                 coord: {
                   x: this.$store.state.upgrades.grid.selX,
                   y: this.$store.state.upgrades.grid.selY
                 }
-              });
+              })
             })
             .catch(err => {
-              console.log("task-create ERR", err);
-            });
+              console.log('task-create ERR', err)
+            })
         } else {
-          this.$store.dispatch("makeEvent", {
-            type: "grid-add",
+          this.$store.dispatch('makeEvent', {
+            type: 'grid-add',
             taskId: foundId,
             coord: {
               x: this.$store.state.upgrades.grid.selX,
               y: this.$store.state.upgrades.grid.selY
             }
-          });
+          })
         }
-        this.resetCard();
+        this.resetCard()
       },
       isGrabbed(taskId) {
         return (
           this.$store.getters.hashMap[taskId].deck.indexOf(
             this.$store.getters.member.memberId
           ) > -1
-        );
+        )
       },
       nextColor() {
-        let colors = ["red", "yellow", "green", "purple", "blue"];
-        let color = colors.indexOf(this.task.color);
-        color++;
-        this.switchColor(colors[color > 4 ? 0 : color], false);
+        let colors = ['red', 'yellow', 'green', 'purple', 'blue']
+        let color = colors.indexOf(this.task.color)
+        color++
+        this.switchColor(colors[color > 4 ? 0 : color], false)
       },
       previousColor() {
-        let colors = ["red", "yellow", "green", "purple", "blue"];
-        let color = colors.indexOf(this.task.color);
-        color--;
-        this.switchColor(colors[color < 0 ? 4 : color], false);
+        let colors = ['red', 'yellow', 'green', 'purple', 'blue']
+        let color = colors.indexOf(this.task.color)
+        color--
+        this.switchColor(colors[color < 0 ? 4 : color], false)
       },
       openCreate() {
-        this.showCreate = !this.showCreate;
+        this.showCreate = !this.showCreate
       },
       closeCreate() {
-        this.showCreate = false;
+        this.showCreate = false
       },
       resultInputSty(card) {
         return {
-          redtx: card.color == "red",
-          bluetx: card.color == "blue",
-          greentx: card.color == "green",
-          yellowtx: card.color == "yellow",
-          purpletx: card.color == "purple",
-          blacktx: card.color == "black"
-        };
+          redtx: card.color == 'red',
+          bluetx: card.color == 'blue',
+          greentx: card.color == 'green',
+          yellowtx: card.color == 'yellow',
+          purpletx: card.color == 'purple',
+          blacktx: card.color == 'black'
+        }
       },
       loadResult(t) {
-        this.exploring = true;
-        this.task.name = t.name.trim();
-        this.task.color = t.color;
+        this.exploring = true
+        this.task.name = t.name.trim()
+        this.task.color = t.color
       },
       debounce(func, delay) {
-        const context = this;
-        const args = arguments;
-        clearTimeout(this.inDebounce);
-        this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay);
+        const context = this
+        const args = arguments
+        clearTimeout(this.inDebounce)
+        this.inDebounce = setTimeout(() => func.apply(context, args[2]), delay)
       },
       shortName(theName) {
-        return calculations.shortName(theName);
+        return calculations.shortName(theName)
       }
     },
     computed: {
       isCard() {
         return (
-          this.$store.state.upgrades.dimension === "unicorn" && !this.isPepe
-        );
+          this.$store.state.upgrades.dimension === 'unicorn' && !this.isPepe
+        )
       },
       isPepe() {
-        return this.$router.currentRoute.path.split("/")[1] === "grid";
+        return this.$router.currentRoute.path.split('/')[1] === 'grid'
       },
       taskId() {
-        return this.$store.getters.contextCard.taskId;
+        return this.$store.getters.contextCard.taskId
       },
       matchCard() {
-        let foundId;
+        let foundId
         this.$store.state.tasks.filter(t => {
           if (t.name === this.task.name.trim()) {
-            foundId = t.taskId;
+            foundId = t.taskId
           }
-        });
-        return foundId;
+        })
+        return foundId
       },
       matchCards() {
-        if (this.task.search.length < 1) return [];
-        if (this.exploring) return this.searchResults;
-        let matches = [];
-        let guildmatches = [];
-        let dogematches = [];
+        if (this.task.search.length < 1) return []
+        if (this.exploring) return this.searchResults
+        let matches = []
+        let guildmatches = []
+        let dogematches = []
         try {
-          let regex = new RegExp(this.task.search, "i");
+          let regex = new RegExp(this.task.search, 'i')
           this.$store.state.tasks.forEach(t => {
             if (t.guild && regex.test(t.guild)) {
-              guildmatches.push(t);
+              guildmatches.push(t)
             } else if (regex.test(t.name)) {
-              matches.push(t);
+              matches.push(t)
             }
-          });
+          })
           this.$store.state.members.forEach(member => {
             if (regex.test(member.name)) {
-              let result = this.$store.getters.hashMap[member.memberId];
-              result.name = member.name;
-              dogematches.push(result);
+              let result = this.$store.getters.hashMap[member.memberId]
+              result.name = member.name
+              dogematches.push(result)
             }
-          });
+          })
         } catch (err) {
-          console.log("regex search terminated in error: ", err);
+          console.log('regex search terminated in error: ', err)
         }
         this.searchResults = {
           guilds: guildmatches,
           doges: dogematches,
           cards: matches
-        };
-        return this.searchResults;
+        }
+        return this.searchResults
       },
       colorWord() {
         switch (this.task.color) {
-          case "blue":
-            return "info";
-          case "red":
-            return "challenge";
-          case "green":
-            return "do";
-          case "purple":
-            return "dream";
-          case "yellow":
-            return "align";
-          case "black":
-            return "bark";
+          case 'blue':
+            return 'info'
+          case 'red':
+            return 'challenge'
+          case 'green':
+            return 'do'
+          case 'purple':
+            return 'dream'
+          case 'yellow':
+            return 'align'
+          case 'black':
+            return 'bark'
         }
       },
       cardInputSty() {
-        return calculations.cardColorCSS(this.task.color);
+        return calculations.cardColorCSS(this.task.color)
       },
       debouncedName: {
         get() {
-          return this.task.name;
+          return this.task.name
         },
         set(newValue) {
-          this.task.name = newValue;
+          this.task.name = newValue
           this.debounce(() => {
-            this.task.search = newValue;
-          }, 400);
+            this.task.search = newValue
+          }, 400)
         }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

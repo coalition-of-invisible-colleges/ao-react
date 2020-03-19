@@ -5,72 +5,72 @@
 </template>
 
 <script>
-  import uuidv1 from "uuid/v1";
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import uuidv1 from 'uuid/v1'
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
   export default {
-    props: ["b", "inId"],
+    props: ['b', 'inId'],
     data() {
       return {
         uuid: uuidv1()
-      };
+      }
     },
     mounted() {
-      let checkel = document.getElementById(this.uuid);
-      if (!checkel) return;
-      let checkmc = Propagating(new Hammer.Manager(checkel));
+      let checkel = document.getElementById(this.uuid)
+      if (!checkel) return
+      let checkmc = Propagating(new Hammer.Manager(checkel))
 
-      let checkTap = new Hammer.Tap({ event: "singletap", time: 400 });
+      let checkTap = new Hammer.Tap({ event: 'singletap', time: 400 })
       let checkDoubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
-      checkmc.add([checkDoubleTap, checkTap]);
+      })
+      checkmc.add([checkDoubleTap, checkTap])
 
-      checkDoubleTap.recognizeWith(checkTap);
-      checkTap.requireFailure(checkDoubleTap);
+      checkDoubleTap.recognizeWith(checkTap)
+      checkTap.requireFailure(checkDoubleTap)
 
-      checkmc.on("singletap", e => {
+      checkmc.on('singletap', e => {
         if (!this.isCompleted) {
-          this.complete();
+          this.complete()
         } else {
-          this.uncheck();
+          this.uncheck()
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      checkmc.on("doubletap", e => {
-        e.stopPropagation();
-      });
+      checkmc.on('doubletap', e => {
+        e.stopPropagation()
+      })
     },
     computed: {
       isCompleted() {
-        return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1;
+        return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1
       }
     },
     methods: {
       complete() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-claimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-claimed',
           inId: this.inId,
           taskId: this.b.taskId,
           memberId: this.$store.getters.member.memberId,
-          notes: "checked by " + this.$store.getters.member.memberId
-        });
+          notes: 'checked by ' + this.$store.getters.member.memberId
+        })
       },
       uncheck() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-unclaimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-unclaimed',
           taskId: this.b.taskId,
           memberId: this.$store.getters.member.memberId,
-          notes: ""
-        });
+          notes: ''
+        })
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

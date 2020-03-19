@@ -9,70 +9,70 @@
 </template>
 
 <script>
-  import request from "superagent";
-  import uuidV1 from "uuid/v1";
-  import cryptoUtils from "../crypto";
+  import request from 'superagent'
+  import uuidV1 from 'uuid/v1'
+  import cryptoUtils from '../crypto'
 
   export default {
-    name: "Auth",
+    name: 'Auth',
     data() {
       return {
-        name: "",
-        pass: "",
-        err: ""
-      };
+        name: '',
+        pass: '',
+        err: ''
+      }
     },
     computed: {
       confirmed() {
-        return this.$store.getters.isLoggedIn;
+        return this.$store.getters.isLoggedIn
       }
     },
     methods: {
       createSession() {
-        let session = uuidV1();
+        let session = uuidV1()
         let sessionKey = cryptoUtils.createHash(
           session + cryptoUtils.createHash(this.pass)
-        );
-        let token = cryptoUtils.hmacHex(session, sessionKey);
+        )
+        let token = cryptoUtils.hmacHex(session, sessionKey)
         request
-          .post("/session")
-          .set("authorization", token)
-          .set("session", session)
-          .set("name", this.name)
+          .post('/session')
+          .set('authorization', token)
+          .set('session', session)
+          .set('name', this.name)
           .end((err, res) => {
             if (err) {
-              this.pass = "";
-              return (this.err = err.message);
+              this.pass = ''
+              return (this.err = err.message)
             }
 
-            this.pass = "";
-            this.$store.commit("setAuth", {
+            this.pass = ''
+            this.$store.commit('setAuth', {
               token,
               session
-            });
+            })
 
-            window.localStorage.setItem("token", token);
-            window.localStorage.setItem("session", session);
+            window.localStorage.setItem('token', token)
+            window.localStorage.setItem('session', session)
 
-            this.$store.dispatch("loadCurrent");
-          });
+            this.$store.dispatch('loadCurrent')
+          })
       },
       killSession() {
-        this.$store.dispatch("makeEvent", {
-          type: "session-killed",
+        this.$store.dispatch('makeEvent', {
+          type: 'session-killed',
           session: this.$store.state.loader.session
-        });
-        window.localStorage.removeItem("token");
-        window.localStorage.removeItem("session");
-        window.localStorage.clear();
-        this.$store.commit("setAuth", {
-          token: "",
-          session: ""
-        });
-        window.location.replace("/");
+        })
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('session')
+        window.localStorage.clear()
+        this.$store.commit('setAuth', {
+          token: '',
+          session: ''
+        })
+        window.location.replace('/')
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -4,7 +4,7 @@ div(v-if='$store.state.context.loading')
 </template>
 
 <script>
-  export default {};
+  export default {}
 </script>
 
 <style lang="stylus" scoped>

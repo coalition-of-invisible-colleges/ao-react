@@ -41,14 +41,14 @@
 </template>
 
 <script>
-  import calculations from "../calculations";
-  import MemberRow from "./Member";
-  import ResourceRow from "./ResourceRow";
-  import Context from "./ContextRow";
-  import Hypercard from "./Card";
-  import Panels from "./Panels";
-  import GiftBox from "./GiftBox";
-  import Auth from "./Auth";
+  import calculations from '../calculations'
+  import MemberRow from './Member'
+  import ResourceRow from './ResourceRow'
+  import Context from './ContextRow'
+  import Hypercard from './Card'
+  import Panels from './Panels'
+  import GiftBox from './GiftBox'
+  import Auth from './Auth'
 
   export default {
     components: {
@@ -62,75 +62,75 @@
     },
     methods: {
       goWithinPanel(n) {
-        let i = this.$store.state.context.panel.indexOf(n);
+        let i = this.$store.state.context.panel.indexOf(n)
         if (i > -1) {
-          console.log("all that should happen is set top!");
-          this.$store.commit("setTop", i);
+          console.log('all that should happen is set top!')
+          this.$store.commit('setTop', i)
         }
       },
       toggleShowComplete() {
-        this.$store.commit("toggleCompleted");
+        this.$store.commit('toggleCompleted')
       },
       toggleStacks() {
-        this.$store.commit("toggleStacks");
+        this.$store.commit('toggleStacks')
       },
       pilePrioritized() {
-        this.$store.dispatch("makeEvent", {
-          type: "pile-prioritized",
+        this.$store.dispatch('makeEvent', {
+          type: 'pile-prioritized',
           inId: this.$store.getters.contextCard.taskId
-        });
+        })
       },
       pileRefocused() {
-        this.$store.dispatch("makeEvent", {
-          type: "pile-refocused",
+        this.$store.dispatch('makeEvent', {
+          type: 'pile-refocused',
           inId: this.$store.getters.contextCard.taskId
-        });
+        })
       }
     },
     computed: {
       panelSplit() {
-        let before = [];
-        let after = [];
-        let top = this.$store.state.context.top;
+        let before = []
+        let after = []
+        let top = this.$store.state.context.top
         this.$store.state.context.panel.forEach((n, i) => {
           if (i < top) {
-            before.push(n);
+            before.push(n)
           }
           if (i > top) {
-            after.push(n);
+            after.push(n)
           }
-        });
+        })
 
-        return { before, after };
+        return { before, after }
       },
       card() {
         if (!this.$store.getters.contextCard) {
           return {
-            taskId: "test",
-            name: "hello, world"
-          };
+            taskId: 'test',
+            name: 'hello, world'
+          }
         }
-        return this.$store.getters.contextCard;
+        return this.$store.getters.contextCard
       },
       cardInputSty() {
         if (this.card)
           return {
-            redwx: this.card.color == "red",
-            bluewx: this.card.color == "blue",
-            greenwx: this.card.color == "green",
-            yellowwx: this.card.color == "yellow",
-            purplewx: this.card.color == "purple",
-            blackwx: this.card.color == "black"
-          };
+            redwx: this.card.color == 'red',
+            bluewx: this.card.color == 'blue',
+            greenwx: this.card.color == 'green',
+            yellowwx: this.card.color == 'yellow',
+            purplewx: this.card.color == 'purple',
+            blackwx: this.card.color == 'black'
+          }
       },
       cardAge() {
-        let now = Date.now();
-        let msSince = now - this.card.timestamp;
-        let days = msSince / (1000 * 60 * 60 * 24);
-        return days;
+        let now = Date.now()
+        let msSince = now - this.card.timestamp
+        let days = msSince / (1000 * 60 * 60 * 24)
+        return days
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

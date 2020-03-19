@@ -13,52 +13,52 @@
 </template>
 
 <script>
-  import _ from "lodash";
-  import Row from "./MemberRow";
+  import _ from 'lodash'
+  import Row from './MemberRow'
 
   export default {
     data() {
       return {
         showStart: 0
-      };
+      }
     },
     methods: {
       showNext() {
-        this.showStart = this.showStart + 5;
+        this.showStart = this.showStart + 5
         if (this.showStart > this.sortedMembers.length) {
-          this.showStart = 0;
+          this.showStart = 0
         }
       },
       showBack() {
-        this.showStart = this.showStart - 4;
+        this.showStart = this.showStart - 4
         if (this.showStart < 0) {
-          this.showStart = this.sortedMembers.length - 1;
+          this.showStart = this.sortedMembers.length - 1
         }
       }
     },
     computed: {
       showingPanel() {
-        return this.sortedMembers.slice(this.showStart, this.showStart + 5);
+        return this.sortedMembers.slice(this.showStart, this.showStart + 5)
       },
       showTotal() {
-        return this.sortedMembers.length;
+        return this.sortedMembers.length
       },
       sortedMembers() {
-        let sortedMembers = this.$store.state.members.slice();
+        let sortedMembers = this.$store.state.members.slice()
         sortedMembers.sort((a, b) => {
-          let cardA = this.$store.getters.hashMap[a.memberId];
-          let cardB = this.$store.getters.hashMap[b.memberId];
-          if (cardA.deck.length < cardB.deck.length) return 1;
-          if (cardA.deck.length === cardB.deck.length) return 0;
-          return -1;
-        });
-        return sortedMembers;
+          let cardA = this.$store.getters.hashMap[a.memberId]
+          let cardB = this.$store.getters.hashMap[b.memberId]
+          if (cardA.deck.length < cardB.deck.length) return 1
+          if (cardA.deck.length === cardB.deck.length) return 0
+          return -1
+        })
+        return sortedMembers
       }
     },
     components: {
       Row
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

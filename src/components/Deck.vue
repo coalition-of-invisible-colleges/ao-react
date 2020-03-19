@@ -6,16 +6,16 @@
 </template>
 
 <script>
-  import HyperDeck from "./HyperDeck";
+  import HyperDeck from './HyperDeck'
 
   export default {
     components: {
       HyperDeck
     },
     mounted() {
-      this.$store.dispatch("loaded");
+      this.$store.dispatch('loaded')
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

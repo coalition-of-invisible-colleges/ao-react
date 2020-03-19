@@ -6,9 +6,9 @@
 <script>
   export default {
     mounted() {
-      this.$store.commit("setMode", 0);
-      this.$store.commit("setDimension", 0);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 0)
+      this.$store.commit('setDimension', 0)
+      this.$store.dispatch('loaded')
     }
-  };
+  }
 </script>

@@ -19,9 +19,9 @@
 </template>
 
 <script>
-  import calcs from "../calculations";
-  import PayAddress from "./PayAddress";
-  import PayReq from "./PayReq";
+  import calcs from '../calculations'
+  import PayAddress from './PayAddress'
+  import PayReq from './PayReq'
 
   export default {
     components: {
@@ -29,63 +29,63 @@
       PayAddress
     },
     mounted() {
-      this.$store.commit("setMode", 3);
-      this.$store.commit("setDimension", 0);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 3)
+      this.$store.commit('setDimension', 0)
+      this.$store.dispatch('loaded')
     },
     data() {
       return {
         payreqAmount: 1
-      };
+      }
     },
     methods: {
       togglePayment(x) {
-        let payModes = ["bitcoin", "lightning"];
+        let payModes = ['bitcoin', 'lightning']
         if (this.$store.state.upgrades.payment === payModes[x]) {
-          this.$store.commit("closePayMode");
-          return;
+          this.$store.commit('closePayMode')
+          return
         }
-        this.$store.commit("setPayMode", x);
+        this.$store.commit('setPayMode', x)
         if (x === 0) {
           if (!this.$store.getters.contextCard.address) {
-            this.$store.dispatch("makeEvent", {
-              type: "address-updated",
+            this.$store.dispatch('makeEvent', {
+              type: 'address-updated',
               taskId: this.$store.getters.contextCard.taskId
-            });
+            })
           }
         }
         if (x === 1) {
-          this.invoiceCreate();
+          this.invoiceCreate()
         }
       },
       invoiceCreate() {
-        let spot = this.$store.state.cash.spot;
-        let amount;
+        let spot = this.$store.state.cash.spot
+        let amount
         if (!spot) {
-          amount = parseInt(this.payreqAmount);
+          amount = parseInt(this.payreqAmount)
         } else {
-          amount = calcs.cadToSats(this.payreqAmount, spot);
+          amount = calcs.cadToSats(this.payreqAmount, spot)
         }
-        this.$store.dispatch("makeEvent", {
-          type: "invoice-created",
+        this.$store.dispatch('makeEvent', {
+          type: 'invoice-created',
           taskId: this.b.taskId,
           amount,
-          label: "<3"
-        });
+          label: '<3'
+        })
       }
     },
     computed: {
       b() {
-        return this.$store.getters.contextCard;
+        return this.$store.getters.contextCard
       },
       addressUpdate() {
         return {
-          type: "address-updated",
+          type: 'address-updated',
           taskId: this.b.taskId
-        };
+        }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -18,116 +18,116 @@
 </template>
 
 <script>
-  import PreviewDeck from "./PreviewDeck";
-  import SimplePriorities from "./SimplePriorities";
-  import Coin from "./Coin";
+  import PreviewDeck from './PreviewDeck'
+  import SimplePriorities from './SimplePriorities'
+  import Coin from './Coin'
 
   export default {
-    props: ["m"],
+    props: ['m'],
     components: { PreviewDeck, SimplePriorities, Coin },
     methods: {
       isBull() {
-        let mainroute = this.$router.currentRoute.path.split("/")[1];
-        let isBull = mainroute === "dash";
-        return isBull;
+        let mainroute = this.$router.currentRoute.path.split('/')[1]
+        let isBull = mainroute === 'dash'
+        return isBull
       },
       goIn(taskId) {
-        let panel = [taskId];
-        let parents = [];
-        let top = 0;
+        let panel = [taskId]
+        let parents = []
+        let top = 0
 
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
 
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
+        })
 
-        this.$store.commit("startLoading", "unicorn");
+        this.$store.commit('startLoading', 'unicorn')
 
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
 
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       toggleGrab() {
         if (this.isVouched) {
-          this.$store.dispatch("makeEvent", {
-            type: "task-dropped",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-dropped',
             taskId: this.b.taskId,
             memberId: this.$store.getters.member.memberId
-          });
+          })
         } else {
-          this.$store.dispatch("makeEvent", {
-            type: "task-grabbed",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-grabbed',
             taskId: this.b.taskId,
             memberId: this.$store.getters.member.memberId
-          });
+          })
         }
       },
       purgeAccount() {
-        this.$store.dispatch("makeEvent", {
-          type: "member-purged",
+        this.$store.dispatch('makeEvent', {
+          type: 'member-purged',
           memberId: this.m.memberId
-        });
+        })
       }
     },
     computed: {
       isVulnerable() {
-        let v = !this.hasAnyVouches && this.$store.state.members.length > 1;
-        return v || this.$router.currentRoute.path === "/dash/slayer";
+        let v = !this.hasAnyVouches && this.$store.state.members.length > 1
+        return v || this.$router.currentRoute.path === '/dash/slayer'
       },
       isLoggedIn() {
-        let isLoggedIn;
+        let isLoggedIn
         this.$store.state.sessions.forEach(s => {
           if (s.ownerId === this.m.memberId) {
-            isLoggedIn = true;
+            isLoggedIn = true
           }
-        });
-        return isLoggedIn;
+        })
+        return isLoggedIn
       },
       rowsGuilds() {
-        let g = [];
+        let g = []
         // this.$store.getters.pubguilds.forEach(t => {
         //     if (t.deck.indexOf(this.m.memberId) > -1){
         //         g.push(t)
         //     }
         // })
-        return g;
+        return g
       },
       b() {
-        return this.$store.getters.hashMap[this.m.memberId];
+        return this.$store.getters.hashMap[this.m.memberId]
       },
       isVouched() {
-        return this.b.deck.indexOf(this.$store.getters.member.memberId) > -1;
+        return this.b.deck.indexOf(this.$store.getters.member.memberId) > -1
       },
       hasAnyVouches() {
-        return this.b.deck.length > 0;
+        return this.b.deck.length > 0
       },
       vouchCount() {
         let vouchCount = this.$store.getters.membersVouches.find(
           c => c.memberId === this.m.memberId
-        );
-        if (!vouchCount) return 0;
-        return vouchCount.count;
+        )
+        if (!vouchCount) return 0
+        return vouchCount.count
       },
       vouchRatio() {
-        let ratio = this.vouchCount / this.b.deck.length;
-        if (this.b.deck.length <= 0 && this.vouchCount > 0) return "-∞";
-        else if (this.vouchCount === 0) return "0";
-        else return ratio.toFixed(2);
+        let ratio = this.vouchCount / this.b.deck.length
+        if (this.b.deck.length <= 0 && this.vouchCount > 0) return '-∞'
+        else if (this.vouchCount === 0) return '0'
+        else return ratio.toFixed(2)
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

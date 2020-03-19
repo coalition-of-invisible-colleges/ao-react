@@ -8,39 +8,39 @@
 </template>
 
 <script>
-  import Row from "./MemberRow";
+  import Row from './MemberRow'
   export default {
     components: {
       Row
     },
     data() {
-      return { showTotal: 11 };
+      return { showTotal: 11 }
     },
     mounted() {
-      this.$store.commit("setMode", 2);
-      this.$store.commit("setDimension", 1);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 2)
+      this.$store.commit('setDimension', 1)
+      this.$store.dispatch('loaded')
     },
     methods: {
       andThen() {
-        this.showTotal++;
+        this.showTotal++
       }
     },
     computed: {
       recentMembers() {
-        let recentMembers = [];
+        let recentMembers = []
         try {
-          recentMembers = this.$store.state.members.slice();
+          recentMembers = this.$store.state.members.slice()
           recentMembers.sort((a, b) => {
-            return b.lastUsed - a.lastUsed;
-          });
+            return b.lastUsed - a.lastUsed
+          })
         } catch (err) {
-          console.log("ddnn wrrk: ", err);
+          console.log('ddnn wrrk: ', err)
         }
-        return recentMembers;
+        return recentMembers
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

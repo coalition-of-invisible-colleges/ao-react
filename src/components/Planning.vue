@@ -7,15 +7,15 @@
 </template>
 
 <script>
-  import calcs from "../calculations";
-  import TaskCalendar from "./Calendar";
-  import ResourceBook from "./ResourceBook";
+  import calcs from '../calculations'
+  import TaskCalendar from './Calendar'
+  import ResourceBook from './ResourceBook'
 
   export default {
     mounted() {
-      this.$store.commit("setMode", 4);
-      this.$store.commit("setDimension", 0);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 4)
+      this.$store.commit('setDimension', 0)
+      this.$store.dispatch('loaded')
     },
     components: {
       ResourceBook,
@@ -24,12 +24,12 @@
     computed: {
       calcTime() {
         if (this.$store.getters.contextCard.book.startTs) {
-          let now = new Date(this.$store.getters.contextCard.book.startTs);
-          return now.toString();
+          let now = new Date(this.$store.getters.contextCard.book.startTs)
+          return now.toString()
         }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

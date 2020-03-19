@@ -7,20 +7,20 @@ span.current
 
 <script>
   export default {
-    props: ["resourceId"],
+    props: ['resourceId'],
     computed: {
       name() {
-        let resourceId = this.resourceId;
-        let name = false;
+        let resourceId = this.resourceId
+        let name = false
         this.$store.state.resources.forEach(r => {
           if (r.resourceId == resourceId) {
-            name = r.name;
+            name = r.name
           }
-        });
-        return name;
+        })
+        return name
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

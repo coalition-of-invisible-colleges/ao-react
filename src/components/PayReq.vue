@@ -12,41 +12,41 @@
 </template>
 
 <script>
-  import qrcode from "qrcode-generator";
-  import calculations from "../calculations";
+  import qrcode from 'qrcode-generator'
+  import calculations from '../calculations'
 
   export default {
-    props: ["bolt11"],
+    props: ['bolt11'],
     computed: {
       imgTag() {
-        let typeNumber = 0;
-        let errorCorrectionLevel = "L";
-        let qr = qrcode(typeNumber, errorCorrectionLevel);
-        let data = this.bolt11;
+        let typeNumber = 0
+        let errorCorrectionLevel = 'L'
+        let qr = qrcode(typeNumber, errorCorrectionLevel)
+        let data = this.bolt11
         try {
-          qr.addData(data);
-          qr.make();
+          qr.addData(data)
+          qr.make()
         } catch (err) {
-          return console.log("err from qrcode", err);
+          return console.log('err from qrcode', err)
         }
-        let cellsize = 4;
-        let margin = 2;
-        let tag = qr.createImgTag(cellsize, margin);
-        return tag;
+        let cellsize = 4
+        let margin = 2
+        let tag = qr.createImgTag(cellsize, margin)
+        return tag
       },
       cadAmount() {
-        let found = this.bolt11.match(/[0-9]+/);
+        let found = this.bolt11.match(/[0-9]+/)
         return calculations.satsToCad(
           found[0] / 10,
           this.$store.state.cash.spot
-        );
+        )
       },
       satAmount() {
-        let found = this.bolt11.match(/[0-9]+/);
-        return found[0] / 10;
+        let found = this.bolt11.match(/[0-9]+/)
+        return found[0] / 10
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

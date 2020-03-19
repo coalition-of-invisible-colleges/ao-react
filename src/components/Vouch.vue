@@ -6,20 +6,20 @@
 
 <script>
   export default {
-    props: ["memberId", "b", "inId"],
+    props: ['memberId', 'b', 'inId'],
     computed: {
       name() {
-        let memberId = this.memberId;
-        let name = false;
+        let memberId = this.memberId
+        let name = false
         this.$store.state.members.forEach(member => {
           if (member.memberId == memberId) {
-            name = member.name;
+            name = member.name
           }
-        });
-        return name;
+        })
+        return name
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -10,28 +10,28 @@
 </template>
 
 <script>
-  import Hypercard from "./Card";
-  import SimpleHyperpriority from "./SimplePriority";
-  import NotZen from "./NotZen";
+  import Hypercard from './Card'
+  import SimpleHyperpriority from './SimplePriority'
+  import NotZen from './NotZen'
 
   export default {
-    props: ["taskId"],
+    props: ['taskId'],
     computed: {
       card() {
-        return this.$store.getters.hashMap[this.taskId];
+        return this.$store.getters.hashMap[this.taskId]
       },
       priorities() {
-        let p = [];
+        let p = []
         if (this.card && this.card.priorities.length > 0) {
-          p = this.card.priorities.slice().reverse();
+          p = this.card.priorities.slice().reverse()
         }
-        return p;
+        return p
       },
       isSun() {
-        return this.$store.state.upgrades.dimension === "sun";
+        return this.$store.state.upgrades.dimension === 'sun'
       },
       isUni() {
-        return this.$store.state.upgrades.dimension === "unicorn";
+        return this.$store.state.upgrades.dimension === 'unicorn'
       }
     },
     components: {
@@ -39,7 +39,7 @@
       Hypercard,
       NotZen
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

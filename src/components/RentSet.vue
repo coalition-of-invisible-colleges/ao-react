@@ -12,18 +12,18 @@
   export default {
     methods: {
       setRent() {
-        this.$store.dispatch("makeEvent", this.details);
+        this.$store.dispatch('makeEvent', this.details)
       }
     },
     data() {
       return {
         details: {
-          type: "rent-set",
-          amount: ""
+          type: 'rent-set',
+          amount: ''
         }
-      };
+      }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

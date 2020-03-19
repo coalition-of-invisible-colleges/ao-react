@@ -25,134 +25,131 @@
 </template>
 
 <script>
-  import Linky from "./Linky";
-  import calculations from "../calculations";
+  import Linky from './Linky'
+  import calculations from '../calculations'
 
   export default {
-    props: ["memberId", "taskId", "task"],
+    props: ['memberId', 'taskId', 'task'],
     methods: {
       getTask(taskId) {
-        return this.$store.getters.hashMap[taskId];
+        return this.$store.getters.hashMap[taskId]
       },
       goto(taskId) {
-        let panel = [taskId];
-        let top = 0;
-        let t = this.$store.getters.hashMap[taskId];
+        let panel = [taskId]
+        let top = 0
+        let t = this.$store.getters.hashMap[taskId]
         let panelColor = this.task.subTasks.filter(p => {
-          return this.card(p).color === t.color;
-        });
-        let topColor = panelColor.indexOf(taskId);
+          return this.card(p).color === t.color
+        })
+        let topColor = panelColor.indexOf(taskId)
 
         if (topColor > -1) {
-          panel = panelColor;
-          top = topColor;
+          panel = panelColor
+          top = topColor
         }
-        let parents = [
-          this.$store.getters.contextCard.taskId,
-          this.task.taskId
-        ];
-        this.$store.dispatch("goIn", { parents, panel, top });
+        let parents = [this.$store.getters.contextCard.taskId, this.task.taskId]
+        this.$store.dispatch('goIn', { parents, panel, top })
 
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
 
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       card(tId) {
-        return this.$store.getters.hashMap[tId];
+        return this.$store.getters.hashMap[tId]
       },
       shortName(name) {
-        return calculations.shortName(name);
+        return calculations.shortName(name)
       }
     },
     computed: {
       deck() {
-        let tasks = [];
+        let tasks = []
         if (this.memberId) {
           tasks = this.$store.state.tasks.filter(
             t => t.deck.indexOf(this.memberId) !== -1
-          );
+          )
         } else if (this.taskId) {
-          let subTasks = [];
-          let t = this.$store.getters.hashMap[this.taskId];
-          t.subTasks.forEach(t => tasks.push(this.getTask(t)));
+          let subTasks = []
+          let t = this.$store.getters.hashMap[this.taskId]
+          t.subTasks.forEach(t => tasks.push(this.getTask(t)))
         } else if (this.task && this.task.subTasks) {
           this.task.subTasks.forEach(tId => {
-            let task = this.getTask(tId);
+            let task = this.getTask(tId)
             if (task) {
-              tasks.push(task);
+              tasks.push(task)
             }
-          });
+          })
         }
-        return tasks;
+        return tasks
       },
       red() {
         return this.deck
           .filter(c => {
             if (!c) {
-              return false;
+              return false
             }
-            return c.color === "red";
+            return c.color === 'red'
           })
           .reverse()
-          .slice(0, 5 - this.topPriorities.length);
+          .slice(0, 5 - this.topPriorities.length)
       },
       yellow() {
         return this.deck
           .filter(c => {
             if (!c) {
-              return false;
+              return false
             }
-            return c.color === "yellow";
+            return c.color === 'yellow'
           })
           .reverse()
-          .slice(0, 5);
+          .slice(0, 5)
       },
       blue() {
         return this.deck
           .filter(c => {
             if (!c) {
-              return false;
+              return false
             }
-            return c.color === "blue";
+            return c.color === 'blue'
           })
           .reverse()
-          .slice(0, 5);
+          .slice(0, 5)
       },
       purple() {
         return this.deck
           .filter(c => {
             if (!c) {
-              return false;
+              return false
             }
-            return c.color === "purple";
+            return c.color === 'purple'
           })
           .reverse()
-          .slice(0, 5);
+          .slice(0, 5)
       },
       green() {
         return this.deck
           .filter(c => {
             if (!c) {
-              return false;
+              return false
             }
-            return c.color === "green";
+            return c.color === 'green'
           })
           .reverse()
-          .slice(0, 5);
+          .slice(0, 5)
       },
       topPriorities() {
-        return this.task.priorities.slice(0, 5).reverse();
+        return this.task.priorities.slice(0, 5).reverse()
       }
     },
     components: {
       Linky
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

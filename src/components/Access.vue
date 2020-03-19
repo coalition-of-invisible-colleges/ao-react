@@ -13,24 +13,24 @@
 </template>
 
 <script>
-  import Row from "./ResourceRow";
-  import uuidV1 from "uuid/v1";
+  import Row from './ResourceRow'
+  import uuidV1 from 'uuid/v1'
 
   export default {
     mounted() {
-      this.$store.commit("setMode", 0);
-      this.$store.commit("setDimension", 2);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 0)
+      this.$store.commit('setDimension', 2)
+      this.$store.dispatch('loaded')
     },
     computed: {
       resources() {
-        return this.$store.state.resources.slice().filter(r => !r.pubkey);
+        return this.$store.state.resources.slice().filter(r => !r.pubkey)
       },
       isLoggedIn() {
-        return this.$store.getters.isLoggedIn;
+        return this.$store.getters.isLoggedIn
       },
       panel() {
-        return this.resources.map(r => r.resourceId);
+        return this.resources.map(r => r.resourceId)
       }
     },
     components: {
@@ -39,17 +39,17 @@
     methods: {
       createTest(letter) {
         let newEv = {
-          type: "resource-created",
+          type: 'resource-created',
           resourceId: uuidV1(),
-          name: "teste",
+          name: 'teste',
           charged: 0,
-          secret: "asd",
+          secret: 'asd',
           trackStock: true
-        };
-        this.$store.dispatch("makeEvent", newEv);
+        }
+        this.$store.dispatch('makeEvent', newEv)
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

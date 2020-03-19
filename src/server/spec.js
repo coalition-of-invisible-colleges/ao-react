@@ -1,28 +1,28 @@
-const express = require("express");
-const uuidV1 = require("uuid/v1");
-const state = require("./state");
-const utils = require("./utils");
-const validators = require("./validators");
-const calculations = require("../calculations");
-const events = require("./events");
-const connector = require("./connector");
-const lightning = require("./lightning");
+const express = require('express')
+const uuidV1 = require('uuid/v1')
+const state = require('./state')
+const utils = require('./utils')
+const validators = require('./validators')
+const calculations = require('../calculations')
+const events = require('./events')
+const connector = require('./connector')
+const lightning = require('./lightning')
 
-const router = express.Router();
+const router = express.Router()
 
-router.post("/events", (req, res, next) => {
+router.post('/events', (req, res, next) => {
   state.serverState.sessions.forEach(s => {
     if (s.token === req.headers.authorization) {
-      req.body.blame = s.ownerId;
+      req.body.blame = s.ownerId
     }
-  });
-  next();
-});
+  })
+  next()
+})
 
-router.post("/events", (req, res, next) => {
-  let errRes = [];
+router.post('/events', (req, res, next) => {
+  let errRes = []
   switch (req.body.type) {
-    case "ao-linked":
+    case 'ao-linked':
       if (
         validators.isAddress(req.body.address, errRes) &&
         validators.isTaskId(req.body.taskId)
@@ -31,12 +31,12 @@ router.post("/events", (req, res, next) => {
           req.body.address,
           req.body.taskId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "highlighted":
+      break
+    case 'highlighted':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes) &&
@@ -47,62 +47,62 @@ router.post("/events", (req, res, next) => {
           req.body.memberId,
           req.body.valence,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "ao-disconnected":
+      break
+    case 'ao-disconnected':
       if (validators.isAddress(req.body.address, errRes)) {
-        events.aoDisconnected(req.body.address, utils.buildResCallback(res));
+        events.aoDisconnected(req.body.address, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "ao-named":
+      break
+    case 'ao-named':
       if (validators.isNotes(req.body.alias, errRes)) {
-        events.aoNamed(req.body.alias, utils.buildResCallback(res));
+        events.aoNamed(req.body.alias, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "rent-set":
+      break
+    case 'rent-set':
       if (validators.isAmount(req.body.amount, errRes)) {
-        events.rentSet(req.body.amount, utils.buildResCallback(res));
+        events.rentSet(req.body.amount, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "cap-set":
+      break
+    case 'cap-set':
       if (validators.isAmount(req.body.amount, errRes)) {
-        events.capSet(req.body.amount, utils.buildResCallback(res));
+        events.capSet(req.body.amount, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "ao-outbound-connected":
+      break
+    case 'ao-outbound-connected':
       connector.postEvent(
         req.body.address,
         req.body.secret,
         {
-          type: "ao-inbound-connected",
+          type: 'ao-inbound-connected',
           address: state.serverState.cash.address,
           secret: req.body.secret //
         },
         subscriptionResponse => {
           if (!subscriptionResponse.lastInsertRowid) {
-            return res.status(200).send(["ao-connect failed"]);
+            return res.status(200).send(['ao-connect failed'])
           }
-          console.log("subscribe success, attempt ao connect");
+          console.log('subscribe success, attempt ao connect')
           events.aoOutboundConnected(
             req.body.address,
             req.body.secret,
             utils.buildResCallback(res)
-          );
+          )
         }
-      );
-      break;
-    case "ao-inbound-connected":
+      )
+      break
+    case 'ao-inbound-connected':
       if (
         validators.isNotes(req.body.address, errRes) &&
         validators.isNotes(req.body.secret, errRes)
@@ -111,57 +111,57 @@ router.post("/events", (req, res, next) => {
           req.body.address,
           req.body.secret,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "ao-relay":
-      let secret;
+      break
+    case 'ao-relay':
+      let secret
       state.serverState.ao.forEach(a => {
         if (a.address == req.body.address) {
-          secret = a.outboundSecret;
+          secret = a.outboundSecret
         }
-      });
+      })
       if (secret) {
         connector.postEvent(
           req.body.address,
           secret,
           req.body.ev,
           connectorRes => {
-            console.log("ao relay response", { connectorRes });
+            console.log('ao relay response', { connectorRes })
           }
-        );
+        )
       } else {
-        console.log("no connection for ", req.body.address);
-        next();
+        console.log('no connection for ', req.body.address)
+        next()
       }
-      break;
-    case "invoice-created":
+      break
+    case 'invoice-created':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isAmount(req.body.amount, errRes)
       ) {
         lightning
-          .createInvoice(req.body.amount, "<3" + uuidV1(), "~", 3600)
+          .createInvoice(req.body.amount, '<3' + uuidV1(), '~', 3600)
           .then(result => {
-            let addr = result["p2sh-segwit"];
+            let addr = result['p2sh-segwit']
             events.invoiceCreated(
               req.body.taskId,
               result.bolt11,
               result.payment_hash,
               utils.buildResCallback(res)
-            );
+            )
           })
           .catch(err => {
-            console.log({ err });
-            res.status(200).send("attempt failed");
-          });
+            console.log({ err })
+            res.status(200).send('attempt failed')
+          })
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "member-created":
+      break
+    case 'member-created':
       if (
         validators.isNotes(req.body.name, errRes) &&
         validators.isNotes(req.body.fob, errRes) &&
@@ -172,40 +172,37 @@ router.post("/events", (req, res, next) => {
           req.body.fob,
           req.body.secret,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-activated":
+      break
+    case 'member-activated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberActivated(req.body.memberId, utils.buildResCallback(res));
+        events.memberActivated(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-deactivated":
+      break
+    case 'member-deactivated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberDeactivated(
-          req.body.memberId,
-          utils.buildResCallback(res)
-        );
+        events.memberDeactivated(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-purged":
+      break
+    case 'member-purged':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events.memberPurged(
           req.body.memberId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-field-updated":
+      break
+    case 'member-field-updated':
       if (
         validators.isMemberId(req.body.memberId, errRes) &&
         validators.isField(req.body.field, errRes) &&
@@ -216,38 +213,38 @@ router.post("/events", (req, res, next) => {
           req.body.field,
           req.body.newfield,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-barked":
+      break
+    case 'doge-barked':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeBarked(req.body.memberId, utils.buildResCallback(res));
+        events.dogeBarked(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-muted":
+      break
+    case 'doge-muted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeMuted(req.body.memberId, utils.buildResCallback(res));
+        events.dogeMuted(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-unmuted":
+      break
+    case 'doge-unmuted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events
           .dogeUnmuted(req.body.memberId, utils.buildResCallback(res))
           .catch(err => {
-            console.log({ err });
-            res.status(200).send("attempt failed");
-          });
+            console.log({ err })
+            res.status(200).send('attempt failed')
+          })
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "member-created":
+      break
+    case 'member-created':
       if (
         validators.isNotes(req.body.name, errRes) &&
         validators.isNotes(req.body.fob, errRes) &&
@@ -258,40 +255,37 @@ router.post("/events", (req, res, next) => {
           req.body.fob,
           req.body.secret,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-activated":
+      break
+    case 'member-activated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberActivated(req.body.memberId, utils.buildResCallback(res));
+        events.memberActivated(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-deactivated":
+      break
+    case 'member-deactivated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberDeactivated(
-          req.body.memberId,
-          utils.buildResCallback(res)
-        );
+        events.memberDeactivated(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-purged":
+      break
+    case 'member-purged':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events.memberPurged(
           req.body.memberId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "member-field-updated":
+      break
+    case 'member-field-updated':
       if (
         validators.isMemberId(req.body.memberId, errRes) &&
         validators.isField(req.body.field, errRes) &&
@@ -302,100 +296,95 @@ router.post("/events", (req, res, next) => {
           req.body.field,
           req.body.newfield,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-barked":
+      break
+    case 'doge-barked':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeBarked(req.body.memberId, utils.buildResCallback(res));
+        events.dogeBarked(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-muted":
+      break
+    case 'doge-muted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeMuted(req.body.memberId, utils.buildResCallback(res));
+        events.dogeMuted(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-unmuted":
+      break
+    case 'doge-unmuted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeUnmuted(req.body.memberId, utils.buildResCallback(res));
+        events.dogeUnmuted(req.body.memberId, utils.buildResCallback(res))
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "doge-migrated":
-      let tasks = [];
-      let memberCard;
-      let taskIds = [];
+      break
+    case 'doge-migrated':
+      let tasks = []
+      let memberCard
+      let taskIds = []
       state.serverState.tasks.forEach(t => {
         if (t.taskId === req.body.memberId) {
-          memberCard = t;
+          memberCard = t
         }
         if (t.deck.indexOf(req.body.memberId) >= 0) {
-          taskIds.push(t.taskId);
-          taskIds = [
-            ...taskIds,
-            ...t.subTasks,
-            ...t.priorities,
-            ...t.completed
-          ];
+          taskIds.push(t.taskId)
+          taskIds = [...taskIds, ...t.subTasks, ...t.priorities, ...t.completed]
         }
-      });
+      })
 
-      let name = "migrated doge";
+      let name = 'migrated doge'
       let memberObject = state.serverState.members.some(m => {
         if (m.memberId === req.body.memberId) {
-          let name = m.name;
+          let name = m.name
         }
-      });
-      let envelope = calculations.blankCard(uuidV1(), name, "blue");
-      envelope.name = memberCard.name;
-      envelope.subTasks = [...new Set(taskIds)];
-      envelope.passed = [[req.body.address, req.body.toMemberId]];
+      })
+      let envelope = calculations.blankCard(uuidV1(), name, 'blue')
+      envelope.name = memberCard.name
+      envelope.subTasks = [...new Set(taskIds)]
+      envelope.passed = [[req.body.address, req.body.toMemberId]]
 
       tasks = state.serverState.tasks.filter(
         t => taskIds.indexOf(t.taskId) >= 0
-      );
-      tasks.push(envelope);
+      )
+      tasks.push(envelope)
 
-      let serverAddress;
-      let serverSecret;
+      let serverAddress
+      let serverSecret
       state.serverState.ao.forEach(a => {
         if (a.address === req.body.address) {
-          serverAddress = a.address;
-          serverSecret = a.secret;
+          serverAddress = a.address
+          serverSecret = a.secret
         }
-      });
-      console.log("tasks to be sent: ", tasks.length);
-      let next100 = tasks.splice(0, 50);
-      let delay = 0;
+      })
+      console.log('tasks to be sent: ', tasks.length)
+      let next100 = tasks.splice(0, 50)
+      let delay = 0
       while (next100.length > 0) {
         let newEvent = {
-          type: "tasks-received",
+          type: 'tasks-received',
           tasks: next100
-        };
+        }
         setTimeout(() => {
           connector.postEvent(
             serverAddress,
             serverSecret,
             newEvent,
             connectorRes => {
-              console.log("migrate connection response", {
+              console.log('migrate connection response', {
                 connectorRes
-              });
+              })
             }
-          );
-        }, delay);
-        next100 = tasks.splice(0, 50);
-        delay += 500;
+          )
+        }, delay)
+        next100 = tasks.splice(0, 50)
+        delay += 500
       }
-      break;
-    case "resource-created":
+      break
+    case 'resource-created':
       if (
         validators.isNewResourceId(req.body.resourceId, errRes) &&
         validators.isNotes(req.body.name, errRes) &&
@@ -410,12 +399,12 @@ router.post("/events", (req, res, next) => {
           req.body.secret,
           req.body.trackStock,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "resource-used":
+      break
+    case 'resource-used':
       if (
         validators.isActiveMemberId(req.body.memberId, errRes) &&
         validators.isResourceId(req.body.resourceId, errRes) &&
@@ -430,12 +419,12 @@ router.post("/events", (req, res, next) => {
           req.body.charged,
           req.body.notes,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "resource-stocked":
+      break
+    case 'resource-stocked':
       if (
         validators.isResourceId(req.body.resourceId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes) &&
@@ -450,12 +439,12 @@ router.post("/events", (req, res, next) => {
           req.body.paid,
           req.body.notes,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "resource-booked":
+      break
+    case 'resource-booked':
       if (
         validators.isTaskId(req.body.resourceId, errRes) &&
         validators.isMemberId(req.body.blame, errRes) &&
@@ -474,49 +463,49 @@ router.post("/events", (req, res, next) => {
           req.body.charge,
           req.body.notes,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "resource-purged":
+      break
+    case 'resource-purged':
       if (validators.isResourceId(req.body.resourceId, errRes)) {
         events.resourcePurged(
           req.body.resourceId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "session-killed":
+      break
+    case 'session-killed':
       if (validators.isSession(req.body.session, errRes)) {
-        events.sessionKilled(req.body.session, utils.buildResCallback(res));
+        events.sessionKilled(req.body.session, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "address-updated":
+      break
+    case 'address-updated':
       if (validators.isTaskId(req.body.taskId, errRes)) {
         lightning
           .newAddress()
           .then(result => {
-            let addr = result["p2sh-segwit"];
+            let addr = result['p2sh-segwit']
             events.addressUpdated(
               req.body.taskId,
               addr,
               utils.buildResCallback(res)
-            );
+            )
           })
           .catch(err => {
-            res.status(200).send("attempt failed");
-          });
+            res.status(200).send('attempt failed')
+          })
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-created":
+      break
+    case 'task-created':
       if (
         validators.isNotes(req.body.name, errRes) &&
         validators.isNotes(req.body.color, errRes) &&
@@ -529,12 +518,12 @@ router.post("/events", (req, res, next) => {
           req.body.deck,
           req.body.inId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-guilded":
+      break
+    case 'task-guilded':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isNotes(req.body.guild, errRes)
@@ -543,12 +532,12 @@ router.post("/events", (req, res, next) => {
           req.body.taskId,
           req.body.guild,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-sub-tasked":
+      break
+    case 'task-sub-tasked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.subTask, errRes)
@@ -558,12 +547,12 @@ router.post("/events", (req, res, next) => {
           req.body.subTask,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-de-sub-tasked":
+      break
+    case 'task-de-sub-tasked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.subTask, errRes)
@@ -573,12 +562,12 @@ router.post("/events", (req, res, next) => {
           req.body.subTask,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-valued":
+      break
+    case 'task-valued':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isAmount(req.body.value, errRes)
@@ -588,12 +577,12 @@ router.post("/events", (req, res, next) => {
           req.body.value,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "task-colored":
+      break
+    case 'task-colored':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.inId, errRes) &&
@@ -605,12 +594,12 @@ router.post("/events", (req, res, next) => {
           req.body.color,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "task-claimed":
+      break
+    case 'task-claimed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
@@ -620,12 +609,12 @@ router.post("/events", (req, res, next) => {
           req.body.memberId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "task-unclaimed":
+      break
+    case 'task-unclaimed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes) &&
@@ -636,12 +625,12 @@ router.post("/events", (req, res, next) => {
           req.body.memberId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "task-refocused":
+      break
+    case 'task-refocused':
       if (
         validators.isTaskId(req.body.inId, errRes) &&
         validators.isTaskId(req.body.taskId, errRes)
@@ -651,34 +640,34 @@ router.post("/events", (req, res, next) => {
           req.body.inId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "pile-refocused":
+      break
+    case 'pile-refocused':
       if (validators.isTaskId(req.body.inId, errRes)) {
         events.pileRefocused(
           req.body.inId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "task-removed":
+      break
+    case 'task-removed':
       if (validators.isTaskId(req.body.taskId, errRes)) {
         events.taskRemoved(
           req.body.taskId,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-passed":
+      break
+    case 'task-passed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.fromMemberId, errRes) &&
@@ -689,12 +678,12 @@ router.post("/events", (req, res, next) => {
           req.body.fromMemberId,
           req.body.toMemberId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(400).send(errRes);
+        res.status(400).send(errRes)
       }
-      break;
-    case "task-grabbed":
+      break
+    case 'task-grabbed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes) &&
@@ -704,12 +693,12 @@ router.post("/events", (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "pile-grabbed":
+      break
+    case 'pile-grabbed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes) &&
@@ -719,12 +708,12 @@ router.post("/events", (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-dropped":
+      break
+    case 'task-dropped':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
@@ -733,12 +722,12 @@ router.post("/events", (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "pile-dropped":
+      break
+    case 'pile-dropped':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
@@ -747,12 +736,12 @@ router.post("/events", (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-swapped":
+      break
+    case 'task-swapped':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.swapId1, errRes) &&
@@ -765,12 +754,12 @@ router.post("/events", (req, res, next) => {
           req.body.swapId2,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "task-bumped":
+      break
+    case 'task-bumped':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.bumpId, errRes) &&
@@ -782,13 +771,13 @@ router.post("/events", (req, res, next) => {
           req.body.direction,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
+      break
 
-    case "task-prioritized":
+    case 'task-prioritized':
       if (
         validators.isTaskId(req.body.inId, errRes) &&
         validators.isTaskId(req.body.taskId, errRes)
@@ -797,33 +786,33 @@ router.post("/events", (req, res, next) => {
           req.body.taskId,
           req.body.inId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "pile-prioritized":
-      console.log("spec runs");
+      break
+    case 'pile-prioritized':
+      console.log('spec runs')
       if (validators.isTaskId(req.body.inId, errRes)) {
-        console.log("spec success");
-        events.pilePrioritized(req.body.inId, utils.buildResCallback(res));
+        console.log('spec success')
+        events.pilePrioritized(req.body.inId, utils.buildResCallback(res))
       } else {
-        console.log("spec fails");
-        res.status(200).send(errRes);
+        console.log('spec fails')
+        res.status(200).send(errRes)
       }
-    case "tasks-received":
+    case 'tasks-received':
       if (true) {
         // XXX
         events.tasksReceived(
           req.body.tasks,
           req.body.blame,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "grid-add":
+      break
+    case 'grid-add':
       if (
         (validators.isCoord(req.body.coord, errRes),
         validators.isTaskId(req.body.taskId))
@@ -832,21 +821,21 @@ router.post("/events", (req, res, next) => {
           req.body.coord,
           req.body.taskId,
           utils.buildResCallback(res)
-        );
+        )
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
-    case "grid-del":
+      break
+    case 'grid-del':
       if (validators.isCoord(req.body.coord, errRes)) {
-        events.gridDel(req.body.coord, utils.buildResCallback(res));
+        events.gridDel(req.body.coord, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes);
+        res.status(200).send(errRes)
       }
-      break;
+      break
     default:
-      next();
+      next()
   }
-});
+})
 
-module.exports = router;
+module.exports = router

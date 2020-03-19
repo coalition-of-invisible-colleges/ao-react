@@ -1,174 +1,172 @@
-let PORT = process.env.PORT || 8003;
+let PORT = process.env.PORT || 8003
 
-const Kefir = require("kefir");
-const _ = require("lodash");
-const uuidV1 = require("uuid/v1");
-const dbengine = require("better-sqlite3");
-const config = require("../../configuration");
-const cryptoUtils = require("../crypto");
+const Kefir = require('kefir')
+const _ = require('lodash')
+const uuidV1 = require('uuid/v1')
+const dbengine = require('better-sqlite3')
+const config = require('../../configuration')
+const cryptoUtils = require('../crypto')
 
-const preparedStmts = {};
+const preparedStmts = {}
 
-var conn, eventEmitter, shadowEmitter;
+var conn, eventEmitter, shadowEmitter
 
 const changeFeed = Kefir.stream(e => {
-  eventEmitter = e;
-});
+  eventEmitter = e
+})
 
 const shadowFeed = Kefir.stream(e => {
-  shadowEmitter = e;
-});
+  shadowEmitter = e
+})
 
 function triggerShadow(x) {
-  shadowEmitter.emit(x);
+  shadowEmitter.emit(x)
 }
 
 function initializeSqlite(cb) {
-  console.log("initializing new sqlite3");
-  var err = null;
+  console.log('initializing new sqlite3')
+  var err = null
   try {
     var initDb = conn.prepare(
-      "CREATE TABLE `events` ( `document` BLOB NOT NULL, `timestamp` INTEGER UNIQUE, PRIMARY KEY(`timestamp`) )"
-    );
+      'CREATE TABLE `events` ( `document` BLOB NOT NULL, `timestamp` INTEGER UNIQUE, PRIMARY KEY(`timestamp`) )'
+    )
     var initBackups = conn.prepare(
-      "CREATE TABLE `backups` ( `document` BLOB NOT NULL, `timestamp` INTEGER UNIQUE, PRIMARY KEY(`timestamp`) )"
-    );
-    initDb.run();
-    initBackups.run();
-    createStatements();
+      'CREATE TABLE `backups` ( `document` BLOB NOT NULL, `timestamp` INTEGER UNIQUE, PRIMARY KEY(`timestamp`) )'
+    )
+    initDb.run()
+    initBackups.run()
+    createStatements()
   } catch (actualErr) {
-    console.log(actualErr);
-    err = actualErr;
+    console.log(actualErr)
+    err = actualErr
   }
   if (err) {
-    cb(err, conn);
+    cb(err, conn)
   } else {
     insertEvent({
-      type: "member-created",
-      name: "dctrl",
-      fob: "0000000000",
-      secret: cryptoUtils.createHash("dctrl"), // init user-password is dctrl
+      type: 'member-created',
+      name: 'dctrl',
+      fob: '0000000000',
+      secret: cryptoUtils.createHash('dctrl'), // init user-password is dctrl
       memberId: uuidV1(),
-      address: "2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu",
+      address: '2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu',
       active: 1,
       balance: 0,
       badges: [],
       info: {}
-    });
-    startFeed();
-    cb(null, conn);
+    })
+    startFeed()
+    cb(null, conn)
   }
 }
 
 function createStatements() {
-  conn.function("eventFeed", doc => {
-    eventEmitter.emit(JSON.parse(doc));
-  });
+  conn.function('eventFeed', doc => {
+    eventEmitter.emit(JSON.parse(doc))
+  })
   preparedStmts.getAll = conn.prepare(
-    "SELECT document FROM events WHERE (timestamp > ?) ORDER BY timestamp"
-  ); // WHERE (timestamp > ?)
-  preparedStmts.insertEvent = conn.prepare("INSERT INTO events VALUES (?, ?)");
-  preparedStmts.insertBackup = conn.prepare(
-    "INSERT INTO backups VALUES (?, ?)"
-  );
+    'SELECT document FROM events WHERE (timestamp > ?) ORDER BY timestamp'
+  ) // WHERE (timestamp > ?)
+  preparedStmts.insertEvent = conn.prepare('INSERT INTO events VALUES (?, ?)')
+  preparedStmts.insertBackup = conn.prepare('INSERT INTO backups VALUES (?, ?)')
   preparedStmts.recover = conn.prepare(
-    "SELECT document from backups ORDER BY timestamp DESC LIMIT 1"
-  );
+    'SELECT document from backups ORDER BY timestamp DESC LIMIT 1'
+  )
 }
 
 function recover(callback) {
   try {
-    let all = [];
+    let all = []
 
     for (const ev of preparedStmts.recover.iterate()) {
-      console.log;
-      all.push(JSON.parse(ev.document));
+      console.log
+      all.push(JSON.parse(ev.document))
     }
-    callback(null, all);
+    callback(null, all)
   } catch (err) {
-    console.log("err caught recover " + err);
+    console.log('err caught recover ' + err)
   }
 }
 
 function getAll(timestamp, callback) {
   try {
-    let all = [];
+    let all = []
 
     for (const ev of preparedStmts.getAll.iterate(timestamp)) {
-      all.push(JSON.parse(ev.document));
+      all.push(JSON.parse(ev.document))
     }
-    callback(null, all);
+    callback(null, all)
   } catch (err) {
-    console.log("err caught getAll " + err);
+    console.log('err caught getAll ' + err)
   }
 }
 
 function startFeed() {
-  conn.function("eventFeed", doc => {
-    eventEmitter.emit(JSON.parse(doc));
-  });
+  conn.function('eventFeed', doc => {
+    eventEmitter.emit(JSON.parse(doc))
+  })
   conn
     .prepare(
-      "CREATE TRIGGER updateHook AFTER INSERT ON events BEGIN SELECT eventFeed(NEW.document); END"
+      'CREATE TRIGGER updateHook AFTER INSERT ON events BEGIN SELECT eventFeed(NEW.document); END'
     )
-    .run();
+    .run()
 }
 
 function insertEvent(ev, callback) {
-  if (!conn) return callback("No db connection");
+  if (!conn) return callback('No db connection')
   if (!ev.timestamp) {
-    ev.timestamp = Date.now();
+    ev.timestamp = Date.now()
   }
-  var err = null;
-  var result = null;
+  var err = null
+  var result = null
   try {
-    result = preparedStmts.insertEvent.run(JSON.stringify(ev), ev.timestamp);
+    result = preparedStmts.insertEvent.run(JSON.stringify(ev), ev.timestamp)
   } catch (actualErr) {
-    err = actualErr;
+    err = actualErr
   }
   if (callback) {
-    callback(err, { event: ev, result });
+    callback(err, { event: ev, result })
   }
 }
 
 function insertBackup(state, callback) {
-  if (!conn) return callback("No db connection");
+  if (!conn) return callback('No db connection')
 
-  state.timestamp = Date.now();
+  state.timestamp = Date.now()
 
-  var err = null;
-  var result = null;
+  var err = null
+  var result = null
   try {
     result = preparedStmts.insertBackup.run(
       JSON.stringify(state),
       state.timestamp
-    );
+    )
   } catch (actualErr) {
-    err = actualErr;
+    err = actualErr
   }
-  if (callback) return callback(err, result);
+  if (callback) return callback(err, result)
 }
 
 function startDb(callback) {
-  dblocation = config.sqlite3.file;
+  dblocation = config.sqlite3.file
   if (PORT !== 8003) {
-    dblocation = dblocation.replace("database", PORT);
+    dblocation = dblocation.replace('database', PORT)
   }
-  conn = dbengine(dblocation, {});
+  conn = dbengine(dblocation, {})
   var checkTable = conn.prepare(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
-  );
+  )
 
   if (checkTable.all().length == 0) {
-    initializeSqlite(callback);
+    initializeSqlite(callback)
   } else {
-    createStatements();
-    callback(null, conn);
+    createStatements()
+    callback(null, conn)
   }
 }
 
 function getConn() {
-  return conn;
+  return conn
 }
 
 module.exports = {
@@ -182,4 +180,4 @@ module.exports = {
   insertBackup,
   getConn,
   recover
-};
+}

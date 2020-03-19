@@ -30,39 +30,39 @@
 <script>
   export default {
     mounted() {
-      this.$store.commit("setMode", 1);
-      this.$store.commit("setDimension", 2);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 1)
+      this.$store.commit('setDimension', 2)
+      this.$store.dispatch('loaded')
     },
     data() {
       return {
         aoNamed: {
-          type: "ao-named",
-          alias: ""
+          type: 'ao-named',
+          alias: ''
         },
         ao: {
-          type: "ao-outbound-connected",
-          address: "",
-          secret: ""
+          type: 'ao-outbound-connected',
+          address: '',
+          secret: ''
         }
-      };
+      }
     },
     methods: {
       name() {
-        this.$store.dispatch("makeEvent", this.aoNamed);
+        this.$store.dispatch('makeEvent', this.aoNamed)
       },
       connect() {
-        this.$store.dispatch("makeEvent", this.ao);
+        this.$store.dispatch('makeEvent', this.ao)
       },
       discon(address) {
-        console.log("try diconnection", address);
-        this.$store.dispatch("makeEvent", {
-          type: "ao-disconnected",
+        console.log('try diconnection', address)
+        this.$store.dispatch('makeEvent', {
+          type: 'ao-disconnected',
           address
-        });
+        })
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -9,34 +9,34 @@
 </template>
 
 <script>
-  import qrcode from "qrcode-generator";
-  import calculations from "../calculations";
+  import qrcode from 'qrcode-generator'
+  import calculations from '../calculations'
 
   export default {
-    props: ["address"],
+    props: ['address'],
     computed: {
       imgTag() {
-        let typeNumber = 10;
-        let errorCorrectionLevel = "L";
-        let qr = qrcode(typeNumber, errorCorrectionLevel);
-        let data = this.address;
+        let typeNumber = 10
+        let errorCorrectionLevel = 'L'
+        let qr = qrcode(typeNumber, errorCorrectionLevel)
+        let data = this.address
         try {
-          qr.addData(data);
-          qr.make();
+          qr.addData(data)
+          qr.make()
         } catch (err) {
-          return console.log("err from qrcode", err);
+          return console.log('err from qrcode', err)
         }
-        let cellsize = 4;
-        let margin = 2;
-        let tag = qr.createImgTag(cellsize, margin);
-        return tag;
+        let cellsize = 4
+        let margin = 2
+        let tag = qr.createImgTag(cellsize, margin)
+        return tag
       },
       cadAmount() {
-        return 1;
+        return 1
         // return calculations.satsToCad(this.i.sats, this.$store.state.cash.spot)
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

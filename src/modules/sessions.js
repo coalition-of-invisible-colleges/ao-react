@@ -1,21 +1,21 @@
-const M = require("../mutations");
+const M = require('../mutations')
 
-const state = [];
+const state = []
 
 const mutations = {
   setCurrent(sessions, current) {
-    sessions.length = 0;
+    sessions.length = 0
     current.sessions.forEach(session => {
-      sessions.push(session);
-    });
+      sessions.push(session)
+    })
   },
   applyEvent: M.sessionsMuts
-};
+}
 
-const actions = {};
+const actions = {}
 
 module.exports = {
   state,
   mutations,
   actions
-};
+}

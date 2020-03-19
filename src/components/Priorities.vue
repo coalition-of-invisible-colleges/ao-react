@@ -18,9 +18,9 @@
 </template>
 
 <script>
-  import Hypercard from "./Card";
-  import Hyperpriority from "./Priority";
-  import _ from "lodash";
+  import Hypercard from './Card'
+  import Hyperpriority from './Priority'
+  import _ from 'lodash'
 
   export default {
     components: {
@@ -28,43 +28,43 @@
     },
 
     mounted() {
-      this.$store.commit("setMode", 1);
-      this.$store.commit("setDimension", 0);
-      this.$store.dispatch("loaded");
+      this.$store.commit('setMode', 1)
+      this.$store.commit('setDimension', 0)
+      this.$store.dispatch('loaded')
     },
     data() {
       return {
         action: false
-      };
+      }
     },
     methods: {
       getSubPriorities(taskId) {
-        let card = this.$store.getters.hashMap[taskId];
+        let card = this.$store.getters.hashMap[taskId]
         if (card && card.priorities) {
-          return card.priorities.slice().reverse();
+          return card.priorities.slice().reverse()
         }
       },
       allocate(taskId) {
-        this.$store.dispatch("makeEvent", {
-          type: "task-prioritized",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-prioritized',
           inId: this.$store.getters.contextCard.taskId,
           taskId
-        });
+        })
       },
       getCard(taskId) {
-        return this.$store.getters.hashMap[taskId];
+        return this.$store.getters.hashMap[taskId]
       }
     },
     computed: {
       priorities() {
-        return this.$store.getters.contextCard.priorities.slice().reverse();
+        return this.$store.getters.contextCard.priorities.slice().reverse()
       }
     },
     components: {
       Hyperpriority,
       Hypercard
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

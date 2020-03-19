@@ -1,9 +1,11 @@
 {
- "useTabs": false,
- "printWidth": 80,
- "tabWidth": 2,
- "jsxBracketSameLine": true,
- "arrowParens": "avoid",
- "htmlWhitespaceSensitivity": "strict",
- "vueIndentScriptAndStyle": true
+  "useTabs": false,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "jsxBracketSameLine": true,
+  "arrowParens": "avoid",
+  "htmlWhitespaceSensitivity": "strict",
+  "vueIndentScriptAndStyle": true,
+  "semi": false,
+  "singleQuote": true
 }

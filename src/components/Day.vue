@@ -12,69 +12,69 @@
 </template>
 
 <script>
-  import _ from "lodash";
-  import Linky from "./Linky";
+  import _ from 'lodash'
+  import Linky from './Linky'
 
   function getDMY(ts) {
-    let d = new Date(ts);
-    let day = d.getDate();
-    let month = d.getMonth();
-    let year = d.getFullYear();
-    let hour = d.getHours();
-    let minute = d.getMinutes();
-    return { day, month, year, hour, minute };
+    let d = new Date(ts)
+    let day = d.getDate()
+    let month = d.getMonth()
+    let year = d.getFullYear()
+    let hour = d.getHours()
+    let minute = d.getMinutes()
+    return { day, month, year, hour, minute }
   }
 
   export default {
     components: { Linky },
-    props: ["day", "month", "year", "inId", "ev", "isToday"],
+    props: ['day', 'month', 'year', 'inId', 'ev', 'isToday'],
     methods: {
       styl(color) {
-        if (!color) return;
+        if (!color) return
         return {
-          redwx: color == "red",
-          bluewx: color == "blue",
-          greenwx: color == "green",
-          yellowwx: color == "yellow",
-          purplewx: color == "purple",
-          blackwx: color == "black"
-        };
+          redwx: color == 'red',
+          bluewx: color == 'blue',
+          greenwx: color == 'green',
+          yellowwx: color == 'yellow',
+          purplewx: color == 'purple',
+          blackwx: color == 'black'
+        }
       },
       goIn(taskId) {
-        let parents = [];
+        let parents = []
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           panel: [taskId],
           top: 0,
           parents
-        });
+        })
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       cardDate(b) {
         if (b.book.startTs) {
-          let DMY = getDMY(b.book.startTs);
+          let DMY = getDMY(b.book.startTs)
           return (
             DMY.hour +
-            ":" +
-            DMY.minute.toLocaleString("en-US", {
+            ':' +
+            DMY.minute.toLocaleString('en-US', {
               minimumIntegerDigits: 2,
               useGrouping: false
             })
-          );
+          )
         }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

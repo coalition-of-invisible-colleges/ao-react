@@ -23,66 +23,66 @@ div
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
   export default {
     computed: {
       isSun() {
-        return this.$store.state.upgrades.dimension === "sun";
+        return this.$store.state.upgrades.dimension === 'sun'
       }
     },
     methods: {
       nextMode() {
-        this.$store.commit("nextMode");
+        this.$store.commit('nextMode')
       },
       goFront(mode) {
         if (!mode) {
-          mode = this.$store.state.upgrades.mode;
+          mode = this.$store.state.upgrades.mode
         }
-        this.$store.commit("setDimension", 1);
-        this.$store.commit("startLoading", "sun-" + mode);
+        this.$store.commit('setDimension', 1)
+        this.$store.commit('startLoading', 'sun-' + mode)
 
-        this.$router.push("/front/" + mode);
+        this.$router.push('/front/' + mode)
       },
       close(mode) {
         if (!mode) {
-          mode = this.$store.state.upgrades.mode;
+          mode = this.$store.state.upgrades.mode
         }
-        this.$store.commit("setDimension", 0);
-        this.$router.push("/" + mode);
+        this.$store.commit('setDimension', 0)
+        this.$router.push('/' + mode)
       }
     },
     components: {},
     mounted() {
-      let sunel = this.$refs.sun;
-      let sunmc = Propagating(new Hammer.Manager(sunel));
-      let sunTap = new Hammer.Tap({ time: 400 });
+      let sunel = this.$refs.sun
+      let sunmc = Propagating(new Hammer.Manager(sunel))
+      let sunTap = new Hammer.Tap({ time: 400 })
       let sunDoubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
+      })
       let sunTripleTap = new Hammer.Tap({
-        event: "tripletap",
+        event: 'tripletap',
         taps: 3,
         time: 400,
         interval: 400
-      });
+      })
       let sunQuadrupleTap = new Hammer.Tap({
-        event: "quadrupletap",
+        event: 'quadrupletap',
         taps: 4,
         time: 400,
         interval: 400
-      });
+      })
       let sunQuintupleTap = new Hammer.Tap({
-        event: "quintupletap",
+        event: 'quintupletap',
         taps: 5,
         time: 400,
         interval: 400
-      });
-      let sunPress = new Hammer.Press({ time: 600 });
+      })
+      let sunPress = new Hammer.Press({ time: 600 })
       sunmc.add([
         sunPress,
         sunQuintupleTap,
@@ -90,79 +90,79 @@ div
         sunTripleTap,
         sunDoubleTap,
         sunTap
-      ]);
+      ])
       sunPress.recognizeWith([
         sunQuintupleTap,
         sunQuadrupleTap,
         sunTripleTap,
         sunDoubleTap,
         sunTap
-      ]);
+      ])
       sunTap.recognizeWith([
         sunQuintupleTap,
         sunQuadrupleTap,
         sunTripleTap,
         sunDoubleTap
-      ]);
+      ])
       sunTap.requireFailure([
         sunQuintupleTap,
         sunQuadrupleTap,
         sunTripleTap,
         sunDoubleTap
-      ]);
+      ])
       sunDoubleTap.recognizeWith([
         sunQuintupleTap,
         sunQuadrupleTap,
         sunTripleTap
-      ]);
+      ])
       sunDoubleTap.requireFailure([
         sunQuintupleTap,
         sunQuadrupleTap,
         sunTripleTap
-      ]);
-      sunTripleTap.recognizeWith([sunQuintupleTap, sunQuadrupleTap]);
-      sunTripleTap.requireFailure([sunQuintupleTap, sunQuadrupleTap]);
-      sunQuadrupleTap.recognizeWith(sunQuintupleTap);
-      sunQuadrupleTap.requireFailure(sunQuintupleTap);
+      ])
+      sunTripleTap.recognizeWith([sunQuintupleTap, sunQuadrupleTap])
+      sunTripleTap.requireFailure([sunQuintupleTap, sunQuadrupleTap])
+      sunQuadrupleTap.recognizeWith(sunQuintupleTap)
+      sunQuadrupleTap.requireFailure(sunQuintupleTap)
 
-      sunmc.on("tap", e => {
+      sunmc.on('tap', e => {
         if (!this.isSun) {
-          this.goFront(false);
+          this.goFront(false)
         } else {
-          this.nextMode();
-          this.goFront(false);
+          this.nextMode()
+          this.goFront(false)
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      sunmc.on("doubletap", e => {
-        console.log("double click");
-        this.goFront("boat");
-        e.stopPropagation();
-      });
+      sunmc.on('doubletap', e => {
+        console.log('double click')
+        this.goFront('boat')
+        e.stopPropagation()
+      })
 
-      sunmc.on("tripletap", e => {
-        console.log("triple click");
-        this.goFront("badge");
-        e.stopPropagation();
-      });
+      sunmc.on('tripletap', e => {
+        console.log('triple click')
+        this.goFront('badge')
+        e.stopPropagation()
+      })
 
-      sunmc.on("quadrupletap", e => {
-        this.goFront("chest");
-        e.stopPropagation();
-      });
+      sunmc.on('quadrupletap', e => {
+        this.goFront('chest')
+        e.stopPropagation()
+      })
 
-      sunmc.on("quintupletap", e => {
-        this.goFront("timecube");
-        e.stopPropagation();
-      });
+      sunmc.on('quintupletap', e => {
+        this.goFront('timecube')
+        e.stopPropagation()
+      })
 
-      sunmc.on("press", e => {
-        this.goFront("doge");
-        e.stopPropagation();
-      });
+      sunmc.on('press', e => {
+        this.goFront('doge')
+        e.stopPropagation()
+      })
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

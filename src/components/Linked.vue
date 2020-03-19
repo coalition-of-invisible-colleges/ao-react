@@ -8,24 +8,24 @@ div
 </template>
 
 <script>
-  import request from "superagent";
+  import request from 'superagent'
 
   export default {
-    props: ["b"],
+    props: ['b'],
     components: {},
     methods: {},
     computed: {
       links() {
-        let links = [];
+        let links = []
         this.$store.state.ao.forEach(a => {
           if (a.links.indexOf(this.b.taskId) > -1) {
-            links.push(a.address);
+            links.push(a.address)
           }
-        });
-        return links;
+        })
+        return links
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

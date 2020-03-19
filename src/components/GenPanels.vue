@@ -18,31 +18,31 @@
 </template>
 
 <script>
-  import CardPanel from "./CardPanel";
+  import CardPanel from './CardPanel'
 
   export default {
-    props: ["c"],
+    props: ['c'],
     computed: {
       red() {
-        return this.c.filter(f => f.color === "red");
+        return this.c.filter(f => f.color === 'red')
       },
       yellow() {
-        return this.c.filter(f => f.color === "yellow");
+        return this.c.filter(f => f.color === 'yellow')
       },
       green() {
-        return this.c.filter(f => f.color === "green");
+        return this.c.filter(f => f.color === 'green')
       },
       purple() {
-        return this.c.filter(f => f.color === "purple");
+        return this.c.filter(f => f.color === 'purple')
       },
       blue() {
-        return this.c.filter(f => f.color === "blue");
+        return this.c.filter(f => f.color === 'blue')
       }
     },
     components: {
       CardPanel
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

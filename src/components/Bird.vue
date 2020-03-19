@@ -31,13 +31,13 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
-  import GuildCreate from "./GuildCreate";
-  import calculations from "../calculations";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
+  import GuildCreate from './GuildCreate'
+  import calculations from '../calculations'
 
   export default {
-    props: ["b", "inId"],
+    props: ['b', 'inId'],
     components: {
       GuildCreate
     },
@@ -45,129 +45,129 @@
       return {
         showGuildCreate: false,
         showSend: false,
-        toMember: "",
-        toGuild: "",
-        toAo: ""
-      };
+        toMember: '',
+        toGuild: '',
+        toAo: ''
+      }
     },
     mounted() {
-      let el = this.$refs.bird;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = this.$refs.bird
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
-      let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
+      let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
+      })
       let tripleTap = new Hammer.Tap({
-        event: "tripletap",
+        event: 'tripletap',
         taps: 3,
         time: 400,
         interval: 400
-      });
-      let longPress = new Hammer.Press({ time: 400 });
+      })
+      let longPress = new Hammer.Press({ time: 400 })
 
-      mc.add([tripleTap, doubleTap, singleTap, longPress]);
+      mc.add([tripleTap, doubleTap, singleTap, longPress])
 
-      tripleTap.recognizeWith([doubleTap, singleTap]);
-      doubleTap.recognizeWith(singleTap);
-      singleTap.requireFailure([doubleTap, tripleTap]);
-      doubleTap.requireFailure(tripleTap);
+      tripleTap.recognizeWith([doubleTap, singleTap])
+      doubleTap.recognizeWith(singleTap)
+      singleTap.requireFailure([doubleTap, tripleTap])
+      doubleTap.requireFailure(tripleTap)
 
-      mc.on("singletap", e => {
-        this.toggleSend();
-        e.stopPropagation();
-      });
+      mc.on('singletap', e => {
+        this.toggleSend()
+        e.stopPropagation()
+      })
 
-      mc.on("doubletap", e => {
-        this.toggleSend();
-        this.$store.commit("setMode", 2);
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        this.toggleSend()
+        this.$store.commit('setMode', 2)
+        e.stopPropagation()
+      })
 
-      mc.on("press", e => {
-        this.toggleGuildCreate();
-        e.stopPropagation();
-      });
+      mc.on('press', e => {
+        this.toggleGuildCreate()
+        e.stopPropagation()
+      })
 
-      let Swipe = new Hammer.Swipe();
-      mc.add(Swipe);
-      mc.on("swipeleft", e => {
-        this.$store.commit("nextMode", 2);
-        e.stopPropagation();
-      });
-      mc.on("swiperight", e => {
-        this.$store.commit("previousMode", 2);
-        e.stopPropagation();
-      });
+      let Swipe = new Hammer.Swipe()
+      mc.add(Swipe)
+      mc.on('swipeleft', e => {
+        this.$store.commit('nextMode', 2)
+        e.stopPropagation()
+      })
+      mc.on('swiperight', e => {
+        this.$store.commit('previousMode', 2)
+        e.stopPropagation()
+      })
     },
     methods: {
       dispatchMakeEvent(ev) {
-        this.$store.dispatch("makeEvent", ev);
+        this.$store.dispatch('makeEvent', ev)
       },
       toggleGuildCreate() {
         if (!this.showGuildCreate) {
-          this.showSend = false;
+          this.showSend = false
         }
-        this.showGuildCreate = !this.showGuildCreate;
+        this.showGuildCreate = !this.showGuildCreate
         if (this.showGuildCreate) {
           setTimeout(() => {
-            document.getElementById("titlebox").focus();
-          }, 1);
+            document.getElementById('titlebox').focus()
+          }, 1)
         }
       },
       toggleSend() {
         if (!this.showSend) {
-          this.showGuildCreate = false;
+          this.showGuildCreate = false
         }
-        this.showSend = !this.showSend;
+        this.showSend = !this.showSend
       }
     },
     computed: {
       showGive() {
         return (
           this.showSend &&
-          (this.$store.state.upgrades.mode === "doge" ||
-            this.$store.state.upgrades.mode === "boat")
-        );
+          (this.$store.state.upgrades.mode === 'doge' ||
+            this.$store.state.upgrades.mode === 'boat')
+        )
       },
       showPlay() {
-        return this.showSend && this.$store.state.upgrades.mode === "badge";
+        return this.showSend && this.$store.state.upgrades.mode === 'badge'
       },
       showRelay() {
         return (
           this.showSend &&
-          (this.$store.state.upgrades.mode === "chest" ||
-            this.$store.state.upgrades.mode === "timecube")
-        );
+          (this.$store.state.upgrades.mode === 'chest' ||
+            this.$store.state.upgrades.mode === 'timecube')
+        )
       },
       passInfo() {
         return {
-          type: "task-passed",
+          type: 'task-passed',
           taskId: this.b.taskId,
           fromMemberId: this.$store.getters.member.memberId,
           toMemberId: this.toMember
-        };
+        }
       },
       playInfo() {
         return {
-          type: "task-sub-tasked",
+          type: 'task-sub-tasked',
           taskId: this.toGuild,
           subTask: this.b.taskId
-        };
+        }
       },
       aoLink() {
         return {
-          type: "ao-linked",
+          type: 'ao-linked',
           address: this.toAo,
           taskId: this.b.taskId
-        };
+        }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

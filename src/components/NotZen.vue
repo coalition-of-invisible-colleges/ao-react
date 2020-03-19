@@ -5,27 +5,27 @@
 
 <script>
   export default {
-    props: ["taskId"],
+    props: ['taskId'],
     computed: {
       card() {
-        return this.$store.getters.hashMap[this.taskId];
+        return this.$store.getters.hashMap[this.taskId]
       },
       dukkha() {
         if (this.taskId) {
-          if (this.card.priorities.length === 0) return "";
-          return this.card.priorities.length;
+          if (this.card.priorities.length === 0) return ''
+          return this.card.priorities.length
         }
-        if (this.$store.getters.contextCard.priorities.length === 0) return "";
-        return this.$store.getters.contextCard.priorities.length;
+        if (this.$store.getters.contextCard.priorities.length === 0) return ''
+        return this.$store.getters.contextCard.priorities.length
       }
     },
     methods: {
       goBoat() {
-        this.$store.commit("setMode", 1);
-        this.$router.push("/boat");
+        this.$store.commit('setMode', 1)
+        this.$router.push('/boat')
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

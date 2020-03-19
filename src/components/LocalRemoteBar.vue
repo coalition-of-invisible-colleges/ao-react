@@ -7,34 +7,34 @@
 
 <script>
   export default {
-    props: ["c"],
+    props: ['c'],
     computed: {
       r() {
-        let local = parseFloat(this.c.channel_sat);
-        let remote = parseFloat(this.c.channel_total_sat - this.c.channel_sat);
+        let local = parseFloat(this.c.channel_sat)
+        let remote = parseFloat(this.c.channel_total_sat - this.c.channel_sat)
 
-        let capacity = local + remote;
-        let remotePercent = remote / capacity;
+        let capacity = local + remote
+        let remotePercent = remote / capacity
 
-        let w = (remotePercent * 100).toFixed(7) + "%";
+        let w = (remotePercent * 100).toFixed(7) + '%'
         return {
           width: w
-        };
+        }
       },
       l() {
-        let local = parseFloat(this.c.channel_sat);
-        let remote = parseFloat(this.c.channel_total_sat - this.c.channel_sat);
+        let local = parseFloat(this.c.channel_sat)
+        let remote = parseFloat(this.c.channel_total_sat - this.c.channel_sat)
 
-        let capacity = local + remote;
-        let localPercent = this.c.channel_sat / capacity;
+        let capacity = local + remote
+        let localPercent = this.c.channel_sat / capacity
 
-        let w = (localPercent * 100).toFixed(7) + "%";
+        let w = (localPercent * 100).toFixed(7) + '%'
         return {
           width: w
-        };
+        }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

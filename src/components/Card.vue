@@ -33,24 +33,24 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
-  import calculations from "../calculations";
-  import PreviewDeck from "./PreviewDeck";
-  import Bird from "./Bird";
-  import Flag from "./Flag";
-  import Scroll from "./Scroll";
-  import Vine from "./Vine";
-  import Coin from "./Coin";
-  import Passed from "./Passed";
-  import Tally from "./Tally";
-  import Linky from "./Linky";
-  import SimplePriorities from "./SimplePriorities";
-  import Current from "./Current";
-  import Linked from "./Linked";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
+  import calculations from '../calculations'
+  import PreviewDeck from './PreviewDeck'
+  import Bird from './Bird'
+  import Flag from './Flag'
+  import Scroll from './Scroll'
+  import Vine from './Vine'
+  import Coin from './Coin'
+  import Passed from './Passed'
+  import Tally from './Tally'
+  import Linky from './Linky'
+  import SimplePriorities from './SimplePriorities'
+  import Current from './Current'
+  import Linked from './Linked'
 
   export default {
-    props: ["b", "inId", "c"],
+    props: ['b', 'inId', 'c'],
     components: {
       PreviewDeck,
       Bird,
@@ -66,150 +66,150 @@
       Linked
     },
     mounted() {
-      let el = this.$refs.wholeCard;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = this.$refs.wholeCard
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
-      let longPress = new Hammer.Press({ time: 600 });
+      })
+      let longPress = new Hammer.Press({ time: 600 })
 
-      mc.add([doubleTap, longPress]);
+      mc.add([doubleTap, longPress])
 
-      longPress.recognizeWith([doubleTap]);
-      longPress.requireFailure([doubleTap]);
+      longPress.recognizeWith([doubleTap])
+      longPress.requireFailure([doubleTap])
 
-      mc.on("doubletap", e => {
-        console.log("goin triggered by doubletap");
-        this.goIn();
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        console.log('goin triggered by doubletap')
+        this.goIn()
+        e.stopPropagation()
+      })
 
-      mc.on("press", e => {
-        this.copyCardToClipboard();
-        e.stopPropagation();
-      });
+      mc.on('press', e => {
+        this.copyCardToClipboard()
+        e.stopPropagation()
+      })
     },
     methods: {
       goIn() {
-        let panel = this.c;
+        let panel = this.c
         if (panel && panel.length && panel.length > 0) {
         } else {
-          panel = [this.b.taskId];
+          panel = [this.b.taskId]
         }
 
-        let top = panel.indexOf(this.b.taskId);
+        let top = panel.indexOf(this.b.taskId)
 
         if (top > -1) {
         } else {
-          top = 0;
+          top = 0
         }
 
-        let parents = [];
+        let parents = []
 
-        parents.push(this.$store.getters.contextCard.taskId);
+        parents.push(this.$store.getters.contextCard.taskId)
         if (this.inId && parents.indexOf(this.inId) < 0) {
-          parents.push(this.inId);
+          parents.push(this.inId)
         }
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
+        })
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        if (this.$store.state.upgrades.dimension !== "unicorn") {
-          this.$router.push("/" + this.$store.state.upgrades.mode);
+        if (this.$store.state.upgrades.dimension !== 'unicorn') {
+          this.$router.push('/' + this.$store.state.upgrades.mode)
         }
       },
       purge() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-removed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-removed',
           taskId: this.b.taskId
-        });
+        })
       },
       copyCardToClipboard() {
         navigator.clipboard
           .writeText(this.b.name)
-          .then(x => console.log("copied card text to clipboard", x))
+          .then(x => console.log('copied card text to clipboard', x))
           .catch(err => {
-            console.log("failed to copy: " + this.b.name, { err }); // XXX firefox, null error
-          });
+            console.log('failed to copy: ' + this.b.name, { err }) // XXX firefox, null error
+          })
       },
       deaction() {
-        this.$store.commit("setAction", false);
+        this.$store.commit('setAction', false)
       },
       paint() {
-        console.log("about to paint a card");
-        this.$store.dispatch("makeEvent", {
-          type: "task-colored",
+        console.log('about to paint a card')
+        this.$store.dispatch('makeEvent', {
+          type: 'task-colored',
           taskId: this.b.taskId,
           inId: this.inId,
           color: this.$store.state.upgrades.paintbrushColor
-        });
-        this.$store.commit("stopPainting");
-        console.log("card painted");
+        })
+        this.$store.commit('stopPainting')
+        console.log('card painted')
       }
     },
     computed: {
       cardStart() {
         if (this.b.book.startTs) {
-          let now = Date.now();
-          let msTill = this.b.book.startTs - now;
-          let days = msTill / (1000 * 60 * 60 * 24);
-          let hours = 0;
-          let minutes = 0;
+          let now = Date.now()
+          let msTill = this.b.book.startTs - now
+          let days = msTill / (1000 * 60 * 60 * 24)
+          let hours = 0
+          let minutes = 0
           return {
             days,
             hours,
             minutes
-          };
+          }
         }
       },
       cardInputSty() {
         if (!this.b) {
-          return;
+          return
         }
         return {
-          redwx: this.b.color == "red",
-          bluewx: this.b.color == "blue",
-          greenwx: this.b.color == "green",
-          yellowwx: this.b.color == "yellow",
-          purplewx: this.b.color == "purple",
-          blackwx: this.b.color == "black"
-        };
+          redwx: this.b.color == 'red',
+          bluewx: this.b.color == 'blue',
+          greenwx: this.b.color == 'green',
+          yellowwx: this.b.color == 'yellow',
+          purplewx: this.b.color == 'purple',
+          blackwx: this.b.color == 'black'
+        }
       },
       cardAge() {
-        let now = Date.now();
-        let msSince = now - this.b.timestamp;
-        let days = msSince / (1000 * 60 * 60 * 24);
-        return days;
+        let now = Date.now()
+        let msSince = now - this.b.timestamp
+        let days = msSince / (1000 * 60 * 60 * 24)
+        return days
       },
       dogeCard() {
-        let mc;
+        let mc
         this.$store.state.members.forEach(m => {
           if (this.b.name === m.memberId) {
-            mc = m;
+            mc = m
           }
-        });
-        return mc;
+        })
+        return mc
       },
       fractionalReserveDoge() {
-        return Math.max(Math.floor((this.b.weight % 1) * 16), 1);
+        return Math.max(Math.floor((this.b.weight % 1) * 16), 1)
       },
       wePaintin() {
-        return this.$store.state.upgrades.paintbrushColor;
+        return this.$store.state.upgrades.paintbrushColor
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -6,50 +6,50 @@
 
 <script>
   export default {
-    props: ["b"],
+    props: ['b'],
     methods: {
       goIn() {
-        let panel = this.c;
+        let panel = this.c
         if (panel && panel.length && panel.length > 0) {
         } else {
-          panel = [this.b.taskId];
+          panel = [this.b.taskId]
         }
 
-        let top = panel.indexOf(this.b.taskId);
+        let top = panel.indexOf(this.b.taskId)
 
         if (top > -1) {
         } else {
-          top = 0;
+          top = 0
         }
 
-        let parents = [];
+        let parents = []
 
         if (this.$store.state.context.panel[this.$store.state.context.top]) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         }
 
         if (this.inId && parents.indexOf(this.inId) < 0) {
-          parents.push(this.inId);
+          parents.push(this.inId)
         }
 
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
+        })
 
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        if (this.$store.state.upgrades.dimension !== "unicorn") {
-          this.$router.push("/" + this.$store.state.upgrades.mode);
+        if (this.$store.state.upgrades.dimension !== 'unicorn') {
+          this.$router.push('/' + this.$store.state.upgrades.mode)
         }
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

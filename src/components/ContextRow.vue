@@ -19,62 +19,62 @@
 </template>
 
 <script>
-  import Linky from "./Linky";
+  import Linky from './Linky'
 
   export default {
-    props: ["taskId"],
+    props: ['taskId'],
     components: { Linky },
     computed: {
       isMember() {
-        let is = false;
+        let is = false
         this.$store.state.members.some(m => {
           if (m.memberId === this.taskId) {
-            is = m.name;
-            return true;
+            is = m.name
+            return true
           }
-        });
-        return is;
+        })
+        return is
       },
       name() {
-        return this.card.name;
+        return this.card.name
       },
       card() {
-        return this.$store.getters.hashMap[this.taskId];
+        return this.$store.getters.hashMap[this.taskId]
       },
       cardStart() {
         if (this.card.book.startTs) {
-          let now = Date.now();
-          let msTill = this.card.book.startTs - now;
+          let now = Date.now()
+          let msTill = this.card.book.startTs - now
           // XXX TODO
-          let days = msTill / (1000 * 60 * 60 * 24);
-          let hours = 0;
-          let minutes = 0;
+          let days = msTill / (1000 * 60 * 60 * 24)
+          let hours = 0
+          let minutes = 0
           return {
             days,
             hours,
             minutes
-          };
+          }
         }
       },
       cardInputSty() {
-        let color = this.card.color;
+        let color = this.card.color
         return {
-          redwx: color == "red",
-          bluewx: color == "blue",
-          greenwx: color == "green",
-          yellowwx: color == "yellow",
-          purplewx: color == "purple",
-          blackwx: color == "black"
-        };
+          redwx: color == 'red',
+          bluewx: color == 'blue',
+          greenwx: color == 'green',
+          yellowwx: color == 'yellow',
+          purplewx: color == 'purple',
+          blackwx: color == 'black'
+        }
       },
       cardAge() {
-        let now = Date.now();
-        let msSince = now - this.card.timestamp;
-        let days = msSince / (1000 * 60 * 60 * 24);
-        return days;
+        let now = Date.now()
+        let msSince = now - this.card.timestamp
+        let days = msSince / (1000 * 60 * 60 * 24)
+        return days
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -17,39 +17,39 @@
 </template>
 
 <script>
-  import cryptoUtils from "../crypto";
+  import cryptoUtils from '../crypto'
 
   export default {
     data() {
       return {
         member: {
-          name: "",
-          pass: "",
-          fob: ""
+          name: '',
+          pass: '',
+          fob: ''
         }
-      };
+      }
     },
     computed: {
       memberReq() {
-        let name, secret;
-        name = this.member.name;
+        let name, secret
+        name = this.member.name
         if (name) {
-          secret = cryptoUtils.createHash(name);
+          secret = cryptoUtils.createHash(name)
         }
         return {
-          type: "member-created",
+          type: 'member-created',
           name,
           secret,
           fob: this.member.fob
-        };
+        }
       }
     },
     methods: {
       newMember() {
-        this.$store.dispatch("makeEvent", this.memberReq);
+        this.$store.dispatch('makeEvent', this.memberReq)
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -26,67 +26,67 @@
 </template>
 
 <script>
-  import Current from "./Current";
-  import Currentr from "./Currentr";
+  import Current from './Current'
+  import Currentr from './Currentr'
 
   export default {
     components: { Current, Currentr },
     methods: {
       burn(taskId) {
-        this.$store.dispatch("makeEvent", {
-          type: "task-removed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-removed',
           taskId
-        });
+        })
       }
     },
     computed: {
       funded() {
-        let members = [];
-        let guilds = [];
-        let resources = [];
-        let cards = [];
+        let members = []
+        let guilds = []
+        let resources = []
+        let cards = []
         this.$store.state.tasks.forEach(t => {
           if (t.boost > 0) {
             if (this.$store.getters.memberIds.indexOf(t.taskId) > -1) {
-              members.push(t);
+              members.push(t)
             } else if (this.$store.getters.resourceIds.indexOf(t.taskId) > -1) {
-              resources.push(t);
+              resources.push(t)
             } else if (t.guild) {
-              guilds.push(t);
+              guilds.push(t)
             } else {
-              cards.push(t);
+              cards.push(t)
             }
           }
-        });
-        return { members, guilds, resources, cards };
+        })
+        return { members, guilds, resources, cards }
       },
       totalMembers() {
-        let totalMembers = 0;
+        let totalMembers = 0
         this.funded.members.forEach(t => {
-          totalMembers += parseFloat(t.boost);
-        });
-        return totalMembers;
+          totalMembers += parseFloat(t.boost)
+        })
+        return totalMembers
       },
       totalGuilds() {
-        let totalGuilds = 0;
+        let totalGuilds = 0
         this.funded.guilds.forEach(t => {
-          totalGuilds += parseFloat(t.boost);
-        });
-        return totalGuilds;
+          totalGuilds += parseFloat(t.boost)
+        })
+        return totalGuilds
       },
       totalCards() {
-        let totalCards = 0;
+        let totalCards = 0
         this.funded.cards.forEach(t => {
-          totalCards += parseFloat(t.boost);
-        });
-        return totalCards;
+          totalCards += parseFloat(t.boost)
+        })
+        return totalCards
       },
       totalResources() {
-        let totalResources = 0;
+        let totalResources = 0
         this.funded.resources.forEach(t => {
-          totalResources += parseFloat(t.boost);
-        });
-        return totalResources;
+          totalResources += parseFloat(t.boost)
+        })
+        return totalResources
       },
       totalPointsSum() {
         return (
@@ -94,15 +94,15 @@
           this.totalGuilds +
           this.totalResources +
           this.totalCards
-        );
+        )
       },
       satPoint() {
-        let sp = this.$store.getters.totalWallet / this.totalPointsSum;
-        console.log({ sp });
-        return sp ? sp : 0;
+        let sp = this.$store.getters.totalWallet / this.totalPointsSum
+        console.log({ sp })
+        return sp ? sp : 0
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

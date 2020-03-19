@@ -1,67 +1,67 @@
-const express = require("express");
-const router = express.Router();
-const tr = require("tor-request");
-const crypto = require("../crypto");
-const calculations = require("../calculations");
+const express = require('express')
+const router = express.Router()
+const tr = require('tor-request')
+const crypto = require('../crypto')
+const calculations = require('../calculations')
 
 function postEvent(address, secret, body, callback) {
   tr.request(
     {
-      url: "http://" + address + "/events",
+      url: 'http://' + address + '/events',
       headers: { Authorization: secret },
-      method: "post",
+      method: 'post',
       body,
       json: true
     },
     function(err, res, resBody) {
       if (err) {
-        console.log("error res", err);
-        return callback(err);
+        console.log('error res', err)
+        return callback(err)
       }
-      callback(resBody);
+      callback(resBody)
     }
-  );
+  )
 }
 
 function checkHash(address, secret, taskId, callback) {
   tr.request(
     {
-      url: "http://" + address + "/taskhash/" + taskId,
+      url: 'http://' + address + '/taskhash/' + taskId,
       headers: { Authorization: secret },
-      method: "post",
+      method: 'post',
       json: true
     },
     function(err, res, resBody) {
       if (err) {
-        console.log("error res", err);
-        return callback(err);
+        console.log('error res', err)
+        return callback(err)
       }
-      callback(resBody);
+      callback(resBody)
     }
-  );
+  )
 }
 
 function getState(address, secret, callback) {
   tr.request(
     {
-      url: "http://" + address + "/state",
+      url: 'http://' + address + '/state',
       headers: { Authorization: secret },
-      method: "post",
+      method: 'post',
       body: { x: true },
       json: true
     },
     function(err, res, resBody) {
       if (err) {
-        console.log("error res", err);
-        return callback(err);
+        console.log('error res', err)
+        return callback(err)
       }
-      callback(null, resBody);
+      callback(null, resBody)
     }
-  );
+  )
 }
 
 module.exports = {
   postEvent,
   getState,
   checkHash
-};
+}

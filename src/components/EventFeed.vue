@@ -16,34 +16,34 @@
   export default {
     computed: {
       eventstream() {
-        return this.$store.state.eventstream;
+        return this.$store.state.eventstream
       }
     },
     methods: {
       goTo(ev) {
         if (ev.inId) {
-          this.$store.dispatch("goIn", {
+          this.$store.dispatch('goIn', {
             parents: [this.$store.getters.contextCard.taskId],
             panel: [ev.inId],
             top: 0
-          });
-          if (this.$store.state.upgrades.dimension !== "unicorn") {
-            this.$router.push("/" + this.$store.state.upgrades.mode);
+          })
+          if (this.$store.state.upgrades.dimension !== 'unicorn') {
+            this.$router.push('/' + this.$store.state.upgrades.mode)
           }
         } else if (ev.taskId) {
-          this.$store.dispatch("goIn", {
+          this.$store.dispatch('goIn', {
             parents: [this.$store.getters.contextCard.taskId],
             panel: [ev.taskId],
             top: 0
-          });
-          if (this.$store.state.upgrades.dimension !== "unicorn") {
-            this.$router.push("/" + this.$store.state.upgrades.mode);
+          })
+          if (this.$store.state.upgrades.dimension !== 'unicorn') {
+            this.$router.push('/' + this.$store.state.upgrades.mode)
           }
         }
         // XXX should switch mode / location more specifically on events such as resource-booked
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

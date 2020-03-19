@@ -20,49 +20,49 @@
   export default {
     methods: {
       goIn(taskId, guild = undefined) {
-        let parents = [];
-        let panel = [taskId];
-        let top = 0;
+        let parents = []
+        let panel = [taskId]
+        let top = 0
 
-        let t = this.$store.getters.hashMap[taskId];
-        let panelColor = this.$store.getters[t.color];
-        let topColor = panelColor.indexOf(taskId);
+        let t = this.$store.getters.hashMap[taskId]
+        let panelColor = this.$store.getters[t.color]
+        let topColor = panelColor.indexOf(taskId)
 
         if (topColor > -1) {
-          panel = panelColor;
-          top = topColor;
+          panel = panelColor
+          top = topColor
         }
 
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
 
-        if (guild) parents.push(guild);
+        if (guild) parents.push(guild)
 
-        this.$store.dispatch("goIn", { panel, top, parents });
+        this.$store.dispatch('goIn', { panel, top, parents })
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
       },
       cardInputSty(c) {
         return {
-          redtx: c === "red",
-          bluetx: c === "blue",
-          greentx: c === "green",
-          yellowtx: c === "yellow",
-          purpletx: c === "purple",
-          blacktx: c === "black"
-        };
+          redtx: c === 'red',
+          bluetx: c === 'blue',
+          greentx: c === 'green',
+          yellowtx: c === 'yellow',
+          purpletx: c === 'purple',
+          blacktx: c === 'black'
+        }
       }
     },
     computed: {
       b() {
-        return this.$store.getters.contextCard;
+        return this.$store.getters.contextCard
       },
       subguilds() {
         return this.$store.state.tasks.filter(
@@ -71,10 +71,10 @@
             this.b.subTasks
               .concat(this.b.priorities, this.b.completed)
               .indexOf(p.taskId) > -1
-        );
+        )
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

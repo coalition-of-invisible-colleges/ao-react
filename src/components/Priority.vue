@@ -19,194 +19,194 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
-  import Linky from "./Linky";
-  import Hypercard from "./Card";
-  import Checkbox from "./Checkbox";
-  import Tally from "./Tally";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
+  import Linky from './Linky'
+  import Hypercard from './Card'
+  import Checkbox from './Checkbox'
+  import Tally from './Tally'
 
   export default {
-    props: ["taskId", "inId", "inInId"],
+    props: ['taskId', 'inId', 'inInId'],
     components: { Hypercard, Linky, Checkbox, Tally },
     mounted() {
-      let el = this.$refs.wholeCard;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = this.$refs.wholeCard
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
-      let singleTap = new Hammer.Tap({ event: "singletap", time: 400 });
+      let singleTap = new Hammer.Tap({ event: 'singletap', time: 400 })
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
-      let longPress = new Hammer.Press({ time: 600 });
-      let swipe = new Hammer.Swipe({ threshold: 20 });
+      })
+      let longPress = new Hammer.Press({ time: 600 })
+      let swipe = new Hammer.Swipe({ threshold: 20 })
 
-      mc.add([doubleTap, singleTap, swipe, longPress]);
+      mc.add([doubleTap, singleTap, swipe, longPress])
 
-      doubleTap.recognizeWith(singleTap);
-      singleTap.requireFailure(doubleTap);
+      doubleTap.recognizeWith(singleTap)
+      singleTap.requireFailure(doubleTap)
 
-      mc.on("singletap", e => {
-        console.log("tap on priority");
+      mc.on('singletap', e => {
+        console.log('tap on priority')
         if (this.$store.state.context.action === this.taskId) {
-          this.deaction();
+          this.deaction()
         } else {
-          this.setAction();
+          this.setAction()
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      mc.on("doubletap", e => {
-        this.goIn();
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        this.goIn()
+        e.stopPropagation()
+      })
 
-      mc.on("press", e => {
-        this.copyCardToClipboard();
-        e.stopPropagation();
-      });
+      mc.on('press', e => {
+        this.copyCardToClipboard()
+        e.stopPropagation()
+      })
 
-      mc.on("swipeup", e => {
-        this.allocate();
-        e.stopPropagation();
-      });
+      mc.on('swipeup', e => {
+        this.allocate()
+        e.stopPropagation()
+      })
 
-      mc.on("swipedown", e => {
-        this.refocus();
-        e.stopPropagation();
-      });
+      mc.on('swipedown', e => {
+        this.refocus()
+        e.stopPropagation()
+      })
     },
     computed: {
       card() {
-        return this.$store.getters.hashMap[this.taskId];
+        return this.$store.getters.hashMap[this.taskId]
       },
       parent() {
-        return this.$store.getters.hashMap[this.inId];
+        return this.$store.getters.hashMap[this.inId]
       },
       name() {
-        return this.card.name;
+        return this.card.name
       },
       isMember() {
-        let is = false;
+        let is = false
         this.$store.state.members.some(m => {
           if (m.memberId === this.taskId) {
-            is = m.name;
-            return true;
+            is = m.name
+            return true
           }
-        });
-        return is;
+        })
+        return is
       },
       isBounty() {
         return this.$store.getters.bounties.some(t => {
-          return t.taskId === this.taskId;
-        });
+          return t.taskId === this.taskId
+        })
       },
       cardAge() {
-        let now = Date.now();
-        let msSince = now - this.card.timestamp;
-        let days = msSince / (1000 * 60 * 60 * 24);
-        return days;
+        let now = Date.now()
+        let msSince = now - this.card.timestamp
+        let days = msSince / (1000 * 60 * 60 * 24)
+        return days
       },
       cardStart() {
         // XXX recalc on nav
         if (this.card.book.startTs) {
-          let now = Date.now();
-          let msTill = this.card.book.startTs - now;
+          let now = Date.now()
+          let msTill = this.card.book.startTs - now
           // XXX TODO
-          let days = msTill / (1000 * 60 * 60 * 24);
-          let hours = 0;
-          let minutes = 0;
+          let days = msTill / (1000 * 60 * 60 * 24)
+          let hours = 0
+          let minutes = 0
           return {
             days,
             hours,
             minutes
-          };
+          }
         }
       },
       cardInputSty() {
-        let color;
+        let color
         this.$store.state.tasks.some(t => {
           if (this.taskId === t.taskId) {
-            color = t.color;
-            return true;
+            color = t.color
+            return true
           }
-        });
+        })
         return {
-          redwx: color == "red",
-          bluewx: color == "blue",
-          greenwx: color == "green",
-          yellowwx: color == "yellow",
-          purplewx: color == "purple",
-          blackwx: color == "black"
-        };
+          redwx: color == 'red',
+          bluewx: color == 'blue',
+          greenwx: color == 'green',
+          yellowwx: color == 'yellow',
+          purplewx: color == 'purple',
+          blackwx: color == 'black'
+        }
       }
     },
     methods: {
       deaction() {
-        this.$store.commit("setAction", false);
+        this.$store.commit('setAction', false)
       },
       setAction() {
-        this.$store.commit("setAction", this.taskId);
+        this.$store.commit('setAction', this.taskId)
       },
       goIn() {
-        let panel = this.parent.priorities;
-        let parents = [];
-        let top = this.parent.priorities.indexOf(this.taskId);
+        let panel = this.parent.priorities
+        let parents = []
+        let top = this.parent.priorities.indexOf(this.taskId)
 
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
 
         if (this.inInId) {
-          parents.push(this.inInId);
+          parents.push(this.inInId)
         }
 
         if (this.inId) {
-          parents.push(this.inId);
+          parents.push(this.inId)
         }
 
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
+        })
 
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
 
-        this.$store.commit("startLoading", "unicorn");
+        this.$store.commit('startLoading', 'unicorn')
 
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       copyCardToClipboard() {
-        navigator.clipboard.writeText(this.name);
+        navigator.clipboard.writeText(this.name)
       },
       allocate() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-prioritized",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-prioritized',
           taskId: this.taskId,
           inId: this.$store.getters.contextCard.taskId
-        });
+        })
       },
       refocus() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-refocused",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-refocused',
           inId: this.inId,
           taskId: this.taskId
-        });
-        this.$store.commit("setAction", false);
+        })
+        this.$store.commit('setAction', false)
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

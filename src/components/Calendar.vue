@@ -17,134 +17,134 @@
 </template>
 
 <script>
-  import Day from "./Day.vue";
+  import Day from './Day.vue'
 
   function getDMY(ts) {
-    let d = new Date(ts);
-    let day = d.getDate();
-    let month = d.getMonth();
-    let year = d.getFullYear();
-    return { day, month, year };
+    let d = new Date(ts)
+    let day = d.getDate()
+    let month = d.getMonth()
+    let year = d.getFullYear()
+    return { day, month, year }
   }
 
   export default {
     data() {},
-    props: ["inId"],
+    props: ['inId'],
     components: {
       Day
     },
     methods: {
       nextMonth() {
         if (this.month == 11) {
-          this.year++;
-          this.month = 0;
+          this.year++
+          this.month = 0
         } else {
-          this.month++;
+          this.month++
         }
       },
       prevMonth() {
         if (this.month == 0) {
-          this.year--;
-          this.month = 11;
+          this.year--
+          this.month = 11
         } else {
-          this.month--;
+          this.month--
         }
       },
       nextYear() {
-        this.year++;
+        this.year++
       },
       prevYear() {
-        this.year--;
+        this.year--
       },
       checkToday(day, month, year) {
         let isToday =
           day === this.today.day &&
           month === this.today.month &&
-          year === this.today.year;
-        return isToday;
+          year === this.today.year
+        return isToday
       }
     },
     computed: {
       today() {
-        return getDMY(Date.now());
+        return getDMY(Date.now())
       },
       areEvs() {
-        return Object.keys(this.eventsByDay).length > 0;
+        return Object.keys(this.eventsByDay).length > 0
       },
       eventsByDay() {
-        let evs = {};
+        let evs = {}
         if (this.inId) {
           this.todaysEvents.forEach(t => {
             if (t && t.book && t.book.startTs) {
-              let date = getDMY(t.book.startTs);
+              let date = getDMY(t.book.startTs)
               if (date.month === this.month && date.year === this.year) {
                 if (!evs[date.day]) {
-                  evs[date.day] = [];
+                  evs[date.day] = []
                 }
                 if (evs[date.day].indexOf(t) === -1) {
-                  evs[date.day].push(t);
+                  evs[date.day].push(t)
                 }
               }
             }
-          });
+          })
         }
 
-        return evs;
+        return evs
       },
       card() {
-        return this.$store.getters.hashMap[this.inId];
+        return this.$store.getters.hashMap[this.inId]
       },
       todaysEvents() {
-        let allTasks;
+        let allTasks
         if (this.inId && this.card) {
           allTasks = this.card.subTasks
             .concat(this.card.priorities)
-            .concat(this.card.completed);
+            .concat(this.card.completed)
         } else {
-          allTasks = [];
+          allTasks = []
         }
 
         return allTasks.map(tId => {
-          return this.$store.getters.hashMap[tId];
-        });
+          return this.$store.getters.hashMap[tId]
+        })
       },
       firstDay() {
-        let date = new Date(this.year, this.month, 1);
-        let firstDay = date.getDay();
-        return firstDay;
+        let date = new Date(this.year, this.month, 1)
+        let firstDay = date.getDay()
+        return firstDay
       },
       days() {
-        return new Date(this.year, this.month + 1, 0).getDate();
+        return new Date(this.year, this.month + 1, 0).getDate()
       },
       monthName() {
         var mL = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December"
-        ];
-        return mL[this.month];
+          'January',
+          'February',
+          'March',
+          'April',
+          'May',
+          'June',
+          'July',
+          'August',
+          'September',
+          'October',
+          'November',
+          'December'
+        ]
+        return mL[this.month]
       }
     },
     data() {
-      let current = new Date();
-      let year = current.getFullYear();
-      let month = current.getMonth();
+      let current = new Date()
+      let year = current.getFullYear()
+      let month = current.getMonth()
       return {
-        DAYS_OF_WEEK: ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"],
+        DAYS_OF_WEEK: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
         month,
         year
-      };
+      }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -18,175 +18,175 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
-  import Linky from "./Linky";
-  import Hypercard from "./Card";
-  import Tally from "./Tally";
+  import Linky from './Linky'
+  import Hypercard from './Card'
+  import Tally from './Tally'
 
   export default {
-    props: ["taskId", "inId", "c"],
+    props: ['taskId', 'inId', 'c'],
     components: { Hypercard, Linky, Tally },
     mounted() {
-      let el = this.$refs.wholeCard;
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = this.$refs.wholeCard
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
-      let longPress = new Hammer.Press({ time: 600 });
+      })
+      let longPress = new Hammer.Press({ time: 600 })
 
-      mc.add([doubleTap, longPress]);
+      mc.add([doubleTap, longPress])
 
-      longPress.recognizeWith([doubleTap]);
-      longPress.requireFailure([doubleTap]);
+      longPress.recognizeWith([doubleTap])
+      longPress.requireFailure([doubleTap])
 
-      mc.on("doubletap", e => {
-        this.goIn(this.taskId);
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        this.goIn(this.taskId)
+        e.stopPropagation()
+      })
 
-      mc.on("press", e => {
-        this.copyCardToClipboard();
-        e.stopPropagation();
-      });
+      mc.on('press', e => {
+        this.copyCardToClipboard()
+        e.stopPropagation()
+      })
 
-      let checkel = this.$refs.checkbox;
-      if (!checkel) return;
-      let checkmc = Propagating(new Hammer.Manager(checkel));
+      let checkel = this.$refs.checkbox
+      if (!checkel) return
+      let checkmc = Propagating(new Hammer.Manager(checkel))
 
-      let Tap = new Hammer.Tap({ time: 400 });
-      checkmc.add(Tap);
-      checkmc.on("tap", e => {
+      let Tap = new Hammer.Tap({ time: 400 })
+      checkmc.add(Tap)
+      checkmc.on('tap', e => {
         if (!this.isCompleted) {
-          this.complete();
+          this.complete()
         } else {
-          this.uncheck();
+          this.uncheck()
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
     },
     methods: {
       goIn(taskId) {
-        let panel = [taskId];
-        let parents = [];
-        let top = 0;
+        let panel = [taskId]
+        let parents = []
+        let top = 0
 
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         } else if (this.$store.getters.memberCard.taskId) {
-          parents.push(this.$store.getters.memberCard.taskId);
+          parents.push(this.$store.getters.memberCard.taskId)
         }
 
         if (this.inId) {
-          parents.push(this.inId);
+          parents.push(this.inId)
         }
 
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           parents,
           top,
           panel
-        });
+        })
 
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
 
-        this.$store.commit("startLoading", "unicorn");
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$store.commit('startLoading', 'unicorn')
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       },
       complete() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-claimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-claimed',
           inId: this.inId,
           taskId: this.taskId,
           memberId: this.$store.getters.member.memberId,
-          notes: "checked by " + this.$store.getters.member.memberId
-        });
+          notes: 'checked by ' + this.$store.getters.member.memberId
+        })
       },
       uncheck() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-unclaimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-unclaimed',
           taskId: this.taskId,
           memberId: this.$store.getters.member.memberId,
-          notes: ""
-        });
+          notes: ''
+        })
       },
       copyCardToClipboard() {
         navigator.clipboard.writeText(this.card.name).then(
           function() {},
           function() {
-            console.log("copy failed");
+            console.log('copy failed')
           }
-        );
+        )
       }
     },
     computed: {
       card() {
-        return this.$store.getters.hashMap[this.taskId];
+        return this.$store.getters.hashMap[this.taskId]
       },
       isMember() {
-        let is = false;
+        let is = false
         this.$store.state.members.some(m => {
           if (m.memberId === this.taskId) {
-            is = m.name;
-            return true;
+            is = m.name
+            return true
           }
-        });
-        return is;
+        })
+        return is
       },
       isBounty() {
         return this.$store.getters.bounties.some(t => {
-          return t.taskId === this.taskId;
-        });
+          return t.taskId === this.taskId
+        })
       },
       cardStart() {
         // XXX recalc on nav
         if (this.card.book.startTs) {
-          let now = Date.now();
-          let msTill = this.card.book.startTs - now;
+          let now = Date.now()
+          let msTill = this.card.book.startTs - now
           // XXX TODO
-          let days = msTill / (1000 * 60 * 60 * 24);
-          let hours = 0;
-          let minutes = 0;
+          let days = msTill / (1000 * 60 * 60 * 24)
+          let hours = 0
+          let minutes = 0
           return {
             days,
             hours,
             minutes
-          };
+          }
         }
       },
       cardInputSty() {
         return {
-          redwx: this.card.color == "red",
-          bluewx: this.card.color == "blue",
-          greenwx: this.card.color == "green",
-          yellowwx: this.card.color == "yellow",
-          purplewx: this.card.color == "purple",
-          blackwx: this.card.color == "black"
-        };
+          redwx: this.card.color == 'red',
+          bluewx: this.card.color == 'blue',
+          greenwx: this.card.color == 'green',
+          yellowwx: this.card.color == 'yellow',
+          purplewx: this.card.color == 'purple',
+          blackwx: this.card.color == 'black'
+        }
       },
       cardAge() {
-        let now = Date.now();
-        let msSince = now - this.c.timestamp;
-        let days = msSince / (1000 * 60 * 60 * 24);
-        return days;
+        let now = Date.now()
+        let msSince = now - this.c.timestamp
+        let days = msSince / (1000 * 60 * 60 * 24)
+        return days
       },
       isCompleted() {
         return (
           this.card.claimed.indexOf(this.$store.getters.member.memberId) > -1
-        );
+        )
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

@@ -21,64 +21,64 @@ isUni<template lang="pug">
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
 
-  import Status from "./Status";
+  import Status from './Status'
 
   export default {
     mounted() {
-      let el = document.getElementById("helm");
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = document.getElementById('helm')
+      let mc = Propagating(new Hammer.Manager(el))
 
-      let Swipe = new Hammer.Swipe();
-      mc.add(Swipe);
-      mc.on("swipeleft", e => {
-        this.$store.dispatch("previousUpgradeMode", this.$router);
-        e.stopPropagation();
-      });
+      let Swipe = new Hammer.Swipe()
+      mc.add(Swipe)
+      mc.on('swipeleft', e => {
+        this.$store.dispatch('previousUpgradeMode', this.$router)
+        e.stopPropagation()
+      })
 
-      mc.on("swiperight", e => {
-        this.$store.dispatch("nextUpgradeMode", this.$router);
-        e.stopPropagation();
-      });
+      mc.on('swiperight', e => {
+        this.$store.dispatch('nextUpgradeMode', this.$router)
+        e.stopPropagation()
+      })
 
-      mc.on("swipeup", e => {
-        this.$store.commit("closeUpgrades");
-        e.stopPropagation();
-      });
+      mc.on('swipeup', e => {
+        this.$store.commit('closeUpgrades')
+        e.stopPropagation()
+      })
 
-      mc.on("swipedown", e => {
-        this.$store.dispatch("nextUpgradeMode", this.$router);
-        e.stopPropagation();
-      });
+      mc.on('swipedown', e => {
+        this.$store.dispatch('nextUpgradeMode', this.$router)
+        e.stopPropagation()
+      })
 
-      let helmTap = new Hammer.Tap({ time: 400 });
+      let helmTap = new Hammer.Tap({ time: 400 })
       let helmDoubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
+      })
       let helmTripleTap = new Hammer.Tap({
-        event: "tripletap",
+        event: 'tripletap',
         taps: 3,
         time: 400,
         interval: 400
-      });
+      })
       let helmQuadrupleTap = new Hammer.Tap({
-        event: "quadrupletap",
+        event: 'quadrupletap',
         taps: 4,
         time: 400,
         interval: 400
-      });
+      })
       let helmQuintupleTap = new Hammer.Tap({
-        event: "quintupletap",
+        event: 'quintupletap',
         taps: 5,
         time: 400,
         interval: 400
-      });
-      let helmPress = new Hammer.Press({ time: 600 });
+      })
+      let helmPress = new Hammer.Press({ time: 600 })
       mc.add([
         helmPress,
         helmQuintupleTap,
@@ -86,159 +86,159 @@ isUni<template lang="pug">
         helmTripleTap,
         helmDoubleTap,
         helmTap
-      ]);
+      ])
       helmPress.recognizeWith([
         helmQuintupleTap,
         helmQuadrupleTap,
         helmTripleTap,
         helmDoubleTap,
         helmTap
-      ]);
+      ])
       helmTap.recognizeWith([
         helmQuintupleTap,
         helmQuadrupleTap,
         helmTripleTap,
         helmDoubleTap
-      ]);
+      ])
       helmTap.requireFailure([
         helmQuintupleTap,
         helmQuadrupleTap,
         helmTripleTap,
         helmDoubleTap
-      ]);
+      ])
       helmDoubleTap.recognizeWith([
         helmQuintupleTap,
         helmQuadrupleTap,
         helmTripleTap
-      ]);
+      ])
       helmDoubleTap.requireFailure([
         helmQuintupleTap,
         helmQuadrupleTap,
         helmTripleTap
-      ]);
-      helmTripleTap.recognizeWith([helmQuintupleTap, helmQuadrupleTap]);
-      helmTripleTap.requireFailure([helmQuintupleTap, helmQuadrupleTap]);
-      helmQuadrupleTap.recognizeWith(helmQuintupleTap);
-      helmQuadrupleTap.requireFailure(helmQuintupleTap);
+      ])
+      helmTripleTap.recognizeWith([helmQuintupleTap, helmQuadrupleTap])
+      helmTripleTap.requireFailure([helmQuintupleTap, helmQuadrupleTap])
+      helmQuadrupleTap.recognizeWith(helmQuintupleTap)
+      helmQuadrupleTap.requireFailure(helmQuintupleTap)
 
-      mc.on("tap", e => {
-        this.$store.dispatch("nextUpgradeMode", this.$router);
-        e.stopPropagation();
-      });
+      mc.on('tap', e => {
+        this.$store.dispatch('nextUpgradeMode', this.$router)
+        e.stopPropagation()
+      })
 
-      mc.on("doubletap", e => {
-        console.log("double click");
-        this.$store.dispatch("flashHelm", 0.5);
-        this.goUni("boat");
-        e.stopPropagation();
-      });
+      mc.on('doubletap', e => {
+        console.log('double click')
+        this.$store.dispatch('flashHelm', 0.5)
+        this.goUni('boat')
+        e.stopPropagation()
+      })
 
-      mc.on("tripletap", e => {
-        console.log("triple click");
-        this.$store.dispatch("flashHelm", 0.5);
-        this.goUni("badge");
-        e.stopPropagation();
-      });
+      mc.on('tripletap', e => {
+        console.log('triple click')
+        this.$store.dispatch('flashHelm', 0.5)
+        this.goUni('badge')
+        e.stopPropagation()
+      })
 
-      mc.on("quadrupletap", e => {
-        this.$store.dispatch("flashHelm", 0.5);
-        this.goUni("chest");
-        e.stopPropagation();
-      });
+      mc.on('quadrupletap', e => {
+        this.$store.dispatch('flashHelm', 0.5)
+        this.goUni('chest')
+        e.stopPropagation()
+      })
 
-      mc.on("quintupletap", e => {
-        this.$store.dispatch("flashHelm", 0.5);
-        this.goUni("timecube");
-        e.stopPropagation();
-      });
+      mc.on('quintupletap', e => {
+        this.$store.dispatch('flashHelm', 0.5)
+        this.goUni('timecube')
+        e.stopPropagation()
+      })
 
-      mc.on("press", e => {
+      mc.on('press', e => {
         if (this.isUni && !this.isPepe) {
           if (
-            this.$store.state.upgrades.mode === "doge" &&
+            this.$store.state.upgrades.mode === 'doge' &&
             this.$store.getters.contextCard.taskId ===
               this.$store.getters.memberCard.taskId
           ) {
-            this.$store.dispatch("flashHelm", 5);
-            this.goFront("doge");
+            this.$store.dispatch('flashHelm', 5)
+            this.goFront('doge')
           } else {
-            this.$store.dispatch("flashHelm", 2);
-            this.goUni("doge", true);
+            this.$store.dispatch('flashHelm', 2)
+            this.goUni('doge', true)
             if (
               this.$store.getters.contextCard.taskId !==
               this.$store.getters.memberCard.taskId
             ) {
-              this.goHome();
+              this.goHome()
             }
           }
         } else {
-          this.$store.dispatch("flashHelm", 2);
-          this.goUni("doge");
+          this.$store.dispatch('flashHelm', 2)
+          this.goUni('doge')
           if (
             this.$store.getters.contextCard.taskId !==
             this.$store.getters.memberCard.taskId
           ) {
-            this.goHome();
+            this.goHome()
           }
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      let rel = document.getElementById("helmright");
-      let rmc = new Hammer.Manager(rel);
+      let rel = document.getElementById('helmright')
+      let rmc = new Hammer.Manager(rel)
 
-      let Tap2 = new Hammer.Tap({ time: 400 });
-      rmc.add(Tap2);
-      rmc.on("tap", e => {
-        this.$store.dispatch("nextUpgradeMode", this.$router);
-      });
+      let Tap2 = new Hammer.Tap({ time: 400 })
+      rmc.add(Tap2)
+      rmc.on('tap', e => {
+        this.$store.dispatch('nextUpgradeMode', this.$router)
+      })
 
-      let lel = document.getElementById("helmleft");
-      let lmc = new Hammer.Manager(lel);
+      let lel = document.getElementById('helmleft')
+      let lmc = new Hammer.Manager(lel)
 
-      let Tap3 = new Hammer.Tap({ time: 400 });
-      lmc.add(Tap3);
-      lmc.on("tap", e => {
-        this.$store.dispatch("previousUpgradeMode", this.$router);
-      });
+      let Tap3 = new Hammer.Tap({ time: 400 })
+      lmc.add(Tap3)
+      lmc.on('tap', e => {
+        this.$store.dispatch('previousUpgradeMode', this.$router)
+      })
     },
     methods: {
       goUni(mode, silent = false) {
-        this.$store.commit("startLoading", "uni");
-        this.$router.push("/" + mode);
+        this.$store.commit('startLoading', 'uni')
+        this.$router.push('/' + mode)
       },
       goFront(mode) {
-        this.$store.commit("startLoading", "sun");
-        this.$router.push("/front/" + mode);
+        this.$store.commit('startLoading', 'sun')
+        this.$router.push('/front/' + mode)
       },
       goHome(taskId) {
-        let parents = [];
+        let parents = []
         if (this.$store.getters.contextCard.taskId) {
-          parents.push(this.$store.getters.contextCard.taskId);
+          parents.push(this.$store.getters.contextCard.taskId)
         }
-        this.$store.dispatch("goIn", {
+        this.$store.dispatch('goIn', {
           panel: [this.$store.getters.memberCard.taskId],
           top: 0,
           parents
-        });
+        })
         if (
-          this.$store.state.upgrades.mode === "doge" &&
+          this.$store.state.upgrades.mode === 'doge' &&
           this.$store.getters.contextCard.priorities.length > 0
         ) {
-          this.$store.commit("setMode", 1);
+          this.$store.commit('setMode', 1)
         }
-        this.$router.push("/" + this.$store.state.upgrades.mode);
+        this.$router.push('/' + this.$store.state.upgrades.mode)
       }
     },
     computed: {
       isUni() {
-        return this.$store.state.upgrades.dimension === "unicorn";
+        return this.$store.state.upgrades.dimension === 'unicorn'
       },
       isPepe() {
-        return this.$router.currentRoute.path.split("/")[1] === "grid";
+        return this.$router.currentRoute.path.split('/')[1] === 'grid'
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>

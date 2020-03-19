@@ -14,12 +14,12 @@
 </template>
 
 <script>
-  import Hammer from "hammerjs";
-  import Propagating from "propagating-hammerjs";
-  import uuidv1 from "uuid/v1";
-  import ResourceBook from "./ResourceBook";
-  import GuildCreate from "./GuildCreate";
-  import PointsSet from "./PointsSet";
+  import Hammer from 'hammerjs'
+  import Propagating from 'propagating-hammerjs'
+  import uuidv1 from 'uuid/v1'
+  import ResourceBook from './ResourceBook'
+  import GuildCreate from './GuildCreate'
+  import PointsSet from './PointsSet'
 
   export default {
     components: { ResourceBook, GuildCreate, PointsSet },
@@ -29,230 +29,230 @@
         isCubeOpen: false,
         isChestOpen: false,
         uuid: uuidv1()
-      };
+      }
     },
-    props: ["b", "inId"],
+    props: ['b', 'inId'],
     mounted() {
-      let el = document.getElementById(this.uuid);
-      if (!el) return;
-      let mc = Propagating(new Hammer.Manager(el));
+      let el = document.getElementById(this.uuid)
+      if (!el) return
+      let mc = Propagating(new Hammer.Manager(el))
 
-      let Tap = new Hammer.Tap({ time: 400 });
-      mc.add(Tap);
-      mc.on("tap", e => {
+      let Tap = new Hammer.Tap({ time: 400 })
+      mc.add(Tap)
+      mc.on('tap', e => {
         switch (this.$store.state.upgrades.mode) {
-          case "doge":
-          case "boat":
+          case 'doge':
+          case 'boat':
             if (this.isOracle) {
               if (!this.isCompleted) {
-                this.complete();
+                this.complete()
               } else {
-                this.uncheck();
+                this.uncheck()
               }
             } else if (this.isTop) {
-              this.dogeIt();
+              this.dogeIt()
             } else {
-              this.flagIt();
+              this.flagIt()
             }
-            break;
-          case "chest":
+            break
+          case 'chest':
             if (!this.isCompleted) {
-              this.complete();
+              this.complete()
             } else {
-              this.uncheck();
+              this.uncheck()
             }
-            break;
-          case "badge":
-            this.togglePay();
-            break;
-          case "timecube":
-            this.toggleCube();
-            break;
+            break
+          case 'badge':
+            this.togglePay()
+            break
+          case 'timecube':
+            this.toggleCube()
+            break
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      let Press = new Hammer.Press({ time: 400 });
-      mc.add(Press);
-      mc.on("press", e => {
+      let Press = new Hammer.Press({ time: 400 })
+      mc.add(Press)
+      mc.on('press', e => {
         switch (this.$store.state.upgrades.mode) {
           case false:
-            return;
-          case "doge":
-          case "boat":
-            this.dogeIt();
-            break;
-          case "badge":
-            return;
-          case "chest":
-            this.toggleChest();
-            break;
-          case "timecube":
-            return;
+            return
+          case 'doge':
+          case 'boat':
+            this.dogeIt()
+            break
+          case 'badge':
+            return
+          case 'chest':
+            this.toggleChest()
+            break
+          case 'timecube':
+            return
         }
-        e.stopPropagation();
-      });
+        e.stopPropagation()
+      })
 
-      let Swipe = new Hammer.Swipe();
-      mc.add(Swipe);
-      mc.on("swipeleft", e => {
-        this.$store.dispatch("previousUpgradeMode", this.$router);
-        e.stopPropagation();
-      });
+      let Swipe = new Hammer.Swipe()
+      mc.add(Swipe)
+      mc.on('swipeleft', e => {
+        this.$store.dispatch('previousUpgradeMode', this.$router)
+        e.stopPropagation()
+      })
 
-      mc.on("swiperight", e => {
-        this.$store.dispatch("nextUpgradeMode", this.$router);
-        e.stopPropagation();
-      });
+      mc.on('swiperight', e => {
+        this.$store.dispatch('nextUpgradeMode', this.$router)
+        e.stopPropagation()
+      })
 
       let doubleTap = new Hammer.Tap({
-        event: "doubletap",
+        event: 'doubletap',
         taps: 2,
         time: 400,
         interval: 400
-      });
-      mc.add(doubleTap);
-      mc.on("doubletap", e => {
-        e.stopPropagation();
-      });
+      })
+      mc.add(doubleTap)
+      mc.on('doubletap', e => {
+        e.stopPropagation()
+      })
     },
     methods: {
       complete() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-claimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-claimed',
           inId: this.inId,
           taskId: this.b.taskId,
           memberId: this.$store.getters.member.memberId,
-          notes: "checked by " + this.$store.getters.member.memberId
-        });
+          notes: 'checked by ' + this.$store.getters.member.memberId
+        })
       },
       uncheck() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-unclaimed",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-unclaimed',
           taskId: this.b.taskId,
           memberId: this.$store.getters.member.memberId,
-          notes: ""
-        });
+          notes: ''
+        })
       },
       togglePay() {
-        this.isPayOpen = !this.isPayOpen;
+        this.isPayOpen = !this.isPayOpen
         if (this.isPayOpen) {
-          this.isCubeOpen = false;
-          this.isChestOpen = false;
+          this.isCubeOpen = false
+          this.isChestOpen = false
         }
       },
       toggleCube() {
-        this.isCubeOpen = !this.isCubeOpen;
+        this.isCubeOpen = !this.isCubeOpen
         if (this.isCubeOpen) {
-          this.isPayOpen = false;
-          this.isChestOpen = false;
+          this.isPayOpen = false
+          this.isChestOpen = false
         }
       },
       toggleChest() {
-        this.isChestOpen = !this.isChestOpen;
+        this.isChestOpen = !this.isChestOpen
         if (this.isChestOpen) {
-          this.isPayOpen = false;
-          this.isCubeOpen = false;
+          this.isPayOpen = false
+          this.isCubeOpen = false
         }
       },
       deckIt() {
-        this.$store.dispatch("makeEvent", {
-          type: "task-sub-tasked",
+        this.$store.dispatch('makeEvent', {
+          type: 'task-sub-tasked',
           subTask: this.b.taskId,
           taskId: this.$store.getters.memberCard.taskId
-        });
+        })
       },
       flagIt() {
         let parentId = this.$store.state.context.parent[
           this.$store.state.context.parent.length - 1
-        ];
+        ]
 
         if (this.inId) {
-          this.$store.dispatch("makeEvent", {
-            type: "task-prioritized",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-prioritized',
             taskId: this.b.taskId,
             inId: this.inId
-          });
+          })
         } else if (parentId) {
-          this.$store.dispatch("makeEvent", {
-            type: "task-prioritized",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-prioritized',
             taskId: this.b.taskId,
             inId: parentId
-          });
-          this.$store.dispatch("goUp", {
+          })
+          this.$store.dispatch('goUp', {
             target: parentId,
             panel: [parentId],
             top: 0
-          });
+          })
         }
-        if (this.$store.state.upgrades.mode === "doge") {
-          this.$store.commit("setMode", 1);
-          this.$router.push("/boat");
+        if (this.$store.state.upgrades.mode === 'doge') {
+          this.$store.commit('setMode', 1)
+          this.$router.push('/boat')
         }
       },
       dogeIt() {
         if (!this.isDoged) {
-          this.$store.dispatch("makeEvent", {
-            type: "task-prioritized",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-prioritized',
             taskId: this.b.taskId,
             inId: this.$store.getters.memberCard.taskId
-          });
+          })
         } else {
-          this.$store.dispatch("makeEvent", {
-            type: "task-refocused",
+          this.$store.dispatch('makeEvent', {
+            type: 'task-refocused',
             taskId: this.b.taskId,
             inId: this.$store.getters.memberCard.taskId
-          });
+          })
         }
       }
     },
     computed: {
       isOracle() {
         return (
-          this.$store.state.upgrades.dimension === "sun" &&
-          this.$store.state.upgrades.mode === "doge"
-        );
+          this.$store.state.upgrades.dimension === 'sun' &&
+          this.$store.state.upgrades.mode === 'doge'
+        )
       },
       isTop() {
         return (
-          this.$store.state.upgrades.dimension === "sun" &&
-          this.$store.state.upgrades.mode === "boat"
-        );
+          this.$store.state.upgrades.dimension === 'sun' &&
+          this.$store.state.upgrades.mode === 'boat'
+        )
       },
       flagClass() {
         return {
           boat:
-            (this.$store.state.upgrades.mode === "boat" ||
-              this.$store.state.upgrades.mode === "doge") &&
+            (this.$store.state.upgrades.mode === 'boat' ||
+              this.$store.state.upgrades.mode === 'doge') &&
             !this.isDoged,
           doge:
-            (this.$store.state.upgrades.mode === "boat" ||
-              this.$store.state.upgrades.mode === "doge") &&
+            (this.$store.state.upgrades.mode === 'boat' ||
+              this.$store.state.upgrades.mode === 'doge') &&
             this.isDoged,
-          chest: this.$store.state.upgrades.mode === "chest",
-          timecube: this.$store.state.upgrades.mode === "timecube"
-        };
+          chest: this.$store.state.upgrades.mode === 'chest',
+          timecube: this.$store.state.upgrades.mode === 'timecube'
+        }
       },
       isFlagged() {
         if (!this.inId) {
-          return false;
+          return false
         }
         return (
           this.$store.getters.hashMap[this.inId].priorities.indexOf(
             this.b.taskId
           ) > -1
-        );
+        )
       },
       isCompleted() {
-        return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1;
+        return this.b.claimed.indexOf(this.$store.getters.member.memberId) > -1
       },
       isDoged() {
         return (
           this.$store.getters.memberCard.priorities.indexOf(this.b.taskId) > -1
-        );
+        )
       }
     }
-  };
+  }
 </script>
 
 <style lang="stylus" scoped>
