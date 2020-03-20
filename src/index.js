@@ -1,7 +1,6 @@
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-import mobx from 'mobx'
-const { observable, computed, autorun } = mobx
+import { observable, computed, autorun } from 'mobx'
 class MyStore {
   @observable data = 'foo'
 }
@@ -12,14 +11,3 @@ autorun(() => {
 })
 
 myStore.data = 'bar'
-// import React from "react";
-// import ReactDOM from "react-dom";
-// let HelloWorld = () => {
-//     return <div>
-//               <h1>Hello World!</h1> by Amila Silva (amilasilva88@gmail.com)
-//            </div>;
-// }
-// ReactDOM.render(
-//     <HelloWorld />,
-//     document.getElementById("root")
-// );
