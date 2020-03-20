@@ -6,13 +6,17 @@ const allEvents = require('./events')
 const calculations = require('../calculations')
 const LightningClient = require('lightning-client')
 const { serverState } = require('./state')
-const client = new LightningClient(config.clightning.dir, true)
+const client = config.clightning.enable
+  ? new LightningClient(config.clightning.dir, true)
+  : null
 
 lightningRouter.post('/lightning/channel', (req, res) => {
-  client.fundchannel(req.body.id, 'all').then(channel => {
-    console.log(channel)
-    res.send(true)
-  })
+  if (client) {
+    client.fundchannel(req.body.id, 'all').then(channel => {
+      console.log(channel)
+      res.send(true)
+    })
+  }
 })
 
 function createInvoice(amount, label, description, expiresInSec) {

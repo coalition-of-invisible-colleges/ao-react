@@ -5,6 +5,7 @@ const express = require('express')
 const path = require('path')
 const socketIo = require('socket.io')
 const socketProtector = require('socketio-auth')
+const config = require('../../configuration.js')
 const dctrlDb = require('./dctrlDb')
 const state = require('./state')
 const reactions = require('./reactions')
@@ -29,9 +30,10 @@ function startDctrlAo() {
       watchSpot()
       rent()
       link()
-      lightning.recordEveryInvoice(state.serverState.cash.pay_index)
-      lightning.watchOnChain()
-
+      if (config.clightning.enable) {
+        lightning.recordEveryInvoice(state.serverState.cash.pay_index)
+        lightning.watchOnChain()
+      }
       const serverReactions = dctrlDb.changeFeed
         .onValue(ev => {
           state.applyEvent(state.serverState, ev)
