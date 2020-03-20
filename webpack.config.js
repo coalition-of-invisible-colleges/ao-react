@@ -1,16 +1,16 @@
-var webpack = require('webpack');
-var path = require('path');
+var webpack = require('webpack')
+var path = require('path')
 
 // variables
 var isProduction =
-  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production';
-var sourcePath = path.join(__dirname, './src');
-var outPath = path.join(__dirname, './build');
+  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
+var sourcePath = path.join(__dirname, './src')
+var outPath = path.join(__dirname, './public')
 
 // plugins
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var MiniCssExtractPlugin = require('mini-css-extract-plugin');
-var WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+var WebpackCleanupPlugin = require('webpack-cleanup-plugin')
 
 module.exports = {
   context: sourcePath,
@@ -38,10 +38,10 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: [
-          !isProduction && {
-            loader: 'babel-loader',
-            options: { plugins: [] }
-          },
+          // !isProduction && {
+          //   loader: 'babel-loader',
+          //   options: { plugins: [] }
+          // },
           'ts-loader'
         ].filter(Boolean)
       },
@@ -142,4 +142,4 @@ module.exports = {
     fs: 'empty',
     net: 'empty'
   }
-};
+}
