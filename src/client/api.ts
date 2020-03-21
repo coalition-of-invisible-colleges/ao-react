@@ -41,8 +41,10 @@ class AoApi {
         return res
       })
   }
-  // async createAndOrAddCardToGrid(x,y taskId): Promise<request.Response> {
-  //   this.createAndOrAddCardToGrid
+  // async createAndOrAddCardToGrid(x, y, name): Promise<request.Response> {
+  //   if (_.isObject())
+  //     return this.addCardToGrid(x, y, taskId)
+  //   else return this.createCard()
   // }
 }
 

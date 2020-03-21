@@ -6,12 +6,12 @@
   "scripts": {
     "webdev": "webpack-dev-server --mode development --hot --progress --colors --port 3000 --open",
     "webpack": "webpack -p --progress --colors",
-    "setup": "chmod u+x install.sh && ./install.sh",
-    "start": "run-p webdev server",
+    "start": "run-s webpack server",
     "server": "node src/server/app.js",
     "pretty": "npm run pretty-js && npm run pretty-vue",
     "pretty-js": "prettier --write \"src/**/*.js\"",
-    "pretty-vue": "prettier --parser \"vue\" --write \"src/**/*.vue\"",
+    "pretty-ts": "prettier --parser \"ts\" --write \"src/**/*.tsx\" && pretty-tsx",
+    "pretty-tsx": "prettier --parser \"ts\" --write \"src/**/*.ts\"",
     "precommit": "lint-staged",
     "prepush": "lint-staged"
   },
@@ -28,6 +28,7 @@
     "@most/core": "^1.5.0",
     "@most/dom-event": "^2.2.0",
     "@most/scheduler": "^1.2.3",
+    "@types/lodash": "^4.14.149",
     "@types/socket.io": "^2.1.4",
     "@types/superagent": "^4.1.7",
     "better-sqlite3": "^5.4.3",

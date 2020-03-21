@@ -1,5 +1,5 @@
-import { observe, autorun, intercept, reaction } from 'mobx'
-import aoStore from './store'
+// import { observe, autorun, intercept, reaction } from 'mobx'
+// import aoStore from './store'
 // export const disposer0 = observe(aoStore.state.tasks, change => {
 //   console.log('observe!!', change)
 //   if (!change.object) {
