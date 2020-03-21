@@ -4,7 +4,7 @@ import aoStore from './store'
 
 class AoApi {
   constructor() {}
-  public createCard(name: string): Promise<request.Response> {
+  async createCard(name: string): Promise<request.Response> {
     const act = {
       type: 'task-created',
       name: name,
@@ -24,8 +24,8 @@ class AoApi {
       })
   }
 
-  addCardToGrid(x, y, taskId) {
-    return {
+  async addCardToGrid(x, y, taskId): Promise<request.Response> {
+    const act = {
       type: 'grid-add',
       taskId,
       coord: {
@@ -33,7 +33,17 @@ class AoApi {
         y: y
       }
     }
+    return request
+      .post('http://localhost:8003/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
   }
+  // async createAndOrAddCardToGrid(x,y taskId): Promise<request.Response> {
+  //   this.createAndOrAddCardToGrid
+  // }
 }
 
 const api = new AoApi()

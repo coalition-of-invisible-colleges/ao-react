@@ -2,18 +2,14 @@ import { keyup, click } from '@most/dom-event'
 import _ from 'lodash'
 import { tap, runEffects } from '@most/core'
 import { newDefaultScheduler } from '@most/scheduler'
-import * as socketIO from 'socket.io'
-import { AoAuth } from './client/auth'
 import useAoStream from './client/ao-stream'
 import api from './client/api'
-import {
-  disposer0,
-  disposer1,
-  disposer2,
-  disposer3
-} from './client/state-hooks'
-
-logAo.innerHTML += 'Card added: ' + e.name + '<br />'
+// import {
+//   disposer0,
+//   disposer1,
+//   disposer2,
+//   disposer3
+// } from './client/state-hooks'
 
 // import cryptoUtils from '../crypto'
 // import request from 'superagent'
@@ -36,17 +32,18 @@ if (input instanceof HTMLInputElement) {
 }
 // Execute a function when the user releases a key on the keyboard
 
-const io: socketIO.Socket = require('socket.io-client')('http://localhost:8003')
-
 const logAo = document.getElementById('log')
 
+useAoStream(e => {
+  logAo.innerHTML += 'Card created: ' + e.name + '<br />'
+})
 const disposalEl = document.getElementById('disposal')
 const disposalStream = click(disposalEl)
 function onDisposal() {
-  disposer0()
-  disposer1()
-  disposer2()
-  disposer3()
+  // disposer0()
+  // disposer1()
+  // disposer2()
+  // disposer3()
 }
 runEffects(tap(onDisposal, disposalStream), newDefaultScheduler())
 

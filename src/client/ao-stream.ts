@@ -17,14 +17,13 @@ function applyEvent(state, ev) {
   M.gridMuts(state.grid, ev)
 }
 
-function onAo(onEvent) {
-  return function(e) {
-    applyEvent(aoStore.state, e)
-    onEvent(e)
-  }
-}
-
-export function useAoStream(onEvent) {
+export default function useAoStream(onEvent) {
   const aoStream = new AoAuth('dctrl', 'dctrl', io)
-  runEffects(tap(onAo, aoStream), newDefaultScheduler())
+  runEffects(
+    tap(function(e) {
+      applyEvent(aoStore.state, e)
+      onEvent(e)
+    }, aoStream),
+    newDefaultScheduler()
+  )
 }
