@@ -3,7 +3,7 @@ import _ from 'lodash'
 import calculations from '../calculations'
 // import 'core-js/stable';
 // import 'regenerator-runtime/runtime';
-interface Member {
+export interface Member {
   type: 'member-created'
   name: string
   memberId: string
@@ -17,7 +17,7 @@ interface Member {
   muted: Boolean
 }
 
-interface Task {
+export interface Task {
   taskId: string
   color: string
   deck: number[]
@@ -38,7 +38,7 @@ interface Task {
   highlights: number[]
 }
 
-interface Session {
+export interface Session {
   type: 'session-created'
   session: string
   ownerId: string
@@ -116,14 +116,21 @@ class AoStore {
   @computed get memberCard(): Task {
     let memberCard = _.merge(
       calculations.blankCard('', '', ''),
-      this.hashMap[this.member.memberId]
+      this.hashMap.get(this.member.memberId)
     )
     return memberCard
   }
-  @computed get hashMap() {
-    let hashMap = {}
+  @computed get hashMap(): Map<string, Task> {
+    let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
-      hashMap[t.taskId] = t
+      hashMap.set(t.taskId, t)
+    })
+    return hashMap
+  }
+  @computed get memberByName(): Map<string, Task> {
+    let hashMap: Map<string, Task> = new Map()
+    this.state.tasks.forEach(t => {
+      hashMap.set(t.name, t)
     })
     return hashMap
   }

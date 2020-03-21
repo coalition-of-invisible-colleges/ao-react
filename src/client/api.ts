@@ -1,6 +1,6 @@
 import request from 'superagent'
 import _ from 'lodash'
-import aoStore from './store'
+import aoStore, { Task } from './store'
 
 class AoApi {
   constructor() {}
@@ -24,10 +24,11 @@ class AoApi {
       })
   }
 
-  async addCardToGrid(x, y, taskId): Promise<request.Response> {
+  async addCardToGrid(x, y, name): Promise<request.Response> {
+    const task: Task = aoStore.memberByName.get(name)
     const act = {
       type: 'grid-add',
-      taskId,
+      taskId: task.taskId,
       coord: {
         x: x,
         y: y
@@ -41,11 +42,56 @@ class AoApi {
         return res
       })
   }
-  // async createAndOrAddCardToGrid(x, y, name): Promise<request.Response> {
-  //   if (_.isObject())
-  //     return this.addCardToGrid(x, y, taskId)
-  //   else return this.createCard()
-  // }
+  async createAndOrAddCardToGrid(x, y, name): Promise<request.Response> {
+    const task: Task = aoStore.memberByName.get(name)
+    if (_.isObject(task)) {
+      const act = {
+        type: 'grid-add',
+        taskId: task.taskId,
+        coord: {
+          x: x,
+          y: y
+        }
+      }
+      return request
+        .post('http://localhost:8003/events')
+        .set('Authorization', aoStore.state.token)
+        .send(act)
+        .then(res => {
+          return res
+        })
+    } else {
+      const act = {
+        type: 'task-created',
+        name: name,
+        color: 'blue',
+        deck: [aoStore.member.memberId],
+        inId: aoStore.memberCard.taskId
+      }
+      return request
+        .post('http://localhost:8003/events')
+        .set('Authorization', aoStore.state.token)
+        .send(act)
+        .then(res => {
+          const taskId = JSON.parse(res.text).event.taskId
+          const gridAct = {
+            type: 'grid-add',
+            taskId,
+            coord: {
+              x: x,
+              y: y
+            }
+          }
+          return request
+            .post('http://localhost:8003/events')
+            .set('Authorization', aoStore.state.token)
+            .send(gridAct)
+            .then(res => {
+              return res
+            })
+        })
+    }
+  }
 }
 
 const api = new AoApi()
