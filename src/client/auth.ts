@@ -68,8 +68,8 @@ export class AoAuth {
         } else {
           setCurrent(aoStore.state, res.body)
           this.onLoad()
+          console.log('loaded state', aoStore.state)
         }
-        console.log('STAATE', aoStore.state)
       })
 
     this.socket.on('connect', () => {

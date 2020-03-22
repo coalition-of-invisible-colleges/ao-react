@@ -7,7 +7,7 @@ import api from './client/api'
 import Router, { UrlEvent } from './client/router'
 import aoStore from './client/store'
 import './assets/grid.css'
-console.log(window)
+console.log('WINDOW!', window.location.pathname)
 const router = new Router()
 const gridContainerEl = document.getElementById('grid-container')
 const gridTextEl = document.getElementById('grid-text')
@@ -24,8 +24,9 @@ const gridEls = []
 
 function onItemClick(x, y) {
   return function(event) {
-    if (gridSel.x && gridSel.y)
+    if (typeof gridSel.x == 'number' && typeof gridSel.y == 'number') {
       gridEls[gridSel.y][gridSel.x].className = 'grid-item'
+    }
     gridSel.x = x
     gridSel.y = y
     gridEls[y][x].className = 'grid-item-selected'
@@ -42,7 +43,6 @@ const onLoad = function() {
       gridEls[j][i] = node
       if (aoStore.state.grid[j] && aoStore.state.grid[j][i]) {
         const task = aoStore.hashMap.get(aoStore.state.grid[j][i])
-        console.log('i has task', task.name)
         node.innerText = task.name
       }
       node.addEventListener('click', onItemClick(i, j))
@@ -58,8 +58,6 @@ const homeLinkEl = document.getElementById('home-link')
 const gridSel = { x: undefined, y: undefined }
 
 router.match('#/grid', function({ oldUrl, newUrl }: UrlEvent, params) {
-  console.log('onmatch', params, oldUrl, newUrl)
-  console.log('empty length', oldUrl.length)
   input.style.visibility = 'hidden'
   logAo.style.visibility = 'hidden'
   logAo.style.visibility = 'hidden'
@@ -69,8 +67,6 @@ router.match('#/grid', function({ oldUrl, newUrl }: UrlEvent, params) {
   gridContainerEl.style.visibility = 'visible'
 })
 router.match('#', function({ oldUrl, newUrl }: UrlEvent, params) {
-  console.log('onmatch', params, oldUrl, newUrl)
-  console.log('empty length', oldUrl.length)
   input.style.visibility = 'visible'
   logAo.style.visibility = 'visible'
   homeLinkEl.style.visibility = 'hidden'
@@ -79,8 +75,6 @@ router.match('#', function({ oldUrl, newUrl }: UrlEvent, params) {
   gridContainerEl.style.visibility = 'hidden'
 })
 router.match('', function({ oldUrl, newUrl }: UrlEvent, params) {
-  console.log('onmatch', params, oldUrl, newUrl)
-  console.log('empty length', oldUrl.length)
   input.style.visibility = 'visible'
   logAo.style.visibility = 'visible'
   homeLinkEl.style.visibility = 'hidden'
@@ -92,15 +86,11 @@ router.match('', function({ oldUrl, newUrl }: UrlEvent, params) {
 function onGridInput(input: HTMLInputElement, e) {
   if (e.keyCode === 13) {
     event.preventDefault()
-    console.log('event', e, '\n', 'element', input.value)
     api
       .createAndOrAddCardToGrid(gridSel.x, gridSel.y, input.value)
       .then((...args) => {
-        console.log('wtf?', gridSel, input.value)
         gridEls[gridSel.y][gridSel.x].className = 'grid-item'
         gridEls[gridSel.y][gridSel.x].innerText = input.value
-        console.log('args', args)
-        console.log('grid state', aoStore.state.grid)
         input.value = ''
       })
   }

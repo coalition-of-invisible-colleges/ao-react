@@ -12,9 +12,6 @@ class AoApi {
       deck: [aoStore.member.memberId],
       inId: aoStore.memberCard.taskId
     }
-    console.log('action!', act)
-    console.log('member card!', aoStore.memberCard)
-    console.log('create')
     return request
       .post('http://localhost:8003/events')
       .set('Authorization', aoStore.state.token)
@@ -73,7 +70,6 @@ class AoApi {
         .set('Authorization', aoStore.state.token)
         .send(act)
         .then(res => {
-          console.log('task created res', res)
           const taskId = JSON.parse(res.text).event.taskId
           const gridAct = {
             type: 'grid-add',
@@ -88,7 +84,6 @@ class AoApi {
             .set('Authorization', aoStore.state.token)
             .send(gridAct)
             .then(res => {
-              console.log('grid add res', res)
               return res
             })
         })

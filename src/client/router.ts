@@ -21,13 +21,11 @@ export default class Router {
   stream: Stream<Event>
   constructor() {
     this.routes = []
-    console.log('pathMatch', pMatch)
     this.handleChange = this.handleChange.bind(this)
     this.match = this.match.bind(this)
     useRouterStream(this.handleChange)
   }
   handleChange({ newUrl: longNewUrl, oldUrl: longOldUrl }: UrlEvent) {
-    console.log('hashChange', longNewUrl, longOldUrl)
     const newUrl = longNewUrl
       .split('/')
       .slice(3)
@@ -36,16 +34,13 @@ export default class Router {
       .split('/')
       .slice(3)
       .join('/')
-    console.log('url change from ', oldUrl, ' to ', newUrl)
     for (let i = 0; i < this.routes.length; i++) {
       if (this.routes[i]({ newUrl, oldUrl })) break
     }
   }
   match(pattern: String, onMatch: (event: UrlEvent, params: Object) => void) {
-    console.log('match!!!', this)
     const match = pMatch(pattern)
     const route = function({ newUrl, oldUrl }) {
-      console.log('match')
       const params = match(newUrl)
       if (params === false) {
         return false
