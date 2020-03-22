@@ -17,9 +17,11 @@ function setCurrent(state, b) {
 }
 export class AoAuth {
   socket: socketIO.Socket
-  constructor(user, pass, socket) {
+  onLoad: () => void
+  constructor(onLoad, user, pass, socket) {
     let token = window.localStorage.getItem('token')
     let session = window.localStorage.getItem('session')
+    this.onLoad = onLoad
     aoStore.state.user = user
     if (token && session) {
       console.log('recovered session')
@@ -65,6 +67,7 @@ export class AoAuth {
         if (err || !res.body) {
         } else {
           setCurrent(aoStore.state, res.body)
+          this.onLoad()
         }
         console.log('STAATE', aoStore.state)
       })

@@ -17,8 +17,8 @@ function applyEvent(state, ev) {
   M.gridMuts(state.grid, ev)
 }
 
-export default function useAoStream(onEvent) {
-  const aoStream = new AoAuth('dctrl', 'dctrl', io)
+export default function useAoStream(onLoad, onEvent) {
+  const aoStream = new AoAuth(onLoad, 'dctrl', 'dctrl', io)
   runEffects(
     tap(function(e) {
       applyEvent(aoStore.state, e)

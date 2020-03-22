@@ -45,42 +45,46 @@ module.exports = {
           'ts-loader'
         ].filter(Boolean)
       },
-      // css
       {
-        test: /\.css$/,
-        use: [
-          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
-          {
-            loader: 'css-loader',
-            query: {
-              modules: true,
-              sourceMap: !isProduction,
-              importLoaders: 1,
-              localIdentName: isProduction
-                ? '[hash:base64:5]'
-                : '[local]__[hash:base64:5]'
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              ident: 'postcss',
-              plugins: [
-                require('postcss-import')({ addDependencyTo: webpack }),
-                require('postcss-url')(),
-                require('postcss-preset-env')({
-                  /* use stage 2 features (defaults) */
-                  stage: 2
-                }),
-                require('postcss-reporter')(),
-                require('postcss-browser-reporter')({
-                  disabled: isProduction
-                })
-              ]
-            }
-          }
-        ]
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
       },
+
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+      //     {
+      //       loader: 'css-loader',
+      //       query: {
+      //         modules: true,
+      //         sourceMap: !isProduction,
+      //         importLoaders: 1,
+      //         localIdentName: isProduction
+      //           ? '[hash:base64:5]'
+      //           : '[local]__[hash:base64:5]'
+      //       }
+      //     },
+      //     {
+      //       loader: 'postcss-loader',
+      //       options: {
+      //         ident: 'postcss',
+      //         plugins: [
+      //           require('postcss-import')({ addDependencyTo: webpack }),
+      //           require('postcss-url')(),
+      //           require('postcss-preset-env')({
+      //             /* use stage 2 features (defaults) */
+      //             stage: 2
+      //           }),
+      //           require('postcss-reporter')(),
+      //           require('postcss-browser-reporter')({
+      //             disabled: isProduction
+      //           })
+      //         ]
+      //       }
+      //     }
+      //   ]
+      // },
       // static assets
       { test: /\.html$/, use: 'html-loader' },
       { test: /\.(a?png|svg)$/, use: 'url-loader?limit=10000' },
@@ -116,10 +120,10 @@ module.exports = {
       DEBUG: false
     }),
     new WebpackCleanupPlugin(),
-    new MiniCssExtractPlugin({
-      filename: isProduction ? '[contenthash].css' : '[hash].css',
-      disable: !isProduction
-    }),
+    // new MiniCssExtractPlugin({
+    //   filename: isProduction ? '[contenthash].css' : '[hash].css',
+    //   disable: !isProduction
+    // }),
     new HtmlWebpackPlugin({
       template: 'assets/index.html'
     })
