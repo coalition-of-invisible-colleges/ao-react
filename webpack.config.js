@@ -5,7 +5,7 @@ var path = require('path')
 var isProduction =
   process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
 var sourcePath = path.join(__dirname, './src')
-var outPath = path.join(__dirname, './public')
+var outPath = path.join(__dirname, './dist')
 
 // plugins
 var HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -15,7 +15,7 @@ var WebpackCleanupPlugin = require('webpack-cleanup-plugin')
 module.exports = {
   context: sourcePath,
   entry: {
-    app: './main.tsx'
+    app: './index.ts'
   },
   output: {
     path: outPath,
@@ -126,7 +126,10 @@ module.exports = {
     // }),
     new HtmlWebpackPlugin({
       template: 'assets/index.html'
-    })
+    }),
+    new webpack.ProvidePlugin({
+      Snabbdom: 'snabbdom-pragma'
+  })
   ],
   devServer: {
     contentBase: sourcePath,

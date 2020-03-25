@@ -1,4 +1,4 @@
-const config = require('../../configuration.js')
+const config = require('../../configuration')
 const uuidV1 = require('uuid/v1')
 const express = require('express')
 const lightningRouter = express.Router()

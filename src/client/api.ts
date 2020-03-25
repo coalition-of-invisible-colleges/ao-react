@@ -83,9 +83,6 @@ class AoApi {
             .post('http://localhost:8003/events')
             .set('Authorization', aoStore.state.token)
             .send(gridAct)
-            .then(res => {
-              return res
-            })
         })
     }
   }

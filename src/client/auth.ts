@@ -6,6 +6,7 @@ import cryptoUtils from '../crypto'
 import request from 'superagent'
 import aoStore from './store'
 import modules from '../modules'
+import { Stream } from 'stream'
 function setCurrent(state, b) {
   modules.cash.mutations.setCurrent(state.cash, b)
   modules.tasks.mutations.setCurrent(state.tasks, b)
@@ -15,10 +16,11 @@ function setCurrent(state, b) {
   modules.resources.mutations.setCurrent(state.resources, b)
   modules.grid.mutations.setCurrent(state.grid, b)
 }
-export class AoAuth {
+export class AoAuth extends Stream {
   socket: socketIO.Socket
   onLoad: () => void
   constructor(onLoad, user, pass, socket) {
+    super()
     let token = window.localStorage.getItem('token')
     let session = window.localStorage.getItem('session')
     this.onLoad = onLoad

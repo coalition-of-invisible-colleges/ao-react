@@ -40,7 +40,7 @@ export default class Router {
   }
   match(pattern: String, onMatch: (event: UrlEvent, params: Object) => void) {
     const match = pMatch(pattern)
-    const route = function({ newUrl, oldUrl }) {
+    const route: Route = function({ newUrl, oldUrl }) {
       const params = match(newUrl)
       if (params === false) {
         return false

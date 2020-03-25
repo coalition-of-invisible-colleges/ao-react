@@ -1,4 +1,4 @@
-import { observable, computed } from 'mobx'
+// import { observable, computed } from 'mobx'
 import _ from 'lodash'
 import calculations from '../calculations'
 // import 'core-js/stable';
@@ -70,7 +70,7 @@ interface AoState {
   }
 }
 class AoStore {
-  @observable state: AoState = {
+  state: AoState = {
     session: '',
     token: '',
     user: '',
@@ -94,7 +94,7 @@ class AoStore {
       info: {}
     }
   }
-  @computed get member(): Member {
+  get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
       console.log('compare session', session)
@@ -113,21 +113,21 @@ class AoStore {
     return loggedInMember
   }
 
-  @computed get memberCard(): Task {
+  get memberCard(): Task {
     let memberCard = _.merge(
       calculations.blankCard('', '', ''),
       this.hashMap.get(this.member.memberId)
     )
     return memberCard
   }
-  @computed get hashMap(): Map<string, Task> {
+  get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
     return hashMap
   }
-  @computed get memberByName(): Map<string, Task> {
+  get memberByName(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.name, t)

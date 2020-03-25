@@ -1,25 +1,16 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "sourceMap": true,
-    "target": "es5",
-    "jsx": "react",
-    "module": "es6",
+    "module": "ES6",
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "declaration": false,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
+    "target": "ES5",
+    "sourceMap": true,
+    "jsx": "react",
+    "jsxFactory": "Snabbdom.createElement",
+    "noImplicitReturns": true,
+    "strictFunctionTypes": false,
     "allowSyntheticDefaultImports": true,
-    "noUnusedLocals": true,
-    "removeComments": true,
-    "strictNullChecks": false,
-    "outDir": "build",
-    "lib": ["es6", "es7", "dom"],
-    "baseUrl": "src",
-    "paths": {
-      "app/*": ["./app/*"]
-    }
-  },
-  "exclude": ["dist", "build", "node_modules"]
+    "allowJs": true,
+    "lib": ["ES6", "ES5", "DOM"]
+  }
 }

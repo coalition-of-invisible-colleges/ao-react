@@ -6,7 +6,6 @@ import M from '../mutations'
 import { AoAuth } from './auth'
 
 const io: socketIO.Socket = require('socket.io-client')('http://localhost:8003')
-
 function applyEvent(state, ev) {
   M.cashMuts(state.cash, ev)
   M.membersMuts(state.members, ev)
