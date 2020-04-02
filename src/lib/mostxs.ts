@@ -35,7 +35,6 @@ class FromMostStream<T> implements InternalProducer<T> {
   public out?: XStream<T>
   private active: boolean
   private _dispose: Disposable
-  private _writexs: Observer<T>
 
   constructor(m$: MostStream<T>) {
     this.ins = m$
@@ -45,17 +44,17 @@ class FromMostStream<T> implements InternalProducer<T> {
   _start(out: XStream<T>) {
     this.out = out
     this.active = true
-    this._writexs = new Observer(out)
+    const _writexs = new Observer(out)
     this._dispose = this.ins.run(
       {
         event(t, e: T) {
-          this._writexs.next(e)
+          _writexs.next(e)
         },
         end(t) {
-          this._writexs.complete()
+          _writexs.complete()
         },
         error(t, e) {
-          this._writexs.error(e)
+          _writexs.error(e)
         }
       },
       newDefaultScheduler()
@@ -69,7 +68,7 @@ class FromMostStream<T> implements InternalProducer<T> {
   }
 }
 
-function fromMostStream<T>(stream: MostStream<T>): XStream<T> {
+export function fromMostStream<T>(stream: MostStream<T>): XStream<T> {
   return new XStream<T>(new FromMostStream(stream))
 }
 
