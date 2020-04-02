@@ -1,6 +1,6 @@
-import { run } from '@cycle/most-run'
-
-import xs, { Stream, MemoryStream } from 'xstream'
+import { filter as mfilter, mergeArray, tap, combine } from '@most/core'
+import fromObservable from 'most-observable'
+import { Stream } from '@most/types'
 import * as io from 'socket.io-client'
 import { Client } from 'socket.io'
 import { adapt } from '@cycle/run/lib/adapt'
@@ -225,7 +225,7 @@ export class ApiSelector implements AoSource {
     predicate: (request: AoResponseRead) => boolean,
     scope?: string
   ): AoSource {
-    const filteredResponse$$ = this.__action$.filter(r$ => predicate(r$))
+    const filteredResponse$$ = mfilter(r$ => predicate(r$), this.__action$)
     return new ApiSelector(
       filteredResponse$$,
       this._name,
@@ -235,13 +235,14 @@ export class ApiSelector implements AoSource {
 
   public select(category?: string): any {
     const res$$ = category
-      ? this.__action$.filter(
-          res$ => _.has(res$, '_category') && res$._category === category
+      ? mfilter(
+          res$ => _.has(res$, '_category') && res$._category === category,
+          this.__action$
         )
       : this.__action$
-    const out: DevToolEnabledSource = adapt(res$$)
-    out._isCycleSource = this._name
-    return out
+    // const out: DevToolEnabledSource = adapt(res$$)
+    // ._isCycleSource = this._name
+    return res$$
   }
 
   public isolateSource = isolateSource
@@ -260,9 +261,9 @@ export function makeApiDriver(
     name: string = 'AO'
   ): ApiSelector {
     const readR: Subject<AoResponseRead> = new Subject()
-    const session$: Stream<UserSession> = xs.fromObservable(sessionR)
-    xs.combine(req$, session$).addListener({
-      next([req, session]) {
+    const session$: Stream<UserSession> = fromObservable(sessionR)
+    combine(
+      (...args) => {
         const { _namespace, ...act } = req
         request
           .post('http://localhost:8003/events')
@@ -275,9 +276,10 @@ export function makeApiDriver(
               payload: { ...res }
             })
           })
-      }
-    })
-    const sel = new ApiSelector(xs.fromObservable(readR), name, [])
+      },
+      [req$, session$]
+    )
+    const sel = new ApiSelector(fromObservable(readR), name, [])
     return sel
   }
   return driver
@@ -321,7 +323,7 @@ export function isolateSink(
     return request$
   }
   return adapt(
-    xs.fromObservable<AoActionWrite>(request$).map(req => {
+    fromObservable<AoActionWrite>(request$).map(req => {
       return {
         ...req,
         _namespace: [scope, ...(req._namespace || [])]
@@ -437,11 +439,11 @@ function loginEventToSession(event: Subject<LoginEvent>): Subject<UserSession> {
 
 export class AoController {
   private socket: any
-  public events$: MemoryStream<AoEvent>
-  public state$: MemoryStream<State>
-  public member$: MemoryStream<Member>
-  public hashMap$: MemoryStream<Map<string, Task>>
-  public session$: MemoryStream<UserSession>
+  public events$: Stream<AoEvent>
+  public state$: Stream<State>
+  public member$: Stream<Member>
+  public hashMap$: Stream<Map<string, Task>>
+  public session$: Stream<UserSession>
 
   private _eventStream: Subject<AoEvent>
   private _stateStream: Subject<State>
@@ -468,19 +470,15 @@ export class AoController {
     this._sessionController.next({
       type: 'try-load-session'
     })
-    this.session$ = xs.fromObservable(this._session).remember() as MemoryStream<
+    this.session$ = fromObservable(this._session).remember() as Stream<
       UserSession
     >
-    this.events$ = xs
-      .fromObservable(this._eventStream)
-      .remember() as MemoryStream<AoEvent>
-    this.state$ = xs
-      .fromObservable(this._stateStream)
-      .remember() as MemoryStream<State>
-    this.member$ = xs.fromObservable(this._member).remember() as MemoryStream<
-      Member
+    this.events$ = fromObservable(this._eventStream).remember() as Stream<
+      AoEvent
     >
-    this.hashMap$ = xs.fromObservable(this._hashMap).remember() as MemoryStream<
+    this.state$ = fromObservable(this._stateStream).remember() as Stream<State>
+    this.member$ = fromObservable(this._member).remember() as Stream<Member>
+    this.hashMap$ = fromObservable(this._hashMap).remember() as Stream<
       Map<string, Task>
     >
 

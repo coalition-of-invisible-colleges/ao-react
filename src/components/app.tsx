@@ -1,4 +1,4 @@
-// import xs, { Stream } from 'xstream'
+import xs, { Stream } from 'xstream'
 // import { VNode, DOMSource } from '@cycle/dom';
 import { extractSinks } from 'cyclejs-utils'
 import isolate from '@cycle/isolate'
