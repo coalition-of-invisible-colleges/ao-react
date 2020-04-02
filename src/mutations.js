@@ -847,6 +847,17 @@ function gridMuts(grid, ev) {
   }
 }
 
+function applyEvent(state, ev) {
+  cashMuts(state.cash, ev)
+  membersMuts(state.members, ev)
+  resourcesMuts(state.resources, ev)
+  sessionsMuts(state.sessions, ev)
+  tasksMuts(state.tasks, ev)
+  aoMuts(state.ao, ev)
+  gridMuts(state.grid, ev)
+}
+
+
 module.exports = {
   aoMuts,
   cashMuts,
@@ -854,5 +865,6 @@ module.exports = {
   resourcesMuts,
   sessionsMuts,
   tasksMuts,
-  gridMuts
+  gridMuts,
+  applyEvent
 }

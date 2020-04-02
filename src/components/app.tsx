@@ -1,4 +1,4 @@
-import xs, { Stream } from 'xstream'
+// import xs, { Stream } from 'xstream'
 // import { VNode, DOMSource } from '@cycle/dom';
 import { extractSinks } from 'cyclejs-utils'
 import isolate from '@cycle/isolate'
@@ -21,7 +21,7 @@ export interface State {
 
 export function App(sources: Sources<State>): Sinks<State> {
   const match$ = sources.router.define({
-    '/counter': isolate(Counter, 'counter')
+    // '/counter': isolate(Counter, 'counter')
     // '/speaker': isolate(Speaker, 'speaker')
   })
 
