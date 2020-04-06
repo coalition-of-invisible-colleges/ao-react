@@ -68,11 +68,13 @@ export function setup<
   D extends MatchingDrivers<D, M>,
   M extends MatchingMain<D, M>
 >(main: M, drivers: D): CycleProgram<D, M> {
+  console.log('main type', typeof main !== `function`)
   if (typeof main !== `function`) {
     throw new Error(
       `First argument given to Cycle must be the 'main' ` + `function.`
     )
   }
+  console.log('drivers', drivers, drivers === null)
   if (typeof drivers !== `object` || drivers === null) {
     throw new Error(
       `Second argument given to Cycle must be an object ` +
@@ -88,6 +90,7 @@ export function setup<
 
   const engine = setupReusable(drivers)
   const sinks = main(engine.sources)
+
   if (typeof window !== 'undefined') {
     ;(window as any).Cyclejs = (window as any).Cyclejs || {}
     ;(window as any).Cyclejs.sinks = sinks

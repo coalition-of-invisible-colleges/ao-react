@@ -6,41 +6,43 @@ import isolate from '@cycle/isolate'
 import { driverNames } from '../drivers'
 import {
   Sources,
-  Sinks,
+  Sinks
   // Reducer,
-  Component
+  // Component
 } from '../interfaces'
+import { now, periodic, map, scan, delay } from '@most/core'
 
-import { Counter, State as CounterState } from './counter'
+// import { Counter, State as CounterState } from './counter'
 // import { Speaker, State as SpeakerState } from './speaker';
 
 export interface State {
-  counter?: CounterState
+  // counter?: CounterState
   // speaker?: SpeakerState
 }
 
 export function App(sources: Sources<State>): Sinks<State> {
-  const match$ = sources.router.define({
-    // '/counter': isolate(Counter, 'counter')
-    // '/speaker': isolate(Speaker, 'speaker')
-  })
+  // const match$ = sources.router.define({
+  //   '/counter': isolate(Counter, 'counter')
+  //   // '/speaker': isolate(Speaker, 'speaker')
+  // })
 
-  const componentSinks$: Stream<Sinks<State>> = match$
-    .filter(({ path, value }: any) => path && typeof value === 'function')
-    .map(({ path, value }: { path: string; value: Component<any> }) => {
-      return value({
-        ...sources,
-        router: sources.router.path(path)
-      })
-    })
+  // const componentSinks$: Stream<Sinks<State>> = match$
+  //   .filter(({ path, value }: any) => path && typeof value === 'function')
+  //   .map(({ path, value }: { path: string; value: Component<any> }) => {
+  //     return value({
+  //       ...sources,
+  //       router: sources.router.path(path)
+  //     })
+  //   })
 
-  const redirect$: Stream<string> = sources.router.history$
-    .filter((l: Location) => l.pathname === '/')
-    .mapTo('/counter')
+  // const redirect$: Stream<string> = sources.router.history$
+  //   .filter((l: Location) => l.pathname === '/')
+  //   .mapTo('/counter')
 
-  const sinks = extractSinks(componentSinks$, driverNames)
+  // const sinks = extractSinks(componentSinks$, driverNames)
   return {
-    ...sinks,
-    router: xs.merge(redirect$, sinks.router)
+    DOM: delay(1000, now(<div>hello</div>))
+    // ...sinks,
+    // router: xs.merge(redirect$, sinks.router)
   }
 }

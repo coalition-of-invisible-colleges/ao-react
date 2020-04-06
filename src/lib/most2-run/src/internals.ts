@@ -9,18 +9,23 @@ import {
   SinkProxies,
   Sources
 } from './types'
-import { runEffects } from '@most/core'
+import { runEffects, tap } from '@most/core'
 import { newDefaultScheduler } from '@most/scheduler'
 
 const scheduleMicrotask = quicktask()
-
+const scheduler = newDefaultScheduler()
 export function makeSinkProxies<D extends Drivers>(drivers: D): SinkProxies<D> {
   const sinkProxies: SinkProxies<D> = {} as SinkProxies<D>
   for (const name in drivers) {
     if (drivers.hasOwnProperty(name)) {
       sinkProxies[name] = create<any>()
+      runEffects(
+        tap(val => console.log('runsink', val), sinkProxies[name][1]),
+        scheduler
+      )
     }
   }
+  console.log('made sink proxies', sinkProxies)
   return sinkProxies
 }
 
@@ -31,7 +36,8 @@ export function callDrivers<D extends Drivers>(
   const sources: Sources<D> = {} as Sources<D>
   for (const name in drivers) {
     if (drivers.hasOwnProperty(name)) {
-      sources[name as any] = (drivers[name] as any)(sinkProxies[name], name)
+      // console.log('drivers', drivers, 'sinkProxies', sinkProxies[name][1].run)
+      sources[name as any] = (drivers[name] as any)(sinkProxies[name][1], name)
       if (sources[name as any] && typeof sources[name as any] === 'object') {
         ;(sources[name as any] as DevToolEnabledSource)._isCycleSource = name
       }
@@ -40,7 +46,7 @@ export function callDrivers<D extends Drivers>(
   return sources
 }
 
-// // NOTE: this will mutate `sources`.
+// NOTE: this will mutate `sources`.
 // export function adaptSources<So>(sources: So): So {
 //   for (const name in sources) {
 //     if (
@@ -86,8 +92,8 @@ export function attachAndRunSinkProxies<Si extends any>(
     name => !!sinkProxies[name]
   )
   sinkNames.forEach(name => {
+    console.log('sinks', sinks)
     attach(sinkProxies[name][0], sinks[name])
-    runEffects(sinkProxies[name][1], newDefaultScheduler())
   })
   return () => undefined
 }

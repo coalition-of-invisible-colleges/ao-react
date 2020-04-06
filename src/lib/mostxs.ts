@@ -5,6 +5,7 @@ import xs, {
   InternalProducer,
   InternalListener
 } from 'xstream'
+import fromObservable from 'most-observable'
 import { Stream as MostStream, Sink, Scheduler, Disposable } from '@most/types'
 import { newDefaultScheduler } from '@most/scheduler'
 // import { runEffects, tap } from '@most/core'
@@ -45,6 +46,10 @@ class FromMostStream<T> implements InternalProducer<T> {
     this.out = out
     this.active = true
     const _writexs = new Observer(out)
+    console.log('from observable aha', this.ins)
+    // if (!!(this.ins as any).sinks) {
+    //   throw new Error('dammit')
+    // }
     this._dispose = this.ins.run(
       {
         event(t, e: T) {
@@ -70,6 +75,40 @@ class FromMostStream<T> implements InternalProducer<T> {
 
 export function fromMostStream<T>(stream: MostStream<T>): XStream<T> {
   return new XStream<T>(new FromMostStream(stream))
+}
+
+export function toMostSource(source: any) {
+  if (typeof (source as XStream<any>).shamefullySendNext == 'function') {
+    console.log('outside xstream')
+    return fromObservable(source)
+  } else {
+    console.log('outside proxy')
+    const mostProxy = new Proxy(source, {
+      get(target, prop, receiver) {
+        console.log('prop', prop, target[prop])
+        if (typeof target[prop] == 'function') {
+          console.log('inside case function')
+          return function(...args) {
+            const mostSrc = toMostSource(target[prop](...args))
+            console.log('inside function call', mostSrc)
+            return mostSrc
+          }
+        } else if (
+          typeof (target[prop] as XStream<any>).shamefullySendNext == 'function'
+        ) {
+          const mostSrc = fromObservable(target[prop])
+          console.log('inside case xs', mostSrc)
+          return mostSrc
+        } else {
+          const mostSrc = toMostSource(target[prop])
+          console.log('inside case other', mostSrc)
+          return mostSrc
+        }
+      }
+    })
+    console.log('most proxy', mostProxy)
+    return mostProxy
+  }
 }
 
 // function fromObservable<T>(obs: { subscribe: any }): Stream<T> {
