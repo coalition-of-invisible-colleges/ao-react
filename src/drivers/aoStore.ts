@@ -144,7 +144,7 @@ export class StateDriver {
       startWith({ type: 'try-load-session' })
     )(act$)
     const sessionLoaded$ = new SessionStream(sessionActs$)
-    const session$ = map(val => val.payload, sessionLoaded$)
+    const session$ = multicast(map(val => val.payload, sessionLoaded$))
     const aoActions$: Stream<AoAction> = R.compose(
       multicast,
       tap((val: AoAction) => console.log('got action', val)),
@@ -153,6 +153,7 @@ export class StateDriver {
     )(this.act$)
 
     const stateAndResponse = R.compose(
+      switchLatest,
       map((session: UserSession) => {
         console.log('load session', session)
         const getState = new GetStateStream(
@@ -187,16 +188,12 @@ export class StateDriver {
             }
           )
         )(tap(val => console.log('got state', val), getState))
-        const response$ = new AoResponseStream(aoActions$, session)
-        return { state$, response$ }
+        return state$
       })
     )(session$)
-    this.state$ = R.compose(
-      switchLatest,
-      map((val: any): Stream<State> => val.state$)
-    )(stateAndResponse)
     // this.state$ = map(val => val.state$, stateAndResponse)
-    // this.response = new ApiSelector(response$, _name)
+    const response$ = new AoResponseStream(aoActions$, session$)
+    this.response = new ApiSelector(response$, _name)
     this.member$ = this.getMember(this.state$)
     this.hashMap$ = this.getHashMap(this.state$)
     this.memberCard$ = this.getMemberCard(this.member$, this.hashMap$)

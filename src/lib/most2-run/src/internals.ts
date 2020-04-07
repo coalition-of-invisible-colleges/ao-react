@@ -9,7 +9,13 @@ import {
   SinkProxies,
   Sources
 } from './types'
-import { runEffects, tap, combineArray, mergeArray } from '@most/core'
+import {
+  runEffects,
+  tap,
+  combineArray,
+  mergeArray,
+  multicast
+} from '@most/core'
 import { newDefaultScheduler } from '@most/scheduler'
 
 const scheduleMicrotask = quicktask()
@@ -37,6 +43,7 @@ export function makeSinkProxies<D extends Drivers>(drivers: D): SinkProxies<D> {
     if (drivers.hasOwnProperty(name)) {
       console.log('has sink')
       sinkProxies[name] = create<any>()
+      sinkProxies[name][1] = multicast(sinkProxies[name][1])
       console.log('damn sink', sinkProxies[name])
       sinkStreams.push(sinkProxies[name][1])
     }

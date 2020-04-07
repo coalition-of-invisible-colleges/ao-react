@@ -39,7 +39,7 @@ class SocketSink extends Pipe<SocketAction, SocketEvent>
     })
   }
   event(t: Time, act: SocketAction) {
-    console.log('only socket sink', act)
+    console.log('event socket sink', act)
     const { sink, socket } = this
     switch (act.type) {
       case 'start-socket':
@@ -47,7 +47,7 @@ class SocketSink extends Pipe<SocketAction, SocketEvent>
         this.socket.open()
         this.socket.on('connect', function() {
           console.log('connected')
-          console.log('socket sink', sink)
+          console.log('connected socket sink')
           sink.event(t, { type: 'socket-connected' })
           socket.emit('authentication', {
             session,
@@ -56,11 +56,11 @@ class SocketSink extends Pipe<SocketAction, SocketEvent>
         })
         socket.on('authenticated', () => {
           console.log('authenticated')
-          console.log('socket sink', sink)
+          console.log('authenticated socket sink', sink)
           sink.event(t, { type: 'socket-authenticated' })
           socket.on('eventstream', ev => {
             console.log('got event, ev')
-            console.log('socket sink', sink)
+            console.log('event stream socket sink')
             sink.event(t, { type: 'ao-action', payload: ev })
           })
         })
