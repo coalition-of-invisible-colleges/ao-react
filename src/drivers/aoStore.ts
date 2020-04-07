@@ -130,11 +130,19 @@ export class StateDriver {
   public memberCard$: Stream<Task>
   public response: AoResponseSource
   constructor(private act$: Stream<FluxAction>, public _name: string) {
-    const sessionActs$ = filter(
-      (val: SessionAction) =>
-        val.type == 'try-load-session' || val.type == 'try-login',
-      startWith({ type: 'try-load-session' }, act$)
-    )
+    // const sessionActs$ = filter(
+    //   (val: SessionAction) =>
+    //     val.type == 'try-load-session' || val.type == 'try-login',
+    //   startWith({ type: 'try-load-session' }, act$)
+    // )
+    const sessionActs$ = R.compose(
+      filter(
+        (val: SessionAction) =>
+          val.type == 'try-load-session' || val.type == 'try-login'
+      ),
+      tap(val => console.log('got val', val)),
+      startWith({ type: 'try-load-session' })
+    )(act$)
     const sessionLoaded$ = new SessionStream(sessionActs$)
     const session$ = map(val => val.payload, sessionLoaded$)
     const aoActions$: Stream<AoAction> = R.compose(
@@ -184,11 +192,10 @@ export class StateDriver {
       })
     )(session$)
     this.state$ = R.compose(
-      switchLatest
-      map((val: any): Stream<State> => val.state$))(
-      stateAndResponse
-    )
-    this.state$ = map(val => val.state$, stateAndResponse)
+      switchLatest,
+      map((val: any): Stream<State> => val.state$)
+    )(stateAndResponse)
+    // this.state$ = map(val => val.state$, stateAndResponse)
     // this.response = new ApiSelector(response$, _name)
     this.member$ = this.getMember(this.state$)
     this.hashMap$ = this.getHashMap(this.state$)
