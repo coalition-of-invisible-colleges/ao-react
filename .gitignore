@@ -19,6 +19,7 @@ npm-debug.log*
 *.ntvs*
 *.njsproj
 *.sln
+*.code-workspace
 configuration.js
 
 package-lock.json

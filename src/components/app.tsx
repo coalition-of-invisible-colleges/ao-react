@@ -28,6 +28,7 @@ import { newDefaultScheduler } from '@most/scheduler'
 import { AoActionAction as AoAction } from '../drivers/aoStore'
 import { taskCreate } from '../lib/actions'
 import { Member, Task } from '../drivers/ao/types'
+import aoStore from '../client/store'
 
 // import { Counter, State as CounterState } from './counter'
 // import { Speaker, State as SpeakerState } from './speaker';
@@ -58,19 +59,21 @@ export function App(sources: Sources<State>): Sinks<State> {
     ),
     sources.ao.state$
   )
-  const click$ = tap(
-    val => console.log('clicked', val),
-    sources.DOM.select('.card-create').events('click')
-  )
+  const click$ = tap(val => {
+    val.stopPropagation()
+    val.stopImmediatePropagation()
+    console.log('clicked', val)
+  }, sources.DOM.select('.card-create').events('click'))
   const text$ = R.compose(
     map((e: any): string => e.target.value),
     multicast
   )(sources.DOM.select('.card-text').events('change'))
-  const res$ = tap(
-    val => console.log('got response', val),
-    sources.ao.response.select()
-  )
+  // const res$ = multicast(
+  //   tap(val => console.log('got response', val), sources.ao.response.select())
+  // )
   const createCard$ = R.compose(
+    multicast,
+    tap((val: any) => console.log('created card', val)),
     map(
       ({
         text,
@@ -80,10 +83,13 @@ export function App(sources: Sources<State>): Sinks<State> {
         text: string
         member: Member
         card: Task
-      }) => ({
-        type: 'ao-action',
-        payload: taskCreate(text, 'blue', [member.memberId], card.taskId)
-      })
+      }) => {
+        console.log('making action')
+        return {
+          type: 'ao-action',
+          payload: taskCreate(text, 'blue', [member.memberId], card.taskId)
+        }
+      }
     ),
     combined$ => sample(combined$, click$)
   )(
@@ -93,7 +99,7 @@ export function App(sources: Sources<State>): Sinks<State> {
     )
   )
 
-  runEffects(res$, newDefaultScheduler())
+  runEffects(createCard$, newDefaultScheduler())
   // runEffects(
   //   tap(val => console.log('member', val), createCard$),
   //   newDefaultScheduler()
@@ -123,8 +129,9 @@ export function App(sources: Sources<State>): Sinks<State> {
 
   // const sinks = extractSinks(componentSinks$, driverNames)
   return {
-    DOM: writeDom,
-    ao: createCard$
+    DOM: writeDom
+    // ao: createCard$
+    // abyss: res$
     // ...sinks,
     // router: xs.merge(redirect$, sinks.router)
   }

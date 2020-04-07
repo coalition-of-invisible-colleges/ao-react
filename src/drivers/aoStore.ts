@@ -138,10 +138,11 @@ export class StateDriver {
     const sessionLoaded$ = new SessionStream(sessionActs$)
     const session$ = map(val => val.payload, sessionLoaded$)
     const aoActions$: Stream<AoAction> = R.compose(
+      multicast,
       tap((val: AoAction) => console.log('got action', val)),
       map((val: AoActionAction): AoAction => val.payload),
       filter((val: FluxAction) => val.type == 'ao-action')
-    )(tap(val => console.log('got action action', val), act$))
+    )(this.act$)
 
     const getState = new GetStateStream(
       map(session => ({ type: 'load-state', payload: session }), session$)
@@ -228,16 +229,18 @@ export class StateDriver {
     member$: Stream<Member>,
     hashMap$: Stream<Map<string, Task>>
   ): Stream<Task> {
-    return combine(
-      (member: Member, hashMap: Map<string, Task>): Task => {
-        let memberCard = _.merge(
-          calculations.blankCard('', '', ''),
-          hashMap.get(member.memberId)
-        )
-        return memberCard
-      },
-      member$,
-      hashMap$
+    return multicast(
+      combine(
+        (member: Member, hashMap: Map<string, Task>): Task => {
+          let memberCard = _.merge(
+            calculations.blankCard('', '', ''),
+            hashMap.get(member.memberId)
+          )
+          return memberCard
+        },
+        member$,
+        hashMap$
+      )
     )
   }
 }

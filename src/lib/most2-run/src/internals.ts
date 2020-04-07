@@ -9,26 +9,47 @@ import {
   SinkProxies,
   Sources
 } from './types'
-import { runEffects, tap } from '@most/core'
+import { runEffects, tap, combineArray, mergeArray } from '@most/core'
 import { newDefaultScheduler } from '@most/scheduler'
 
 const scheduleMicrotask = quicktask()
 const scheduler = newDefaultScheduler()
+// export function makeSinkProxies<D extends Drivers>(drivers: D): SinkProxies<D> {
+//   const sinkProxies: SinkProxies<D> = {} as SinkProxies<D>
+//   for (const name in drivers) {
+//     if (drivers.hasOwnProperty(name)) {
+//       sinkProxies[name] = create<any>()
+//       runEffects(
+//         tap(val => console.log('runsink', val), sinkProxies[name][1]),
+//         scheduler
+//       )
+//     }
+//   }
+//   console.log('made sink proxies', sinkProxies)
+//   return sinkProxies
+// }
 export function makeSinkProxies<D extends Drivers>(drivers: D): SinkProxies<D> {
+  console.log('making sink proxies')
   const sinkProxies: SinkProxies<D> = {} as SinkProxies<D>
+  const sinkStreams = []
   for (const name in drivers) {
+    console.log('sink', name)
     if (drivers.hasOwnProperty(name)) {
+      console.log('has sink')
       sinkProxies[name] = create<any>()
-      runEffects(
-        tap(val => console.log('runsink', val), sinkProxies[name][1]),
-        scheduler
-      )
+      console.log('damn sink', sinkProxies[name])
+      sinkStreams.push(sinkProxies[name][1])
     }
   }
+  const mainStream: Stream<any> = mergeArray(sinkStreams)
+  console.log('main', mainStream.run)
+  runEffects(
+    tap(val => console.log('main sink', val), mainStream),
+    scheduler
+  )
   console.log('made sink proxies', sinkProxies)
   return sinkProxies
 }
-
 export function callDrivers<D extends Drivers>(
   drivers: D,
   sinkProxies: SinkProxies<D>

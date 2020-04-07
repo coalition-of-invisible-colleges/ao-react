@@ -25,7 +25,11 @@ function toMostDriver(driver: XsDriver<any, any>): MostDriver<any, any> {
 
 const driversFactories: any = {
   DOM: () => toMostDriver(makeDOMDriver('#app')),
-  ao: () => createStateDriver()
+  ao: () => createStateDriver(),
+  abyss: () =>
+    function() {
+      return function(sink): void {}
+    }
   // history: () => makeHistoryDriver()
   // speech: () => speechDriver
 }

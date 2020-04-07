@@ -22,5 +22,6 @@ export interface Sinks<State> {
   DOM?: Stream<VNode>
   router?: Stream<HistoryInput>
   ao?: Stream<FluxAction>
+  abyss?: Stream<any>
   // state?: Stream<Reducer<State>>
 }

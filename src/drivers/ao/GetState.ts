@@ -35,7 +35,7 @@ class GetStateSink extends Pipe<LoadStateAction, StateLoadedEvent>
     switch (act.type) {
       case 'load-state':
         return request
-          .post('http://localhost:8003/state')
+          .post('http://localhost:3000/state')
           .set('Authorization', act.payload.token)
           .then(res => {
             return {
