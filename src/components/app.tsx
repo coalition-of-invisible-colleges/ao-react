@@ -1,7 +1,18 @@
-import xs, { Stream } from 'xstream'
 // import { VNode, DOMSource } from '@cycle/dom';
 import { extractSinks } from 'cyclejs-utils'
 import isolate from '@cycle/isolate'
+import * as R from 'ramda'
+import {
+  now,
+  periodic,
+  map,
+  scan,
+  delay,
+  runEffects,
+  take,
+  switchLatest,
+  tap
+} from '@most/core'
 
 import { driverNames } from '../drivers'
 import {
@@ -10,7 +21,7 @@ import {
   // Reducer,
   // Component
 } from '../interfaces'
-import { now, periodic, map, scan, delay } from '@most/core'
+import { newDefaultScheduler } from '@most/scheduler'
 
 // import { Counter, State as CounterState } from './counter'
 // import { Speaker, State as SpeakerState } from './speaker';
@@ -18,9 +29,6 @@ import { now, periodic, map, scan, delay } from '@most/core'
 interface Foo<T> {
   bar: T
 }
-
-Foo < number > { bar: 5 }
-Foo < string > { bar: 'string' }
 
 export interface State {
   // counter?: CounterState
@@ -44,12 +52,22 @@ export function App(sources: Sources<State>): Sinks<State> {
     ),
     sources.ao.state$
   )
-  const writeAo = sources.DOM.select('.card-create').events<'click'>('click')
+  const click$ = sources.DOM.select('.card-create').events('click')
+  const text$ = sources.DOM.select('.card-text').events('change')
+  const textClick$ = R.compose(
+    tap(val => console.log('textclick', val)),
+    switchLatest,
+    map(val => {
+      console.log('click!')
+      return take(1, text$)
+    })
+  )(click$)
+
+  runEffects(textClick$, newDefaultScheduler())
   // const match$ = sources.router.define({
   //   '/counter': isolate(Counter, 'counter')
   //   // '/speaker': isolate(Speaker, 'speaker')
   // })
-
   // const componentSinks$: Stream<Sinks<State>> = match$
   //   .filter(({ path, value }: any) => path && typeof value === 'function')
   //   .map(({ path, value }: { path: string; value: Component<any> }) => {
