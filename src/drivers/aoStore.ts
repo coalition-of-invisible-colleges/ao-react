@@ -151,7 +151,8 @@ export class StateDriver {
       map((val: AoActionAction): AoAction => val.payload),
       filter((val: FluxAction) => val.type == 'ao-action')
     )(this.act$)
-
+    const response$ = new AoResponseStream(aoActions$, session$)
+    this.response = new ApiSelector(response$, _name)
     const stateAndResponse = R.compose(
       switchLatest,
       map((session: UserSession) => {
@@ -192,8 +193,6 @@ export class StateDriver {
       })
     )(session$)
     // this.state$ = map(val => val.state$, stateAndResponse)
-    const response$ = new AoResponseStream(aoActions$, session$)
-    this.response = new ApiSelector(response$, _name)
     this.member$ = this.getMember(this.state$)
     this.hashMap$ = this.getHashMap(this.state$)
     this.memberCard$ = this.getMemberCard(this.member$, this.hashMap$)
