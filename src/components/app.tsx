@@ -15,6 +15,13 @@ import { now, periodic, map, scan, delay } from '@most/core'
 // import { Counter, State as CounterState } from './counter'
 // import { Speaker, State as SpeakerState } from './speaker';
 
+interface Foo<T> {
+  bar: T
+}
+
+Foo < number > { bar: 5 }
+Foo < string > { bar: 'string' }
+
 export interface State {
   // counter?: CounterState
   // speaker?: SpeakerState
@@ -37,7 +44,7 @@ export function App(sources: Sources<State>): Sinks<State> {
     ),
     sources.ao.state$
   )
-  const writeAo = sources.DOM.select('.card-create').events('click')
+  const writeAo = sources.DOM.select('.card-create').events<'click'>('click')
   // const match$ = sources.router.define({
   //   '/counter': isolate(Counter, 'counter')
   //   // '/speaker': isolate(Speaker, 'speaker')
