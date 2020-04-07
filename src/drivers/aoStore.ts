@@ -25,7 +25,7 @@ import { Client } from 'socket.io'
 import { Subject, create } from 'most-subject'
 
 import modules from '../modules'
-import _ from 'lodash'
+import * as _ from 'lodash'
 import { AoAction as AoActionRaw } from '../lib/actions'
 import { currentTime } from '@most/scheduler'
 import { applyEvent } from '../mutations'
@@ -108,8 +108,8 @@ export type FluxAction = { type: string; payload?: any }
 export function createStateDriver(name: string = 'http') {
   return function(action$: Stream<FluxAction>) {
     const driver = new StateDriver(action$, name)
-    const { state$, hashMap$, member$, memberCard$ } = driver
-    return { state$, hashMap$, member$, memberCard$ }
+    const { state$, hashMap$, member$, memberCard$, response } = driver
+    return { state$, hashMap$, member$, memberCard$, response }
   }
 }
 
@@ -118,9 +118,10 @@ export interface AoSource {
   hashMap$: Stream<Map<string, Task>>
   member$: Stream<Member>
   memberCard$: Stream<Task>
+  response: ApiSelector
 }
 
-type AoActionAction = { type: 'ao-action'; payload: AoAction }
+export type AoActionAction = { type: 'ao-action'; payload: AoAction }
 
 export class StateDriver {
   public state$: Stream<State>
@@ -137,9 +138,10 @@ export class StateDriver {
     const sessionLoaded$ = new SessionStream(sessionActs$)
     const session$ = map(val => val.payload, sessionLoaded$)
     const aoActions$: Stream<AoAction> = R.compose(
+      tap((val: AoAction) => console.log('got action', val)),
       map((val: AoActionAction): AoAction => val.payload),
       filter((val: FluxAction) => val.type == 'ao-action')
-    )(act$)
+    )(tap(val => console.log('got action action', val), act$))
 
     const getState = new GetStateStream(
       map(session => ({ type: 'load-state', payload: session }), session$)
@@ -227,7 +229,7 @@ export class StateDriver {
     hashMap$: Stream<Map<string, Task>>
   ): Stream<Task> {
     return combine(
-      (member: Member, hashMap: Map<string, Task>) => {
+      (member: Member, hashMap: Map<string, Task>): Task => {
         let memberCard = _.merge(
           calculations.blankCard('', '', ''),
           hashMap.get(member.memberId)

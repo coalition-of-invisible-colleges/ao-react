@@ -25,7 +25,7 @@ export class SocketStream implements Stream<SocketEvent> {
 class SocketSink extends Pipe<SocketAction, SocketEvent>
   implements Sink<SocketAction> {
   public socket: any
-  constructor(sink: Sink<SocketEvent>, url?) {
+  constructor(readonly sink: Sink<SocketEvent>, url?) {
     super(sink)
     console.log('socket sink', sink)
     this.socket = io.connect('http://localhost:8003', {
@@ -34,27 +34,28 @@ class SocketSink extends Pipe<SocketAction, SocketEvent>
   }
   event(t: Time, act: SocketAction) {
     console.log('socket sink', this.sink)
+    const { sink, socket } = this
     switch (act.type) {
       case 'start-socket':
         const { session, token } = act.payload
         this.socket.open()
         this.socket.on('connect', function() {
           console.log('connected')
-          console.log('socket sink', this.sink)
-          this.sink.event({ type: 'socket-connected' })
-          this.socket.emit('authentication', {
+          console.log('socket sink', sink)
+          sink.event(t, { type: 'socket-connected' })
+          socket.emit('authentication', {
             session,
             token
           })
         })
-        this.socket.on('authenticated', () => {
+        socket.on('authenticated', () => {
           console.log('authenticated')
-          console.log('socket sink', this.sink)
-          this.sink.event(t, { type: 'socket-authenticated' })
-          this.socket.on('eventstream', ev => {
+          console.log('socket sink', sink)
+          sink.event(t, { type: 'socket-authenticated' })
+          socket.on('eventstream', ev => {
             console.log('got event, ev')
-            console.log('socket sink', this.sink)
-            this.sink.event(t, { type: 'ao-action', payload: ev })
+            console.log('socket sink', sink)
+            sink.event(t, { type: 'ao-action', payload: ev })
           })
         })
     }

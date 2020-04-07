@@ -11,9 +11,12 @@ import {
   runEffects,
   take,
   switchLatest,
-  tap
+  tap,
+  multicast,
+  sample,
+  combineArray
 } from '@most/core'
-
+import { Stream } from '@most/types'
 import { driverNames } from '../drivers'
 import {
   Sources,
@@ -22,6 +25,9 @@ import {
   // Component
 } from '../interfaces'
 import { newDefaultScheduler } from '@most/scheduler'
+import { AoActionAction as AoAction } from '../drivers/aoStore'
+import { taskCreate } from '../lib/actions'
+import { Member, Task } from '../drivers/ao/types'
 
 // import { Counter, State as CounterState } from './counter'
 // import { Speaker, State as SpeakerState } from './speaker';
@@ -52,18 +58,52 @@ export function App(sources: Sources<State>): Sinks<State> {
     ),
     sources.ao.state$
   )
-  const click$ = sources.DOM.select('.card-create').events('click')
-  const text$ = sources.DOM.select('.card-text').events('change')
-  const textClick$ = R.compose(
-    tap(val => console.log('textclick', val)),
-    switchLatest,
-    map(val => {
-      console.log('click!')
-      return take(1, text$)
-    })
-  )(click$)
+  const click$ = tap(
+    val => console.log('clicked', val),
+    sources.DOM.select('.card-create').events('click')
+  )
+  const text$ = R.compose(
+    map((e: any): string => e.target.value),
+    multicast
+  )(sources.DOM.select('.card-text').events('change'))
+  const res$ = tap(
+    val => console.log('got response', val),
+    sources.ao.response.select()
+  )
+  const createCard$ = R.compose(
+    map(
+      ({
+        text,
+        member,
+        card
+      }: {
+        text: string
+        member: Member
+        card: Task
+      }) => ({
+        type: 'ao-action',
+        payload: taskCreate(text, 'blue', [member.memberId], card.taskId)
+      })
+    ),
+    combined$ => sample(combined$, click$)
+  )(
+    combineArray(
+      (text: string, member: Member, card: Task) => ({ text, member, card }),
+      [text$, sources.ao.member$, sources.ao.memberCard$]
+    )
+  )
 
-  runEffects(textClick$, newDefaultScheduler())
+  runEffects(res$, newDefaultScheduler())
+  // runEffects(
+  //   tap(val => console.log('member', val), createCard$),
+  //   newDefaultScheduler()
+  // )
+  // const writeAo = map((text: string): AoAction => ({
+  //   type: 'ao-action',
+  //   payload:
+
+  //   }
+  // }),textClick$)
   // const match$ = sources.router.define({
   //   '/counter': isolate(Counter, 'counter')
   //   // '/speaker': isolate(Speaker, 'speaker')
@@ -83,7 +123,8 @@ export function App(sources: Sources<State>): Sinks<State> {
 
   // const sinks = extractSinks(componentSinks$, driverNames)
   return {
-    DOM: writeDom
+    DOM: writeDom,
+    ao: createCard$
     // ...sinks,
     // router: xs.merge(redirect$, sinks.router)
   }
