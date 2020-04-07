@@ -99,7 +99,7 @@ export function App(sources: Sources<State>): Sinks<State> {
     )
   )
 
-  runEffects(createCard$, newDefaultScheduler())
+  // runEffects(createCard$, newDefaultScheduler())
   // runEffects(
   //   tap(val => console.log('member', val), createCard$),
   //   newDefaultScheduler()
@@ -129,8 +129,8 @@ export function App(sources: Sources<State>): Sinks<State> {
 
   // const sinks = extractSinks(componentSinks$, driverNames)
   return {
-    DOM: writeDom
-    // ao: createCard$
+    DOM: writeDom,
+    ao: createCard$
     // abyss: res$
     // ...sinks,
     // router: xs.merge(redirect$, sinks.router)

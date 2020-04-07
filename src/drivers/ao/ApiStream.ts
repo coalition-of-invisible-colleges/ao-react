@@ -14,41 +14,30 @@ export type LoadStateAction = {
   type: 'load-state'
 }
 
-type AoRequest = {
-  act: AoAction
-  session: UserSession
-}
+type AoRequest = AoAction
 
 export class AoResponseStream implements Stream<AoResponse> {
-  constructor(
-    private act$: Stream<AoAction>,
-    private session$: Stream<UserSession>
-  ) {}
+  constructor(private act$: Stream<AoAction>, private session: UserSession) {}
 
   run(sink: Sink<AoResponse>, scheduler: Scheduler): Disposable {
-    const merged$ = combine(
-      (act, session): AoRequest => ({ act, session }),
-      this.act$,
-      this.session$
-    )
-    const reqSink = new AoApiRequestSink(sink)
-    return merged$.run(reqSink, scheduler)
+    const reqSink = new AoApiRequestSink(sink, this.session)
+    return this.act$.run(reqSink, scheduler)
   }
 }
 
 class AoApiRequestSink extends Pipe<AoRequest, AoResponse>
   implements Sink<AoRequest> {
-  constructor(sink: Sink<AoResponse>) {
+  constructor(sink: Sink<AoResponse>, private session: UserSession) {
     super(sink)
   }
   event(t: Time, act: AoRequest) {
     this.handleGetStateAction(act).then(e => this.sink.event(t, e))
   }
   private handleGetStateAction(req: AoRequest): Promise<AoResponse> {
-    const { _namespace, _category, ...act } = req.act
+    const { _namespace, _category, ...act } = req
     return request
       .post('http://localhost:3000/events')
-      .set('Authorization', req.session.token)
+      .set('Authorization', this.session.token)
       .send(act)
       .then(res => ({
         _namespace,

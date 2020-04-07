@@ -34,6 +34,7 @@ class SessionSink extends Pipe<SessionAction, SessionLoadedEvent>
     this.sink.event(t, this.handleSessionAction(act))
   }
   private handleSessionAction(act: SessionAction): SessionLoadedEvent {
+    console.log('handle session action', act)
     switch (act.type) {
       case 'try-load-session':
         if (mode == 'nodejs') {

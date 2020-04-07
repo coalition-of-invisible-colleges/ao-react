@@ -144,34 +144,52 @@ export class StateDriver {
       filter((val: FluxAction) => val.type == 'ao-action')
     )(this.act$)
 
-    const getState = new GetStateStream(
-      map(session => ({ type: 'load-state', payload: session }), session$)
-    )
-    const socketEvents = new SocketStream(
-      map(val => ({ type: 'start-socket', payload: val }), session$)
-    )
-    const aoEvents: Stream<AoActionRaw> = R.compose(
-      map((val: any) => val.payload),
-      filter((val: SocketEvent) => val.type == 'ao-action')
-    )(socketEvents) as Stream<AoActionRaw>
-    this.state$ = R.compose(
-      multicast,
-      (state$$: Stream<Stream<State>>) => switchLatest(state$$),
-      map(
-        (stateLoaded: StateLoadedEvent): Stream<State> => {
-          return scan(
-            (state: State, event: AoActionRaw): State => {
-              applyEvent(state, event)
-              return state
-            },
-            stateLoaded.payload,
-            aoEvents
+    const stateAndResponse = R.compose(
+      map((session: UserSession) => {
+        console.log('load session', session)
+        const getState = new GetStateStream(
+          now({ type: 'load-state' }),
+          session
+        )
+        const socketEvents = new SocketStream(
+          now({ type: 'start-socket' }),
+          session
+        )
+        const aoEvents: Stream<AoActionRaw> = R.compose(
+          map((val: any) => {
+            console.log('got event', val)
+            return val.payload
+          }),
+          filter((val: SocketEvent) => val.type == 'ao-action')
+        )(socketEvents) as Stream<AoActionRaw>
+        const state$: Stream<State> = R.compose(
+          // multicast,
+          (state$$: Stream<Stream<State>>) => switchLatest(state$$),
+          map(
+            (stateLoaded: StateLoadedEvent): Stream<State> => {
+              return scan(
+                (state: State, event: AoActionRaw): State => {
+                  applyEvent(state, event)
+                  console.log('has state', state)
+                  return state
+                },
+                stateLoaded.payload,
+                aoEvents
+              )
+            }
           )
-        }
-      )
-    )(getState)
-    const response$ = new AoResponseStream(aoActions$, session$)
-    this.response = new ApiSelector(response$, _name)
+        )(tap(val => console.log('got state', val), getState))
+        const response$ = new AoResponseStream(aoActions$, session)
+        return { state$, response$ }
+      })
+    )(session$)
+    this.state$ = R.compose(
+      switchLatest
+      map((val: any): Stream<State> => val.state$))(
+      stateAndResponse
+    )
+    this.state$ = map(val => val.state$, stateAndResponse)
+    // this.response = new ApiSelector(response$, _name)
     this.member$ = this.getMember(this.state$)
     this.hashMap$ = this.getHashMap(this.state$)
     this.memberCard$ = this.getMemberCard(this.member$, this.hashMap$)

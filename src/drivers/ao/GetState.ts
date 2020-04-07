@@ -10,20 +10,22 @@ export type StateLoadedEvent = {
 
 export type LoadStateAction = {
   type: 'load-state'
-  payload: UserSession
 }
 
 export class GetStateStream implements Stream<StateLoadedEvent> {
-  constructor(private act$: Stream<LoadStateAction>) {}
+  constructor(
+    private act$: Stream<LoadStateAction>,
+    private session: UserSession
+  ) {}
   run(sink: Sink<StateLoadedEvent>, scheduler: Scheduler): Disposable {
-    const getStateSink = new GetStateSink(sink)
+    const getStateSink = new GetStateSink(sink, this.session)
     return this.act$.run(getStateSink, scheduler)
   }
 }
 
 class GetStateSink extends Pipe<LoadStateAction, StateLoadedEvent>
   implements Sink<LoadStateAction> {
-  constructor(sink: Sink<StateLoadedEvent>) {
+  constructor(sink: Sink<StateLoadedEvent>, private session: UserSession) {
     super(sink)
   }
   event(t: Time, act: LoadStateAction) {
@@ -36,11 +38,11 @@ class GetStateSink extends Pipe<LoadStateAction, StateLoadedEvent>
       case 'load-state':
         return request
           .post('http://localhost:3000/state')
-          .set('Authorization', act.payload.token)
+          .set('Authorization', this.session.token)
           .then(res => {
             return {
               type: 'state-loaded',
-              payload: { ...res.body, session: act.payload } as State
+              payload: { ...res.body, session: this.session } as State
             } as StateLoadedEvent
           })
     }

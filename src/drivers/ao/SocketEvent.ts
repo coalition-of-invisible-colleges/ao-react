@@ -10,14 +10,16 @@ export type SocketEvent =
 
 export type SocketAction = {
   type: 'start-socket'
-  payload: UserSession
 }
 
 export class SocketStream implements Stream<SocketEvent> {
-  constructor(private ev$: Stream<SocketAction>) {}
+  constructor(
+    private ev$: Stream<SocketAction>,
+    private session: UserSession
+  ) {}
   run(sink: Sink<SocketEvent>, scheduler: Scheduler): Disposable {
     console.log('socket sink', sink)
-    const socketSink = new SocketSink(sink)
+    const socketSink = new SocketSink(sink, this.session)
     return this.ev$.run(socketSink, scheduler)
   }
 }
@@ -25,7 +27,11 @@ export class SocketStream implements Stream<SocketEvent> {
 class SocketSink extends Pipe<SocketAction, SocketEvent>
   implements Sink<SocketAction> {
   public socket: any
-  constructor(readonly sink: Sink<SocketEvent>, url?) {
+  constructor(
+    readonly sink: Sink<SocketEvent>,
+    private session: UserSession,
+    url?
+  ) {
     super(sink)
     console.log('socket sink', sink)
     this.socket = io.connect('http://localhost:8003', {
@@ -33,11 +39,11 @@ class SocketSink extends Pipe<SocketAction, SocketEvent>
     })
   }
   event(t: Time, act: SocketAction) {
-    console.log('socket sink', this.sink)
+    console.log('only socket sink', act)
     const { sink, socket } = this
     switch (act.type) {
       case 'start-socket':
-        const { session, token } = act.payload
+        const { session, token } = this.session
         this.socket.open()
         this.socket.on('connect', function() {
           console.log('connected')
