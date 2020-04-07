@@ -8,6 +8,7 @@ import { Component } from './interfaces'
 import { toMostSource, fromMostStream } from './lib/mostxs'
 import { Driver as XsDriver } from '@cycle/run'
 import { Driver as MostDriver } from './lib/most2-run/src'
+import { createStateDriver } from './drivers/aoStore'
 // import speechDriver from './drivers/speech';
 function toMostDriver(driver: XsDriver<any, any>): MostDriver<any, any> {
   return function(sink) {
@@ -23,7 +24,8 @@ function toMostDriver(driver: XsDriver<any, any>): MostDriver<any, any> {
 }
 
 const driversFactories: any = {
-  DOM: () => toMostDriver(makeDOMDriver('#app'))
+  DOM: () => toMostDriver(makeDOMDriver('#app')),
+  ao: () => createStateDriver()
   // history: () => makeHistoryDriver()
   // speech: () => speechDriver
 }

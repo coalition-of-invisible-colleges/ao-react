@@ -37,9 +37,17 @@ export function callDrivers<D extends Drivers>(
   for (const name in drivers) {
     if (drivers.hasOwnProperty(name)) {
       // console.log('drivers', drivers, 'sinkProxies', sinkProxies[name][1].run)
-      sources[name as any] = (drivers[name] as any)(sinkProxies[name][1], name)
-      if (sources[name as any] && typeof sources[name as any] === 'object') {
-        ;(sources[name as any] as DevToolEnabledSource)._isCycleSource = name
+      sources[name as keyof D] = (drivers[name] as any)(
+        sinkProxies[name][1],
+        name
+      )
+      if (
+        sources[name as keyof D] &&
+        typeof sources[name as keyof D] === 'object'
+      ) {
+        ;(sources[
+          name as keyof D
+        ] as DevToolEnabledSource)._isCycleSource = name
       }
     }
   }

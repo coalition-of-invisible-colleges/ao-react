@@ -21,6 +21,23 @@ export interface State {
 }
 
 export function App(sources: Sources<State>): Sinks<State> {
+  const writeDom = map(
+    state => (
+      <div>
+        <input type="text" className="card-text" />
+        <button type="button" className="card-create">
+          Create card
+        </button>
+        <div>
+          {state.tasks.map(task => (
+            <div>{task.name}</div>
+          ))}
+        </div>
+      </div>
+    ),
+    sources.ao.state$
+  )
+  const writeAo = sources.DOM.select('.card-create').events('click')
   // const match$ = sources.router.define({
   //   '/counter': isolate(Counter, 'counter')
   //   // '/speaker': isolate(Speaker, 'speaker')
@@ -41,7 +58,7 @@ export function App(sources: Sources<State>): Sinks<State> {
 
   // const sinks = extractSinks(componentSinks$, driverNames)
   return {
-    DOM: delay(1000, now(<div>hello</div>))
+    DOM: writeDom
     // ...sinks,
     // router: xs.merge(redirect$, sinks.router)
   }
