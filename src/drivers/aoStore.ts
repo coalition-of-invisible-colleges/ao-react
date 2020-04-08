@@ -162,7 +162,8 @@ export class StateDriver {
     const response$ = new AoResponseStream(aoActions$, session$)
     this.response = new ApiSelector(response$, _name)
     this.state$ = R.compose(
-      switchLatest,
+      multicast,
+      (state$$: any) => switchLatest(state$$),
       map((session: UserSession) => {
         console.log('load session', session)
         const getState = new GetStateStream(

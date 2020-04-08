@@ -1,71 +1,64 @@
-import xs, { Stream } from 'xstream'
-import { VNode, DOMSource } from '@cycle/dom'
+import { MainDOMSource } from '../drivers/ao/types'
 import isolate from '@cycle/isolate'
-
+import { State as AoState } from '../drivers/ao/types'
 import { Sources, Sinks, Reducer } from '../interfaces'
+import { map, tap } from '@most/core'
+import { Stream } from '@most/types'
+import { VNode } from '@cycle/dom'
 
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
-
-export interface State {
-  count: number
-  // gridCard: GridCardState
-}
-
-export const defaultState: State = {
-  count: 8
-}
-
-interface DOMIntent {
-  increment$: Stream<null>
-  decrement$: Stream<null>
-  link$: Stream<null>
-}
-
-export function Grid({ DOM, state }: Sources<State>): Sinks<State> {
-  const { increment$, decrement$, link$ }: DOMIntent = intent(DOM)
-  // const GridCard = isolate(GridCardSchema, 'gridCard')
-  return {
-    DOM: view(state.stream),
-    state: model(increment$, decrement$),
-    router: redirect(link$)
-  }
-}
-
-function model(
-  increment$: Stream<any>,
-  decrement$: Stream<any>
-): Stream<Reducer<State>> {
-  const init$ = xs.of<Reducer<State>>(prevState =>
-    prevState === undefined ? defaultState : prevState
-  )
-
-  const addToState: (n: number) => Reducer<State> = n => state => ({
-    ...state,
-    count: (state as State).count + n
-  })
-  const add$ = increment$.mapTo(addToState(1))
-  const subtract$ = decrement$.mapTo(addToState(-1))
-
-  return xs.merge(init$, add$, subtract$)
-}
-
-function RenderRemainder(props: { grid: GridType }): VNode {
-  const { grid } = props
-  const ret = []
-
-  // for (let j = grid.size; j < grid.length; j++) {
-  //   for (let i = grid.size; i < grid[j].length; i++) {
-  //     if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
-  //       ret.push(<li>{grid[j][i]}</li>)
-  //     }
-  //   }
-  // }
-  return <ol></ol>
+interface Sel {
+  x: number
+  y: number
 }
 
 interface GridType {
   [y: number]: { [x: number]: string }
   size: number
+}
+
+export interface State {
+  selected?: Sel
+  // gridCard: GridCardState
+}
+
+export const defaultState: State = {
+  selected: undefined
+}
+
+interface DOMIntent {
+  // increment$: Stream<null>
+  // decrement$: Stream<null>
+  click$: Stream<any>
+}
+
+export function Grid({ DOM, ao }: Sources<State>): Sinks<State> {
+  const { click$ }: DOMIntent = intent(DOM)
+  const out = tap(val => console.log('model click', val), model(click$))
+  // const GridCard = isolate(GridCardSchema, 'gridCard')
+  return {
+    DOM: view(ao.state$),
+    abyss: out
+    // router: redirect(link$)
+  }
+}
+
+function model(click$: Stream<any>): Stream<any> {
+  return map((val: any) => {
+    const id: string = val.target.id
+    const arr = id.split('-')
+    return { x: parseInt(arr[0]), y: parseInt(arr[1]) }
+  }, click$)
+  // const init$ = xs.of<Reducer<State>>(prevState =>
+  //   prevState === undefined ? defaultState : prevState
+  // )
+  // const addToState: (n: number) => Reducer<State> = n => state => ({
+  //   ...state,
+  //   count: (state as State).count + n
+  // })
+  // const add$ = increment$.mapTo(addToState(1))
+  // const subtract$ = decrement$.mapTo(addToState(-1))
+  // return xs.merge(init$, add$, subtract$)
 }
 
 function RenderGrid(props: { grid: GridType }): VNode {
@@ -76,7 +69,8 @@ function RenderGrid(props: { grid: GridType }): VNode {
       if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
         ret.push(
           <div
-            className='square'
+            id={i + '-' + j}
+            className="square"
             style={{
               'grid-row': (j + 1).toString(),
               'grid-column': (i + 1).toString()
@@ -87,7 +81,8 @@ function RenderGrid(props: { grid: GridType }): VNode {
       } else {
         ret.push(
           <div
-            className='square'
+            id={i + '-' + j}
+            className="square"
             style={{
               'grid-row': (j + 1).toString(),
               'grid-column': (i + 1).toString()
@@ -98,7 +93,7 @@ function RenderGrid(props: { grid: GridType }): VNode {
   }
   return (
     <div
-      className='grid'
+      className="grid"
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(' + grid.size.toString() + ', 5em)',
@@ -109,48 +104,49 @@ function RenderGrid(props: { grid: GridType }): VNode {
   )
 }
 
-function view(state$: Stream<State>): Stream<VNode> {
-  return state$.map(({ count }) => (
-    <div>
-      <h2>Meme Grid</h2>
-      <span>{'Size: ' + count}</span>
-      <button type='button' className='add'>
-        Increase
-      </button>
-      <button type='button' className='subtract'>
-        Decrease
-      </button>
-      <button type='button' data-action='navigate'>
-        Test Link
-      </button>
-      <RenderGrid
-        grid={{
-          size: count,
-          3: { 3: 'click to type' },
-          4: { 4: 'state loading', 5: 'drag-and-drop', 6: 'image upload' },
-          5: { 4: 'display image', 5: 'create card' }
-        }}
-      />
-    </div>
-  ))
+function view(state$: Stream<AoState>): Stream<VNode> {
+  return map(
+    (state: AoState): VNode => (
+      <div>
+        <h2>Meme Grid</h2>
+        <span>{'Size: '}</span>
+        <button type="button" className="add">
+          Increase
+        </button>
+        <button type="button" className="subtract">
+          Decrease
+        </button>
+        <button type="button" data-action="navigate">
+          Test Link
+        </button>
+        <RenderGrid
+          grid={{
+            size: 8,
+            3: { 3: 'click to type' },
+            4: { 4: 'state loading', 5: 'drag-and-drop', 6: 'image upload' },
+            5: { 4: 'display image', 5: 'create card' }
+          }}
+        />
+      </div>
+    ),
+    state$
+  )
 }
 
-function intent(DOM: DOMSource): DOMIntent {
-  const increment$ = DOM.select('.add')
-    .events('click')
-    .mapTo(null)
+function intent(DOM: MainDOMSource): DOMIntent {
+  const click$ = DOM.select('.square').events('click')
 
-  const decrement$ = DOM.select('.subtract')
-    .events('click')
-    .mapTo(null)
+  // const decrement$ = DOM.select('.subtract')
+  //   .events('click')
+  //   .mapTo(null)
 
-  const link$ = DOM.select('[data-action="navigate"]')
-    .events('click')
-    .mapTo(null)
+  // const link$ = DOM.select('[data-action="navigate"]')
+  //   .events('click')
+  //   .mapTo(null)
 
-  return { increment$, decrement$, link$ }
+  return { click$ }
 }
 
-function redirect(link$: Stream<any>): Stream<string> {
-  return link$.mapTo('/speaker')
-}
+// function redirect(link$: Stream<any>): Stream<string> {
+//   return link$.mapTo('/speaker')
+// }

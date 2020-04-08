@@ -11,6 +11,7 @@ import { Stream as XStream } from 'xstream'
 import { Stream as MostStream } from '@most/types'
 import fromObservable from 'most-observable'
 import { create } from 'most-subject'
+import './css/styles.scss'
 import {
   setupReusable as mostSetup,
   run,

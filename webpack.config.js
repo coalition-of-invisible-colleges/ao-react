@@ -49,7 +49,17 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader']
       },
-
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ],
+      },
       // {
       //   test: /\.css$/,
       //   use: [
@@ -139,7 +149,7 @@ module.exports = {
       disableDotRule: true
     },
     proxy: [{
-      context: ['/state','/events'],
+      context: ['/state','/events', '/session'],
       target: 'http://localhost:8003',
       changeOrigin: true
     }],
