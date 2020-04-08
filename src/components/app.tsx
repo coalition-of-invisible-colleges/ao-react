@@ -70,7 +70,7 @@ export function App(sources: Sources<State>): Sinks<State> {
   )(sources.DOM.select('.card-text').events('change'))
   // const res$ = tap(
   //   val => console.log('got response', val),
-  console.log(sources.ao.response.select())
+  const res$ = sources.ao.response.select()
   // )
   const createCard$ = R.compose(
     multicast,
@@ -131,8 +131,8 @@ export function App(sources: Sources<State>): Sinks<State> {
   // const sinks = extractSinks(componentSinks$, driverNames)
   return {
     DOM: writeDom,
-    ao: createCard$
-    // abyss: res$
+    ao: createCard$,
+    abyss: res$
     // ...sinks,
     // router: xs.merge(redirect$, sinks.router)
   }
