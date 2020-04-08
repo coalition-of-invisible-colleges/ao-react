@@ -138,14 +138,11 @@ module.exports = {
     historyApiFallback: {
       disableDotRule: true
     },
-    proxy: {
-      '/state': {
-        target: 'http://localhost:8003',
-      },
-      '/events': {
-        target: 'http://localhost:8003',
-      },
-    },
+    proxy: [{
+      context: ['/state','/events'],
+      target: 'http://localhost:8003',
+      changeOrigin: true
+    }],
     stats: 'minimal',
     clientLogLevel: 'warning'
   },
