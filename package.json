@@ -7,7 +7,7 @@
   "scripts": {
     "webdev": "webpack-dev-server --mode development --hot --progress --colors --port 3000 --open",
     "webpack": "webpack -p --progress --colors",
-    "start": "run-s webpack server",
+    "start": "run-p webdev server",
     "server": "node src/server/app.js",
     "format": "prettier --write '{src,test}/**/*.{js,jsx,ts,tsx}'",
     "precommit": "lint-staged",
