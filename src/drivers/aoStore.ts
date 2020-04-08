@@ -32,6 +32,7 @@ import { applyEvent } from '../mutations'
 import { State, SessionAction, UserSession, Member, Task } from './ao/types'
 import { AoResponseSource, ApiSelector } from './ao/ApiSource'
 import { AoResponseStream } from './ao/ApiStream'
+import { Driver } from '../lib/most2-run/src'
 
 export let mode = 'browser'
 // let provideXMLHttpRequest
@@ -96,16 +97,22 @@ export default abstract class Pipe<A, B> implements Sink<A> {
 type hasReadSelector<T> = { _namespace?: Array<string>; _category?: string } & T
 type hasWriteSelector<T> = {
   _namespace?: Array<string>
-  _category?: string
+  category?: string
 } & T
 
 type AoResponseRaw = { type: 'ao-response'; payload: any }
-export type AoAction = hasWriteSelector<AoActionRaw>
+export type AoActionAction = {
+  type: 'ao-action'
+  payload: hasWriteSelector<AoActionRaw>
+}
+export type AoAction = AoActionAction
 export type AoResponse = hasReadSelector<AoResponseRaw>
 
 export type FluxAction = { type: string; payload?: any }
 
-export function createStateDriver(name: string = 'http') {
+export function createStateDriver(
+  name: string = 'http'
+): Driver<Stream<FluxAction>, AoSource> {
   return function(action$: Stream<FluxAction>) {
     const driver = new StateDriver(action$, name)
     const { state$, hashMap$, member$, memberCard$, response } = driver
@@ -118,10 +125,8 @@ export interface AoSource {
   hashMap$: Stream<Map<string, Task>>
   member$: Stream<Member>
   memberCard$: Stream<Task>
-  response: ApiSelector
+  response: AoResponseSource
 }
-
-export type AoActionAction = { type: 'ao-action'; payload: AoAction }
 
 export class StateDriver {
   public state$: Stream<State>
@@ -141,6 +146,10 @@ export class StateDriver {
           val.type == 'try-load-session' || val.type == 'try-login'
       ),
       tap(val => console.log('got val', val)),
+      // startWith({
+      //   type: 'try-login',
+      //   payload: { user: 'dctrl', pass: 'dctrl' }
+      // } as SessionAction)
       startWith({ type: 'try-load-session' })
     )(act$)
     const sessionLoaded$ = new SessionStream(sessionActs$)
@@ -148,7 +157,6 @@ export class StateDriver {
     const aoActions$: Stream<AoAction> = R.compose(
       multicast,
       tap((val: AoAction) => console.log('got action', val)),
-      map((val: AoActionAction): AoAction => val.payload),
       filter((val: FluxAction) => val.type == 'ao-action')
     )(this.act$)
     const response$ = new AoResponseStream(aoActions$, session$)

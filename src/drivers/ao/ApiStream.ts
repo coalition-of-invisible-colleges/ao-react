@@ -45,14 +45,15 @@ class AoApiRequestSink extends Pipe<AoRequest, AoResponse>
     this.handleGetStateAction(act).then(e => this.sink.event(t, e))
   }
   private handleGetStateAction(req: AoRequest): Promise<AoResponse> {
-    const { _namespace, _category, ...act } = req.act
+    const { _namespace, category, ...act } = req.act.payload
+    console.log('got api action', act, req)
     return request
       .post('http://localhost:3000/events')
       .set('Authorization', req.session.token)
       .send(act)
       .then(res => ({
         _namespace,
-        _category,
+        _category: category,
         type: 'ao-response',
         payload: { ...res }
       }))

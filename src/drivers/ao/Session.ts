@@ -68,8 +68,14 @@ class SessionSink extends Pipe<SessionAction, SessionLoadedEvent>
           session + cryptoUtils.createHash(act.payload.pass)
         )
         const token = cryptoUtils.hmacHex(session, sessionKey)
+        if (mode == 'browser') {
+          window.localStorage.setItem('token', token)
+          window.localStorage.setItem('session', session)
+          window.localStorage.setItem('user', user)
+        }
+        console.log('session login', session, token)
         request
-          .post('http://localhost:8003/session')
+          .post('http://localhost:3000/session')
           .set('authorization', token)
           .set('session', session)
           .set('name', act.payload.user)

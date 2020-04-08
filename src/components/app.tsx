@@ -70,7 +70,10 @@ export function App(sources: Sources<State>): Sinks<State> {
   )(sources.DOM.select('.card-text').events('change'))
   // const res$ = tap(
   //   val => console.log('got response', val),
-  const res$ = sources.ao.response.select()
+  const res$ = tap(
+    x => console.log('response val', x),
+    sources.ao.response.select('create-task')
+  )
   // )
   const createCard$ = R.compose(
     multicast,
@@ -88,7 +91,10 @@ export function App(sources: Sources<State>): Sinks<State> {
         console.log('making action')
         return {
           type: 'ao-action',
-          payload: taskCreate(text, 'blue', [member.memberId], card.taskId)
+          payload: {
+            ...taskCreate(text, 'blue', [member.memberId], card.taskId),
+            category: 'create-task'
+          }
         }
       }
     ),
