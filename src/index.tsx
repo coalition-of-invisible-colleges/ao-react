@@ -9,7 +9,7 @@ import './css/styles.scss'
 const socket = io.connect('http://localhost:8003', {
   autoConnect: false
 })
-const driver = new AoDriver('dctrl', 'dctrl', socket)
+const driver = new AoDriver(socket)
 
 render(
   <React.StrictMode>

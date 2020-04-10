@@ -4,30 +4,24 @@ import uuidV1 from 'uuid/v1'
 import cryptoUtils from '../crypto'
 import request from 'superagent'
 import _ from 'lodash'
-import modules from '../modules'
-import { runInAction } from 'mobx'
 
-function setCurrent(state, b) {
-  modules.cash.mutations.setCurrent(state.cash, b)
-  modules.tasks.mutations.setCurrent(state.tasks, b)
-  modules.sessions.mutations.setCurrent(state.sessions, b)
-  modules.ao.mutations.setCurrent(state.ao, b)
-  modules.members.mutations.setCurrent(state.members, b)
-  modules.resources.mutations.setCurrent(state.resources, b)
-  modules.grid.mutations.setCurrent(state.grid, b)
-}
 export class AoDriver {
   socket: any
-  constructor(user, pass, socket) {
+  constructor(socket) {
     let token = window.localStorage.getItem('token')
     let session = window.localStorage.getItem('session')
-    aoStore.state.user = user
+    let user = window.localStorage.getItem('user')
     if (token && session) {
       console.log('recovered session')
+      aoStore.state.user = user
+
       aoStore.state.token = token
       aoStore.state.session = session
     } else {
       console.log('new session')
+      let user = 'dctrl'
+      let pass = 'dctrl'
+      aoStore.state.user = user
       aoStore.state.session = uuidV1()
       let sessionKey = cryptoUtils.createHash(
         aoStore.state.session + cryptoUtils.createHash(pass)
