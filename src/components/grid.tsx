@@ -1,11 +1,7 @@
-import { MainDOMSource } from '../drivers/ao/types'
-import isolate from '@cycle/isolate'
-import { State as AoState } from '../drivers/ao/types'
-import { Sources, Sinks, Reducer } from '../interfaces'
-import { map, tap } from '@most/core'
-import { Stream } from '@most/types'
-import { VNode } from '@cycle/dom'
-
+import * as React from 'react'
+import { observer } from 'mobx-react'
+import aoStore, { AoState } from '../client/store'
+import api from '../client/api'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
 interface Sel {
   x: number
@@ -26,90 +22,144 @@ export const defaultState: State = {
   selected: undefined
 }
 
-interface DOMIntent {
-  // increment$: Stream<null>
-  // decrement$: Stream<null>
-  click$: Stream<any>
+interface GridProps {
+  grid: GridType
+  sel?: Sel
+  onClick: (event: any) => void
+  onKeyDown: (event: any) => void
+  onSelection: (event: any) => void
+  onChange: (event: any) => void
+  ref: any
 }
-
-export function Grid({ DOM, ao }: Sources<State>): Sinks<State> {
-  const { click$ }: DOMIntent = intent(DOM)
-  const out = tap(val => console.log('model click', val), model(click$))
-  // const GridCard = isolate(GridCardSchema, 'gridCard')
-  return {
-    DOM: view(ao.state$),
-    abyss: out
-    // router: redirect(link$)
-  }
-}
-
-function model(click$: Stream<any>): Stream<any> {
-  return map((val: any) => {
-    const id: string = val.target.id
-    const arr = id.split('-')
-    return { x: parseInt(arr[0]), y: parseInt(arr[1]) }
-  }, click$)
-  // const init$ = xs.of<Reducer<State>>(prevState =>
-  //   prevState === undefined ? defaultState : prevState
-  // )
-  // const addToState: (n: number) => Reducer<State> = n => state => ({
-  //   ...state,
-  //   count: (state as State).count + n
-  // })
-  // const add$ = increment$.mapTo(addToState(1))
-  // const subtract$ = decrement$.mapTo(addToState(-1))
-  // return xs.merge(init$, add$, subtract$)
-}
-
-function RenderGrid(props: { grid: GridType }): VNode {
-  const { grid } = props
-  const ret = []
-  for (let j = 0; j < grid.size; j++) {
-    for (let i = 0; i < grid.size; i++) {
-      if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
-        ret.push(
-          <div
-            id={i + '-' + j}
-            className="square"
-            style={{
-              'grid-row': (j + 1).toString(),
-              'grid-column': (i + 1).toString()
-            }}>
-            {grid[j][i]}
-          </div>
-        )
-      } else {
-        ret.push(
-          <div
-            id={i + '-' + j}
-            className="square"
-            style={{
-              'grid-row': (j + 1).toString(),
-              'grid-column': (i + 1).toString()
-            }}></div>
-        )
+const RenderGrid: React.FunctionComponent<GridProps> = observer(
+  ({ grid, onClick, sel, onKeyDown, onChange, onSelection }) => {
+    console.log('rerender grid', grid)
+    const ret = []
+    for (let j = 0; j < grid.size; j++) {
+      for (let i = 0; i < grid.size; i++) {
+        if (sel && sel.x == i && sel.y == j) {
+          ret.push(
+            <input
+              id={i + '-' + j}
+              onClick={onClick}
+              autoFocus
+              onBlur={() => console.log('selection event', i, j)}
+              className="square"
+              onChange={onChange}
+              onKeyDown={onKeyDown}
+              style={{
+                gridRow: (j + 1).toString(),
+                gridColumn: (i + 1).toString()
+              }}
+            />
+          )
+        } else {
+          if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
+            ret.push(
+              <div
+                id={i + '-' + j}
+                onClick={onClick}
+                className="square"
+                style={{
+                  gridRow: (j + 1).toString(),
+                  gridColumn: (i + 1).toString()
+                }}>
+                {aoStore.hashMap.get(grid[j][i]).name}
+              </div>
+            )
+          } else {
+            ret.push(
+              <div
+                id={i + '-' + j}
+                onClick={onClick}
+                className="square"
+                style={{
+                  gridRow: (j + 1).toString(),
+                  gridColumn: (i + 1).toString()
+                }}></div>
+            )
+          }
+        }
       }
     }
+    return (
+      <div
+        className="grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(' + grid.size.toString() + ', 5em)',
+          gridTemplateRows: 'repeat(' + grid.size.toString() + ', 5em)'
+        }}>
+        {ret}
+      </div>
+    )
   }
-  return (
-    <div
-      className="grid"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(' + grid.size.toString() + ', 5em)',
-        gridTemplateRows: 'repeat(' + grid.size.toString() + ', 5em)'
-      }}>
-      {ret}
-    </div>
-  )
-}
+)
 
-function view(state$: Stream<AoState>): Stream<VNode> {
-  return map(
-    (state: AoState): VNode => (
-      <div>
+@observer
+export class AoGrid extends React.Component<any, any> {
+  theme: string
+  constructor(props) {
+    super(props)
+    this.state = {
+      theme: 1
+    }
+    this.changeTheme = this.changeTheme.bind(this)
+    this.onClick = this.onClick.bind(this)
+    this.onKeyDown = this.onKeyDown.bind(this)
+    this.onSelectionChange = this.onSelectionChange.bind(this)
+    this.onChange = this.onChange.bind(this)
+    // this.ref = React.createRef()
+    console.log('grid', aoStore.state.grid)
+  }
+  changeTheme() {
+    if (this.state.theme == 3) {
+      this.setState({ theme: 1 })
+      document.body.className = 'theme-1'
+    } else {
+      const newTheme = this.state.theme + 1
+      document.body.className = 'theme-' + newTheme
+      this.setState({ theme: newTheme })
+    }
+  }
+  onClick(event) {
+    const [xs, ys] = event.target.id.split('-')
+    const x = parseInt(xs)
+    const y = parseInt(ys)
+    this.setState({ sel: { x, y } })
+    console.log('clicked', x, y)
+    // this.ref.current.focus()
+  }
+  onKeyDown(event) {
+    if (event.key === 'Enter') {
+      console.log('enter')
+      api.createAndOrAddCardToGrid(
+        this.state.sel.x,
+        this.state.sel.y,
+        this.state.text
+      )
+      this.setState({ sel: undefined })
+    }
+  }
+  onSelectionChange(event) {
+    console.log('selected event', event)
+  }
+  componentDidMount() {
+    document.body.className = 'theme-' + this.state.theme
+  }
+  onChange(event) {
+    console.log('on change', event.target.value)
+    this.setState({ text: event.target.value })
+  }
+  render() {
+    console.log('render main grid', aoStore.state.grid)
+    return (
+      <div id="gridContainer">
         <h2>Meme Grid</h2>
         <span>{'Size: '}</span>
+        <button type="button" className="my-button" onClick={this.changeTheme}>
+          Click button
+        </button>
         <button type="button" className="add">
           Increase
         </button>
@@ -120,33 +170,14 @@ function view(state$: Stream<AoState>): Stream<VNode> {
           Test Link
         </button>
         <RenderGrid
-          grid={{
-            size: 8,
-            3: { 3: 'click to type' },
-            4: { 4: 'state loading', 5: 'drag-and-drop', 6: 'image upload' },
-            5: { 4: 'display image', 5: 'create card' }
-          }}
+          sel={this.state.sel}
+          onClick={this.onClick}
+          onKeyDown={this.onKeyDown}
+          onSelection={this.onSelectionChange}
+          onChange={this.onChange}
+          grid={{ ...aoStore.state.grid, size: 8 }}
         />
       </div>
-    ),
-    state$
-  )
+    )
+  }
 }
-
-function intent(DOM: MainDOMSource): DOMIntent {
-  const click$ = DOM.select('.square').events('click')
-
-  // const decrement$ = DOM.select('.subtract')
-  //   .events('click')
-  //   .mapTo(null)
-
-  // const link$ = DOM.select('[data-action="navigate"]')
-  //   .events('click')
-  //   .mapTo(null)
-
-  return { click$ }
-}
-
-// function redirect(link$: Stream<any>): Stream<string> {
-//   return link$.mapTo('/speaker')
-// }

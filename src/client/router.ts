@@ -1,5 +1,5 @@
 import pathMatch from 'path-match'
-import { Stream } from '@most/types'
+// import { Stream } from '@most/types'
 import useRouterStream from './router-stream'
 const pMatch = pathMatch({
   // path-to-regexp options
@@ -18,7 +18,6 @@ type Route = (event: UrlEvent) => Boolean
 export default class Router {
   routes: Array<Route>
   pathMatch: Function
-  stream: Stream<Event>
   constructor() {
     this.routes = []
     this.handleChange = this.handleChange.bind(this)

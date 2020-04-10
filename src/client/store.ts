@@ -1,8 +1,7 @@
-// import { observable, computed } from 'mobx'
+import { observable, computed, observe, action } from 'mobx'
 import _ from 'lodash'
+import M from '../mutations'
 import calculations from '../calculations'
-// import 'core-js/stable';
-// import 'regenerator-runtime/runtime';
 export interface Member {
   type: 'member-created'
   name: string
@@ -45,7 +44,7 @@ export interface Session {
   timestamp: Date
 }
 
-interface AoState {
+export interface AoState {
   session: string
   token: string
   user: string
@@ -70,6 +69,7 @@ interface AoState {
   }
 }
 class AoStore {
+  @observable
   state: AoState = {
     session: '',
     token: '',
@@ -94,7 +94,7 @@ class AoStore {
       info: {}
     }
   }
-  get member(): Member {
+  @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
       console.log('compare session', session)
@@ -113,26 +113,43 @@ class AoStore {
     return loggedInMember
   }
 
-  get memberCard(): Task {
+  @computed get memberCard(): Task {
     let memberCard = _.merge(
       calculations.blankCard('', '', ''),
       this.hashMap.get(this.member.memberId)
     )
     return memberCard
   }
-  get hashMap(): Map<string, Task> {
+  @computed get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
     return hashMap
   }
-  get memberByName(): Map<string, Task> {
+  @computed get memberByName(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.name, t)
     })
     return hashMap
+  }
+  @action.bound
+  initializeState(state: AoState) {
+    Object.keys(state).forEach(key =>
+      Object.assign(this.state[key], state[key])
+    )
+    console.log('initialized state', this.state)
+  }
+  @action.bound
+  applyEvent(ev) {
+    M.cashMuts(this.state.cash, ev)
+    M.membersMuts(this.state.members, ev)
+    M.resourcesMuts(this.state.resources, ev)
+    M.sessionsMuts(this.state.sessions, ev)
+    M.tasksMuts(this.state.tasks, ev)
+    M.aoMuts(this.state.ao, ev)
+    M.gridMuts(this.state.grid, ev)
   }
 }
 const aoStore = new AoStore()

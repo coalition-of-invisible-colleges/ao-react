@@ -1,37 +1,57 @@
 html {
-	width: 100%;
-	height: 100%;
-}
-
-body {
-	text-align: center;
-	background-color: #000;
-	color: white;
-	font-family: monospace;
-	font-size: 1.25em;
+  width: 100%;
+  height: 100%;
 }
 
 span,
 button,
 textarea {
-	margin: 0.5em;
+  margin: 0.5em;
 }
 
-.grid {
-	display: grid;
-	margin-left: 50%;
-	transform: translateX(-50%);
-	width: fit-content;
+@mixin themable(
+  $theme-name,
+  $body-bg,
+  $body-color,
+  $square-bg,
+  $square-border,
+  $square-hover
+) {
+  // body {
+  //   background-color: $body-bg;
+  // }
+
+  .#{$theme-name} {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    color: $body-color;
+    font-family: monospace;
+    font-size: 1.25em;
+    background-color: $body-bg;
+
+    .grid {
+      display: grid;
+      margin-left: 50%;
+      transform: translateX(-50%);
+      width: fit-content;
+
+      .square {
+        background: $square-bg;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: $square-border;
+        color: $body-color;
+
+        &:hover {
+          background: $square-hover;
+        }
+      }
+    }
+  }
 }
 
-.grid .square {
-	background: rgba(255, 255, 255, 0.075);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.grid .square:hover {
-	background: rgba(80, 110, 255, 0.6);
-}
+@import './themes/dark';
+@import './themes/light';
+@import './themes/green';

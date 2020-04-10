@@ -9,13 +9,15 @@ var outPath = path.join(__dirname, './dist')
 
 // plugins
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 var WebpackCleanupPlugin = require('webpack-cleanup-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 
 module.exports = {
-  context: sourcePath,
+  context: __dirname,
   entry: {
-    app: './index.tsx'
+    app: './src/index.tsx'
   },
   output: {
     path: outPath,
@@ -24,26 +26,40 @@ module.exports = {
   },
   target: 'web',
   resolve: {
-    extensions: ['.js', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
     mainFields: ['module', 'browser', 'main'],
     alias: {
-      app: path.resolve(__dirname, 'src/app/')
-    }
+      'react-dom': '@hot-loader/react-dom',
+    },
   },
   module: {
     rules: [
-      // .ts, .tsx
       {
-        test: /\.tsx?$/,
-        use: [
-          // !isProduction && {
-          //   loader: 'babel-loader',
-          //   options: { plugins: [] }
-          // },
-          'ts-loader'
-        ].filter(Boolean)
+        test: /\.(j|t)s(x)?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            babelrc: false,
+            presets: [
+              [
+                '@babel/preset-env',
+                { targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
+              ],
+              '@babel/preset-typescript',
+              '@babel/preset-react',
+            ],
+            plugins: [
+              // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
+              ['@babel/plugin-proposal-decorators', { legacy: true }],
+              ['@babel/plugin-proposal-class-properties', { loose: true }],
+              'react-hot-loader/babel',
+            ],
+          },
+        },
       },
       {
         test: /\.css$/i,
@@ -134,12 +150,11 @@ module.exports = {
     //   filename: isProduction ? '[contenthash].css' : '[hash].css',
     //   disable: !isProduction
     // }),
+    new ForkTsCheckerWebpackPlugin(),
+    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
-      template: 'assets/index.html'
+      template: 'src/assets/index.html'
     }),
-    new webpack.ProvidePlugin({
-      Snabbdom: 'snabbdom-pragma'
-  })
   ],
   devServer: {
     contentBase: sourcePath,
@@ -157,7 +172,8 @@ module.exports = {
     clientLogLevel: 'warning'
   },
   // https://webpack.js.org/configuration/devtool/
-  devtool: isProduction ? 'hidden-source-map' : 'cheap-module-eval-source-map',
+  devtool: 'eval-source-map',
+  // devtool: isProduction ? 'hidden-source-map' : 'cheap-module-eval-source-map',
   node: {
     // workaround for webpack-dev-server issue
     // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179

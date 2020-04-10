@@ -1,0 +1,8 @@
+@include themable(
+  theme-1,
+  #000,
+  white,
+  rgba(255, 255, 255, 0.075),
+  1px solid rgba(255, 255, 255, 0.3),
+  rgba(80, 110, 255, 0.6)
+);

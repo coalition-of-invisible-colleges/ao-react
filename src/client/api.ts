@@ -13,7 +13,7 @@ class AoApi {
       inId: aoStore.memberCard.taskId
     }
     return request
-      .post('http://localhost:8003/events')
+      .post('http://localhost:3000/events')
       .set('Authorization', aoStore.state.token)
       .send(act)
       .then(res => {
@@ -32,7 +32,7 @@ class AoApi {
       }
     }
     return request
-      .post('http://localhost:8003/events')
+      .post('http://localhost:3000/events')
       .set('Authorization', aoStore.state.token)
       .send(act)
       .then(res => {
@@ -51,7 +51,7 @@ class AoApi {
         }
       }
       return request
-        .post('http://localhost:8003/events')
+        .post('http://localhost:3000/events')
         .set('Authorization', aoStore.state.token)
         .send(act)
         .then(res => {
@@ -66,7 +66,7 @@ class AoApi {
         inId: aoStore.memberCard.taskId
       }
       return request
-        .post('http://localhost:8003/events')
+        .post('http://localhost:3000/events')
         .set('Authorization', aoStore.state.token)
         .send(act)
         .then(res => {
@@ -80,7 +80,7 @@ class AoApi {
             }
           }
           return request
-            .post('http://localhost:8003/events')
+            .post('http://localhost:3000/events')
             .set('Authorization', aoStore.state.token)
             .send(gridAct)
         })
