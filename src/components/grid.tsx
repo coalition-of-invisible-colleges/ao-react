@@ -29,7 +29,6 @@ interface GridProps {
   onKeyDown: (event: any) => void
   onSelection: (event: any) => void
   onChange: (event: any) => void
-  ref: any
 }
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
   ({ grid, onClick, sel, onKeyDown, onChange, onSelection }) => {
