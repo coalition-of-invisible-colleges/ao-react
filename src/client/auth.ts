@@ -40,7 +40,7 @@
 //         sessionKey
 //       )
 //       request
-//         .post('http://localhost:8003/session')
+//         .post('http://107.172.5.114:8003//session')
 //         .set('authorization', aoStore.state.token)
 //         .set('session', aoStore.state.session)
 //         .set('name', aoStore.state.user)
