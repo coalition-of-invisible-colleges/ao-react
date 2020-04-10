@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
+import { ObservableMap } from 'mobx'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
 interface Sel {
   x: number
@@ -95,8 +96,14 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
   }
 )
 
+interface AoGridState {
+  theme: number
+  text?: string
+  sel?: Sel
+}
+
 @observer
-export class AoGrid extends React.Component<any, any> {
+export class AoGrid extends React.Component<{}, AoGridState> {
   theme: string
   constructor(props) {
     super(props)
@@ -137,7 +144,7 @@ export class AoGrid extends React.Component<any, any> {
         this.state.sel.y,
         this.state.text
       )
-      this.setState({ sel: undefined })
+      this.setState({ sel: undefined, text: undefined })
     }
   }
   onSelectionChange(event) {
