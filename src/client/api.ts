@@ -33,14 +33,19 @@ class AoApi {
   }
 
   async fetchState(): Promise<void> {
+    const session = window.localStorage.getItem('session')
+    const token = window.localStorage.getItem('token')
+    const user = window.localStorage.getItem('user')
     return request
       .post('/state')
-      .set('Authorization', aoStore.state.token)
+      .set('Authorization', token)
       .end((err, res) => {
         if (err || !res.body) {
           aoStore.state.loggedIn = false
         } else {
-          // setCurrent(aoStore.state, res.body)
+          aoStore.state.session = session
+          aoStore.state.token = token
+          aoStore.state.user = user
           aoStore.initializeState(res.body)
         }
       })

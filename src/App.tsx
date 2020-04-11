@@ -1,6 +1,6 @@
 import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,6 +11,7 @@ import {
 import { AoGrid } from './components/grid'
 import Card from './components/card'
 import aoStore from './client/store'
+import api from './client/api'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   console.log('logged in?', loggedIn)
@@ -26,8 +27,14 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 }
 
 const App = () => {
-  useState
-  useEffect
+  // const [render, setRender] = useState(false)
+  // api.fetchState().then(v => {
+  //   console.log('state fetched')
+  //   setRender(true)
+  //   if (aoStore.state.loggedIn) {
+  //     api.onLoad()
+  //   }
+  // })
   return (
     <Router>
       <div>
@@ -45,16 +52,16 @@ const App = () => {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <ProtectedRoute
-            path="/task/:taskID"
-            component={Card}
-            loggedIn={aoStore.state.loggedIn}
-          />
-          <ProtectedRoute
-            path=""
-            component={AoGrid}
-            loggedIn={aoStore.state.loggedIn}
-          />
+          {/* <ProtectedRoute
+              path="/task/:taskID"
+              component={Card}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path=""
+              component={AoGrid}
+              loggedIn={aoStore.state.loggedIn}
+            /> */}
           <Route path="/task/:taskId">
             <Card />
           </Route>
