@@ -66,6 +66,25 @@ class AoApi {
         return res
       })
   }
+  async createMember(
+    name: string,
+    fob: string = ''
+  ): Promise<request.Response> {
+    const secret = cryptoUtils.createHash(name)
+    const act = {
+      type: 'member-created',
+      name,
+      secret,
+      fob
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
 
   async addCardToGrid(x, y, name): Promise<request.Response> {
     const task: Task = aoStore.memberByName.get(name)
@@ -133,6 +152,7 @@ class AoApi {
     }
   }
   logout() {
+    this.socket.emit('disconnect')
     this.socket.close()
     aoStore.resetState()
     window.localStorage.setItem('user', null)
@@ -154,6 +174,9 @@ class AoApi {
         console.log('event', ev)
         aoStore.applyEvent(ev)
       })
+    })
+    this.socket.on('disconnect', () => {
+      this.socket.open()
     })
   }
 }

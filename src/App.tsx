@@ -14,6 +14,7 @@ import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
+import Members from './components/Members'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   console.log('logged in?', loggedIn)
@@ -22,7 +23,7 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
       path={path}
       {...rest}
       render={props => {
-        console.log('props', props)
+        console.log
         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
       }}
     />
@@ -77,9 +78,7 @@ const App = observer(() => {
                   <Link to="/">Home</Link>
                 </li>
                 <li>
-                  <Link to="/task/a31033b0-793f-11ea-9597-55c4b88fddef">
-                    About
-                  </Link>
+                  <Link to="/members">Members</Link>
                 </li>
               </ul>
             </nav>
@@ -91,10 +90,26 @@ const App = observer(() => {
                 <Login />
               </Route>
               <ProtectedRoute
+                path="/members"
+                component={Members}
+                loggedIn={aoStore.state.loggedIn}
+              />
+              <ProtectedRoute
+                path="/task"
+                component={Card}
+                loggedIn={aoStore.state.loggedIn}
+              />
+              <ProtectedRoute
                 path="/"
                 component={AoGrid}
                 loggedIn={aoStore.state.loggedIn}
               />
+              {/* <Route path="/task/:taskId">
+                <Card />
+              </Route>
+              <Route path="/">
+                <AoGrid />
+              </Route> */}
             </Switch>
           </div>
         </Router>
