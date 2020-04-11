@@ -47,6 +47,7 @@ export interface Session {
 export interface AoState {
   session: string
   token: string
+  loggedIn: boolean
   user: string
   ao: number[]
   sessions: Session[]
@@ -74,6 +75,7 @@ class AoStore {
     session: '',
     token: '',
     user: '',
+    loggedIn: false,
     ao: [],
     sessions: [],
     members: [],
@@ -139,6 +141,7 @@ class AoStore {
     Object.keys(state).forEach(key =>
       Object.assign(this.state[key], state[key])
     )
+    this.state.loggedIn = true
     console.log('initialized state', this.state)
   }
   @action.bound

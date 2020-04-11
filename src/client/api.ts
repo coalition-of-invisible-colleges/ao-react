@@ -1,9 +1,51 @@
 import request from 'superagent'
+import uuidV1 from 'uuid/v1'
+import cryptoUtils from '../crypto'
 import _ from 'lodash'
+import configuration from '../../client-configuration'
 import aoStore, { Task } from './store'
+import io from 'socket.io-client'
 
 class AoApi {
-  constructor() {}
+  constructor(public socket) {}
+
+  async createSession(user: string, pass: string): Promise<void> {
+    const session = uuidV1()
+    let sessionKey = cryptoUtils.createHash(
+      session + cryptoUtils.createHash(pass)
+    )
+    const token = cryptoUtils.hmacHex(session, sessionKey)
+    return request
+      .post('/session')
+      .set('authorization', token)
+      .set('session', session)
+      .set('name', user)
+      .end((err, res) => {
+        if (err) {
+          console.log('err', err)
+          return (err = err.message)
+        }
+        aoStore.state.token = token
+        aoStore.state.session = session
+        window.localStorage.setItem('token', token)
+        window.localStorage.setItem('session', session)
+      })
+  }
+
+  async fetchState(): Promise<void> {
+    return request
+      .post('/state')
+      .set('Authorization', aoStore.state.token)
+      .end((err, res) => {
+        if (err || !res.body) {
+          aoStore.state.loggedIn = false
+        } else {
+          // setCurrent(aoStore.state, res.body)
+          aoStore.initializeState(res.body)
+        }
+      })
+  }
+
   async createCard(name: string): Promise<request.Response> {
     const act = {
       type: 'task-created',
@@ -86,7 +128,29 @@ class AoApi {
         })
     }
   }
+  onLoad() {
+    this.socket.open()
+    this.socket.on('connect', () => {
+      console.log('connected')
+      this.socket.emit('authentication', {
+        session: aoStore.state.session,
+        token: aoStore.state.token
+      })
+    })
+    this.socket.on('authenticated', () => {
+      console.log('authenticated')
+      this.socket.on('eventstream', ev => {
+        console.log('event', ev)
+        aoStore.applyEvent(ev)
+      })
+    })
+  }
 }
-
-const api = new AoApi()
+const socket = io.connect(
+  configuration.socketUrl ? configuration.socketUrl : '/',
+  {
+    autoConnect: false
+  }
+)
+const api = new AoApi(socket)
 export default api
