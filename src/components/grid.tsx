@@ -72,7 +72,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               <div
                 id={i + '-' + j}
                 onClick={onClick}
-                className="square"
+                className="square empty"
                 style={{
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()

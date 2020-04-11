@@ -58,6 +58,10 @@ textarea {
         background: $square-hover;
         overflow: visible;
       }
+
+      .empty.square:hover::after {
+        content: 'click to type';
+      }
     }
   }
 }
