@@ -8,7 +8,7 @@ import './css/styles.scss'
 import configuration from '../client-configuration'
 import api from './client/api'
 
-api.fetchState()
+api.fetchState().then(() => api.onLoad())
 render(
   <React.StrictMode>
     <App />
