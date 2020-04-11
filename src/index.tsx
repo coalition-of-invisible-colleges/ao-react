@@ -6,9 +6,14 @@ import { render } from 'react-dom'
 import { AoDriver } from './client/ao-driver'
 import App from './App'
 import './css/styles.scss'
-const socket = io.connect('http://107.172.5.114:8003', {
-  autoConnect: false
-})
+import configuration from '../client-configuration'
+
+const socket = io.connect(
+  configuration.socketUrl ? configuration.socketUrl : '/',
+  {
+    autoConnect: false
+  }
+)
 const driver = new AoDriver(socket)
 
 render(
