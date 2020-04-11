@@ -91,21 +91,10 @@ const App = observer(() => {
                 <Login />
               </Route>
               <ProtectedRoute
-                path="/task"
-                component={Card}
-                loggedIn={aoStore.state.loggedIn}
-              />
-              <ProtectedRoute
                 path="/"
                 component={AoGrid}
                 loggedIn={aoStore.state.loggedIn}
               />
-              {/* <Route path="/task/:taskId">
-                <Card />
-              </Route>
-              <Route path="/">
-                <AoGrid />
-              </Route> */}
             </Switch>
           </div>
         </Router>
