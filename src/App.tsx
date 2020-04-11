@@ -22,6 +22,7 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
       path={path}
       {...rest}
       render={props => {
+        console.log('props', props)
         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
       }}
     />
@@ -90,7 +91,7 @@ const App = observer(() => {
                 <Login />
               </Route>
               <ProtectedRoute
-                path="/task/:taskID"
+                path="/task"
                 component={Card}
                 loggedIn={aoStore.state.loggedIn}
               />

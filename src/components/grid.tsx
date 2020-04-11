@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import { Redirect } from 'react-router-dom'
 import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
+import { delay, cancelablePromise, noop } from '../utils'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
 interface Sel {
   x: number
@@ -28,11 +30,11 @@ interface GridProps {
   sel?: Sel
   onClick: (event: any) => void
   onKeyDown: (event: any) => void
-  onSelection: (event: any) => void
+  onDoubleClick: (event: any) => void
   onChange: (event: any) => void
 }
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
-  ({ grid, onClick, sel, onKeyDown, onChange, onSelection }) => {
+  ({ grid, onClick, sel, onKeyDown, onChange, onDoubleClick }) => {
     console.log('rerender grid', grid)
     const ret = []
     for (let j = 0; j < grid.size; j++) {
@@ -47,6 +49,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               className="square"
               onChange={onChange}
               onKeyDown={onKeyDown}
+              onDoubleClick={onDoubleClick}
               style={{
                 gridRow: (j + 1).toString(),
                 gridColumn: (i + 1).toString()
@@ -59,6 +62,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               <div
                 id={i + '-' + j}
                 onClick={onClick}
+                onDoubleClick={onDoubleClick}
                 className="square"
                 style={{
                   gridRow: (j + 1).toString(),
@@ -72,6 +76,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               <div
                 id={i + '-' + j}
                 onClick={onClick}
+                onDoubleClick={onDoubleClick}
                 className="square empty"
                 style={{
                   gridRow: (j + 1).toString(),
@@ -97,44 +102,72 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
 )
 
 interface AoGridState {
-  theme: number
+  redirect?: string
   text?: string
   sel?: Sel
 }
 
 @observer
 export class AoGrid extends React.Component<{}, AoGridState> {
-  theme: string
   constructor(props) {
     super(props)
-    this.state = {
-      theme: 1
-    }
-    this.changeTheme = this.changeTheme.bind(this)
+    this.state = {}
     this.onClick = this.onClick.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onSelectionChange = this.onSelectionChange.bind(this)
     this.onChange = this.onChange.bind(this)
     // this.ref = React.createRef()
     console.log('grid', aoStore.state.grid)
+    this.onDoubleClick = this.onDoubleClick.bind(this)
   }
-  changeTheme() {
-    if (this.state.theme == 3) {
-      this.setState({ theme: 1 })
-      document.body.className = 'theme-1'
-    } else {
-      const newTheme = this.state.theme + 1
-      document.body.className = 'theme-' + newTheme
-      this.setState({ theme: newTheme })
-    }
+  componentWillUnmount() {
+    // cancel all pending promises to avoid
+    // side effects when the component is unmounted
+    this.clearPendingPromises()
+  }
+
+  pendingPromises = []
+
+  appendPendingPromise = promise =>
+    (this.pendingPromises = [...this.pendingPromises, promise])
+
+  removePendingPromise = promise =>
+    (this.pendingPromises = this.pendingPromises.filter(p => p !== promise))
+
+  clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
+  onDoubleClick(e) {
+    console.log('double click')
+    this.clearPendingPromises()
+    const [xs, ys] = e.target.id.split('-')
+    const x = parseInt(xs)
+    const y = parseInt(ys)
+    this.setState({ redirect: '/task/' + aoStore.state.grid[y][x] })
   }
   onClick(event) {
+    console.log('clicked!')
     const [xs, ys] = event.target.id.split('-')
     const x = parseInt(xs)
     const y = parseInt(ys)
-    this.setState({ sel: { x, y } })
-    console.log('clicked', x, y)
-    // this.ref.current.focus()
+    const waitForClick = cancelablePromise(delay(1000))
+    this.appendPendingPromise(waitForClick)
+
+    return waitForClick.promise
+      .then(() => {
+        this.setState({ sel: { x, y } })
+        console.log('clicked', x, y)
+        // this.ref.current.focus()
+        // if the promise wasn't cancelled, we execute
+        // the callback and remove it from the queue
+        this.removePendingPromise(waitForClick)
+      })
+      .catch(errorInfo => {
+        // rethrow the error if the promise wasn't
+        // rejected because of a cancelation
+        this.removePendingPromise(waitForClick)
+        if (!errorInfo.isCanceled) {
+          throw errorInfo.error
+        }
+      })
   }
   onKeyDown(event) {
     if (event.key === 'Enter') {
@@ -150,9 +183,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   onSelectionChange(event) {
     console.log('selected event', event)
   }
-  componentDidMount() {
-    document.body.className = 'theme-' + this.state.theme
-  }
+  componentDidMount() {}
   onChange(event) {
     console.log('on change', event.target.value)
     this.setState({ text: event.target.value })
@@ -160,16 +191,21 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   render() {
     console.log('render main grid', aoStore.state.grid)
     return (
-      <div id="gridContainer">
-        <h2>Meme Grid</h2>
-        <RenderGrid
-          sel={this.state.sel}
-          onClick={this.onClick}
-          onKeyDown={this.onKeyDown}
-          onSelection={this.onSelectionChange}
-          onChange={this.onChange}
-          grid={{ ...aoStore.state.grid, size: 8 }}
-        />
+      <div>
+        {!this.state.redirect && (
+          <div id="gridContainer">
+            <h2>Meme Grid</h2>
+            <RenderGrid
+              sel={this.state.sel}
+              onClick={this.onClick}
+              onKeyDown={this.onKeyDown}
+              onDoubleClick={this.onDoubleClick}
+              onChange={this.onChange}
+              grid={{ ...aoStore.state.grid, size: 8 }}
+            />
+          </div>
+        )}
+        {this.state.redirect && <Redirect to={this.state.redirect} />}
       </div>
     )
   }
