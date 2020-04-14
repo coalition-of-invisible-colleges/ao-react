@@ -43,10 +43,24 @@ textarea {
         align-items: center;
         border: $square-border;
         color: $body-color;
+        overflow: hidden;
+      }
 
-        &:hover {
-          background: $square-hover;
-        }
+      textarea.square {
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      div.square:hover {
+        background: $square-hover;
+        overflow: visible;
+      }
+
+      .empty.square:hover::after {
+        content: 'click to type';
       }
     }
   }

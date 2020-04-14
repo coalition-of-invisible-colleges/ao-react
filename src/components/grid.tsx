@@ -39,7 +39,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
       for (let i = 0; i < grid.size; i++) {
         if (sel && sel.x == i && sel.y == j) {
           ret.push(
-            <input
+            <textarea
               id={i + '-' + j}
               onClick={onClick}
               autoFocus
@@ -72,7 +72,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               <div
                 id={i + '-' + j}
                 onClick={onClick}
-                className="square"
+                className="square empty"
                 style={{
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
@@ -162,19 +162,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     return (
       <div id="gridContainer">
         <h2>Meme Grid</h2>
-        <span>{'Size: '}</span>
-        <button type="button" className="my-button" onClick={this.changeTheme}>
-          Click button
-        </button>
-        <button type="button" className="add">
-          Increase
-        </button>
-        <button type="button" className="subtract">
-          Decrease
-        </button>
-        <button type="button" data-action="navigate">
-          Test Link
-        </button>
         <RenderGrid
           sel={this.state.sel}
           onClick={this.onClick}
