@@ -155,7 +155,8 @@ export class AoGrid extends React.Component<{}, AoGridState> {
 
     return waitForClick.promise
       .then(() => {
-        this.setState({ sel: { x, y } })
+        // trying to get this to load the text of an existing square
+        this.setState({ sel: { x, y }, text: aoStore.state.grid[y][x] })
         console.log('clicked', x, y)
         // this.ref.current.focus()
         // if the promise wasn't cancelled, we execute
@@ -184,6 +185,9 @@ export class AoGrid extends React.Component<{}, AoGridState> {
           this.state.text
         )
       }
+      this.setState({ sel: undefined, text: undefined })
+    } else if (event.key === 'Escape') {
+      console.log('escape')
       this.setState({ sel: undefined, text: undefined })
     }
   }
