@@ -44,23 +44,16 @@ textarea {
         border: $square-border;
         color: $body-color;
         overflow: hidden;
-      }
 
-      textarea.square {
-        text-align: center;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      div.square:hover {
-        background: $square-hover;
-        overflow: visible;
-      }
-
-      .empty.square:hover::after {
-        content: 'click to type';
+        &:hover {
+          background: darken($square-hover, 50%);
+          span {
+            position: absolute;
+            // overflow: visible;
+            // overflow-y: auto;
+            background: darken($square-hover, 50%);
+          }
+        }
       }
     }
   }
@@ -69,3 +62,9 @@ textarea {
 @import './themes/dark';
 @import './themes/light';
 @import './themes/green';
+
+// Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
+// Change theme names to the name of their file (without the underscore)
+// Run through the theme array (or have a drop down) to apply specific & names themes
+// Theme generator page/applet allows one to construct a new theme
+// New theme is generated as an scss file in the themes folder, and imported above in styles.scss
