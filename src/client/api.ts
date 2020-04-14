@@ -50,6 +50,48 @@ class AoApi {
       .catch(() => false)
   }
 
+  async bark(): Promise<request.Response> {
+    const act = {
+      type: 'doge-barked',
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async mute(): Promise<request.Response> {
+    const act = {
+      type: 'doge-muted',
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async unmute(): Promise<request.Response> {
+    const act = {
+      type: 'doge-unmuted',
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async createCard(name: string): Promise<request.Response> {
     const act = {
       type: 'task-created',
@@ -66,6 +108,7 @@ class AoApi {
         return res
       })
   }
+
   async createMember(
     name: string,
     fob: string = ''
@@ -104,6 +147,7 @@ class AoApi {
         return res
       })
   }
+
   async createAndOrAddCardToGrid(x, y, name): Promise<request.Response> {
     const task: Task = aoStore.memberByName.get(name)
     if (_.isObject(task)) {

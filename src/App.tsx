@@ -15,6 +15,8 @@ import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
 import Members from './components/Members'
+import { AoStatus } from './components/status'
+import { AoVolume } from './components/volume'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   console.log('logged in?', loggedIn)
@@ -61,6 +63,8 @@ const App = observer(() => {
     <div>
       {render && (
         <Router>
+          <AoStatus />
+          <AoVolume />
           <div>
             <nav>
               <ul>

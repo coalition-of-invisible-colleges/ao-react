@@ -30,6 +30,27 @@ textarea {
     font-size: 1.25em;
     background-color: $body-bg;
 
+    #status {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      margin-left: 0.5em;
+      margin-bottom: 0.3em;
+      cursor: pointer;
+      height: 3em;
+    }
+
+    #volume {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      margin-right: 0.5em;
+      margin-bottom: 0.3em;
+      cursor: pointer;
+      height: 3em;
+      fill: #fff;
+    }
+
     .grid {
       display: grid;
       margin-left: 50%;
