@@ -49,6 +49,7 @@ textarea {
           background: darken($square-hover, 50%);
           span {
             position: absolute;
+            margin: auto;
             // overflow: visible;
             // overflow-y: auto;
             pointer-events: none;
