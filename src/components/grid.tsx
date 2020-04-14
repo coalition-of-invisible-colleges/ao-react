@@ -146,6 +146,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   }
   onClick(event) {
     console.log('clicked!')
+    this.setState({ text: '' })
     const [xs, ys] = event.target.id.split('-')
     const x = parseInt(xs)
     const y = parseInt(ys)
@@ -173,11 +174,16 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   onKeyDown(event) {
     if (event.key === 'Enter') {
       console.log('enter')
-      api.createAndOrAddCardToGrid(
-        this.state.sel.x,
-        this.state.sel.y,
-        this.state.text
-      )
+      if (this.state.text === '') {
+        api.delCardFromGrid(this.state.sel.x, this.state.sel.y),
+          console.log('delFired')
+      } else {
+        api.createAndOrAddCardToGrid(
+          this.state.sel.x,
+          this.state.sel.y,
+          this.state.text
+        )
+      }
       this.setState({ sel: undefined, text: undefined })
     }
   }

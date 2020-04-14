@@ -86,6 +86,23 @@ class AoApi {
       })
   }
 
+  async delCardFromGrid(x: number, y: number): Promise<request.Response> {
+    const act = {
+      type: 'grid-del',
+      coord: {
+        x,
+        y
+      }
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async addCardToGrid(x, y, name): Promise<request.Response> {
     const task: Task = aoStore.memberByName.get(name)
     const act = {

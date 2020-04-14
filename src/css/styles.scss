@@ -51,6 +51,7 @@ textarea {
             position: absolute;
             // overflow: visible;
             // overflow-y: auto;
+            pointer-events: none;
             background: darken($square-hover, 50%);
           }
         }
