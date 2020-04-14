@@ -1,7 +1,23 @@
 import { observable, computed, observe, action } from 'mobx'
 import _ from 'lodash'
 import M from '../mutations'
+import modules from '../modules'
 import calculations from '../calculations'
+
+function setCurrent(state: AoState, b: AoState) {
+  modules.cash.mutations.setCurrent(state.cash, b)
+  modules.tasks.mutations.setCurrent(state.tasks, b)
+  modules.sessions.mutations.setCurrent(state.sessions, b)
+  modules.ao.mutations.setCurrent(state.ao, b)
+  modules.members.mutations.setCurrent(state.members, b)
+  modules.resources.mutations.setCurrent(state.resources, b)
+  modules.grid.mutations.setCurrent(state.grid, b)
+  state.user = b.user
+  state.session = b.session
+  state.token = b.token
+  state.loggedIn = b.loggedIn
+}
+
 export interface Member {
   type: 'member-created'
   name: string
@@ -69,33 +85,34 @@ export interface AoState {
     info: {}
   }
 }
+const defaultState: AoState = {
+  session: '',
+  token: '',
+  user: '',
+  loggedIn: false,
+  ao: [],
+  sessions: [],
+  members: [],
+  tasks: [],
+  resources: [],
+  grid: {},
+  cash: {
+    address: '',
+    alias: '',
+    currency: 'CAD',
+    spot: 0,
+    rent: 0,
+    cap: 75,
+    pay_index: 0,
+    usedTxIds: [],
+    outputs: [],
+    channels: [],
+    info: {}
+  }
+}
 class AoStore {
   @observable
-  state: AoState = {
-    session: '',
-    token: '',
-    user: '',
-    loggedIn: false,
-    ao: [],
-    sessions: [],
-    members: [],
-    tasks: [],
-    resources: [],
-    grid: {},
-    cash: {
-      address: '',
-      alias: '',
-      currency: 'CAD',
-      spot: 0,
-      rent: 0,
-      cap: 75,
-      pay_index: 0,
-      usedTxIds: [],
-      outputs: [],
-      channels: [],
-      info: {}
-    }
-  }
+  state: AoState = defaultState
   @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
@@ -153,6 +170,10 @@ class AoStore {
     M.tasksMuts(this.state.tasks, ev)
     M.aoMuts(this.state.ao, ev)
     M.gridMuts(this.state.grid, ev)
+  }
+  @action.bound
+  resetState() {
+    setCurrent(this.state, defaultState)
   }
 }
 const aoStore = new AoStore()

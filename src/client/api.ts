@@ -7,9 +7,11 @@ import aoStore, { Task } from './store'
 import io from 'socket.io-client'
 
 class AoApi {
-  constructor(public socket) {}
+  constructor(public socket) {
+    this.onLoad = this.onLoad.bind(this)
+  }
 
-  async createSession(user: string, pass: string): Promise<void> {
+  async createSession(user: string, pass: string): Promise<boolean> {
     const session = uuidV1()
     let sessionKey = cryptoUtils.createHash(
       session + cryptoUtils.createHash(pass)
@@ -20,30 +22,32 @@ class AoApi {
       .set('authorization', token)
       .set('session', session)
       .set('name', user)
-      .end((err, res) => {
-        if (err) {
-          console.log('err', err)
-          return (err = err.message)
-        }
+      .on('error', () => false)
+      .then(res => {
         aoStore.state.token = token
         aoStore.state.session = session
+        window.localStorage.setItem('user', user)
         window.localStorage.setItem('token', token)
         window.localStorage.setItem('session', session)
+        return true
       })
   }
 
-  async fetchState(): Promise<void> {
+  async fetchState(): Promise<boolean> {
+    const session = window.localStorage.getItem('session')
+    const token = window.localStorage.getItem('token')
+    const user = window.localStorage.getItem('user')
     return request
       .post('/state')
-      .set('Authorization', aoStore.state.token)
-      .end((err, res) => {
-        if (err || !res.body) {
-          aoStore.state.loggedIn = false
-        } else {
-          // setCurrent(aoStore.state, res.body)
-          aoStore.initializeState(res.body)
-        }
+      .set('Authorization', token)
+      .then(res => {
+        aoStore.state.session = session
+        aoStore.state.token = token
+        aoStore.state.user = user
+        aoStore.initializeState(res.body)
+        return true
       })
+      .catch(() => false)
   }
 
   async createCard(name: string): Promise<request.Response> {
@@ -53,6 +57,25 @@ class AoApi {
       color: 'blue',
       deck: [aoStore.member.memberId],
       inId: aoStore.memberCard.taskId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+  async createMember(
+    name: string,
+    fob: string = ''
+  ): Promise<request.Response> {
+    const secret = cryptoUtils.createHash(name)
+    const act = {
+      type: 'member-created',
+      name,
+      secret,
+      fob
     }
     return request
       .post('/events')
@@ -128,8 +151,19 @@ class AoApi {
         })
     }
   }
+  logout() {
+    this.socket.emit('disconnect')
+    this.socket.close()
+    aoStore.resetState()
+    window.localStorage.setItem('user', null)
+    window.localStorage.setItem('session', null)
+    window.localStorage.setItem('token', null)
+  }
   onLoad() {
-    this.socket.open()
+    socket.connect()
+  }
+  startSocketListeners() {
+    socket.open()
     this.socket.on('connect', () => {
       console.log('connected')
       this.socket.emit('authentication', {
@@ -143,6 +177,9 @@ class AoApi {
         console.log('event', ev)
         aoStore.applyEvent(ev)
       })
+    })
+    this.socket.on('disconnect', () => {
+      console.log('disconnected')
     })
   }
 }
