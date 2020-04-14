@@ -6,6 +6,7 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
+
 interface Sel {
   x: number
   y: number
@@ -148,7 +149,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     const [xs, ys] = event.target.id.split('-')
     const x = parseInt(xs)
     const y = parseInt(ys)
-    const waitForClick = cancelablePromise(delay(1000))
+    const waitForClick = cancelablePromise(delay(200))
     this.appendPendingPromise(waitForClick)
 
     return waitForClick.promise

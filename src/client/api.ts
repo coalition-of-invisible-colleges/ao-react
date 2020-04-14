@@ -160,7 +160,10 @@ class AoApi {
     window.localStorage.setItem('token', null)
   }
   onLoad() {
-    this.socket.open()
+    socket.connect()
+  }
+  startSocketListeners() {
+    socket.open()
     this.socket.on('connect', () => {
       console.log('connected')
       this.socket.emit('authentication', {
@@ -176,7 +179,7 @@ class AoApi {
       })
     })
     this.socket.on('disconnect', () => {
-      this.socket.open()
+      console.log('disconnected')
     })
   }
 }
