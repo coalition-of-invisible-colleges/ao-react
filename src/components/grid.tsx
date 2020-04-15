@@ -121,6 +121,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     // this.ref = React.createRef()
     console.log('grid', aoStore.state.grid)
     this.onDoubleClick = this.onDoubleClick.bind(this)
+    this.resize = this.resize.bind(this)
   }
   componentWillUnmount() {
     // cancel all pending promises to avoid
@@ -204,6 +205,22 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     console.log('on change', event.target.value)
     this.setState({ text: event.target.value })
   }
+  resize(event) {
+    switch (event.target.id) {
+      case 'plusColumn':
+        // api.resizeGrid(thisGridId, 'right', 1)
+        break
+      case 'minusColumn':
+        // api.resizeGrid(thisGridId, 'right', -1)
+        break
+      case 'plusRow':
+        // api.resizeGrid(thisGridId, 'bottom', 1)
+        break
+      case 'minusRow':
+        // api.resizeGrid(thisGridId, 'bottom', -1)
+        break
+    }
+  }
   render() {
     console.log('render main grid', aoStore.state.grid)
     return (
@@ -220,6 +237,18 @@ export class AoGrid extends React.Component<{}, AoGridState> {
               grid={{ ...aoStore.state.grid, size: 8 }}
               text={this.state.text}
             />
+            <button type="button" onClick={this.resize} id="plusColumn">
+              thiccen
+            </button>
+            <button type="button" onClick={this.resize} id="minusColumn">
+              skinnier
+            </button>
+            <button type="button" onClick={this.resize} id="plusRow">
+              taller
+            </button>
+            <button type="button" onClick={this.resize} id="minusRow">
+              shorter
+            </button>
           </div>
         )}
         {this.state.redirect && <Redirect to={this.state.redirect} />}
