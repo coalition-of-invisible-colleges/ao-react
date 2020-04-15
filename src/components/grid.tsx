@@ -35,7 +35,7 @@ interface GridProps {
   onChange: (event: any) => void
 }
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
-  ({ grid, onClick, sel, onKeyDown, onChange, onDoubleClick }) => {
+  ({ grid, onClick, sel, onKeyDown, onChange, onDoubleClick, text }) => {
     console.log('rerender grid', grid)
     const ret = []
     for (let j = 0; j < grid.size; j++) {
@@ -54,8 +54,9 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               style={{
                 gridRow: (j + 1).toString(),
                 gridColumn: (i + 1).toString()
-              }}
-            />
+              }}>
+              {text}
+            </textarea>
           )
         } else {
           if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
@@ -156,7 +157,11 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     return waitForClick.promise
       .then(() => {
         // trying to get this to load the text of an existing square
-        this.setState({ sel: { x, y }, text: aoStore.state.grid[y][x] })
+        console.log('grid contains:', aoStore.state.grid[y][x])
+        this.setState({
+          sel: { x, y },
+          text: aoStore.hashMap.get(aoStore.state.grid[y][x]).name
+        })
         console.log('clicked', x, y)
         // this.ref.current.focus()
         // if the promise wasn't cancelled, we execute
@@ -213,6 +218,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
               onDoubleClick={this.onDoubleClick}
               onChange={this.onChange}
               grid={{ ...aoStore.state.grid, size: 8 }}
+              text={this.state.text}
             />
           </div>
         )}
