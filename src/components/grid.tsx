@@ -33,9 +33,22 @@ interface GridProps {
   onKeyDown: (event: any) => void
   onDoubleClick: (event: any) => void
   onChange: (event: any) => void
+  drag: (event: any) => void
+  allowDrop: (event: any) => void
+  drop: (event: any) => void
 }
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
-  ({ grid, onClick, sel, onKeyDown, onChange, onDoubleClick }) => {
+  ({
+    grid,
+    onClick,
+    sel,
+    onKeyDown,
+    onChange,
+    onDoubleClick,
+    drag,
+    allowDrop,
+    drop
+  }) => {
     console.log('rerender grid', grid)
     const ret = []
     for (let j = 0; j < grid.size; j++) {
@@ -51,6 +64,10 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               onChange={onChange}
               onKeyDown={onKeyDown}
               onDoubleClick={onDoubleClick}
+              draggable="true"
+              onDragStart={drag}
+              onDragOver={allowDrop}
+              onDrop={drop}
               style={{
                 gridRow: (j + 1).toString(),
                 gridColumn: (i + 1).toString()
@@ -65,6 +82,10 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 className="square"
+                draggable="true"
+                onDragStart={drag}
+                onDragOver={allowDrop}
+                onDrop={drop}
                 style={{
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
@@ -86,7 +107,9 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 ) : (
                   ''
                 )}
-                {aoStore.hashMap.get(grid[j][i]).name}
+                <span className="gridSpanContainer">
+                  {aoStore.hashMap.get(grid[j][i]).name}
+                </span>
               </div>
             )
           } else {
@@ -96,6 +119,10 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 className="square empty"
+                draggable="true"
+                onDragStart={drag}
+                onDragOver={allowDrop}
+                onDrop={drop}
                 style={{
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
@@ -137,11 +164,83 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     // this.ref = React.createRef()
     console.log('grid', aoStore.state.grid)
     this.onDoubleClick = this.onDoubleClick.bind(this)
+    this.drag = this.drag.bind(this)
+    this.allowDrop = this.allowDrop.bind(this)
+    this.drop = this.drop.bind(this)
   }
   componentWillUnmount() {
     // cancel all pending promises to avoid
     // side effects when the component is unmounted
     this.clearPendingPromises()
+  }
+
+  drag = event => {
+    // console.log('drag fire')
+    // console.log(event.target.id)
+    event.dataTransfer.setData('dragSquare', event.target.id)
+  }
+
+  allowDrop = event => {
+    event.preventDefault()
+  }
+
+  drop = async event => {
+    event.preventDefault()
+    console.log('drag over fire')
+    console.log(event.target.id)
+    console.log('parent: ' + event.target.parentNode.id)
+    let iTo =
+      event.target.className === 'gridSpanContainer'
+        ? event.target.parentNode.id.split('-')
+        : event.target.id.split('-')
+    let iFrom = event.dataTransfer.getData('dragSquare').split('-')
+    console.log('from' + iFrom)
+    console.log('to' + iTo)
+    console.log('from 0: ' + iFrom[0])
+    console.log('from 1: ' + iFrom[1])
+    console.log('to 0: ' + iTo[0])
+    console.log('to 1: ' + iTo[1])
+    console.log('ToID: ' + iTo)
+
+    // let nFrom = aoStore.hashMap.get(
+    //   aoStore.state.grid[Number(iFrom[1])][Number(iFrom[0])]
+    // ).name
+    // let nTo = aoStore.hashMap.get(
+    //   aoStore.state.grid[Number(iTo[1])][Number(iTo[0])]
+    // ).name
+
+    let nFrom = undefined
+    let nTo = undefined
+
+    if (
+      aoStore.hashMap.get(
+        aoStore.state.grid[Number(iFrom[1])][Number(iFrom[0])]
+      )
+    ) {
+      nFrom = aoStore.hashMap.get(
+        aoStore.state.grid[Number(iFrom[1])][Number(iFrom[0])]
+      ).name
+    }
+
+    if (
+      aoStore.hashMap.get(aoStore.state.grid[Number(iTo[1])][Number(iTo[0])])
+    ) {
+      nTo = aoStore.hashMap.get(
+        aoStore.state.grid[Number(iTo[1])][Number(iTo[0])]
+      ).name
+    }
+
+    if (nFrom && nTo) {
+      api.createAndOrAddCardToGrid(Number(iTo[0]), Number(iTo[1]), nFrom)
+      api.createAndOrAddCardToGrid(Number(iFrom[0]), Number(iFrom[1]), nTo)
+    } else if (nFrom) {
+      api.createAndOrAddCardToGrid(Number(iTo[0]), Number(iTo[1]), nFrom)
+      api.delCardFromGrid(Number(iFrom[0]), Number(iFrom[1]))
+    } else if (nTo) {
+      api.createAndOrAddCardToGrid(Number(iFrom[0]), Number(iFrom[1]), nTo)
+      api.delCardFromGrid(Number(iTo[0]), Number(iTo[1]))
+    } else if (!nFrom && !nTo) {
+    }
   }
 
   pendingPromises = []
@@ -219,6 +318,9 @@ export class AoGrid extends React.Component<{}, AoGridState> {
               onKeyDown={this.onKeyDown}
               onDoubleClick={this.onDoubleClick}
               onChange={this.onChange}
+              drag={this.drag}
+              allowDrop={this.allowDrop}
+              drop={this.drop}
               grid={{ ...aoStore.state.grid, size: 8 }}
             />
           </div>
