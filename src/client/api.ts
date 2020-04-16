@@ -82,9 +82,208 @@ class AoApi {
       })
   }
 
+  async grabPile(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'pile-grabbed',
+      taskId: taskId,
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async dropCard(taskId: string): Promise<request.Response> {
     const act = {
       type: 'task-dropped',
+      taskId: taskId,
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async dropPile(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'pile-dropped',
+      taskId: taskId,
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async passCard(
+    taskId: string,
+    toMemberId: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-passed',
+      taskId: taskId,
+      toMemberId: toMemberId,
+      fromMemberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async swapCard(
+    inId: string,
+    taskId1: string,
+    taskId2: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-swapped',
+      taskId: inId,
+      swapId1: taskId1,
+      swapId2: taskId2,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async bumpCard(
+    taskId: string,
+    inId: string,
+    direction: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-bumped',
+      taskId: inId,
+      bumpId: taskId,
+      direction: direction,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async prioritizeCard(
+    taskId: string,
+    inId: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-prioritized',
+      taskId: taskId,
+      inId: inId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async prioritizePile(inId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-prioritized',
+      inId: inId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async refocusCard(taskId: string, inId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-prioritized',
+      taskId: taskId,
+      inId: inId,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async refocusPile(taskId: string, inId: string): Promise<request.Response> {
+    const act = {
+      type: 'pile-refocused',
+      inId: inId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async valueCard(taskId: string, value: number): Promise<request.Response> {
+    const act = {
+      type: 'task-valued',
+      taskId: taskId,
+      value: value,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async claimCard(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-claimed',
+      taskId: taskId,
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async unclaimCard(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-unclaimed',
       taskId: taskId,
       memberId: aoStore.member.memberId
     }
@@ -107,6 +306,26 @@ class AoApi {
       name,
       secret,
       fob
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async updateMemberField(
+    field: string,
+    newValue: string
+  ): Promise<request.Response> {
+    const secret = cryptoUtils.createHash(name)
+    const act = {
+      type: 'member-field-updated',
+      memberId: aoStore.member.memberId,
+      field: field,
+      newfield: newValue
     }
     return request
       .post('/events')
