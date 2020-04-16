@@ -22,8 +22,6 @@ textarea {
   // }
 
   .#{$theme-name} {
-    height: 100%;
-    width: 100%;
     text-align: center;
     color: $body-color;
     font-family: monospace;
@@ -55,6 +53,57 @@ textarea {
             pointer-events: none;
             background: darken($square-hover, 50%);
           }
+        }
+      }
+    }
+
+    .card {
+      max-width: 30em;
+      background-color: rgba(255, 255, 255, 0.1);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.25em;
+      min-height: 6em;
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .coin {
+        width: 2.5em;
+        height: 2.5em;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0.75em;
+        cursor: pointer;
+
+        &.ungrabbed {
+          opacity: 0.3;
+        }
+
+        img {
+          animation: spin 32s linear infinite;
+        }
+
+        .hodls {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+          width: 2.75em;
+          bottom: calc(0.75em);
+          padding-bottom: 0.25em;
+          margin-bottom: 0;
+          font-weight: bold;
+          color: rgba(255, 255, 255, 1);
+          pointer-events: none;
         }
       }
     }

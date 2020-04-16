@@ -35,7 +35,7 @@ export interface Member {
 export interface Task {
   taskId: string
   color: string
-  deck: number[]
+  deck: string[]
   name: string
   address: string
   bolt11: string

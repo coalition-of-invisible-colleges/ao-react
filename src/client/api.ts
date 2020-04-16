@@ -66,6 +66,37 @@ class AoApi {
         return res
       })
   }
+
+  async grabCard(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-grabbed',
+      taskId: taskId,
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async dropCard(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-dropped',
+      taskId: taskId,
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async createMember(
     name: string,
     fob: string = ''

@@ -35,7 +35,7 @@ interface GridProps {
   onChange: (event: any) => void
 }
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
-  ({ grid, onClick, sel, onKeyDown, onChange, onDoubleClick, text }) => {
+  ({ grid, onClick, sel, onKeyDown, onChange, onDoubleClick }) => {
     console.log('rerender grid', grid)
     const ret = []
     for (let j = 0; j < grid.size; j++) {
@@ -54,9 +54,8 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               style={{
                 gridRow: (j + 1).toString(),
                 gridColumn: (i + 1).toString()
-              }}>
-              {text}
-            </textarea>
+              }}
+            />
           )
         } else {
           if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
@@ -70,7 +69,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
                 }}>
-                <span>{aoStore.hashMap.get(grid[j][i]).name}</span>
+                {aoStore.hashMap.get(grid[j][i]).name}
               </div>
             )
           } else {
@@ -121,7 +120,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     // this.ref = React.createRef()
     console.log('grid', aoStore.state.grid)
     this.onDoubleClick = this.onDoubleClick.bind(this)
-    this.resize = this.resize.bind(this)
   }
   componentWillUnmount() {
     // cancel all pending promises to avoid
@@ -148,7 +146,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   }
   onClick(event) {
     console.log('clicked!')
-    this.setState({ text: '' })
     const [xs, ys] = event.target.id.split('-')
     const x = parseInt(xs)
     const y = parseInt(ys)
@@ -157,12 +154,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
 
     return waitForClick.promise
       .then(() => {
-        // trying to get this to load the text of an existing square
-        console.log('grid contains:', aoStore.state.grid[y][x])
-        this.setState({
-          sel: { x, y },
-          text: aoStore.hashMap.get(aoStore.state.grid[y][x]).name
-        })
+        this.setState({ sel: { x, y } })
         console.log('clicked', x, y)
         // this.ref.current.focus()
         // if the promise wasn't cancelled, we execute
@@ -181,19 +173,11 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   onKeyDown(event) {
     if (event.key === 'Enter') {
       console.log('enter')
-      if (this.state.text === '') {
-        api.delCardFromGrid(this.state.sel.x, this.state.sel.y),
-          console.log('delFired')
-      } else {
-        api.createAndOrAddCardToGrid(
-          this.state.sel.x,
-          this.state.sel.y,
-          this.state.text
-        )
-      }
-      this.setState({ sel: undefined, text: undefined })
-    } else if (event.key === 'Escape') {
-      console.log('escape')
+      api.createAndOrAddCardToGrid(
+        this.state.sel.x,
+        this.state.sel.y,
+        this.state.text
+      )
       this.setState({ sel: undefined, text: undefined })
     }
   }
@@ -204,22 +188,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   onChange(event) {
     console.log('on change', event.target.value)
     this.setState({ text: event.target.value })
-  }
-  resize(event) {
-    switch (event.target.id) {
-      case 'plusColumn':
-        // api.resizeGrid(thisGridId, 'right', 1)
-        break
-      case 'minusColumn':
-        // api.resizeGrid(thisGridId, 'right', -1)
-        break
-      case 'plusRow':
-        // api.resizeGrid(thisGridId, 'bottom', 1)
-        break
-      case 'minusRow':
-        // api.resizeGrid(thisGridId, 'bottom', -1)
-        break
-    }
   }
   render() {
     console.log('render main grid', aoStore.state.grid)
@@ -235,20 +203,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
               onDoubleClick={this.onDoubleClick}
               onChange={this.onChange}
               grid={{ ...aoStore.state.grid, size: 8 }}
-              text={this.state.text}
             />
-            <button type="button" onClick={this.resize} id="plusColumn">
-              thiccen
-            </button>
-            <button type="button" onClick={this.resize} id="minusColumn">
-              skinnier
-            </button>
-            <button type="button" onClick={this.resize} id="plusRow">
-              taller
-            </button>
-            <button type="button" onClick={this.resize} id="minusRow">
-              shorter
-            </button>
           </div>
         )}
         {this.state.redirect && <Redirect to={this.state.redirect} />}

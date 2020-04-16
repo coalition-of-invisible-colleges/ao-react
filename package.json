@@ -44,6 +44,7 @@
     "lightning-client": "^0.5.2-beta.8",
     "linkifyjs": "^2.1.8",
     "lodash": "^4.17.15",
+    "markdown-to-jsx": "^6.11.1",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "moment": "^2.24.0",
