@@ -55,6 +55,12 @@ export interface Task {
   completeValue: number
   payment_hash: string
   highlights: number[]
+  seen: Userseen[]
+}
+
+interface Userseen {
+  memberId: string
+  timestamp: Date
 }
 
 export interface Session {

@@ -565,6 +565,17 @@ function memberCharged(memberId, charged, notes, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskSeen(taskId, memberId, callback) {
+  console.log('EVENTS fire')
+
+  let newEvent = {
+    type: 'task-seen',
+    taskId,
+    memberId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function gridAdd(coord, taskId, callback) {
   let newEvent = {
     type: 'grid-add',
@@ -637,5 +648,6 @@ module.exports = {
   taskBoostedLightning,
   tasksReceived,
   gridAdd,
-  gridDel
+  gridDel,
+  taskSeen
 }

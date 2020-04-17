@@ -363,6 +363,21 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-seen':
+      console.log('MUTATION fires')
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          if (
+            !task.seen.some(t => {
+              return t.memberId === ev.memberId
+            })
+          ) {
+            task.seen = { memberId: ev.memberId, timestamp: Date.now() }
+            console.log('task seen! : ' + task.seen)
+          }
+        }
+      })
+      break
     case 'pile-grabbed':
       if (!ev.memberId) {
         break

@@ -36,6 +36,7 @@ interface GridProps {
   drag: (event: any) => void
   allowDrop: (event: any) => void
   drop: (event: any) => void
+  onHover: (event: any) => void
 }
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
   ({
@@ -47,7 +48,8 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
     onDoubleClick,
     drag,
     allowDrop,
-    drop
+    drop,
+    onHover
   }) => {
     console.log('rerender grid', grid)
     const ret = []
@@ -60,6 +62,13 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               onClick={onClick}
               autoFocus
               onBlur={() => console.log('selection event', i, j)}
+              // className={`square ${
+              //   aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.some(s => {
+              //     return s.memberId === aoStore.member.memberId
+              //   })
+              //     ? 'seen'
+              //     : ''
+              // }`}
               className="square"
               onChange={onChange}
               onKeyDown={onKeyDown}
@@ -68,6 +77,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               onDragStart={drag}
               onDragOver={allowDrop}
               onDrop={drop}
+              onMouseOver={onHover}
               style={{
                 gridRow: (j + 1).toString(),
                 gridColumn: (i + 1).toString()
@@ -81,11 +91,19 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 id={i + '-' + j}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
+                // className={`square ${
+                //   aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.some(s => {
+                //     return s.memberId === aoStore.member.memberId
+                //   })
+                //     ? 'seen'
+                //     : ''
+                // }`}
                 className="square"
                 draggable="true"
                 onDragStart={drag}
                 onDragOver={allowDrop}
                 onDrop={drop}
+                onMouseOver={onHover}
                 style={{
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
@@ -123,6 +141,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 onDragStart={drag}
                 onDragOver={allowDrop}
                 onDrop={drop}
+                onMouseOver={onHover}
                 style={{
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
@@ -167,11 +186,25 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     this.drag = this.drag.bind(this)
     this.allowDrop = this.allowDrop.bind(this)
     this.drop = this.drop.bind(this)
+    this.onHover = this.onHover.bind(this)
   }
   componentWillUnmount() {
     // cancel all pending promises to avoid
     // side effects when the component is unmounted
     this.clearPendingPromises()
+  }
+
+  onHover = async event => {
+    event.preventDefault()
+    console.log(event)
+    console.log('hovering')
+    let square = event.target.id.split('-')
+    let name = aoStore.hashMap.get(
+      aoStore.state.grid[Number(square[1])][Number(square[0])]
+    ).name
+    let timer = setTimeout(() => api.markSeen(name), 2000)
+    document.getElementById(event.target.id).onmouseout = () =>
+      clearTimeout(timer)
   }
 
   drag = event => {
@@ -321,6 +354,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
               drag={this.drag}
               allowDrop={this.allowDrop}
               drop={this.drop}
+              onHover={this.onHover}
               grid={{ ...aoStore.state.grid, size: 8 }}
             />
           </div>

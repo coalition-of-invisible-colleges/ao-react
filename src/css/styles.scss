@@ -181,6 +181,10 @@ textarea {
           pointer-events: none;
         }
       }
+
+      .seen {
+        background: red;
+      }
     }
   }
 }

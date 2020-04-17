@@ -5,6 +5,7 @@ import _ from 'lodash'
 import configuration from '../../client-configuration'
 import aoStore, { Task } from './store'
 import io from 'socket.io-client'
+import { composeP } from 'ramda'
 
 class AoApi {
   constructor(public socket) {
@@ -392,6 +393,25 @@ class AoApi {
       memberId: aoStore.member.memberId,
       field: field,
       newfield: newValue
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async markSeen(name): Promise<request.Response> {
+    const task: Task = aoStore.memberByName.get(name)
+    console.log('task' + JSON.stringify(task))
+    console.log('API fire')
+    console.log('memberId: ' + aoStore.member.memberId)
+    const act = {
+      type: 'task-seen',
+      taskId: task.taskId,
+      memberId: aoStore.member.memberId
     }
     return request
       .post('/events')

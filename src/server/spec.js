@@ -537,6 +537,24 @@ router.post('/events', (req, res, next) => {
         res.status(200).send(errRes)
       }
       break
+    case 'task-seen':
+      console.log('SPEC fire')
+
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isMemberId(req.body.memberId, errRes)
+      ) {
+        console.log('SPEC validators fire')
+
+        events.taskSeen(
+          req.body.taskId,
+          req.body.memberId,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(200).send(errRes)
+      }
+      break
     case 'task-sub-tasked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
