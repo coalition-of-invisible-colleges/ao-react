@@ -44,7 +44,7 @@ export interface Task {
   priorities: number[]
   subTasks: number[]
   completed: number[]
-  claimed: number[]
+  claimed: string[]
   passed: number[]
   guild: false
   lastClaimed: number

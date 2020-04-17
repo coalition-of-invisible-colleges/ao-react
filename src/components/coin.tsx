@@ -29,7 +29,7 @@ const AoCoin: FunctionComponent<AoCoinParams> = observer(({ taskId }) => {
     }
   }
   return (
-    <div className={computed.isGrabbed ? 'coin ungrabbed' : 'coin'}>
+    <div className={computed.isGrabbed ? 'coin' : 'coin ungrabbed'}>
       <img
         src="../assets/images/coin.svg"
         onClick={onClick}

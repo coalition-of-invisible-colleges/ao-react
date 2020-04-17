@@ -11,6 +11,8 @@ import aoStore from '../client/store'
 import { useParams } from 'react-router-dom'
 import Markdown from 'markdown-to-jsx'
 import AoCoin from './coin'
+import AoCheckbox from './checkbox'
+import AoValue from './value'
 
 interface CardParams {
   taskId: string
@@ -21,7 +23,11 @@ const RenderCard = () => {
   console.log('card!', taskId, aoStore.hashMap.get(taskId))
   return (
     <div className="card">
-      <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
+      <AoValue taskId={taskId} />
+      <AoCheckbox taskId={taskId} />
+      <div className="content">
+        <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
+      </div>
       <AoCoin taskId={taskId} />
     </div>
   )

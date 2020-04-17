@@ -266,7 +266,7 @@ class AoApi {
       })
   }
 
-  async claimCard(taskId: string): Promise<request.Response> {
+  async completeCard(taskId: string): Promise<request.Response> {
     const act = {
       type: 'task-claimed',
       taskId: taskId,
@@ -281,7 +281,7 @@ class AoApi {
       })
   }
 
-  async unclaimCard(taskId: string): Promise<request.Response> {
+  async uncheckCard(taskId: string): Promise<request.Response> {
     const act = {
       type: 'task-unclaimed',
       taskId: taskId,
