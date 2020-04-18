@@ -21,7 +21,7 @@ interface CardParams {
   taskId: string
 }
 interface TimeClockState {
-  seconds?: number
+  seconds: number
 }
 
 class TimeClock extends React.Component<{}, TimeClockState> {
