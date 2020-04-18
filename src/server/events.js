@@ -565,20 +565,18 @@ function memberCharged(memberId, charged, notes, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridAdd(coord, taskId, callback) {
-  let newEvent = {
-    type: 'grid-add',
-    coord,
-    taskId
-  }
+function gridCreate(name, length, width, callback) {
+  let gridId = uuidV1()
+  let newEvent = { type: 'grid-created', gridId, name, length, width }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridDel(coord, callback) {
-  let newEvent = {
-    type: 'grid-del',
-    coord
-  }
+function gridUnpin(gridId, x, y, callback) {
+  let newEvent = { type: 'grid-unpin', gridId, x, y }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+function gridPin(gridId, taskId, x, y, callback) {
+  let newEvent = { type: 'grid-pin', gridId, taskId, x, y }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
@@ -636,6 +634,7 @@ module.exports = {
   invoiceCreated,
   taskBoostedLightning,
   tasksReceived,
-  gridAdd,
-  gridDel
+  gridCreate,
+  gridUnpin,
+  gridPin
 }

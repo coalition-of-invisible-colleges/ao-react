@@ -11,13 +11,19 @@ function setCurrent(state: AoState, b: AoState) {
   modules.ao.mutations.setCurrent(state.ao, b)
   modules.members.mutations.setCurrent(state.members, b)
   modules.resources.mutations.setCurrent(state.resources, b)
-  modules.grid.mutations.setCurrent(state.grid, b)
+  modules.grid.mutations.setCurrent(state.grids, b)
   state.user = b.user
   state.session = b.session
   state.token = b.token
   state.loggedIn = b.loggedIn
 }
 
+export interface Grid {
+  gridId: string
+  elem: number[][]
+  length: number
+  width: number
+}
 export interface Member {
   type: 'member-created'
   name: string
@@ -70,7 +76,7 @@ export interface AoState {
   members: Member[]
   tasks: Task[]
   resources: []
-  grid: {}
+  grids: Grid[]
   cash: {
     address: string
     alias: string
@@ -95,7 +101,7 @@ const defaultState: AoState = {
   members: [],
   tasks: [],
   resources: [],
-  grid: {},
+  grids: [],
   cash: {
     address: '',
     alias: '',
@@ -169,7 +175,7 @@ class AoStore {
     M.sessionsMuts(this.state.sessions, ev)
     M.tasksMuts(this.state.tasks, ev)
     M.aoMuts(this.state.ao, ev)
-    M.gridMuts(this.state.grid, ev)
+    M.gridMuts(this.state.grids, ev)
   }
   @action.bound
   resetState() {

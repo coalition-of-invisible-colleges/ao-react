@@ -32,7 +32,7 @@ const pubState = {
   members: [],
   tasks: [],
   resources: [],
-  grid: {},
+  grids: [],
   cash: {
     address: config.tor.hostname,
     alias: '',

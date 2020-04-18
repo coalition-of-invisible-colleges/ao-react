@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-import aoStore, { AoState } from '../client/store'
+import aoStore, { AoState, Grid as GridType } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
@@ -10,11 +10,6 @@ import { delay, cancelablePromise, noop } from '../utils'
 interface Sel {
   x: number
   y: number
-}
-
-interface GridType {
-  [y: number]: { [x: number]: string }
-  size: number
 }
 
 export interface State {
