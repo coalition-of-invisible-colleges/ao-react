@@ -296,6 +296,27 @@ class AoApi {
       })
   }
 
+  async bookResource(
+    taskId: string,
+    startTime: number,
+    endTime: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'resource-booked',
+      resourceId: taskId,
+      memberId: aoStore.member.memberId,
+      startTs: startTime,
+      endTs: endTime
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async createMember(
     name: string,
     fob: string = ''

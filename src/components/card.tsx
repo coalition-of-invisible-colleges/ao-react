@@ -13,6 +13,7 @@ import Markdown from 'markdown-to-jsx'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
+import AoCountdown from './countdown'
 
 interface CardParams {
   taskId: string
@@ -28,6 +29,7 @@ const RenderCard = () => {
       <div className="content">
         <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
       </div>
+      <AoCountdown taskId={taskId} />
       <AoCoin taskId={taskId} />
     </div>
   )

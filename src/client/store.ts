@@ -39,7 +39,11 @@ export interface Task {
   name: string
   address: string
   bolt11: string
-  book: {}
+  book: {
+    memberId: string
+    startTs: Date
+    endTs: Date
+  }
   boost: number
   priorities: number[]
   subTasks: number[]

@@ -78,6 +78,9 @@ textarea {
           width: 0.75em;
           opacity: 0.5;
         }
+
+        .miniCountdown {
+        }
       }
     }
 
@@ -118,6 +121,12 @@ textarea {
         to {
           transform: rotate(360deg);
         }
+      }
+
+      .countdown {
+        position: absolute;
+        right: 0.5em;
+        bottom: 0.5em;
       }
 
       .coin {
