@@ -403,6 +403,23 @@ class AoApi {
       })
   }
 
+  async commitTime(seconds, taskId): Promise<request.Response> {
+    console.log('commitTime API')
+    const act = {
+      type: 'time-commit',
+      taskId: taskId,
+      memberId: aoStore.member.memberId,
+      seconds: seconds
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async markSeen(name): Promise<request.Response> {
     const task: Task = aoStore.memberByName.get(name)
     console.log('task' + JSON.stringify(task))
@@ -413,6 +430,7 @@ class AoApi {
       taskId: task.taskId,
       memberId: aoStore.member.memberId
     }
+    console.log('API 2')
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)

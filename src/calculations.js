@@ -71,7 +71,8 @@ function blankCard(taskId, name, color, deck = []) {
     completeValue: 0,
     payment_hash: '',
     highlights: [],
-    seen: []
+    seen: [],
+    time: []
   }
   return newCard
 }

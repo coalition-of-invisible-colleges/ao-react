@@ -56,6 +56,12 @@ export interface Task {
   payment_hash: string
   highlights: number[]
   seen: Userseen[]
+  time: Usertime[]
+}
+
+interface Usertime {
+  memberId: string
+  timelog: number[]
 }
 
 interface Userseen {

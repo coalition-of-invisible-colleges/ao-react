@@ -809,6 +809,24 @@ router.post('/events', (req, res, next) => {
         res.status(200).send(errRes)
       }
       break
+    case 'time-commit':
+      console.log('time-commit SPEC')
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isMemberId(req.body.memberId, errRes)
+      ) {
+        console.log('SPEC validators fire')
+
+        events.timeCommit(
+          req.body.taskId,
+          req.body.memberId,
+          req.body.seconds,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(200).send(errRes)
+      }
+      break
     case 'pile-prioritized':
       console.log('spec runs')
       if (validators.isTaskId(req.body.inId, errRes)) {

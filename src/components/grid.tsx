@@ -198,28 +198,31 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   onHover = async event => {
     event.preventDefault()
     console.log(event)
+    console.log('id' + event.target.id)
     console.log('hovering')
-    let square = event.target.id.split('-')
-    let name = aoStore.hashMap.get(
-      aoStore.state.grid[Number(square[1])][Number(square[0])]
-    ).name
-    let timer = setTimeout(() => api.markSeen(name), 2000)
-    document.getElementById(event.target.id).onmouseout = () =>
-      clearTimeout(timer)
-    console.log(
-      'seen?: ' +
-        aoStore.hashMap
-          .get(aoStore.state.grid[Number(square[1])][Number(square[0])])
-          .seen.hasOwnProperty('memberId')
-    )
-    console.log(
-      'seen2? : ' +
-        aoStore.hashMap
-          .get(aoStore.state.grid[Number(square[1])][Number(square[0])])
-          .seen.some(s => {
-            return s.memberId === aoStore.member.memberId
-          })
-    )
+    if (document.getElementById(event.target.id).classList.contains('seen')) {
+      let square = event.target.id.split('-')
+      let name = aoStore.hashMap.get(
+        aoStore.state.grid[Number(square[1])][Number(square[0])]
+      ).name
+      let timer = setTimeout(() => api.markSeen(name), 2000)
+      document.getElementById(event.target.id).onmouseout = () =>
+        clearTimeout(timer)
+      console.log(
+        'seen?: ' +
+          aoStore.hashMap
+            .get(aoStore.state.grid[Number(square[1])][Number(square[0])])
+            .seen.hasOwnProperty('memberId')
+      )
+      console.log(
+        'seen2? : ' +
+          aoStore.hashMap
+            .get(aoStore.state.grid[Number(square[1])][Number(square[0])])
+            .seen.some(s => {
+              return s.memberId === aoStore.member.memberId
+            })
+      )
+    }
   }
 
   drag = event => {
