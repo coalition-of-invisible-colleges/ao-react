@@ -63,9 +63,11 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
               autoFocus
               onBlur={() => console.log('selection event', i, j)}
               // className={`square ${
-              //   aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.some(s => {
-              //     return s.memberId === aoStore.member.memberId
-              //   })
+              //   JSON.stringify(
+              //     aoStore.hashMap.get(
+              //       aoStore.state.grid[j][i]
+              //     ).seen.length
+              //   )
               //     ? 'seen'
               //     : ''
               // }`}
@@ -91,14 +93,13 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 id={i + '-' + j}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
-                // className={`square ${
-                //   aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.some(s => {
-                //     return s.memberId === aoStore.member.memberId
-                //   })
-                //     ? 'seen'
-                //     : ''
-                // }`}
-                className="square"
+                className={`square ${
+                  !aoStore.hashMap
+                    .get(aoStore.state.grid[j][i])
+                    .seen.hasOwnProperty('memberId')
+                    ? 'seen'
+                    : ''
+                }`}
                 draggable="true"
                 onDragStart={drag}
                 onDragOver={allowDrop}
@@ -205,6 +206,20 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     let timer = setTimeout(() => api.markSeen(name), 2000)
     document.getElementById(event.target.id).onmouseout = () =>
       clearTimeout(timer)
+    console.log(
+      'seen?: ' +
+        aoStore.hashMap
+          .get(aoStore.state.grid[Number(square[1])][Number(square[0])])
+          .seen.hasOwnProperty('memberId')
+    )
+    console.log(
+      'seen2? : ' +
+        aoStore.hashMap
+          .get(aoStore.state.grid[Number(square[1])][Number(square[0])])
+          .seen.some(s => {
+            return s.memberId === aoStore.member.memberId
+          })
+    )
   }
 
   drag = event => {

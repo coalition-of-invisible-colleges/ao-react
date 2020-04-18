@@ -373,7 +373,7 @@ function tasksMuts(tasks, ev) {
             })
           ) {
             task.seen = { memberId: ev.memberId, timestamp: Date.now() }
-            console.log('task seen! : ' + task.seen)
+            console.log('task seen! : ' + JSON.stringify(task.seen))
           }
         }
       })

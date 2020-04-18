@@ -182,8 +182,22 @@ textarea {
         }
       }
 
-      .seen {
-        background: red;
+      .seen:before {
+        position: absolute;
+        // margin-bottom: 10%;
+        // margin-left: 10%;
+        // margin-top: -60px;
+        // margin-right: -25px;
+        z-index: 5;
+        content: '';
+        // top: 0;
+        // right: 0;
+        margin-left: -33px;
+        transform: translateY(-33px);
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        background-color: rgba(255, 10, 10, 0.85);
       }
     }
   }
