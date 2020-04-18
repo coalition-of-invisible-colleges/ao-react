@@ -35,16 +35,20 @@ export interface Member {
 export interface Task {
   taskId: string
   color: string
-  deck: number[]
+  deck: string[]
   name: string
   address: string
   bolt11: string
-  book: {}
+  book: {
+    memberId: string
+    startTs: Date
+    endTs: Date
+  }
   boost: number
   priorities: number[]
   subTasks: number[]
   completed: number[]
-  claimed: number[]
+  claimed: string[]
   passed: number[]
   guild: false
   lastClaimed: number

@@ -22,8 +22,6 @@ textarea {
   // }
 
   .#{$theme-name} {
-    height: 100%;
-    width: 100%;
     text-align: center;
     color: $body-color;
     font-family: monospace;
@@ -58,6 +56,7 @@ textarea {
       width: fit-content;
 
       .square {
+        position: relative;
         background: $square-bg;
         display: flex;
         justify-content: center;
@@ -76,6 +75,110 @@ textarea {
             pointer-events: none;
             background: darken($square-hover, 50%);
           }
+        }
+
+        .miniValue {
+          position: absolute;
+          top: 0;
+          right: 0;
+          font-size: 0.75em;
+          background-color: rgba(0, 0, 0, 0.2);
+          padding: 0.25em;
+        }
+
+        .miniCheckbox + .miniValue {
+          right: 1.25em;
+          line-height: 1em;
+        }
+
+        .miniCheckbox {
+          position: absolute;
+          right: 0.15em;
+          top: 0.15em;
+          height: 0.75em;
+          width: 0.75em;
+          opacity: 0.5;
+        }
+
+        .miniCountdown {
+        }
+      }
+    }
+
+    .card {
+      max-width: 30em;
+      background-color: rgba(255, 255, 255, 0.1);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.25em;
+      min-height: 6em;
+
+      .content {
+        margin-top: 1em;
+        margin-bottom: 4em;
+      }
+
+      .value {
+        position: absolute;
+        right: 2em;
+        top: 0.2em;
+      }
+
+      .checkbox {
+        position: absolute;
+        right: 0.5em;
+        top: 0.5em;
+        height: 1.5em;
+        width: 1.5em;
+        opacity: 0.5;
+        cursor: pointer;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .countdown {
+        position: absolute;
+        right: 0.5em;
+        bottom: 0.5em;
+      }
+
+      .coin {
+        width: 2.5em;
+        height: 2.5em;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0.75em;
+        cursor: pointer;
+
+        &.ungrabbed {
+          opacity: 0.3;
+        }
+
+        img {
+          animation: spin 32s linear infinite;
+        }
+
+        .hodls {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+          width: 2.75em;
+          bottom: 0.25em;
+          padding-bottom: 0.4em;
+          margin-bottom: 0;
+          font-weight: bold;
+          color: rgba(255, 255, 255, 1);
+          pointer-events: none;
         }
       }
     }

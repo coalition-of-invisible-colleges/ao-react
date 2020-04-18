@@ -9,15 +9,30 @@ import {
 } from 'react-router-dom'
 import aoStore from '../client/store'
 import { useParams } from 'react-router-dom'
+import Markdown from 'markdown-to-jsx'
+import AoCoin from './coin'
+import AoCheckbox from './checkbox'
+import AoValue from './value'
+import AoCountdown from './countdown'
 
 interface CardParams {
   taskId: string
 }
 
-const CardDetails = () => {
+const RenderCard = () => {
   const { taskId }: CardParams = useParams()
   console.log('card!', taskId, aoStore.hashMap.get(taskId))
-  return <div>{JSON.stringify(aoStore.hashMap.get(taskId))}</div>
+  return (
+    <div className="card">
+      <AoValue taskId={taskId} />
+      <AoCheckbox taskId={taskId} />
+      <div className="content">
+        <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
+      </div>
+      <AoCountdown taskId={taskId} />
+      <AoCoin taskId={taskId} />
+    </div>
+  )
 }
 
 const Card: React.FunctionComponent<{}> = () => {
@@ -25,7 +40,7 @@ const Card: React.FunctionComponent<{}> = () => {
   return (
     <Switch>
       <Route path={`${match.path}/:taskId`}>
-        <CardDetails />
+        <RenderCard />
       </Route>
     </Switch>
   )
