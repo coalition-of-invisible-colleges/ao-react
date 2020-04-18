@@ -857,7 +857,6 @@ function applyEvent(state, ev) {
   gridMuts(state.grid, ev)
 }
 
-
 module.exports = {
   aoMuts,
   cashMuts,
