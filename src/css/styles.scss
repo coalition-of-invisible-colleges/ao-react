@@ -56,7 +56,6 @@ textarea {
       width: fit-content;
 
       .square {
-        position: relative;
         background: $square-bg;
         display: flex;
         justify-content: center;
@@ -84,6 +83,7 @@ textarea {
           font-size: 0.75em;
           background-color: rgba(0, 0, 0, 0.2);
           padding: 0.25em;
+          pointer-events: none;
         }
 
         .miniCheckbox + .miniValue {
@@ -98,10 +98,29 @@ textarea {
           height: 0.75em;
           width: 0.75em;
           opacity: 0.5;
+          pointer-events: none;
         }
 
         .miniCountdown {
         }
+      }
+
+      .seen:before {
+        position: absolute;
+        // margin-bottom: 10%;
+        // margin-left: 10%;
+        // margin-top: -60px;
+        // margin-right: -25px;
+        z-index: 5;
+        content: '';
+        // top: 0;
+        // right: 0;
+        margin-left: -33px;
+        transform: translateY(-33px);
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        background-color: rgba(255, 10, 10, 0.85);
       }
     }
 
@@ -180,24 +199,6 @@ textarea {
           color: rgba(255, 255, 255, 1);
           pointer-events: none;
         }
-      }
-
-      .seen:before {
-        position: absolute;
-        // margin-bottom: 10%;
-        // margin-left: 10%;
-        // margin-top: -60px;
-        // margin-right: -25px;
-        z-index: 5;
-        content: '';
-        // top: 0;
-        // right: 0;
-        margin-left: -33px;
-        transform: translateY(-33px);
-        height: 7px;
-        width: 7px;
-        border-radius: 50%;
-        background-color: rgba(255, 10, 10, 0.85);
       }
     }
   }
