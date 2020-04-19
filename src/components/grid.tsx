@@ -339,7 +339,10 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   onKeyDown(event) {
     if (event.key === 'Enter') {
       console.log('enter')
-      if (this.state.text === '') {
+      console.log('selx: ' + this.state.sel.x)
+      console.log('sely: ' + this.state.sel.y)
+      console.log('text: ' + this.state.text)
+      if (!this.state.text) {
         api.delCardFromGrid(this.state.sel.x, this.state.sel.y),
           console.log('delFired')
       } else {
