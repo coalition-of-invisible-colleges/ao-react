@@ -109,19 +109,21 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
                 }}>
-                {aoStore.hashMap
-                  .get(grid[j][i])
-                  .claimed.indexOf(aoStore.member.memberId) >= 0 ? (
-                  <img
-                    className="miniCheckbox"
-                    src="../assets/images/completed.svg"
-                  />
-                ) : null}
-                {aoStore.hashMap.get(grid[j][i]).completeValue > 0 ? (
-                  <div className="miniValue">
-                    {aoStore.hashMap.get(grid[j][i]).completeValue}
-                  </div>
-                ) : null}
+                <div className="miniContainer">
+                  {aoStore.hashMap
+                    .get(grid[j][i])
+                    .claimed.indexOf(aoStore.member.memberId) >= 0 ? (
+                    <img
+                      className="miniCheckbox"
+                      src="../assets/images/completed.svg"
+                    />
+                  ) : null}
+                  {aoStore.hashMap.get(grid[j][i]).completeValue > 0 ? (
+                    <div className="miniValue">
+                      {aoStore.hashMap.get(grid[j][i]).completeValue}
+                    </div>
+                  ) : null}
+                </div>
                 <span className="gridSpanContainer">
                   {aoStore.hashMap.get(grid[j][i]).name}
                 </span>

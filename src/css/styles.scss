@@ -69,39 +69,43 @@ textarea {
           span {
             position: absolute;
             margin: auto;
-            // overflow: visible;
-            // overflow-y: auto;
             pointer-events: none;
             background: darken($square-hover, 50%);
           }
         }
 
-        .miniValue {
-          position: absolute;
-          top: 0;
-          right: 0;
-          font-size: 0.75em;
-          background-color: rgba(0, 0, 0, 0.2);
-          padding: 0.25em;
+        .miniContainer {
           pointer-events: none;
-        }
-
-        .miniCheckbox + .miniValue {
-          right: 1.25em;
-          line-height: 1em;
-        }
-
-        .miniCheckbox {
           position: absolute;
-          right: 0.15em;
-          top: 0.15em;
-          height: 0.75em;
-          width: 0.75em;
-          opacity: 0.5;
-          pointer-events: none;
-        }
+          z-index: 7;
+          margin-right: auto;
+          .miniValue {
+            position: absolute;
+            z-index: 7;
+            font-size: 0.75em;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 0.25em;
+            pointer-events: none;
+            transform: translate(28px, -42px);
+            right: 0;
+          }
 
-        .miniCountdown {
+          .miniCheckbox + .miniValue {
+            line-height: 1em;
+          }
+
+          .miniCheckbox {
+            position: absolute;
+            z-index: 7;
+            height: 0.75em;
+            width: 0.75em;
+            opacity: 0.5;
+            pointer-events: none;
+            transform: translate(28px, -40px);
+          }
+
+          .miniCountdown {
+          }
         }
       }
 
@@ -205,6 +209,7 @@ textarea {
 }
 
 #hourglassIMG {
+  margin-top: 2.5rem;
   height: 350px;
 }
 
