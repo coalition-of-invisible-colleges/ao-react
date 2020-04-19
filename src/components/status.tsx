@@ -6,16 +6,13 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 
-export const defaultState: State = {
-  selected: undefined
-}
-
 interface AoStatusState {
   barking?: boolean
 }
 
 @observer
 export class AoStatus extends React.Component<{}, AoStatusState> {
+  buttonPressTimer: NodeJS.Timeout
   constructor(props) {
     super(props)
     this.state = {}

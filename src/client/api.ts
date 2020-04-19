@@ -37,17 +37,20 @@ class AoApi {
     const session = window.localStorage.getItem('session')
     const token = window.localStorage.getItem('token')
     const user = window.localStorage.getItem('user')
-    return request
-      .post('/state')
-      .set('Authorization', token)
-      .then(res => {
-        aoStore.state.session = session
-        aoStore.state.token = token
-        aoStore.state.user = user
-        aoStore.initializeState(res.body)
-        return true
-      })
-      .catch(() => false)
+    if (session && token && user) {
+      return request
+        .post('/state')
+        .set('Authorization', token)
+        .then(res => {
+          aoStore.state.session = session
+          aoStore.state.token = token
+          aoStore.state.user = user
+          aoStore.initializeState(res.body)
+          return true
+        })
+        .catch(() => false)
+    }
+    return Promise.resolve(false)
   }
 
   async bark(): Promise<request.Response> {
@@ -109,8 +112,6 @@ class AoApi {
       })
   }
 
-<<<<<<< HEAD
-=======
   async grabCard(taskId: string): Promise<request.Response> {
     const act = {
       type: 'task-grabbed',
@@ -361,7 +362,6 @@ class AoApi {
       })
   }
 
->>>>>>> coin
   async createMember(
     name: string,
     fob: string = ''
@@ -489,9 +489,7 @@ class AoApi {
     this.socket.emit('disconnect')
     this.socket.close()
     aoStore.resetState()
-    window.localStorage.setItem('user', null)
-    window.localStorage.setItem('session', null)
-    window.localStorage.setItem('token', null)
+    window.localStorage.clear()
   }
   onLoad() {
     socket.connect()
