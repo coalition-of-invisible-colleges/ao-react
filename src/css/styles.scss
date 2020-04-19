@@ -203,6 +203,11 @@ textarea {
   }
 }
 
+#hourglassIMG {
+  fill: red !important;
+  height: 350px;
+}
+
 @import './themes/dark';
 @import './themes/light';
 @import './themes/green';

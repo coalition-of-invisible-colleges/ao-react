@@ -24,6 +24,8 @@ interface TimeClockState {
   seconds: number
   timer: boolean
   t: any
+  colorOff: string
+  colorOn: string
 }
 
 interface Props {
@@ -36,12 +38,31 @@ class TimeClock extends React.Component<Props, TimeClockState> {
     this.state = {
       seconds: 0,
       timer: false,
-      t: null
+      t: null,
+      colorOff: 'red',
+      colorOn: 'green'
     }
     this.setTrigger = this.setTrigger.bind(this)
     this.run = this.run.bind(this)
     this.commit = this.commit.bind(this)
+    this.toHHMMSS = this.toHHMMSS.bind(this)
     var t
+  }
+
+  toHHMMSS = () => {
+    let time = this.state.seconds
+    let dateObj = new Date(time * 1000)
+    let hours = dateObj.getUTCHours()
+    let minutes = dateObj.getUTCMinutes()
+    let sec = dateObj.getSeconds()
+
+    let timeString =
+      hours.toString().padStart(2, '0') +
+      ':' +
+      minutes.toString().padStart(2, '0') +
+      ':' +
+      sec.toString().padStart(2, '0')
+    return timeString
   }
 
   setTrigger = () => this.setState({ seconds: this.state.seconds + 1 })
@@ -50,13 +71,19 @@ class TimeClock extends React.Component<Props, TimeClockState> {
     if (this.state.timer === false) {
       this.setState({ t: setInterval(this.setTrigger, 1000) })
       this.setState({ timer: true })
-      document.getElementById('cardTimer').innerHTML = 'End Timer'
+      // document.getElementById('cardTimer').innerHTML = 'End Timer'
+      document
+        .getElementById('hourglassIMG')
+        .setAttribute('fill', this.state.colorOn + ' !important')
     } else {
       //stop timer
       clearTimeout(this.state.t)
       this.setState({ timer: false })
       //send value to server
-      document.getElementById('cardTimer').innerHTML = 'Start Timer'
+      // document.getElementById('cardTimer').innerHTML = 'Start Timer'
+      document
+        .getElementById('hourglassIMG')
+        .setAttribute('fill', this.state.colorOff)
     }
   }
 
@@ -65,7 +92,10 @@ class TimeClock extends React.Component<Props, TimeClockState> {
     if (this.state.timer === true) {
       this.setState({ timer: false })
       clearTimeout(this.state.t)
-      document.getElementById('cardTimer').innerHTML = 'Start Timer'
+      // document.getElementById('cardTimer').innerHTML = 'Start Timer'
+      document
+        .getElementById('hourglassIMG')
+        .setAttribute('fill', this.state.colorOn)
     }
     console.log('before')
     //commit this.state.seconds to server
@@ -79,11 +109,15 @@ class TimeClock extends React.Component<Props, TimeClockState> {
   render() {
     return (
       <React.Fragment>
-        <div>test</div>
-        <div>{this.state.seconds}</div>
-        <button id="cardTimer" onClick={this.run}>
+        <img
+          onClick={this.run}
+          id="hourglassIMG"
+          src="../assets/images/hourglass.svg"
+          alt=""></img>
+        <div>{this.toHHMMSS()}</div>
+        {/* <button id="cardTimer" onClick={this.run}>
           Start Timer
-        </button>
+        </button> */}
         <button id="cardTimerCommit" onClick={this.commit}>
           Commit Time
         </button>
