@@ -24,8 +24,6 @@ interface TimeClockState {
   seconds: number
   timer: boolean
   t: any
-  colorOff: string
-  colorOn: string
 }
 
 interface Props {
@@ -38,9 +36,7 @@ class TimeClock extends React.Component<Props, TimeClockState> {
     this.state = {
       seconds: 0,
       timer: false,
-      t: null,
-      colorOff: 'red',
-      colorOn: 'green'
+      t: null
     }
     this.setTrigger = this.setTrigger.bind(this)
     this.run = this.run.bind(this)
@@ -72,18 +68,12 @@ class TimeClock extends React.Component<Props, TimeClockState> {
       this.setState({ t: setInterval(this.setTrigger, 1000) })
       this.setState({ timer: true })
       // document.getElementById('cardTimer').innerHTML = 'End Timer'
-      document
-        .getElementById('hourglassIMG')
-        .setAttribute('fill', this.state.colorOn + ' !important')
     } else {
       //stop timer
       clearTimeout(this.state.t)
       this.setState({ timer: false })
       //send value to server
       // document.getElementById('cardTimer').innerHTML = 'Start Timer'
-      document
-        .getElementById('hourglassIMG')
-        .setAttribute('fill', this.state.colorOff)
     }
   }
 
@@ -93,9 +83,6 @@ class TimeClock extends React.Component<Props, TimeClockState> {
       this.setState({ timer: false })
       clearTimeout(this.state.t)
       // document.getElementById('cardTimer').innerHTML = 'Start Timer'
-      document
-        .getElementById('hourglassIMG')
-        .setAttribute('fill', this.state.colorOn)
     }
     console.log('before')
     //commit this.state.seconds to server
@@ -112,6 +99,7 @@ class TimeClock extends React.Component<Props, TimeClockState> {
         <img
           onClick={this.run}
           id="hourglassIMG"
+          className={this.state.timer ? 'hgOn' : 'hgOff'}
           src="../assets/images/hourglass.svg"
           alt=""></img>
         <div>{this.toHHMMSS()}</div>

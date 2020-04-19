@@ -204,8 +204,17 @@ textarea {
 }
 
 #hourglassIMG {
-  fill: red !important;
   height: 350px;
+}
+
+.hgOff {
+  filter: invert(23%) sepia(86%) saturate(7352%) hue-rotate(356deg)
+    brightness(83%) contrast(118%);
+}
+
+.hgOn {
+  filter: invert(99%) sepia(39%) saturate(2221%) hue-rotate(60deg)
+    brightness(104%) contrast(99%);
 }
 
 @import './themes/dark';
