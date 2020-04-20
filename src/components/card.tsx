@@ -101,6 +101,7 @@ class TimeClock extends React.Component<Props, TimeClockState> {
           className={this.state.timer ? 'hgOn' : 'hgOff'}
           src="../assets/images/hourglass.svg"
           alt=""></img>
+
         <div>{this.toHHMMSS()}</div>
         <button id="cardTimerCommit" onClick={this.commit}>
           Commit Time
@@ -134,7 +135,18 @@ class TimeHistory extends React.Component<Props, TimeHistoryState> {
 
   @computed get timeLog() {
     let timeLogOut = null
-    if (aoStore.hashMap.get(this.props.taskId).time.length > 0) {
+    console.log(
+      'memberId Object: ' +
+        aoStore.hashMap.get(this.props.taskId).time.find(t => {
+          return t.memberId === aoStore.member.memberId
+        })
+    )
+    if (
+      aoStore.hashMap.get(this.props.taskId).time.length > 0 &&
+      aoStore.hashMap.get(this.props.taskId).time.find(t => {
+        return t.memberId === aoStore.member.memberId
+      })
+    ) {
       console.log(aoStore.hashMap.get(this.props.taskId).time)
       console.log('IF FIRE')
       timeLogOut = aoStore.hashMap
@@ -155,7 +167,12 @@ class TimeHistory extends React.Component<Props, TimeHistoryState> {
 
   @computed get dateLog() {
     let dateLogOut = null
-    if (aoStore.hashMap.get(this.props.taskId).time.length > 0) {
+    if (
+      aoStore.hashMap.get(this.props.taskId).time.length > 0 &&
+      aoStore.hashMap.get(this.props.taskId).time.some(t => {
+        t.memberId === aoStore.member.memberId
+      })
+    ) {
       dateLogOut = aoStore.hashMap
         .get(this.props.taskId)
         .time.find(t => {

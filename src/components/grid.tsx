@@ -94,11 +94,14 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 className={`square ${
-                  !aoStore.hashMap
+                  aoStore.hashMap
                     .get(aoStore.state.grid[j][i])
-                    .seen.hasOwnProperty('memberId')
-                    ? 'seen'
-                    : ''
+                    .seen.hasOwnProperty('memberId') &&
+                  aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.find(t => {
+                    return t.memberId === aoStore.member.memberId
+                  }).memberId === aoStore.member.memberId
+                    ? ''
+                    : 'seen'
                 }`}
                 draggable="true"
                 onDragStart={drag}
