@@ -11,12 +11,12 @@ const Login: React.FunctionComponent<{}> = () => {
     api
       .createSession(user, pass)
       .then(api.fetchState)
-      .then(api.onLoad)
-      .then(() => setLoggedIn(true))
-      .catch(() => {
-        console.log('login failed')
-        setUser('')
-        setPass('')
+      .then(res => {
+        if (res) setLoggedIn(true)
+        else {
+          setUser('')
+          setUser('')
+        }
       })
   }
   return (
