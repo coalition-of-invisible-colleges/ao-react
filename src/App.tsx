@@ -47,9 +47,6 @@ const App = observer(() => {
     api.fetchState().then(() => {
       console.log('in fetch', aoStore.state.loggedIn)
       setRender(true)
-      if (aoStore.state.loggedIn) {
-        api.onLoad()
-      }
     })
   }, [])
   const changeTheme = () => {

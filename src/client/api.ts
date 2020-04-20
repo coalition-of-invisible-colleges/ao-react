@@ -8,9 +8,7 @@ import io from 'socket.io-client'
 import { composeP } from 'ramda'
 
 class AoApi {
-  constructor(public socket) {
-    this.onLoad = this.onLoad.bind(this)
-  }
+  constructor(public socket) {}
 
   async createSession(user: string, pass: string): Promise<boolean> {
     const session = uuidV1()
@@ -525,16 +523,11 @@ class AoApi {
     }
   }
   logout() {
-    this.socket.emit('disconnect')
-    this.socket.close()
     aoStore.resetState()
     window.localStorage.clear()
   }
-  onLoad() {
-    socket.connect()
-  }
   startSocketListeners() {
-    socket.open()
+    this.socket.connect()
     this.socket.on('connect', () => {
       console.log('connected')
       this.socket.emit('authentication', {
@@ -551,6 +544,7 @@ class AoApi {
     })
     this.socket.on('disconnect', () => {
       console.log('disconnected')
+      this.socket.connect()
     })
   }
 }

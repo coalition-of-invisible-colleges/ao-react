@@ -6,7 +6,7 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
-
+import MiniCheckbox from '../assets/images/completed.svg'
 interface Sel {
   x: number
   y: number
@@ -116,10 +116,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                   {aoStore.hashMap
                     .get(grid[j][i])
                     .claimed.indexOf(aoStore.member.memberId) >= 0 ? (
-                    <img
-                      className="miniCheckbox"
-                      src="../assets/images/completed.svg"
-                    />
+                    <img className="miniCheckbox" src={MiniCheckbox} />
                   ) : null}
                   {aoStore.hashMap.get(grid[j][i]).completeValue > 0 ? (
                     <div className="miniValue">
