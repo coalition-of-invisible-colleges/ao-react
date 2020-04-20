@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import { useParams } from 'react-router-dom'
 import api from '../client/api'
-
+import Coin from '../assets/images/coin.svg'
 interface AoCoinParams {
   taskId: string
 }
@@ -30,11 +30,7 @@ const AoCoin: FunctionComponent<AoCoinParams> = observer(({ taskId }) => {
   }
   return (
     <div className={computed.isGrabbed ? 'coin' : 'coin ungrabbed'}>
-      <img
-        src="../assets/images/coin.svg"
-        onClick={onClick}
-        draggable={false}
-      />
+      <img src={Coin} onClick={onClick} draggable={false} />
       <div className="hodls">{computed.hodlCount}</div>
     </div>
   )

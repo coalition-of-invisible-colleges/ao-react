@@ -5,7 +5,7 @@ import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-
+import Loud from '../assets/images/loud.svg'
 interface AoStatusState {
   barking?: boolean
 }
@@ -55,7 +55,7 @@ export class AoStatus extends React.Component<{}, AoStatusState> {
     return (
       <img
         id="status"
-        src="../assets/images/loud.svg"
+        src={Loud}
         onTouchStart={this.handleButtonPress}
         onTouchEnd={this.handleButtonRelease}
         onMouseDown={this.handleButtonPress}

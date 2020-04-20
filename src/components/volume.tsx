@@ -5,7 +5,8 @@ import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-
+import Muted from '../assets/images/muted.svg'
+import Unmuted from '../assets/images/unmuted.svg'
 @observer
 export class AoVolume extends React.Component<{}> {
   constructor(props) {
@@ -43,11 +44,7 @@ export class AoVolume extends React.Component<{}> {
     return (
       <img
         id="volume"
-        src={
-          aoStore.member.muted
-            ? '../assets/images/muted.svg'
-            : '../assets/images/unmuted.svg'
-        }
+        src={aoStore.member.muted ? Muted : Unmuted}
         onDoubleClick={this.toggleMute}
       />
     )

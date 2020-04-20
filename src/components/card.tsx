@@ -10,7 +10,7 @@ import {
   useRouteMatch
 } from 'react-router-dom'
 import api from '../client/api'
-
+import Hourglass from '../assets/images/hourglass.svg'
 import aoStore from '../client/store'
 import Markdown from 'markdown-to-jsx'
 import AoCoin from './coin'
@@ -99,7 +99,7 @@ class TimeClock extends React.Component<Props, TimeClockState> {
           onClick={this.run}
           id="hourglassIMG"
           className={this.state.timer ? 'hgOn' : 'hgOff'}
-          src="../assets/images/hourglass.svg"
+          src={Hourglass}
           alt=""></img>
         <div>{this.toHHMMSS()}</div>
         <button id="cardTimerCommit" onClick={this.commit}>
