@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { observer } from 'mobx-react'
-import { ObservableMap } from 'mobx'
+import { ObservableMap, computed } from 'mobx'
 import {
   BrowserRouter as Router,
   Switch,
@@ -25,6 +25,8 @@ interface TimeClockState {
   timer: boolean
   t: any
 }
+
+interface TimeHistoryState {}
 
 interface Props {
   taskId: string
@@ -79,18 +81,15 @@ class TimeClock extends React.Component<Props, TimeClockState> {
 
   commit() {
     console.log(this.state.seconds, this.props.taskId)
-    if (this.state.timer === true) {
-      this.setState({ timer: false })
-      clearTimeout(this.state.t)
-      // document.getElementById('cardTimer').innerHTML = 'Start Timer'
+    if (this.state.seconds > 0) {
+      if (this.state.timer === true) {
+        this.setState({ timer: false })
+        clearTimeout(this.state.t)
+      }
+      api.commitTime(this.state.seconds, this.props.taskId, Date.now())
+      this.setState({ t: null })
+      this.setState({ seconds: 0 })
     }
-    console.log('before')
-    //commit this.state.seconds to server
-
-    api.commitTime(this.state.seconds, this.props.taskId)
-    console.log('after')
-    this.setState({ t: null })
-    this.setState({ seconds: 0 })
   }
 
   render() {
@@ -103,12 +102,98 @@ class TimeClock extends React.Component<Props, TimeClockState> {
           src="../assets/images/hourglass.svg"
           alt=""></img>
         <div>{this.toHHMMSS()}</div>
-        {/* <button id="cardTimer" onClick={this.run}>
-          Start Timer
-        </button> */}
         <button id="cardTimerCommit" onClick={this.commit}>
           Commit Time
         </button>
+      </React.Fragment>
+    )
+  }
+}
+
+@observer
+class TimeHistory extends React.Component<Props, TimeHistoryState> {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
+  formatTime = seconds => {
+    let dateObj = new Date(seconds * 1000)
+    let hours = dateObj.getUTCHours()
+    let minutes = dateObj.getUTCMinutes()
+    let sec = dateObj.getSeconds()
+
+    let timeString =
+      hours.toString().padStart(2, '0') +
+      ':' +
+      minutes.toString().padStart(2, '0') +
+      ':' +
+      sec.toString().padStart(2, '0')
+    return timeString
+  }
+
+  @computed get timeLog() {
+    let timeLogOut = null
+    if (aoStore.hashMap.get(this.props.taskId).time.length > 0) {
+      console.log(aoStore.hashMap.get(this.props.taskId).time)
+      console.log('IF FIRE')
+      timeLogOut = aoStore.hashMap
+        .get(this.props.taskId)
+        .time.find(t => {
+          return t.memberId === aoStore.member.memberId
+        })
+        .timelog.map((num, i) => {
+          return (
+            <div className={`${i % 2 === 0 ? 'orangeLog' : ''}`} key={i}>
+              {this.formatTime(num)} on{' '}
+            </div>
+          )
+        })
+    }
+    return timeLogOut
+  }
+
+  @computed get dateLog() {
+    let dateLogOut = null
+    if (aoStore.hashMap.get(this.props.taskId).time.length > 0) {
+      dateLogOut = aoStore.hashMap
+        .get(this.props.taskId)
+        .time.find(t => {
+          return t.memberId === aoStore.member.memberId
+        })
+        .date.map((num, i) => {
+          if (num) {
+            return (
+              <div
+                className={`cardTimeLogDate ${i % 2 === 0 ? 'orangeLog' : ''}`}
+                key={i}>
+                {new Date(Number(num) - 25200000).toUTCString().slice(0, 25)}
+              </div>
+            )
+          } else {
+            return (
+              <div
+                className={`cardTimeLogDateNull ${
+                  i % 2 === 0 ? 'orangeLog' : ''
+                }`}
+                key={i}>
+                Null
+              </div>
+            )
+          }
+        })
+
+      return dateLogOut
+    }
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <div className="cardTimeLog">
+          <div>{this.timeLog}</div>
+          <div>{this.dateLog}</div>
+        </div>
       </React.Fragment>
     )
   }
@@ -128,16 +213,20 @@ const CardDetails = () => {
   const { taskId }: CardParams = useParams()
   console.log('card!', taskId, aoStore.hashMap.get(taskId))
   return (
-    <div className="card">
-      <AoValue taskId={taskId} />
-      <AoCheckbox taskId={taskId} />
-      <TimeClock taskId={taskId} />
-      <div className="content">
-        <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
+    <React.Fragment>
+      <div className="card">
+        <AoValue taskId={taskId} />
+        <AoCheckbox taskId={taskId} />
+        <TimeClock taskId={taskId} />
+        <div className="content">
+          <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
+        </div>
+        <AoCountdown taskId={taskId} />
+        <AoCoin taskId={taskId} />
       </div>
-      <AoCountdown taskId={taskId} />
-      <AoCoin taskId={taskId} />
-    </div>
+      <div>Activity Log:</div>
+      <TimeHistory taskId={taskId} />
+    </React.Fragment>
   )
 }
 

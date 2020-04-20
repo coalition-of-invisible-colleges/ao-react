@@ -394,13 +394,28 @@ function tasksMuts(tasks, ev) {
           })
           console.log('mutest3')
           if (!found) {
-            task.time.push({ memberId: ev.memberId, timelog: [ev.seconds] })
-            console.log(task.time.timelog)
+            task.time.push({
+              memberId: ev.memberId,
+              timelog: [ev.seconds],
+              date: [ev.date]
+            })
+            console.log('task.time.timelog' + task.time.timelog)
           } else {
             if (!found.timelog) {
               found.timelog = []
             }
+            if (!found.date) {
+              found.date = []
+              if (found.timelog.length > found.date.length) {
+                let count = found.timelog.length - found.date.length
+                while (count > 0) {
+                  found.date.push(null)
+                  count--
+                }
+              }
+            }
             found.timelog.push(ev.seconds)
+            found.date.push(ev.date)
             console.log(found.timelog)
           }
 

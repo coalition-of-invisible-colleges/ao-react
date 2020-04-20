@@ -565,13 +565,14 @@ function memberCharged(memberId, charged, notes, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function timeCommit(taskId, memberId, seconds, callback) {
+function timeCommit(taskId, memberId, seconds, date, callback) {
   console.log('timeCommit EVENTS')
   let newEvent = {
     type: 'time-commit',
     taskId,
     memberId,
-    seconds
+    seconds,
+    date
   }
   dctrlDb.insertEvent(newEvent, callback)
 }

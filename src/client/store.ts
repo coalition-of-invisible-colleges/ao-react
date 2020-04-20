@@ -62,6 +62,7 @@ export interface Task {
 interface Usertime {
   memberId: string
   timelog: number[]
+  date: Date[]
 }
 
 interface Userseen {

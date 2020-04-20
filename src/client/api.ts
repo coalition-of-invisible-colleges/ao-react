@@ -403,13 +403,14 @@ class AoApi {
       })
   }
 
-  async commitTime(seconds, taskId): Promise<request.Response> {
+  async commitTime(seconds, taskId, date): Promise<request.Response> {
     console.log('commitTime API')
     const act = {
       type: 'time-commit',
       taskId: taskId,
       memberId: aoStore.member.memberId,
-      seconds: seconds
+      seconds: seconds,
+      date: date
     }
     return request
       .post('/events')

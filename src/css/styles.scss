@@ -208,6 +208,28 @@ textarea {
   }
 }
 
+.cardTimeLog {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  .cardTimeLogDate {
+    align-self: left;
+    margin-left: 10px;
+    // left: 0;
+  }
+  .cardTimeLogDateNull {
+    align-self: left;
+    // margin-left: 5px;
+    // left: 0;
+  }
+}
+
+.orangeLog {
+  color: orange;
+}
+
 #hourglassIMG {
   margin-top: 2.5rem;
   height: 350px;

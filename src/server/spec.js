@@ -821,6 +821,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           req.body.seconds,
+          req.body.date,
           utils.buildResCallback(res)
         )
       } else {
