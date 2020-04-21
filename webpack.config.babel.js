@@ -6,7 +6,7 @@ var isProduction =
   process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
 var sourcePath = path.join(__dirname, './src')
 var outPath = path.join(__dirname, './dist')
-
+const ManifestPlugin = require("webpack-manifest-plugin")
 // plugins
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 // var MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -113,7 +113,17 @@ module.exports = {
       // },
       // static assets
       { test: /\.html$/, use: 'html-loader' },
-      { test: /\.(a?png|svg)$/, use: 'url-loader?limit=10000' },
+      { test: /\.(a?png)$/, use: 'url-loader?limit=10000' },
+      {
+        test: /\.svg/,
+        use: [
+          {
+            loader: 'svg-url-loader',
+            options: {
+            },
+          },
+        ],
+      },
       {
         test: /\.(jpe?g|gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
         use: 'file-loader'
@@ -155,6 +165,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'src/assets/index.html'
     }),
+    new ManifestPlugin({
+      fileName: "%PUBLIC_URL%/manifest.json"
+  })
   ],
   devServer: {
     contentBase: sourcePath,

@@ -564,6 +564,29 @@ function memberCharged(memberId, charged, notes, callback) {
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
+function timeCommit(taskId, memberId, seconds, date, callback) {
+  console.log('timeCommit EVENTS')
+  let newEvent = {
+    type: 'time-commit',
+    taskId,
+    memberId,
+    seconds,
+    date
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
+function taskSeen(taskId, memberId, callback) {
+  console.log('EVENTS fire')
+
+  let newEvent = {
+    type: 'task-seen',
+    taskId,
+    memberId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 
 function gridCreate(name, length, width, callback) {
   let gridId = uuidV1()
@@ -636,5 +659,7 @@ module.exports = {
   tasksReceived,
   gridCreate,
   gridUnpin,
-  gridPin
+  gridPin,
+  taskSeen,
+  timeCommit
 }

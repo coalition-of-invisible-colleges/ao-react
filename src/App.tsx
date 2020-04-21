@@ -15,6 +15,8 @@ import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
 import Members from './components/Members'
+import { AoStatus } from './components/status'
+import { AoVolume } from './components/volume'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   console.log('logged in?', loggedIn)
@@ -30,6 +32,13 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   )
 }
 
+const ProtectedFragment: React.FunctionComponent<{ loggedIn: boolean }> = ({
+  children,
+  loggedIn
+}) => {
+  return loggedIn ? <React.Fragment>{children}</React.Fragment> : null
+}
+
 const App = observer(() => {
   const [render, setRender] = useState(false)
   const [theme, setTheme] = useState(1)
@@ -38,9 +47,6 @@ const App = observer(() => {
     api.fetchState().then(() => {
       console.log('in fetch', aoStore.state.loggedIn)
       setRender(true)
-      if (aoStore.state.loggedIn) {
-        api.onLoad()
-      }
     })
   }, [])
   const changeTheme = () => {
@@ -82,6 +88,10 @@ const App = observer(() => {
                 </li>
               </ul>
             </nav>
+            <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
+              <AoStatus />
+              <AoVolume />
+            </ProtectedFragment>
 
             {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}

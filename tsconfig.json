@@ -11,6 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "allowJs": true,
+    "outDir": "./dist",
     "lib": ["ES6", "ES5", "DOM"]
   }
 }

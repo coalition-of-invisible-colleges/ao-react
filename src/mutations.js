@@ -363,6 +363,66 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-seen':
+      console.log('MUTATION fires')
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          if (!task.seen) {
+            task.seen = []
+          }
+          if (
+            !task.seen.some(t => {
+              return t.memberId === ev.memberId
+            })
+          ) {
+            task.seen = { memberId: ev.memberId, timestamp: Date.now() }
+            console.log('task seen! : ' + JSON.stringify(task.seen))
+          }
+        }
+      })
+      break
+    case 'time-commit':
+      console.log('time commit MUTATION')
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          console.log('mutest1')
+          console.log('task', task)
+          console.log('task.time' + task.time)
+          let found = task.time.find(t => {
+            console.log('mutest2')
+            return t.memberId === ev.memberId
+          })
+          console.log('mutest3')
+          if (!found) {
+            task.time.push({
+              memberId: ev.memberId,
+              timelog: [ev.seconds],
+              date: [ev.date]
+            })
+            console.log('task.time.timelog' + task.time.timelog)
+          } else {
+            if (!found.timelog) {
+              found.timelog = []
+            }
+            if (!found.date) {
+              found.date = []
+              if (found.timelog.length > found.date.length) {
+                let count = found.timelog.length - found.date.length
+                while (count > 0) {
+                  found.date.push(null)
+                  count--
+                }
+              }
+            }
+            found.timelog.push(ev.seconds)
+            found.date.push(ev.date)
+            console.log(found.timelog)
+          }
+
+          console.log('mutations sucess')
+        }
+      })
+      break
     case 'pile-grabbed':
       if (!ev.memberId) {
         break

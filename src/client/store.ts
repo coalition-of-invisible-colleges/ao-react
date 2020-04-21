@@ -41,22 +41,39 @@ export interface Member {
 export interface Task {
   taskId: string
   color: string
-  deck: number[]
+  deck: string[]
   name: string
   address: string
   bolt11: string
-  book: {}
+  book: {
+    memberId: string
+    startTs: Date
+    endTs: Date
+  }
   boost: number
   priorities: number[]
   subTasks: number[]
   completed: number[]
-  claimed: number[]
+  claimed: string[]
   passed: number[]
   guild: false
   lastClaimed: number
   completeValue: number
   payment_hash: string
   highlights: number[]
+  seen: Userseen[]
+  time: Usertime[]
+}
+
+interface Usertime {
+  memberId: string
+  timelog: number[]
+  date: Date[]
+}
+
+interface Userseen {
+  memberId: string
+  timestamp: Date
 }
 
 export interface Session {

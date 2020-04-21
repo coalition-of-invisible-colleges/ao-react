@@ -22,13 +22,32 @@ textarea {
   // }
 
   .#{$theme-name} {
-    height: 100%;
-    width: 100%;
     text-align: center;
     color: $body-color;
     font-family: monospace;
     font-size: 1.25em;
     background-color: $body-bg;
+
+    #status {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      margin-left: 0.5em;
+      margin-bottom: 0.3em;
+      cursor: pointer;
+      height: 3em;
+    }
+
+    #volume {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      margin-right: 0.5em;
+      margin-bottom: 0.3em;
+      cursor: pointer;
+      height: 3em;
+      fill: #fff;
+    }
 
     .grid {
       display: grid;
@@ -44,28 +63,194 @@ textarea {
         border: $square-border;
         color: $body-color;
         overflow: hidden;
+
+        &:hover {
+          background: darken($square-hover, 50%);
+          span {
+            position: absolute;
+            margin: auto;
+            pointer-events: none;
+            background: darken($square-hover, 50%);
+          }
+        }
+
+        .miniContainer {
+          pointer-events: none;
+          position: absolute;
+          z-index: 7;
+          margin-right: auto;
+          .miniValue {
+            position: absolute;
+            z-index: 7;
+            font-size: 0.75em;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 0.25em;
+            pointer-events: none;
+            transform: translate(28px, -42px);
+            right: 0;
+          }
+
+          .miniCheckbox + .miniValue {
+            line-height: 1em;
+          }
+
+          .miniCheckbox {
+            position: absolute;
+            z-index: 7;
+            height: 0.75em;
+            width: 0.75em;
+            opacity: 0.5;
+            pointer-events: none;
+            transform: translate(28px, -40px);
+          }
+
+          .miniCountdown {
+          }
+        }
       }
 
-      textarea.square {
-        text-align: center;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
+      .seen:before {
+        position: absolute;
+        // margin-bottom: 10%;
+        // margin-left: 10%;
+        // margin-top: -60px;
+        // margin-right: -25px;
+        z-index: 5;
+        content: '';
+        // top: 0;
+        // right: 0;
+        margin-left: -33px;
+        transform: translateY(-33px);
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        background-color: rgba(255, 10, 10, 0.85);
+      }
+    }
+
+    .card {
+      max-width: 30em;
+      background-color: rgba(255, 255, 255, 0.1);
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.25em;
+      min-height: 6em;
+
+      .content {
+        margin-top: 1em;
+        margin-bottom: 4em;
       }
 
-      div.square:hover {
-        background: $square-hover;
-        overflow: visible;
+      .value {
+        position: absolute;
+        right: 2em;
+        top: 0.2em;
       }
 
-      .empty.square:hover::after {
-        content: 'click to type';
+      .checkbox {
+        position: absolute;
+        right: 0.5em;
+        top: 0.5em;
+        height: 1.5em;
+        width: 1.5em;
+        opacity: 0.5;
+        cursor: pointer;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .countdown {
+        position: absolute;
+        right: 0.5em;
+        bottom: 0.5em;
+      }
+
+      .coin {
+        width: 2.5em;
+        height: 2.5em;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0.75em;
+        cursor: pointer;
+
+        &.ungrabbed {
+          opacity: 0.3;
+        }
+
+        img {
+          animation: spin 32s linear infinite;
+        }
+
+        .hodls {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          text-align: center;
+          width: 2.75em;
+          bottom: 0.25em;
+          padding-bottom: 0.4em;
+          margin-bottom: 0;
+          font-weight: bold;
+          color: rgba(255, 255, 255, 1);
+          pointer-events: none;
+        }
       }
     }
   }
 }
 
+.cardTimeLog {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  .cardTimeLogDate {
+    align-self: left;
+    margin-left: 10px;
+    // left: 0;
+  }
+  .cardTimeLogDateNull {
+    align-self: left;
+    // margin-left: 5px;
+    // left: 0;
+  }
+}
+
+.orangeLog {
+  color: orange;
+}
+
+#hourglassIMG {
+  margin-top: 2.5rem;
+  height: 350px;
+}
+
+.hgOff {
+  filter: invert(23%) sepia(86%) saturate(7352%) hue-rotate(356deg)
+    brightness(83%) contrast(118%);
+}
+
+.hgOn {
+  filter: invert(99%) sepia(39%) saturate(2221%) hue-rotate(60deg)
+    brightness(104%) contrast(99%);
+}
+
 @import './themes/dark';
 @import './themes/light';
 @import './themes/green';
+
+// Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
+// Change theme names to the name of their file (without the underscore)
+// Run through the theme array (or have a drop down) to apply specific & names themes
+// Theme generator page/applet allows one to construct a new theme
+// New theme is generated as an scss file in the themes folder, and imported above in styles.scss
