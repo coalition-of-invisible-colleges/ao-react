@@ -94,9 +94,9 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 className={`square ${
-                  aoStore.hashMap
-                    .get(aoStore.state.grid[j][i])
-                    .seen.hasOwnProperty('memberId')
+                  aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.some(t => {
+                    return t.memberId === aoStore.member.memberId
+                  })
                     ? ''
                     : 'seen'
                 }`}
