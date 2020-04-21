@@ -167,10 +167,11 @@ class TimeHistory extends React.Component<Props, TimeHistoryState> {
 
   @computed get dateLog() {
     let dateLogOut = null
+
     if (
       aoStore.hashMap.get(this.props.taskId).time.length > 0 &&
       aoStore.hashMap.get(this.props.taskId).time.some(t => {
-        t.memberId === aoStore.member.memberId
+        return t.memberId === aoStore.member.memberId
       })
     ) {
       dateLogOut = aoStore.hashMap
