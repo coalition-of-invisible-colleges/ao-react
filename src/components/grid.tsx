@@ -32,6 +32,7 @@ interface GridProps {
   grid: GridType
   sel?: Sel
   onClick: (event: any) => void
+  onBlur: (event: any) => void
   onKeyDown: (event: any) => void
   onDoubleClick: (event: any) => void
   onChange: (event: any) => void
@@ -44,6 +45,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
   ({
     grid,
     onClick,
+    onBlur,
     sel,
     onKeyDown,
     onChange,
@@ -60,10 +62,10 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
         if (sel && sel.x == i && sel.y == j) {
           ret.push(
             <textarea
-              id={i + '-' + j}
+              id={j + '-' + i}
               onClick={onClick}
               autoFocus
-              onBlur={() => console.log('selection event', i, j)}
+              onBlur={onBlur}
               // className={`square ${
               //   JSON.stringify(
               //     aoStore.hashMap.get(
@@ -183,6 +185,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     super(props)
     this.state = {}
     this.onClick = this.onClick.bind(this)
+    this.onBlur = this.onBlur.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onSelectionChange = this.onSelectionChange.bind(this)
     this.onChange = this.onChange.bind(this)
@@ -323,7 +326,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     const y = parseInt(ys)
     const waitForClick = cancelablePromise(delay(200))
     this.appendPendingPromise(waitForClick)
-
     return waitForClick.promise
       .then(() => {
         this.setState({ sel: { x, y } })
@@ -343,6 +345,10 @@ export class AoGrid extends React.Component<{}, AoGridState> {
       })
   }
 
+  onBlur(event) {
+    this.setState({ sel: undefined, text: undefined })
+  }
+
   onKeyDown(event) {
     if (event.key === 'Enter') {
       console.log('enter')
@@ -359,7 +365,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
           this.state.text
         )
       }
-      this.setState({ sel: undefined, text: undefined })
+      this.onBlur(event)
     }
   }
   onSelectionChange(event) {
@@ -380,6 +386,7 @@ export class AoGrid extends React.Component<{}, AoGridState> {
             <RenderGrid
               sel={this.state.sel}
               onClick={this.onClick}
+              onBlur={this.onBlur}
               onKeyDown={this.onKeyDown}
               onDoubleClick={this.onDoubleClick}
               onChange={this.onChange}

@@ -422,10 +422,10 @@ class AoApi {
       })
   }
 
-  async commitTime(seconds, taskId, date): Promise<request.Response> {
+  async clockTime(seconds, taskId, date): Promise<request.Response> {
     console.log('commitTime API')
     const act = {
-      type: 'clock-time',
+      type: 'task-time-clocked',
       taskId: taskId,
       memberId: aoStore.member.memberId,
       seconds: seconds,

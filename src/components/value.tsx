@@ -28,8 +28,14 @@ export default class AoValue extends React.Component<ValueParams, State> {
     this.startEditing = this.startEditing.bind(this)
     this.saveValue = this.saveValue.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.onKeyDown = this.onKeyDown.bind(this)
+    // this.textBox = React.createRef()
     console.log('AoValue!')
   }
+
+  // componentDidUpdate() {
+  //   this.refs.textBox.focus()
+  // }
 
   startEditing(event) {
     console.log(
@@ -55,6 +61,12 @@ export default class AoValue extends React.Component<ValueParams, State> {
     }
   }
 
+  onKeyDown(event) {
+    if (event.key === 'Enter') {
+      this.saveValue(event)
+    }
+  }
+
   onChange(event) {
     console.log('on change', event.target.value)
     this.setState({ text: event.target.value })
@@ -65,7 +77,13 @@ export default class AoValue extends React.Component<ValueParams, State> {
     if (this.state.editing) {
       return (
         <div className="value">
-          <input type="text" onChange={this.onChange} value={this.state.text} />
+          <input
+            type="text"
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
+            // ref={this.textBox}
+            value={this.state.text}
+          />
           <button type="button" onClick={this.saveValue}>
             Set Value
           </button>

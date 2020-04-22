@@ -15,20 +15,26 @@ const Login: React.FunctionComponent<{}> = () => {
         if (res) setLoggedIn(true)
         else {
           setUser('')
-          setUser('')
         }
       })
+  }
+  const onKeyDown = e => {
+    if (event.key === 'Enter') {
+      e.preventDefault()
+      onClick(e)
+    }
   }
   return (
     <div>
       {!loggedIn && (
-        <div>
+        <form onSubmit={onKeyDown}>
           <div>
             Username:
             <input
               value={user}
               type="text"
               onChange={e => setUser(e.target.value)}
+              onKeyDown={onKeyDown}
             />
           </div>
           <div>
@@ -37,12 +43,13 @@ const Login: React.FunctionComponent<{}> = () => {
               value={pass}
               type="password"
               onChange={e => setPass(e.target.value)}
+              onKeyDown={onKeyDown}
             />
           </div>
           <button type="button" onClick={onClick}>
             Login
           </button>
-        </div>
+        </form>
       )}
       {loggedIn && <Redirect to="/" />}
     </div>
