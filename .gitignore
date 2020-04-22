@@ -22,5 +22,3 @@ npm-debug.log*
 *.sln
 *.code-workspace
 configuration.js
-
-package-lock.json
