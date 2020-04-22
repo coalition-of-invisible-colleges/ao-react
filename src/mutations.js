@@ -375,7 +375,7 @@ function tasksMuts(tasks, ev) {
               return t.memberId === ev.memberId
             })
           ) {
-            task.seen = { memberId: ev.memberId, timestamp: Date.now() }
+            task.seen.push({ memberId: ev.memberId, timestamp: Date.now() })
             console.log('task seen! : ' + JSON.stringify(task.seen))
           }
         }

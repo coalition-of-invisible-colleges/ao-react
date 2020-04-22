@@ -6,7 +6,7 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
-import MiniCheckbox from '../assets/images/completed.svg'
+
 interface Sel {
   x: number
   y: number
@@ -94,11 +94,11 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}
                 className={`square ${
-                  !aoStore.hashMap
-                    .get(aoStore.state.grid[j][i])
-                    .seen.hasOwnProperty('memberId')
-                    ? 'seen'
-                    : ''
+                  aoStore.hashMap.get(aoStore.state.grid[j][i]).seen.some(t => {
+                    return t.memberId === aoStore.member.memberId
+                  })
+                    ? ''
+                    : 'seen'
                 }`}
                 draggable="true"
                 onDragStart={drag}
@@ -113,7 +113,10 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                   {aoStore.hashMap
                     .get(grid[j][i])
                     .claimed.indexOf(aoStore.member.memberId) >= 0 ? (
-                    <img className="miniCheckbox" src={MiniCheckbox} />
+                    <img
+                      className="miniCheckbox"
+                      src="../assets/images/completed.svg"
+                    />
                   ) : null}
                   {aoStore.hashMap.get(grid[j][i]).completeValue > 0 ? (
                     <div className="miniValue">
