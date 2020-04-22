@@ -86,7 +86,7 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
           src={Hourglass}
           alt="hourglass"
         />
-        <div class="history">
+        <div className={'history'}>
           <p>Activity Log</p>
           <AoTimeHistory taskId={this.props.taskId} />
         </div>

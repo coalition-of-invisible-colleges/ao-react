@@ -30,11 +30,11 @@ interface DatePickerParams {
 }
 
 const RenderDatePicker: React.FunctionComponent<DatePickerParams> = observer(
-  ({ bookResource, startTime }) => {
+  ({ bookResource, startTime, onChange }) => {
     return (
       <DatePicker
         selected={startTime}
-        onChange={date => this.onChange(date)}
+        onChange={date => onChange(date)}
         showTimeSelect
         timeFormat="HH:mm"
         timeIntervals={15}
@@ -105,6 +105,7 @@ export default class AoCountdown extends React.Component<
           <RenderDatePicker
             bookResource={this.bookResource}
             startTime={this.state.startTime}
+            onChange={this.onChange}
           />
           <button type="button" onClick={this.bookResource}>
             Schedule

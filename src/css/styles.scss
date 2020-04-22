@@ -76,40 +76,39 @@ textarea {
           background: darken($square-hover, 50%);
           span {
             margin: auto;
+            padding: 0.5em;
             pointer-events: none;
             background: darken($square-hover, 50%);
           }
         }
 
-        .miniContainer {
+        .miniCardSummary {
           pointer-events: none;
           position: absolute;
+          right: 0;
+          top: 0;
           z-index: 7;
-          margin-right: auto;
+          background-color: rgba(0, 0, 0, 0.2);
 
           .miniValue {
-            position: absolute;
             z-index: 7;
             font-size: 0.75em;
-            background-color: rgba(0, 0, 0, 0.2);
             padding: 0.25em;
             pointer-events: none;
-            transform: translate(28px, -42px);
-            right: 0;
-          }
-
-          .miniCheckbox + .miniValue {
-            line-height: 1em;
+            margin: 0;
           }
 
           .miniCheckbox {
-            position: absolute;
             z-index: 7;
+            position: relative;
+            top: 0.08em;
             height: 0.75em;
             width: 0.75em;
             opacity: 0.5;
+            display: inline;
             pointer-events: none;
-            transform: translate(28px, -40px);
+            margin-left: 0.15em;
+            // transform: translate(28px, -40px);
           }
 
           .miniCountdown {

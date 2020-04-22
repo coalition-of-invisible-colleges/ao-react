@@ -19,7 +19,7 @@ const Login: React.FunctionComponent<{}> = () => {
       })
   }
   const onKeyDown = e => {
-    if (event.key === 'Enter') {
+    if (e.key === 'Enter') {
       e.preventDefault()
       onClick(e)
     }

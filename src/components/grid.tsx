@@ -118,7 +118,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                 ) : (
                   ''
                 )}
-                <div className="miniContainer">
+                <div className="miniCardSummary">
                   {aoStore.hashMap
                     .get(grid[j][i])
                     .claimed.indexOf(aoStore.member.memberId) >= 0 ? (
@@ -128,14 +128,14 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                     />
                   ) : null}
                   {aoStore.hashMap.get(grid[j][i]).completeValue > 0 ? (
-                    <div className="miniValue">
+                    <span className="miniValue">
                       {aoStore.hashMap.get(grid[j][i]).completeValue}
-                    </div>
+                    </span>
                   ) : null}
                 </div>
-                <span className="gridSpanContainer">
-                  <Markdown>{aoStore.hashMap.get(grid[j][i]).name}</Markdown>
-                </span>
+                <Markdown options={{ forceInline: true }}>
+                  {aoStore.hashMap.get(grid[j][i]).name}
+                </Markdown>
               </div>
             )
           } else {
