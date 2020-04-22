@@ -6,6 +6,8 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 // import { GridCard as GridCardSchema, State as GridCardState } from './grid'
+import AoPaper from './paper'
+import Markdown from 'markdown-to-jsx'
 
 interface Sel {
   x: number
@@ -109,6 +111,11 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                   gridRow: (j + 1).toString(),
                   gridColumn: (i + 1).toString()
                 }}>
+                {aoStore.hashMap.get(grid[j][i]).color ? (
+                  <AoPaper taskId={aoStore.hashMap.get(grid[j][i]).taskId} />
+                ) : (
+                  ''
+                )}
                 <div className="miniContainer">
                   {aoStore.hashMap
                     .get(grid[j][i])
@@ -125,7 +132,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
                   ) : null}
                 </div>
                 <span className="gridSpanContainer">
-                  {aoStore.hashMap.get(grid[j][i]).name}
+                  <Markdown>{aoStore.hashMap.get(grid[j][i]).name}</Markdown>
                 </span>
               </div>
             )

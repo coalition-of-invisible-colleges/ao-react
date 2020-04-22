@@ -13,6 +13,8 @@ import api from '../client/api'
 import Hourglass from '../assets/images/hourglass.svg'
 import aoStore from '../client/store'
 import Markdown from 'markdown-to-jsx'
+import AoPaper from './paper'
+import AoPalette from './palette'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
@@ -233,6 +235,8 @@ const CardDetails = () => {
   return (
     <React.Fragment>
       <div className="card">
+        <AoPaper taskId={taskId} />
+        <AoPalette taskId={taskId} />
         <AoValue taskId={taskId} />
         <AoCheckbox taskId={taskId} />
         <TimeClock taskId={taskId} />

@@ -381,8 +381,8 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
-    case 'time-commit':
-      console.log('time commit MUTATION')
+    case 'task-time-clocked':
+      console.log('task time clocked MUTATION')
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           console.log('mutest1')

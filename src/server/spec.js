@@ -809,15 +809,15 @@ router.post('/events', (req, res, next) => {
         res.status(200).send(errRes)
       }
       break
-    case 'time-commit':
-      console.log('time-commit SPEC')
+    case 'task-time-clocked':
+      console.log('task-time-clocked SPEC')
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
         console.log('SPEC validators fire')
 
-        events.timeCommit(
+        events.taskTimeClocked(
           req.body.taskId,
           req.body.memberId,
           req.body.seconds,

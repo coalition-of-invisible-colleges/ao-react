@@ -111,6 +111,27 @@ class AoApi {
       })
   }
 
+  async colorCard(
+    taskId: string,
+    // inId: string,
+    color: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-colored',
+      taskId: taskId,
+      inId: taskId, // maybe remove dis, or get it properly
+      color: color
+    }
+    console.log('action is: ', act)
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async grabCard(taskId: string): Promise<request.Response> {
     const act = {
       type: 'task-grabbed',
@@ -404,7 +425,7 @@ class AoApi {
   async commitTime(seconds, taskId, date): Promise<request.Response> {
     console.log('commitTime API')
     const act = {
-      type: 'time-commit',
+      type: 'clock-time',
       taskId: taskId,
       memberId: aoStore.member.memberId,
       seconds: seconds,

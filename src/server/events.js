@@ -565,10 +565,10 @@ function memberCharged(memberId, charged, notes, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function timeCommit(taskId, memberId, seconds, date, callback) {
-  console.log('timeCommit EVENTS')
+function taskTimeClocked(taskId, memberId, seconds, date, callback) {
+  console.log('taskTimeClocked EVENTS')
   let newEvent = {
-    type: 'time-commit',
+    type: 'task-time-clocked',
     taskId,
     memberId,
     seconds,
@@ -662,5 +662,5 @@ module.exports = {
   gridAdd,
   gridDel,
   taskSeen,
-  timeCommit
+  taskTimeClocked
 }
