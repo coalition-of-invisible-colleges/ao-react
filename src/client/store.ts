@@ -57,6 +57,7 @@ export interface Task {
   highlights: number[]
   seen: Userseen[]
   time: Usertime[]
+  timestamp: number
 }
 
 interface Usertime {
