@@ -17,13 +17,9 @@ interface GridType {
   size: number
 }
 
-export interface State {
-  selected?: Sel
-  // gridCard: GridCardState
-}
-
-export const defaultState: State = {
-  selected: undefined
+interface AoGridState {
+  redirect?: string
+  sel?: Sel
 }
 
 interface GridProps {
@@ -31,32 +27,10 @@ interface GridProps {
   sel?: Sel
   onSelect: (selection: { x: number; y: number }) => void
   onGoIn: (selection: { x: number; y: number }) => void
-  // onClick: (event: any) => void
-  // onBlur: (event: any) => void
-  // onKeyDown: (event: any) => void
-  // onDoubleClick: (event: any) => void
-  // onChange: (event: any) => void
-  // drag: (event: any) => void
-  // allowDrop: (event: any) => void
-  // drop: (event: any) => void
-  // onHover: (event: any) => void
 }
+
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
-  ({
-    grid,
-    // onClick,
-    // onBlur,
-    sel,
-    onSelect,
-    onGoIn
-    // onKeyDown,
-    // onChange,
-    // onDoubleClick,
-    // drag,
-    // allowDrop,
-    // drop,
-    // onHover
-  }) => {
+  ({ grid, sel, onSelect, onGoIn }) => {
     console.log('rerender grid', grid)
     const ret = []
     for (let j = 0; j < grid.size; j++) {
@@ -91,11 +65,6 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
   }
 )
 
-interface AoGridState {
-  redirect?: string
-  sel?: Sel
-}
-
 @observer
 export class AoGrid extends React.Component<{}, AoGridState> {
   constructor(props) {
@@ -103,18 +72,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
     this.state = {}
     this.selectGridSquare = this.selectGridSquare.bind(this)
     this.goInSquare = this.goInSquare.bind(this)
-    // this.onClick = this.onClick.bind(this)
-    // this.onBlur = this.onBlur.bind(this)
-    // this.onKeyDown = this.onKeyDown.bind(this)
-    // this.onSelectionChange = this.onSelectionChange.bind(this)
-    // this.onChange = this.onChange.bind(this)
-    // // this.ref = React.createRef()
-    // console.log('grid', aoStore.state.grid)
-    // this.onDoubleClick = this.onDoubleClick.bind(this)
-    // this.drag = this.drag.bind(this)
-    // this.allowDrop = this.allowDrop.bind(this)
-    // this.drop = this.drop.bind(this)
-    // this.onHover = this.onHover.bind(this)
   }
 
   selectGridSquare(selection: Sel) {
@@ -138,15 +95,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
             <h2>Meme Grid</h2>
             <RenderGrid
               sel={this.state.sel}
-              // onClick={this.onClick}
-              // onBlur={this.onBlur}
-              // onKeyDown={this.onKeyDown}
-              // onDoubleClick={this.onDoubleClick}
-              // onChange={this.onChange}
-              // drag={this.drag}
-              // allowDrop={this.allowDrop}
-              // drop={this.drop}
-              // onHover={this.onHover}
               grid={{ ...aoStore.state.grid, size: 8 }}
               onSelect={this.selectGridSquare}
               onGoIn={this.goInSquare}
