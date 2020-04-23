@@ -27,6 +27,7 @@ interface CountdownParams {
 interface DatePickerParams {
   startTime: Date
   bookResource: (event: Date) => void
+  onChange: (event: Date) => void
 }
 
 const RenderDatePicker: React.FunctionComponent<DatePickerParams> = observer(
