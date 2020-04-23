@@ -41,8 +41,6 @@ export default class AoGridSquare extends React.Component<
 		this.onKeyDown = this.onKeyDown.bind(this)
 		this.onSelectionChange = this.onSelectionChange.bind(this)
 		this.onChange = this.onChange.bind(this)
-		// this.ref = React.createRef()
-		console.log('grid', aoStore.state.grid)
 		this.onDoubleClick = this.onDoubleClick.bind(this)
 		this.drag = this.drag.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
@@ -53,7 +51,7 @@ export default class AoGridSquare extends React.Component<
 	componentWillUnmount() {
 		// cancel all pending promises to avoid
 		// side effects when the component is unmounted
-		// this.clearPendingPromises()
+		this.clearPendingPromises()
 	}
 
 	pendingPromises = []
