@@ -57,6 +57,7 @@
     "react": "^16.13.1",
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^10.2.2",
     "react-hot-loader": "^4.12.20",
     "react-router-dom": "^5.1.2",
     "regenerator-runtime": "^0.13.3",

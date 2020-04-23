@@ -82,56 +82,60 @@ textarea {
           }
         }
 
-        .miniCardSummary {
+        .miniCard {
           pointer-events: none;
-          position: absolute;
-          right: 0;
-          top: 0;
-          z-index: 7;
-          background-color: rgba(0, 0, 0, 0.2);
 
-          .miniValue {
-            z-index: 7;
-            font-size: 0.75em;
-            padding: 0.25em;
+          .miniCardSummary {
             pointer-events: none;
-            margin: 0;
-          }
-
-          .miniCheckbox {
+            position: absolute;
+            right: 0;
+            top: 0;
             z-index: 7;
-            position: relative;
-            top: 0.08em;
-            height: 0.75em;
-            width: 0.75em;
-            opacity: 0.5;
-            display: inline;
-            pointer-events: none;
-            margin-left: 0.15em;
-            // transform: translate(28px, -40px);
-          }
+            background-color: rgba(0, 0, 0, 0.2);
 
-          .miniCountdown {
+            .seen {
+              position: absolute;
+              // margin-bottom: 10%;
+              // margin-left: 10%;
+              // margin-top: -60px;
+              // margin-right: -25px;
+              z-index: 5;
+              content: '';
+              // top: 0;
+              // right: 0;
+              top: 0;
+              left: 0;
+              height: 7px;
+              width: 7px;
+              border-radius: 50%;
+              background-color: rgba(255, 10, 10, 0.85);
+            }
+
+            .miniValue {
+              z-index: 7;
+              font-size: 0.75em;
+              padding: 0.25em;
+              pointer-events: none;
+              margin: 0;
+            }
+
+            .miniCheckbox {
+              z-index: 7;
+              position: relative;
+              top: 0.08em;
+              height: 0.75em;
+              width: 0.75em;
+              opacity: 0.5;
+              display: inline;
+              pointer-events: none;
+              margin-left: 0.15em;
+              // transform: translate(28px, -40px);
+            }
+
+            .miniCountdown {
+            }
           }
         }
-      }
-
-      .seen:before {
-        position: absolute;
-        // margin-bottom: 10%;
-        // margin-left: 10%;
-        // margin-top: -60px;
-        // margin-right: -25px;
-        z-index: 5;
-        content: '';
-        // top: 0;
-        // right: 0;
-        margin-left: -33px;
-        transform: translateY(-33px);
-        height: 7px;
-        width: 7px;
-        border-radius: 50%;
-        background-color: rgba(255, 10, 10, 0.85);
       }
     }
 

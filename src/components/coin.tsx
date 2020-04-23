@@ -5,6 +5,7 @@ import aoStore from '../client/store'
 import { useParams } from 'react-router-dom'
 import api from '../client/api'
 import Coin from '../assets/images/coin.svg'
+
 interface AoCoinParams {
   taskId: string
 }

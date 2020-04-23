@@ -83,6 +83,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
             onKeyDown={this.onKeyDown}
             // ref={this.textBox}
             value={this.state.text}
+            autoFocus
           />
           <button type="button" onClick={this.saveValue}>
             Set Value
