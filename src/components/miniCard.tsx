@@ -18,11 +18,7 @@ const AoMiniCard: React.FunctionComponent<MiniCardProps> = observer(
 	({ taskId }) => {
 		const card: Task = aoStore.hashMap.get(taskId)
 		return (
-			<div
-				className={'miniCard'}
-				// id={i + '-' + j}
-				// onDoubleClick={onDoubleClick}
-			>
+			<div className={'miniCard'}>
 				{card.color ? <AoPaper taskId={card.taskId} /> : ''}
 				<div className="miniCardSummary">
 					{card.seen.some(t => {

@@ -171,14 +171,15 @@ export default class AoGridSquare extends React.Component<
 			y: event.dataTransfer.getData('fromY')
 		}
 		console.log('from is', fromCoords)
-
 		let nameFrom = undefined
 		let nameTo = undefined
-		console.log('aoStore.state is', aoStore.state)
-		if (aoStore.hashMap.get(aoStore.state.grid[fromCoords.y][fromCoords.x])) {
-			nameFrom = aoStore.hashMap.get(
-				aoStore.state.grid[fromCoords.y][fromCoords.x]
-			).name
+		if (fromCoords.x && fromCoords.y) {
+			console.log('aoStore.state is', aoStore.state)
+			if (aoStore.hashMap.get(aoStore.state.grid[fromCoords.y][fromCoords.x])) {
+				nameFrom = aoStore.hashMap.get(
+					aoStore.state.grid[fromCoords.y][fromCoords.x]
+				).name
+			}
 		}
 
 		if (aoStore.hashMap.get(this.props.taskId)) {
@@ -238,8 +239,6 @@ export default class AoGridSquare extends React.Component<
 					className="square empty"
 					onClick={this.onClick}
 					onDoubleClick={this.onDoubleClick}
-					draggable="true"
-					onDragStart={this.drag}
 					onDragOver={this.allowDrop}
 					onDrop={this.drop}
 					onMouseOver={this.onHover}
