@@ -42,7 +42,7 @@ const AoMiniCard: React.FunctionComponent<MiniCardProps> = observer(
 						<span className="miniValue">{card.completeValue}</span>
 					) : null}
 				</div>
-				<Markdown options={{ forceInline: true }}>{card.name}</Markdown>
+				<Markdown options={{ forceBlock: true }}>{card.name}</Markdown>
 			</div>
 		)
 	}
