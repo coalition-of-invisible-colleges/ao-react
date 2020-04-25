@@ -12,7 +12,6 @@ export class AoVolume extends React.Component<{}> {
   constructor(props) {
     super(props)
     this.toggleMute = this.toggleMute.bind(this)
-    console.log('volume constructed')
   }
 
   componentWillUnmount() {
@@ -32,7 +31,6 @@ export class AoVolume extends React.Component<{}> {
   clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
 
   toggleMute() {
-    console.log('toggleMuted')
     if (aoStore.member.muted) {
       api.unmute()
     } else {

@@ -39,7 +39,6 @@ export default class AoGridSquare extends React.Component<
 		this.onClick = this.onClick.bind(this)
 		this.onBlur = this.onBlur.bind(this)
 		this.onKeyDown = this.onKeyDown.bind(this)
-		this.onSelectionChange = this.onSelectionChange.bind(this)
 		this.onChange = this.onChange.bind(this)
 		this.onDoubleClick = this.onDoubleClick.bind(this)
 		this.drag = this.drag.bind(this)
@@ -65,15 +64,12 @@ export default class AoGridSquare extends React.Component<
 	clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
 
 	onClick = event => {
-		console.log('clicked!')
 		const waitForClick = cancelablePromise(delay(200))
 		this.appendPendingPromise(waitForClick)
 		return waitForClick.promise
 			.then(() => {
-				console.log('promise x is ', this.props.x, ' and y is ', this.props.y)
 				this.props.onSelect({ x: this.props.x, y: this.props.y })
 
-				console.log('clicked', this.props.x, this.props.y)
 				this.removePendingPromise(waitForClick)
 			})
 			.catch(errorInfo => {
@@ -87,7 +83,6 @@ export default class AoGridSquare extends React.Component<
 	}
 
 	onDoubleClick = event => {
-		console.log('double click')
 		this.clearPendingPromises()
 		const [xs, ys] = event.target.id.split('-')
 		const x = parseInt(xs)
@@ -101,11 +96,8 @@ export default class AoGridSquare extends React.Component<
 
 	onKeyDown = event => {
 		if (event.key === 'Enter') {
-			console.log('enter')
-			console.log('selx: ' + this.props.x)
-			console.log('sely: ' + this.props.y)
 			if (!this.state.text) {
-				api.delCardFromGrid(this.props.x, this.props.y), console.log('delFired')
+				api.delCardFromGrid(this.props.x, this.props.y)
 			} else {
 				api.createAndOrAddCardToGrid(
 					this.props.x,
@@ -117,12 +109,7 @@ export default class AoGridSquare extends React.Component<
 		}
 	}
 
-	onSelectionChange = event => {
-		console.log('selected event', event)
-	}
-
 	onChange = event => {
-		console.log('on change', event.target.value)
 		this.setState({ text: event.target.value })
 	}
 
@@ -148,9 +135,7 @@ export default class AoGridSquare extends React.Component<
 
 		if (dataTransfer.items && dataTransfer.items.length > 0) {
 			dataTransfer.items.forEach(dt => {
-				console.log('dt is ', dt)
 				if (dt.type === 'fromx' || dt.type === 'fromy') {
-					console.log('card swap detected')
 					filetype = 'card'
 				}
 			})
@@ -160,7 +145,6 @@ export default class AoGridSquare extends React.Component<
 	}
 
 	allowDrop = event => {
-		console.log('allowDrop')
 		event.preventDefault()
 		this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
 	}
@@ -170,7 +154,6 @@ export default class AoGridSquare extends React.Component<
 	}
 
 	drop = async event => {
-		console.log('drop fire')
 		this.hideDrop(event)
 		event.preventDefault()
 		if (this.detectDragKind(event.dataTransfer) === 'file') {
@@ -179,19 +162,16 @@ export default class AoGridSquare extends React.Component<
 			return
 		}
 
-		console.log(event.target.id)
-		console.log('parent: ' + event.target.parentNode.id)
 		let toCoords: Sel = { x: this.props.x, y: this.props.y }
 		let fromCoords: Sel = {
 			x: event.dataTransfer.getData('fromX'),
 			y: event.dataTransfer.getData('fromY')
 		}
-		console.log('from is', fromCoords)
+
 		let nameFrom = undefined
 		let nameTo = undefined
 
 		if (fromCoords.x && fromCoords.y) {
-			console.log('aoStore.state is', aoStore.state)
 			if (aoStore.hashMap.get(aoStore.state.grid[fromCoords.y][fromCoords.x])) {
 				nameFrom = aoStore.hashMap.get(
 					aoStore.state.grid[fromCoords.y][fromCoords.x]
@@ -202,71 +182,16 @@ export default class AoGridSquare extends React.Component<
 		if (aoStore.hashMap.get(this.props.taskId)) {
 			nameTo = aoStore.hashMap.get(this.props.taskId).name
 		}
-		console.log(
-			'checkpoint 1. nameFrom is ',
-			nameFrom,
-			' and nameTo is ',
-			nameTo
-		)
 		if (nameFrom && nameTo) {
-			console.log('swap card')
 			api.createAndOrAddCardToGrid(toCoords.x, toCoords.y, nameFrom)
 			api.createAndOrAddCardToGrid(fromCoords.x, fromCoords.y, nameTo)
 		} else if (nameFrom) {
-			console.log('move card')
 			api.createAndOrAddCardToGrid(toCoords.x, toCoords.y, nameFrom)
 			api.delCardFromGrid(fromCoords.x, fromCoords.y)
 		}
 		console.log(
-			'nonsensical drag data. this should be made impossible or detected earlier.'
+			'nonsensical drag data. this should be impossible or detected earlier.'
 		)
-	}
-
-	// NoInputLayout = ({ previews, submitButton, dropzoneProps, files }) => {
-	// 	return (
-	// 		<div
-	// 			{...dropzoneProps}
-	// 			onClick={this.onClick}
-	// 			onDoubleClick={this.onDoubleClick}>
-	// 			{files.length === 0 && this.state.acceptFiles && (
-	// 				<div
-	// 					className={defaultClassNames.inputLabel}
-	// 					style={{ cursor: 'unset' }}>
-	// 					drop to upload
-	// 				</div>
-	// 			)}
-
-	// 			{previews}
-
-	// 			{files.length > 0 && submitButton}
-	// 		</div>
-	// 	)
-	// }
-
-	handleSubmit = (files, allFiles) => {
-		console.log('handleSubmit!')
-		console.log(
-			'files is',
-			files.map(f => f.meta)
-		)
-		allFiles.forEach(f => f.remove())
-	}
-
-	handleChangeStatus = ({ meta, remove }, status, files) => {
-		console.log('handleChangeStatus. files is', files)
-		if (status === 'headers_received') {
-			console.log(`${meta.name} uploaded!`)
-			remove()
-		} else if (status === 'aborted') {
-			console.log(`${meta.name}, upload failed...`)
-		}
-		// this should happen in handleSubmit but it isn't
-		this.setState({ draggedKind: undefined })
-	}
-
-	getUploadParams = ({ file, meta }) => {
-		console.log('getUploadParams, file is ', file, ' and meta is ', meta)
-		return { url: 'https://httpbin.org/post' }
 	}
 
 	emptySquare = () => {

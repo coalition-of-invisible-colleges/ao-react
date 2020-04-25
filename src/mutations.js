@@ -364,7 +364,6 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-seen':
-      console.log('MUTATION fires')
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           if (!task.seen) {
@@ -376,30 +375,22 @@ function tasksMuts(tasks, ev) {
             })
           ) {
             task.seen.push({ memberId: ev.memberId, timestamp: Date.now() })
-            console.log('task seen! : ' + JSON.stringify(task.seen))
           }
         }
       })
       break
     case 'task-time-clocked':
-      console.log('task time clocked MUTATION')
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          console.log('mutest1')
-          console.log('task', task)
-          console.log('task.time' + task.time)
           let found = task.time.find(t => {
-            console.log('mutest2')
             return t.memberId === ev.memberId
           })
-          console.log('mutest3')
           if (!found) {
             task.time.push({
               memberId: ev.memberId,
               timelog: [ev.seconds],
               date: [ev.date]
             })
-            console.log('task.time.timelog' + task.time.timelog)
           } else {
             if (!found.timelog) {
               found.timelog = []
@@ -416,10 +407,7 @@ function tasksMuts(tasks, ev) {
             }
             found.timelog.push(ev.seconds)
             found.date.push(ev.date)
-            console.log(found.timelog)
           }
-
-          console.log('mutations sucess')
         }
       })
       break

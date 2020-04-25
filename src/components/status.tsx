@@ -20,7 +20,6 @@ export class AoStatus extends React.Component<{}, AoStatusState> {
     this.handleButtonRelease = this.handleButtonRelease.bind(this)
     this.bark = this.bark.bind(this)
     // this.emitPing = this.emitPing.bind(this)
-    console.log('status constructed')
   }
 
   componentWillUnmount() {

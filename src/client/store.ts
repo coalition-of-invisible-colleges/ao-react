@@ -134,14 +134,11 @@ class AoStore {
   @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
-      console.log('compare session', session)
       if (this.state.session === session.session) {
-        console.log('success')
-        console.log('members', this.state.members)
+        console.log('found existing session')
         const memberId = session.ownerId
         this.state.members.forEach(m => {
           if (m.memberId === memberId) {
-            console.log('SUCCESS')
             loggedInMember = m
           }
         })
@@ -177,7 +174,7 @@ class AoStore {
       Object.assign(this.state[key], state[key])
     )
     this.state.loggedIn = true
-    console.log('initialized state', this.state)
+    console.log('state initialized:', this.state)
   }
   @action.bound
   applyEvent(ev) {

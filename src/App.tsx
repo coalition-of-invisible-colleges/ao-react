@@ -19,7 +19,6 @@ import { AoStatus } from './components/status'
 import { AoVolume } from './components/volume'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
-  console.log('logged in?', loggedIn)
   return (
     <Route
       path={path}
@@ -45,7 +44,6 @@ const App = observer(() => {
   useEffect(() => {
     document.body.className = 'theme-1'
     api.fetchState().then(() => {
-      console.log('in fetch', aoStore.state.loggedIn)
       setRender(true)
     })
   }, [])
@@ -61,7 +59,7 @@ const App = observer(() => {
   }
   const onLogout = () => {
     api.logout()
-    console.log('state', aoStore.state.loggedIn)
+    console.log('logged out', aoStore.state.loggedIn)
   }
   return (
     <div>
