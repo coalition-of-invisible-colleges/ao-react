@@ -5,10 +5,8 @@ import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-
 import AoPaper from './paper'
 import Markdown from 'markdown-to-jsx'
-import { useDropzone } from 'react-dropzone'
 
 interface MiniCardProps {
 	taskId: string
@@ -28,15 +26,17 @@ const AoMiniCard: React.FunctionComponent<MiniCardProps> = observer(
 					) : (
 						<div className={'seen'} />
 					)}
-					{card.claimed.indexOf(aoStore.member.memberId) >= 0 ? (
-						<img
-							className="miniCheckbox"
-							src="../assets/images/completed.svg"
-						/>
-					) : null}
-					{card.completeValue > 0 ? (
-						<span className="miniValue">{card.completeValue}</span>
-					) : null}
+					<div className="miniCompleted">
+						{card.claimed.indexOf(aoStore.member.memberId) >= 0 ? (
+							<img
+								className="miniCheckbox"
+								src="../assets/images/completed.svg"
+							/>
+						) : null}
+						{card.completeValue > 0 ? (
+							<span className="miniValue">{card.completeValue}</span>
+						) : null}
+					</div>
 				</div>
 				<Markdown options={{ forceBlock: true }}>{card.name}</Markdown>
 			</div>

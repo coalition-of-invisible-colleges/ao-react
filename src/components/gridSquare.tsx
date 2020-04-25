@@ -8,10 +8,10 @@ import { delay, cancelablePromise, noop } from '../utils'
 import AoPaper from './paper'
 import AoMiniCard from './miniCard'
 import Markdown from 'markdown-to-jsx'
-import { useDropzone } from 'react-dropzone'
 
 export interface State {
 	text?: string
+	draggedKind?: string
 }
 
 interface Sel {
@@ -128,26 +128,13 @@ export default class AoGridSquare extends React.Component<
 
 	onHover = async event => {
 		event.preventDefault()
-		console.log(event)
-		console.log('id' + event.target.id)
-		console.log('hovering')
 		const el = document.getElementById(event.target.id)
-		if (el && el.classList.contains('seen')) {
+		if (el && !el.classList.contains('seen')) {
 			let square = event.target.id.split('-')
 			let name = aoStore.hashMap.get(this.props.taskId).name
 			let timer = setTimeout(() => api.markSeen(name), 2000)
 			document.getElementById(event.target.id).onmouseout = () =>
 				clearTimeout(timer)
-			console.log(
-				'seen?: ' +
-					aoStore.hashMap.get(this.props.taskId).seen.hasOwnProperty('memberId')
-			)
-			console.log(
-				'seen2? : ' +
-					aoStore.hashMap.get(this.props.taskId).seen.some(s => {
-						return s.memberId === aoStore.member.memberId
-					})
-			)
 		}
 	}
 
@@ -156,13 +143,42 @@ export default class AoGridSquare extends React.Component<
 		event.dataTransfer.setData('fromY', this.props.y)
 	}
 
+	detectDragKind = dataTransfer => {
+		let filetype = 'file'
+
+		if (dataTransfer.items && dataTransfer.items.length > 0) {
+			dataTransfer.items.forEach(dt => {
+				console.log('dt is ', dt)
+				if (dt.type === 'fromx' || dt.type === 'fromy') {
+					console.log('card swap detected')
+					filetype = 'card'
+				}
+			})
+		}
+
+		return filetype
+	}
+
 	allowDrop = event => {
+		console.log('allowDrop')
 		event.preventDefault()
+		this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
+	}
+
+	hideDrop = event => {
+		this.setState({ draggedKind: undefined })
 	}
 
 	drop = async event => {
+		console.log('drop fire')
+		this.hideDrop(event)
 		event.preventDefault()
-		console.log('drag over fire')
+		if (this.detectDragKind(event.dataTransfer) === 'file') {
+			console.log('file transfer, aborting card swap')
+			// api.uploadFile(event.dataTransfer)
+			return
+		}
+
 		console.log(event.target.id)
 		console.log('parent: ' + event.target.parentNode.id)
 		let toCoords: Sel = { x: this.props.x, y: this.props.y }
@@ -173,6 +189,7 @@ export default class AoGridSquare extends React.Component<
 		console.log('from is', fromCoords)
 		let nameFrom = undefined
 		let nameTo = undefined
+
 		if (fromCoords.x && fromCoords.y) {
 			console.log('aoStore.state is', aoStore.state)
 			if (aoStore.hashMap.get(aoStore.state.grid[fromCoords.y][fromCoords.x])) {
@@ -185,22 +202,89 @@ export default class AoGridSquare extends React.Component<
 		if (aoStore.hashMap.get(this.props.taskId)) {
 			nameTo = aoStore.hashMap.get(this.props.taskId).name
 		}
-
+		console.log(
+			'checkpoint 1. nameFrom is ',
+			nameFrom,
+			' and nameTo is ',
+			nameTo
+		)
 		if (nameFrom && nameTo) {
+			console.log('swap card')
 			api.createAndOrAddCardToGrid(toCoords.x, toCoords.y, nameFrom)
 			api.createAndOrAddCardToGrid(fromCoords.x, fromCoords.y, nameTo)
 		} else if (nameFrom) {
+			console.log('move card')
 			api.createAndOrAddCardToGrid(toCoords.x, toCoords.y, nameFrom)
 			api.delCardFromGrid(fromCoords.x, fromCoords.y)
-		} else if (nameTo) {
-			api.createAndOrAddCardToGrid(fromCoords.x, fromCoords.y, nameTo)
-			api.delCardFromGrid(toCoords.x, toCoords.y)
-		} else if (!nameFrom && !nameTo) {
 		}
+		console.log(
+			'nonsensical drag data. this should be made impossible or detected earlier.'
+		)
+	}
+
+	// NoInputLayout = ({ previews, submitButton, dropzoneProps, files }) => {
+	// 	return (
+	// 		<div
+	// 			{...dropzoneProps}
+	// 			onClick={this.onClick}
+	// 			onDoubleClick={this.onDoubleClick}>
+	// 			{files.length === 0 && this.state.acceptFiles && (
+	// 				<div
+	// 					className={defaultClassNames.inputLabel}
+	// 					style={{ cursor: 'unset' }}>
+	// 					drop to upload
+	// 				</div>
+	// 			)}
+
+	// 			{previews}
+
+	// 			{files.length > 0 && submitButton}
+	// 		</div>
+	// 	)
+	// }
+
+	handleSubmit = (files, allFiles) => {
+		console.log('handleSubmit!')
+		console.log(
+			'files is',
+			files.map(f => f.meta)
+		)
+		allFiles.forEach(f => f.remove())
+	}
+
+	handleChangeStatus = ({ meta, remove }, status, files) => {
+		console.log('handleChangeStatus. files is', files)
+		if (status === 'headers_received') {
+			console.log(`${meta.name} uploaded!`)
+			remove()
+		} else if (status === 'aborted') {
+			console.log(`${meta.name}, upload failed...`)
+		}
+		// this should happen in handleSubmit but it isn't
+		this.setState({ draggedKind: undefined })
+	}
+
+	getUploadParams = ({ file, meta }) => {
+		console.log('getUploadParams, file is ', file, ' and meta is ', meta)
+		return { url: 'https://httpbin.org/post' }
+	}
+
+	emptySquare = () => {
+		return (
+			<div
+				className="square empty"
+				onClick={this.onClick}
+				onDoubleClick={this.onDoubleClick}
+				onDragOver={this.allowDrop}
+				onDragLeave={this.hideDrop}
+				onDrop={this.drop}>
+				{this.state.draggedKind === 'card' ? 'drop to move' : ''}
+				{this.state.draggedKind === 'file' ? 'drop file to upload' : ''}
+			</div>
+		)
 	}
 
 	render() {
-		console.log('render grid square', aoStore.state.grid)
 		if (this.props.selected) {
 			return (
 				<textarea
@@ -218,35 +302,32 @@ export default class AoGridSquare extends React.Component<
 		} else if (this.props.taskId) {
 			return (
 				<div
+					id={this.props.x + '-' + this.props.y}
 					className={'square'}
 					onClick={this.onClick}
 					onDoubleClick={this.onDoubleClick}
 					draggable="true"
 					onDragStart={this.drag}
 					onDragOver={this.allowDrop}
+					onDragLeave={this.hideDrop}
 					onDrop={this.drop}
 					onMouseOver={this.onHover}
 					style={{
 						gridRow: (this.props.y + 1).toString(),
 						gridColumn: (this.props.x + 1).toString()
 					}}>
+					{this.state.draggedKind === 'card' ? (
+						<div className={'overlay'}>
+							<div className={'label'}>drop to swap</div>
+						</div>
+					) : (
+						''
+					)}
 					<AoMiniCard taskId={this.props.taskId} />
 				</div>
 			)
 		} else {
-			return (
-				<div
-					className="square empty"
-					onClick={this.onClick}
-					onDoubleClick={this.onDoubleClick}
-					onDragOver={this.allowDrop}
-					onDrop={this.drop}
-					onMouseOver={this.onHover}
-					style={{
-						gridRow: (this.props.y + 1).toString(),
-						gridColumn: (this.props.x + 1).toString()
-					}}></div>
-			)
+			return this.emptySquare()
 		}
 	}
 }

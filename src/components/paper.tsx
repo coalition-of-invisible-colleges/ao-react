@@ -10,7 +10,6 @@ interface AoPaperParams {
 }
 
 const AoPaper: FunctionComponent<AoPaperParams> = observer(({ taskId }) => {
-  console.log('paper!', taskId, aoStore.hashMap.get(taskId))
   const computed = observable({
     get cardColor() {
       const color = aoStore.hashMap.get(taskId).color

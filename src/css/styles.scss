@@ -82,54 +82,93 @@ textarea {
           }
         }
 
+        &.empty {
+          .dzu-dropzone {
+            width: 100%;
+            height: 100%;
+
+            &:hover .dzu-inputLabel {
+              visibility: visible;
+              margin-top: 50%;
+              transform: translateY(-50%);
+            }
+
+            .dzu-inputLabel {
+              visibility: hidden;
+              font-size: 0.8em;
+            }
+
+            img {
+              max-width: 100%;
+              max-height: 100%;
+            }
+          }
+        }
+
+        .overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          background-color: rgba(0, 0, 0, 0.4);
+          pointer-events: none;
+          color: #ddd;
+
+          .label {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+
         .miniCard {
           pointer-events: none;
 
           .miniCardSummary {
-            pointer-events: none;
-            position: absolute;
-            right: 0;
-            top: 0;
             z-index: 7;
-            background-color: rgba(0, 0, 0, 0.2);
+            height: 100%;
+            width: 100%;
+            pointer-events: none;
 
             .seen {
-              position: absolute;
-              // margin-bottom: 10%;
-              // margin-left: 10%;
-              // margin-top: -60px;
-              // margin-right: -25px;
               z-index: 5;
+              position: absolute;
               content: '';
-              // top: 0;
-              // right: 0;
-              top: 0;
-              left: 0;
-              height: 7px;
-              width: 7px;
+              top: 0.25em;
+              left: 0.25em;
+              height: 0.375em;
+              width: 0.375em;
               border-radius: 50%;
               background-color: rgba(255, 10, 10, 0.85);
             }
 
-            .miniValue {
-              z-index: 7;
-              font-size: 0.75em;
-              padding: 0.25em;
-              pointer-events: none;
-              margin: 0;
-            }
+            .miniCompleted {
+              position: absolute;
+              top: 0;
+              right: 0;
+              background-color: rgba(0, 0, 0, 0.2);
 
-            .miniCheckbox {
-              z-index: 7;
-              position: relative;
-              top: 0.08em;
-              height: 0.75em;
-              width: 0.75em;
-              opacity: 0.5;
-              display: inline;
-              pointer-events: none;
-              margin-left: 0.15em;
-              // transform: translate(28px, -40px);
+              .miniValue {
+                z-index: 7;
+                font-size: 0.75em;
+                padding: 0.25em;
+                pointer-events: none;
+                margin: 0;
+              }
+
+              .miniCheckbox {
+                z-index: 7;
+                position: relative;
+                top: 0.08em;
+                height: 0.75em;
+                width: 0.75em;
+                opacity: 0.5;
+                display: inline;
+                pointer-events: none;
+                margin-left: 0.15em;
+                // transform: translate(28px, -40px);
+              }
             }
 
             .miniCountdown {
@@ -322,12 +361,12 @@ textarea {
   }
 }
 
-@import './themes/dark';
-@import './themes/light';
-@import './themes/green';
-
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
 // Change theme names to the name of their file (without the underscore)
 // Run through the theme array (or have a drop down) to apply specific & names themes
 // Theme generator page/applet allows one to construct a new theme
 // New theme is generated as an scss file in the themes folder, and imported above in styles.scss
+
+@import './themes/dark';
+@import './themes/light';
+@import './themes/green';

@@ -31,7 +31,6 @@ interface GridProps {
 
 const RenderGrid: React.FunctionComponent<GridProps> = observer(
   ({ grid, sel, onSelect, onGoIn }) => {
-    console.log('rerender grid', grid)
     const ret = []
     for (let j = 0; j < grid.size; j++) {
       for (let i = 0; i < grid.size; i++) {
@@ -47,6 +46,7 @@ const RenderGrid: React.FunctionComponent<GridProps> = observer(
             y={j}
             onSelect={onSelect}
             onGoIn={onGoIn}
+            key={i + '-' + j}
           />
         )
       }
@@ -87,7 +87,6 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   }
 
   render() {
-    console.log('render main grid', aoStore.state.grid)
     return (
       <div>
         {!this.state.redirect && (
