@@ -102,11 +102,6 @@ const mutations = {
     flip.volume = flip.volume * 0.33
     flip.play()
   },
-  selectGridMeme(state, coord) {
-    console.log('x,y ', coord)
-    state.grid.selX = coord.x
-    state.grid.selY = coord.y
-  },
   zoom(state) {
     state.zoom = !state.zoom
   },

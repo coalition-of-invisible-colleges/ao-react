@@ -603,7 +603,8 @@ router.post('/events', (req, res, next) => {
     case 'task-colored':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
-        validators.isTaskId(req.body.inId, errRes) &&
+        (validators.isTaskId(req.body.inId, errRes) ||
+          req.body.inId === null) &&
         validators.isColor(req.body.color, errRes)
       ) {
         events.taskColored(
@@ -810,13 +811,10 @@ router.post('/events', (req, res, next) => {
       }
       break
     case 'task-time-clocked':
-      console.log('task-time-clocked SPEC')
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        console.log('SPEC validators fire')
-
         events.taskTimeClocked(
           req.body.taskId,
           req.body.memberId,
@@ -829,12 +827,9 @@ router.post('/events', (req, res, next) => {
       }
       break
     case 'pile-prioritized':
-      console.log('spec runs')
       if (validators.isTaskId(req.body.inId, errRes)) {
-        console.log('spec success')
         events.pilePrioritized(req.body.inId, utils.buildResCallback(res))
       } else {
-        console.log('spec fails')
         res.status(200).send(errRes)
       }
     case 'tasks-received':
@@ -851,7 +846,6 @@ router.post('/events', (req, res, next) => {
       break
     case 'grid-created':
       if (true) {
-        console.log('gridCreated server pre')
         events.gridCreated(
           req.body.name,
           req.body.height,
@@ -859,7 +853,19 @@ router.post('/events', (req, res, next) => {
           req.body.deck,
           utils.buildResCallback(res)
         )
-        console.log('gridCreated server post')
+      } else {
+        res.status(200).send(errRes)
+      }
+      break
+
+    case 'grid-resized':
+      if (req.body.height >= 1 && req.body.width >= 1) {
+        events.gridResized(
+          req.body.gridId,
+          req.body.height,
+          req.body.width,
+          utils.buildResCallback(res)
+        )
       } else {
         res.status(200).send(errRes)
       }
@@ -877,6 +883,7 @@ router.post('/events', (req, res, next) => {
       } else {
         res.status(200).send(errRes)
       }
+
       break
 
     case 'grid-unpin':
@@ -891,13 +898,6 @@ router.post('/events', (req, res, next) => {
         res.status(200).send(errRes)
       }
       break
-
-    // case 'grid-resize':
-    //   if (true) {
-    //   } else {
-    //     res.status(200).send(errRes)
-    //   }
-    //   break
 
     // case 'grid-add':
     //   if (

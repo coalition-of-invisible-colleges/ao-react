@@ -12,6 +12,7 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoGridSquare from './gridSquare'
+import AoGridResizer from './gridResizer'
 
 interface Sel {
   x: number
@@ -35,7 +36,7 @@ interface GridParams {
 // }
 
 @observer
-export class AoGrid extends React.Component<{}, AoGridState> {
+export class RenderGrid extends React.Component<GridParams, AoGridState> {
   constructor(props) {
     super(props)
     this.state = {}
@@ -50,31 +51,37 @@ export class AoGrid extends React.Component<{}, AoGridState> {
   }
 
   goInSquare(selection: Sel) {
+    const grid = aoStore.state.grids.find(g => {
+      return g.gridId === this.props.gridId
+    })
     this.setState({
-      redirect: '/task/' + aoStore.state.grids[selection.y][selection.x]
+      redirect: '/task/' + grid.rows[selection.y][selection.x]
     })
   }
 
   render() {
-    const ret = []
-    const { gridId }: GridParams = useParams()
+    const render = []
     const grid = aoStore.state.grids.find(g => {
-      return g.gridId === gridId
+      return g.gridId === this.props.gridId
     })
     for (let j = 0; j < grid.height; j++) {
       for (let i = 0; i < grid.width; i++) {
         let tId: string
-        if (grid[j] && grid[j][i] && typeof (grid[j][i] === 'string')) {
-          tId = aoStore.hashMap.get(grid[j][i]).taskId
+        if (
+          grid.rows[j] &&
+          grid.rows[j][i] &&
+          typeof (grid.rows[j][i] === 'string')
+        ) {
+          tId = aoStore.hashMap.get(grid.rows[j][i]).taskId
         }
-        ret.push(
+        render.push(
           <AoGridSquare
             selected={
               this.state.selected &&
               this.state.selected.x == i &&
               this.state.selected.y == j
             }
-            gridId={gridId}
+            gridId={this.props.gridId}
             taskId={tId}
             x={i}
             y={j}
@@ -85,31 +92,36 @@ export class AoGrid extends React.Component<{}, AoGridState> {
         )
       }
     }
-    let match = useRouteMatch()
-    return (
-      <Switch>
-        <Route path={`${match.path}/:gridId`}>
-          {!this.state.redirect && (
-            <div id="gridContainer">
-              <h2>Meme Grid</h2>
-              <div
-                className="grid"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'repeat(' + grid.width.toString() + ', 5em)',
-                  gridTemplateRows:
-                    'repeat(' + grid.height.toString() + ', 5em)'
-                }}>
-                {ret}
-              </div>
-            </div>
-          )}
-          {this.state.redirect && <Redirect to={this.state.redirect} />}
-        </Route>
-      </Switch>
+    return !this.state.redirect ? (
+      <div id="gridContainer">
+        <h2>Meme Grid</h2>
+        <div
+          className="grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(' + grid.width.toString() + ', 5em)',
+            gridTemplateRows: 'repeat(' + grid.height.toString() + ', 5em)'
+          }}>
+          {render}
+        </div>
+        <AoGridResizer gridId={this.props.gridId} />
+      </div>
+    ) : (
+      this.state.redirect && <Redirect to={this.state.redirect} />
     )
   }
+}
+
+const AoGrid: React.FunctionComponent<{}> = () => {
+  const { gridId }: GridParams = useParams()
+  const match = useRouteMatch()
+  return (
+    <Switch>
+      <Route path={`${match.path}/:gridId`}>
+        <RenderGrid gridId={'6894c1c0-87f8-11ea-adfb-9bde4bd00109'} />
+      </Route>
+    </Switch>
+  )
 }
 
 export default AoGrid

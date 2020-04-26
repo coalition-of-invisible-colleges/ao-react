@@ -114,10 +114,12 @@ class AoApi {
   async colorCard(taskId: string, color: string): Promise<request.Response> {
     const act = {
       type: 'task-colored',
-      color: 'blue',
-      // inId: null, // add this when we have context, mutation works on server
+      taskId: taskId,
+      color: color,
+      inId: null, // add this when we have context, mutation works on server
       blame: aoStore.member.memberId
     }
+    console.log('colorCard act is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -420,7 +422,7 @@ class AoApi {
   async clockTime(seconds, taskId, date): Promise<request.Response> {
     console.log('commitTime API')
     const act = {
-      type: 'time-commit',
+      type: 'task-time-clocked',
       taskId: taskId,
       memberId: aoStore.member.memberId,
       seconds: seconds,
@@ -478,13 +480,16 @@ class AoApi {
       })
   }
 
-  async delCardFromGrid(x: number, y: number): Promise<request.Response> {
+  async resizeGrid(
+    gridId: string,
+    newHeight: number,
+    newWidth: number
+  ): Promise<request.Response> {
     const act = {
-      type: 'grid-del',
-      coord: {
-        x,
-        y
-      }
+      type: 'grid-resized',
+      gridId: gridId,
+      height: newHeight,
+      width: newWidth
     }
     return request
       .post('/events')
@@ -495,36 +500,25 @@ class AoApi {
       })
   }
 
-  async addCardToGrid(x, y, name): Promise<request.Response> {
-    const task: Task = aoStore.memberByName.get(name)
-    const act = {
-      type: 'grid-add',
-      taskId: task.taskId,
-      coord: {
-        x: x,
-        y: y
-      }
-    }
-    return request
-      .post('/events')
-      .set('Authorization', aoStore.state.token)
-      .send(act)
-      .then(res => {
-        return res
-      })
-  }
-
-  async createAndOrAddCardToGrid(x, y, name): Promise<request.Response> {
+  async createAndOrAddCardToGrid(
+    x: number,
+    y: number,
+    name: string,
+    gridId: string
+  ): Promise<request.Response> {
+    console.log('createAndOrAddCardToGrid')
     const task: Task = aoStore.memberByName.get(name)
     if (_.isObject(task)) {
+      console.log('card already exists')
+
       const act = {
-        type: 'grid-add',
+        type: 'grid-pin',
         taskId: task.taskId,
-        coord: {
-          x: x,
-          y: y
-        }
+        x: x,
+        y: y,
+        gridId: gridId
       }
+      console.log('act is ', act)
       return request
         .post('/events')
         .set('Authorization', aoStore.state.token)
@@ -540,6 +534,7 @@ class AoApi {
         deck: [aoStore.member.memberId],
         inId: aoStore.memberCard.taskId
       }
+      console.log('act is ', act)
       return request
         .post('/events')
         .set('Authorization', aoStore.state.token)
@@ -547,13 +542,13 @@ class AoApi {
         .then(res => {
           const taskId = JSON.parse(res.text).event.taskId
           const gridAct = {
-            type: 'grid-add',
-            taskId,
-            coord: {
-              x: x,
-              y: y
-            }
+            type: 'grid-pin',
+            taskId: taskId,
+            x: x,
+            y: y,
+            gridId: gridId
           }
+          console.log('act is ', act)
           return request
             .post('/events')
             .set('Authorization', aoStore.state.token)
@@ -561,10 +556,56 @@ class AoApi {
         })
     }
   }
+
+  async addCardToGrid(
+    x: number,
+    y: number,
+    name: string,
+    gridId: string
+  ): Promise<request.Response> {
+    const task: Task = aoStore.memberByName.get(name)
+    const act = {
+      type: 'grid-pin',
+      taskId: task.taskId,
+      x: x,
+      y: y,
+      gridId: gridId
+    }
+    console.log('addCardToGrid action is ', act)
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async delCardFromGrid(
+    x: number,
+    y: number,
+    gridId: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'grid-unpin',
+      x,
+      y,
+      gridId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   logout() {
     aoStore.resetState()
     window.localStorage.clear()
   }
+
   startSocketListeners() {
     this.socket.connect()
     this.socket.on('connect', () => {

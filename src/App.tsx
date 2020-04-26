@@ -86,7 +86,7 @@ const App = observer(() => {
                   <Link to="/members">Members</Link>
                 </li>
                 <li>
-                  <Link to="/grids">Grids</Link>
+                  <Link to="/">Grids</Link>
                 </li>
               </ul>
             </nav>
@@ -102,11 +102,6 @@ const App = observer(() => {
                 <Login />
               </Route>
               <ProtectedRoute
-                path="/"
-                component={AoGrids}
-                loggedIn={aoStore.state.loggedIn}
-              />
-              <ProtectedRoute
                 path="/members"
                 component={Members}
                 loggedIn={aoStore.state.loggedIn}
@@ -119,6 +114,11 @@ const App = observer(() => {
               <ProtectedRoute
                 path="/grid"
                 component={AoGrid}
+                loggedIn={aoStore.state.loggedIn}
+              />
+              <ProtectedRoute
+                path="/"
+                component={AoGrids}
                 loggedIn={aoStore.state.loggedIn}
               />
               {/* <Route path="/task/:taskId">

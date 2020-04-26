@@ -5,14 +5,14 @@ const tasks = require('./tasks')
 const resources = require('./resources')
 const sessions = require('./sessions')
 const ao = require('./ao')
-const grid = require('./grid')
+const grids = require('./grids')
 
 module.exports = {
-  cash,
-  members,
-  tasks,
-  resources,
-  sessions,
-  ao,
-  grid
+	cash,
+	members,
+	tasks,
+	resources,
+	sessions,
+	ao,
+	grids
 }

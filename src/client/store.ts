@@ -11,7 +11,10 @@ function setCurrent(state: AoState, b: AoState) {
   modules.ao.mutations.setCurrent(state.ao, b)
   modules.members.mutations.setCurrent(state.members, b)
   modules.resources.mutations.setCurrent(state.resources, b)
-  modules.grid.mutations.setCurrent(state.grids, b)
+  console.log('setCurrent pre')
+  modules.grids.mutations.setCurrent(state.grids, b)
+  console.log('setCurrent post')
+
   state.user = b.user
   state.session = b.session
   state.token = b.token
@@ -21,7 +24,7 @@ function setCurrent(state: AoState, b: AoState) {
 export interface Grid {
   type: 'grid-created'
   gridId: string
-  rows: number[][]
+  rows: {}
   height: number
   width: number
 }
@@ -162,7 +165,7 @@ class AoStore {
     )
     return memberCard
   }
-  @computed get TaskById(): Map<string, Task> {
+  @computed get taskById(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
@@ -183,6 +186,13 @@ class AoStore {
     })
     return hashMap
   }
+  @computed get gridById(): Map<string, Grid> {
+    let hashMap: Map<string, Grid> = new Map()
+    this.state.grids.forEach(t => {
+      hashMap.set(t.gridId, t)
+    })
+    return hashMap
+  }
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -199,7 +209,7 @@ class AoStore {
     M.sessionsMuts(this.state.sessions, ev)
     M.tasksMuts(this.state.tasks, ev)
     M.aoMuts(this.state.ao, ev)
-    M.gridMuts(this.state.grids, ev)
+    M.gridsMuts(this.state.grids, ev)
   }
   @action.bound
   resetState() {

@@ -97,12 +97,13 @@ export default class AoGridSquare extends React.Component<
 	onKeyDown = event => {
 		if (event.key === 'Enter') {
 			if (!this.state.text) {
-				api.delCardFromGrid(this.props.x, this.props.y)
+				api.delCardFromGrid(this.props.x, this.props.y, this.props.gridId)
 			} else {
 				api.createAndOrAddCardToGrid(
 					this.props.x,
 					this.props.y,
-					this.state.text
+					this.state.text,
+					this.props.gridId
 				)
 			}
 			this.onBlur(event)
@@ -171,27 +172,47 @@ export default class AoGridSquare extends React.Component<
 		let nameFrom = undefined
 		let nameTo = undefined
 
+		console.log('this.props.gridId is ', this.props.gridId)
+		console.log('name lookup')
 		if (fromCoords.x && fromCoords.y) {
-			if (
-				aoStore.hashMap.get(
-					aoStore.state.grids[this.props.gridId][fromCoords.y][fromCoords.x]
-				)
-			) {
-				nameFrom = aoStore.hashMap.get(
-					aoStore.state.grids[this.props.gridId][fromCoords.y][fromCoords.x]
-				).name
+			const fromGridId = aoStore.gridById.get(this.props.gridId).rows[
+				fromCoords.y
+			][fromCoords.x]
+			console.log('fromGridId is ', fromGridId)
+
+			const name = aoStore.hashMap.get(fromGridId).name
+			console.log('name is ', name)
+
+			if (name) {
+				nameFrom = name
 			}
 		}
 
 		if (aoStore.hashMap.get(this.props.taskId)) {
 			nameTo = aoStore.hashMap.get(this.props.taskId).name
 		}
+
 		if (nameFrom && nameTo) {
-			api.createAndOrAddCardToGrid(toCoords.x, toCoords.y, nameFrom)
-			api.createAndOrAddCardToGrid(fromCoords.x, fromCoords.y, nameTo)
+			api.createAndOrAddCardToGrid(
+				toCoords.x,
+				toCoords.y,
+				nameFrom,
+				this.props.gridId
+			)
+			api.createAndOrAddCardToGrid(
+				fromCoords.x,
+				fromCoords.y,
+				nameTo,
+				this.props.gridId
+			)
 		} else if (nameFrom) {
-			api.createAndOrAddCardToGrid(toCoords.x, toCoords.y, nameFrom)
-			api.delCardFromGrid(fromCoords.x, fromCoords.y)
+			api.createAndOrAddCardToGrid(
+				toCoords.x,
+				toCoords.y,
+				nameFrom,
+				this.props.gridId
+			)
+			api.delCardFromGrid(fromCoords.x, fromCoords.y, this.props.gridId)
 		}
 		console.log(
 			'nonsensical drag data. this should be impossible or detected earlier.'

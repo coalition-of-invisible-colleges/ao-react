@@ -64,6 +64,7 @@ const actions = {
     attachSocket(commit, dispatch)
   },
   loadCurrent({ commit, state, dispatch }) {
+    console.log('loadCurrent pre')
     if (state.connected !== 'connected') {
       socket.connect()
     }
@@ -80,6 +81,8 @@ const actions = {
           })
         }
       })
+    console.log('loadCurrent 2')
+
     request
       .post('/state')
       .set('Authorization', state.token)
@@ -94,6 +97,7 @@ const actions = {
           })
         }
       })
+    console.log('loadCurrent post')
   },
   makeEvent({ commit, state, getters, dispatch }, newEv) {
     let startTs = Date.now()

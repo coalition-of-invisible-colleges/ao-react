@@ -591,7 +591,11 @@ function taskSeen(taskId, memberId, callback) {
 function gridCreated(name, height, width, deck, callback) {
   let gridId = uuidV1()
   let newEvent = { type: 'grid-created', gridId, name, height, width, deck }
-  console.log('gridCreated event')
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
+function gridResized(gridId, height, width, callback) {
+  let newEvent = { type: 'grid-resized', gridId, height, width }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
@@ -660,8 +664,9 @@ module.exports = {
   taskBoostedLightning,
   tasksReceived,
   gridCreated,
-  gridUnpin,
+  gridResized,
   gridPin,
+  gridUnpin,
   taskSeen,
   taskTimeClocked
 }
