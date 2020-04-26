@@ -849,27 +849,77 @@ router.post('/events', (req, res, next) => {
         res.status(200).send(errRes)
       }
       break
-    case 'grid-add':
-      if (
-        (validators.isCoord(req.body.coord, errRes),
-        validators.isTaskId(req.body.taskId))
-      ) {
-        events.gridAdd(
-          req.body.coord,
+    case 'grid-created':
+      if (true) {
+        console.log('gridCreated server pre')
+        events.gridCreated(
+          req.body.name,
+          req.body.height,
+          req.body.width,
+          req.body.deck,
+          utils.buildResCallback(res)
+        )
+        console.log('gridCreated server post')
+      } else {
+        res.status(200).send(errRes)
+      }
+      break
+
+    case 'grid-pin':
+      if (true) {
+        events.gridPin(
+          req.body.gridId,
           req.body.taskId,
+          req.body.x,
+          req.body.y,
           utils.buildResCallback(res)
         )
       } else {
         res.status(200).send(errRes)
       }
       break
-    case 'grid-del':
-      if (validators.isCoord(req.body.coord, errRes)) {
-        events.gridDel(req.body.coord, utils.buildResCallback(res))
+
+    case 'grid-unpin':
+      if (true) {
+        events.gridUnpin(
+          req.body.gridId,
+          req.body.x,
+          req.body.y,
+          utils.buildResCallback(res)
+        )
       } else {
         res.status(200).send(errRes)
       }
       break
+
+    // case 'grid-resize':
+    //   if (true) {
+    //   } else {
+    //     res.status(200).send(errRes)
+    //   }
+    //   break
+
+    // case 'grid-add':
+    //   if (
+    //     (validators.isCoord(req.body.coord, errRes),
+    //     validators.isTaskId(req.body.taskId))
+    //   ) {
+    //     events.gridAdd(
+    //       req.body.coord,
+    //       req.body.taskId,
+    //       utils.buildResCallback(res)
+    //     )
+    //   } else {
+    //     res.status(200).send(errRes)
+    //   }
+    //   break
+    // case 'grid-del':
+    //   if (validators.isCoord(req.body.coord, errRes)) {
+    //     events.gridDel(req.body.coord, utils.buildResCallback(res))
+    //   } else {
+    //     res.status(200).send(errRes)
+    //   }
+    //   break
     default:
       next()
   }

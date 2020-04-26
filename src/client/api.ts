@@ -111,18 +111,13 @@ class AoApi {
       })
   }
 
-  async colorCard(
-    taskId: string,
-    // inId: string,
-    color: string
-  ): Promise<request.Response> {
+  async colorCard(taskId: string, color: string): Promise<request.Response> {
     const act = {
       type: 'task-colored',
-      taskId: taskId,
-      inId: taskId, // maybe remove dis, or get it properly
-      color: color
+      color: 'blue',
+      // inId: null, // add this when we have context, mutation works on server
+      blame: aoStore.member.memberId
     }
-    console.log('action is: ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -425,7 +420,7 @@ class AoApi {
   async clockTime(seconds, taskId, date): Promise<request.Response> {
     console.log('commitTime API')
     const act = {
-      type: 'task-time-clocked',
+      type: 'time-commit',
       taskId: taskId,
       memberId: aoStore.member.memberId,
       seconds: seconds,
@@ -451,6 +446,29 @@ class AoApi {
       memberId: aoStore.member.memberId
     }
     console.log('API 2')
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async createGrid(
+    name: string,
+    height: number,
+    width: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'grid-created',
+      name: name,
+      height: height,
+      width: width,
+      color: 'blue',
+      deck: [aoStore.member.memberId]
+    }
+    console.log('createGrid action is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)

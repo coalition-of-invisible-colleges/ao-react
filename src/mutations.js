@@ -670,7 +670,7 @@ function tasksMuts(tasks, ev) {
         if (task.taskId === ev.taskId) {
           task.color = ev.color
         }
-        if (task.taskId === ev.inId) {
+        if (ev.inId && task.taskId === ev.inId) {
           task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
           task.subTasks.push(ev.taskId)
         }
@@ -878,20 +878,100 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'grid-created':
+      console.log('grid-created task mutation')
+      tasks.push(calculations.blankCard(ev.gridId, ev.name, 'blue', ev.deck))
+      break
+    case 'grid-pin':
+      for (let i = 0; i < grids.length; i++) {
+        if (tasks[i].taskId == ev.gridId) {
+          const task = tasks[i]
+          for (
+            let j = 0;
+            j <
+            Math.max(
+              task.subTasks.length,
+              task.completed.length,
+              task.priorities.length
+            );
+            j++
+          ) {
+            if (task.subTasks[j] && task.subTasks[j].taskId == ev.taskId) {
+              break
+            }
+            if (task.priorities[j] && task.priorities[j].taskId == ev.taskId) {
+              break
+            }
+            if (task.completed[j] && task.completed[j].taskId == ev.taskId) {
+              break
+            }
+            task.subTasks.push(ev.taskId)
+            break
+          }
+          break
+        }
+      }
+      break
   }
 }
 
-function gridMuts(grid, ev) {
+function gridMuts(grids, ev) {
   switch (ev.type) {
-    case 'grid-add':
-      if (!grid.hasOwnProperty(ev.coord.y)) {
-        grid[ev.coord.y] = {}
+    case 'grid-created':
+      console.log('grid-created grid mutation')
+      grids.push({
+        gridId: ev.gridId,
+        rows: [],
+        height: ev.height,
+        width: ev.width
+      })
+      break
+    case 'grid-pin':
+      for (let i = 0; i < grids.length; i++) {
+        if (grids[i].gridId == ev.gridId) {
+          if (!_.has(grids[i].rows, ev.y)) {
+            grids[i].rows[ev.y] = []
+          }
+          grids[i].rows[ev.y][ev.x] = taskId
+        }
       }
-      grid[ev.coord.y][ev.coord.x] = ev.taskId
       break
-    case 'grid-del':
-      delete grid[ev.coord.y][ev.coord.x]
+    case 'grid-unpin':
+      const { gridId, x, y } = ev
+      for (let i = 0; i < grids.length; i++) {
+        if (grids[i].gridId == gridId) {
+          delete grids.rows[i][y][x]
+          if (grids.rows[i].length == 0) {
+            delete grids.rows[i]
+          }
+          break
+        }
+      }
       break
+
+    // case 'grid-resize':
+    //   const { gridId, amount, side }
+    //   for(let c = 0; c < grids.length; c++) {
+    //     if(grids[c].gridId == gridId) {
+    //       switch (side) {
+    //         case 'right':
+    //           if(amount > 0) {
+    //             grid.length += amount
+    //           } else {
+    //             for(let i = grid.length - amount - 1; i < grid.length; i++) {
+
+    //             }
+    //           }
+    //           break
+    //         case 'left':
+    //           break
+    //         case 'bottom':
+    //           break
+    //         case 'top':
+    //           break
+    //     }
+    //   }
+    // }
   }
 }
 
@@ -902,7 +982,7 @@ function applyEvent(state, ev) {
   sessionsMuts(state.sessions, ev)
   tasksMuts(state.tasks, ev)
   aoMuts(state.ao, ev)
-  gridMuts(state.grid, ev)
+  gridMuts(state.grids, ev)
 }
 
 module.exports = {

@@ -7,16 +7,15 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import Muted from '../assets/images/muted.svg'
 import Unmuted from '../assets/images/unmuted.svg'
+
 @observer
-export class AoVolume extends React.Component<{}> {
+export default class AoVolume extends React.Component<{}> {
   constructor(props) {
     super(props)
     this.toggleMute = this.toggleMute.bind(this)
   }
 
   componentWillUnmount() {
-    // cancel all pending promises to avoid
-    // side effects when the component is unmounted
     this.clearPendingPromises()
   }
 

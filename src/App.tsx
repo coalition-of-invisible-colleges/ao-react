@@ -8,15 +8,16 @@ import {
   Link,
   Redirect
 } from 'react-router-dom'
-import { AoGrid } from './components/grid'
+import AoGrids from './components/Grids'
+import AoGrid from './components/grid'
 import Card from './components/card'
 import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
 import Members from './components/Members'
-import { AoStatus } from './components/status'
-import { AoVolume } from './components/volume'
+import AoStatus from './components/status'
+import AoVolume from './components/volume'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   return (
@@ -84,6 +85,9 @@ const App = observer(() => {
                 <li>
                   <Link to="/members">Members</Link>
                 </li>
+                <li>
+                  <Link to="/grids">Grids</Link>
+                </li>
               </ul>
             </nav>
             <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
@@ -98,6 +102,11 @@ const App = observer(() => {
                 <Login />
               </Route>
               <ProtectedRoute
+                path="/"
+                component={AoGrids}
+                loggedIn={aoStore.state.loggedIn}
+              />
+              <ProtectedRoute
                 path="/members"
                 component={Members}
                 loggedIn={aoStore.state.loggedIn}
@@ -108,7 +117,7 @@ const App = observer(() => {
                 loggedIn={aoStore.state.loggedIn}
               />
               <ProtectedRoute
-                path="/"
+                path="/grid"
                 component={AoGrid}
                 loggedIn={aoStore.state.loggedIn}
               />

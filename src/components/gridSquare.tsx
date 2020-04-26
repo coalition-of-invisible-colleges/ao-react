@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
 import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
@@ -20,6 +19,7 @@ interface Sel {
 }
 
 interface GridSquareProps {
+	gridId: string
 	selected: boolean
 	taskId?: string
 	x: number
@@ -172,9 +172,13 @@ export default class AoGridSquare extends React.Component<
 		let nameTo = undefined
 
 		if (fromCoords.x && fromCoords.y) {
-			if (aoStore.hashMap.get(aoStore.state.grid[fromCoords.y][fromCoords.x])) {
+			if (
+				aoStore.hashMap.get(
+					aoStore.state.grids[this.props.gridId][fromCoords.y][fromCoords.x]
+				)
+			) {
 				nameFrom = aoStore.hashMap.get(
-					aoStore.state.grid[fromCoords.y][fromCoords.x]
+					aoStore.state.grids[this.props.gridId][fromCoords.y][fromCoords.x]
 				).name
 			}
 		}

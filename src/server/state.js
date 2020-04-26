@@ -10,7 +10,7 @@ const serverState = {
   members: [],
   tasks: [],
   resources: [],
-  grid: {},
+  grids: [],
   cash: {
     address: config.tor.hostname,
     alias: 'dctrl',
@@ -32,7 +32,7 @@ const pubState = {
   members: [],
   tasks: [],
   resources: [],
-  grid: {},
+  grids: [],
   cash: {
     address: config.tor.hostname,
     alias: '',
@@ -75,7 +75,7 @@ function applyEvent(state, ev) {
   M.sessionsMuts(state.sessions, ev)
   M.tasksMuts(state.tasks, ev)
   M.aoMuts(state.ao, ev)
-  M.gridMuts(state.grid, ev)
+  M.gridMuts(state.grids, ev)
 }
 
 function initialize(callback) {

@@ -588,20 +588,20 @@ function taskSeen(taskId, memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridAdd(coord, taskId, callback) {
-  let newEvent = {
-    type: 'grid-add',
-    coord,
-    taskId
-  }
+function gridCreated(name, height, width, deck, callback) {
+  let gridId = uuidV1()
+  let newEvent = { type: 'grid-created', gridId, name, height, width, deck }
+  console.log('gridCreated event')
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridDel(coord, callback) {
-  let newEvent = {
-    type: 'grid-del',
-    coord
-  }
+function gridPin(gridId, taskId, x, y, callback) {
+  let newEvent = { type: 'grid-pin', gridId, taskId, x, y }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
+function gridUnpin(gridId, x, y, callback) {
+  let newEvent = { type: 'grid-unpin', gridId, x, y }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
@@ -659,8 +659,9 @@ module.exports = {
   invoiceCreated,
   taskBoostedLightning,
   tasksReceived,
-  gridAdd,
-  gridDel,
+  gridCreated,
+  gridUnpin,
+  gridPin,
   taskSeen,
   taskTimeClocked
 }
