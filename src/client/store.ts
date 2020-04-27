@@ -11,9 +11,6 @@ function setCurrent(state: AoState, b: AoState) {
   modules.ao.mutations.setCurrent(state.ao, b)
   modules.members.mutations.setCurrent(state.members, b)
   modules.resources.mutations.setCurrent(state.resources, b)
-  console.log('setCurrent pre')
-  modules.grids.mutations.setCurrent(state.grids, b)
-  console.log('setCurrent post')
 
   state.user = b.user
   state.session = b.session
@@ -22,8 +19,6 @@ function setCurrent(state: AoState, b: AoState) {
 }
 
 export interface Grid {
-  type: 'grid-created'
-  gridId: string
   rows: {}
   height: number
   width: number
@@ -56,9 +51,9 @@ export interface Task {
     endTs: Date
   }
   boost: number
-  priorities: number[]
-  subTasks: number[]
-  completed: number[]
+  priorities: string[]
+  subTasks: string[]
+  completed: string[]
   claimed: string[]
   passed: number[]
   guild: false
@@ -69,6 +64,7 @@ export interface Task {
   seen: Userseen[]
   time: Usertime[]
   timestamp: number
+  grid?: Grid
 }
 
 interface Usertime {
@@ -99,7 +95,6 @@ export interface AoState {
   members: Member[]
   tasks: Task[]
   resources: []
-  grids: Grid[]
   cash: {
     address: string
     alias: string
@@ -124,7 +119,6 @@ const defaultState: AoState = {
   members: [],
   tasks: [],
   resources: [],
-  grids: [],
   cash: {
     address: '',
     alias: '',
@@ -165,13 +159,6 @@ class AoStore {
     )
     return memberCard
   }
-  @computed get taskById(): Map<string, Task> {
-    let hashMap: Map<string, Task> = new Map()
-    this.state.tasks.forEach(t => {
-      hashMap.set(t.taskId, t)
-    })
-    return hashMap
-  }
   @computed get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
@@ -183,13 +170,6 @@ class AoStore {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.name, t)
-    })
-    return hashMap
-  }
-  @computed get gridById(): Map<string, Grid> {
-    let hashMap: Map<string, Grid> = new Map()
-    this.state.grids.forEach(t => {
-      hashMap.set(t.gridId, t)
     })
     return hashMap
   }
@@ -209,7 +189,6 @@ class AoStore {
     M.sessionsMuts(this.state.sessions, ev)
     M.tasksMuts(this.state.tasks, ev)
     M.aoMuts(this.state.ao, ev)
-    M.gridsMuts(this.state.grids, ev)
   }
   @action.bound
   resetState() {

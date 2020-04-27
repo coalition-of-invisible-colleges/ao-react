@@ -5,7 +5,6 @@ const tasks = require('./tasks')
 const resources = require('./resources')
 const sessions = require('./sessions')
 const ao = require('./ao')
-const grids = require('./grids')
 
 module.exports = {
 	cash,
@@ -13,6 +12,5 @@ module.exports = {
 	tasks,
 	resources,
 	sessions,
-	ao,
-	grids
+	ao
 }

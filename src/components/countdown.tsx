@@ -99,7 +99,6 @@ export default class AoCountdown extends React.Component<
   }
 
   render() {
-    console.log('render main grid')
     if (this.state.editing) {
       return (
         <div className="countdown">

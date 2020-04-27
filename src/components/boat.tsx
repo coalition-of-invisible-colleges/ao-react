@@ -173,7 +173,7 @@
 //   onKeyDown(event) {
 //     if (event.key === 'Enter') {
 //       console.log('enter')
-//       api.createAndOrAddCardToGrid(
+//       api.pinCardToGrid(
 //         this.state.sel.x,
 //         this.state.sel.y,
 //         this.state.text

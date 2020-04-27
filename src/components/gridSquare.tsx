@@ -19,9 +19,9 @@ interface Sel {
 }
 
 interface GridSquareProps {
-	gridId: string
-	selected: boolean
+	inId: string
 	taskId?: string
+	selected: boolean
 	x: number
 	y: number
 	onSelect: (selection: { x: number; y: number }) => void
@@ -97,13 +97,13 @@ export default class AoGridSquare extends React.Component<
 	onKeyDown = event => {
 		if (event.key === 'Enter') {
 			if (!this.state.text) {
-				api.delCardFromGrid(this.props.x, this.props.y, this.props.gridId)
+				api.unpinCardFromGrid(this.props.x, this.props.y, this.props.inId)
 			} else {
-				api.createAndOrAddCardToGrid(
+				api.pinCardToGrid(
 					this.props.x,
 					this.props.y,
 					this.state.text,
-					this.props.gridId
+					this.props.inId
 				)
 			}
 			this.onBlur(event)
@@ -172,15 +172,15 @@ export default class AoGridSquare extends React.Component<
 		let nameFrom = undefined
 		let nameTo = undefined
 
-		console.log('this.props.gridId is ', this.props.gridId)
+		console.log('this.props.inId is ', this.props.inId)
 		console.log('name lookup')
 		if (fromCoords.x && fromCoords.y) {
-			const fromGridId = aoStore.gridById.get(this.props.gridId).rows[
+			const fromTaskId = aoStore.hashMap.get(this.props.inId).grid.rows[
 				fromCoords.y
 			][fromCoords.x]
-			console.log('fromGridId is ', fromGridId)
+			console.log('fromInId is ', fromTaskId)
 
-			const name = aoStore.hashMap.get(fromGridId).name
+			const name = aoStore.hashMap.get(fromTaskId).name
 			console.log('name is ', name)
 
 			if (name) {
@@ -193,26 +193,11 @@ export default class AoGridSquare extends React.Component<
 		}
 
 		if (nameFrom && nameTo) {
-			api.createAndOrAddCardToGrid(
-				toCoords.x,
-				toCoords.y,
-				nameFrom,
-				this.props.gridId
-			)
-			api.createAndOrAddCardToGrid(
-				fromCoords.x,
-				fromCoords.y,
-				nameTo,
-				this.props.gridId
-			)
+			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+			api.pinCardToGrid(fromCoords.x, fromCoords.y, nameTo, this.props.inId)
 		} else if (nameFrom) {
-			api.createAndOrAddCardToGrid(
-				toCoords.x,
-				toCoords.y,
-				nameFrom,
-				this.props.gridId
-			)
-			api.delCardFromGrid(fromCoords.x, fromCoords.y, this.props.gridId)
+			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
 		}
 		console.log(
 			'nonsensical drag data. this should be impossible or detected earlier.'
@@ -224,7 +209,6 @@ export default class AoGridSquare extends React.Component<
 			<div
 				className="square empty"
 				onClick={this.onClick}
-				onDoubleClick={this.onDoubleClick}
 				onDragOver={this.allowDrop}
 				onDragLeave={this.hideDrop}
 				onDrop={this.drop}>

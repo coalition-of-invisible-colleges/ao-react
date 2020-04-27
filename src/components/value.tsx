@@ -73,7 +73,6 @@ export default class AoValue extends React.Component<ValueParams, State> {
   }
 
   render() {
-    console.log('render main grid')
     if (this.state.editing) {
       return (
         <div className="value">

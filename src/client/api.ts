@@ -3,7 +3,7 @@ import uuidV1 from 'uuid/v1'
 import cryptoUtils from '../crypto'
 import _ from 'lodash'
 import configuration from '../../client-configuration'
-import aoStore, { Task } from './store'
+import aoStore, { Task, Grid } from './store'
 import io from 'socket.io-client'
 import { composeP } from 'ramda'
 
@@ -44,6 +44,7 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
+          console.log('initialState', res.body)
           aoStore.initializeState(res.body)
           return true
         })
@@ -457,7 +458,27 @@ class AoApi {
       })
   }
 
-  async createGrid(
+  async resizeGrid(
+    taskId: string,
+    newHeight: number,
+    newWidth: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'grid-resized',
+      taskId: taskId,
+      height: newHeight,
+      width: newWidth
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async createCardWithGrid(
     name: string,
     height: number,
     width: number
@@ -480,16 +501,16 @@ class AoApi {
       })
   }
 
-  async resizeGrid(
-    gridId: string,
-    newHeight: number,
-    newWidth: number
+  async addGridToCard(
+    taskId: string,
+    height: number,
+    width: number
   ): Promise<request.Response> {
     const act = {
-      type: 'grid-resized',
-      gridId: gridId,
-      height: newHeight,
-      width: newWidth
+      type: 'grid-added',
+      taskId: taskId,
+      height: height,
+      width: width
     }
     return request
       .post('/events')
@@ -500,13 +521,13 @@ class AoApi {
       })
   }
 
-  async createAndOrAddCardToGrid(
+  async pinCardToGrid(
     x: number,
     y: number,
     name: string,
-    gridId: string
+    inId: string
   ): Promise<request.Response> {
-    console.log('createAndOrAddCardToGrid')
+    console.log('pinCardToGrid')
     const task: Task = aoStore.memberByName.get(name)
     if (_.isObject(task)) {
       console.log('card already exists')
@@ -516,7 +537,7 @@ class AoApi {
         taskId: task.taskId,
         x: x,
         y: y,
-        gridId: gridId
+        inId: inId
       }
       console.log('act is ', act)
       return request
@@ -546,7 +567,7 @@ class AoApi {
             taskId: taskId,
             x: x,
             y: y,
-            gridId: gridId
+            inId: inId
           }
           console.log('act is ', act)
           return request
@@ -557,40 +578,16 @@ class AoApi {
     }
   }
 
-  async addCardToGrid(
+  async unpinCardFromGrid(
     x: number,
     y: number,
-    name: string,
-    gridId: string
-  ): Promise<request.Response> {
-    const task: Task = aoStore.memberByName.get(name)
-    const act = {
-      type: 'grid-pin',
-      taskId: task.taskId,
-      x: x,
-      y: y,
-      gridId: gridId
-    }
-    console.log('addCardToGrid action is ', act)
-    return request
-      .post('/events')
-      .set('Authorization', aoStore.state.token)
-      .send(act)
-      .then(res => {
-        return res
-      })
-  }
-
-  async delCardFromGrid(
-    x: number,
-    y: number,
-    gridId: string
+    inId: string
   ): Promise<request.Response> {
     const act = {
       type: 'grid-unpin',
       x,
       y,
-      gridId
+      inId
     }
     return request
       .post('/events')

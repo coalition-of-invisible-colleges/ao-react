@@ -24,24 +24,27 @@ interface AoGridState {
   selected?: Sel
 }
 
-interface GridParams {
-  gridId: string
+export const defaultState: AoGridState = {
+  redirect: undefined
 }
 
-// interface GridProps {
-//   grid: Grid
-//   sel?: Sel
-//   onSelect: (selection: { x: number; y: number }) => void
-//   onGoIn: (selection: { x: number; y: number }) => void
-// }
+interface GridProps {
+  taskId: string
+}
 
 @observer
-export class RenderGrid extends React.Component<GridParams, AoGridState> {
+export default class AoGrid extends React.Component<GridProps, AoGridState> {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = defaultState
+    this.addGrid = this.addGrid.bind(this)
     this.selectGridSquare = this.selectGridSquare.bind(this)
     this.goInSquare = this.goInSquare.bind(this)
+  }
+
+  addGrid() {
+    console.log('addGrid()')
+    api.addGridToCard(this.props.taskId, 3, 3)
   }
 
   selectGridSquare(selection: Sel) {
@@ -51,28 +54,59 @@ export class RenderGrid extends React.Component<GridParams, AoGridState> {
   }
 
   goInSquare(selection: Sel) {
-    const grid = aoStore.state.grids.find(g => {
-      return g.gridId === this.props.gridId
-    })
     this.setState({
-      redirect: '/task/' + grid.rows[selection.y][selection.x]
+      redirect:
+        '/task/' +
+        aoStore.hashMap.get(this.props.taskId).grid.rows[selection.y][
+          selection.x
+        ]
     })
   }
 
   render() {
     const render = []
-    const grid = aoStore.state.grids.find(g => {
-      return g.gridId === this.props.gridId
-    })
+    const task = aoStore.hashMap.get(this.props.taskId)
+    console.log('task is ', task)
+    const grid = task.hasOwnProperty('grid') ? task.grid : false
+    console.log('task.grid is ', grid)
+
+    if (this.state.redirect !== undefined) {
+      console.log('redirecting')
+      this.setState({ redirect: undefined })
+      return <Redirect to={this.state.redirect} />
+    }
+    console.log('about to check')
+    if (
+      !grid ||
+      (grid.hasOwnProperty('height') && grid.height < 1) ||
+      (grid.hasOwnProperty('width') && grid.width < 1) ||
+      !grid.hasOwnProperty('height') ||
+      !grid.hasOwnProperty('width')
+    ) {
+      console.log('displaying text')
+      return (
+        <div className={'gridContainer'}>
+          <p onClick={this.addGrid} className={'action'}>
+            +grid
+          </p>
+        </div>
+      )
+    }
+    console.log('failed to display text')
+
     for (let j = 0; j < grid.height; j++) {
       for (let i = 0; i < grid.width; i++) {
+        console.log('loop j is ', j, ' and i is ', i)
         let tId: string
+        // console.log('cell is ', grid.rows[j][i])
         if (
           grid.rows[j] &&
           grid.rows[j][i] &&
           typeof (grid.rows[j][i] === 'string')
         ) {
           tId = aoStore.hashMap.get(grid.rows[j][i]).taskId
+          // console.log('\n\ntId is', tId)
+          // console.log('raw square is ', aoStore.hashMap.get(grid.rows[j][i]))
         }
         render.push(
           <AoGridSquare
@@ -81,7 +115,7 @@ export class RenderGrid extends React.Component<GridParams, AoGridState> {
               this.state.selected.x == i &&
               this.state.selected.y == j
             }
-            gridId={this.props.gridId}
+            inId={this.props.taskId}
             taskId={tId}
             x={i}
             y={j}
@@ -92,11 +126,11 @@ export class RenderGrid extends React.Component<GridParams, AoGridState> {
         )
       }
     }
-    return !this.state.redirect ? (
-      <div id="gridContainer">
-        <h2>Meme Grid</h2>
+    console.log('returning')
+    return (
+      <div className={'gridContainer'}>
         <div
-          className="grid"
+          className={'grid'}
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(' + grid.width.toString() + ', 5em)',
@@ -104,24 +138,8 @@ export class RenderGrid extends React.Component<GridParams, AoGridState> {
           }}>
           {render}
         </div>
-        <AoGridResizer gridId={this.props.gridId} />
+        <AoGridResizer taskId={this.props.taskId} />
       </div>
-    ) : (
-      this.state.redirect && <Redirect to={this.state.redirect} />
     )
   }
 }
-
-const AoGrid: React.FunctionComponent<{}> = () => {
-  const { gridId }: GridParams = useParams()
-  const match = useRouteMatch()
-  return (
-    <Switch>
-      <Route path={`${match.path}/:gridId`}>
-        <RenderGrid gridId={'6894c1c0-87f8-11ea-adfb-9bde4bd00109'} />
-      </Route>
-    </Switch>
-  )
-}
-
-export default AoGrid

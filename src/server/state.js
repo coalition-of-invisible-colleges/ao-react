@@ -10,7 +10,6 @@ const serverState = {
   members: [],
   tasks: [],
   resources: [],
-  grids: [],
   cash: {
     address: config.tor.hostname,
     alias: 'dctrl',
@@ -32,7 +31,6 @@ const pubState = {
   members: [],
   tasks: [],
   resources: [],
-  grids: [],
   cash: {
     address: config.tor.hostname,
     alias: '',
@@ -55,9 +53,6 @@ function setCurrent(state, b) {
   modules.ao.mutations.setCurrent(state.ao, b)
   modules.members.mutations.setCurrent(state.members, b)
   modules.resources.mutations.setCurrent(state.resources, b)
-  console.log('setCurrent pre')
-  modules.grids.mutations.setCurrent(state.grids, b)
-  console.log('setCurrent post')
 }
 
 function applyBackup(b) {
@@ -77,7 +72,6 @@ function applyEvent(state, ev) {
   M.sessionsMuts(state.sessions, ev)
   M.tasksMuts(state.tasks, ev)
   M.aoMuts(state.ao, ev)
-  M.gridsMuts(state.grids, ev)
 }
 
 function initialize(callback) {

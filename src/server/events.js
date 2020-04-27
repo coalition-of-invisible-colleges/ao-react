@@ -588,24 +588,51 @@ function taskSeen(taskId, memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridCreated(name, height, width, deck, callback) {
-  let gridId = uuidV1()
-  let newEvent = { type: 'grid-created', gridId, name, height, width, deck }
+function gridCreated(name, height, width, color, deck, callback) {
+  console.log('grid-created event pre')
+
+  let taskId = uuidV1()
+  let newEvent = {
+    type: 'grid-created',
+    taskId,
+    name,
+    height,
+    width,
+    color,
+    deck
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+  console.log('grid-created event post')
+}
+
+function gridAdded(taskId, height, width, callback) {
+  console.log('grid-added event pre')
+
+  let newEvent = {
+    type: 'grid-added',
+    taskId,
+    height,
+    width
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+  console.log('grid-added event post')
+}
+
+function gridResized(taskId, height, width, callback) {
+  let newEvent = { type: 'grid-resized', taskId, height, width }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridResized(gridId, height, width, callback) {
-  let newEvent = { type: 'grid-resized', gridId, height, width }
+function gridPin(inId, taskId, x, y, callback) {
+  console.log('grid-pin event pre')
+
+  let newEvent = { type: 'grid-pin', inId, taskId, x, y }
   dctrlDb.insertEvent(newEvent, callback)
+  console.log('grid-pin event pre')
 }
 
-function gridPin(gridId, taskId, x, y, callback) {
-  let newEvent = { type: 'grid-pin', gridId, taskId, x, y }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function gridUnpin(gridId, x, y, callback) {
-  let newEvent = { type: 'grid-unpin', gridId, x, y }
+function gridUnpin(inId, x, y, callback) {
+  let newEvent = { type: 'grid-unpin', inId, x, y }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
@@ -664,6 +691,7 @@ module.exports = {
   taskBoostedLightning,
   tasksReceived,
   gridCreated,
+  gridAdded,
   gridResized,
   gridPin,
   gridUnpin,

@@ -13,6 +13,8 @@ import AoCheckbox from './checkbox'
 import AoValue from './value'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
+import AoGrid from './grid'
+// import AoStack from './stack'
 
 interface CardParams {
   taskId: string
@@ -32,6 +34,7 @@ const CardDetails = () => {
           <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
         </div>
         <AoCountdown taskId={taskId} />
+        <AoGrid taskId={taskId} />
         <AoCoin taskId={taskId} />
         <AoTimeClock taskId={taskId} />
       </div>
@@ -39,7 +42,7 @@ const CardDetails = () => {
   )
 }
 
-const Card: React.FunctionComponent<{}> = () => {
+const AoCard: React.FunctionComponent<{}> = () => {
   const match = useRouteMatch()
   return (
     <Switch>
@@ -50,4 +53,4 @@ const Card: React.FunctionComponent<{}> = () => {
   )
 }
 
-export default Card
+export default AoCard

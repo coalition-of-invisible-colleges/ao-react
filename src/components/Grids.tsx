@@ -7,7 +7,7 @@ import api from '../client/api'
 
 interface State {
   redirect?: string
-  newGrid?: string
+  newGridName?: string
 }
 
 @observer
@@ -15,38 +15,52 @@ export class ListGrids extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = {}
+    this.onClick = this.onClick.bind(this)
+    this.onChange = this.onChange.bind(this)
     this.goInGrid = this.goInGrid.bind(this)
   }
 
-  goInGrid(gridId: string) {
+  onClick(event) {
+    api.createCardWithGrid(this.state.newGridName, 3, 3)
+  }
+
+  onChange(event) {
+    this.setState({ newGridName: event.target.value })
+  }
+
+  goInGrid(taskId: string) {
     this.setState({
-      redirect: '/grid/' + gridId //'/task/ab35d560-86c6-11ea-8ade-b19b69a89b74' //+ gridId
+      redirect: '/task/' + taskId
     })
   }
 
-  setNewGrid(name: string) {
-    this.setState({ newGrid: name })
-  }
-
   render() {
-    const onChange = e => this.setNewGrid(e.target.value)
-    const onClick = e => api.createGrid(this.state.newGrid, 8, 8)
+    console.log('grid render tasks are ', aoStore.state.tasks)
     return (
       <div>
         <h2>Grids</h2>
         <ul>
-          {aoStore.state.grids.map((grid, i) => (
-            <li key={i}>
-              <div onClick={() => this.goInGrid(grid.gridId)} key={i}>
-                {aoStore.hashMap.get(grid.gridId).name}
-              </div>
-            </li>
-          ))}
+          {aoStore.state.tasks.map((task, i) =>
+            task.grid !== undefined ? (
+              <li
+                key={i}
+                onClick={() => this.goInGrid(task.taskId)}
+                style={{ cursor: 'pointer', padding: '0.5em' }}>
+                {task.name}
+              </li>
+            ) : (
+              ''
+            )
+          )}
         </ul>
         <div>
           Add Grid
-          <input type="text" value={this.state.newGrid} onChange={onChange} />
-          <button type="button" onClick={onClick}>
+          <input
+            type="text"
+            value={this.state.newGridName}
+            onChange={this.onChange}
+          />
+          <button type="button" onClick={this.onClick}>
             Add Grid
           </button>
         </div>

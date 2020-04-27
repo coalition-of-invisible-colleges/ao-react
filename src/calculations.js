@@ -51,7 +51,14 @@ function cardColorCSS(color) {
   }
 }
 
-function blankCard(taskId, name, color, deck = []) {
+function blankCard(
+  taskId,
+  name,
+  color,
+  deck = [],
+  height = undefined,
+  width = undefined
+) {
   let newCard = {
     taskId,
     color,
@@ -72,9 +79,19 @@ function blankCard(taskId, name, color, deck = []) {
     payment_hash: '',
     highlights: [],
     seen: [],
-    time: []
+    time: [],
+    grid: height >= 1 && width >= 1 ? blankGrid(height, width) : undefined
   }
   return newCard
+}
+
+function blankGrid(height, width) {
+  let newGrid = {
+    height: height,
+    width: width,
+    rows: {}
+  }
+  return newGrid
 }
 
 // function safeClone(card) {
@@ -190,6 +207,7 @@ module.exports = {
   shortName,
   cardColorCSS,
   blankCard,
+  blankGrid,
   // safeClone,
   safeMerge,
   crawler,

@@ -845,14 +845,32 @@ router.post('/events', (req, res, next) => {
       }
       break
     case 'grid-created':
+      console.log('grid-created spec pre')
       if (true) {
         events.gridCreated(
           req.body.name,
           req.body.height,
           req.body.width,
+          req.body.color,
           req.body.deck,
           utils.buildResCallback(res)
         )
+        console.log('grid-created spec post')
+      } else {
+        res.status(200).send(errRes)
+      }
+      break
+
+    case 'grid-added':
+      console.log('grid-added spec pre')
+      if (true) {
+        events.gridAdded(
+          req.body.taskId,
+          req.body.height,
+          req.body.width,
+          utils.buildResCallback(res)
+        )
+        console.log('grid-added spec post')
       } else {
         res.status(200).send(errRes)
       }
@@ -861,7 +879,7 @@ router.post('/events', (req, res, next) => {
     case 'grid-resized':
       if (req.body.height >= 1 && req.body.width >= 1) {
         events.gridResized(
-          req.body.gridId,
+          req.body.taskId,
           req.body.height,
           req.body.width,
           utils.buildResCallback(res)
@@ -872,14 +890,16 @@ router.post('/events', (req, res, next) => {
       break
 
     case 'grid-pin':
+      console.log('grid-created spec pre')
       if (true) {
         events.gridPin(
-          req.body.gridId,
+          req.body.inId,
           req.body.taskId,
           req.body.x,
           req.body.y,
           utils.buildResCallback(res)
         )
+        console.log('grid-created spec post')
       } else {
         res.status(200).send(errRes)
       }
@@ -889,7 +909,7 @@ router.post('/events', (req, res, next) => {
     case 'grid-unpin':
       if (true) {
         events.gridUnpin(
-          req.body.gridId,
+          req.body.inId,
           req.body.x,
           req.body.y,
           utils.buildResCallback(res)

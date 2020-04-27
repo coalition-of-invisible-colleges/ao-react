@@ -7,11 +7,11 @@ import api from '../client/api'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
 
-interface AoCheckboxParams {
+interface AoCheckboxProps {
   taskId: string
 }
 
-const AoCheckbox: FunctionComponent<AoCheckboxParams> = observer(
+const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
   ({ taskId }) => {
     console.log('checkbox!', taskId, aoStore.hashMap.get(taskId))
     const computed = observable({

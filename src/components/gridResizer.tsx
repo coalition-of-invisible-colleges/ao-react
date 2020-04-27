@@ -7,7 +7,7 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 
 interface GridResizerProps {
-  gridId: string
+  taskId: string
 }
 
 @observer
@@ -21,17 +21,17 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
 
   resizeRows(change: number) {
     api.resizeGrid(
-      this.props.gridId,
-      aoStore.gridById.get(this.props.gridId).height + change,
-      aoStore.gridById.get(this.props.gridId).width
+      this.props.taskId,
+      aoStore.hashMap.get(this.props.taskId).grid.height + change,
+      aoStore.hashMap.get(this.props.taskId).grid.width
     )
   }
 
   resizeColumns(change: number) {
     api.resizeGrid(
-      this.props.gridId,
-      aoStore.gridById.get(this.props.gridId).height,
-      aoStore.gridById.get(this.props.gridId).width + change
+      this.props.taskId,
+      aoStore.hashMap.get(this.props.taskId).grid.height,
+      aoStore.hashMap.get(this.props.taskId).grid.width + change
     )
   }
 
@@ -42,25 +42,25 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
         <button
           type="button"
           onClick={event => this.resizeRows(-1)}
-          disabled={aoStore.gridById.get(this.props.gridId).height <= 1}>
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.height <= 1}>
           -row
         </button>
         <button
           type="button"
           onClick={event => this.resizeRows(1)}
-          disabled={aoStore.gridById.get(this.props.gridId).height >= 30}>
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.height >= 30}>
           +row
         </button>
         <button
           type="button"
           onClick={event => this.resizeColumns(-1)}
-          disabled={aoStore.gridById.get(this.props.gridId).width <= 1}>
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.width <= 1}>
           -column
         </button>
         <button
           type="button"
           onClick={event => this.resizeColumns(1)}
-          disabled={aoStore.gridById.get(this.props.gridId).width >= 30}>
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.width >= 30}>
           +column
         </button>
       </div>

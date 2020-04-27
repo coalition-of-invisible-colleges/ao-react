@@ -879,101 +879,87 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'grid-created':
-      tasks.push(calculations.blankCard(ev.gridId, ev.name, 'blue', ev.deck))
+      tasks.push(
+        calculations.blankCard(
+          ev.taskId,
+          ev.name,
+          ev.color,
+          ev.deck,
+          ev.height,
+          ev.width
+        )
+      )
       break
-    case 'grid-pin':
-      tasks.forEach(task => {
-        if (task.taskId === ev.gridId) {
-          if (
-            !task.priorities
-              .concat(task.subTasks)
-              .concat(task.completed)
-              .some(st => {
-                return st.taskId === ev.taskId
-              })
-          ) {
-            task.subTasks.push(ev.taskId)
-          }
+    case 'grid-added':
+      console.log('grid-added mutation pre')
+      tasks.forEach((task, i) => {
+        if (task.taskId === ev.taskId) {
+          console.log('found task! making grid')
+          task.grid = calculations.blankGrid(ev.height, ev.width)
+          console.log('made a grid! task is ', task)
         }
       })
-      break
-  }
-}
-
-function gridsMuts(grids, ev) {
-  switch (ev.type) {
-    case 'grid-created':
-      grids.push({
-        gridId: ev.gridId,
-        rows: {},
-        height: ev.height,
-        width: ev.width
-      })
+      console.log('grid-added mutation post')
 
       break
     case 'grid-resized':
-      grids.forEach((grid, i) => {
-        if (grid.gridId === ev.gridId) {
-          grid.height = ev.height
-          grid.width = ev.width
-          Object.entries(grid.rows).forEach(([y, row]) => {
+      tasks.forEach((task, i) => {
+        if (task.taskId === ev.taskId) {
+          task.grid.height = ev.height
+          task.grid.width = ev.width
+          Object.entries(task.grid.rows).forEach(([y, row]) => {
             Object.entries(row).forEach(([x, cell]) => {
               if (x >= ev.width || y >= ev.height) {
-                delete grids[i].rows[y][x]
+                tasks.forEach(st => {
+                  if (st.taskId === cell) {
+                    task.subTasks = _.filter(
+                      task.subTasks,
+                      taskId => taskId !== ev.taskId
+                    )
+                    task.completed = _.filter(
+                      task.completed,
+                      taskId => taskId !== ev.taskId
+                    )
+                    if (st.claimed && st.claimed.length >= 1) {
+                      task.completed.push(ev.taskId)
+                    } else {
+                      task.subTasks.push(ev.taskId)
+                    }
+                  }
+                })
+                delete tasks[i].grid.rows[y][x]
               }
             })
-            if (y >= ev.height || row.length === 0) {
-              delete grids[i].rows[y]
+            if (row.length === 0) {
+              delete tasks[i].grid.rows[y]
             }
           })
         }
       })
       break
     case 'grid-pin':
-      grids.forEach((grid, i) => {
-        if (grid.gridId === ev.gridId) {
-          if (!_.has(grid.rows, ev.y)) {
-            grids[i].rows[ev.y] = {}
+      console.log('grid pin mutation pre')
+      tasks.forEach((task, i) => {
+        if (task.taskId === ev.inId) {
+          if (!_.has(task.grid.rows, ev.y)) {
+            tasks[i].grid.rows[ev.y] = {}
           }
-          grids[i].rows[ev.y][ev.x] = ev.taskId
+          tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
         }
       })
+      console.log('grid pin mutation post')
       break
     case 'grid-unpin':
-      grids.some((grid, i) => {
-        if (grid.gridId == ev.gridId) {
-          delete grids[i].rows[ev.y][ev.x]
-          if (grid.rows[ev.y].length == 0) {
-            delete grids[i].rows[ev.y]
+      tasks.some((task, i) => {
+        if (task.taskId == ev.inId) {
+          delete tasks[i].grid.rows[ev.y][ev.x]
+          if (task.grid.rows[ev.y].length == 0) {
+            delete tasks[i].grid.rows[ev.y]
           }
           return true
         }
       })
       break
-
-    // case 'grid-resize':
-    //   const { gridId, amount, side }
-    //   for(let c = 0; c < grids.length; c++) {
-    //     if(grids[c].gridId == gridId) {
-    //       switch (side) {
-    //         case 'right':
-    //           if(amount > 0) {
-    //             grid.length += amount
-    //           } else {
-    //             for(let i = grid.length - amount - 1; i < grid.length; i++) {
-
-    //             }
-    //           }
-    //           break
-    //         case 'left':
-    //           break
-    //         case 'bottom':
-    //           break
-    //         case 'top':
-    //           break
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -994,6 +980,5 @@ module.exports = {
   resourcesMuts,
   sessionsMuts,
   tasksMuts,
-  gridsMuts,
   applyEvent
 }

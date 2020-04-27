@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom'
 import AoGrids from './components/Grids'
 import AoGrid from './components/grid'
-import Card from './components/card'
+import AoCard from './components/card'
 import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
@@ -85,9 +85,6 @@ const App = observer(() => {
                 <li>
                   <Link to="/members">Members</Link>
                 </li>
-                <li>
-                  <Link to="/">Grids</Link>
-                </li>
               </ul>
             </nav>
             <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
@@ -108,7 +105,7 @@ const App = observer(() => {
               />
               <ProtectedRoute
                 path="/task"
-                component={Card}
+                component={AoCard}
                 loggedIn={aoStore.state.loggedIn}
               />
               <ProtectedRoute
