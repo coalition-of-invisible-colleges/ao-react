@@ -1,3 +1,26 @@
+ao-react is a reimplementation of the AO frontend using TypeScript and React.
+
+Benefits compared to the [AO on Vue](https://github.com/AutonomousOrganization/ao/):
+
+- AO API abstracted to one file
+- Totally responsive—platform bugs, slowdowns and memory leaks are gone
+- New grid with working drag-and-drop makes it easy to organize card spatially
+- CSS organized in one place, in one structure which matches page layout
+- React elements use native HTML; custom components appear as native HTML elements (no extra divs needed!)
+- TypeScript ubiquitously checks types, speeding up coding, reducing errors, and improving security
+- CSS themes already work
+
+Disadvantages:
+
+- Vue is community-built from the ground up; React is maintained by Facebook and TypeScript by Microsoft. Both are open-source, though. Vue 3.0 might be great but it is still delayed.
+- Vue might be more fun to code in. In React you have to deal with all verbosity of HTML and JavaScript.
+- Still missing about half the features of the original AO (these are being rapidly ported)
+- A few mutations have changed, which might make databases incompatible
+- Still no way to easily migrate cards between databases
+- Vue's idiosyncratic page layout language is more concise than React's HTML-like components
+- Consolidating CSS means it is not compartmentalized with each component
+- Original AO layout will need to be ported over (or, a new streamlined layout based around grids)
+- Possible performance issues (computer seems to run moderately hot)
 
 #### Install
 
@@ -9,6 +32,7 @@ npm run serve
 ```
 
 To be fully setup ao requires (tested on) Ubuntu 18 and Raspbian lite. These dependencies will be installed:
+
 - sqlite3 - `~/.ao/database.sqlite3` file where history is stored
 - clightning - `~/.lightning/` directory where bitcoin wallet is created
 - tor - `/usr/local/etc/tor/torrc` file that configures external access
@@ -21,16 +45,18 @@ npm run compile
 
 After compiling a webserver should be hosted on localhost:8003.
 
-- The **name *and* password** of the first account is **dctrl**.
+- The **name _and_ password** of the first account is **dctrl**.
 
 At this time [clightning](https://github.com/ElementsProject/lightning) requires [bitcoind](https://www.bitcoin.org/download). Ao facilitates getting addresses and invoices from this wallet. Backup the ~/.lightning/bitcoin/hsm_secret file. Use responsibly and at your own risk!
 
-After setup, the ao and any information you put into it are meaningfully *yours*.
+After setup, the ao and any information you put into it are meaningfully _yours_.
 
 ### Anatomy of Autonomous Organization
+
 #### - Three dimensions:
 
 The dimensions of ao are the three aspects of a decentralized society.
+
 - **Unicorn**: You, the individual
 - **Sun**: We, the community
 - **Bull**: The Computer, the server
@@ -38,13 +64,14 @@ The dimensions of ao are the three aspects of a decentralized society.
 #### - Five modes:
 
 The modes of ao correspond loosely to
+
 - **doge**: contemplate, articulate
 - **boat**: plan, prioritize
 - **badge**: acknowledge, collaborate, account
 - **chest**: reward, value, incentivize
 - **timecube**: schedule, coordinate
 
-Switch dimension using the top corners of the page: top left to the Sun, top right to the Bull. At the top center, the current mode is displayed and can be switched with clicks or swipes. Each of the dimensions is augmented by the current mode for 15 combinations. *Unicorn-doge* is where you start; you start on your account card.
+Switch dimension using the top corners of the page: top left to the Sun, top right to the Bull. At the top center, the current mode is displayed and can be switched with clicks or swipes. Each of the dimensions is augmented by the current mode for 15 combinations. _Unicorn-doge_ is where you start; you start on your account card.
 
 #### Cards
 
@@ -71,6 +98,7 @@ Each account is able to see and move cards, organize lists, create new accounts,
 Each card account can only hold a card once, be relevant to it, be on the badge list, and be elegable for checkmarks with that context. By holding it your account is also protecting it from being removed. On the sun pages cards with the most holds come to the top. When you create a card you automatically become the first holder of it. Click the moon to toggle your hold.
 
 #### Points
+
 Ao is an interface to recieve payments in bitcoin. Each card can request payment and when recieved it is translated to points on the card or account. Points on a card indicate irrefutably that someone values that idea. Ao converts payments into points using the btc-cad exchange rate (~8500&#12471; per point). Note that is is a recieve only, channel create interface, to withdraw or make outgoing payments you must have access to the computer or server running the ao.
 
 Optionally, you can set an amount of points to divide monthly between active accounts. If accounts have no points they will become inactive. Add points to an account using bitcoin to automatically reactivate it.
@@ -81,13 +109,16 @@ Using the gpio pins of a raspberry pi and the [repo pi](https://github.com/auton
 
 #### Ao 2 Ao
 
-Ao allows you or others to access from anywhere using a tor .onion location. You can connect two ao servers together, then mark cards that you would like to share. Ao will periodically keep the contents of the linked cards synced between servers. 
+Ao allows you or others to access from anywhere using a tor .onion location. You can connect two ao servers together, then mark cards that you would like to share. Ao will periodically keep the contents of the linked cards synced between servers.
 
 #### Customize
-I suggest starting by swapping the images in `src/assets/images/*`  and hex codes in `src/styles/colours.styl` to suit your mojo.
 
-***
+I suggest starting by swapping the images in `src/assets/images/*` and hex codes in `src/styles/colours.styl` to suit your mojo.
+
+---
+
 ###### Ao is an open source project built with open source tools on open source platforms. Much love and gratitude to climb on the shoulders of giants. Linux, Ubuntu, Nodejs, Vuejs, Sqlite3, Tor, Atom, Bitcoind, Clightning, Firefox.
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
@@ -95,6 +126,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
-***
+
+---
