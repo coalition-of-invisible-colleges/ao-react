@@ -4,6 +4,10 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import { useParams } from 'react-router-dom'
 import api from '../client/api'
+import Paper1 from '../assets/images/paper_1.svg'
+import Paper2 from '../assets/images/paper_2.svg'
+import Paper3 from '../assets/images/paper_3.svg'
+import Paper4 from '../assets/images/paper_4.svg'
 
 interface AoPaperParams {
   taskId: string
@@ -36,18 +40,18 @@ const AoPaper: FunctionComponent<AoPaperParams> = observer(({ taskId }) => {
       return days
     }
   })
-  let filename = 'paper_1.jpg'
+  let filename = Paper1
   // console.log('computed.cardAge is ', computed.cardAge)
   if (computed.cardAge >= 8) {
-    filename = 'paper_2.png'
+    filename = Paper2
   } else if (computed.cardAge >= 30) {
-    filename = 'paper_3.png'
+    filename = Paper3
   } else if (computed.cardAge >= 90) {
-    filename = 'paper_4.png'
+    filename = Paper4
   }
   return (
     <div className={'paper'}>
-      <img src={'../assets/images/' + filename} />
+      <img src={filename} />
       <div className={'color ' + computed.cardColor} />
     </div>
   )
