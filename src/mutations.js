@@ -322,8 +322,13 @@ function tasksMuts(tasks, ev) {
       tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck))
       tasks.forEach(task => {
         if (task.taskId === ev.inId) {
-          task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
-          task.subTasks.push(ev.taskId)
+          if (ev.prioritized) {
+            task.priorities = _.filter(task.subTasks, tId => tId !== ev.taskId)
+            task.priorities.push(ev.taskId)
+          } else {
+            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+            task.subTasks.push(ev.taskId)
+          }
         }
       })
       break
@@ -571,7 +576,12 @@ function tasksMuts(tasks, ev) {
             task.completed,
             taskId => taskId !== ev.taskId
           )
+          // if (ev.position) {
+          //   task.priorities = task.priorities.splice(ev.position, 0, ev.taskId)
+          // } else {
+          console.log('task-prioritized position is ', ev.position)
           task.priorities.push(ev.taskId)
+          // }
         }
       })
       break
@@ -891,16 +901,11 @@ function tasksMuts(tasks, ev) {
       )
       break
     case 'grid-added':
-      console.log('grid-added mutation pre')
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
-          console.log('found task! making grid')
           task.grid = calculations.blankGrid(ev.height, ev.width)
-          console.log('made a grid! task is ', task)
         }
       })
-      console.log('grid-added mutation post')
-
       break
     case 'grid-resized':
       tasks.forEach((task, i) => {
@@ -914,16 +919,16 @@ function tasksMuts(tasks, ev) {
                   if (st.taskId === cell) {
                     task.subTasks = _.filter(
                       task.subTasks,
-                      taskId => taskId !== ev.taskId
+                      taskId => taskId !== cell
                     )
                     task.completed = _.filter(
                       task.completed,
-                      taskId => taskId !== ev.taskId
+                      taskId => taskId !== cell
                     )
                     if (st.claimed && st.claimed.length >= 1) {
-                      task.completed.push(ev.taskId)
+                      task.completed.push(cell)
                     } else {
-                      task.subTasks.push(ev.taskId)
+                      task.subTasks.unshift(cell)
                     }
                   }
                 })
@@ -938,7 +943,6 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'grid-pin':
-      console.log('grid pin mutation pre')
       tasks.forEach((task, i) => {
         if (task.taskId === ev.inId) {
           if (!_.has(task.grid.rows, ev.y)) {
@@ -946,16 +950,19 @@ function tasksMuts(tasks, ev) {
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
         }
+        task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
       })
-      console.log('grid pin mutation post')
       break
     case 'grid-unpin':
       tasks.some((task, i) => {
         if (task.taskId == ev.inId) {
+          let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
           delete tasks[i].grid.rows[ev.y][ev.x]
           if (task.grid.rows[ev.y].length == 0) {
             delete tasks[i].grid.rows[ev.y]
           }
+          task.subTasks = task.subTasks.filter(st => st !== gridTaskId)
+          task.subTasks.push(gridTaskId)
           return true
         }
       })

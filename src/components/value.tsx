@@ -29,13 +29,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
     this.saveValue = this.saveValue.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
-    // this.textBox = React.createRef()
-    console.log('AoValue!')
   }
-
-  // componentDidUpdate() {
-  //   this.refs.textBox.focus()
-  // }
 
   startEditing(event) {
     console.log(
@@ -82,6 +76,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
             onKeyDown={this.onKeyDown}
             // ref={this.textBox}
             value={this.state.text}
+            size={1}
             autoFocus
           />
           <button type="button" onClick={this.saveValue}>

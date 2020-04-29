@@ -1,26 +1,28 @@
+# ao-react
+
 ao-react is a reimplementation of the AO frontend using TypeScript and React.
 
 Benefits compared to the [AO on Vue](https://github.com/AutonomousOrganization/ao/):
 
 - AO API abstracted to one file
-- Totally responsive—platform bugs, slowdowns and memory leaks are gone
-- New grid with working drag-and-drop makes it easy to organize card spatially
-- CSS organized in one place, in one structure which matches page layout
-- React elements use native HTML; custom components appear as native HTML elements (no extra divs needed!)
-- TypeScript ubiquitously checks types, speeding up coding, reducing errors, and improving security
-- CSS themes already work
+- Totally responsive—platform bugs, slowdowns and memory leaks are gone (afaict).
+- CSS organized in one place, in one structure which matches page layout.
+- React elements use native HTML; custom components appear as native HTML elements (no extra divs needed!).
+- TypeScript ubiquitously checks types, speeding up coding, reducing errors, and improving security.
+- CSS themes already work.
+- New card grid with working drag-and-drop makes it easy to organize cards spatially.
 
 Disadvantages:
 
 - Vue is community-built from the ground up; React is maintained by Facebook and TypeScript by Microsoft. Both are open-source, though. Vue 3.0 might be great but it is still delayed.
 - Vue might be more fun to code in. In React you have to deal with all verbosity of HTML and JavaScript.
-- Still missing about half the features of the original AO (these are being rapidly ported)
-- A few mutations have changed, which might make databases incompatible
-- Still no way to easily migrate cards between databases
-- Vue's idiosyncratic page layout language is more concise than React's HTML-like components
-- Consolidating CSS means it is not compartmentalized with each component
-- Original AO layout will need to be ported over (or, a new streamlined layout based around grids)
-- Possible performance issues (computer seems to run moderately hot)
+- Still missing about half the features of the original AO (these are being rapidly ported).
+- A few mutations have changed, which might make databases incompatible.
+- Still no way to easily migrate cards between databases.
+- Vue's idiosyncratic page layout language is more concise than React's HTML-like components.
+- Consolidating CSS means it is not compartmentalized with each component.
+- Original AO layout will need to be ported over (or, a new streamlined layout based around grids).
+- Possible performance issues (computer seems to run moderately hot).
 
 #### Install
 

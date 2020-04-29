@@ -34,6 +34,18 @@ textarea {
     font-size: 1.25em;
     background-color: $body-bg;
 
+    #home {
+      position: fixed;
+      top: 0.5em;
+      left: 1em;
+    }
+
+    #members {
+      position: fixed;
+      top: 0.5em;
+      left: 4em;
+    }
+
     #status {
       position: fixed;
       bottom: 0;
@@ -42,6 +54,12 @@ textarea {
       margin-bottom: 0.3em;
       cursor: pointer;
       height: 3em;
+    }
+
+    #themer {
+      position: fixed;
+      bottom: 0.75em;
+      left: 5em;
     }
 
     #volume {
@@ -53,6 +71,12 @@ textarea {
       cursor: pointer;
       height: 3em;
       fill: #fff;
+    }
+
+    #logout {
+      position: fixed;
+      bottom: 0.75em;
+      right: 5em;
     }
 
     .card {
@@ -85,6 +109,11 @@ textarea {
         width: 1.5em;
         opacity: 0.5;
         cursor: pointer;
+
+        img {
+          height: 100%;
+          width: 100%;
+        }
       }
 
       @keyframes spin {
@@ -104,17 +133,18 @@ textarea {
 
       .palette {
         position: absolute;
-        right: 0.5em;
-        bottom: 2.5em;
+        right: 5.5em;
+        bottom: 0.5em;
       }
 
       .coin {
         width: 2.5em;
         height: 2.5em;
-        position: absolute;
+        position: relative;
         left: 50%;
         transform: translateX(-50%);
         bottom: 0.75em;
+        margin-top: 1.5em;
         cursor: pointer;
 
         &.ungrabbed {
@@ -146,8 +176,7 @@ textarea {
         bottom: 0.5em;
 
         img {
-          width: 3em;
-          margin-top: 2.5rem;
+          width: 2em;
         }
 
         .history {
@@ -197,15 +226,16 @@ textarea {
       }
 
       .gridContainer {
-        margin: 1em 1em 5em 1em;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: fit-content;
 
         .grid {
+          padding-top: 0.5em;
           display: grid;
-          margin-left: 50%;
-          transform: translateX(-50%);
-          width: fit-content;
 
-          .square {
+          .zone {
             position: relative;
             background: $square-bg;
             display: flex;
@@ -274,6 +304,10 @@ textarea {
             .miniCard {
               pointer-events: none;
 
+              p {
+                padding: 1em;
+              }
+
               .miniCardSummary {
                 z-index: 7;
                 height: 100%;
@@ -327,14 +361,56 @@ textarea {
           }
         }
         .resizer {
-          margin-top: 1em;
-          margin-bottom: -1em;
+          position: absolute;
+          margin-top: -4.75em;
+          right: -3em;
+
+          button {
+            display: block;
+          }
+
+          .minusColumn,
+          .plusColumn,
+          .minusRow,
+          .plusRow {
+            outline: none;
+            font-family: monospace;
+            margin: 0;
+          }
+          .minusColumn,
+          .plusColumn {
+            margin-top: 0.25em;
+            padding-left: 0.25em;
+            padding-right: 0.25em;
+          }
+          .minusRow,
+          .plusRow {
+            display: inline;
+            position: relative;
+            left: -2.5em;
+            top: 0.75em;
+            margin-right: 0.25em;
+            padding: 0 0.75em;
+          }
         }
       }
     }
 
     .stack {
+      margin: 0.5em 1em 0.5em 1em;
+      .priority {
+        position: relative;
+        margin-top: 0.25em;
+        text-align: left;
+        padding-top: 0.55em;
+        padding-bottom: 0.55em;
+        .content {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
       .card {
+        margin-top: 0.5em;
       }
     }
 
@@ -387,7 +463,10 @@ textarea {
     }
 
     .action {
-      display: inline;
+      display: block;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
       width: fit-content;
       background-color: rgba(0, 0, 0, 0.25);
       border-radius: 0.5em;
@@ -396,6 +475,8 @@ textarea {
       cursor: pointer;
       border: 0.15em solid rgba(0, 0, 0, 0.1);
       padding: 0.5em;
+      margin-top: 0;
+      margin-bottom: 0;
 
       &:hover {
         text-decoration: underline;

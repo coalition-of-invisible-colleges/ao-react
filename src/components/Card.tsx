@@ -14,7 +14,7 @@ import AoValue from './value'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
 import AoGrid from './grid'
-// import AoStack from './stack'
+import AoStack from './stack'
 
 interface CardParams {
   taskId: string
@@ -33,10 +33,12 @@ const CardDetails = () => {
         <div className="content">
           <Markdown>{aoStore.hashMap.get(taskId).name}</Markdown>
         </div>
-        <AoCountdown taskId={taskId} />
+        <AoStack taskId={taskId} cardSource="priorities" />
         <AoGrid taskId={taskId} />
-        <AoCoin taskId={taskId} />
+        <AoStack taskId={taskId} cardSource="subTasks" />
         <AoTimeClock taskId={taskId} />
+        <AoCoin taskId={taskId} />
+        <AoCountdown taskId={taskId} />
       </div>
     </React.Fragment>
   )

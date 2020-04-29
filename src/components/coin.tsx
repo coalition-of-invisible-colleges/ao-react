@@ -11,7 +11,6 @@ interface AoCoinParams {
 }
 
 const AoCoin: FunctionComponent<AoCoinParams> = observer(({ taskId }) => {
-  console.log('coin!', taskId, aoStore.hashMap.get(taskId))
   const computed = observable({
     get isGrabbed() {
       return (

@@ -288,7 +288,7 @@ function sessionKilled(session, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskCreated(name, color, deck, inId, callback) {
+function taskCreated(name, color, deck, inId, prioritized, callback) {
   let h = crypto.createHash('sha256')
   h.update(name)
   let hash = h.digest('hex')
@@ -309,7 +309,8 @@ function taskCreated(name, color, deck, inId, callback) {
       color,
       deck,
       hash,
-      inId
+      inId,
+      prioritized
     }
     dctrlDb.insertEvent(newEvent, callback)
   }
@@ -382,11 +383,12 @@ function taskDeSubTasked(taskId, subTask, memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskPrioritized(taskId, inId, callback) {
+function taskPrioritized(taskId, inId, position, callback) {
   let newEvent = {
     type: 'task-prioritized',
     taskId,
-    inId
+    inId,
+    position
   }
   dctrlDb.insertEvent(newEvent, callback)
 }

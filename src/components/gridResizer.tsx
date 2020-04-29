@@ -41,27 +41,31 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
       <div className="resizer">
         <button
           type="button"
-          onClick={event => this.resizeRows(-1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.height <= 1}>
-          -row
-        </button>
-        <button
-          type="button"
-          onClick={event => this.resizeRows(1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.height >= 30}>
-          +row
-        </button>
-        <button
-          type="button"
           onClick={event => this.resizeColumns(-1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.width <= 1}>
-          -column
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.width <= 1}
+          className={'action minusColumn'}>
+          -
         </button>
         <button
           type="button"
           onClick={event => this.resizeColumns(1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.width >= 30}>
-          +column
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.width >= 30}
+          className={'action plusColumn'}>
+          +
+        </button>
+        <button
+          type="button"
+          onClick={event => this.resizeRows(-1)}
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.height <= 1}
+          className={'action minusRow'}>
+          -
+        </button>
+        <button
+          type="button"
+          onClick={event => this.resizeRows(1)}
+          disabled={aoStore.hashMap.get(this.props.taskId).grid.height >= 30}
+          className={'action plusRow'}>
+          +
         </button>
       </div>
     )

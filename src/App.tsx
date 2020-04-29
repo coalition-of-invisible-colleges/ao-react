@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom'
 import AoGrids from './components/Grids'
 import AoGrid from './components/grid'
-import AoCard from './components/card'
+import AoCard from './components/Card'
 import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
@@ -66,66 +66,58 @@ const App = observer(() => {
     <div>
       {render && (
         <Router>
-          <div>
-            <nav>
-              <ul>
-                <li>
-                  <button type="button" onClick={changeTheme}>
-                    Change theme
-                  </button>
-                </li>
-                <li>
-                  <button type="button" onClick={onLogout}>
-                    Log out
-                  </button>
-                </li>
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/members">Members</Link>
-                </li>
-              </ul>
-            </nav>
-            <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
-              <AoStatus />
-              <AoVolume />
-            </ProtectedFragment>
+          <nav>
+            <button type="button" onClick={changeTheme} id="themer">
+              Change theme
+            </button>
+            <button type="button" onClick={onLogout} id="logout">
+              Log out
+            </button>
+            <Link to="/" id="home">
+              Home
+            </Link>
+            <Link to="/members" id="members">
+              Members
+            </Link>
+          </nav>
+          <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
+            <AoStatus />
+            <AoVolume />
+          </ProtectedFragment>
 
-            {/* A <Switch> looks through its children <Route>s and
+          {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-            <Switch>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <ProtectedRoute
-                path="/members"
-                component={Members}
-                loggedIn={aoStore.state.loggedIn}
-              />
-              <ProtectedRoute
-                path="/task"
-                component={AoCard}
-                loggedIn={aoStore.state.loggedIn}
-              />
-              <ProtectedRoute
-                path="/grid"
-                component={AoGrid}
-                loggedIn={aoStore.state.loggedIn}
-              />
-              <ProtectedRoute
-                path="/"
-                component={AoGrids}
-                loggedIn={aoStore.state.loggedIn}
-              />
-              {/* <Route path="/task/:taskId">
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <ProtectedRoute
+              path="/members"
+              component={Members}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path="/task"
+              component={AoCard}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path="/grid"
+              component={AoGrid}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path="/"
+              component={AoGrids}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            {/* <Route path="/task/:taskId">
                 <Card />
               </Route>
               <Route path="/">
                 <AoGrid />
               </Route> */}
-            </Switch>
-          </div>
+          </Switch>
         </Router>
       )}
       {!render && <div>Logging in </div>}

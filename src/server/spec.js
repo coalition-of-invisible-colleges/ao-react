@@ -510,13 +510,15 @@ router.post('/events', (req, res, next) => {
         validators.isNotes(req.body.name, errRes) &&
         validators.isNotes(req.body.color, errRes) &&
         validators.isNotes(req.body.deck, errRes) &&
-        validators.isTaskId(req.body.inId)
+        validators.isTaskId(req.body.inId, errRes) &&
+        validators.isBool(req.body.prioritized, errRes)
       ) {
         events.taskCreated(
           req.body.name,
           req.body.color,
           req.body.deck,
           req.body.inId,
+          req.body.prioritized,
           utils.buildResCallback(res)
         )
       } else {
@@ -799,11 +801,13 @@ router.post('/events', (req, res, next) => {
     case 'task-prioritized':
       if (
         validators.isTaskId(req.body.inId, errRes) &&
-        validators.isTaskId(req.body.taskId, errRes)
+        validators.isTaskId(req.body.taskId, errRes) &&
+        Number.isInteger(req.body.position)
       ) {
         events.taskPrioritized(
           req.body.taskId,
           req.body.inId,
+          req.body.position,
           utils.buildResCallback(res)
         )
       } else {

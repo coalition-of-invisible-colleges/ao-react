@@ -59,16 +59,10 @@ export default class AoCountdown extends React.Component<
     this.startEditing = this.startEditing.bind(this)
     this.onChange = this.onChange.bind(this)
     this.bookResource = this.bookResource.bind(this)
-    console.log('AoCountdown!')
   }
 
   startEditing(event) {
-    console.log(
-      'countdown value is ',
-      aoStore.hashMap.get(this.props.taskId).book.startTs
-    )
     if (aoStore.hashMap.get(this.props.taskId).book.startTs) {
-      console.log('has a value')
       this.setState({
         startTime: aoStore.hashMap.get(this.props.taskId).book.startTs
       })
@@ -77,12 +71,10 @@ export default class AoCountdown extends React.Component<
   }
 
   onChange(date) {
-    console.log('onChange date is ', date)
     this.setState({ startTime: date })
   }
 
   bookResource() {
-    console.log('book resource', this.state.startTime)
     let newStartTime: Date = this.state.startTime
       ? this.state.startTime
       : undefined

@@ -11,7 +11,7 @@ import aoStore, { AoState, Grid } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoGridSquare from './gridSquare'
+import AoSmartZone from './smartZone'
 import AoGridResizer from './gridResizer'
 
 interface Sel {
@@ -19,12 +19,12 @@ interface Sel {
   y: number
 }
 
-interface AoGridState {
+interface GridState {
   redirect?: string
   selected?: Sel
 }
 
-export const defaultState: AoGridState = {
+export const defaultState: GridState = {
   redirect: undefined
 }
 
@@ -33,7 +33,7 @@ interface GridProps {
 }
 
 @observer
-export default class AoGrid extends React.Component<GridProps, AoGridState> {
+export default class AoGrid extends React.Component<GridProps, GridState> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -48,9 +48,7 @@ export default class AoGrid extends React.Component<GridProps, AoGridState> {
   }
 
   selectGridSquare(selection: Sel) {
-    console.log('selectGridSquare pre')
     this.setState({ selected: selection })
-    console.log('selectGridSquare post')
   }
 
   goInSquare(selection: Sel) {
@@ -66,16 +64,13 @@ export default class AoGrid extends React.Component<GridProps, AoGridState> {
   render() {
     const render = []
     const task = aoStore.hashMap.get(this.props.taskId)
-    console.log('task is ', task)
     const grid = task.hasOwnProperty('grid') ? task.grid : false
-    console.log('task.grid is ', grid)
 
     if (this.state.redirect !== undefined) {
-      console.log('redirecting')
       this.setState({ redirect: undefined })
       return <Redirect to={this.state.redirect} />
     }
-    console.log('about to check')
+
     if (
       !grid ||
       (grid.hasOwnProperty('height') && grid.height < 1) ||
@@ -83,7 +78,6 @@ export default class AoGrid extends React.Component<GridProps, AoGridState> {
       !grid.hasOwnProperty('height') ||
       !grid.hasOwnProperty('width')
     ) {
-      console.log('displaying text')
       return (
         <div className={'gridContainer'}>
           <p onClick={this.addGrid} className={'action'}>
@@ -92,24 +86,19 @@ export default class AoGrid extends React.Component<GridProps, AoGridState> {
         </div>
       )
     }
-    console.log('failed to display text')
 
     for (let j = 0; j < grid.height; j++) {
       for (let i = 0; i < grid.width; i++) {
-        console.log('loop j is ', j, ' and i is ', i)
         let tId: string
-        // console.log('cell is ', grid.rows[j][i])
         if (
           grid.rows[j] &&
           grid.rows[j][i] &&
           typeof (grid.rows[j][i] === 'string')
         ) {
           tId = aoStore.hashMap.get(grid.rows[j][i]).taskId
-          // console.log('\n\ntId is', tId)
-          // console.log('raw square is ', aoStore.hashMap.get(grid.rows[j][i]))
         }
         render.push(
-          <AoGridSquare
+          <AoSmartZone
             selected={
               this.state.selected &&
               this.state.selected.x == i &&
@@ -122,11 +111,11 @@ export default class AoGrid extends React.Component<GridProps, AoGridState> {
             onSelect={this.selectGridSquare}
             onGoIn={this.goInSquare}
             key={i + '-' + j}
+            cardSource={'grid'}
           />
         )
       }
     }
-    console.log('returning')
     return (
       <div className={'gridContainer'}>
         <div

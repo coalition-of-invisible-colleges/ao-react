@@ -35,7 +35,6 @@ export class ListGrids extends React.Component<{}, State> {
   }
 
   render() {
-    console.log('grid render tasks are ', aoStore.state.tasks)
     return (
       <div>
         <h2>Grids</h2>

@@ -166,7 +166,7 @@ class AoStore {
     })
     return hashMap
   }
-  @computed get memberByName(): Map<string, Task> {
+  @computed get cardByName(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.name, t)

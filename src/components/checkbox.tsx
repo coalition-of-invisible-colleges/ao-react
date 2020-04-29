@@ -13,7 +13,6 @@ interface AoCheckboxProps {
 
 const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
   ({ taskId }) => {
-    console.log('checkbox!', taskId, aoStore.hashMap.get(taskId))
     const computed = observable({
       get isCompleted() {
         return (
@@ -31,11 +30,9 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
       }
     }
     return (
-      <img
-        className="checkbox"
-        src={computed.isCompleted ? Completed : Uncompleted}
-        onClick={onClick}
-      />
+      <div className="checkbox" onClick={onClick}>
+        <img src={computed.isCompleted ? Completed : Uncompleted} />
+      </div>
     )
   }
 )

@@ -101,7 +101,45 @@ class AoApi {
       name: name,
       color: 'blue',
       deck: [aoStore.member.memberId],
-      inId: aoStore.memberCard.taskId
+      inId: aoStore.memberCard.taskId,
+      prioritized: false
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async findOrCreateCardInCard(
+    name: string,
+    inId: string,
+    prioritized?: boolean
+  ): Promise<request.Response> {
+    let found = aoStore.cardByName.get(name.trim())
+    let act
+    if (found) {
+      if (prioritized) {
+        return this.prioritizeCard(found.taskId, inId)
+      } else {
+        act = {
+          type: 'task-sub-tasked',
+          taskId: inId,
+          subTask: found.taskId,
+          memberId: aoStore.member.memberId
+        }
+      }
+    } else {
+      act = {
+        type: 'task-created',
+        name: name,
+        color: 'blue',
+        deck: [aoStore.member.memberId],
+        inId: inId,
+        prioritized: prioritized
+      }
     }
     return request
       .post('/events')
@@ -253,12 +291,14 @@ class AoApi {
 
   async prioritizeCard(
     taskId: string,
-    inId: string
+    inId: string,
+    position?: number = 0
   ): Promise<request.Response> {
     const act = {
       type: 'task-prioritized',
       taskId: taskId,
-      inId: inId
+      inId: inId,
+      position: position
     }
     return request
       .post('/events')
@@ -284,8 +324,9 @@ class AoApi {
   }
 
   async refocusCard(taskId: string, inId: string): Promise<request.Response> {
+    console.log('refocusCard')
     const act = {
-      type: 'task-prioritized',
+      type: 'task-refocused',
       taskId: taskId,
       inId: inId,
       blame: aoStore.member.memberId
@@ -438,17 +479,14 @@ class AoApi {
       })
   }
 
-  async markSeen(name): Promise<request.Response> {
-    const task: Task = aoStore.memberByName.get(name)
-    console.log('task' + JSON.stringify(task))
-    console.log('API fire')
-    console.log('memberId: ' + aoStore.member.memberId)
+  async markSeen(taskId): Promise<request.Response> {
+    const task: Task = aoStore.hashMap.get(taskId)
     const act = {
       type: 'task-seen',
       taskId: task.taskId,
       memberId: aoStore.member.memberId
     }
-    console.log('API 2')
+    console.log('card marked seen')
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -528,7 +566,7 @@ class AoApi {
     inId: string
   ): Promise<request.Response> {
     console.log('pinCardToGrid')
-    const task: Task = aoStore.memberByName.get(name)
+    const task: Task = aoStore.cardByName.get(name)
     if (_.isObject(task)) {
       console.log('card already exists')
 
@@ -553,7 +591,8 @@ class AoApi {
         name: name,
         color: 'blue',
         deck: [aoStore.member.memberId],
-        inId: aoStore.memberCard.taskId
+        inId: aoStore.memberCard.taskId,
+        prioritized: false
       }
       console.log('act is ', act)
       return request
