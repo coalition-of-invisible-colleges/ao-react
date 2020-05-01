@@ -61,7 +61,9 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       redirect:
         '/task/' +
         aoStore.hashMap.get(this.props.taskId)[this.props.cardSource][
-          selection.y
+          aoStore.hashMap.get(this.props.taskId)[this.props.cardSource].length -
+            1 -
+            selection.y
         ]
     })
   }

@@ -64,7 +64,7 @@ fi
 NODEVERSION=`nvm current`
 
 # install node
-if [ $(echo $NODEVERSION | grep -c "11.15") -eq 1 ];
+if [ $(echo $NODEVERSION | grep -c "12.16") -eq 1 ];
 then
 	echo node $NODEVERSION already installed
 else

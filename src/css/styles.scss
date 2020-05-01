@@ -79,6 +79,10 @@ textarea {
       right: 5em;
     }
 
+    .discard {
+      min-height: 100vh;
+    }
+
     .card {
       position: relative;
       left: 50%;
@@ -229,7 +233,11 @@ textarea {
         position: relative;
         left: 50%;
         transform: translateX(-50%);
-        width: fit-content;
+        width: min-content;
+
+        &.padbottom {
+          margin-bottom: 2em;
+        }
 
         .grid {
           padding-top: 0.5em;

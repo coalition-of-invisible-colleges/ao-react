@@ -117,7 +117,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
       }
     }
     return (
-      <div className={'gridContainer'}>
+      <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>
         <div
           className={'grid'}
           style={{

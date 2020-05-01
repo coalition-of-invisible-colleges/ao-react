@@ -150,6 +150,25 @@ class AoApi {
       })
   }
 
+  async discardCardFromCard(
+    taskId: string,
+    inId: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-de-sub-tasked',
+      taskId: inId,
+      subTask: taskId,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async colorCard(taskId: string, color: string): Promise<request.Response> {
     const act = {
       type: 'task-colored',

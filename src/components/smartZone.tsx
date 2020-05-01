@@ -15,17 +15,17 @@ export interface Sel {
 	y: number
 }
 
-type CardSource = 'priorities' | 'subTasks' | 'completed' | 'grid'
+type CardSource = 'priorities' | 'subTasks' | 'completed' | 'grid' | 'discard'
 
 interface SmartZoneProps {
 	inId: string
 	taskId?: string
-	selected: boolean
+	selected?: boolean
 	cardSource: CardSource
 	x?: number
-	y: number
-	onSelect: (selection: Sel) => void
-	onGoIn: (selection: Sel) => void
+	y?: number
+	onSelect?: (selection: Sel) => void
+	onGoIn?: (selection: Sel) => void
 }
 
 @observer
@@ -264,8 +264,8 @@ export default class AoSmartZone extends React.Component<
 				api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 				api.pinCardToGrid(fromCoords.x, fromCoords.y, nameTo, this.props.inId)
 			} else if (nameFrom) {
-				api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 				api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+				api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 			}
 		} else if (fromZone === 'priorities' && this.props.cardSource === 'grid') {
 			console.log('drag detected from priorities to grid')
@@ -276,7 +276,7 @@ export default class AoSmartZone extends React.Component<
 			console.log('fromTaskId: ', fromTaskId)
 			console.log('inId: ', this.props.inId)
 			if (nameTo) {
-				api.findOrCreateCardInCard(nameTo, this.props.inId)
+				api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
 			}
 			api.refocusCard(fromTaskId, this.props.inId)
 			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
@@ -302,10 +302,10 @@ export default class AoSmartZone extends React.Component<
 		) {
 			api.prioritizeCard(fromTaskId, this.props.inId)
 		} else if (fromZone === 'subTasks' && this.props.cardSource === 'grid') {
-			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 			if (nameTo) {
-				api.findOrCreateCardInCard(nameTo, this.props.inId)
+				api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
 			}
+			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 		} else if (fromZone === 'completed' && this.props.cardSource === 'grid') {
 			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 		} else if (fromZone === 'grid' && this.props.cardSource === 'priorities') {
@@ -323,13 +323,30 @@ export default class AoSmartZone extends React.Component<
 			console.log('fromCoords: ', fromCoords)
 			console.log('toCoords: ', toCoords)
 			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-			api.findOrCreateCardInCard(nameFrom, this.props.inId)
 		} else if (fromZone === 'grid' && this.props.cardSource === 'completed') {
 			console.log('drag detected from grid to completed')
 			console.log('nameFrom: ', nameFrom)
 			console.log('nameTo: ', nameTo)
 			console.log('fromCoords: ', fromCoords)
 			console.log('toCoords: ', toCoords)
+		} else if (
+			fromZone === 'subTasks' &&
+			this.props.cardSource === 'subTasks'
+		) {
+			console.log('drag detected from subTasks to subTasks')
+			console.log('nameFrom: ', nameFrom)
+			console.log('nameTo: ', nameTo)
+			console.log('fromCoords: ', fromCoords)
+			console.log('toCoords: ', toCoords)
+			api.findOrCreateCardInCard(nameFrom, this.props.inId)
+		} else if (this.props.cardSource === 'discard') {
+			console.log('discard drop detected')
+			if (fromZone === 'grid') {
+				api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+			} else if (fromZone === 'priorities') {
+				api.refocusCard(fromTaskId, this.props.inId)
+			}
+			api.discardCardFromCard(fromTaskId, this.props.inId)
 		}
 	}
 
@@ -357,7 +374,17 @@ export default class AoSmartZone extends React.Component<
 	}
 
 	render() {
-		if (this.props.selected) {
+		if (this.props.cardSource === 'discard') {
+			return (
+				<div
+					className={'discard'}
+					onDragOver={this.allowDrop}
+					onDragLeave={this.hideDrop}
+					onDrop={this.drop}>
+					{this.props.children}
+				</div>
+			)
+		} else if (this.props.selected) {
 			return (
 				<textarea
 					autoFocus
@@ -386,7 +413,7 @@ export default class AoSmartZone extends React.Component<
 					message = 'drop to deprioritize'
 					break
 				case 'grid':
-					message = 'drop to move'
+					message = 'drop to discard'
 					break
 				case 'subTasks':
 					message = 'drop to move to top'

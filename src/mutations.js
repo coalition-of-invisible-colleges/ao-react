@@ -962,7 +962,7 @@ function tasksMuts(tasks, ev) {
             delete tasks[i].grid.rows[ev.y]
           }
           task.subTasks = task.subTasks.filter(st => st !== gridTaskId)
-          task.subTasks.push(gridTaskId)
+          task.subTasks.unshift(gridTaskId)
           return true
         }
       })
