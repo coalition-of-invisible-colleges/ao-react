@@ -27,7 +27,12 @@ const CardDetails = () => {
   return (
     <React.Fragment>
       <AoSmartZone inId={taskId} cardSource={'discard'}>
-        <div className={'card'}>
+        <div
+          className={'card'}
+          onDrop={e => {
+            e.preventDefault()
+            e.stopPropagation()
+          }}>
           <AoPaper taskId={taskId} />
           <AoPalette taskId={taskId} />
           <AoValue taskId={taskId} />

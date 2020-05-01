@@ -204,13 +204,13 @@ export default class AoSmartZone extends React.Component<
 	}
 
 	drop = async event => {
-		this.hideDrop(event)
 		event.preventDefault()
 		if (this.detectDragKind(event.dataTransfer) === 'file') {
 			console.log('file transfer, aborting card swap')
 			// api.uploadFile(event.dataTransfer)
 			return
 		}
+		this.hideDrop(event)
 
 		let toCoords: Sel = { x: this.props.x, y: this.props.y }
 		let fromZone: CardSource = event.dataTransfer.getData('fromZone')
