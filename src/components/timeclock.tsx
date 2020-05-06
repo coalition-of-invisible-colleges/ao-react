@@ -131,7 +131,7 @@ class AoTimeHistory extends React.Component<Props> {
 
   @computed get timeLog() {
     if (
-      aoStore.hashMap.get(this.props.taskId).time ||
+      !aoStore.hashMap.get(this.props.taskId).time ||
       aoStore.hashMap.get(this.props.taskId).time.length < 1
     ) {
       return ''
