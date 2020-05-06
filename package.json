@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "repository": "github.com/AutonomousOrganization",
   "license": "GPL-3.0",
-  "type": "module",
   "scripts": {
     "webdev": "webpack-dev-server --mode development --hot --progress --colors --port 3000 --open",
     "webpack": "webpack -p --progress --colors",
