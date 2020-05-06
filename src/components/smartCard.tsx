@@ -85,7 +85,8 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 					<div className={'miniCard'}>
 						{card.color ? <AoPaper taskId={card.taskId} /> : ''}
 						<div className={'miniCardSummary'}>
-							{card.seen.some(t => {
+							{card.seen &&
+							card.seen.some(t => {
 								return t.memberId === aoStore.member.memberId
 							}) ? (
 								''
