@@ -30,9 +30,6 @@ export default class AoStatus extends React.Component<{}, AoStatusState> {
 
   pendingPromises = []
 
-  appendPendingPromise = promise =>
-    (this.pendingPromises = [...this.pendingPromises, promise])
-
   removePendingPromise = promise =>
     (this.pendingPromises = this.pendingPromises.filter(p => p !== promise))
 

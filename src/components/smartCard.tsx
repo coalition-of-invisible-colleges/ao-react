@@ -27,7 +27,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 		switch (cardStyle) {
 			case 'priority':
 				return (
-					<div className={'priority'}>
+					<div className={'card prioritized'}>
 						<AoPaper taskId={taskId} />
 						<div className={'content'}>
 							<Markdown>{card.name}</Markdown>
@@ -68,6 +68,19 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 				break
 			case 'mini':
 			default:
+				let gridCardCount = 0
+				if (card.grid) {
+					Object.keys(card.grid.rows).forEach(row => {
+						Object.keys(row).forEach(cell => {
+							gridCardCount++
+						})
+					})
+				}
+				const subCardCount =
+					card.priorities.length +
+					gridCardCount +
+					card.subTasks.length +
+					card.completed.length
 				return (
 					<div className={'miniCard'}>
 						{card.color ? <AoPaper taskId={card.taskId} /> : ''}
@@ -90,6 +103,11 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 									<span className={'miniValue'}>{card.completeValue}</span>
 								) : null}
 							</div>
+							{subCardCount >= 1 ? (
+								<div className={'miniPreview'}>{subCardCount}</div>
+							) : (
+								''
+							)}
 						</div>
 						<Markdown options={{ forceBlock: true }}>{card.name}</Markdown>
 					</div>

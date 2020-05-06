@@ -8,7 +8,7 @@ import {
   Link,
   Redirect
 } from 'react-router-dom'
-import AoGrids from './components/Grids'
+import AoMember from './components/Member'
 import AoGrid from './components/grid'
 import AoCard from './components/Card'
 import aoStore from './client/store'
@@ -18,6 +18,7 @@ import Login from './components/Login'
 import Members from './components/Members'
 import AoStatus from './components/status'
 import AoVolume from './components/volume'
+import AoSearch from './components/search'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   return (
@@ -83,6 +84,7 @@ const App = observer(() => {
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
             <AoStatus />
             <AoVolume />
+            <AoSearch />
           </ProtectedFragment>
 
           {/* A <Switch> looks through its children <Route>s and
@@ -108,7 +110,7 @@ const App = observer(() => {
             />
             <ProtectedRoute
               path="/"
-              component={AoGrids}
+              component={AoMember}
               loggedIn={aoStore.state.loggedIn}
             />
             {/* <Route path="/task/:taskId">

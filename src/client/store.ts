@@ -56,7 +56,7 @@ export interface Task {
   completed: string[]
   claimed: string[]
   passed: number[]
-  guild: false
+  guild: string
   lastClaimed: number
   completeValue: number
   payment_hash: string
@@ -136,6 +136,8 @@ const defaultState: AoState = {
 class AoStore {
   @observable
   state: AoState = defaultState
+  @observable
+  searchResults: Task[] = []
   @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
@@ -193,6 +195,45 @@ class AoStore {
   @action.bound
   resetState() {
     setCurrent(this.state, defaultState)
+  }
+  @action.bound
+  updateSearchResults(query: string) {
+    if (query.length < 1) return
+    // for 1 letter search only first letter of guild names, 2 letters searches 1st word and also 1st initials of guild titles
+    let foundCards: Task[] = []
+    let foundGuilds: Task[] = []
+    let foundMembers: Task[] = []
+    let searchResults: Task[] = []
+
+    try {
+      let regex = new RegExp(query, 'i')
+      console.log('query is ', query)
+      this.state.tasks.forEach(t => {
+        if (t.guild && regex.test(t.guild)) {
+          foundGuilds.push(t)
+        } else if (regex.test(t.name)) {
+          if (
+            !foundGuilds.some(g => {
+              return g.guild === t.name
+            })
+          ) {
+            foundCards.push(t)
+          }
+        }
+      })
+
+      this.state.members.forEach(member => {
+        if (regex.test(member.name)) {
+          let result = this.hashMap.get(member.memberId)
+          result.name = member.name
+          foundMembers.push(result)
+        }
+      })
+      this.searchResults = foundGuilds.concat(foundMembers).concat(foundCards)
+      console.log('store.searchResults is now ', this.searchResults)
+    } catch (err) {
+      console.log('regex search terminated in error: ', err)
+    }
   }
 }
 const aoStore = new AoStore()

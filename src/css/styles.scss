@@ -73,6 +73,49 @@ textarea {
       fill: #fff;
     }
 
+    #search {
+      z-index: 1;
+      position: fixed;
+      right: 0.5em;
+      top: 50%;
+      transform: translateY(-50%);
+
+      &.open {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.5em;
+        width: min-content;
+        border-radius: 0.5em;
+
+        .actionCircle {
+          img {
+            width: 3em;
+          }
+        }
+
+        input {
+          margin: 0.5em 5em 0.5em 0.5em;
+        }
+
+        .results {
+          overflow-y: scroll;
+          max-height: 50vh;
+          padding-right: 0.5em;
+          width: 31vw;
+        }
+      }
+
+      .actionCircle {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+
+        img {
+          width: 2.5em;
+        }
+      }
+    }
+
     #logout {
       position: fixed;
       bottom: 0.75em;
@@ -93,6 +136,22 @@ textarea {
       width: fit-content;
       padding: 0.25em 0.25em 0.25em 0.25em;
 
+      &.prioritized {
+        position: relative;
+        margin-top: 0.25em;
+        text-align: left;
+        padding-top: 0.55em;
+        padding-bottom: 0.55em;
+        min-height: 0;
+        width: 100%;
+        min-width: unset;
+
+        .content {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+      }
+
       .content {
         position: relative;
         margin-top: 1em;
@@ -111,13 +170,8 @@ textarea {
         top: 0.5em;
         height: 1.5em;
         width: 1.5em;
-        opacity: 0.5;
         cursor: pointer;
-
-        img {
-          height: 100%;
-          width: 100%;
-        }
+        opacity: 0.5;
       }
 
       @keyframes spin {
@@ -265,6 +319,8 @@ textarea {
             }
 
             &.empty {
+              cursor: text;
+
               .dzu-dropzone {
                 width: 100%;
                 height: 100%;
@@ -354,12 +410,24 @@ textarea {
                     top: 0.08em;
                     height: 0.75em;
                     width: 0.75em;
-                    opacity: 0.5;
+                    opacity: 0.75;
                     display: inline;
                     pointer-events: none;
-                    margin-left: 0.15em;
-                    // transform: translate(28px, -40px);
+                    margin-left: 0.175em;
+                    margin-right: 0.15em;
                   }
+                }
+
+                .miniPreview {
+                  z-index: 7;
+                  font-size: 0.75em;
+                  padding: 0.25em;
+                  pointer-events: none;
+                  margin: 0;
+                  position: absolute;
+                  right: 0;
+                  bottom: 0;
+                  background-color: rgba(0, 0, 0, 0.2);
                 }
 
                 .miniCountdown {
@@ -406,17 +474,6 @@ textarea {
 
     .stack {
       margin: 0.5em 1em 0.5em 1em;
-      .priority {
-        position: relative;
-        margin-top: 0.25em;
-        text-align: left;
-        padding-top: 0.55em;
-        padding-bottom: 0.55em;
-        .content {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
-      }
       .card {
         margin-top: 0.5em;
       }
@@ -485,10 +542,19 @@ textarea {
       padding: 0.5em;
       margin-top: 0;
       margin-bottom: 0;
+      user-select: none;
 
       &:hover {
         text-decoration: underline;
       }
+    }
+
+    .actionCircle {
+      background-color: rgba(255, 255, 255, 0.25);
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 0.5em;
+      user-select: none;
     }
   }
 }

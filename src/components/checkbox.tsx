@@ -30,9 +30,11 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
       }
     }
     return (
-      <div className="checkbox" onClick={onClick}>
-        <img src={computed.isCompleted ? Completed : Uncompleted} />
-      </div>
+      <img
+        className="checkbox"
+        src={computed.isCompleted ? Completed : Uncompleted}
+        onClick={onClick}
+      />
     )
   }
 )

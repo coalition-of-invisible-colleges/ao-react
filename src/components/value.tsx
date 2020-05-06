@@ -8,12 +8,12 @@ import { delay, cancelablePromise, noop } from '../utils'
 
 interface State {
   editing: boolean
-  text?: string
+  text: string
 }
 
 export const defaultState: State = {
   editing: false,
-  text: undefined
+  text: ''
 }
 
 interface ValueParams {
@@ -74,7 +74,6 @@ export default class AoValue extends React.Component<ValueParams, State> {
             type="text"
             onChange={this.onChange}
             onKeyDown={this.onKeyDown}
-            // ref={this.textBox}
             value={this.state.text}
             size={1}
             autoFocus

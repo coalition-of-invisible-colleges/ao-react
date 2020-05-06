@@ -15,10 +15,16 @@ export interface Sel {
 	y: number
 }
 
-type CardSource = 'priorities' | 'subTasks' | 'completed' | 'grid' | 'discard'
+type CardSource =
+	| 'priorities'
+	| 'subTasks'
+	| 'completed'
+	| 'grid'
+	| 'discard'
+	| 'search'
 
 interface SmartZoneProps {
-	inId: string
+	inId?: string
 	taskId?: string
 	selected?: boolean
 	cardSource: CardSource
@@ -81,15 +87,6 @@ export default class AoSmartZone extends React.Component<
 
 	onDoubleClick = event => {
 		this.clearPendingPromises()
-		// let x, y
-		// if (event.target.id.includes('-')) {
-		// 	const [xs, ys] = event.target.id.split('-')
-		// 	x = parseInt(xs)
-		// } else {
-		// 	const ys = event.target.id
-		// 	y = parseInt(ys)
-		// }
-		console.log('doubleClick y is ', this.props.y)
 		this.props.onGoIn({ x: this.props.x, y: this.props.y })
 	}
 
@@ -251,6 +248,13 @@ export default class AoSmartZone extends React.Component<
 			if (name) {
 				nameFrom = name
 			}
+		} else if (fromZone === 'search' && fromCoords.y) {
+			const trueY = aoStore.searchResults.length - 1 - fromCoords.y
+			fromTaskId = aoStore.searchResults[trueY].taskId
+			const name = aoStore.hashMap.get(fromTaskId).name
+			if (name) {
+				nameFrom = name
+			}
 		}
 
 		let nameTo = undefined
@@ -347,6 +351,21 @@ export default class AoSmartZone extends React.Component<
 				api.refocusCard(fromTaskId, this.props.inId)
 			}
 			api.discardCardFromCard(fromTaskId, this.props.inId)
+		} else if (fromZone === 'search') {
+			switch (this.props.cardSource) {
+				case 'priorities':
+					api.prioritizeCard(fromTaskId, this.props.inId)
+					break
+				case 'grid':
+					if (nameTo) {
+						api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
+					}
+					api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+					break
+				case 'subTasks':
+					api.findOrCreateCardInCard(nameFrom, this.props.inId)
+					break
+			}
 		}
 	}
 
@@ -456,6 +475,9 @@ export default class AoSmartZone extends React.Component<
 				case 'completed':
 					hardcodedStyle = 'card'
 					break
+				case 'search':
+					hardcodedStyle = 'priority'
+					break
 			}
 
 			return (
@@ -470,10 +492,14 @@ export default class AoSmartZone extends React.Component<
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}
 					onMouseOver={this.onHover}
-					style={{
-						gridRow: (this.props.y + 1).toString(),
-						gridColumn: (this.props.x + 1).toString()
-					}}>
+					style={
+						this.props.cardSource === 'grid'
+							? {
+									gridRow: (this.props.y + 1).toString(),
+									gridColumn: (this.props.x + 1).toString()
+							  }
+							: {}
+					}>
 					{this.state.draggedKind === 'card' ? (
 						<div className={'overlay'}>
 							<div className={'label'}>{message}</div>
