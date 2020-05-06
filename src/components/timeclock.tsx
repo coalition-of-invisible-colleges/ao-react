@@ -172,6 +172,7 @@ class AoTimeHistory extends React.Component<Props> {
     let dateLogOut = null
 
     if (
+      aoStore.hashMap.get(this.props.taskId).time &&
       aoStore.hashMap.get(this.props.taskId).time.length > 0 &&
       aoStore.hashMap.get(this.props.taskId).time.some(t => {
         return t.memberId === aoStore.member.memberId
