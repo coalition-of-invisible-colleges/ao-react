@@ -138,6 +138,7 @@ class AoStore {
   state: AoState = defaultState
   @observable
   searchResults: Task[] = []
+  context: string[] = []
   @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
@@ -165,6 +166,13 @@ class AoStore {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
+    })
+    return hashMap
+  }
+  @computed get memberById(): Map<string, Member> {
+    let hashMap: Map<string, Member> = new Map()
+    this.state.members.forEach(m => {
+      hashMap.set(m.memberId, m)
     })
     return hashMap
   }
@@ -234,6 +242,20 @@ class AoStore {
     } catch (err) {
       console.log('regex search terminated in error: ', err)
     }
+  }
+  @action.bound
+  addToContext(taskIds: string[]) {
+    console.log('addToContext cards is ', taskIds)
+    if (taskIds.length < 1) return
+    this.context.push(...taskIds)
+    console.log('post: context is ', this.context)
+  }
+  @action.bound
+  clearContextTo(taskId: string) {
+    const index = this.context.findIndex(tId => {
+      return tId === taskId
+    })
+    this.context.splice(index)
   }
 }
 const aoStore = new AoStore()

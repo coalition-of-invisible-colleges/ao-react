@@ -13,7 +13,7 @@ import {
 import api from '../client/api'
 import aoStore from '../client/store'
 import Markdown from 'markdown-to-jsx'
-import AoSmartZone, { Sel } from './smartZone'
+import AoSmartZone, { Sel, CardSource } from './smartZone'
 
 interface StackState {
   redirect?: string
@@ -23,8 +23,6 @@ interface StackState {
 export const defaultState: StackState = {
   redirect: undefined
 }
-
-type CardSource = 'priorities' | 'subTasks' | 'completed'
 
 interface StackProps {
   taskId: string
@@ -57,22 +55,36 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       "so altogether it's ",
       aoStore.hashMap.get(this.props.taskId)[this.props.cardSource]
     )
+
+    let taskId
+    if (this.props.cardSource === 'context') {
+      taskId = aoStore.context[selection.y]
+      aoStore.clearContextTo(taskId)
+    } else {
+      aoStore.addToContext([this.props.taskId])
+      const trueY =
+        aoStore.hashMap.get(this.props.taskId)[this.props.cardSource].length -
+        1 -
+        selection.y
+      taskId = aoStore.hashMap.get(this.props.taskId)[this.props.cardSource][
+        trueY
+      ]
+    }
     this.setState({
-      redirect:
-        '/task/' +
-        aoStore.hashMap.get(this.props.taskId)[this.props.cardSource][
-          aoStore.hashMap.get(this.props.taskId)[this.props.cardSource].length -
-            1 -
-            selection.y
-        ]
+      redirect: '/task/' + taskId
     })
   }
 
   render() {
     console.log('AoStack taskId is ', this.props.taskId)
-    const cardsToRender = aoStore.hashMap.get(this.props.taskId)[
-      this.props.cardSource
-    ]
+    let cardsToRender
+    if (this.props.cardSource === 'context') {
+      cardsToRender = aoStore.context.reverse()
+    } else {
+      cardsToRender = aoStore.hashMap.get(this.props.taskId)[
+        this.props.cardSource
+      ]
+    }
     console.log('cardsToRender is ', cardsToRender)
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
@@ -92,19 +104,31 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           onGoIn={this.goInZone}
           key={i}
           cardSource={this.props.cardSource}
+          style={{
+            maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
+          }}
         />
       ))
 
     return (
-      <div className={'stack'}>
-        <AoSmartZone
-          selected={this.state.selected ? this.state.selected.y === -1 : false}
-          y={-1}
-          inId={this.props.taskId}
-          onSelect={this.selectStackZone}
-          onGoIn={this.goInZone}
-          cardSource={this.props.cardSource}
-        />
+      <div
+        className={
+          this.props.cardSource === 'context' ? 'context stack' : 'stack'
+        }>
+        {this.props.cardSource !== 'context' ? (
+          <AoSmartZone
+            selected={
+              this.state.selected ? this.state.selected.y === -1 : false
+            }
+            y={-1}
+            inId={this.props.taskId}
+            onSelect={this.selectStackZone}
+            onGoIn={this.goInZone}
+            cardSource={this.props.cardSource}
+          />
+        ) : (
+          ''
+        )}
         {list}
       </div>
     )

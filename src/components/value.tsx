@@ -32,6 +32,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
   }
 
   startEditing(event) {
+    event.stopPropagation()
     console.log(
       'value is ',
       aoStore.hashMap.get(this.props.taskId).completeValue
@@ -46,6 +47,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
   }
 
   saveValue(event) {
+    event.stopPropagation()
     console.log('save Value', event.target.value)
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0

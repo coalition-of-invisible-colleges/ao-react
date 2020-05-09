@@ -15,13 +15,14 @@ export interface Sel {
 	y: number
 }
 
-type CardSource =
+export type CardSource =
 	| 'priorities'
 	| 'subTasks'
 	| 'completed'
 	| 'grid'
 	| 'discard'
 	| 'search'
+	| 'context'
 
 interface SmartZoneProps {
 	inId?: string
@@ -30,6 +31,7 @@ interface SmartZoneProps {
 	cardSource: CardSource
 	x?: number
 	y?: number
+	style?: {}
 	onSelect?: (selection: Sel) => void
 	onGoIn?: (selection: Sel) => void
 }
@@ -72,7 +74,9 @@ export default class AoSmartZone extends React.Component<
 		this.appendPendingPromise(waitForClick)
 		return waitForClick.promise
 			.then(() => {
-				this.props.onSelect({ x: this.props.x, y: this.props.y })
+				if (this.props.cardSource === 'grid') {
+					this.props.onSelect({ x: this.props.x, y: this.props.y })
+				}
 				this.removePendingPromise(waitForClick)
 			})
 			.catch(errorInfo => {
@@ -255,6 +259,15 @@ export default class AoSmartZone extends React.Component<
 			if (name) {
 				nameFrom = name
 			}
+		} else if (fromZone === 'context' && fromCoords.y) {
+			console.log('detected drag from context y is ', fromCoords.y)
+			const trueY = fromCoords.y
+			fromTaskId = aoStore.context[trueY]
+			console.log('trueY is ', trueY)
+			const name = aoStore.hashMap.get(fromTaskId).name
+			if (name) {
+				nameFrom = name
+			}
 		}
 
 		let nameTo = undefined
@@ -351,7 +364,7 @@ export default class AoSmartZone extends React.Component<
 				api.refocusCard(fromTaskId, this.props.inId)
 			}
 			api.discardCardFromCard(fromTaskId, this.props.inId)
-		} else if (fromZone === 'search') {
+		} else if (fromZone === 'search' || fromZone === 'context') {
 			switch (this.props.cardSource) {
 				case 'priorities':
 					api.prioritizeCard(fromTaskId, this.props.inId)
@@ -384,6 +397,7 @@ export default class AoSmartZone extends React.Component<
 			<div
 				className="zone empty"
 				onClick={this.onClick}
+				onDragEnter={this.allowDrop}
 				onDragOver={this.allowDrop}
 				onDragLeave={this.hideDrop}
 				onDrop={this.drop}>
@@ -397,6 +411,7 @@ export default class AoSmartZone extends React.Component<
 			return (
 				<div
 					className={'discard'}
+					onDragEnter={this.allowDrop}
 					onDragOver={this.allowDrop}
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}>
@@ -450,6 +465,7 @@ export default class AoSmartZone extends React.Component<
 				<p
 					className={'action'}
 					onClick={() => this.props.onSelect({ y: this.props.y })}
+					onDragEnter={this.allowDrop}
 					onDragOver={this.allowDrop}
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}>
@@ -478,6 +494,28 @@ export default class AoSmartZone extends React.Component<
 				case 'search':
 					hardcodedStyle = 'priority'
 					break
+				case 'context':
+					console.log('context row rendering')
+					hardcodedStyle = 'priority'
+					break
+			}
+			// console.log(
+			// 	'var log: this.props.x = ',
+			// 	this.props.x,
+			// 	' and this.props.y is ',
+			// 	this.props.y,
+			// 	' and this.props.taskId is ',
+			// 	this.props.taskId,
+			// 	' and hardcodedStyle is ',
+			// 	hardcodedStyle
+			// )
+
+			let style = this.props.style
+			if (this.props.cardSource === 'grid') {
+				style = {
+					gridRow: (this.props.y + 1).toString(),
+					gridColumn: (this.props.x + 1).toString()
+				}
 			}
 
 			return (
@@ -488,18 +526,12 @@ export default class AoSmartZone extends React.Component<
 					onDoubleClick={this.onDoubleClick}
 					draggable="true"
 					onDragStart={this.drag}
+					onDragEnter={this.allowDrop}
 					onDragOver={this.allowDrop}
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}
 					onMouseOver={this.onHover}
-					style={
-						this.props.cardSource === 'grid'
-							? {
-									gridRow: (this.props.y + 1).toString(),
-									gridColumn: (this.props.x + 1).toString()
-							  }
-							: {}
-					}>
+					style={style}>
 					{this.state.draggedKind === 'card' ? (
 						<div className={'overlay'}>
 							<div className={'label'}>{message}</div>

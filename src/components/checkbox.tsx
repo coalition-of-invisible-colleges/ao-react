@@ -22,7 +22,8 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
         )
       }
     })
-    const onClick = () => {
+    const onClick = event => {
+      event.stopPropagation()
       if (computed.isCompleted) {
         api.uncheckCard(taskId)
       } else {

@@ -27,6 +27,7 @@ const CardDetails = () => {
   return (
     <React.Fragment>
       <AoSmartZone inId={taskId} cardSource={'discard'}>
+        <AoStack taskId={taskId} cardSource={'context'} />
         <div
           className={'card'}
           onDrop={e => {
@@ -35,9 +36,9 @@ const CardDetails = () => {
           }}>
           <AoPaper taskId={taskId} />
           <div className="content">
-            <Markdown>
-              {taskId === aoStore.member.memberId
-                ? aoStore.member.name
+            <Markdown options={{ forceBlock: true }}>
+              {taskId === aoStore.hashMap.get(taskId).name
+                ? aoStore.memberById.get(taskId).name
                 : aoStore.hashMap.get(taskId).name}
             </Markdown>
           </div>

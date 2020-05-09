@@ -13,6 +13,7 @@ import AoValue from './value'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
 import AoGrid from './grid'
+import Completed from '../assets/images/completed.svg'
 
 export type CardStyle = 'priority' | 'card' | 'full' | 'mini'
 
@@ -24,13 +25,17 @@ interface SmartCardProps {
 const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 	({ taskId, cardStyle }) => {
 		const card: Task = aoStore.hashMap.get(taskId)
+		let content = card.name
+		if (taskId === card.name) {
+			content = aoStore.memberById.get(taskId).name
+		}
 		switch (cardStyle) {
 			case 'priority':
 				return (
 					<div className={'card prioritized'}>
 						<AoPaper taskId={taskId} />
 						<div className={'content'}>
-							<Markdown>{card.name}</Markdown>
+							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
 						<AoValue taskId={taskId} />
 						<AoCheckbox taskId={taskId} />
@@ -44,7 +49,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 						<AoValue taskId={taskId} />
 						<AoCheckbox taskId={taskId} />
 						<div className={'content'}>
-							<Markdown>{card.name}</Markdown>
+							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
 						<AoCoin taskId={taskId} />
 					</div>
@@ -57,7 +62,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 						<AoValue taskId={taskId} />
 						<AoCheckbox taskId={taskId} />
 						<div className={'content'}>
-							<Markdown>{card.name}</Markdown>
+							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
 						<AoTimeClock taskId={taskId} />
 						<AoPalette taskId={taskId} />
@@ -70,12 +75,16 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 			default:
 				let gridCardCount = 0
 				if (card.grid) {
-					Object.keys(card.grid.rows).forEach(row => {
-						Object.keys(row).forEach(cell => {
+					console.log('grid is ', card.grid)
+					Object.keys(card.grid.rows).forEach(i => {
+						console.log('row! row is ', card.grid.rows[i])
+						Object.keys(card.grid.rows[i]).forEach(cell => {
+							console.log('cell!')
 							gridCardCount++
 						})
 					})
 				}
+				console.log('gridCardCount is ', gridCardCount)
 				const subCardCount =
 					card.priorities.length +
 					gridCardCount +
@@ -95,10 +104,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 							)}
 							<div className={'miniCompleted'}>
 								{card.claimed.indexOf(aoStore.member.memberId) >= 0 ? (
-									<img
-										className={'miniCheckbox'}
-										src="../assets/images/completed.svg"
-									/>
+									<img className={'miniCheckbox'} src={Completed} />
 								) : null}
 								{card.completeValue > 0 ? (
 									<span className={'miniValue'}>{card.completeValue}</span>
@@ -110,7 +116,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 								''
 							)}
 						</div>
-						<Markdown options={{ forceBlock: true }}>{card.name}</Markdown>
+						<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 					</div>
 				)
 				break

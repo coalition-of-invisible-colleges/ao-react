@@ -52,6 +52,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   }
 
   goInSquare(selection: Sel) {
+    aoStore.addToContext([this.props.taskId])
     this.setState({
       redirect:
         '/task/' +

@@ -21,7 +21,8 @@ const AoCoin: FunctionComponent<AoCoinParams> = observer(({ taskId }) => {
       return aoStore.hashMap.get(taskId).deck.length
     }
   })
-  const onClick = () => {
+  const onClick = event => {
+    event.stopPropagation()
     if (computed.isGrabbed) {
       api.dropCard(taskId)
     } else {

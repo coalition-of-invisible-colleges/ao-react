@@ -146,7 +146,8 @@ textarea {
         width: 100%;
         min-width: unset;
 
-        .content {
+        .content,
+        .content > p {
           margin-top: 0;
           margin-bottom: 0;
         }
@@ -154,8 +155,8 @@ textarea {
 
       .content {
         position: relative;
-        margin-top: 1em;
-        margin-bottom: 1em;
+        margin: 1em;
+        max-width: 28em;
       }
 
       .value {
@@ -474,6 +475,16 @@ textarea {
 
     .stack {
       margin: 0.5em 1em 0.5em 1em;
+      &.context {
+        .zone {
+          margin: 0 auto;
+          .content > p {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
       .card {
         margin-top: 0.5em;
         max-width: 30em;
