@@ -57,7 +57,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       taskId = aoStore.context[selection.y]
       console.log(
         'going in to context zone: ',
-        aoStore.hashMap.get(aoStore.context[selection.y])
+        aoStore.hashMap.get(aoStore.context[selection.y]).name
       )
       aoStore.clearContextTo(taskId)
     } else {
