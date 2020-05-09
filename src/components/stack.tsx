@@ -51,14 +51,14 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       ' and y is ',
       selection.y
     )
-    console.log(
-      "so altogether it's ",
-      aoStore.hashMap.get(this.props.taskId)[this.props.cardSource]
-    )
 
     let taskId
     if (this.props.cardSource === 'context') {
       taskId = aoStore.context[selection.y]
+      console.log(
+        'going in to context zone: ',
+        aoStore.hashMap.get(aoStore.context[selection.y])
+      )
       aoStore.clearContextTo(taskId)
     } else {
       aoStore.addToContext([this.props.taskId])
@@ -104,9 +104,13 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           onGoIn={this.goInZone}
           key={i}
           cardSource={this.props.cardSource}
-          style={{
-            maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
-          }}
+          style={
+            this.props.cardSource === 'context'
+              ? {
+                  maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
+                }
+              : {}
+          }
         />
       ))
 

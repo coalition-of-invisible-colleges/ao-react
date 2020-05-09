@@ -255,7 +255,7 @@ class AoStore {
     const index = this.context.findIndex(tId => {
       return tId === taskId
     })
-    this.context.splice(index)
+    this.context = this.context.slice(0, index)
   }
 }
 const aoStore = new AoStore()
