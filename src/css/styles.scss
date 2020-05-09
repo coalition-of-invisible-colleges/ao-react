@@ -477,13 +477,15 @@ textarea {
       margin: 0.5em 1em 0.5em 1em;
       &.context {
         .zone {
-          margin: 0 auto;
           .content > p {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
           }
         }
+      }
+      .zone {
+        margin: 0 auto;
       }
       .card {
         margin-top: 0.5em;
