@@ -247,7 +247,7 @@ class AoStore {
   addToContext(taskIds: string[]) {
     console.log('addToContext cards is ', taskIds)
     if (taskIds.length < 1) return
-    this.context.push(...taskIds)
+    Array.prototype.push.apply(this.context, taskIds)
     console.log('post: context is ', this.context)
   }
   @action.bound
