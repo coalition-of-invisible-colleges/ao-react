@@ -15,19 +15,7 @@ export default class AoVolume extends React.Component<{}> {
     this.toggleMute = this.toggleMute.bind(this)
   }
 
-  componentWillUnmount() {
-    this.clearPendingPromises()
-  }
-
   pendingPromises = []
-
-  appendPendingPromise = promise =>
-    (this.pendingPromises = [...this.pendingPromises, promise])
-
-  removePendingPromise = promise =>
-    (this.pendingPromises = this.pendingPromises.filter(p => p !== promise))
-
-  clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
 
   toggleMute() {
     if (aoStore.member.muted) {
@@ -39,11 +27,10 @@ export default class AoVolume extends React.Component<{}> {
 
   render() {
     return (
-      <img
-        id="volume"
-        src={aoStore.member.muted ? Muted : Unmuted}
-        onDoubleClick={this.toggleMute}
-      />
+      <div id={'volume'} onClick={this.toggleMute} className={'action'}>
+        <img src={aoStore.member.muted ? Muted : Unmuted} />
+        <span>{aoStore.member.muted ? 'Unmute' : 'Mute'}</span>
+      </div>
     )
   }
 }

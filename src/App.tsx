@@ -19,6 +19,8 @@ import AoMembers from './components/Members'
 import AoStatus from './components/status'
 import AoVolume from './components/volume'
 import AoSearch from './components/search'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   return (
@@ -63,17 +65,26 @@ const App = observer(() => {
     api.logout()
     console.log('logged out', aoStore.state.loggedIn)
   }
+
+  const MainMenu: React.FunctionComponent<{}> = () => {
+    return (
+      <div id={'mainmenu'}>
+        <AoVolume />
+        <div onClick={changeTheme} id={'themer'} className={'action'}>
+          Next Theme
+        </div>
+        <div onClick={onLogout} id="logout" className={'action'}>
+          Log out
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       {render && (
         <Router>
           <nav>
-            <button type="button" onClick={changeTheme} id="themer">
-              Change theme
-            </button>
-            <button type="button" onClick={onLogout} id="logout">
-              Log out
-            </button>
             <Link to="/" id="home">
               Home
             </Link>
@@ -83,7 +94,13 @@ const App = observer(() => {
           </nav>
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
             <AoStatus />
-            <AoVolume />
+            <Tippy
+              content={<MainMenu />}
+              interactive={true}
+              trigger={'click'}
+              placement={'top-end'}>
+              <div id={'mainmenubutton'}>&#x22EE;</div>
+            </Tippy>
             <AoSearch />
           </ProtectedFragment>
 

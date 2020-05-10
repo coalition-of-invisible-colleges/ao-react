@@ -29,6 +29,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@tippyjs/react": "^4.0.2",
     "@types/lodash": "^4.14.149",
     "@types/ramda": "^0.27.3",
     "@types/socket.io": "^2.1.4",
