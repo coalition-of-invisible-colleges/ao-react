@@ -138,7 +138,8 @@ class AoStore {
   state: AoState = defaultState
   @observable
   searchResults: Task[] = []
-  context: string[] = []
+  @observable context: string[] = []
+  @observable currentCard: string = undefined
   @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
@@ -260,12 +261,22 @@ class AoStore {
     }
     console.log('post: context is ', this.context)
   }
+  removeFromContext(taskId: string) {
+    this.context = this.context.filter(tId => {
+      return tId !== taskId
+    })
+    console.log('card removed')
+  }
   @action.bound
   clearContextTo(taskId: string) {
     const index = this.context.findIndex(tId => {
       return tId === taskId
     })
     this.context = this.context.slice(0, index)
+  }
+  @action.bound
+  setCurrentCard(taskId: string) {
+    this.currentCard = taskId
   }
 }
 const aoStore = new AoStore()

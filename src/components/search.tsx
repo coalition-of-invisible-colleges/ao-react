@@ -31,6 +31,7 @@ export default class AoSearch extends React.Component<{}, State> {
     this.onChange = this.onChange.bind(this)
     this.renderSearchButton = this.renderSearchButton.bind(this)
     this.updateResults = this.updateResults.bind(this)
+    this.goInResult = this.goInResult.bind(this)
   }
 
   pendingPromises = []
@@ -72,8 +73,8 @@ export default class AoSearch extends React.Component<{}, State> {
 
   goInResult(selection: Sel) {
     console.log('goinResult')
-    const taskId = aoStore.context[selection.y]
-    aoStore.addToContext([taskId])
+    const taskId = aoStore.searchResults[selection.y].taskId
+    aoStore.addToContext([aoStore.currentCard])
     this.setState({
       redirect: '/task/' + taskId
     })
@@ -96,7 +97,13 @@ export default class AoSearch extends React.Component<{}, State> {
       .slice()
       .reverse()
       .map((task, i) => (
-        <AoSmartZone taskId={task.taskId} y={i} key={i} cardSource={'search'} />
+        <AoSmartZone
+          taskId={task.taskId}
+          y={i}
+          key={i}
+          cardSource={'search'}
+          onGoIn={this.goInResult}
+        />
       ))
 
     return <div className={'results'}>{results}</div>

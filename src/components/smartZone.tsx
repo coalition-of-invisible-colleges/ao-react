@@ -360,10 +360,14 @@ export default class AoSmartZone extends React.Component<
 			console.log('discard drop detected')
 			if (fromZone === 'grid') {
 				api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+				api.discardCardFromCard(fromTaskId, this.props.inId)
 			} else if (fromZone === 'priorities') {
 				api.refocusCard(fromTaskId, this.props.inId)
+				api.discardCardFromCard(fromTaskId, this.props.inId)
+			} else if (fromZone === 'context') {
+				console.log('drop from context detected')
+				aoStore.removeFromContext(fromTaskId)
 			}
-			api.discardCardFromCard(fromTaskId, this.props.inId)
 		} else if (fromZone === 'search' || fromZone === 'context') {
 			switch (this.props.cardSource) {
 				case 'priorities':
