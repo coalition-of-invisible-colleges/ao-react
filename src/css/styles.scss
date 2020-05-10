@@ -476,11 +476,19 @@ textarea {
     .stack {
       margin: 0.5em 1em 0.5em 1em;
       &.context {
+        margin-bottom: 0;
         .zone {
           .content > p {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+          }
+        }
+        .card {
+          margin-top: 0;
+          &.prioritized {
+            margin-top: 0;
+            box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
           }
         }
       }
@@ -491,6 +499,10 @@ textarea {
         margin-top: 0.5em;
         max-width: 30em;
       }
+    }
+
+    .context.stack ~ .card {
+      box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
     }
 
     .paper {
