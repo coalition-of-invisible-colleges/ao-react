@@ -14,8 +14,10 @@ import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
 import AoGrid from './grid'
 import Completed from '../assets/images/completed.svg'
+import AoStack from './stack'
+import AoCardMenu from './cardMenu'
 
-export type CardStyle = 'priority' | 'card' | 'full' | 'mini'
+export type CardStyle = 'priority' | 'card' | 'full' | 'mini' | 'context'
 
 interface SmartCardProps {
 	taskId: string
@@ -30,6 +32,16 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 			content = aoStore.memberById.get(taskId).name
 		}
 		switch (cardStyle) {
+			case 'context':
+				return (
+					<div className={'card context'}>
+						<AoPaper taskId={taskId} />
+						<div className={'content'}>
+							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+						</div>
+					</div>
+				)
+				break
 			case 'priority':
 				return (
 					<div className={'card prioritized'}>
@@ -37,7 +49,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
-						<AoValue taskId={taskId} />
+						<AoValue taskId={taskId} cardStyle={'collapsed'} />
 						<AoCheckbox taskId={taskId} />
 					</div>
 				)
@@ -57,18 +69,27 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 				break
 			case 'full':
 				return (
-					<div className={'card'}>
-						<AoPaper taskId={taskId} />
-						<AoValue taskId={taskId} />
-						<AoCheckbox taskId={taskId} />
-						<div className={'content'}>
-							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+					<React.Fragment>
+						<AoStack taskId={taskId} cardSource={'context'} />
+						<div
+							className={'card'}
+							onDrop={e => {
+								e.preventDefault()
+								e.stopPropagation()
+							}}>
+							<AoPaper taskId={taskId} />
+							<div className="content">
+								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+							</div>
+							<AoStack taskId={taskId} cardSource="priorities" />
+							<AoGrid taskId={taskId} />
+							<AoStack taskId={taskId} cardSource="subTasks" />
+							<AoValue taskId={taskId} cardStyle={'full'} />
+							<AoCheckbox taskId={taskId} />
+							<AoCoin taskId={taskId} />
+							<AoCardMenu taskId={taskId} />
 						</div>
-						<AoTimeClock taskId={taskId} />
-						<AoPalette taskId={taskId} />
-						<AoCountdown taskId={taskId} />
-						<AoCoin taskId={taskId} />
-					</div>
+					</React.Fragment>
 				)
 				break
 			case 'mini':
@@ -106,9 +127,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 								{card.claimed.indexOf(aoStore.member.memberId) >= 0 ? (
 									<img className={'miniCheckbox'} src={Completed} />
 								) : null}
-								{card.completeValue > 0 ? (
-									<span className={'miniValue'}>{card.completeValue}</span>
-								) : null}
+								<AoValue taskId={card.taskId} cardStyle={'mini'} />
 							</div>
 							{subCardCount >= 1 ? (
 								<div className={'miniPreview'}>{subCardCount}</div>

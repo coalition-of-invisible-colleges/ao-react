@@ -11,6 +11,8 @@ interface State {
   text: string
 }
 
+export type ValueStyle = 'full' | 'collapsed' | 'mini' | 'menu'
+
 export const defaultState: State = {
   editing: false,
   text: ''
@@ -18,6 +20,7 @@ export const defaultState: State = {
 
 interface ValueParams {
   taskId: string
+  cardStyle?: ValueStyle
 }
 
 @observer
@@ -86,16 +89,48 @@ export default class AoValue extends React.Component<ValueParams, State> {
         </div>
       )
     }
-    return (
-      <div className="value">
-        <div onClick={this.startEditing} className={'action'}>
-          {aoStore.hashMap.get(this.props.taskId).completeValue
-            ? 'worth ' +
-              aoStore.hashMap.get(this.props.taskId).completeValue +
-              ' points if checked'
-            : 'set checkmark value'}
-        </div>
-      </div>
-    )
+    switch (this.props.cardStyle) {
+      case 'full':
+        return (
+          <div onClick={this.startEditing} className={'value full action'}>
+            {aoStore.hashMap.get(this.props.taskId).completeValue
+              ? aoStore.hashMap.get(this.props.taskId).completeValue + ' points'
+              : '+value'}
+          </div>
+        )
+      case 'mini':
+        if (aoStore.hashMap.get(this.props.taskId).completeValue) {
+          return (
+            <span className={'miniValue'}>
+              {aoStore.hashMap.get(this.props.taskId).completeValue}
+            </span>
+          )
+        }
+        return null
+      case 'menu':
+        return (
+          <div className={'value'}>
+            <div onClick={this.startEditing} className={'action'}>
+              {aoStore.hashMap.get(this.props.taskId).completeValue
+                ? 'worth ' +
+                  aoStore.hashMap.get(this.props.taskId).completeValue +
+                  ' points if checked'
+                : 'set checkmark value'}
+            </div>
+          </div>
+        )
+      case 'collapsed':
+      default:
+        if (aoStore.hashMap.get(this.props.taskId).completeValue > 0) {
+          return (
+            <div className="value">
+              <div className={'action'}>
+                {aoStore.hashMap.get(this.props.taskId).completeValue}
+              </div>
+            </div>
+          )
+        }
+        return null
+    }
   }
 }

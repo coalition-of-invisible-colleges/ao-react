@@ -509,7 +509,7 @@ export default class AoSmartZone extends React.Component<
 					break
 				case 'context':
 					console.log('context row rendering')
-					hardcodedStyle = 'priority'
+					hardcodedStyle = 'context'
 					break
 			}
 			// console.log(

@@ -20,7 +20,7 @@ const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
       <Tippy
         content={
           <div className={'cardMenu'}>
-            <AoValue taskId={taskId} />
+            <AoValue taskId={taskId} cardStyle={'menu'} />
             <AoCountdown taskId={taskId} />
             <AoTimeClock taskId={taskId} />
             <AoPalette taskId={taskId} />

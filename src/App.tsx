@@ -93,7 +93,6 @@ const App = observer(() => {
             </Link>
           </nav>
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
-            <AoStatus />
             <Tippy
               content={<MainMenu />}
               interactive={true}
