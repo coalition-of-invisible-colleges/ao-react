@@ -16,6 +16,7 @@ import AoTimeClock from './timeclock'
 import AoGrid from './grid'
 import AoStack from './stack'
 import AoSmartZone from './smartZone'
+import AoCardMenu from './cardMenu'
 
 interface CardParams {
   taskId: string
@@ -26,6 +27,10 @@ const CardDetails = () => {
   aoStore.setCurrentCard(taskId)
   aoStore.removeFromContext(taskId)
   console.log('card!', taskId, aoStore.hashMap.get(taskId))
+  // <AoValue taskId={taskId} />
+  // <AoCheckbox taskId={taskId} />
+  // <AoCountdown taskId={taskId} />
+  // <AoPalette taskId={taskId} />
   return (
     <React.Fragment>
       <AoSmartZone inId={taskId} cardSource={'discard'}>
@@ -44,15 +49,12 @@ const CardDetails = () => {
                 : aoStore.hashMap.get(taskId).name}
             </Markdown>
           </div>
-          <AoValue taskId={taskId} />
-          <AoCheckbox taskId={taskId} />
           <AoStack taskId={taskId} cardSource="priorities" />
           <AoGrid taskId={taskId} />
           <AoStack taskId={taskId} cardSource="subTasks" />
-          <AoTimeClock taskId={taskId} />
+          <AoCheckbox taskId={taskId} />
           <AoCoin taskId={taskId} />
-          <AoCountdown taskId={taskId} />
-          <AoPalette taskId={taskId} />
+          <AoCardMenu taskId={taskId} />
         </div>
       </AoSmartZone>
     </React.Fragment>

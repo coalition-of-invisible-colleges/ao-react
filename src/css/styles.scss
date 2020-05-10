@@ -46,7 +46,7 @@ textarea {
       left: 4em;
     }
 
-    #mainmenubutton {
+    #mainMenuButton {
       position: fixed;
       right: 0;
       bottom: 0;
@@ -54,9 +54,10 @@ textarea {
       font-weight: bold;
       cursor: pointer;
       padding: 0.5em;
+      user-select: none;
     }
 
-    #mainmenu {
+    #mainMenu {
       padding: 0.25em 0.75em;
       .action {
         margin-bottom: 0.5em;
@@ -174,11 +175,54 @@ textarea {
         max-width: 28em;
       }
 
-      .value {
-        position: absolute;
-        right: 2em;
-        top: 0.2em;
+      .cardMenu {
+        .palette {
+          width: 100%;
+          .swatch {
+            display: inline-block;
+            position: relative;
+            margin: 0.75em 1em 2.5em 1em;
+            cursor: pointer;
+            .paper {
+              width: 1em;
+              height: 1em;
+            }
+            .border {
+              padding: 0.9em;
+              border: 0.165em solid transparent;
+              margin: -0.6em;
+              &.selected,
+              &:hover {
+                border-color: white;
+                border-radius: 1em;
+              }
+            }
+            .label {
+              margin-top: 0.75em;
+              position: absolute;
+              left: 50%;
+              transform: translateX(-50%);
+            }
+          }
+        }
       }
+
+      .cardMenuButton {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 0.5em;
+        font-size: 1.25em;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      // .value {
+      //   position: absolute;
+      //   right: 2em;
+      //   top: 0.2em;
+      // }
 
       .checkbox {
         position: absolute;
@@ -200,16 +244,16 @@ textarea {
       }
 
       .countdown {
-        position: absolute;
-        right: 0.5em;
-        bottom: 0.5em;
+        // position: absolute;
+        // right: 0.5em;
+        // bottom: 0.5em;
       }
 
-      .palette {
-        position: absolute;
-        right: 5.5em;
-        bottom: 0.5em;
-      }
+      // .palette {
+      //   position: absolute;
+      //   right: 5.5em;
+      //   bottom: 0.5em;
+      // }
 
       .coin {
         width: 2.5em;
@@ -245,9 +289,9 @@ textarea {
       }
 
       .hourglass {
-        position: absolute;
-        left: 0.5em;
-        bottom: 0.5em;
+        // position: absolute;
+        // left: 0.5em;
+        // bottom: 0.5em;
 
         img {
           width: 2em;

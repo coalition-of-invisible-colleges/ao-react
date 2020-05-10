@@ -9,14 +9,15 @@ import { delay, cancelablePromise, noop } from '../utils'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDistanceToNow } from 'date-fns'
+import AoPaper from './paper'
 
 interface State {
-  editing: boolean
+  // editing: boolean
   color: string
 }
 
 export const defaultState: State = {
-  editing: false,
+  // editing: false,
   color: undefined
 }
 
@@ -29,52 +30,56 @@ export default class AoPalette extends React.Component<PaletteParams, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
-    this.startEditing = this.startEditing.bind(this)
+    // this.startEditing = this.startEditing.bind(this)
     this.onClick = this.onClick.bind(this)
     console.log('AoCountdown!')
   }
 
-  startEditing(event) {
-    if (aoStore.hashMap.get(this.props.taskId).color) {
-      console.log('has a value')
-      this.setState({
-        color: aoStore.hashMap.get(this.props.taskId).color
-      })
-    }
-    this.setState({ editing: true })
-  }
+  // startEditing(event) {
+  //   if (aoStore.hashMap.get(this.props.taskId).color) {
+  //     console.log('has a value')
+  //     this.setState({
+  //       color: aoStore.hashMap.get(this.props.taskId).color
+  //     })
+  //   }
+  //   this.setState({ editing: true })
+  // }
 
   onClick(event, color) {
     console.log('onClick color is ', color)
     api.colorCard(this.props.taskId, color)
-    this.setState({ color: color, editing: false })
+    this.setState({ color: color })
   }
 
   render() {
-    if (this.state.editing) {
-      return (
-        <div className="palette">
-          <button onClick={event => this.onClick(event, 'red')}>Red</button>
-          <button onClick={event => this.onClick(event, 'yellow')}>
-            Yellow
-          </button>
-          <button onClick={event => this.onClick(event, 'green')}>Green</button>
-          <button onClick={event => this.onClick(event, 'blue')}>Blue</button>
-          <button onClick={event => this.onClick(event, 'purple')}>
-            Purple
-          </button>
-          <button onClick={event => this.onClick(event, 'black')}>Black</button>
+    // if (this.state.editing) {
+    const list = ['red', 'yellow', 'green', 'blue', 'purple'].map(
+      (colorName, i) => (
+        <div
+          onClick={event => this.onClick(event, colorName)}
+          className={'swatch'}>
+          <div
+            className={
+              aoStore.hashMap.get(this.props.taskId).color === colorName
+                ? 'border selected'
+                : 'border'
+            }>
+            <AoPaper color={colorName} />
+          </div>
+          <div className={'label'}>{colorName}</div>
         </div>
       )
-    }
-    return (
-      <div className="palette">
-        <button type="button" onClick={this.startEditing}>
-          {aoStore.hashMap.get(this.props.taskId).color
-            ? aoStore.hashMap.get(this.props.taskId).color
-            : 'Color'}
-        </button>
-      </div>
     )
+    return <div className="palette">{list}</div>
+    // }
+    // return (
+    //   <div className="palette">
+    //     <button type="button" onClick={this.startEditing}>
+    //       {aoStore.hashMap.get(this.props.taskId).color
+    //         ? aoStore.hashMap.get(this.props.taskId).color
+    //         : 'Color'}
+    //     </button>
+    //   </div>
+    // )
   }
 }

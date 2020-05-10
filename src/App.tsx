@@ -68,13 +68,13 @@ const App = observer(() => {
 
   const MainMenu: React.FunctionComponent<{}> = () => {
     return (
-      <div id={'mainmenu'}>
+      <div id={'mainMenu'}>
         <AoVolume />
         <div onClick={changeTheme} id={'themer'} className={'action'}>
           Next Theme
         </div>
         <div onClick={onLogout} id="logout" className={'action'}>
-          Log out
+          Log Out
         </div>
       </div>
     )
@@ -99,7 +99,7 @@ const App = observer(() => {
               interactive={true}
               trigger={'click'}
               placement={'top-end'}>
-              <div id={'mainmenubutton'}>&#x22EE;</div>
+              <div id={'mainMenuButton'}>&#x22EE;</div>
             </Tippy>
             <AoSearch />
           </ProtectedFragment>
