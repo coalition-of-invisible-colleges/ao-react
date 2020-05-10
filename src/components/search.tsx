@@ -5,19 +5,21 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartZone from './smartZone'
+import AoSmartZone, { Sel } from './smartZone'
 import MagnifyingGlass from '../assets/images/search.svg'
 
 interface State {
   searchPanel: boolean
   query: string
   results: Task[]
+  redirect?: string
 }
 
 export const defaultState: State = {
   searchPanel: false,
   query: '',
-  results: []
+  results: [],
+  redirect: undefined
 }
 
 @observer
@@ -68,6 +70,15 @@ export default class AoSearch extends React.Component<{}, State> {
     aoStore.updateSearchResults(this.state.query.trim())
   }
 
+  goInResult(selection: Sel) {
+    console.log('goinResult')
+    const taskId = aoStore.context[selection.y]
+    aoStore.addToContext([taskId])
+    this.setState({
+      redirect: '/task/' + taskId
+    })
+  }
+
   renderSearchButton() {
     return (
       <div className={'actionCircle'}>
@@ -92,6 +103,11 @@ export default class AoSearch extends React.Component<{}, State> {
   }
 
   render() {
+    if (this.state.redirect !== undefined) {
+      this.setState({ redirect: undefined })
+      return <Redirect to={this.state.redirect} />
+    }
+
     if (!this.state.searchPanel) {
       return <div id={'search'}>{this.renderSearchButton()}</div>
     }

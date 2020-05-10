@@ -79,11 +79,12 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     console.log('AoStack taskId is ', this.props.taskId)
     let cardsToRender
     if (this.props.cardSource === 'context') {
-      cardsToRender = aoStore.context.reverse()
+      cardsToRender = aoStore.context.slice()
     } else {
-      cardsToRender = aoStore.hashMap.get(this.props.taskId)[
-        this.props.cardSource
-      ]
+      cardsToRender = aoStore.hashMap
+        .get(this.props.taskId)
+        [this.props.cardSource].slice()
+        .reverse()
     }
     console.log('cardsToRender is ', cardsToRender)
     if (this.state.redirect !== undefined) {
@@ -91,28 +92,25 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       return <Redirect to={this.state.redirect} />
     }
 
-    const list = cardsToRender
-      .slice()
-      .reverse()
-      .map((stId, i) => (
-        <AoSmartZone
-          selected={this.state.selected ? this.state.selected.y === i : false}
-          inId={this.props.taskId}
-          taskId={stId}
-          y={i}
-          onSelect={this.selectStackZone}
-          onGoIn={this.goInZone}
-          key={i}
-          cardSource={this.props.cardSource}
-          style={
-            this.props.cardSource === 'context'
-              ? {
-                  maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
-                }
-              : {}
-          }
-        />
-      ))
+    const list = cardsToRender.map((stId, i) => (
+      <AoSmartZone
+        selected={this.state.selected ? this.state.selected.y === i : false}
+        inId={this.props.taskId}
+        taskId={stId}
+        y={i}
+        onSelect={this.selectStackZone}
+        onGoIn={this.goInZone}
+        key={i}
+        cardSource={this.props.cardSource}
+        style={
+          this.props.cardSource === 'context'
+            ? {
+                maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
+              }
+            : {}
+        }
+      />
+    ))
 
     return (
       <div
