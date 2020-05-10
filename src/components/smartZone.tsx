@@ -99,12 +99,18 @@ export default class AoSmartZone extends React.Component<
 	}
 
 	onKeyDown = event => {
-		if (event.key === 'Enter') {
+		if (event.key === 'Enter' && !event.shiftKey) {
 			switch (this.props.cardSource) {
 				case 'grid':
-					if (!this.state.text) {
+					const currentGrid = aoStore.hashMap.get(aoStore.currentCard).grid
+					if (
+						!this.state.text ||
+						(currentGrid &&
+							currentGrid[this.props.y] &&
+							currentGrid[this.props.y][this.props.x])
+					) {
 						api.unpinCardFromGrid(this.props.x, this.props.y, this.props.inId)
-					} else {
+					} else if (this.state.text.trim().length >= 1) {
 						api.pinCardToGrid(
 							this.props.x,
 							this.props.y,
@@ -125,6 +131,9 @@ export default class AoSmartZone extends React.Component<
 					}
 					break
 			}
+			this.setState({ text: undefined })
+			this.onBlur(event)
+		} else if (event.key === 'Escape') {
 			this.onBlur(event)
 		}
 	}

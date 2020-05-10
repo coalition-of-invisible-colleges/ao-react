@@ -24,6 +24,7 @@ interface CardParams {
 const CardDetails = () => {
   const { taskId }: CardParams = useParams()
   aoStore.setCurrentCard(taskId)
+  aoStore.removeFromContext(taskId)
   console.log('card!', taskId, aoStore.hashMap.get(taskId))
   return (
     <React.Fragment>
