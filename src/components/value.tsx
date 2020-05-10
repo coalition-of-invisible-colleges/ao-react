@@ -123,7 +123,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
       default:
         if (aoStore.hashMap.get(this.props.taskId).completeValue > 0) {
           return (
-            <div className="value">
+            <div className={'value collapsed'}>
               <div className={'action'}>
                 {aoStore.hashMap.get(this.props.taskId).completeValue}
               </div>

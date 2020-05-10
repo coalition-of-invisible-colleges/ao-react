@@ -32,7 +32,11 @@ const AoCoin: FunctionComponent<AoCoinParams> = observer(({ taskId }) => {
   return (
     <div className={computed.isGrabbed ? 'coin' : 'coin ungrabbed'}>
       <img src={Coin} onClick={onClick} draggable={false} />
-      <div className="hodls">{computed.hodlCount}</div>
+      {computed.hodlCount >= 2 ? (
+        <div className="hodls">{computed.hodlCount}</div>
+      ) : (
+        ''
+      )}
     </div>
   )
 })

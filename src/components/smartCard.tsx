@@ -64,6 +64,7 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
 						<AoCoin taskId={taskId} />
+						<AoCardMenu taskId={taskId} />
 					</div>
 				)
 				break

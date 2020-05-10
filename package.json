@@ -5,7 +5,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "webdev": "webpack-dev-server --mode development --hot --progress --colors --port 3000 --open",
-    "webpack": "webpack -p --progress --colors",
+    "webpack": "webpack -p --progress --colors --max_old_space_size=4096",
     "start": "run-p webdev server",
     "server": "node src/server/app.js",
     "format": "prettier --write '{src,test}/**/*.{js,jsx,ts,tsx}'",

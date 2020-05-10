@@ -82,8 +82,8 @@ export default class AoSearch extends React.Component<{}, State> {
 
   renderSearchButton() {
     return (
-      <div className={'actionCircle'}>
-        <img src={MagnifyingGlass} onClick={this.toggleSearchPanel} />
+      <div onClick={this.toggleSearchPanel} className={'actionCircle'}>
+        <img src={MagnifyingGlass} />
       </div>
     )
   }
