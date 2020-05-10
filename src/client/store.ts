@@ -248,7 +248,16 @@ class AoStore {
     console.log('addToContext cards is ', taskIds)
     if (taskIds.length < 1) return
     console.log('pre: context is ', this.context)
-    Array.prototype.push.apply(this.context, taskIds)
+    this.context = this.context.filter(tId => {
+      return !taskIds.includes(tId)
+    })
+    this.context.push(...taskIds)
+    if (this.context[0] !== this.member.memberId) {
+      this.context = this.context.filter(tId => {
+        return tId !== this.member.memberId
+      })
+      this.context.unshift(this.member.memberId)
+    }
     console.log('post: context is ', this.context)
   }
   @action.bound
