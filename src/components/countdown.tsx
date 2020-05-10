@@ -107,13 +107,13 @@ export default class AoCountdown extends React.Component<
     }
     return (
       <div className="countdown">
-        <button type="button" onClick={this.startEditing}>
+        <div onClick={this.startEditing} className={'action'}>
           {aoStore.hashMap.get(this.props.taskId).book.startTs
             ? formatDistanceToNow(
                 aoStore.hashMap.get(this.props.taskId).book.startTs
               )
-            : 'Schedule'}
-        </button>
+            : 'schedule event'}
+        </div>
       </div>
     )
   }

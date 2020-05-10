@@ -176,12 +176,16 @@ textarea {
       }
 
       .cardMenu {
+        .action {
+          margin-bottom: 0.5em;
+          margin-top: 0.5em;
+        }
         .palette {
           width: 100%;
           .swatch {
             display: inline-block;
             position: relative;
-            margin: 0.75em 1em 2.5em 1em;
+            margin: 0.75em 1em 2em 1em;
             cursor: pointer;
             .paper {
               width: 1em;
@@ -306,18 +310,14 @@ textarea {
           background-color: rgba(22, 22, 22, 0.4);
         }
 
-        img:hover + .history {
+        .action:hover + .history {
           display: block;
         }
 
         .stopped {
-          filter: invert(23%) sepia(86%) saturate(7352%) hue-rotate(356deg)
-            brightness(83%) contrast(118%);
         }
 
         .started {
-          filter: invert(99%) sepia(39%) saturate(2221%) hue-rotate(60deg)
-            brightness(104%) contrast(99%);
         }
 
         .cardTimeLog {

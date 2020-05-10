@@ -88,11 +88,13 @@ export default class AoValue extends React.Component<ValueParams, State> {
     }
     return (
       <div className="value">
-        <button type="button" onClick={this.startEditing}>
+        <div onClick={this.startEditing} className={'action'}>
           {aoStore.hashMap.get(this.props.taskId).completeValue
-            ? aoStore.hashMap.get(this.props.taskId).completeValue
-            : 'P'}
-        </button>
+            ? 'worth ' +
+              aoStore.hashMap.get(this.props.taskId).completeValue +
+              ' points if checked'
+            : 'set checkmark value'}
+        </div>
       </div>
     )
   }

@@ -6,7 +6,6 @@ import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import Hourglass from '../assets/images/hourglass.svg'
 
 interface TimeClockState {
   seconds: number
@@ -80,12 +79,11 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
   render() {
     return (
       <div className={'hourglass'}>
-        <img
+        <div
           onClick={this.run}
-          className={this.state.timer ? 'started' : 'stopped'}
-          src={Hourglass}
-          alt="hourglass"
-        />
+          className={this.state.timer ? 'started action' : 'stopped action'}>
+          {this.state.timer ? 'stop timeclock' : 'start timeclock'}
+        </div>
         <div className={'history'}>
           <p>Activity Log</p>
           <AoTimeHistory taskId={this.props.taskId} />
