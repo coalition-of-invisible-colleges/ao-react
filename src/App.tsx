@@ -15,7 +15,7 @@ import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
-import Members from './components/Members'
+import AoMembers from './components/Members'
 import AoStatus from './components/status'
 import AoVolume from './components/volume'
 import AoSearch from './components/search'
@@ -95,7 +95,7 @@ const App = observer(() => {
             </Route>
             <ProtectedRoute
               path="/members"
-              component={Members}
+              component={AoMembers}
               loggedIn={aoStore.state.loggedIn}
             />
             <ProtectedRoute

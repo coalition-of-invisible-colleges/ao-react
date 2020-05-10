@@ -116,7 +116,9 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 								''
 							)}
 						</div>
-						<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+						<div className={'content'}>
+							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+						</div>
 					</div>
 				)
 				break
