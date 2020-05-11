@@ -326,6 +326,8 @@ export default class AoSmartZone extends React.Component<
 				api.discardCardFromCard(fromTaskId, this.props.inId)
 			} else if (fromZone === 'context') {
 				aoStore.removeFromContext(fromTaskId)
+			} else if (fromZone === 'subTasks') {
+				api.discardCardFromCard(fromTaskId, this.props.inId)
 			}
 		} else if (fromZone === 'search' || fromZone === 'context') {
 			switch (this.props.cardSource) {
