@@ -4,15 +4,17 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import { useParams } from 'react-router-dom'
 import api from '../client/api'
+import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
 
 interface AoCheckboxProps {
   taskId: string
+  hudStyle: HudStyle
 }
 
 const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
-  ({ taskId }) => {
+  ({ taskId, hudStyle }) => {
     const computed = observable({
       get isCompleted() {
         return (
@@ -30,13 +32,25 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
         api.completeCard(taskId)
       }
     }
-    return (
-      <img
-        className="checkbox"
-        src={computed.isCompleted ? Completed : Uncompleted}
-        onClick={onClick}
-      />
-    )
+    switch (hudStyle) {
+      case 'full before':
+      case 'face before':
+      case 'collapsed':
+        return (
+          <img
+            className="checkbox"
+            src={computed.isCompleted ? Completed : Uncompleted}
+            onClick={onClick}
+          />
+        )
+      case 'mini before':
+        if (computed.isCompleted) {
+          return <img src={Completed} className={'checkbox mini'} />
+        }
+        return null
+      default:
+        return null
+    }
   }
 )
 

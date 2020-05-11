@@ -4,14 +4,12 @@ import { Redirect } from 'react-router-dom'
 import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
+import { HudStyle } from './cardHud'
 
 interface State {
   editing: boolean
   text: string
 }
-
-export type ValueStyle = 'full' | 'collapsed' | 'mini' | 'menu'
 
 export const defaultState: State = {
   editing: false,
@@ -20,7 +18,7 @@ export const defaultState: State = {
 
 interface ValueParams {
   taskId: string
-  cardStyle?: ValueStyle
+  hudStyle: HudStyle
 }
 
 @observer
@@ -36,12 +34,7 @@ export default class AoValue extends React.Component<ValueParams, State> {
 
   startEditing(event) {
     event.stopPropagation()
-    console.log(
-      'value is ',
-      aoStore.hashMap.get(this.props.taskId).completeValue
-    )
     if (aoStore.hashMap.get(this.props.taskId).completeValue) {
-      console.log('has a value')
       this.setState({
         text: aoStore.hashMap.get(this.props.taskId).completeValue.toString()
       })
@@ -51,7 +44,6 @@ export default class AoValue extends React.Component<ValueParams, State> {
 
   saveValue(event) {
     event.stopPropagation()
-    console.log('save Value', event.target.value)
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
     if (newValue !== NaN) {
@@ -67,7 +59,6 @@ export default class AoValue extends React.Component<ValueParams, State> {
   }
 
   onChange(event) {
-    console.log('on change', event.target.value)
     this.setState({ text: event.target.value })
   }
 
@@ -89,8 +80,8 @@ export default class AoValue extends React.Component<ValueParams, State> {
         </div>
       )
     }
-    switch (this.props.cardStyle) {
-      case 'full':
+    switch (this.props.hudStyle) {
+      case 'full before':
         return (
           <div onClick={this.startEditing} className={'value full action'}>
             {aoStore.hashMap.get(this.props.taskId).completeValue
@@ -98,18 +89,18 @@ export default class AoValue extends React.Component<ValueParams, State> {
               : '+value'}
           </div>
         )
-      case 'mini':
+      case 'mini before':
         if (aoStore.hashMap.get(this.props.taskId).completeValue) {
           return (
-            <span className={'miniValue'}>
-              {aoStore.hashMap.get(this.props.taskId).completeValue}
+            <span className={'value mini'}>
+              {aoStore.hashMap.get(this.props.taskId).completeValue + 'p'}
             </span>
           )
         }
         return null
       case 'menu':
         return (
-          <div className={'value'}>
+          <div className={'value menu'}>
             <div onClick={this.startEditing} className={'action'}>
               {aoStore.hashMap.get(this.props.taskId).completeValue
                 ? 'worth ' +
@@ -119,14 +110,13 @@ export default class AoValue extends React.Component<ValueParams, State> {
             </div>
           </div>
         )
+      case 'face before':
       case 'collapsed':
       default:
         if (aoStore.hashMap.get(this.props.taskId).completeValue > 0) {
           return (
-            <div className={'value collapsed'}>
-              <div className={'action'}>
-                {aoStore.hashMap.get(this.props.taskId).completeValue}
-              </div>
+            <div className={'value summary ' + this.props.hudStyle}>
+              {aoStore.hashMap.get(this.props.taskId).completeValue + 'p'}
             </div>
           )
         }

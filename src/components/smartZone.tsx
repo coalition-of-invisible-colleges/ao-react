@@ -175,32 +175,23 @@ export default class AoSmartZone extends React.Component<
 	}
 
 	drag = event => {
-		console.log('drag. this.props.cardSource is ', this.props.cardSource)
 		event.dataTransfer.setData('fromZone', this.props.cardSource)
 		if (this.props.cardSource === 'grid') {
 			event.dataTransfer.setData('fromX', this.props.x)
 		}
 		event.dataTransfer.setData('fromY', this.props.y)
-		console.log(
-			'event.dataTransfer is ',
-			event.dataTransfer.getData('fromZone')
-		)
 	}
 
 	detectDragKind = dataTransfer => {
 		let filetype = 'file'
-		console.log('fromezone lowercase is ', dataTransfer.getData('fromzone'))
-		console.log('fromezone uppercase is ', dataTransfer.getData('fromZone'))
 		if (dataTransfer.items && dataTransfer.items.length > 0) {
 			dataTransfer.items.forEach(dt => {
-				console.log('dt is ', dt)
 				if (dt.type === 'fromx' || dt.type === 'fromy') {
 					filetype = 'card'
 				}
 			})
 		}
 
-		// console.log("fromZone loaded. it's ", fromZone)
 		return filetype
 	}
 
@@ -228,22 +219,16 @@ export default class AoSmartZone extends React.Component<
 			x: event.dataTransfer.getData('fromX'),
 			y: event.dataTransfer.getData('fromY')
 		}
-		console.log('fromCoords is ', fromCoords)
 
 		let nameFrom = undefined
 
-		console.log('this.props.inId is ', this.props.inId)
-		console.log('name lookup')
 		let fromTaskId
 		if (fromZone === 'grid' && fromCoords.x && fromCoords.y) {
-			console.log('detected drag from grid')
 			fromTaskId = aoStore.hashMap.get(this.props.inId).grid.rows[fromCoords.y][
 				fromCoords.x
 			]
-			console.log('fromId is ', fromTaskId)
 
 			const name = aoStore.hashMap.get(fromTaskId).name
-			console.log('name is ', name)
 
 			if (name) {
 				nameFrom = name
@@ -252,11 +237,9 @@ export default class AoSmartZone extends React.Component<
 			(fromZone === 'priorities' || fromZone === 'subTasks') &&
 			fromCoords.y
 		) {
-			console.log('detected drag from list')
 			const trueY =
 				aoStore.hashMap.get(this.props.inId)[fromZone].length - 1 - fromCoords.y
 			fromTaskId = aoStore.hashMap.get(this.props.inId)[fromZone][trueY]
-			console.log('list fromId is', fromTaskId)
 			const name = aoStore.hashMap.get(fromTaskId).name
 			if (name) {
 				nameFrom = name
@@ -269,10 +252,8 @@ export default class AoSmartZone extends React.Component<
 				nameFrom = name
 			}
 		} else if (fromZone === 'context' && fromCoords.y) {
-			console.log('detected drag from context y is ', fromCoords.y)
 			const trueY = fromCoords.y
 			fromTaskId = aoStore.context[trueY]
-			console.log('trueY is ', trueY)
 			const name = aoStore.hashMap.get(fromTaskId).name
 			if (name) {
 				nameFrom = name
@@ -294,13 +275,6 @@ export default class AoSmartZone extends React.Component<
 				api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 			}
 		} else if (fromZone === 'priorities' && this.props.cardSource === 'grid') {
-			console.log('drag detected from priorities to grid')
-			console.log('nameFrom: ', nameFrom)
-			console.log('nameTo: ', nameTo)
-			console.log('fromCoords: ', fromCoords)
-			console.log('toCoords: ', toCoords)
-			console.log('fromTaskId: ', fromTaskId)
-			console.log('inId: ', this.props.inId)
 			if (nameTo) {
 				api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
 			}
@@ -310,9 +284,6 @@ export default class AoSmartZone extends React.Component<
 			fromZone === 'priorities' &&
 			this.props.cardSource === 'priorities'
 		) {
-			console.log(
-				'drag detected from priorities to priorities. behavior currently undefined'
-			)
 			if (nameTo) {
 				api.refocusCard(nameTo, this.props.inId)
 			}
@@ -335,35 +306,15 @@ export default class AoSmartZone extends React.Component<
 		} else if (fromZone === 'completed' && this.props.cardSource === 'grid') {
 			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
 		} else if (fromZone === 'grid' && this.props.cardSource === 'priorities') {
-			console.log('drag detected from grid to priorities')
-			console.log('nameFrom: ', nameFrom)
-			console.log('nameTo: ', nameTo)
-			console.log('fromCoords: ', fromCoords)
-			console.log('toCoords: ', toCoords)
 			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
 			api.prioritizeCard(fromTaskId, this.props.inId, toCoords.y)
 		} else if (fromZone === 'grid' && this.props.cardSource === 'subTasks') {
-			console.log('drag detected from grid to subTasks')
-			console.log('nameFrom: ', nameFrom)
-			console.log('nameTo: ', nameTo)
-			console.log('fromCoords: ', fromCoords)
-			console.log('toCoords: ', toCoords)
 			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
 		} else if (fromZone === 'grid' && this.props.cardSource === 'completed') {
-			console.log('drag detected from grid to completed')
-			console.log('nameFrom: ', nameFrom)
-			console.log('nameTo: ', nameTo)
-			console.log('fromCoords: ', fromCoords)
-			console.log('toCoords: ', toCoords)
 		} else if (
 			fromZone === 'subTasks' &&
 			this.props.cardSource === 'subTasks'
 		) {
-			console.log('drag detected from subTasks to subTasks')
-			console.log('nameFrom: ', nameFrom)
-			console.log('nameTo: ', nameTo)
-			console.log('fromCoords: ', fromCoords)
-			console.log('toCoords: ', toCoords)
 			api.findOrCreateCardInCard(nameFrom, this.props.inId)
 		} else if (this.props.cardSource === 'discard') {
 			console.log('discard drop detected')
@@ -374,7 +325,6 @@ export default class AoSmartZone extends React.Component<
 				api.refocusCard(fromTaskId, this.props.inId)
 				api.discardCardFromCard(fromTaskId, this.props.inId)
 			} else if (fromZone === 'context') {
-				console.log('drop from context detected')
 				aoStore.removeFromContext(fromTaskId)
 			}
 		} else if (fromZone === 'search' || fromZone === 'context') {
@@ -454,7 +404,6 @@ export default class AoSmartZone extends React.Component<
 			}
 			let message =
 				'+' + (this.props.cardSource === 'priorities' ? 'priority' : 'card')
-			console.log('emptySquare draggedKind is ', this.state.draggedKind)
 			switch (this.state.draggedKind) {
 				case 'priorities':
 					message = 'drop to deprioritize'
@@ -486,7 +435,7 @@ export default class AoSmartZone extends React.Component<
 				</p>
 			)
 		} else if (this.props.taskId) {
-			let hardcodedStyle: CardStyle = 'card'
+			let hardcodedStyle: CardStyle = 'face'
 			let message = 'drop to place'
 			switch (this.props.cardSource) {
 				case 'priorities':
@@ -498,30 +447,19 @@ export default class AoSmartZone extends React.Component<
 					message = 'drop to swap'
 					break
 				case 'subTasks':
-					hardcodedStyle = 'card'
+					hardcodedStyle = 'face'
 					message = 'drop here'
 					break
 				case 'completed':
-					hardcodedStyle = 'card'
+					hardcodedStyle = 'face'
 					break
 				case 'search':
 					hardcodedStyle = 'priority'
 					break
 				case 'context':
-					console.log('context row rendering')
 					hardcodedStyle = 'context'
 					break
 			}
-			// console.log(
-			// 	'var log: this.props.x = ',
-			// 	this.props.x,
-			// 	' and this.props.y is ',
-			// 	this.props.y,
-			// 	' and this.props.taskId is ',
-			// 	this.props.taskId,
-			// 	' and hardcodedStyle is ',
-			// 	hardcodedStyle
-			// )
 
 			let style = this.props.style
 			if (this.props.cardSource === 'grid') {

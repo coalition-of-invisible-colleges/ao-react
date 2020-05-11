@@ -1,34 +1,29 @@
 import React, { FunctionComponent } from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
-import { useParams } from 'react-router-dom'
-import AoPalette from './palette'
-import AoValue from './value'
-import AoCountdown from './countdown'
-import AoTimeClock from './timeclock'
+import AoCardHud, { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
 interface AoCardMenuProps {
   taskId: string
+  hudStyle: HudStyle
 }
 
 const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
-  ({ taskId }) => {
+  ({ taskId, hudStyle }) => {
+    const str = console.log('taskId is ', taskId)
     return (
       <Tippy
-        content={
-          <div className={'cardMenu'}>
-            <AoValue taskId={taskId} cardStyle={'menu'} />
-            <AoCountdown taskId={taskId} />
-            <AoTimeClock taskId={taskId} />
-            <AoPalette taskId={taskId} />
-          </div>
-        }
+        zIndex={2}
+        content={<AoCardHud taskId={taskId} hudStyle={'menu'} />}
         interactive={true}
         trigger={'click'}
-        placement={'top-end'}>
+        placement={'top-end'}
+        appendTo={() => {
+          console.log('getting the element now')
+          return document.getElementById('card-' + taskId).parentElement
+        }}>
         <div className={'cardMenuButton'}>&#x22EE;</div>
       </Tippy>
     )

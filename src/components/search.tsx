@@ -49,7 +49,6 @@ export default class AoSearch extends React.Component<{}, State> {
   }
 
   onChange(event) {
-    console.log('on change value is ', event.target.value)
     this.setState({ query: event.target.value })
     this.clearPendingPromises()
     const debounce = cancelablePromise(delay(500))
@@ -72,8 +71,8 @@ export default class AoSearch extends React.Component<{}, State> {
   }
 
   goInResult(selection: Sel) {
-    console.log('goinResult')
-    const taskId = aoStore.searchResults[selection.y].taskId
+    const trueY = aoStore.searchResults.length - selection.y - 1
+    const taskId = aoStore.searchResults[trueY].taskId
     aoStore.addToContext([aoStore.currentCard])
     this.setState({
       redirect: '/task/' + taskId

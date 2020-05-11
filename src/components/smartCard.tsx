@@ -1,30 +1,22 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
-import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
-import AoPalette from './palette'
-import AoCoin from './coin'
-import AoCheckbox from './checkbox'
-import AoValue from './value'
-import AoCountdown from './countdown'
-import AoTimeClock from './timeclock'
 import AoGrid from './grid'
-import Completed from '../assets/images/completed.svg'
 import AoStack from './stack'
-import AoCardMenu from './cardMenu'
+import AoCardHud from './cardHud'
 
-export type CardStyle = 'priority' | 'card' | 'full' | 'mini' | 'context'
+export type CardStyle = 'priority' | 'face' | 'full' | 'mini' | 'context'
 
-interface SmartCardProps {
+interface CardProps {
 	taskId: string
 	cardStyle: CardStyle
 }
 
-const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
+const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 	({ taskId, cardStyle }) => {
 		const card: Task = aoStore.hashMap.get(taskId)
 		let content = card.name
@@ -41,107 +33,67 @@ const AoSmartCard: React.FunctionComponent<SmartCardProps> = observer(
 						</div>
 					</div>
 				)
-				break
 			case 'priority':
 				return (
-					<div className={'card prioritized'}>
+					<div className={'card priority'} id={'card-' + taskId}>
 						<AoPaper taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle="collapsed" />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
-						<AoValue taskId={taskId} cardStyle={'collapsed'} />
-						<AoCheckbox taskId={taskId} />
 					</div>
 				)
-				break
-			case 'card':
+			case 'face':
 				return (
-					<div className={'card'}>
+					<div className={'card face'} id={'card-' + taskId}>
 						<AoPaper taskId={taskId} />
-						<AoValue taskId={taskId} />
-						<AoCheckbox taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'face before'} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
-						<AoCoin taskId={taskId} />
-						<AoCardMenu taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'face after'} />
 					</div>
 				)
-				break
 			case 'full':
 				return (
 					<React.Fragment>
 						<AoStack taskId={taskId} cardSource={'context'} />
 						<div
-							className={'card'}
+							id={'card-' + taskId}
+							className={'card full'}
 							onDrop={e => {
 								e.preventDefault()
 								e.stopPropagation()
 							}}>
 							<AoPaper taskId={taskId} />
+							<AoCardHud taskId={taskId} hudStyle={'full before'} />
 							<div className="content">
 								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 							</div>
 							<AoStack taskId={taskId} cardSource="priorities" />
 							<AoGrid taskId={taskId} />
 							<AoStack taskId={taskId} cardSource="subTasks" />
-							<AoValue taskId={taskId} cardStyle={'full'} />
-							<AoCheckbox taskId={taskId} />
-							<AoCoin taskId={taskId} />
-							<AoCardMenu taskId={taskId} />
+							<AoCardHud taskId={taskId} hudStyle={'full after'} />
 						</div>
 					</React.Fragment>
 				)
-				break
 			case 'mini':
 			default:
-				let gridCardCount = 0
-				if (card.grid) {
-					console.log('grid is ', card.grid)
-					Object.keys(card.grid.rows).forEach(i => {
-						console.log('row! row is ', card.grid.rows[i])
-						Object.keys(card.grid.rows[i]).forEach(cell => {
-							console.log('cell!')
-							gridCardCount++
-						})
-					})
+				let shortened = content
+				if (shortened.length > 32) {
+					shortened = shortened.substr(0, shortened.lastIndexOf(' ', 32))
 				}
-				console.log('gridCardCount is ', gridCardCount)
-				const subCardCount =
-					card.priorities.length +
-					gridCardCount +
-					card.subTasks.length +
-					card.completed.length
+
 				return (
-					<div className={'miniCard'}>
-						{card.color ? <AoPaper taskId={card.taskId} /> : ''}
-						<div className={'miniCardSummary'}>
-							{card.seen &&
-							card.seen.some(t => {
-								return t.memberId === aoStore.member.memberId
-							}) ? (
-								''
-							) : (
-								<div className={'seen'} />
-							)}
-							<div className={'miniCompleted'}>
-								{card.claimed.indexOf(aoStore.member.memberId) >= 0 ? (
-									<img className={'miniCheckbox'} src={Completed} />
-								) : null}
-								<AoValue taskId={card.taskId} cardStyle={'mini'} />
-							</div>
-							{subCardCount >= 1 ? (
-								<div className={'miniPreview'}>{subCardCount}</div>
-							) : (
-								''
-							)}
-						</div>
+					<div className={'card mini'}>
+						<AoPaper taskId={card.taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
-							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+							<Markdown options={{ forceBlock: true }}>{shortened}</Markdown>
 						</div>
+						<AoCardHud taskId={taskId} hudStyle={'mini after'} />
 					</div>
 				)
-				break
 		}
 	}
 )

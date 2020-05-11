@@ -118,7 +118,6 @@ module.exports = {
     return true
   },
   isCoord(val, errRes) {
-    console.log('val is ', val)
     let result = true
     const lbx = 0
     const lby = 0

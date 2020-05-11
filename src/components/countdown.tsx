@@ -9,6 +9,7 @@ import { delay, cancelablePromise, noop } from '../utils'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDistanceToNow } from 'date-fns'
+import { HudStyle } from './cardHud'
 
 interface State {
   editing: boolean
@@ -20,8 +21,9 @@ export const defaultState: State = {
   startTime: undefined
 }
 
-interface CountdownParams {
+interface CountdownProps {
   taskId: string
+  hudStyle: HudStyle
 }
 
 interface DatePickerParams {
@@ -50,7 +52,7 @@ const RenderDatePicker: React.FunctionComponent<DatePickerParams> = observer(
 
 @observer
 export default class AoCountdown extends React.Component<
-  CountdownParams,
+  CountdownProps,
   State
 > {
   constructor(props) {
@@ -93,7 +95,7 @@ export default class AoCountdown extends React.Component<
   render() {
     if (this.state.editing) {
       return (
-        <div className="countdown">
+        <div className={'countdown'}>
           <RenderDatePicker
             bookResource={this.bookResource}
             startTime={this.state.startTime}
@@ -105,16 +107,45 @@ export default class AoCountdown extends React.Component<
         </div>
       )
     }
-    return (
-      <div className="countdown">
-        <div onClick={this.startEditing} className={'action'}>
-          {aoStore.hashMap.get(this.props.taskId).book.startTs
-            ? formatDistanceToNow(
-                aoStore.hashMap.get(this.props.taskId).book.startTs
-              )
-            : 'schedule event'}
-        </div>
-      </div>
-    )
+
+    if (
+      !aoStore.hashMap.get(this.props.taskId).book.startTs &&
+      this.props.hudStyle !== 'menu'
+    ) {
+      return null
+    }
+
+    switch (this.props.hudStyle) {
+      case 'full before':
+        return (
+          <div
+            onClick={this.startEditing}
+            className={'countdown action ' + this.props.hudStyle}>
+            {formatDistanceToNow(
+              aoStore.hashMap.get(this.props.taskId).book.startTs
+            )}
+          </div>
+        )
+      case 'face before':
+      case 'collapsed':
+      case 'mini after':
+        return (
+          <div className={'countdown summary ' + this.props.hudStyle}>
+            {formatDistanceToNow(
+              aoStore.hashMap.get(this.props.taskId).book.startTs
+            )}
+          </div>
+        )
+      case 'menu':
+        return (
+          <div
+            onClick={this.startEditing}
+            className={'countdown action ' + this.props.hudStyle}>
+            schedule event
+          </div>
+        )
+      default:
+        return null
+    }
   }
 }

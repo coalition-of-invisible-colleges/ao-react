@@ -23,9 +23,10 @@ textarea {
   $card-purple,
   $card-black
 ) {
-  // body {
-  //   background-color: $body-bg;
-  // }
+  body {
+    // background-color: $body-bg;
+    margin: 0;
+  }
 
   .#{$theme-name} {
     text-align: center;
@@ -34,129 +35,63 @@ textarea {
     font-size: 1.25em;
     background-color: $body-bg;
 
-    #home {
-      position: fixed;
-      top: 0.5em;
-      left: 1em;
-    }
-
-    #members {
-      position: fixed;
-      top: 0.5em;
-      left: 4em;
-    }
-
-    #mainMenuButton {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      font-size: 1.75em;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 0.5em;
-      user-select: none;
-    }
-
-    #mainMenu {
-      padding: 0.25em 0.75em;
+    .menu {
       .action {
-        margin-bottom: 0.5em;
-        margin-top: 0.5em;
-        width: 100%;
+        margin: 0.5em auto;
       }
     }
 
-    #status {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      margin-left: 0.5em;
-      margin-bottom: 0.3em;
-      cursor: pointer;
-      height: 3em;
-    }
-
-    #themer {
-    }
-
-    #volume {
-      margin-right: 0.5em;
-      margin-bottom: 0.3em;
-      cursor: pointer;
-      img {
-        height: 2em;
-        fill: #fff;
-        margin-top: -0.2em;
-        vertical-align: middle;
-      }
-    }
-
-    #search {
-      z-index: 1;
-      position: fixed;
-      left: 0.5em;
-      bottom: 0.5em;
-
-      &.open {
-        background-color: rgba(255, 255, 255, 0.2);
-        padding: 0.5em;
-        width: min-content;
-        border-radius: 0.5em;
-
-        .actionCircle {
-          img {
-            width: 3em;
+    .palette {
+      width: max-content;
+      .swatch {
+        display: inline-block;
+        position: relative;
+        margin: 0.75em 1em 2em 1em;
+        cursor: pointer;
+        .paper {
+          width: 1em;
+          height: 1em;
+        }
+        .border {
+          padding: 0.9em;
+          border: 0.165em solid transparent;
+          margin: -0.6em;
+          &.selected,
+          &:hover {
+            border-color: white;
+            border-radius: 1em;
           }
         }
-
-        input {
-          margin: 0.5em 0.5em 0.5em 5em;
-        }
-
-        .results {
-          overflow-y: scroll;
-          max-height: 50vh;
-          padding-right: 0.5em;
-          width: 31vw;
+        .label {
+          margin-top: 0.75em;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
         }
       }
-
-      .actionCircle {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-
-        img {
-          width: 2.5em;
-        }
-      }
-    }
-
-    #logout {
-    }
-
-    .discard {
-      min-height: 100vh;
     }
 
     .card {
       position: relative;
       left: 50%;
       transform: translateX(-50%);
-      min-height: 6em;
-      max-width: 98vw;
-      min-width: 30em;
       width: fit-content;
       padding: 0.5em 1.5em;
       background-color: black;
+      margin-bottom: 1em;
 
-      &.prioritized,
+      &.full,
+      &.face {
+        min-height: 6em;
+        max-width: 98vw;
+        min-width: 30em;
+      }
+
+      &.priority,
       &.context {
         position: relative;
         margin-top: 0.25em;
         text-align: left;
-        padding-top: 0.55em;
-        padding-bottom: 0.55em;
         min-height: 0;
         width: 100%;
         min-width: unset;
@@ -168,92 +103,247 @@ textarea {
         }
       }
 
+      &.priority {
+        padding: 0;
+
+        .content {
+          padding: 0.55em 1em 0.55em 1em;
+          pointer-events: none;
+        }
+
+        & > .hud {
+          // z-index: 1;
+          position: relative;
+          float: right;
+          margin-left: 0.5em;
+
+          .preview,
+          .countdown,
+          .value,
+          .checkbox,
+          .cardMenuButton {
+            display: inline-block;
+          }
+
+          .preview,
+          .countdown,
+          .value {
+            font-size: 0.8em;
+          }
+
+          .preview,
+          .countdown {
+            margin-right: 0.75em;
+          }
+
+          .value {
+            margin-right: 0.5em;
+          }
+
+          .checkbox {
+            position: relative;
+            top: 0.4em;
+          }
+
+          .cardMenuButton {
+            font-size: 1.15em;
+            padding: 0.35em 0.25em;
+          }
+        }
+      }
+
+      &.mini {
+        pointer-events: none;
+        background-color: black;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.4);
+          border-radius: 0.5em;
+        }
+
+        .content {
+          position: relative;
+          font-size: 0.8em;
+          margin: 0;
+        }
+
+        .hud {
+          position: relative;
+          pointer-events: none;
+
+          &.mini.before {
+            .seen {
+              position: absolute;
+              content: '';
+              top: 0.25em;
+              left: 0.25em;
+              height: 0.375em;
+              width: 0.375em;
+              border-radius: 50%;
+              background-color: rgba(255, 10, 10, 0.85);
+            }
+
+            .countdown,
+            .value {
+              background-color: rgba(0, 0, 0, 0.2);
+              font-size: 0.75em;
+              padding: 0.25em;
+              pointer-events: none;
+              margin: 0;
+            }
+
+            .countdown {
+              float: left;
+            }
+
+            .value {
+              font-size: 0.6em;
+              float: right;
+            }
+
+            .checkbox {
+              float: right;
+              height: 0.75em;
+              width: 0.75em;
+              opacity: 0.75;
+              display: inline;
+              pointer-events: none;
+              padding-top: 0.175em;
+              padding-right: 0.15em;
+            }
+          }
+
+          &.mini.after {
+            position: unset;
+
+            .countdown {
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              background-color: rgba(0, 0, 0, 0.2);
+              font-size: 0.65em;
+              padding: 0.25em;
+              pointer-events: none;
+              margin: 0 2em 0 0;
+            }
+
+            .preview {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              font-size: 0.75em;
+              padding: 0.25em;
+              pointer-events: none;
+              margin: 0;
+              background-color: rgba(0, 0, 0, 0.2);
+            }
+          }
+        }
+      }
+
       .content {
         position: relative;
         margin: 1em auto;
         max-width: 28em;
       }
 
-      .cardMenu {
-        .action {
-          margin-bottom: 0.5em;
-          margin-top: 0.5em;
+      .stack > .action,
+      .grid .action {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .hud {
+        .cardMenuButton {
+          padding: 0.5em;
+          font-size: 1.15em;
+          font-size: 1.25em;
+          font-weight: bold;
+          cursor: pointer;
+          user-select: none;
         }
-        .palette {
-          width: 100%;
-          .swatch {
+
+        &.full.before,
+        &.face.before {
+          position: absolute;
+          right: 0.5em;
+          top: 0.5em;
+
+          .countdown,
+          .value,
+          .checkbox {
+            font-size: 0.9em;
             display: inline-block;
+          }
+
+          .countdown,
+          .value {
             position: relative;
-            margin: 0.75em 1em 2em 1em;
-            cursor: pointer;
-            .paper {
-              width: 1em;
-              height: 1em;
-            }
-            .border {
-              padding: 0.9em;
-              border: 0.165em solid transparent;
-              margin: -0.6em;
-              &.selected,
-              &:hover {
-                border-color: white;
-                border-radius: 1em;
-              }
-            }
-            .label {
-              margin-top: 0.75em;
-              position: absolute;
-              left: 50%;
-              transform: translateX(-50%);
-            }
+            top: -0.4em;
+            margin-right: 0.5em;
+          }
+        }
+
+        &.face.before {
+          .value {
+            margin-left: 0.5em;
+          }
+        }
+
+        &.full.after,
+        &.face.after {
+          .preview {
+            position: absolute;
+            right: 2em;
+            bottom: 0.75em;
+          }
+
+          .cardMenuButton {
+            position: absolute;
+            right: 0;
+            bottom: 0;
           }
         }
       }
 
-      .cardMenuButton {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        padding: 0.5em;
-        font-size: 1.25em;
-        font-weight: bold;
-        cursor: pointer;
-        user-select: none;
-      }
-
-      .stack .zone .card .cardMenuButton {
-        font-size: 1.15em;
-      }
-
       .value,
       .value.full {
-        position: absolute;
-        right: 3em;
-        top: 0.2em;
-        left: unset;
-        transform: unset;
+        // position: absolute;
+        // right: 3em;
+        // top: 0.2em;
+        // left: unset;
+        // transform: unset;
         font-size: 0.9em;
+
+        &.menu {
+          float: none;
+          font-size: 1em;
+        }
 
         &.collapsed {
           font-size: 0.8em;
-          margin-top: 0.25em;
           .action {
+            cursor: default;
+            text-decoration: none;
             padding: 0.25em;
           }
         }
       }
 
       .cardMenu .value {
-        position: relative;
-        right: unset;
-        top: unset;
-        font-size: 1em;
+        // position: relative;
+        // right: unset;
+        // top: unset;
       }
 
       .checkbox {
-        position: absolute;
-        right: 0.5em;
-        top: 0.5em;
+        // position: absolute;
+        // right: 0.5em;
+        // top: 0.5em;
         height: 1.5em;
         width: 1.5em;
         cursor: pointer;
@@ -269,18 +359,6 @@ textarea {
           transform: rotate(360deg);
         }
       }
-
-      .countdown {
-        // position: absolute;
-        // right: 0.5em;
-        // bottom: 0.5em;
-      }
-
-      // .palette {
-      //   position: absolute;
-      //   right: 5.5em;
-      //   bottom: 0.5em;
-      // }
 
       .coin {
         width: 2.5em;
@@ -317,10 +395,6 @@ textarea {
       }
 
       .hourglass {
-        // position: absolute;
-        // left: 0.5em;
-        // bottom: 0.5em;
-
         img {
           width: 2em;
         }
@@ -353,12 +427,9 @@ textarea {
           .cardTimeLogDate {
             align-self: left;
             margin-left: 10px;
-            // left: 0;
           }
           .cardTimeLogDateNull {
             align-self: left;
-            // margin-left: 5px;
-            // left: 0;
 
             &.orangeLog {
               color: orange;
@@ -443,84 +514,6 @@ textarea {
                 transform: translateY(-50%);
               }
             }
-
-            &:hover .miniCard {
-              background-color: rgba(0, 0, 0, 0.4);
-              border-radius: 0.5em;
-            }
-
-            .miniCard {
-              pointer-events: none;
-              background-color: black;
-              min-width: 100%;
-
-              .content {
-                position: relative;
-                padding: 1em;
-              }
-
-              .miniCardSummary {
-                z-index: 7;
-                height: 100%;
-                width: 100%;
-                pointer-events: none;
-
-                .seen {
-                  z-index: 5;
-                  position: absolute;
-                  content: '';
-                  top: 0.25em;
-                  left: 0.25em;
-                  height: 0.375em;
-                  width: 0.375em;
-                  border-radius: 50%;
-                  background-color: rgba(255, 10, 10, 0.85);
-                }
-
-                .miniCompleted {
-                  position: absolute;
-                  top: 0;
-                  right: 0;
-                  background-color: rgba(0, 0, 0, 0.2);
-
-                  .miniValue {
-                    z-index: 7;
-                    font-size: 0.75em;
-                    padding: 0.25em;
-                    pointer-events: none;
-                    margin: 0;
-                  }
-
-                  .miniCheckbox {
-                    z-index: 7;
-                    position: relative;
-                    top: 0.08em;
-                    height: 0.75em;
-                    width: 0.75em;
-                    opacity: 0.75;
-                    display: inline;
-                    pointer-events: none;
-                    margin-left: 0.175em;
-                    margin-right: 0.15em;
-                  }
-                }
-
-                .miniPreview {
-                  z-index: 7;
-                  font-size: 0.75em;
-                  padding: 0.25em;
-                  pointer-events: none;
-                  margin: 0;
-                  position: absolute;
-                  right: 0;
-                  bottom: 0;
-                  background-color: rgba(0, 0, 0, 0.2);
-                }
-
-                .miniCountdown {
-                }
-              }
-            }
           }
         }
         .resizer {
@@ -542,6 +535,8 @@ textarea {
           }
           .minusColumn,
           .plusColumn {
+            position: relative;
+            right: -2em;
             margin-top: 0.25em;
             padding-left: 0.25em;
             padding-right: 0.25em;
@@ -550,8 +545,8 @@ textarea {
           .plusRow {
             display: inline;
             position: relative;
-            left: -2.5em;
-            top: 0.75em;
+            left: -3.9em;
+            top: 0.6em;
             margin-right: 0.25em;
             padding: 0 0.75em;
           }
@@ -559,11 +554,119 @@ textarea {
       }
     }
 
+    #home {
+      position: fixed;
+      top: 0.5em;
+      left: 1em;
+    }
+
+    #members {
+      position: fixed;
+      top: 0.5em;
+      left: 4em;
+    }
+
+    #mainMenuButton {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      font-size: 1.75em;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0.5em;
+      user-select: none;
+    }
+
+    #mainMenu {
+      padding: 0.25em 0em;
+      .action {
+        margin-bottom: 0.5em;
+        margin-top: 0.5em;
+        width: calc(100% - 1.25em);
+      }
+    }
+
+    #status {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      margin-left: 0.5em;
+      margin-bottom: 0.3em;
+      cursor: pointer;
+      height: 3em;
+    }
+
+    #themer {
+    }
+
+    #volume {
+      margin-right: 0.5em;
+      margin-bottom: 0.3em;
+      cursor: pointer;
+      img {
+        height: 2em;
+        fill: #fff;
+        margin-top: -0.2em;
+        vertical-align: middle;
+      }
+    }
+
+    #search {
+      z-index: 1;
+      position: fixed;
+      left: 0.5em;
+      bottom: 0.5em;
+
+      &.open {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.5em;
+        width: min-content;
+        border-radius: 0.5em;
+
+        .actionCircle {
+          img {
+            width: 3em;
+          }
+        }
+
+        input {
+          margin: 0.5em 0.5em 0.5em 5em;
+        }
+
+        .results {
+          overflow-y: scroll;
+          max-height: 50vh;
+          padding-right: 0.5em;
+          width: 31vw;
+        }
+      }
+
+      .actionCircle {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+
+        img {
+          width: 2.5em;
+        }
+      }
+    }
+
+    #logout {
+    }
+
+    .discard {
+      min-height: 97vh;
+    }
+
     .stack {
       margin: 0.5em 1em 0.5em 1em;
       &.context {
         margin-bottom: 0;
+
         .zone {
+          margin: 0 auto;
+
           .content > p {
             overflow: hidden;
             white-space: nowrap;
@@ -573,18 +676,22 @@ textarea {
         }
         .card {
           margin-top: 0;
+
           &.context {
             margin-top: 0;
+            margin-bottom: 0;
             box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
           }
         }
       }
-      .zone {
-        margin: 0 auto;
-      }
       .card {
         margin-top: 0.5em;
+        margin-bottom: 0.5em;
         max-width: 30em;
+        &.priority {
+          margin-top: 0.375em;
+          margin-bottom: 0.375em;
+        }
       }
       textarea {
         position: relative;
@@ -641,22 +748,24 @@ textarea {
       }
     }
 
-    .action {
-      display: block;
+    .action,
+    .summary {
       position: relative;
-      left: 50%;
-      transform: translateX(-50%);
+      display: block;
       width: fit-content;
-      background-color: rgba(0, 0, 0, 0.25);
-      border-radius: 0.5em;
       color: white;
-      text-shadow: 0.2em 0.1em #000;
-      cursor: pointer;
-      border: 0.15em solid rgba(0, 0, 0, 0.1);
-      padding: 0.5em;
       margin-top: 0;
       margin-bottom: 0;
       user-select: none;
+    }
+
+    .action {
+      background-color: rgba(0, 0, 0, 0.25);
+      border: 0.15em solid rgba(0, 0, 0, 0.1);
+      border-radius: 0.5em;
+      text-shadow: -0.2em 0.2em 0.2em #000;
+      padding: 0.5em;
+      cursor: pointer;
 
       &:hover {
         text-decoration: underline;

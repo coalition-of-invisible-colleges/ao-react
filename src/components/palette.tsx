@@ -32,7 +32,6 @@ export default class AoPalette extends React.Component<PaletteParams, State> {
     this.state = defaultState
     // this.startEditing = this.startEditing.bind(this)
     this.onClick = this.onClick.bind(this)
-    console.log('AoCountdown!')
   }
 
   // startEditing(event) {
@@ -46,7 +45,6 @@ export default class AoPalette extends React.Component<PaletteParams, State> {
   // }
 
   onClick(event, color) {
-    console.log('onClick color is ', color)
     api.colorCard(this.props.taskId, color)
     this.setState({ color: color })
   }
@@ -57,7 +55,8 @@ export default class AoPalette extends React.Component<PaletteParams, State> {
       (colorName, i) => (
         <div
           onClick={event => this.onClick(event, colorName)}
-          className={'swatch'}>
+          className={'swatch'}
+          key={i}>
           <div
             className={
               aoStore.hashMap.get(this.props.taskId).color === colorName

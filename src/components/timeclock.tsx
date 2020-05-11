@@ -6,6 +6,7 @@ import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
+import { HudStyle } from './cardHud'
 
 interface TimeClockState {
   seconds: number
@@ -15,6 +16,7 @@ interface TimeClockState {
 
 interface Props {
   taskId: string
+  hudStyle: HudStyle
 }
 
 class AoTimeClock extends React.Component<Props, TimeClockState> {
@@ -65,7 +67,6 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
   }
 
   commit() {
-    console.log(this.state.seconds, this.props.taskId)
     if (this.state.seconds > 0) {
       if (this.state.timer === true) {
         this.setState({ timer: false })
@@ -86,7 +87,10 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
         </div>
         <div className={'history'}>
           <p>Activity Log</p>
-          <AoTimeHistory taskId={this.props.taskId} />
+          <AoTimeHistory
+            taskId={this.props.taskId}
+            hudStyle={this.props.hudStyle}
+          />
         </div>
         {this.state.timer || this.state.seconds > 0 ? (
           <div>{this.toHHMMSS()}</div>
@@ -136,20 +140,12 @@ class AoTimeHistory extends React.Component<Props> {
       return ''
     }
     let timeLogOut = null
-    console.log(
-      'memberId Object: ' +
-        aoStore.hashMap.get(this.props.taskId).time.find(t => {
-          return t.memberId === aoStore.member.memberId
-        })
-    )
     if (
       aoStore.hashMap.get(this.props.taskId).time.length > 0 &&
       aoStore.hashMap.get(this.props.taskId).time.find(t => {
         return t.memberId === aoStore.member.memberId
       })
     ) {
-      console.log(aoStore.hashMap.get(this.props.taskId).time)
-      console.log('IF FIRE')
       timeLogOut = aoStore.hashMap
         .get(this.props.taskId)
         .time.find(t => {

@@ -36,7 +36,6 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
   }
 
   render() {
-    console.log('render resizer')
     return (
       <div className="resizer">
         <button

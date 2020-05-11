@@ -216,7 +216,6 @@ class AoStore {
 
     try {
       let regex = new RegExp(query, 'i')
-      console.log('query is ', query)
       this.state.tasks.forEach(t => {
         if (t.guild && regex.test(t.guild)) {
           foundGuilds.push(t)
@@ -239,16 +238,13 @@ class AoStore {
         }
       })
       this.searchResults = foundGuilds.concat(foundMembers).concat(foundCards)
-      console.log('store.searchResults is now ', this.searchResults)
     } catch (err) {
       console.log('regex search terminated in error: ', err)
     }
   }
   @action.bound
   addToContext(taskIds: string[]) {
-    console.log('addToContext cards is ', taskIds)
     if (taskIds.length < 1) return
-    console.log('pre: context is ', this.context)
     this.context = this.context.filter(tId => {
       return !taskIds.includes(tId)
     })
@@ -259,13 +255,11 @@ class AoStore {
       })
       this.context.unshift(this.member.memberId)
     }
-    console.log('post: context is ', this.context)
   }
   removeFromContext(taskId: string) {
     this.context = this.context.filter(tId => {
       return tId !== taskId
     })
-    console.log('card removed')
   }
   @action.bound
   clearContextTo(taskId: string) {

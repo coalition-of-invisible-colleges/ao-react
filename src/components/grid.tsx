@@ -43,7 +43,6 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   }
 
   addGrid() {
-    console.log('addGrid()')
     api.addGridToCard(this.props.taskId, 3, 3)
   }
 

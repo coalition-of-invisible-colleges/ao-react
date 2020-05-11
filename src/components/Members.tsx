@@ -21,26 +21,13 @@ export const defaultState: State = {
 export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
-    console.log('Members constructor')
     this.state = defaultState
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onClick = this.onClick.bind(this)
   }
 
-  // pendingPromises = []
-
-  // appendPendingPromise = promise =>
-  //   (this.pendingPromises = [...this.pendingPromises, promise])
-
-  // removePendingPromise = promise =>
-  //   (this.pendingPromises = this.pendingPromises.filter(p => p !== promise))
-
-  // clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
-
   onChange(event) {
-    console.log('Members onChange')
-
     this.setState({ text: event.target.value })
   }
 
@@ -50,13 +37,10 @@ export default class AoMembers extends React.Component<{}, State> {
     }
   }
   onClick(event) {
-    console.log('Members onClick')
-    // this.clearPendingPromises()
     api.createMember(this.state.text)
   }
 
   render() {
-    console.log('Members render')
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
       return <Redirect to={this.state.redirect} />

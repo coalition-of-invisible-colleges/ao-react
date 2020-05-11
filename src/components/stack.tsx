@@ -43,22 +43,9 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   goInZone(selection: Sel) {
-    console.log(
-      'goInZone taskId is ',
-      this.props.taskId,
-      ' and cardSource is ',
-      this.props.cardSource,
-      ' and y is ',
-      selection.y
-    )
-
     let taskId
     if (this.props.cardSource === 'context') {
       taskId = aoStore.context[selection.y]
-      console.log(
-        'going in to context zone: ',
-        aoStore.hashMap.get(aoStore.context[selection.y]).name
-      )
       aoStore.clearContextTo(taskId)
     } else {
       aoStore.addToContext([this.props.taskId])
@@ -76,7 +63,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   render() {
-    console.log('AoStack taskId is ', this.props.taskId)
     let cardsToRender
     if (this.props.cardSource === 'context') {
       cardsToRender = aoStore.context.slice()
@@ -86,7 +72,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
         [this.props.cardSource].slice()
         .reverse()
     }
-    console.log('cardsToRender is ', cardsToRender)
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
       return <Redirect to={this.state.redirect} />
