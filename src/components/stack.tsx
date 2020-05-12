@@ -122,13 +122,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           onGoIn={this.goInZone}
           key={0}
           cardSource={this.props.cardSource}
-          style={
-            this.props.cardSource === 'context'
-              ? {
-                  maxWidth: (30 - cardsToRender.length).toString() + 'em'
-                }
-              : {}
-          }
         />
       ]
     }
@@ -156,11 +149,11 @@ export default class AoStack extends React.Component<StackProps, StackState> {
         {this.props.cardSource !== 'context' && cardsToRender.length >= 2 ? (
           !this.state.showAll ? (
             <div onClick={this.show} className={'action'}>
-              {cardsToRender.length - 1}&hellip;
+              {cardsToRender.length - 1} &#8964;
             </div>
           ) : (
             <div onClick={this.hide} className={'action'}>
-              -
+              &#8963;
             </div>
           )
         ) : (
