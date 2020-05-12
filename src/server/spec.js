@@ -849,7 +849,6 @@ router.post('/events', (req, res, next) => {
       }
       break
     case 'grid-created':
-      console.log('grid-created spec pre')
       if (true) {
         events.gridCreated(
           req.body.name,
@@ -859,14 +858,12 @@ router.post('/events', (req, res, next) => {
           req.body.deck,
           utils.buildResCallback(res)
         )
-        console.log('grid-created spec post')
       } else {
         res.status(200).send(errRes)
       }
       break
 
     case 'grid-added':
-      console.log('grid-added spec pre')
       if (true) {
         events.gridAdded(
           req.body.taskId,
@@ -874,7 +871,6 @@ router.post('/events', (req, res, next) => {
           req.body.width,
           utils.buildResCallback(res)
         )
-        console.log('grid-added spec post')
       } else {
         res.status(200).send(errRes)
       }
@@ -894,7 +890,6 @@ router.post('/events', (req, res, next) => {
       break
 
     case 'grid-pin':
-      console.log('grid-created spec pre')
       if (true) {
         events.gridPin(
           req.body.inId,
@@ -903,7 +898,6 @@ router.post('/events', (req, res, next) => {
           req.body.y,
           utils.buildResCallback(res)
         )
-        console.log('grid-created spec post')
       } else {
         res.status(200).send(errRes)
       }

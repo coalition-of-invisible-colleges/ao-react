@@ -34,6 +34,8 @@ export default class AoSearch extends React.Component<{}, State> {
     this.goInResult = this.goInResult.bind(this)
   }
 
+  private searchBox = React.createRef<HTMLInputElement>()
+
   pendingPromises = []
 
   appendPendingPromise = promise =>
@@ -45,7 +47,11 @@ export default class AoSearch extends React.Component<{}, State> {
   clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
 
   toggleSearchPanel() {
-    this.setState({ searchPanel: !this.state.searchPanel })
+    this.setState({ searchPanel: !this.state.searchPanel }, () => {
+      if (this.state.searchPanel) {
+        this.searchBox.current.select()
+      }
+    })
   }
 
   onChange(event) {
@@ -77,6 +83,7 @@ export default class AoSearch extends React.Component<{}, State> {
     this.setState({
       redirect: '/task/' + taskId
     })
+    this.setState({ searchPanel: false })
   }
 
   renderSearchButton() {
@@ -121,6 +128,7 @@ export default class AoSearch extends React.Component<{}, State> {
     return (
       <div id={'search'} className={'open'}>
         <input
+          ref={this.searchBox}
           type="text"
           onChange={this.onChange}
           value={this.state.query}

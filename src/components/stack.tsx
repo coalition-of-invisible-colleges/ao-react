@@ -18,10 +18,13 @@ import AoSmartZone, { Sel, CardSource } from './smartZone'
 interface StackState {
   redirect?: string
   selected?: Sel
+  showAll: boolean
 }
 
 export const defaultState: StackState = {
-  redirect: undefined
+  redirect: undefined,
+  selected: undefined,
+  showAll: false
 }
 
 interface StackProps {
@@ -36,6 +39,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     this.state = defaultState
     this.selectStackZone = this.selectStackZone.bind(this)
     this.goInZone = this.goInZone.bind(this)
+    this.show = this.show.bind(this)
+    this.hide = this.hide.bind(this)
   }
 
   selectStackZone(selection: Sel) {
@@ -62,6 +67,14 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     })
   }
 
+  show() {
+    this.setState({ showAll: true })
+  }
+
+  hide() {
+    this.setState({ showAll: false })
+  }
+
   render() {
     let cardsToRender
     if (this.props.cardSource === 'context') {
@@ -77,25 +90,48 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       return <Redirect to={this.state.redirect} />
     }
 
-    const list = cardsToRender.map((stId, i) => (
-      <AoSmartZone
-        selected={this.state.selected ? this.state.selected.y === i : false}
-        inId={this.props.taskId}
-        taskId={stId}
-        y={i}
-        onSelect={this.selectStackZone}
-        onGoIn={this.goInZone}
-        key={i}
-        cardSource={this.props.cardSource}
-        style={
-          this.props.cardSource === 'context'
-            ? {
-                maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
-              }
-            : {}
-        }
-      />
-    ))
+    let list = []
+    if (this.state.showAll || this.props.cardSource === 'context') {
+      list = cardsToRender.map((stId, i) => (
+        <AoSmartZone
+          selected={this.state.selected ? this.state.selected.y === i : false}
+          inId={this.props.taskId}
+          taskId={stId}
+          y={i}
+          onSelect={this.selectStackZone}
+          onGoIn={this.goInZone}
+          key={i}
+          cardSource={this.props.cardSource}
+          style={
+            this.props.cardSource === 'context'
+              ? {
+                  maxWidth: (30 - (cardsToRender.length - i)).toString() + 'em'
+                }
+              : {}
+          }
+        />
+      ))
+    } else if (cardsToRender.length >= 1) {
+      list = [
+        <AoSmartZone
+          selected={this.state.selected ? this.state.selected.y === 0 : false}
+          inId={this.props.taskId}
+          taskId={cardsToRender[0]}
+          y={0}
+          onSelect={this.selectStackZone}
+          onGoIn={this.goInZone}
+          key={0}
+          cardSource={this.props.cardSource}
+          style={
+            this.props.cardSource === 'context'
+              ? {
+                  maxWidth: (30 - cardsToRender.length).toString() + 'em'
+                }
+              : {}
+          }
+        />
+      ]
+    }
 
     return (
       <div
@@ -117,6 +153,19 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           ''
         )}
         {list}
+        {this.props.cardSource !== 'context' && cardsToRender.length >= 2 ? (
+          !this.state.showAll ? (
+            <div onClick={this.show} className={'action'}>
+              {cardsToRender.length - 1}&hellip;
+            </div>
+          ) : (
+            <div onClick={this.hide} className={'action'}>
+              -
+            </div>
+          )
+        ) : (
+          ''
+        )}
       </div>
     )
   }

@@ -255,6 +255,11 @@ textarea {
       .grid .action {
         left: 50%;
         transform: translateX(-50%);
+        margin-top: 0.5em;
+      }
+
+      .stack > .action {
+        font-size: 0.9em;
       }
 
       .hud {
@@ -536,7 +541,7 @@ textarea {
           .minusColumn,
           .plusColumn {
             position: relative;
-            right: -2em;
+            right: -1.875em;
             margin-top: 0.25em;
             padding-left: 0.25em;
             padding-right: 0.25em;

@@ -12,7 +12,6 @@ interface AoCardMenuProps {
 
 const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
   ({ taskId, hudStyle }) => {
-    const str = console.log('taskId is ', taskId)
     return (
       <Tippy
         zIndex={2}
