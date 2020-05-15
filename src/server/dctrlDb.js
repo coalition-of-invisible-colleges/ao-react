@@ -1,10 +1,7 @@
-let PORT = process.env.PORT || 8003
-
 const Kefir = require('kefir')
 const _ = require('lodash')
 const uuidV1 = require('uuid/v1')
 const dbengine = require('better-sqlite3')
-const config = require('../../configuration')
 const cryptoUtils = require('../crypto')
 
 const preparedStmts = {}
@@ -147,12 +144,8 @@ function insertBackup(state, callback) {
   if (callback) return callback(err, result)
 }
 
-function startDb(callback) {
-  dblocation = config.sqlite3.file
-  if (PORT !== 8003) {
-    dblocation = dblocation.replace('database', PORT)
-  }
-  conn = dbengine(dblocation, {})
+function startDb(path, callback) {
+  conn = dbengine(path, {})
   var checkTable = conn.prepare(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
   )
@@ -165,19 +158,29 @@ function startDb(callback) {
   }
 }
 
-function getConn() {
-  return conn
+function verifyAndLoadDb(path) {
+  conn = dbengine(path, {})
+  var checkTable = conn.prepare(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
+  )
+
+  if (checkTable.all().length == 0) {
+    return 'Database does not exist or does not have AO tables in it.'
+  } else {
+    createStatements()
+  }
+  return true
 }
 
 module.exports = {
   conn: conn,
   startDb,
+  verifyAndLoadDb,
   getAll,
   changeFeed,
   shadowFeed,
   triggerShadow,
   insertEvent,
   insertBackup,
-  getConn,
   recover
 }

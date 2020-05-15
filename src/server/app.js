@@ -17,14 +17,17 @@ const link = require('./link')
 const lightning = require('./lightning')
 
 const app = express()
-console.log('applying router')
 applyRouter(app)
-console.log('router applied')
 startDctrlAo()
 
 function startDctrlAo() {
   console.log('starting db')
-  dctrlDb.startDb((err, conn) => {
+  let dbPath = config.sqlite3.file
+  if (PORT !== 8003) {
+    dbPath = dbPath.replace('database', PORT)
+  }
+
+  dctrlDb.startDb(dbPath, (err, conn) => {
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)

@@ -977,7 +977,7 @@ function applyEvent(state, ev) {
   sessionsMuts(state.sessions, ev)
   tasksMuts(state.tasks, ev)
   aoMuts(state.ao, ev)
-  gridsMuts(state.grids, ev)
+  // gridsMuts(state.grids, ev)
 }
 
 module.exports = {
