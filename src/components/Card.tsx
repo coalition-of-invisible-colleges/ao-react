@@ -1,11 +1,7 @@
 import * as React from 'react'
-import { useState } from 'react'
-import { observer } from 'mobx-react'
 import { ObservableMap, computed } from 'mobx'
-import { Switch, Route, useParams, useRouteMatch } from 'react-router-dom'
-import api from '../client/api'
+import { Route, useParams, useRouteMatch } from 'react-router-dom'
 import aoStore from '../client/store'
-import Markdown from 'markdown-to-jsx'
 import AoSmartZone from './smartZone'
 import AoSmartCard from './smartCard'
 
@@ -13,7 +9,7 @@ interface CardParams {
   taskId: string
 }
 
-const CardDetails = () => {
+const RenderCard = () => {
   const { taskId }: CardParams = useParams()
   aoStore.setCurrentCard(taskId)
   aoStore.removeFromContext(taskId)
@@ -28,12 +24,11 @@ const CardDetails = () => {
 
 const AoCard: React.FunctionComponent<{}> = () => {
   const match = useRouteMatch()
+  console.log('match.path is ', match.path)
   return (
-    <Switch>
-      <Route path={`${match.path}/:taskId`}>
-        <CardDetails />
-      </Route>
-    </Switch>
+    <Route path={`${match.path}/:taskId`}>
+      <RenderCard />
+    </Route>
   )
 }
 

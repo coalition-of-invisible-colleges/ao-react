@@ -579,7 +579,7 @@ function tasksMuts(tasks, ev) {
           // if (ev.position) {
           //   task.priorities = task.priorities.splice(ev.position, 0, ev.taskId)
           // } else {
-          console.log('task-prioritized position is ', ev.position)
+          // console.log('task-prioritized position is ', ev.position)
           task.priorities.push(ev.taskId)
           // }
         }

@@ -88,9 +88,11 @@ const App = observer(() => {
             <Link to="/" id="home">
               Home
             </Link>
-            <Link to="/members" id="members">
-              Members
-            </Link>
+            <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
+              <Link to="/members" id="members">
+                Members
+              </Link>
+            </ProtectedFragment>
           </nav>
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
             <Tippy
@@ -102,9 +104,6 @@ const App = observer(() => {
             </Tippy>
             <AoSearch />
           </ProtectedFragment>
-
-          {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
           <Switch>
             <Route path="/login">
               <Login />
@@ -128,17 +127,12 @@ const App = observer(() => {
               path="/"
               component={AoMember}
               loggedIn={aoStore.state.loggedIn}
+              exact={true}
             />
-            {/* <Route path="/task/:taskId">
-                <Card />
-              </Route>
-              <Route path="/">
-                <AoGrid />
-              </Route> */}
           </Switch>
         </Router>
       )}
-      {!render && <div>Logging in </div>}
+      {!render && <div>Logging in…</div>}
     </div>
   )
 })

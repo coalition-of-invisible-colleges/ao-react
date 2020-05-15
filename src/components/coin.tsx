@@ -2,7 +2,6 @@ import React, { FunctionComponent } from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
-import { useParams } from 'react-router-dom'
 import api from '../client/api'
 import Coin from '../assets/images/coin.svg'
 

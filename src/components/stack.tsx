@@ -3,13 +3,7 @@ import { FunctionComponent } from 'react'
 import { useState } from 'react'
 import { observer } from 'mobx-react'
 import { ObservableMap, computed } from 'mobx'
-import {
-  Redirect,
-  Switch,
-  Route,
-  useParams,
-  useRouteMatch
-} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import api from '../client/api'
 import aoStore from '../client/store'
 import Markdown from 'markdown-to-jsx'

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
 import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'

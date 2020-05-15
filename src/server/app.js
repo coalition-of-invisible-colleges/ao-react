@@ -17,7 +17,9 @@ const link = require('./link')
 const lightning = require('./lightning')
 
 const app = express()
+console.log('applying router')
 applyRouter(app)
+console.log('router applied')
 startDctrlAo()
 
 function startDctrlAo() {

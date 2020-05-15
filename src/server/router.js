@@ -11,6 +11,7 @@ const { lightningRouter } = require('./lightning')
 module.exports = function applyRouter(app) {
   app.use(express.static(path.join(__dirname, '../../dist')))
   app.use(express.static(path.join(__dirname, '../../public')))
+  app.use(express.static(path.join(__dirname, '../../memes')))
   app.get('/%PUBLIC_URL%/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/manifest.json'))
   })
@@ -18,6 +19,7 @@ module.exports = function applyRouter(app) {
     res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/favicon.ico'))
   })
   app.get('/*', (req, res) => {
+    console.log('any route detected')
     res.sendFile(path.join(__dirname, '../../dist/index.html'))
   })
   app.use(bodyParser.json())
@@ -36,14 +38,28 @@ module.exports = function applyRouter(app) {
   })
 
   // // XXX restrict to only memberIds not ao or resourceIds
-  // app.post('/tasks/:taskId', (req, res) => {
-  //   res.json(state.serverState.tasks)
+  // app.get('/task/:taskId', (req, res) => {
+  //   console.log('task route detected')
+  //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
+  //   res.json(
+  //     state.serverState.tasks.find(task => {
+  //       return task.taskId === req.params.taskId
+  //     })
+  //   )
+  //   console.log('task route completed')
   // })
 
   app.post('/taskhash/:taskId', (req, res) => {
     res.end(
       calculations.crawlerHash(state.serverState.tasks, req.params.taskId)
     )
+  })
+
+  // // XXX restrict to only memberIds not ao or resourceIds
+  app.get('/meme/:memeFileName', (req, res) => {
+    console.log('meme route detected')
+    res.download(path.join(__dirname, '~/.ao/memes/' + req.params.memeFileName))
+    console.log('meme route completed')
   })
 
   // app.post('/grids/:gridId', (req, res) => {

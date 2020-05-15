@@ -260,7 +260,6 @@ textarea {
       }
 
       .stack > .action {
-        font-size: 0.9em;
       }
 
       .hud {
@@ -449,6 +448,7 @@ textarea {
         left: 50%;
         transform: translateX(-50%);
         width: min-content;
+        margin-top: 0.5em;
 
         &.padbottom {
           margin-bottom: 2em;
