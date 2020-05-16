@@ -52,11 +52,12 @@ export default class AoMembers extends React.Component<{}, State> {
         <div style={{ width: '30em', margin: '0.5em auto' }}>
           {aoStore.state.members.map((member, i) => (
             <div
-              onDoubleClick={event =>
+              onDoubleClick={event => {
+                aoStore.addToContext([member.memberId])
                 this.setState({
                   redirect: '/task/' + member.memberId
                 })
-              }>
+              }}>
               <AoSmartCard
                 taskId={member.memberId}
                 cardStyle="priority"
