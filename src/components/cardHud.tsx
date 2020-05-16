@@ -14,6 +14,7 @@ import AoTimeClock from './timeclock'
 import AoStack from './stack'
 import AoCardMenu from './cardMenu'
 import AoPreview from './preview'
+import AoMission from './mission'
 
 export type HudStyle =
 	| 'full before'
@@ -37,6 +38,7 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 			case 'collapsed':
 				return (
 					<div className={'hud'}>
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
@@ -79,6 +81,7 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 						) : (
 							<div className={'seen'} />
 						)}
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={card.taskId} hudStyle={hudStyle} />
 					</div>
@@ -95,6 +98,7 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 			case 'menu':
 				return (
 					<div className={'hud menu'}>
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />

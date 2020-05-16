@@ -8,6 +8,7 @@ import AoPaper from './paper'
 import AoGrid from './grid'
 import AoStack from './stack'
 import AoCardHud from './cardHud'
+import AoMission from './mission'
 
 export type CardStyle = 'priority' | 'face' | 'full' | 'mini' | 'context'
 
@@ -49,6 +50,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'face before'} />
 						<div className={'content'}>
+							<AoMission taskId={taskId} hudStyle={'face before'} />
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
 						<AoCardHud taskId={taskId} hudStyle={'face after'} />
@@ -68,6 +70,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 							<AoPaper taskId={taskId} />
 							<AoCardHud taskId={taskId} hudStyle={'full before'} />
 							<div className="content">
+								<AoMission taskId={taskId} hudStyle={'full before'} />
 								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 							</div>
 							<AoStack taskId={taskId} cardSource="priorities" />

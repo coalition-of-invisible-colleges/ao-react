@@ -387,6 +387,25 @@ class AoApi {
       })
   }
 
+  async titleMissionCard(
+    taskId: string,
+    newTitle: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-guilded',
+      taskId: taskId,
+      guild: newTitle,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async valueCard(taskId: string, value: number): Promise<request.Response> {
     const act = {
       type: 'task-valued',

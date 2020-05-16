@@ -71,6 +71,15 @@ textarea {
       }
     }
 
+    .mission {
+      .badge {
+        height: 1.5em;
+        margin-right: 0.5em;
+        position: relative;
+        top: 0.33em;
+      }
+    }
+
     .card {
       position: relative;
       left: 50%;
@@ -118,6 +127,7 @@ textarea {
           float: right;
           margin-left: 0.5em;
 
+          .mission,
           .preview,
           .countdown,
           .value,
@@ -126,15 +136,26 @@ textarea {
             display: inline-block;
           }
 
+          .mission,
           .preview,
           .countdown,
           .value {
             font-size: 0.8em;
           }
 
+          .mission,
           .preview,
           .countdown {
             margin-right: 0.75em;
+          }
+
+          .mission {
+            .badge {
+              height: 1.5em;
+              margin-right: 0.25em;
+              position: relative;
+              top: 0.31em;
+            }
           }
 
           .value {
@@ -186,6 +207,7 @@ textarea {
               background-color: rgba(255, 10, 10, 0.85);
             }
 
+            .mission,
             .countdown,
             .value {
               background-color: rgba(0, 0, 0, 0.2);
@@ -195,8 +217,20 @@ textarea {
               margin: 0;
             }
 
-            .countdown {
+            .countdown,
+            .mission {
               float: left;
+            }
+
+            .mission {
+              text-align: left;
+              .badge {
+                height: 1.1em;
+                margin-right: 0.25em;
+                position: relative;
+                top: 0.2em;
+                left: 0.05em;
+              }
             }
 
             .value {
@@ -262,6 +296,17 @@ textarea {
 
         a {
           text-shadow: 0 0 1em #fff;
+        }
+
+        .mission {
+          margin: 0 auto;
+
+          .badge {
+            height: 1.5em;
+            margin-right: 0.5em;
+            position: relative;
+            top: 0.33em;
+          }
         }
       }
 
@@ -355,12 +400,6 @@ textarea {
             padding: 0.25em;
           }
         }
-      }
-
-      .cardMenu .value {
-        // position: relative;
-        // right: unset;
-        // top: unset;
       }
 
       .checkbox {
