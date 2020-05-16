@@ -266,68 +266,129 @@ export default class AoSmartZone extends React.Component<
 			nameTo = aoStore.hashMap.get(this.props.taskId).name
 		}
 
-		if (this.props.cardSource === 'grid' && fromZone === 'grid') {
-			if (nameFrom && nameTo) {
-				api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-				api.pinCardToGrid(fromCoords.x, fromCoords.y, nameTo, this.props.inId)
-			} else if (nameFrom) {
-				api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-				api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-			}
-		} else if (fromZone === 'priorities' && this.props.cardSource === 'grid') {
-			if (nameTo) {
-				api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
-			}
-			api.refocusCard(fromTaskId, this.props.inId)
-			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-		} else if (
-			fromZone === 'priorities' &&
-			this.props.cardSource === 'priorities'
-		) {
-			if (nameTo) {
-				api.refocusCard(nameTo, this.props.inId)
-			}
-			api.prioritizeCard(fromTaskId, this.props.inId)
-		} else if (
-			fromZone === 'priorities' &&
-			this.props.cardSource === 'subTasks'
-		) {
-			api.refocusCard(fromTaskId, this.props.inId)
-		} else if (
-			fromZone === 'subTasks' &&
-			this.props.cardSource === 'priorities'
-		) {
-			api.prioritizeCard(fromTaskId, this.props.inId)
-		} else if (fromZone === 'subTasks' && this.props.cardSource === 'grid') {
-			if (nameTo) {
-				api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
-			}
-			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-		} else if (fromZone === 'completed' && this.props.cardSource === 'grid') {
-			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-		} else if (fromZone === 'grid' && this.props.cardSource === 'priorities') {
-			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-			api.prioritizeCard(fromTaskId, this.props.inId, toCoords.y)
-		} else if (fromZone === 'grid' && this.props.cardSource === 'subTasks') {
-			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-		} else if (fromZone === 'grid' && this.props.cardSource === 'completed') {
-		} else if (
-			fromZone === 'subTasks' &&
-			this.props.cardSource === 'subTasks'
-		) {
-			api.findOrCreateCardInCard(nameFrom, this.props.inId)
-		} else if (this.props.cardSource === 'discard') {
+		if (this.props.cardSource === 'discard') {
 			console.log('discard drop detected')
-			if (fromZone === 'grid') {
-				api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-				api.discardCardFromCard(fromTaskId, this.props.inId)
-			} else if (fromZone === 'priorities') {
-				api.refocusCard(fromTaskId, this.props.inId)
-				api.discardCardFromCard(fromTaskId, this.props.inId)
-			} else if (fromZone === 'context') {
-				aoStore.removeFromContext(fromTaskId)
-			} else if (fromZone === 'subTasks') {
-				api.discardCardFromCard(fromTaskId, this.props.inId)
+			switch (fromZone) {
+				case 'grid':
+					api
+						.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+						.then(() => api.discardCardFromCard(fromTaskId, this.props.inId))
+					break
+
+				case 'priorities':
+					api
+						.refocusCard(fromTaskId, this.props.inId)
+						.then(() => api.discardCardFromCard(fromTaskId, this.props.inId))
+					break
+				case 'context':
+					aoStore.removeFromContext(fromTaskId)
+					break
+				case 'subTasks':
+					api.discardCardFromCard(fromTaskId, this.props.inId)
+					break
+			}
+		} else if (fromZone === 'priorities') {
+			switch (this.props.cardSource) {
+				case 'priorities':
+					if (nameTo) {
+						api
+							.refocusCard(nameTo, this.props.inId)
+							.then(() => api.prioritizeCard(fromTaskId, this.props.inId))
+					} else {
+						api.prioritizeCard(fromTaskId, this.props.inId)
+					}
+					break
+				case 'grid':
+					if (nameTo) {
+						api
+							.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
+							.then(() => api.refocusCard(fromTaskId, this.props.inId))
+							.then(() =>
+								api.pinCardToGrid(
+									toCoords.x,
+									toCoords.y,
+									nameFrom,
+									this.props.inId
+								)
+							)
+					} else {
+						api.refocusCard(fromTaskId, this.props.inId)
+						api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+					}
+					break
+				case 'subTasks':
+					api.refocusCard(fromTaskId, this.props.inId)
+					break
+			}
+		} else if (fromZone === 'grid') {
+			switch (this.props.cardSource) {
+				case 'priorities':
+					api
+						.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+						.then(() =>
+							api.prioritizeCard(fromTaskId, this.props.inId, toCoords.y)
+						)
+
+					break
+				case 'grid':
+					if (nameFrom && nameTo) {
+						api
+							.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+							.then(() =>
+								api.pinCardToGrid(
+									fromCoords.x,
+									fromCoords.y,
+									nameTo,
+									this.props.inId
+								)
+							)
+					} else if (nameFrom) {
+						api
+							.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+							.then(() =>
+								api.pinCardToGrid(
+									toCoords.x,
+									toCoords.y,
+									nameFrom,
+									this.props.inId
+								)
+							)
+					}
+					break
+				case 'subTasks':
+					api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
+					break
+			}
+		} else if (fromZone === 'subTasks') {
+			switch (this.props.cardSource) {
+				case 'priorities':
+					api.prioritizeCard(fromTaskId, this.props.inId)
+					break
+				case 'grid':
+					if (nameTo) {
+						api
+							.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
+							.then(() =>
+								api.pinCardToGrid(
+									toCoords.x,
+									toCoords.y,
+									nameFrom,
+									this.props.inId
+								)
+							)
+					} else {
+						api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+					}
+					break
+				case 'subTasks':
+					api.findOrCreateCardInCard(nameFrom, this.props.inId)
+					break
+			}
+		} else if (fromZone === 'completed') {
+			switch (this.props.cardSource) {
+				case 'grid':
+					api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
+					break
 			}
 		} else if (fromZone === 'search' || fromZone === 'context') {
 			switch (this.props.cardSource) {
