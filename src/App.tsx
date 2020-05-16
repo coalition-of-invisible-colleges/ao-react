@@ -17,6 +17,9 @@ import { observer } from 'mobx-react'
 import Login from './components/Login'
 import AoMembers from './components/Members'
 import AoStatus from './components/status'
+import AoServerName from './components/serverName'
+import AoUsername from './components/username'
+import AoPassword from './components/password'
 import AoVolume from './components/volume'
 import AoSearch from './components/search'
 import Tippy from '@tippyjs/react'
@@ -69,6 +72,9 @@ const App = observer(() => {
   const MainMenu: React.FunctionComponent<{}> = () => {
     return (
       <div id={'mainMenu'}>
+        <AoServerName />
+        <AoUsername />
+        <AoPassword />
         <AoVolume />
         <div onClick={changeTheme} id={'themer'} className={'action'}>
           Next Theme

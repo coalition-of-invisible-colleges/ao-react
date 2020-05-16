@@ -235,7 +235,7 @@ textarea {
 
             .preview {
               position: absolute;
-              right: 1.25em;
+              right: 1.2em;
               bottom: 0;
               font-size: 0.75em;
               padding: 0.25em;
@@ -249,7 +249,7 @@ textarea {
               right: 0;
               bottom: 0;
               font-size: 0.9em;
-              padding: 0.05em;
+              padding: 0.1em 0;
             }
           }
         }
@@ -259,6 +259,10 @@ textarea {
         position: relative;
         margin: 1em auto;
         max-width: 28em;
+
+        a {
+          text-shadow: 0 0 1em #fff;
+        }
       }
 
       .stack > .action,
@@ -607,6 +611,12 @@ textarea {
         margin-bottom: 0.5em;
         margin-top: 0.5em;
         width: calc(100% - 1.25em);
+      }
+
+      .password {
+        input {
+          display: block;
+        }
       }
     }
 

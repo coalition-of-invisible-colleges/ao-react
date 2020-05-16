@@ -45,6 +45,10 @@ export default class AoValue extends React.Component<ValueParams, State> {
     event.stopPropagation()
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
+    if (newValue === aoStore.hashMap.get(this.props.taskId).completeValue) {
+      this.setState({ editing: false })
+      return
+    }
     if (newValue !== NaN) {
       api.valueCard(this.props.taskId, newValue)
       this.setState({ editing: false })
@@ -54,6 +58,8 @@ export default class AoValue extends React.Component<ValueParams, State> {
   onKeyDown(event) {
     if (event.key === 'Enter') {
       this.saveValue(event)
+    } else if (event.key === 'Escape') {
+      this.setState({ editing: false, text: '' })
     }
   }
 

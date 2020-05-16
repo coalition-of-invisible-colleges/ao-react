@@ -53,6 +53,20 @@ class AoApi {
     return Promise.resolve(false)
   }
 
+  async nameAo(newName: string): Promise<request.Response> {
+    const act = {
+      type: 'ao-named',
+      alias: newName
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async bark(): Promise<request.Response> {
     const act = {
       type: 'doge-barked',
@@ -465,6 +479,9 @@ class AoApi {
     newValue: string
   ): Promise<request.Response> {
     const secret = cryptoUtils.createHash(name)
+    if (field === 'secret') {
+      newValue = cryptoUtils.createHash(newValue)
+    }
     const act = {
       type: 'member-field-updated',
       memberId: aoStore.member.memberId,
