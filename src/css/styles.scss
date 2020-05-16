@@ -162,8 +162,6 @@ textarea {
         margin: 0;
 
         &:hover {
-          background-color: rgba(0, 0, 0, 0.4);
-          border-radius: 0.5em;
         }
 
         .content {
@@ -219,7 +217,10 @@ textarea {
           }
 
           &.mini.after {
-            position: unset;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            pointer-events: auto;
 
             .countdown {
               position: absolute;
@@ -234,13 +235,21 @@ textarea {
 
             .preview {
               position: absolute;
-              right: 0;
+              right: 1.25em;
               bottom: 0;
               font-size: 0.75em;
               padding: 0.25em;
               pointer-events: none;
               margin: 0;
               background-color: rgba(0, 0, 0, 0.2);
+            }
+
+            .cardMenuButton {
+              position: absolute;
+              right: 0;
+              bottom: 0;
+              font-size: 0.9em;
+              padding: 0.05em;
             }
           }
         }
@@ -270,6 +279,11 @@ textarea {
           font-weight: bold;
           cursor: pointer;
           user-select: none;
+          color: rgba(255, 255, 255, 0.8);
+
+          &:hover {
+            color: white;
+          }
         }
 
         &.full.before,
@@ -466,16 +480,15 @@ textarea {
             align-items: center;
             border: $square-border;
             color: $body-color;
-            overflow: hidden;
 
             &:hover {
               overflow: visible;
-              background: darken($square-hover, 50%);
+              // background: darken($square-hover, 50%);
               span {
                 margin: auto;
                 padding: 0.5em;
                 pointer-events: none;
-                background: darken($square-hover, 50%);
+                // background: darken($square-hover, 50%);
               }
             }
 
@@ -519,6 +532,11 @@ textarea {
                 top: 50%;
                 transform: translateY(-50%);
               }
+            }
+
+            .hud .action {
+              left: unset;
+              transform: unset;
             }
           }
         }

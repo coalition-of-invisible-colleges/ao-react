@@ -475,7 +475,6 @@ export default class AoSmartZone extends React.Component<
 				<div
 					id={this.props.x + '-' + this.props.y}
 					className={'zone'}
-					onClick={this.onClick}
 					onDoubleClick={this.onDoubleClick}
 					draggable="true"
 					onDragStart={this.drag}

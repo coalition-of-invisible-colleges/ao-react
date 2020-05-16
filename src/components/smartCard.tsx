@@ -85,7 +85,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 				}
 
 				return (
-					<div className={'card mini'}>
+					<div id={'card-' + taskId} className={'card mini'}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>

@@ -89,6 +89,7 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':
