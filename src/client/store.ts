@@ -72,6 +72,7 @@ export interface Meme {
   memeId: string
   filename: string
   hash: string
+  filetype: string
 }
 
 interface Usertime {

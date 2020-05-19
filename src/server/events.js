@@ -270,12 +270,13 @@ function resourcePurged(resourceId, blame, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function memeAdded(filename, hash, callback) {
+function memeAdded(filename, hash, filetype, callback) {
   let newEvent = {
     type: 'meme-added',
     taskId: uuidV1(),
     filename: filename,
-    hash: hash
+    hash: hash,
+    filetype: filetype
   }
   console.log('meme-added event:', newEvent)
   dctrlDb.insertEvent(newEvent, callback)

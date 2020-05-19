@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const FileType = require('file-type')
 const events = require('./events')
 const crypto = require('../crypto')
 const { serverState } = require('./state')
@@ -21,6 +22,7 @@ function scanMemes() {
 			fs.readFile(filepath, (err, data) => {
 				if (err) throw err
 				const hash = crypto.createHash(data)
+				const filetype = 'jpg' //Promise.all(FileType.fromFile(filepath)).then(() => {
 
 				console.log(
 					'file data loaded. filepath: ',
@@ -34,7 +36,7 @@ function scanMemes() {
 					return m.hash === hash
 				})
 				if (!foundMeme) {
-					events.memeAdded(filename, hash, (err, event) => {
+					events.memeAdded(filename, hash, filetype, (err, event) => {
 						console.log(
 							'\n\n\nmeme-added callback\n\nerr: ',
 							err,

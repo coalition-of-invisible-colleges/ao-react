@@ -255,7 +255,12 @@ function memesMuts(memes, ev) {
           return file.hash === ev.hash
         })
       ) {
-        memes.push({ memeId: ev.taskId, filename: ev.filename, hash: ev.hash })
+        memes.push({
+          memeId: ev.taskId,
+          filename: ev.filename,
+          hash: ev.hash,
+          filetype: ev.filetype
+        })
         console.log('added file: ', ev.filename)
       } else {
         console.log('file already in state: ', ev.filename)
