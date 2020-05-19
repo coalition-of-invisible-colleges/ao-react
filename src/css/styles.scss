@@ -76,7 +76,7 @@ textarea {
         height: 1.5em;
         margin-right: 0.5em;
         position: relative;
-        top: 0.33em;
+        bottom: -0.33em;
       }
     }
 
@@ -84,6 +84,7 @@ textarea {
       position: relative;
       left: 50%;
       transform: translateX(-50%);
+      width: -moz-fit-content;
       width: fit-content;
       padding: 0.5em 1.5em;
       background-color: black;
@@ -828,6 +829,7 @@ textarea {
     .summary {
       position: relative;
       display: block;
+      width: -moz-fit-content;
       width: fit-content;
       color: white;
       margin-top: 0;

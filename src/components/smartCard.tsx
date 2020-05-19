@@ -9,6 +9,7 @@ import AoGrid from './grid'
 import AoStack from './stack'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
+import AoAttachment from './attachment'
 
 export type CardStyle = 'priority' | 'face' | 'full' | 'mini' | 'context'
 
@@ -38,9 +39,10 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 				return (
 					<div className={'card priority'} id={'card-' + taskId}>
 						<AoPaper taskId={taskId} />
-						<AoCardHud taskId={taskId} hudStyle="collapsed" />
+						<AoCardHud taskId={taskId} hudStyle={'collapsed'} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
 						</div>
 					</div>
 				)
@@ -52,6 +54,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 						<div className={'content'}>
 							<AoMission taskId={taskId} hudStyle={'face before'} />
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+							<AoAttachment taskId={taskId} hudStyle={'face before'} />
 						</div>
 						<AoCardHud taskId={taskId} hudStyle={'face after'} />
 					</div>
@@ -72,6 +75,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 							<div className="content">
 								<AoMission taskId={taskId} hudStyle={'full before'} />
 								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+								<AoAttachment taskId={taskId} hudStyle={'full before'} />
 							</div>
 							<AoStack taskId={taskId} cardSource="priorities" />
 							<AoGrid taskId={taskId} />
@@ -93,6 +97,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{shortened}</Markdown>
+							<AoAttachment taskId={taskId} hudStyle={'mini before'} />
 						</div>
 						<AoCardHud taskId={taskId} hudStyle={'mini after'} />
 					</div>

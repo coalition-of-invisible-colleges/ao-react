@@ -14,6 +14,7 @@ const { socketAuth } = require('./auth')
 const { watchSpot } = require('./exchangeRate')
 const rent = require('./rent')
 const link = require('./link')
+const { scanMemes } = require('./files')
 const lightning = require('./lightning')
 
 const app = express()
@@ -35,6 +36,7 @@ function startDctrlAo() {
       watchSpot()
       rent()
       link()
+      scanMemes()
       if (config.clightning.enable) {
         lightning.recordEveryInvoice(state.serverState.cash.pay_index)
         lightning.watchOnChain()

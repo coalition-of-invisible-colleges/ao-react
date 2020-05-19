@@ -479,6 +479,20 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'meme-added':
+      if (
+        validators.isNotes(req.body.hash) &&
+        validators.isNotes(reqbody.filename)
+      ) {
+        events.memeAdded(
+          req.body.filename,
+          req.body.hash,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(200).send(errRes)
+      }
+
     case 'session-killed':
       if (validators.isSession(req.body.session, errRes)) {
         events.sessionKilled(req.body.session, utils.buildResCallback(res))

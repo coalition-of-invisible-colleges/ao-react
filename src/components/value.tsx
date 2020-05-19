@@ -15,13 +15,13 @@ export const defaultState: State = {
   text: ''
 }
 
-interface ValueParams {
+interface ValueProps {
   taskId: string
   hudStyle: HudStyle
 }
 
 @observer
-export default class AoValue extends React.Component<ValueParams, State> {
+export default class AoValue extends React.Component<ValueProps, State> {
   constructor(props) {
     super(props)
     this.state = defaultState

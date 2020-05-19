@@ -270,6 +270,17 @@ function resourcePurged(resourceId, blame, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function memeAdded(filename, hash, callback) {
+  let newEvent = {
+    type: 'meme-added',
+    taskId: uuidV1(),
+    filename: filename,
+    hash: hash
+  }
+  console.log('meme-added event:', newEvent)
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function sessionCreated(ownerId, session, token, callback) {
   let newEvent = {
     type: 'session-created',
@@ -665,6 +676,7 @@ module.exports = {
   resourceBooked,
   bookCancelled,
   resourcePurged,
+  memeAdded,
   sessionCreated,
   sessionKilled,
   taskCreated,

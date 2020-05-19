@@ -7,12 +7,12 @@ import Paper2 from '../assets/images/paper_2.svg'
 import Paper3 from '../assets/images/paper_3.svg'
 import Paper4 from '../assets/images/paper_4.svg'
 
-interface AoPaperParams {
+interface AoPaperProps {
   taskId?: string
   color?: string
 }
 
-const AoPaper: FunctionComponent<AoPaperParams> = observer(
+const AoPaper: FunctionComponent<AoPaperProps> = observer(
   ({ taskId, color }) => {
     const computed = observable({
       get cardColor() {

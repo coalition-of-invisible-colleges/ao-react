@@ -11,7 +11,7 @@ const { lightningRouter } = require('./lightning')
 module.exports = function applyRouter(app) {
   app.use(express.static(path.join(__dirname, '../../dist')))
   app.use(express.static(path.join(__dirname, '../../public')))
-  app.use(express.static(path.join(__dirname, '../../memes')))
+  // app.use(express.static(path.join(__dirname, '../../memes')))
   app.get('/%PUBLIC_URL%/manifest.json', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/manifest.json'))
   })
@@ -56,9 +56,14 @@ module.exports = function applyRouter(app) {
   })
 
   // // XXX restrict to only memberIds not ao or resourceIds
-  app.get('/meme/:memeFileName', (req, res) => {
-    console.log('meme route detected')
-    res.download(path.join(__dirname, '~/.ao/memes/' + req.params.memeFileName))
+  app.post('/meme/:memeHash', (req, res) => {
+    console.log('meme route detected, hash is ', req.params.memeHash)
+    const meme = state.memes.find(meme => {
+      return meme.hash === req.params.memeHash
+    })
+    const path = path.join(__dirname, '~/.ao/memes/' + meme.filename)
+    console.log('meme path is ', path)
+    res.download(path)
     console.log('meme route completed')
   })
 

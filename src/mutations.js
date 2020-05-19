@@ -245,6 +245,25 @@ function resourcesMuts(resources, ev) {
   }
 }
 
+function memesMuts(memes, ev) {
+  switch (ev.type) {
+    case 'meme-added':
+      console.log('meme-added')
+      const fileHash = ev.data
+      if (
+        !memes.some(file => {
+          return file.hash === ev.hash
+        })
+      ) {
+        memes.push({ memeId: ev.taskId, filename: ev.filename, hash: ev.hash })
+        console.log('added file: ', ev.filename)
+      } else {
+        console.log('file already in state: ', ev.filename)
+      }
+      break
+  }
+}
+
 function sessionsMuts(sessions, ev) {
   switch (ev.type) {
     case 'session-created':
@@ -317,6 +336,10 @@ function tasksMuts(tasks, ev) {
       break
     case 'member-created':
       tasks.push(calculations.blankCard(ev.memberId, ev.memberId, 'blue'))
+      break
+    case 'meme-added':
+      console.log('\n\ntask mutation for meme-added\n')
+      tasks.push(calculations.blankCard(ev.taskId, ev.filename, 'yellow'))
       break
     case 'task-created':
       tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck))
@@ -974,10 +997,10 @@ function applyEvent(state, ev) {
   cashMuts(state.cash, ev)
   membersMuts(state.members, ev)
   resourcesMuts(state.resources, ev)
+  memesMuts(state.memes, ev)
   sessionsMuts(state.sessions, ev)
   tasksMuts(state.tasks, ev)
   aoMuts(state.ao, ev)
-  // gridsMuts(state.grids, ev)
 }
 
 module.exports = {
@@ -985,6 +1008,7 @@ module.exports = {
   cashMuts,
   membersMuts,
   resourcesMuts,
+  memesMuts,
   sessionsMuts,
   tasksMuts,
   applyEvent

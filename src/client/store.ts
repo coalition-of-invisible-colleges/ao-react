@@ -10,6 +10,7 @@ function setCurrent(state: AoState, b: AoState) {
   modules.sessions.mutations.setCurrent(state.sessions, b)
   modules.ao.mutations.setCurrent(state.ao, b)
   modules.members.mutations.setCurrent(state.members, b)
+  modules.memes.mutations.setCurrent(state.memes, b)
   modules.resources.mutations.setCurrent(state.resources, b)
 
   state.user = b.user
@@ -67,6 +68,12 @@ export interface Task {
   grid?: Grid
 }
 
+export interface Meme {
+  memeId: string
+  filename: string
+  hash: string
+}
+
 interface Usertime {
   memberId: string
   timelog: number[]
@@ -95,6 +102,7 @@ export interface AoState {
   members: Member[]
   tasks: Task[]
   resources: []
+  memes: Meme[]
   cash: {
     address: string
     alias: string
@@ -119,6 +127,7 @@ const defaultState: AoState = {
   members: [],
   tasks: [],
   resources: [],
+  memes: [],
   cash: {
     address: '',
     alias: '',
@@ -184,6 +193,13 @@ class AoStore {
     })
     return hashMap
   }
+  @computed get memeById(): Map<string, Meme> {
+    let hashMap: Map<string, Meme> = new Map()
+    this.state.memes.forEach(m => {
+      hashMap.set(m.memeId, m)
+    })
+    return hashMap
+  }
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -197,6 +213,7 @@ class AoStore {
     M.cashMuts(this.state.cash, ev)
     M.membersMuts(this.state.members, ev)
     M.resourcesMuts(this.state.resources, ev)
+    M.memesMuts(this.state.memes, ev)
     M.sessionsMuts(this.state.sessions, ev)
     M.tasksMuts(this.state.tasks, ev)
     M.aoMuts(this.state.ao, ev)
