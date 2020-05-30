@@ -8,6 +8,8 @@ import {
   Link,
   Redirect
 } from 'react-router-dom'
+import { renderRoutes } from 'react-router-config'
+import routes from './routes'
 import AoMember from './components/Member'
 import AoGrid from './components/grid'
 import AoCard from './components/Card'
@@ -25,18 +27,18 @@ import AoSearch from './components/search'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
-const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
-  return (
-    <Route
-      path={path}
-      {...rest}
-      render={props => {
-        console.log
-        return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
-      }}
-    />
-  )
-}
+// const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
+//   return (
+//     <Route
+//       path={path}
+//       {...rest}
+//       render={props => {
+//         console.log
+//         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
+//       }}
+//     />
+//   )
+// }
 
 const ProtectedFragment: React.FunctionComponent<{ loggedIn: boolean }> = ({
   children,
@@ -114,27 +116,7 @@ const App = observer(() => {
             <Route path="/login">
               <Login />
             </Route>
-            <ProtectedRoute
-              path="/members"
-              component={AoMembers}
-              loggedIn={aoStore.state.loggedIn}
-            />
-            <ProtectedRoute
-              path="/task"
-              component={AoCard}
-              loggedIn={aoStore.state.loggedIn}
-            />
-            <ProtectedRoute
-              path="/grid"
-              component={AoGrid}
-              loggedIn={aoStore.state.loggedIn}
-            />
-            <ProtectedRoute
-              path="/"
-              component={AoMember}
-              loggedIn={aoStore.state.loggedIn}
-              exact={true}
-            />
+            {renderRoutes(routes, aoStore.state.loggedIn, '/login')}
           </Switch>
         </Router>
       )}

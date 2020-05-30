@@ -2,7 +2,6 @@ let PORT = process.env.PORT || 8003
 
 const Kefir = require('kefir')
 const express = require('express')
-const path = require('path')
 const socketIo = require('socket.io')
 const socketProtector = require('socketio-auth')
 const config = require('../../configuration')

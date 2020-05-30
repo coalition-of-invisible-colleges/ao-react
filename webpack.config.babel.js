@@ -6,13 +6,12 @@ var isProduction =
   process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
 var sourcePath = path.join(__dirname, './src')
 var outPath = path.join(__dirname, './dist')
-const ManifestPlugin = require("webpack-manifest-plugin")
+const ManifestPlugin = require('webpack-manifest-plugin')
 // plugins
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 // var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 var WebpackCleanupPlugin = require('webpack-cleanup-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
 module.exports = {
   context: __dirname,
@@ -31,8 +30,8 @@ module.exports = {
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
     mainFields: ['module', 'browser', 'main'],
     alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
+      'react-dom': '@hot-loader/react-dom'
+    }
   },
   module: {
     rules: [
@@ -47,19 +46,19 @@ module.exports = {
             presets: [
               [
                 '@babel/preset-env',
-                { targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
+                { targets: { browsers: 'last 2 versions' } } // or whatever your project requires
               ],
               '@babel/preset-typescript',
-              '@babel/preset-react',
+              '@babel/preset-react'
             ],
             plugins: [
               // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
               ['@babel/plugin-proposal-decorators', { legacy: true }],
               ['@babel/plugin-proposal-class-properties', { loose: true }],
-              'react-hot-loader/babel',
-            ],
-          },
-        },
+              'react-hot-loader/babel'
+            ]
+          }
+        }
       },
       {
         test: /\.css$/i,
@@ -73,8 +72,8 @@ module.exports = {
           // Translates CSS into CommonJS
           'css-loader',
           // Compiles Sass to CSS
-          'sass-loader',
-        ],
+          'sass-loader'
+        ]
       },
       // {
       //   test: /\.css$/,
@@ -119,10 +118,9 @@ module.exports = {
         use: [
           {
             loader: 'svg-url-loader',
-            options: {
-            },
-          },
-        ],
+            options: {}
+          }
+        ]
       },
       {
         test: /\.(jpe?g|gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
@@ -166,8 +164,8 @@ module.exports = {
       template: 'src/assets/index.html'
     }),
     new ManifestPlugin({
-      fileName: "%PUBLIC_URL%/manifest.json"
-  })
+      fileName: '%PUBLIC_URL%/manifest.json'
+    })
   ],
   devServer: {
     contentBase: sourcePath,
@@ -176,11 +174,13 @@ module.exports = {
     historyApiFallback: {
       disableDotRule: true
     },
-    proxy: [{
-      context: ['/state','/events', '/session'],
-      target: 'http://localhost:8003',
-      changeOrigin: true
-    }],
+    proxy: [
+      {
+        context: ['/state', '/events', '/session'],
+        target: 'http://localhost:8003',
+        changeOrigin: true
+      }
+    ],
     stats: 'minimal',
     clientLogLevel: 'warning'
   },
