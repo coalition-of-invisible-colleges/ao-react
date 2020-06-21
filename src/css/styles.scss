@@ -259,13 +259,14 @@ textarea {
 
             .countdown {
               position: absolute;
-              left: 0;
+              right: 0;
               bottom: 0;
               background-color: rgba(0, 0, 0, 0.2);
               font-size: 0.65em;
               padding: 0.25em;
               pointer-events: none;
               margin: 0 2em 0 0;
+              width: max-content;
             }
 
             .preview {

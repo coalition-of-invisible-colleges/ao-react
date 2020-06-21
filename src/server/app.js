@@ -1,3 +1,5 @@
+// entry point for server
+
 let PORT = process.env.PORT || 8003
 
 const Kefir = require('kefir')

@@ -6,7 +6,8 @@ import AoMember from './components/Member'
 const routes = [
 	{
 		path: '/login',
-		component: Login
+		component: Login,
+		restricted: false
 	},
 	{
 		path: '/members',

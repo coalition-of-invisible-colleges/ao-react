@@ -44,6 +44,7 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
 						</div>
+						<AoStack taskId={taskId} cardSource="priorities" showAdd={false} />
 					</div>
 				)
 			case 'face':

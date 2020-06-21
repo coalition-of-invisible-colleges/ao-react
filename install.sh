@@ -12,6 +12,9 @@ echo apt upgrade complete
 #sudo apt-get clean -yqqq
 #sudo apt-get autoclean -yqqq
 
+# check for sudo install and fail if not
+# install curl
+
 # install git
 if [ $(dpkg-query -W -f='${Status}' git 2>/dev/null | grep -c "ok installed") -eq 1 ];
 then

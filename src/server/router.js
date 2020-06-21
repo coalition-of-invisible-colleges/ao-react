@@ -18,10 +18,10 @@ module.exports = function applyRouter(app) {
   app.get('/%PUBLIC_URL%/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/favicon.ico'))
   })
-  app.get('/*', (req, res) => {
-    console.log('any route detected')
-    res.sendFile(path.join(__dirname, '../../dist/index.html'))
-  })
+  // app.get('/*', (req, res) => {
+  //   console.log('any route detected')
+  //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
+  // })
   app.use(bodyParser.json())
   app.use(
     bodyParser.urlencoded({

@@ -8,7 +8,6 @@ import {
   Link,
   Redirect
 } from 'react-router-dom'
-import { renderRoutes } from 'react-router-config'
 import routes from './routes'
 import AoMember from './components/Member'
 import AoGrid from './components/grid'
@@ -27,24 +26,33 @@ import AoSearch from './components/search'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
-// const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
-//   return (
-//     <Route
-//       path={path}
-//       {...rest}
-//       render={props => {
-//         console.log
-//         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
-//       }}
-//     />
-//   )
-// }
+const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
+  return (
+    <Route
+      path={path}
+      {...rest}
+      render={props => {
+        console.log
+        return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
+      }}
+    />
+  )
+}
 
 const ProtectedFragment: React.FunctionComponent<{ loggedIn: boolean }> = ({
   children,
   loggedIn
 }) => {
   return loggedIn ? <React.Fragment>{children}</React.Fragment> : null
+}
+
+if (typeof window !== 'undefined') {
+  window.onload = () => {
+    console.log('We are in a browser window!')
+    //     React.render(App(), document.getElementById("content"));
+  }
+} else {
+  console.log('We are not in a browser window :(')
 }
 
 const App = observer(() => {
@@ -113,10 +121,23 @@ const App = observer(() => {
             <AoSearch />
           </ProtectedFragment>
           <Switch>
-            <Route path="/login">
-              <Login />
-            </Route>
-            {renderRoutes(routes, aoStore.state.loggedIn, '/login')}
+            <Route path="/login" component={Login} />
+            <ProtectedRoute
+              path="/members"
+              component={AoMembers}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path="/task"
+              component={AoCard}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path="/"
+              component={AoMember}
+              loggedIn={aoStore.state.loggedIn}
+              exact={true}
+            />
           </Switch>
         </Router>
       )}

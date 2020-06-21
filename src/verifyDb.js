@@ -1,7 +1,6 @@
 let PORT = process.env.PORT || 8003
 
 const path = require('path')
-const config = require('../configuration')
 const { AoDb } = require('./server/aoDb')
 const { AoState } = require('./server/aoState')
 const argv = require('yargs').argv

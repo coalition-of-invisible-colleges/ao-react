@@ -24,6 +24,7 @@ export const defaultState: StackState = {
 interface StackProps {
   taskId: string
   cardSource: CardSource
+  showAdd?: boolean
 }
 
 @observer
@@ -125,7 +126,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
         className={
           this.props.cardSource === 'context' ? 'context stack' : 'stack'
         }>
-        {this.props.cardSource !== 'context' ? (
+        {this.props.cardSource !== 'context' && this.props.showAdd !== false ? (
           <AoSmartZone
             selected={
               this.state.selected ? this.state.selected.y === -1 : false
