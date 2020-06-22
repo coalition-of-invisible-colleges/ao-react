@@ -16,13 +16,15 @@ import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
-import AoMembers from './components/Members'
+import AoMembers from './components/members'
+import AoCalendar from './components/calendar'
+import AoMissions from './components/missions'
+import AoSearch from './components/search'
 import AoStatus from './components/status'
 import AoServerName from './components/serverName'
 import AoUsername from './components/username'
 import AoPassword from './components/password'
 import AoVolume from './components/volume'
-import AoSearch from './components/search'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
@@ -104,11 +106,6 @@ const App = observer(() => {
             <Link to="/" id="home">
               Home
             </Link>
-            <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
-              <Link to="/members" id="members">
-                Members
-              </Link>
-            </ProtectedFragment>
           </nav>
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
             <Tippy
@@ -118,15 +115,13 @@ const App = observer(() => {
               placement={'top-end'}>
               <div id={'mainMenuButton'}>&#x22EE;</div>
             </Tippy>
+            <AoMembers />
+            <AoMissions />
+            <AoCalendar />
             <AoSearch />
           </ProtectedFragment>
           <Switch>
             <Route path="/login" component={Login} />
-            <ProtectedRoute
-              path="/members"
-              component={AoMembers}
-              loggedIn={aoStore.state.loggedIn}
-            />
             <ProtectedRoute
               path="/task"
               component={AoCard}

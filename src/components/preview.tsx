@@ -9,10 +9,12 @@ import Uncompleted from '../assets/images/uncompleted.svg'
 interface AoPreviewProps {
   taskId: string
   hudStyle: HudStyle
+  prioritiesShown?: boolean
+  onTogglePriorities?: (any) => void
 }
 
 const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
-  ({ taskId, hudStyle }) => {
+  ({ taskId, hudStyle, prioritiesShown, onTogglePriorities }) => {
     const computed = observable({
       get subCardCount() {
         const card = aoStore.hashMap.get(taskId)
@@ -30,14 +32,34 @@ const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
           card.subTasks.length +
           card.completed.length
         return subCardCount
+      },
+      get priorityCount() {
+        const card = aoStore.hashMap.get(taskId)
+        return card.priorities.length
       }
     })
     if (computed.subCardCount < 1) {
       return null
     }
     switch (hudStyle) {
-      case 'face after':
       case 'collapsed':
+        return (
+          <div className={'preview'}>
+            {computed.priorityCount >= 1 ? (
+              <div className="action" onClick={onTogglePriorities}>
+                {computed.priorityCount}{' '}
+                {computed.priorityCount > 1 ? 'priorities' : 'priority'}{' '}
+                {prioritiesShown ? (
+                  <React.Fragment>&#8963;</React.Fragment>
+                ) : (
+                  <React.Fragment>&#8964;</React.Fragment>
+                )}
+              </div>
+            ) : null}
+            ({computed.subCardCount})
+          </div>
+        )
+      case 'face after':
       case 'mini after':
         return <div className={'preview'}>({computed.subCardCount})</div>
       default:

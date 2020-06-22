@@ -29,17 +29,24 @@ export type HudStyle =
 interface CardHudProps {
 	taskId: string
 	hudStyle: HudStyle
+	prioritiesShown?: boolean
+	onTogglePriorities?: (any) => void
 }
 
 const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
-	({ taskId, hudStyle }) => {
+	({ taskId, hudStyle, prioritiesShown, onTogglePriorities }) => {
 		const card: Task = aoStore.hashMap.get(taskId)
 		switch (hudStyle) {
 			case 'collapsed':
 				return (
 					<div className={'hud'}>
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview
+							taskId={taskId}
+							hudStyle={hudStyle}
+							prioritiesShown={prioritiesShown}
+							onTogglePriorities={onTogglePriorities}
+						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />

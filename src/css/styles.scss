@@ -117,9 +117,25 @@ textarea {
         padding: 0;
         margin-bottom: 0.5em;
 
+        &.padbottom {
+          padding-bottom: 0.25em;
+        }
+
         .content {
           padding: 0.55em 1em 0.55em 1em;
           pointer-events: none;
+        }
+
+        .coin {
+          width: 2em;
+          height: 2em;
+          transform: unset;
+          margin: 0;
+          left: -0.5em;
+          bottom: 0;
+          top: -0.35em;
+          display: inline-block;
+          float: left;
         }
 
         & > .hud {
@@ -171,6 +187,12 @@ textarea {
           .cardMenuButton {
             font-size: 1.15em;
             padding: 0.35em 0.25em;
+          }
+
+          .action {
+            display: inline;
+            margin-right: 0.5em;
+            padding-bottom: 0.25em;
           }
         }
       }
@@ -629,12 +651,6 @@ textarea {
       left: 1em;
     }
 
-    #members {
-      position: fixed;
-      top: 0.5em;
-      left: 4em;
-    }
-
     #mainMenuButton {
       position: fixed;
       right: 0;
@@ -686,14 +702,17 @@ textarea {
       }
     }
 
-    #search {
+    #search,
+    #members,
+    #missions,
+    #calendar {
       z-index: 1;
       position: fixed;
       left: 0.5em;
       bottom: 0.5em;
 
       &.open {
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(0, 0, 0, 0.6);
         padding: 0.5em;
         width: min-content;
         border-radius: 0.5em;
@@ -725,6 +744,31 @@ textarea {
           width: 2.5em;
         }
       }
+    }
+
+    #members,
+    #missions,
+    #calendar {
+      position: fixed;
+      top: 5em;
+      bottom: unset;
+
+      &.open .results {
+        overflow-y: auto;
+        width: 34vw;
+      }
+      .actionCircle {
+        bottom: unset;
+        top: 0;
+      }
+    }
+
+    #missions {
+      top: 9em;
+    }
+
+    #calendar {
+      top: 13em;
     }
 
     #logout {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
+import aoStore, { AoState, Task } from '../client/store'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import Markdown from 'markdown-to-jsx'
@@ -10,6 +10,7 @@ import AoStack from './stack'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
 import AoAttachment from './attachment'
+import AoCoin from './coin'
 
 export type CardStyle = 'priority' | 'face' | 'full' | 'mini' | 'context'
 
@@ -18,18 +19,37 @@ interface CardProps {
 	cardStyle: CardStyle
 }
 
-const AoSmartCard: React.FunctionComponent<CardProps> = observer(
-	({ taskId, cardStyle }) => {
-		const card: Task = aoStore.hashMap.get(taskId)
-		let content = card.name
-		if (taskId === card.name) {
-			content = aoStore.memberById.get(taskId).name
+interface State {
+	showPriorities?: boolean
+}
+
+@observer
+export default class AoSmartCard extends React.Component<CardProps, State> {
+	constructor(props) {
+		super(props)
+		this.state = {}
+		this.togglePriorities = this.togglePriorities.bind(this)
+	}
+
+	togglePriorities(event) {
+		if (!this.state.showPriorities) {
+			this.setState({ showPriorities: true })
+		} else {
+			this.setState({ showPriorities: false })
 		}
-		switch (cardStyle) {
+	}
+
+	render() {
+		const card: Task = aoStore.hashMap.get(this.props.taskId)
+		let content = card.name
+		if (this.props.taskId === card.name) {
+			content = aoStore.memberById.get(this.props.taskId).name
+		}
+		switch (this.props.cardStyle) {
 			case 'context':
 				return (
 					<div className={'card context'}>
-						<AoPaper taskId={taskId} />
+						<AoPaper taskId={this.props.taskId} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
@@ -37,51 +57,76 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 				)
 			case 'priority':
 				return (
-					<div className={'card priority'} id={'card-' + taskId}>
-						<AoPaper taskId={taskId} />
-						<AoCardHud taskId={taskId} hudStyle={'collapsed'} />
+					<div
+						className={
+							'card priority' + (this.state.showPriorities ? ' padbottom' : '')
+						}
+						id={'card-' + this.props.taskId}>
+						<AoPaper taskId={this.props.taskId} />
+						<AoCardHud
+							taskId={this.props.taskId}
+							hudStyle={'collapsed'}
+							prioritiesShown={this.state.showPriorities}
+							onTogglePriorities={this.togglePriorities}
+						/>
 						<div className={'content'}>
+							<AoCoin taskId={this.props.taskId} />
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
-							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
+							<AoAttachment taskId={this.props.taskId} hudStyle={'collapsed'} />
 						</div>
-						<AoStack taskId={taskId} cardSource="priorities" showAdd={false} />
+						{this.state.showPriorities ? (
+							<AoStack
+								taskId={this.props.taskId}
+								cardSource="priorities"
+								showAdd={false}
+							/>
+						) : null}
 					</div>
 				)
 			case 'face':
 				return (
-					<div className={'card face'} id={'card-' + taskId}>
-						<AoPaper taskId={taskId} />
-						<AoCardHud taskId={taskId} hudStyle={'face before'} />
+					<div className={'card face'} id={'card-' + this.props.taskId}>
+						<AoPaper taskId={this.props.taskId} />
+						<AoCardHud taskId={this.props.taskId} hudStyle={'face before'} />
 						<div className={'content'}>
-							<AoMission taskId={taskId} hudStyle={'face before'} />
+							<AoMission taskId={this.props.taskId} hudStyle={'face before'} />
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
-							<AoAttachment taskId={taskId} hudStyle={'face before'} />
+							<AoAttachment
+								taskId={this.props.taskId}
+								hudStyle={'face before'}
+							/>
 						</div>
-						<AoCardHud taskId={taskId} hudStyle={'face after'} />
+						<AoCardHud taskId={this.props.taskId} hudStyle={'face after'} />
 					</div>
 				)
 			case 'full':
 				return (
 					<React.Fragment>
-						<AoStack taskId={taskId} cardSource={'context'} />
+						<AoStack taskId={this.props.taskId} cardSource={'context'} />
 						<div
-							id={'card-' + taskId}
+							id={'card-' + this.props.taskId}
 							className={'card full'}
 							onDrop={e => {
 								e.preventDefault()
 								e.stopPropagation()
 							}}>
-							<AoPaper taskId={taskId} />
-							<AoCardHud taskId={taskId} hudStyle={'full before'} />
+							<AoPaper taskId={this.props.taskId} />
+							<AoCardHud taskId={this.props.taskId} hudStyle={'full before'} />
 							<div className="content">
-								<AoMission taskId={taskId} hudStyle={'full before'} />
+								<AoMission
+									taskId={this.props.taskId}
+									hudStyle={'full before'}
+								/>
 								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
-								<AoAttachment taskId={taskId} hudStyle={'full before'} />
+								<AoAttachment
+									taskId={this.props.taskId}
+									hudStyle={'full before'}
+								/>
 							</div>
-							<AoStack taskId={taskId} cardSource="priorities" />
-							<AoGrid taskId={taskId} />
-							<AoStack taskId={taskId} cardSource="subTasks" />
-							<AoCardHud taskId={taskId} hudStyle={'full after'} />
+							<AoStack taskId={this.props.taskId} cardSource="priorities" />
+							<AoGrid taskId={this.props.taskId} />
+							<AoStack taskId={this.props.taskId} cardSource="subTasks" />
+							<AoCardHud taskId={this.props.taskId} hudStyle={'full after'} />
 						</div>
 					</React.Fragment>
 				)
@@ -93,18 +138,19 @@ const AoSmartCard: React.FunctionComponent<CardProps> = observer(
 				}
 
 				return (
-					<div id={'card-' + taskId} className={'card mini'}>
+					<div id={'card-' + this.props.taskId} className={'card mini'}>
 						<AoPaper taskId={card.taskId} />
-						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
+						<AoCardHud taskId={this.props.taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{shortened}</Markdown>
-							<AoAttachment taskId={taskId} hudStyle={'mini before'} />
+							<AoAttachment
+								taskId={this.props.taskId}
+								hudStyle={'mini before'}
+							/>
 						</div>
-						<AoCardHud taskId={taskId} hudStyle={'mini after'} />
+						<AoCardHud taskId={this.props.taskId} hudStyle={'mini after'} />
 					</div>
 				)
 		}
 	}
-)
-
-export default AoSmartCard
+}
