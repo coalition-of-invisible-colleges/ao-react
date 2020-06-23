@@ -300,6 +300,11 @@ textarea {
               pointer-events: none;
               margin: 0;
               background-color: rgba(0, 0, 0, 0.2);
+
+              & .nopad {
+                padding-left: 0;
+                padding-right: 0;
+              }
             }
 
             .cardMenuButton {

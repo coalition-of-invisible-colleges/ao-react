@@ -61,6 +61,11 @@ const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
         )
       case 'face after':
       case 'mini after':
+        if (computed.priorityCount >= 1) {
+          return (
+            <div className={'preview nopad'}>{computed.priorityCount}!</div>
+          )
+        }
         return <div className={'preview'}>({computed.subCardCount})</div>
       default:
         return null
