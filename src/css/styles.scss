@@ -124,6 +124,10 @@ textarea {
         .content {
           padding: 0.55em 1em 0.55em 1em;
           pointer-events: none;
+
+          .coin {
+            pointer-events: auto;
+          }
         }
 
         .coin {
@@ -336,6 +340,11 @@ textarea {
             position: relative;
             top: 0.33em;
           }
+        }
+
+        .action {
+          left: 50%;
+          transform: translateX(-50%);
         }
       }
 

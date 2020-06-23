@@ -60,6 +60,7 @@ const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
           </div>
         )
       case 'face after':
+        return <div className={'preview'}>({computed.subCardCount})</div>
       case 'mini after':
         if (computed.priorityCount >= 1) {
           return (

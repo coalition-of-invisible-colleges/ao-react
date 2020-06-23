@@ -95,6 +95,26 @@ export default class AoSmartCard extends React.Component<CardProps, State> {
 								taskId={this.props.taskId}
 								hudStyle={'face before'}
 							/>
+							{card.priorities && card.priorities.length >= 1 ? (
+								<>
+									<div className="action" onClick={this.togglePriorities}>
+										{card.priorities.length}{' '}
+										{card.priorities.length > 1 ? 'priorities' : 'priority'}{' '}
+										{this.state.showPriorities ? (
+											<React.Fragment>&#8963;</React.Fragment>
+										) : (
+											<React.Fragment>&#8964;</React.Fragment>
+										)}
+									</div>
+									{this.state.showPriorities ? (
+										<AoStack
+											taskId={this.props.taskId}
+											cardSource="priorities"
+											showAdd={false}
+										/>
+									) : null}
+								</>
+							) : null}
 						</div>
 						<AoCardHud taskId={this.props.taskId} hudStyle={'face after'} />
 					</div>
