@@ -21,6 +21,11 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
             .get(taskId)
             .claimed.indexOf(aoStore.member.memberId) >= 0
         )
+      },
+      get isGrabbed() {
+        return (
+          aoStore.hashMap.get(taskId).deck.indexOf(aoStore.member.memberId) >= 0
+        )
       }
     })
     const onClick = event => {
@@ -35,13 +40,16 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
       case 'full before':
       case 'face before':
       case 'collapsed':
-        return (
-          <img
-            className="checkbox"
-            src={computed.isCompleted ? Completed : Uncompleted}
-            onClick={onClick}
-          />
-        )
+        if (computed.isCompleted || computed.isGrabbed) {
+          return (
+            <img
+              className="checkbox"
+              src={computed.isCompleted ? Completed : Uncompleted}
+              onClick={onClick}
+            />
+          )
+        }
+        return null
       case 'mini before':
         if (computed.isCompleted) {
           return <img src={Completed} className={'checkbox mini'} />

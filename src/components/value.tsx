@@ -87,13 +87,14 @@ export default class AoValue extends React.Component<ValueProps, State> {
     }
     switch (this.props.hudStyle) {
       case 'full before':
-        return (
-          <div onClick={this.startEditing} className={'value full action'}>
-            {aoStore.hashMap.get(this.props.taskId).completeValue
-              ? aoStore.hashMap.get(this.props.taskId).completeValue + ' points'
-              : '+value'}
-          </div>
-        )
+        if (aoStore.hashMap.get(this.props.taskId).completeValue) {
+          return (
+            <div onClick={this.startEditing} className={'value full action'}>
+              {aoStore.hashMap.get(this.props.taskId).completeValue + ' points'}
+            </div>
+          )
+        }
+        return null
       case 'mini before':
         if (aoStore.hashMap.get(this.props.taskId).completeValue) {
           return (
