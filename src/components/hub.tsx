@@ -53,7 +53,12 @@ export default class AoHub extends React.Component<{}, State> {
       topMissions = topMissions.slice(0, 5)
     }
 
-    let topCards = aoStore.state.tasks
+    let topCards = aoStore.state.tasks.filter(task => {
+      return (
+        !task.hasOwnProperty('guild') ||
+        (task.hasOwnProperty('guild') && task.guild.length < 1)
+      )
+    })
 
     topCards = topCards.sort((a, b) => {
       return b.deck.length - a.deck.length
