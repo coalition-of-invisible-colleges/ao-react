@@ -123,11 +123,11 @@ textarea {
 
         .content {
           padding: 0.55em 1em 0.55em 1em;
-          pointer-events: none;
+          // pointer-events: none;
 
-          .coin {
-            pointer-events: auto;
-          }
+          // .coin {
+          // pointer-events: auto;
+          // }
         }
 
         .coin {
