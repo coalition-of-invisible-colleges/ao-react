@@ -17,6 +17,7 @@ import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
 import AoMembers from './components/members'
+import AoHub from './components/hub'
 import AoCalendar from './components/calendar'
 import AoMissions from './components/missions'
 import AoSearch from './components/search'
@@ -115,6 +116,7 @@ const App = observer(() => {
               placement={'top-end'}>
               <div id={'mainMenuButton'}>&#x22EE;</div>
             </Tippy>
+            <AoHub />
             <AoMembers />
             <AoMissions />
             <AoCalendar />

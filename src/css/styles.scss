@@ -716,6 +716,7 @@ textarea {
       }
     }
 
+    #hub,
     #search,
     #members,
     #missions,
@@ -760,6 +761,7 @@ textarea {
       }
     }
 
+    #hub,
     #members,
     #missions,
     #calendar {
@@ -774,6 +776,24 @@ textarea {
       .actionCircle {
         bottom: unset;
         top: 0;
+      }
+    }
+
+    #hub {
+      top: 1em;
+
+      &.open {
+        .actionCircle {
+          img {
+            width: 4.5em;
+          }
+        }
+      }
+
+      .actionCircle {
+        img {
+          width: 3.5em;
+        }
       }
     }
 
@@ -915,6 +935,24 @@ textarea {
       cursor: pointer;
       padding: 0.5em;
       user-select: none;
+    }
+
+    .popover {
+      position: fixed;
+      width: 95%;
+      height: 95%;
+      left: 2.5%;
+      right: 2.5%;
+      top: 2.5%;
+      bottom: 2.5%;
+      background-color: rgba(0, 0, 0, 0.85);
+      border-radius: 5em;
+
+      .right {
+        width: 40%;
+        left: 60%;
+        position: relative;
+      }
     }
   }
 }

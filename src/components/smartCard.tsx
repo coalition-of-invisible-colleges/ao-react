@@ -41,9 +41,25 @@ export default class AoSmartCard extends React.Component<CardProps, State> {
 
 	render() {
 		const card: Task = aoStore.hashMap.get(this.props.taskId)
+		if (!card) {
+			console.log('missing card: ', this.props.taskId)
+			return (
+				<div className={'card'}>
+					<AoPaper taskId={this.props.taskId} />
+					<div className={'content'}>
+						<Markdown options={{ forceBlock: true }}>
+							missing card: {this.props.taskId}
+						</Markdown>
+					</div>
+				</div>
+			)
+		}
 		let content = card.name
-		if (this.props.taskId === card.name) {
-			content = aoStore.memberById.get(this.props.taskId).name
+		if (this.props.taskId === content) {
+			const memberCard = aoStore.memberById.get(this.props.taskId)
+			if (memberCard) {
+				content = memberCard.name
+			}
 		}
 		switch (this.props.cardStyle) {
 			case 'context':
