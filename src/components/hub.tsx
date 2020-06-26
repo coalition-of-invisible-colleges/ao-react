@@ -45,7 +45,7 @@ export default class AoHub extends React.Component<{}, State> {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
     })
 
-    topMissions = topMissions.sort((b, a) => {
+    topMissions = topMissions.sort((a, b) => {
       return b.deck.length - a.deck.length
     })
 
@@ -55,7 +55,7 @@ export default class AoHub extends React.Component<{}, State> {
 
     let topCards = aoStore.state.tasks
 
-    topCards = topCards.sort((b, a) => {
+    topCards = topCards.sort((a, b) => {
       return b.deck.length - a.deck.length
     })
 
