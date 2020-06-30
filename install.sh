@@ -270,7 +270,7 @@ if find "ao" -mindepth 1 -print -quit 2>/dev/null | grep -q .;
 then
 	echo ao git repository already cloned
 else
-	git clone https://github.com/autonomousorganization/ao
+	git clone https://github.com/coalition-of-invisible-colleges/ao-react/tree/staging
 fi
 
 # install project dependencies
