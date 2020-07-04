@@ -332,8 +332,6 @@ textarea {
         }
 
         .mission {
-          margin: 0 auto;
-
           .badge {
             height: 1.5em;
             margin-right: 0.5em;
@@ -805,10 +803,10 @@ textarea {
       top: 13em;
     }
     #score {
-        position: fixed;
-        right: 5em;
-        bottom: 1em;
-        font-size: 1.2em;
+      position: fixed;
+      right: 5em;
+      bottom: 1em;
+      font-size: 1.2em;
     }
     #logout {
     }
