@@ -21,6 +21,7 @@ import AoHub from './components/hub'
 import AoCalendar from './components/calendar'
 import AoMissions from './components/missions'
 import AoSearch from './components/search'
+import AoScore from './components/score'
 import AoStatus from './components/status'
 import AoServerName from './components/serverName'
 import AoUsername from './components/username'
@@ -121,6 +122,7 @@ const App = observer(() => {
             <AoMissions />
             <AoCalendar />
             <AoSearch />
+            <AoScore />
           </ProtectedFragment>
           <Switch>
             <Route path="/login" component={Login} />
