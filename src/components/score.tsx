@@ -27,7 +27,7 @@ const AoScore: FunctionComponent<> = observer(() => {
 
   return (
     <div id={'score'}>
-      <div>{computed.pointsFromCards}</div>
+      <div>Score: {computed.pointsFromCards}</div>
     </div>
   )
 })

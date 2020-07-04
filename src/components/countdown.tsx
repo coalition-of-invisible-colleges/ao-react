@@ -122,7 +122,8 @@ export default class AoCountdown extends React.Component<
             onClick={this.startEditing}
             className={'countdown action ' + this.props.hudStyle}>
             {formatDistanceToNow(
-              aoStore.hashMap.get(this.props.taskId).book.startTs
+              aoStore.hashMap.get(this.props.taskId).book.startTs,
+              { addSuffix: true }
             )}
           </div>
         )
@@ -132,7 +133,8 @@ export default class AoCountdown extends React.Component<
         return (
           <div className={'countdown summary ' + this.props.hudStyle}>
             {formatDistanceToNow(
-              aoStore.hashMap.get(this.props.taskId).book.startTs
+              aoStore.hashMap.get(this.props.taskId).book.startTs,
+              { addSuffix: true }
             )}
           </div>
         )

@@ -7,6 +7,8 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
 import MagnifyingGlass from '../assets/images/search.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 interface State {
   searchPanel: boolean
@@ -88,9 +90,11 @@ export default class AoSearch extends React.Component<{}, State> {
 
   renderSearchButton() {
     return (
-      <div onClick={this.toggleSearchPanel} className={'actionCircle'}>
-        <img src={MagnifyingGlass} />
-      </div>
+      <Tippy zIndex={2} content={'Search'} placement={'top'}>
+        <div onClick={this.toggleSearchPanel} className={'actionCircle'}>
+          <img src={MagnifyingGlass} />
+        </div>
+      </Tippy>
     )
   }
 

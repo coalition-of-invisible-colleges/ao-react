@@ -7,6 +7,8 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
 import Badge from '../assets/images/badge.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 interface State {
   missionsPanel: boolean
@@ -47,9 +49,11 @@ export default class AoMissions extends React.Component<{}, State> {
 
   renderMissionsButton() {
     return (
-      <div onClick={this.toggleMissionsPanel} className={'actionCircle'}>
-        <img src={Badge} />
-      </div>
+      <Tippy zIndex={2} content={'Missions Index'} placement={'right'}>
+        <div onClick={this.toggleMissionsPanel} className={'actionCircle'}>
+          <img src={Badge} />
+        </div>
+      </Tippy>
     )
   }
 

@@ -7,6 +7,8 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
 import MemberIcon from '../assets/images/loggedWhite.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 export type MemberSort = 'recents' | 'vouches'
 
@@ -61,9 +63,11 @@ export default class AoMembers extends React.Component<{}, State> {
 
   renderMembersButton() {
     return (
-      <div onClick={this.toggleMembersPanel} className={'actionCircle'}>
-        <img src={MemberIcon} />
-      </div>
+      <Tippy zIndex={2} content={'Members'} placement={'right'}>
+        <div onClick={this.toggleMembersPanel} className={'actionCircle'}>
+          <img src={MemberIcon} />
+        </div>
+      </Tippy>
     )
   }
 

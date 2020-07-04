@@ -6,6 +6,8 @@ import Sun from '../assets/images/sun.svg'
 import AoGrid from './grid'
 import AoSmartCard from './smartCard'
 import api from '../client/api'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 interface State {
   hubPanel: boolean
@@ -37,9 +39,11 @@ export default class AoHub extends React.Component<{}, State> {
   renderHubButton() {
     return (
       <div id={'hub'}>
-        <div onClick={this.toggleHubPanel} className={'actionCircle'}>
-          <img src={Sun} />
-        </div>
+        <Tippy zIndex={2} content={'Community Hub'} placement={'right'}>
+          <div onClick={this.toggleHubPanel} className={'actionCircle'}>
+            <img src={Sun} />
+          </div>
+        </Tippy>
       </div>
     )
   }

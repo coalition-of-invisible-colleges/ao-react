@@ -7,6 +7,8 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
 import Timecube from '../assets/images/timecube.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 interface State {
   calendarPanel: boolean
@@ -47,9 +49,11 @@ export default class AoCalendar extends React.Component<{}, State> {
 
   renderCalendarButton() {
     return (
-      <div onClick={this.toggleCalendarPanel} className={'actionCircle'}>
-        <img src={Timecube} />
-      </div>
+      <Tippy zIndex={2} content={'Calendar'} placement={'right'}>
+        <div onClick={this.toggleCalendarPanel} className={'actionCircle'}>
+          <img src={Timecube} />
+        </div>
+      </Tippy>
     )
   }
 
