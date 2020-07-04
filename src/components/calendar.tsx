@@ -6,7 +6,7 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
-import Calendar from '../assets/images/calendar.svg'
+import Timecube from '../assets/images/timecube.svg'
 
 interface State {
   calendarPanel: boolean
@@ -48,7 +48,7 @@ export default class AoCalendar extends React.Component<{}, State> {
   renderCalendarButton() {
     return (
       <div onClick={this.toggleCalendarPanel} className={'actionCircle'}>
-        <img src={Calendar} />
+        <img src={Timecube} />
       </div>
     )
   }
