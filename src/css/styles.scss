@@ -804,7 +804,12 @@ textarea {
     #calendar {
       top: 13em;
     }
-
+    #score {
+        position: fixed;
+        right: 5em;
+        bottom: 1em;
+        font-size: 1.2em;
+    }
     #logout {
     }
 
