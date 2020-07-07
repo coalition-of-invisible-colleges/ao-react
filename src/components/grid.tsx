@@ -5,8 +5,12 @@ import aoStore, { AoState, Grid } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartZone from './smartZone'
+import AoDragZone from './dragZone'
+import AoDropZone, { CardPlay } from './dropZone'
 import AoGridResizer from './gridResizer'
+import AoContextCard from './contextCard'
+import { TaskContext } from './taskContext'
+import { Task } from '../client/store'
 
 interface Sel {
   x: number
@@ -34,6 +38,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
     this.addGrid = this.addGrid.bind(this)
     this.selectGridSquare = this.selectGridSquare.bind(this)
     this.goInSquare = this.goInSquare.bind(this)
+    this.dropToGridSquare = this.dropToGridSquare.bind(this)
   }
 
   addGrid() {
@@ -53,6 +58,111 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
           selection.x
         ]
     })
+  }
+
+  dropToGridSquare(move: CardPlay) {
+    console.log('dropToGridSquare, move is ', move)
+
+    if (!move.from.taskId) {
+      return
+    }
+    const nameFrom = aoStore.hashMap.get(move.from.taskId).name
+
+    const nameTo = move.to.taskId
+      ? aoStore.hashMap.get(move.to.taskId).name
+      : undefined
+
+    switch (move.from.zone) {
+      case 'card':
+        // maybe this doesn't make sense, it's supposed to be for the whole card
+        break
+      case 'priorities':
+        if (move.to.taskId) {
+          api
+            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
+            .then(() => api.refocusCard(move.from.taskId, move.from.inId))
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+        } else {
+          api
+            .refocusCard(move.from.taskId, move.from.inId)
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+        }
+        break
+      case 'grid':
+        if (move.to.taskId) {
+          api
+            .pinCardToGrid(
+              move.to.coords.x,
+              move.to.coords.y,
+              nameFrom,
+              move.to.inId
+            )
+            .then(() =>
+              api.pinCardToGrid(
+                move.from.coords.x,
+                move.from.coords.y,
+                nameTo,
+                move.from.inId
+              )
+            )
+        } else {
+          api
+            .unpinCardFromGrid(
+              move.from.coords.x,
+              move.from.coords.y,
+              move.from.inId
+            )
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+        }
+        break
+      case 'subTasks':
+        if (move.to.taskId) {
+          api
+            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+        } else {
+          api.pinCardToGrid(
+            move.to.coords.x,
+            move.to.coords.y,
+            nameFrom,
+            move.to.inId
+          )
+        }
+        break
+      case 'completed':
+      // not yet implemented
+      case 'context':
+        // add the card to the grid
+        break
+    }
   }
 
   render() {
@@ -83,30 +193,42 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
 
     for (let j = 0; j < grid.height; j++) {
       for (let i = 0; i < grid.width; i++) {
-        let tId: string
+        let task: Task
         if (
           grid.rows[j] &&
           grid.rows[j][i] &&
           typeof (grid.rows[j][i] === 'string')
         ) {
-          tId = aoStore.hashMap.get(grid.rows[j][i]).taskId
+          task = aoStore.hashMap.get(grid.rows[j][i])
         }
         render.push(
-          <AoSmartZone
-            selected={
-              this.state.selected &&
-              this.state.selected.x == i &&
-              this.state.selected.y == j
-            }
-            inId={this.props.taskId}
-            taskId={tId}
-            x={i}
-            y={j}
-            onSelect={this.selectGridSquare}
-            onGoIn={this.goInSquare}
-            key={i + '-' + j}
-            cardSource={'grid'}
-          />
+          <TaskContext.Provider value={task} key={i + '-' + j}>
+            <AoDropZone
+              selected={
+                this.state.selected &&
+                this.state.selected.x == i &&
+                this.state.selected.y == j
+              }
+              inId={this.props.taskId}
+              x={i}
+              y={j}
+              onSelect={this.selectGridSquare}
+              onGoIn={this.goInSquare}
+              onDrop={this.dropToGridSquare}
+              zoneStyle={'grid'}>
+              {task ? (
+                <AoDragZone
+                  dragContext={{
+                    zone: 'grid',
+                    inId: this.props.taskId,
+                    x: i,
+                    y: j
+                  }}>
+                  <AoContextCard cardStyle={'mini'} />
+                </AoDragZone>
+              ) : null}
+            </AoDropZone>
+          </TaskContext.Provider>
         )
       }
     }

@@ -102,9 +102,17 @@ export default class AoHub extends React.Component<{}, State> {
           </div>
           <div className={'right'}>
             <h2>Top Missions</h2>
-            <AoSourceStack cards={topMissions} alwaysShowAll={true} />
+            <AoSourceStack
+              cards={topMissions}
+              alwaysShowAll={true}
+              cardStyle={'priority'}
+            />
             <h2>Top Cards</h2>
-            <AoSourceStack cards={topCards} alwaysShowAll={true} />
+            <AoSourceStack
+              cards={topCards}
+              alwaysShowAll={true}
+              cardStyle={'priority'}
+            />
           </div>
         </div>
       </div>

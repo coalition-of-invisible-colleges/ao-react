@@ -17,6 +17,7 @@ interface State {
   sort: MemberSort
   page: number
   redirect?: string
+  text?: string
 }
 
 export const defaultState: State = {
@@ -37,6 +38,9 @@ export default class AoMembers extends React.Component<{}, State> {
     this.renderMembersButton = this.renderMembersButton.bind(this)
     this.renderMembersList = this.renderMembersList.bind(this)
     this.goInResult = this.goInResult.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.onKeyDown = this.onKeyDown.bind(this)
+    this.onClick = this.onClick.bind(this)
   }
 
   toggleMembersPanel() {
@@ -59,6 +63,19 @@ export default class AoMembers extends React.Component<{}, State> {
 
   sortByVouches() {
     this.setState({ sort: 'vouches' })
+  }
+
+  onChange(event) {
+    this.setState({ text: event.target.value })
+  }
+
+  onKeyDown(event) {
+    if (event.key === 'Enter') {
+      this.onClick(event)
+    }
+  }
+  onClick(event) {
+    api.createMember(this.state.text)
   }
 
   renderMembersButton() {
@@ -108,6 +125,18 @@ export default class AoMembers extends React.Component<{}, State> {
         <button onClick={this.sortByRecent}>Recents</button>
         <button onClick={this.sortByVouches}>Vouches</button>
         {this.renderMembersList()}
+        <div>
+          Add Member
+          <input
+            type="text"
+            value={this.state.text}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
+          />
+          <button type="button" onClick={this.onClick}>
+            Add Member
+          </button>
+        </div>
       </div>
     )
   }

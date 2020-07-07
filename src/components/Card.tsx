@@ -2,8 +2,8 @@ import * as React from 'react'
 import { ObservableMap, computed } from 'mobx'
 import { Route, useParams, useRouteMatch } from 'react-router-dom'
 import aoStore from '../client/store'
-import AoSmartZone from './smartZone'
-import AoSmartCard from './smartCard'
+import { TaskContext } from './taskContext'
+import AoContextCard from './contextCard'
 
 interface CardParams {
   taskId: string
@@ -13,12 +13,16 @@ const RenderCard = () => {
   const { taskId }: CardParams = useParams()
   aoStore.setCurrentCard(taskId)
   aoStore.removeFromContext(taskId)
+  let card = aoStore.hashMap.get(taskId)
+
+  if (!card) {
+    return <p>Invalid card ID.</p>
+  }
+
   return (
-    <React.Fragment>
-      <AoSmartZone inId={taskId} cardSource={'discard'}>
-        <AoSmartCard taskId={taskId} cardStyle={'full'} />
-      </AoSmartZone>
-    </React.Fragment>
+    <TaskContext.Provider value={card}>
+      <AoContextCard cardStyle={'full'} />
+    </TaskContext.Provider>
   )
 }
 
