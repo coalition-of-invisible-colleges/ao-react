@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { AoState, Task } from '../client/store'
+import { Redirect } from 'react-router-dom'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
+import api from '../client/api'
 import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
 import AoGrid from './grid'
@@ -14,7 +16,13 @@ import AoAttachment from './attachment'
 import AoCoin from './coin'
 import { TaskContext } from './taskContext'
 
-export type CardStyle = 'priority' | 'face' | 'full' | 'mini' | 'context'
+export type CardStyle =
+	| 'priority'
+	| 'face'
+	| 'full'
+	| 'compact'
+	| 'mini'
+	| 'context'
 
 export type CardZone =
 	| 'card'
@@ -38,6 +46,7 @@ interface CardProps {
 
 interface State {
 	showPriorities?: boolean
+	redirect?: string
 }
 
 @observer
@@ -48,6 +57,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		super(props)
 		this.state = {}
 		this.togglePriorities = this.togglePriorities.bind(this)
+		this.newPriority = this.newPriority.bind(this)
+		this.newSubTask = this.newSubTask.bind(this)
+		this.goInCard = this.goInCard.bind(this)
 	}
 
 	togglePriorities(event) {
@@ -58,7 +70,45 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		}
 	}
 
+	newPriority(name: string) {
+		const card = this.context
+		if (!card) {
+			console.log('missing card')
+		}
+		api.findOrCreateCardInCard(name, card.taskId, true)
+	}
+
+	newSubTask(name: string) {
+		const card = this.context
+		if (!card) {
+			console.log('missing card')
+		}
+		api.findOrCreateCardInCard(name, card.taskId)
+	}
+
+	goInCard() {
+		console.log('goInCard')
+		const card = this.context
+		if (!card) {
+			console.log('missing card')
+			return
+		}
+		if (this.props.cardStyle === 'context') {
+			aoStore.clearContextTo(card.taskId)
+		} else {
+			aoStore.addToContext([aoStore.currentCard])
+		}
+		this.setState({
+			redirect: '/task/' + card.taskId
+		})
+	}
+
 	render() {
+		if (this.state.redirect !== undefined) {
+			this.setState({ redirect: undefined })
+			return <Redirect to={this.state.redirect} />
+		}
+
 		const card = this.context
 		if (!card) {
 			console.log('missing card')
@@ -93,7 +143,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		switch (cardStyle) {
 			case 'context':
 				return (
-					<div className={'card context'}>
+					<div className={'card context'} onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
@@ -106,7 +156,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						className={
 							'card priority' + (this.state.showPriorities ? ' padbottom' : '')
 						}
-						id={'card-' + card.taskId}>
+						id={'card-' + card.taskId}
+						onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud
 							taskId={card.taskId}
@@ -127,13 +178,19 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								hideAddWhenCards={true}
 								addButtonText={'+priority'}
 								cardStyle={'priority'}
+								onNewCard={this.newPriority}
+								zone={'priorities'}
 							/>
 						) : null}
 					</div>
 				)
 			case 'face':
+			case 'compact':
 				return (
-					<div className={'card face'} id={'card-' + card.taskId}>
+					<div
+						className={'card ' + this.props.cardStyle}
+						id={'card-' + card.taskId}
+						onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'face before'} />
 						<div className={'content'}>
@@ -159,6 +216,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 											hideAddWhenCards={true}
 											addButtonText={'+priority'}
 											cardStyle={'priority'}
+											onNewCard={this.newPriority}
+											zone={'priorities'}
 										/>
 									) : null}
 								</>
@@ -190,13 +249,18 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								cards={priorityCards}
 								showAdd={true}
 								hideAddWhenCards={true}
+								addButtonText={'+priority'}
 								cardStyle={'priority'}
+								onNewCard={this.newPriority}
+								zone={'priorities'}
 							/>
 							<AoGrid taskId={card.taskId} />
 							<AoSourceStack
 								inId={card.taskId}
 								cards={subTaskCards}
 								showAdd={true}
+								onNewCard={this.newSubTask}
+								zone={'subTasks'}
 							/>
 							<AoCardHud taskId={card.taskId} hudStyle={'full after'} />
 						</div>
@@ -210,7 +274,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				}
 
 				return (
-					<div id={'card-' + card.taskId} className={'card mini'}>
+					<div
+						id={'card-' + card.taskId}
+						className={'card mini'}
+						onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'mini before'} />
 						<div className={'content'}>

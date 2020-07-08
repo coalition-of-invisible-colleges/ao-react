@@ -13,7 +13,6 @@ interface DropZoneProps {
 	inId?: string
 	x?: number
 	y?: number
-	selected?: boolean
 	// taskId?: string
 	style?: {}
 	onSelect?: (selection: Sel) => void
@@ -58,19 +57,10 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	constructor(props) {
 		super(props)
 		this.state = {}
-		// this.onClick = this.onClick.bind(this)
-		// this.onBlur = this.onBlur.bind(this)
-		// this.onKeyDown = this.onKeyDown.bind(this)
-		this.onChange = this.onChange.bind(this)
 		// this.onDoubleClick = this.onDoubleClick.bind(this)
-		// this.drag = this.drag.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
 		this.drop = this.drop.bind(this)
 		// this.onHover = this.onHover.bind(this)
-	}
-
-	onChange = event => {
-		this.setState({ text: event.target.value })
 	}
 
 	detectDragKind = dataTransfer => {
@@ -78,7 +68,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		if (dataTransfer.items && dataTransfer.items.length > 0) {
 			dataTransfer.items.forEach(dt => {
 				// console.log('dt.type is', dt.type)
-				if (dt.type === 'text/fromx' || dt.type === 'text/fromy') {
+				if (dt.type === 'text/taskid') {
 					filetype = 'card'
 				}
 			})
@@ -98,6 +88,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	drop = async event => {
 		event.preventDefault()
+		event.stopPropagation()
 		let card = this.context
 
 		if (this.detectDragKind(event.dataTransfer) === 'file') {
@@ -106,7 +97,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			return
 		}
 		this.hideDrop(event)
-		console.log('dropZone drop initiated')
 
 		let fromId: string = event.dataTransfer.getData('text/taskId')
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
@@ -131,18 +121,18 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			coords: toCoords
 		}
 
-		console.log(
-			'drop detected. fromId: ',
-			fromId,
-			'\nfromInId: ',
-			fromInId,
-			'\nfromZone: ',
-			fromZone,
-			'\nfromCoords: ',
-			fromCoords,
-			'\ntoCoords',
-			toCoords
-		)
+		// console.log(
+		// 	'drop detected. fromId: ',
+		// 	fromId,
+		// 	'\nfromInId: ',
+		// 	fromInId,
+		// 	'\nfromZone: ',
+		// 	fromZone,
+		// 	'\nfromCoords: ',
+		// 	fromCoords,
+		// 	'\ntoCoords',
+		// 	toCoords
+		// )
 		if (toLocation === fromLocation) {
 			console.log('drag origin and destination are identical, doing nothing')
 			return
@@ -202,27 +192,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		// 	nameTo = aoStore.hashMap.get(this.props.taskId).name
 		// }
 
-		// if (this.props.zoneStyle === 'discard') {
-		// 	console.log('discard drop detected')
-		// 	switch (fromZone) {
-		// 		case 'grid':
-		// 			api
-		// 				.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-		// 				.then(() => api.discardCardFromCard(fromTaskId, this.props.inId))
-		// 			break
-
-		// 		case 'priorities':
-		// 			api
-		// 				.refocusCard(fromTaskId, this.props.inId)
-		// 				.then(() => api.discardCardFromCard(fromTaskId, this.props.inId))
-		// 			break
-		// 		case 'context':
-		// 			aoStore.removeFromContext(fromTaskId)
-		// 			break
-		// 		case 'subTasks':
-		// 			api.discardCardFromCard(fromTaskId, this.props.inId)
-		// 			break
-		// 	}
 		// } else if (fromZone === 'priorities') {
 		// 	switch (this.props.zoneStyle) {
 		// 		case 'priorities':
@@ -299,7 +268,12 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		return (
 			<div
 				className="zone empty"
-				onClick={this.onClick}
+				onClick={() =>
+					this.props.onSelect({
+						y: this.props.y,
+						x: this.props.x ? this.props.x : undefined
+					})
+				}
 				onDragEnter={this.allowDrop}
 				onDragOver={this.allowDrop}
 				onDragLeave={this.hideDrop}
@@ -321,59 +295,46 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					{this.props.children}
 				</div>
 			)
-		} else if (this.props.selected) {
-			return (
-				<textarea
-					autoFocus
-					onBlur={this.onBlur}
-					className={'zone'}
-					onChange={this.onChange}
-					onKeyDown={this.onKeyDown}
-					style={{
-						gridRow: (this.props.y + 1).toString(),
-						gridColumn: (this.props.x + 1).toString()
-					}}
-				/>
-			)
-		} else if (this.props.y === -1) {
-			if (
-				this.props.zoneStyle === 'priorities' &&
-				aoStore.hashMap.get(this.props.inId).priorities.length >= 1
-			) {
-				return ''
-			}
-			let message =
-				'+' + (this.props.zoneStyle === 'priorities' ? 'priority' : 'card')
-			switch (this.state.draggedKind) {
-				case 'priorities':
-					message = 'drop to deprioritize'
-					break
-				case 'grid':
-					message = 'drop to discard'
-					break
-				case 'subTasks':
-					message = 'drop to move to top'
-					break
-				case 'card':
-				case 'default':
-					// for some reason i can't get fromZone data in allowData to make the other cases work
-					message = 'drop to move'
-					if (this.props.zoneStyle === 'priorities') {
-						message = 'drop to prioritize'
-					}
-					break
-			}
-			return (
-				<p
-					className={'action'}
-					onClick={() => this.props.onSelect({ y: this.props.y })}
-					onDragEnter={this.allowDrop}
-					onDragOver={this.allowDrop}
-					onDragLeave={this.hideDrop}
-					onDrop={this.drop}>
-					{message}
-				</p>
-			)
+			// }
+			// else if (this.props.y === -1) {
+			// 	if (
+			// 		this.props.zoneStyle === 'priorities' &&
+			// 		aoStore.hashMap.get(this.props.inId).priorities.length >= 1
+			// 	) {
+			// 		return ''
+			// 	}
+			// 	let message =
+			// 		'+' + (this.props.zoneStyle === 'priorities' ? 'priority' : 'card')
+			// 	switch (this.state.draggedKind) {
+			// 		case 'priorities':
+			// 			message = 'drop to deprioritize'
+			// 			break
+			// 		case 'grid':
+			// 			message = 'drop to discard'
+			// 			break
+			// 		case 'subTasks':
+			// 			message = 'drop to move to top'
+			// 			break
+			// 		case 'card':
+			// 		case 'default':
+			// 			// for some reason i can't get fromZone data in allowData to make the other cases work
+			// 			message = 'drop to move'
+			// 			if (this.props.zoneStyle === 'priorities') {
+			// 				message = 'drop to prioritize'
+			// 			}
+			// 			break
+			// 	}
+			// return (
+			// 	<p
+			// 		className={'action'}
+			// 		onClick={() => this.props.onSelect({ y: this.props.y })}
+			// 		onDragEnter={this.allowDrop}
+			// 		onDragOver={this.allowDrop}
+			// 		onDragLeave={this.hideDrop}
+			// 		onDrop={this.drop}>
+			// 		{message}
+			// 	</p>
+			// )
 		} else if (this.props.children) {
 			let hardcodedStyle: CardStyle = 'face'
 			let message = 'drop to place'
@@ -412,12 +373,13 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			return (
 				<div
 					id={this.props.x + '-' + this.props.y}
-					className={'zone'}
+					className={'dropZone ' + this.props.zoneStyle}
 					onDragEnter={this.allowDrop}
 					onDragOver={this.allowDrop}
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}
 					style={style}>
+					{this.props.children}
 					{this.state.draggedKind === 'card' ? (
 						<div className={'overlay'}>
 							<div className={'label'}>{message}</div>
@@ -425,7 +387,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					) : (
 						''
 					)}
-					{this.props.children}
 				</div>
 			)
 		} else {

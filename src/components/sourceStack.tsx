@@ -12,20 +12,23 @@ import api from '../client/api'
 import aoStore, { Task } from '../client/store'
 import Markdown from 'markdown-to-jsx'
 import { Sel } from './smartZone'
-import AoContextCard, { CardStyle } from './contextCard'
+import AoContextCard, { CardStyle, CardZone } from './contextCard'
 import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
+import AoCardComposer from './cardComposer'
 
 interface StackState {
   redirect?: string
   selected?: Sel
   showAll: boolean
+  showCompose: boolean
 }
 
 export const defaultState: StackState = {
   redirect: undefined,
   selected: undefined,
-  showAll: false
+  showAll: false,
+  showCompose: false
 }
 
 interface StackProps {
@@ -36,6 +39,8 @@ interface StackProps {
   hideAddWhenCards?: boolean
   addButtonText?: string
   alwaysShowAll?: boolean
+  onNewCard?: (string) => void
+  zone?: CardZone
 }
 
 @observer
@@ -50,6 +55,7 @@ export default class AoSourceStack extends React.Component<
     this.goInZone = this.goInZone.bind(this)
     this.show = this.show.bind(this)
     this.hide = this.hide.bind(this)
+    this.toggleCompose = this.toggleCompose.bind(this)
   }
 
   selectStackZone(selection: Sel) {
@@ -70,22 +76,36 @@ export default class AoSourceStack extends React.Component<
     this.setState({ showAll: false })
   }
 
+  toggleCompose() {
+    this.setState({ showCompose: !this.state.showCompose })
+  }
+
   render() {
-    const cardsToRender = this.props.cards
+    const cardsToRender =
+      this.props.cards && this.props.cards.length >= 1
+        ? this.props.cards.reverse()
+        : []
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
       return <Redirect to={this.state.redirect} />
     }
 
     let addButton
-    if (
+    if (this.state.showCompose) {
+      addButton = (
+        <AoCardComposer
+          onNewCard={this.props.onNewCard}
+          onBlur={() => this.setState({ showCompose: false })}
+        />
+      )
+    } else if (
       this.props.showAdd &&
       !(this.props.hideAddWhenCards && cardsToRender.length >= 1)
     ) {
       // onClick={() => this.props.onSelect({ y: this.props.y })}
 
       addButton = (
-        <p className={'action'}>
+        <p className={'action'} onClick={this.toggleCompose}>
           {this.props.addButtonText ? this.props.addButtonText : '+card'}
         </p>
       )
@@ -96,7 +116,11 @@ export default class AoSourceStack extends React.Component<
       list = cardsToRender.map((task, i) => (
         <TaskContext.Provider value={task} key={task.taskId}>
           <AoDragZone
-            dragContext={{ zone: 'subTasks', inId: this.props.inId, y: i }}>
+            dragContext={{
+              zone: this.props.zone,
+              inId: this.props.inId,
+              y: i
+            }}>
             <AoContextCard
               cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
             />
@@ -109,7 +133,11 @@ export default class AoSourceStack extends React.Component<
           value={cardsToRender[0]}
           key={cardsToRender[0].taskId}>
           <AoDragZone
-            dragContext={{ zone: 'subTasks', inId: this.props.inId, y: 0 }}>
+            dragContext={{
+              zone: this.props.zone,
+              inId: this.props.inId,
+              y: 0
+            }}>
             <AoContextCard
               cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
             />

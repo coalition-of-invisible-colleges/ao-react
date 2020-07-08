@@ -11,6 +11,7 @@ import AoGridResizer from './gridResizer'
 import AoContextCard from './contextCard'
 import { TaskContext } from './taskContext'
 import { Task } from '../client/store'
+import AoCardComposer from './cardComposer'
 
 interface Sel {
   x: number
@@ -49,6 +50,10 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
     this.setState({ selected: selection })
   }
 
+  newGridCard(name: string, coords: Sel) {
+    api.pinCardToGrid(coords.x, coords.y, name, this.props.taskId)
+  }
+
   goInSquare(selection: Sel) {
     aoStore.addToContext([this.props.taskId])
     this.setState({
@@ -61,8 +66,6 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   }
 
   dropToGridSquare(move: CardPlay) {
-    console.log('dropToGridSquare, move is ', move)
-
     if (!move.from.taskId) {
       return
     }
@@ -158,9 +161,15 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
         }
         break
       case 'completed':
-      // not yet implemented
       case 'context':
-        // add the card to the grid
+      case 'discard':
+      default:
+        api.pinCardToGrid(
+          move.to.coords.x,
+          move.to.coords.y,
+          nameFrom,
+          move.to.inId
+        )
         break
     }
   }
@@ -201,18 +210,30 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
         ) {
           task = aoStore.hashMap.get(grid.rows[j][i])
         }
+        if (
+          this.state.selected &&
+          this.state.selected.x == i &&
+          this.state.selected.y == j
+        ) {
+          render.push(
+            <React.Fragment key={i + '-' + j}>
+              <AoCardComposer
+                onNewCard={(name: string) =>
+                  this.newGridCard(name, { x: i, y: j })
+                }
+                onBlur={() => this.selectGridSquare(undefined)}
+              />
+            </React.Fragment>
+          )
+          continue
+        }
         render.push(
           <TaskContext.Provider value={task} key={i + '-' + j}>
             <AoDropZone
-              selected={
-                this.state.selected &&
-                this.state.selected.x == i &&
-                this.state.selected.y == j
-              }
               inId={this.props.taskId}
               x={i}
               y={j}
-              onSelect={this.selectGridSquare}
+              onSelect={() => this.selectGridSquare({ x: i, y: j })}
               onGoIn={this.goInSquare}
               onDrop={this.dropToGridSquare}
               zoneStyle={'grid'}>

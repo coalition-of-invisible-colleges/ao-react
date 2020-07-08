@@ -4,6 +4,7 @@ import { Route, useParams, useRouteMatch } from 'react-router-dom'
 import aoStore from '../client/store'
 import { TaskContext } from './taskContext'
 import AoContextCard from './contextCard'
+import AoDiscardZone from './discard'
 
 interface CardParams {
   taskId: string
@@ -21,7 +22,9 @@ const RenderCard = () => {
 
   return (
     <TaskContext.Provider value={card}>
-      <AoContextCard cardStyle={'full'} />
+      <AoDiscardZone>
+        <AoContextCard cardStyle={'full'} />
+      </AoDiscardZone>
     </TaskContext.Provider>
   )
 }

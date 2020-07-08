@@ -620,7 +620,6 @@ class AoApi {
     name: string,
     inId: string
   ): Promise<request.Response> {
-    console.log('pinCardToGrid')
     const task: Task = aoStore.cardByName.get(name)
     if (_.isObject(task)) {
       console.log('card already exists')
