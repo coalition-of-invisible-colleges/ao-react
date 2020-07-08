@@ -40,6 +40,7 @@ interface StackProps {
   addButtonText?: string
   alwaysShowAll?: boolean
   onNewCard?: (string) => void
+  onDrop?: (event) => void
   zone?: CardZone
 }
 
@@ -83,7 +84,7 @@ export default class AoSourceStack extends React.Component<
   render() {
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
-        ? this.props.cards.reverse()
+        ? this.props.cards.slice().reverse()
         : []
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
@@ -113,6 +114,7 @@ export default class AoSourceStack extends React.Component<
 
     let list = []
     if (this.state.showAll || this.props.alwaysShowAll) {
+      // wrap a DropZone here to drop on the whole stack. call this.onDrop on drop
       list = cardsToRender.map((task, i) => (
         <TaskContext.Provider value={task} key={task.taskId}>
           <AoDragZone

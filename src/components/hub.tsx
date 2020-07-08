@@ -64,6 +64,7 @@ export default class AoHub extends React.Component<{}, State> {
     if (topMissions.length > 5) {
       topMissions = topMissions.slice(0, 5)
     }
+    topMissions.reverse()
 
     let topCards = aoStore.state.tasks.filter(task => {
       return (
@@ -79,6 +80,7 @@ export default class AoHub extends React.Component<{}, State> {
     if (topCards.length > 5) {
       topCards = topCards.slice(0, 5)
     }
+    topCards.reverse()
 
     console.log('top missions is ', topMissions, ' and top cards is ', topCards)
 
