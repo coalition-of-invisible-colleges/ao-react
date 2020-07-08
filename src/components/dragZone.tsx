@@ -42,6 +42,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 
 		let element = document.createElement('div')
 		element.innerHTML = cardHTML
+		element.id = 'dragGhost'
 		document.body.appendChild(element)
 
 		event.dataTransfer.setDragImage(element, 170, 145)

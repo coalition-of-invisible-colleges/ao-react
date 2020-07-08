@@ -69,10 +69,20 @@ export default class AoDiscardZone extends React.Component<
 						move.from.coords.y,
 						move.from.inId
 					)
-					.then(() => api.discardCardFromCard(move.from.taskId, move.from.inId))
+					.then(() => {
+						if (card.claimed && card.claimed.length >= 1) {
+							api.refocusCard(move.from.taskId, move.from.inId)
+						} else {
+							api.discardCardFromCard(move.from.taskId, move.from.inId)
+						}
+					})
 				break
 			case 'subTasks':
-				api.discardCardFromCard(move.from.taskId, move.from.inId)
+				if (card.claimed && card.claimed.length >= 1) {
+					api.refocusCard(move.from.taskId, move.from.inId)
+				} else {
+					api.discardCardFromCard(move.from.taskId, move.from.inId)
+				}
 				break
 			case 'completed':
 				api.discardCardFromCard(move.from.taskId, move.from.inId)

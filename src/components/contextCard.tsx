@@ -10,12 +10,16 @@ import AoPaper from './paper'
 import AoGrid from './grid'
 import AoStack from './stack'
 import AoSourceStack from './sourceStack'
+import AoCompleted from './completed'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
 import AoAttachment from './attachment'
 import AoCoin from './coin'
 import { TaskContext } from './taskContext'
 import { CardPlay } from './dropZone'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import Completed from '../assets/images/completed.svg'
 
 export type CardStyle =
 	| 'priority'
@@ -23,6 +27,7 @@ export type CardStyle =
 	| 'full'
 	| 'compact'
 	| 'mini'
+	| 'checkmark'
 	| 'context'
 
 export type CardZone =
@@ -109,8 +114,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					)
 					.then(() => api.prioritizeCard(move.from.taskId, move.to.inId))
 				break
-			case 'subTasks':
 			case 'completed':
+			case 'completed':
+				api.prioritizeCard(move.from.taskId, move.to.inId)
+				break
+			case 'subTasks':
 			case 'context':
 			case 'discard':
 				api.prioritizeCard(move.from.taskId, move.to.inId)
@@ -140,8 +148,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					move.from.inId
 				)
 				break
-			case 'subTasks':
 			case 'completed':
+				api.findOrCreateCardInCard(nameFrom, move.to.inId)
+				break
+			case 'subTasks':
 			case 'context':
 			case 'discard':
 				api.findOrCreateCardInCard(nameFrom, move.to.inId)
@@ -331,9 +341,21 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								onDrop={this.subTaskCard}
 								zone={'subTasks'}
 							/>
+							<AoCompleted />
 							<AoCardHud taskId={card.taskId} hudStyle={'full after'} />
 						</div>
 					</React.Fragment>
+				)
+			case 'checkmark':
+				return (
+					<Tippy zIndex={2} content={<AoContextCard cardStyle={'compact'} />}>
+						<div
+							id={'card-' + card.taskId}
+							className={'card checkmark'}
+							onDoubleClick={this.goInCard}>
+							<img src={Completed} />
+						</div>
+					</Tippy>
 				)
 			case 'mini':
 			default:

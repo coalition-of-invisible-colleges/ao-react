@@ -90,6 +90,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		event.preventDefault()
 		event.stopPropagation()
 		let card = this.context
+		document.getElementById('dragGhost').remove()
 
 		if (this.detectDragKind(event.dataTransfer) === 'file') {
 			console.log('file transfer, aborting card swap')

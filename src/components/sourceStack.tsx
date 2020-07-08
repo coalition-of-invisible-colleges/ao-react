@@ -25,6 +25,11 @@ interface StackState {
   showCompose: boolean
 }
 
+interface CounterWord {
+  singular: string
+  plural: string
+}
+
 export const defaultState: StackState = {
   redirect: undefined,
   selected: undefined,
@@ -40,6 +45,8 @@ interface StackProps {
   hideAddWhenCards?: boolean
   addButtonText?: string
   alwaysShowAll?: boolean
+  noFirstCard?: boolean
+  descriptor?: CounterWord
   onNewCard?: (string) => void
   onDrop?: (CardPlay) => void
   zone?: CardZone
@@ -130,6 +137,7 @@ export default class AoSourceStack extends React.Component<
           </AoDragZone>
         </TaskContext.Provider>
       ))
+    } else if (this.props.noFirstCard) {
     } else if (cardsToRender.length >= 1) {
       list = [
         <TaskContext.Provider
@@ -149,6 +157,43 @@ export default class AoSourceStack extends React.Component<
       ]
     }
 
+    let numCards = cardsToRender.length - 1
+    if (this.props.noFirstCard) {
+      numCards = cardsToRender.length
+    }
+
+    let renderedDescriptor: string
+    if (this.props.descriptor) {
+      renderedDescriptor =
+        cardsToRender.length >= 2
+          ? this.props.descriptor.plural
+          : this.props.descriptor.singular
+      renderedDescriptor = renderedDescriptor + ' '
+    }
+
+    let showButton = (
+      <>
+        {(!this.props.alwaysShowAll && cardsToRender.length >= 2) ||
+        (this.props.noFirstCard && cardsToRender.length >= 1) ? (
+          !this.state.showAll ? (
+            <div onClick={this.show} className={'action'}>
+              {numCards} {renderedDescriptor}&#8964;
+            </div>
+          ) : (
+            <div onClick={this.hide} className={'action'}>
+              {this.props.noFirstCard ? (
+                <>
+                  {numCards} {renderedDescriptor}
+                </>
+              ) : null}
+              &#8963;
+            </div>
+          )
+        ) : (
+          ''
+        )}
+      </>
+    )
     return (
       <div className={'stack'}>
         <AoDropZone
@@ -157,19 +202,16 @@ export default class AoSourceStack extends React.Component<
           onDrop={this.props.onDrop}
           zoneStyle={this.props.zone}>
           {addButton}
-          {list}
-          {!this.props.alwaysShowAll && cardsToRender.length >= 2 ? (
-            !this.state.showAll ? (
-              <div onClick={this.show} className={'action'}>
-                {cardsToRender.length - 1} &#8964;
-              </div>
-            ) : (
-              <div onClick={this.hide} className={'action'}>
-                &#8963;
-              </div>
-            )
+          {this.props.noFirstCard ? (
+            <>
+              {showButton}
+              {list}
+            </>
           ) : (
-            ''
+            <>
+              {list}
+              {showButton}
+            </>
           )}
         </AoDropZone>
       </div>

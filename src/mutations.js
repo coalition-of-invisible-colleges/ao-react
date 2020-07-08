@@ -639,7 +639,13 @@ function tasksMuts(tasks, ev) {
             taskId => taskId !== ev.taskId
           )
           if (claimed && claimed.length >= 1) {
-            task.completed.push(ev.taskId)
+            if (
+              !task.completed.some(tId => {
+                return tId === ev.taskId
+              })
+            ) {
+              task.completed.push(ev.taskId)
+            }
           } else {
             task.subTasks.push(ev.taskId)
           }

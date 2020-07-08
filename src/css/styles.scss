@@ -101,10 +101,10 @@ textarea {
         position: relative;
         top: 0;
         left: 0;
-        margin-left: -50%;
         width: 8em;
         height: 8em;
         overflow: hidden;
+        transform: unset;
       }
 
       &.priority,
@@ -989,6 +989,35 @@ textarea {
         width: 40%;
         left: 60%;
         position: relative;
+      }
+    }
+
+    .completed {
+      max-width: 30em;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+
+      .action {
+        margin-bottom: 1em;
+      }
+
+      .dragZone {
+        display: inline;
+
+        .card.checkmark {
+          background: unset;
+          display: inline;
+          margin: 0;
+          padding: 0.25em;
+          transform: unset;
+          left: unset;
+          line-height: 2em;
+
+          img {
+            width: 1.5em;
+          }
+        }
       }
     }
   }
