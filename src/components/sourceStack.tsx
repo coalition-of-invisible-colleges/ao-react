@@ -15,6 +15,7 @@ import { Sel } from './smartZone'
 import AoContextCard, { CardStyle, CardZone } from './contextCard'
 import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
+import AoDropZone, { CardPlay } from './dropZone'
 import AoCardComposer from './cardComposer'
 
 interface StackState {
@@ -40,7 +41,7 @@ interface StackProps {
   addButtonText?: string
   alwaysShowAll?: boolean
   onNewCard?: (string) => void
-  onDrop?: (event) => void
+  onDrop?: (CardPlay) => void
   zone?: CardZone
 }
 
@@ -150,21 +151,27 @@ export default class AoSourceStack extends React.Component<
 
     return (
       <div className={'stack'}>
-        {addButton}
-        {list}
-        {!this.props.alwaysShowAll && cardsToRender.length >= 2 ? (
-          !this.state.showAll ? (
-            <div onClick={this.show} className={'action'}>
-              {cardsToRender.length - 1} &#8964;
-            </div>
+        <AoDropZone
+          inId={this.props.inId}
+          y={0}
+          onDrop={this.props.onDrop}
+          zoneStyle={this.props.zone}>
+          {addButton}
+          {list}
+          {!this.props.alwaysShowAll && cardsToRender.length >= 2 ? (
+            !this.state.showAll ? (
+              <div onClick={this.show} className={'action'}>
+                {cardsToRender.length - 1} &#8964;
+              </div>
+            ) : (
+              <div onClick={this.hide} className={'action'}>
+                &#8963;
+              </div>
+            )
           ) : (
-            <div onClick={this.hide} className={'action'}>
-              &#8963;
-            </div>
-          )
-        ) : (
-          ''
-        )}
+            ''
+          )}
+        </AoDropZone>
       </div>
     )
   }

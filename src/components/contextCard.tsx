@@ -15,6 +15,7 @@ import AoMission from './mission'
 import AoAttachment from './attachment'
 import AoCoin from './coin'
 import { TaskContext } from './taskContext'
+import { CardPlay } from './dropZone'
 
 export type CardStyle =
 	| 'priority'
@@ -84,6 +85,70 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			console.log('missing card')
 		}
 		api.findOrCreateCardInCard(name, card.taskId)
+	}
+
+	prioritizeCard(move: CardPlay) {
+		if (!move.from.taskId) {
+			return
+		}
+		const nameFrom = aoStore.hashMap.get(move.from.taskId).name
+
+		switch (move.from.zone) {
+			case 'card':
+				// maybe this doesn't make sense, it's supposed to be for the whole card
+				break
+			case 'priorities':
+				api.prioritizeCard(move.from.taskId, move.from.inId)
+				break
+			case 'grid':
+				api
+					.unpinCardFromGrid(
+						move.from.coords.x,
+						move.from.coords.y,
+						move.from.inId
+					)
+					.then(() => api.prioritizeCard(move.from.taskId, move.to.inId))
+				break
+			case 'subTasks':
+			case 'completed':
+			case 'context':
+			case 'discard':
+				api.prioritizeCard(move.from.taskId, move.to.inId)
+				break
+			default:
+				break
+		}
+	}
+
+	subTaskCard(move: CardPlay) {
+		if (!move.from.taskId) {
+			return
+		}
+		const nameFrom = aoStore.hashMap.get(move.from.taskId).name
+
+		switch (move.from.zone) {
+			case 'card':
+				// maybe this doesn't make sense, it's supposed to be for the whole card
+				break
+			case 'priorities':
+				api.refocusCard(move.from.taskId, move.from.inId)
+				break
+			case 'grid':
+				api.unpinCardFromGrid(
+					move.from.coords.x,
+					move.from.coords.y,
+					move.from.inId
+				)
+				break
+			case 'subTasks':
+			case 'completed':
+			case 'context':
+			case 'discard':
+				api.findOrCreateCardInCard(nameFrom, move.to.inId)
+				break
+			default:
+				break
+		}
 	}
 
 	goInCard() {
@@ -179,6 +244,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								addButtonText={'+priority'}
 								cardStyle={'priority'}
 								onNewCard={this.newPriority}
+								onDrop={this.prioritizeCard}
 								zone={'priorities'}
 							/>
 						) : null}
@@ -217,6 +283,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 											addButtonText={'+priority'}
 											cardStyle={'priority'}
 											onNewCard={this.newPriority}
+											onDrop={this.prioritizeCard}
 											zone={'priorities'}
 										/>
 									) : null}
@@ -252,6 +319,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								addButtonText={'+priority'}
 								cardStyle={'priority'}
 								onNewCard={this.newPriority}
+								onDrop={this.prioritizeCard}
 								zone={'priorities'}
 							/>
 							<AoGrid taskId={card.taskId} />
@@ -260,6 +328,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								cards={subTaskCards}
 								showAdd={true}
 								onNewCard={this.newSubTask}
+								onDrop={this.subTaskCard}
 								zone={'subTasks'}
 							/>
 							<AoCardHud taskId={card.taskId} hudStyle={'full after'} />

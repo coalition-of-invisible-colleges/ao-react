@@ -60,9 +60,7 @@ export default class AoDiscardZone extends React.Component<
 				// maybe this doesn't make sense, it's supposed to be for the whole card
 				break
 			case 'priorities':
-				api
-					.refocusCard(move.from.taskId, move.from.inId)
-					.then(() => api.discardCardFromCard(move.from.taskId, move.from.inId))
+				api.refocusCard(move.from.taskId, move.from.inId)
 				break
 			case 'grid':
 				api

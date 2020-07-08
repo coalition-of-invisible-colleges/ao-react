@@ -357,14 +357,31 @@ textarea {
         }
       }
 
-      .stack > .action,
+      .stack > .dropZone > .action,
       .grid .action {
         left: 50%;
         transform: translateX(-50%);
         margin-top: 0.5em;
       }
 
-      .stack > .action {
+      .stack > .dropZone {
+        position: relative;
+        & > .overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          background-color: rgba(0, 0, 0, 0.4);
+          pointer-events: none;
+          color: #ddd;
+
+          .label {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
       }
 
       .hud {
@@ -607,23 +624,6 @@ textarea {
               }
             }
 
-            .overlay {
-              position: absolute;
-              top: 0;
-              left: 0;
-              height: 100%;
-              width: 100%;
-              background-color: rgba(0, 0, 0, 0.4);
-              pointer-events: none;
-              color: #ddd;
-
-              .label {
-                position: relative;
-                top: 50%;
-                transform: translateY(-50%);
-              }
-            }
-
             .hud .action {
               left: unset;
               transform: unset;
@@ -683,6 +683,7 @@ textarea {
       cursor: pointer;
       padding: 0.5em;
       user-select: none;
+      // z-index: 1;
     }
 
     #mainMenu {
@@ -832,8 +833,8 @@ textarea {
     }
 
     .stack {
-      margin: 0.5em 1em 0.5em 1em;
       &.context {
+        margin-top: 0.5em;
         margin-bottom: 0;
 
         .zone,

@@ -325,7 +325,7 @@ class AoApi {
   async prioritizeCard(
     taskId: string,
     inId: string,
-    position?: number = 0
+    position: number = 0
   ): Promise<request.Response> {
     const act = {
       type: 'task-prioritized',

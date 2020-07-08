@@ -192,42 +192,14 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		// 	nameTo = aoStore.hashMap.get(this.props.taskId).name
 		// }
 
-		// } else if (fromZone === 'priorities') {
-		// 	switch (this.props.zoneStyle) {
-		// 		case 'priorities':
-		// 			if (nameTo) {
-		// 				api
-		// 					.refocusCard(nameTo, this.props.inId)
-		// 					.then(() => api.prioritizeCard(fromTaskId, this.props.inId))
-		// 			} else {
-		// 				api.prioritizeCard(fromTaskId, this.props.inId)
-		// 			}
-		// 			break
-		// 		case 'subTasks':
-		// 			api.refocusCard(fromTaskId, this.props.inId)
-		// 			break
-		// 	}
 		// } else if (fromZone === 'grid') {
 		// 	switch (this.props.zoneStyle) {
-		// 		case 'priorities':
-		// 			api
-		// 				.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-		// 				.then(() =>
-		// 					api.prioritizeCard(fromTaskId, this.props.inId, toCoords.y)
-		// 				)
-
-		// 			break
-		// 		case 'subTasks':
-		// 			api.unpinCardFromGrid(fromCoords.x, fromCoords.y, this.props.inId)
-		// 			break
 		// 	}
 		// } else if (fromZone === 'subTasks') {
 		// 	switch (this.props.zoneStyle) {
 		// 		case 'priorities':
-		// 			api.prioritizeCard(fromTaskId, this.props.inId)
 		// 			break
 		// 		case 'subTasks':
-		// 			api.findOrCreateCardInCard(nameFrom, this.props.inId)
 		// 			break
 		// 	}
 		// } else if (fromZone === 'completed') {
