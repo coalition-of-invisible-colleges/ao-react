@@ -1,5 +1,6 @@
-import * as React from 'react'
+import React, { FunctionComponent } from 'react'
 import { observer } from 'mobx-react'
+import { observable } from 'mobx'
 import aoStore, { AoState, Task } from '../client/store'
 import { Redirect } from 'react-router-dom'
 import { ObservableMap } from 'mobx'
@@ -17,24 +18,25 @@ import AoCoin from './coin'
 import { TaskContext } from './taskContext'
 import { CardPlay } from './dropZone'
 
-interface CompletedProps {}
+const AoCompleted: FunctionComponent<{}> = observer(({}) => {
+	const computed = observable({
+		get completedCards() {
+			const card: Task = React.useContext(TaskContext)
 
-interface State {}
+			if (!card.completed || card.completed.length < 1) {
+				return null
+			}
 
-@observer
-export default class AoCompleted extends React.Component<
-	CompletedProps,
-	State
-> {
-	static contextType = TaskContext
+			let completedCards: Task[] = card.completed.map(tId =>
+				aoStore.hashMap.get(tId)
+			)
+			completedCards.reverse()
 
-	constructor(props) {
-		super(props)
-		this.state = {}
-		this.archiveCheckmark = this.archiveCheckmark.bind(this)
-	}
+			return completedCards
+		}
+	})
 
-	archiveCheckmark(move: CardPlay) {
+	const archiveCheckmark = (move: CardPlay) => {
 		if (!move.from.taskId) {
 			return
 		}
@@ -65,34 +67,29 @@ export default class AoCompleted extends React.Component<
 		}
 	}
 
-	render() {
-		const card = this.context
-		if (!card) {
-			console.log('missing card in completed')
-		}
-
-		if (!card.completed || card.completed.length < 1) {
-			return null
-		}
-
-		let completedCards: Task[] = card.completed.map(tId =>
-			aoStore.hashMap.get(tId)
-		)
-		completedCards.reverse()
-
-		return (
-			<AoSourceStack
-				inId={card.taskId}
-				cards={completedCards}
-				cardStyle={'checkmark'}
-				onDrop={this.archiveCheckmark}
-				noFirstCard={true}
-				descriptor={{
-					singular: 'accomplishment',
-					plural: 'accomplishments'
-				}}
-				zone={'completed'}
-			/>
-		)
+	const card: Task = React.useContext(TaskContext)
+	if (!card) {
+		console.log('missing card in completed')
 	}
-}
+
+	if (computed.completedCards === null) {
+		return null
+	}
+
+	return (
+		<AoSourceStack
+			inId={card.taskId}
+			cards={computed.completedCards}
+			cardStyle={'checkmark'}
+			onDrop={archiveCheckmark}
+			noFirstCard={true}
+			descriptor={{
+				singular: 'accomplishment',
+				plural: 'accomplishments'
+			}}
+			zone={'completed'}
+		/>
+	)
+})
+
+export default AoCompleted

@@ -723,36 +723,36 @@ function tasksMuts(tasks, ev) {
     case 'task-claimed':
       let bounty = 0
       tasks.forEach(task => {
-        let found = false
+        // let found = false
         if (task.taskId === ev.memberId) {
           task.boost += parseFloat(ev.paid)
         }
 
-        task.priorities.some(taskId => {
-          if (taskId !== ev.taskId) {
-            return false
-          } else {
-            found = true
-            return true
-          }
-        })
+        // task.priorities.some(taskId => {
+        //   if (taskId !== ev.taskId) {
+        //     return false
+        //   } else {
+        //     found = true
+        //     return true
+        //   }
+        // })
 
-        task.subTasks.some(taskId => {
-          if (taskId !== ev.taskId) {
-            return false
-          } else {
-            found = true
-            return true
-          }
-        })
+        // task.subTasks.some(taskId => {
+        //   if (taskId !== ev.taskId) {
+        //     return false
+        //   } else {
+        //     found = true
+        //     return true
+        //   }
+        // })
 
-        if (found) {
-          if (task.priorities.indexOf(ev.taskId) === -1) {
-            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
-            task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
-            task.completed.push(ev.taskId)
-          }
-        }
+        // if (found) {
+        //   if (task.priorities.indexOf(ev.taskId) === -1) {
+        //     task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
+        //     task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
+        //     task.completed.push(ev.taskId)
+        //   }
+        // }
         if (task.taskId === ev.taskId) {
           task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
