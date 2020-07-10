@@ -57,6 +57,7 @@ export default class AoMissions extends React.Component<{}, State> {
           tooltipText={'Missions Index'}
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
+          <h2>Missions Index</h2>
           {this.renderMissionsList()}
         </AoPopupPanel>
       </div>

@@ -61,6 +61,7 @@ export default class AoCalendar extends React.Component<{}, State> {
           tooltipText={'Calendar'}
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
+          <h2>Upcoming Events</h2>
           {this.renderCalendarList()}
         </AoPopupPanel>
       </div>

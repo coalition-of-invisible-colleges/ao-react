@@ -737,19 +737,16 @@ textarea {
       }
 
       .popupPanel {
-        overflow-y: auto;
-
-        input {
-          margin: 0.5em 0.5em 0.5em 5em;
-        }
+        max-height: 96vh;
 
         .results {
-          overflow-y: scroll;
-          max-height: 50vh;
           padding-right: 0.5em;
-          width: 34vw;
         }
       }
+    }
+
+    #members .popupPanel input {
+      margin: 0.5em 0.5em 0.5em 5em;
     }
 
     #hub {
@@ -798,6 +795,9 @@ textarea {
       .actionCircle {
         top: unset;
         bottom: 0.5em;
+      }
+      input {
+        margin: 0.5em;
       }
     }
 
@@ -966,7 +966,7 @@ textarea {
 
     .popupPanel {
       // width: min-content;
-      overflow-y: scroll;
+      overflow-y: auto;
 
       .left {
         width: 55%;

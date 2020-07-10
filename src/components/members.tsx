@@ -86,6 +86,7 @@ export default class AoMembers extends React.Component<{}, State> {
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
           <React.Fragment>
+            <h2>Members</h2>
             <button onClick={this.sortByRecent}>Recents</button>
             <button onClick={this.sortByVouches}>Vouches</button>
             {list}

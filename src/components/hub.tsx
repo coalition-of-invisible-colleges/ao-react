@@ -68,6 +68,7 @@ export default class AoHub extends React.Component<{}> {
           panelPlacement={'right-start'}>
           <React.Fragment>
             <div className={'left'}>
+              <h2> Community Hub</h2>
               {communityCard && communityCard.hasOwnProperty('taskId') ? (
                 <TaskContext.Provider value={communityCard}>
                   <AoContextCard cardStyle={'full'} noContextOnFull={true} />
