@@ -1,10 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
+import AoSourceStack from './sourceStack'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 
 interface AoPreviewProps {
   taskId: string
@@ -13,7 +16,7 @@ interface AoPreviewProps {
   onTogglePriorities?: (any) => void
 }
 
-const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
+const AoPreview: FunctionComponent<AoPreviewProps> = observer(
   ({ taskId, hudStyle, prioritiesShown, onTogglePriorities }) => {
     const computed = observable({
       get subCardCount() {
@@ -36,6 +39,18 @@ const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
       get priorityCount() {
         const card = aoStore.hashMap.get(taskId)
         return card.priorities.length
+      },
+      get priorityCards() {
+        const card = aoStore.hashMap.get(taskId)
+        let priorityCards: Task[] = []
+        card.priorities.forEach(tId => {
+          let priority = aoStore.hashMap.get(tId)
+          if (!priority) {
+            return
+          }
+          priorityCards.push(priority)
+        })
+        return priorityCards
       }
     })
     if (computed.subCardCount < 1) {
@@ -64,7 +79,17 @@ const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
       case 'mini after':
         if (computed.priorityCount >= 1) {
           return (
-            <div className={'preview nopad'}>{computed.priorityCount}!</div>
+            <Tippy
+              interactive={true}
+              content={
+                <AoSourceStack
+                  inId={taskId}
+                  cardStyle={'priority'}
+                  cards={computed.priorityCards}
+                />
+              }>
+              <div className={'preview nopad'}>{computed.priorityCount}!</div>
+            </Tippy>
           )
         }
         return <div className={'preview'}>({computed.subCardCount})</div>
@@ -74,4 +99,4 @@ const AoCheckbox: FunctionComponent<AoPreviewProps> = observer(
   }
 )
 
-export default AoCheckbox
+export default AoPreview

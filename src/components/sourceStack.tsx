@@ -1,7 +1,3 @@
-// move onDrag out logic to smartCard (all cards are draggable)
-// dropZone only wraps the immediate element that is droppable. so dropZone will wrap the entire priorities region.import
-// start by getting drag to work from Top Missions list to Community Hub grid
-
 import * as React from 'react'
 import { FunctionComponent } from 'react'
 import { useState } from 'react'
@@ -92,7 +88,16 @@ export default class AoSourceStack extends React.Component<
   render() {
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
-        ? this.props.cards.slice().reverse()
+        ? this.props.cards
+            .slice()
+            .filter(t => {
+              if (!t) {
+                console.log('Missing card detected: ', t)
+                return false
+              }
+              return true
+            })
+            .reverse()
         : []
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
@@ -133,6 +138,14 @@ export default class AoSourceStack extends React.Component<
             }}>
             <AoContextCard
               cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
+              inlineStyle={
+                this.props.cardStyle === 'context'
+                  ? {
+                      maxWidth:
+                        (30 - (cardsToRender.length - i)).toString() + 'em'
+                    }
+                  : {}
+              }
             />
           </AoDragZone>
         </TaskContext.Provider>

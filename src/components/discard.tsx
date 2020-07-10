@@ -1,7 +1,3 @@
-// move onDrag out logic to smartCard (all cards are draggable)
-// dropZone only wraps the immediate element that is droppable. so dropZone will wrap the entire priorities region.import
-// start by getting drag to work from Top Missions list to Community Hub grid
-
 import * as React from 'react'
 import { FunctionComponent } from 'react'
 import { useState } from 'react'

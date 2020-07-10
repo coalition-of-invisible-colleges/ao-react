@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartCard, { CardStyle } from './smartCard'
+import { CardStyle } from './smartCard'
 import { CardZone } from './contextCard'
 import { TaskContext } from './taskContext'
 

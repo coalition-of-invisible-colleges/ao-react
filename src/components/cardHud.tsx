@@ -17,6 +17,7 @@ import AoPreview from './preview'
 import AoMission from './mission'
 
 export type HudStyle =
+	| 'context'
 	| 'full before'
 	| 'full after'
 	| 'face before'
@@ -37,6 +38,20 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 	({ taskId, hudStyle, prioritiesShown, onTogglePriorities }) => {
 		const card: Task = aoStore.hashMap.get(taskId)
 		switch (hudStyle) {
+			case 'context':
+				return (
+					<div className={'hud'}>
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview
+							taskId={taskId}
+							hudStyle={hudStyle}
+							prioritiesShown={prioritiesShown}
+							onTogglePriorities={onTogglePriorities}
+						/>
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+					</div>
+				)
+				break
 			case 'collapsed':
 				return (
 					<div className={'hud'}>

@@ -201,6 +201,17 @@ class AoStore {
     })
     return hashMap
   }
+  @computed get contextCards(): Task[] {
+    let cards: Task[] = []
+    console.log('context is', this.context)
+    this.context.forEach(tId => {
+      cards.push(this.hashMap.get(tId))
+    })
+    cards.reverse()
+
+    console.log('computed context. length is ', cards.length)
+    return cards
+  }
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -284,7 +295,7 @@ class AoStore {
     const index = this.context.findIndex(tId => {
       return tId === taskId
     })
-    this.context = this.context.slice(0, index)
+    this.context = this.context.slice(0, index + 1)
   }
   @action.bound
   setCurrentCard(taskId: string) {

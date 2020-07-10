@@ -4,7 +4,8 @@ import aoStore from '../client/store'
 import AoSourceStack from './sourceStack'
 import Sun from '../assets/images/sun.svg'
 import AoGrid from './grid'
-import AoSmartCard from './smartCard'
+import AoContextCard from './contextCard'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import AoPopupPanel from './popupPanel'
 
@@ -68,7 +69,9 @@ export default class AoHub extends React.Component<{}> {
           <React.Fragment>
             <div className={'left'}>
               {communityCard && communityCard.hasOwnProperty('taskId') ? (
-                <AoSmartCard taskId={communityCard.taskId} cardStyle={'full'} />
+                <TaskContext.Provider value={communityCard}>
+                  <AoContextCard cardStyle={'full'} noContextOnFull={true} />
+                </TaskContext.Provider>
               ) : (
                 <p onClick={this.addCommunityCard} className={'action'}>
                   +H.U.B.

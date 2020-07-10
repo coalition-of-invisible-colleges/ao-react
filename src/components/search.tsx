@@ -108,7 +108,7 @@ export default class AoSearch extends React.Component<{}, State> {
             type="text"
             onChange={this.onChange}
             value={this.state.query}
-            size={24}
+            size={36}
             placeholder={'search for a card'}
             autoFocus
           />

@@ -49,6 +49,8 @@ export interface DragContext {
 
 interface CardProps {
 	cardStyle?: CardStyle
+	inlineStyle?: React.CSSProperties
+	noContextOnFull?: boolean
 }
 
 interface State {
@@ -163,7 +165,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	goInCard() {
-		console.log('goInCard')
 		const card = this.context
 		if (!card) {
 			console.log('missing card')
@@ -174,6 +175,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		} else {
 			aoStore.addToContext([aoStore.currentCard])
 		}
+
 		this.setState({
 			redirect: '/task/' + card.taskId
 		})
@@ -220,8 +222,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		switch (cardStyle) {
 			case 'context':
 				return (
-					<div className={'card context'} onDoubleClick={this.goInCard}>
+					<div
+						className={'card context'}
+						id={'card-' + card.taskId}
+						onDoubleClick={this.goInCard}
+						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
 						<AoPaper taskId={card.taskId} />
+						<AoCardHud taskId={card.taskId} hudStyle={'context'} />
 						<div className={'content'}>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 						</div>
@@ -308,7 +315,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'full':
 				return (
 					<React.Fragment>
-						<AoStack taskId={card.taskId} cardSource={'context'} />
+						{this.props.noContextOnFull ? (
+							''
+						) : (
+							<div id={'context'}>
+								<AoSourceStack
+									cards={aoStore.contextCards}
+									cardStyle={'context'}
+									alwaysShowAll={true}
+								/>
+							</div>
+						)}
 						<div
 							id={'card-' + card.taskId}
 							className={'card full'}
