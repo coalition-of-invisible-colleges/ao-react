@@ -762,16 +762,19 @@ textarea {
     #hub {
       .actionCircle {
         top: 0.5em;
-        width: 3em;
-        height: 3em;
+        width: 3.5em;
+        height: 3.5em;
 
         &.open {
           img {
             width: 5em;
             height: 5em;
+            left: -0.75em;
+            top: -0.75em;
           }
         }
       }
+
       .popupPanel {
         width: 90vw;
         height: 96vh;
@@ -923,7 +926,7 @@ textarea {
       width: -moz-fit-content;
       width: fit-content;
       color: white;
-      margin-top: 0 auto;
+      margin: 0 auto;
       user-select: none;
     }
 
