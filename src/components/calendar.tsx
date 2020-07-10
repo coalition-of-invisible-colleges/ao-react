@@ -34,7 +34,7 @@ export default class AoCalendar extends React.Component<{}, State> {
         return task.book.hasOwnProperty('startTs')
       })
       .sort((a, b) => {
-        return b.book.startTs - a.book.startTs
+        return a.book.startTs - b.book.startTs
       })
 
     if (events.length < 1) {
