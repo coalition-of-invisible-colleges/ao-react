@@ -5,8 +5,7 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import { Sel } from './smartZone'
-import AoSourceStack from './sourceStack'
+import AoStack from './stack'
 import Badge from '../assets/images/badge.svg'
 import AoPopupPanel from './popupPanel'
 
@@ -40,11 +39,7 @@ export default class AoMissions extends React.Component<{}, State> {
 
     return (
       <div className={'results'}>
-        <AoSourceStack
-          cards={missions}
-          cardStyle={'priority'}
-          alwaysShowAll={true}
-        />
+        <AoStack cards={missions} cardStyle={'priority'} alwaysShowAll={true} />
       </div>
     )
   }

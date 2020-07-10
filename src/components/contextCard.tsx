@@ -9,7 +9,6 @@ import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
 import AoGrid from './grid'
 import AoStack from './stack'
-import AoSourceStack from './sourceStack'
 import AoCompleted from './completed'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
@@ -255,7 +254,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							<AoAttachment taskId={card.taskId} hudStyle={'collapsed'} />
 						</div>
 						{this.state.showPriorities ? (
-							<AoSourceStack
+							<AoStack
 								inId={card.taskId}
 								cards={priorityCards}
 								showAdd={true}
@@ -294,7 +293,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 										)}
 									</div>
 									{this.state.showPriorities ? (
-										<AoSourceStack
+										<AoStack
 											inId={card.taskId}
 											cards={priorityCards}
 											showAdd={true}
@@ -319,7 +318,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							''
 						) : (
 							<div id={'context'}>
-								<AoSourceStack
+								<AoStack
 									cards={aoStore.contextCards}
 									cardStyle={'context'}
 									alwaysShowAll={true}
@@ -340,7 +339,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 								<AoAttachment taskId={card.taskId} hudStyle={'full before'} />
 							</div>
-							<AoSourceStack
+							<AoStack
 								inId={card.taskId}
 								cards={priorityCards}
 								showAdd={true}
@@ -352,7 +351,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								zone={'priorities'}
 							/>
 							<AoGrid taskId={card.taskId} />
-							<AoSourceStack
+							<AoStack
 								inId={card.taskId}
 								cards={subTaskCards}
 								showAdd={true}

@@ -5,9 +5,8 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import { Sel } from './smartZone'
 import AoPopupPanel from './popupPanel'
-import AoSourceStack from './sourceStack'
+import AoStack from './stack'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 
 export type MemberSort = 'recents' | 'vouches'
@@ -71,7 +70,7 @@ export default class AoMembers extends React.Component<{}, State> {
       .reverse()
     if (memberCards && memberCards.length >= 1) {
       list = (
-        <AoSourceStack
+        <AoStack
           cards={memberCards}
           cardStyle={'priority'}
           alwaysShowAll={true}

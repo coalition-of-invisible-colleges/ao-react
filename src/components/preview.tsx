@@ -5,7 +5,7 @@ import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
-import AoSourceStack from './sourceStack'
+import AoStack from './stack'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
@@ -82,7 +82,7 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
             <Tippy
               interactive={true}
               content={
-                <AoSourceStack
+                <AoStack
                   inId={taskId}
                   cardStyle={'priority'}
                   cards={computed.priorityCards}

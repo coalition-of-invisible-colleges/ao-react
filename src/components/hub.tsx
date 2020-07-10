@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
-import AoSourceStack from './sourceStack'
+import AoStack from './stack'
 import Sun from '../assets/images/sun.svg'
 import AoGrid from './grid'
 import AoContextCard from './contextCard'
@@ -80,13 +80,13 @@ export default class AoHub extends React.Component<{}> {
             </div>
             <div className={'right'}>
               <h2>Top Missions</h2>
-              <AoSourceStack
+              <AoStack
                 cards={topMissions}
                 alwaysShowAll={true}
                 cardStyle={'priority'}
               />
               <h2>Top Cards</h2>
-              <AoSourceStack
+              <AoStack
                 cards={topCards}
                 alwaysShowAll={true}
                 cardStyle={'priority'}

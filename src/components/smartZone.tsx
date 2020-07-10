@@ -1,9 +1,11 @@
+// Deprecated, saving until I redo the unreads feature
+
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { AoState } from '../client/store'
 import api from '../client/api'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartCard, { CardStyle } from './smartCard'
+// import AoSmartCard, { CardStyle } from './smartCard'
 
 export interface State {
 	text?: string
@@ -498,7 +500,7 @@ export default class AoSmartZone extends React.Component<
 				</p>
 			)
 		} else if (this.props.taskId) {
-			let hardcodedStyle: CardStyle = 'face'
+			let hardcodedStyle = 'face'
 			let message = 'drop to place'
 			switch (this.props.cardSource) {
 				case 'priorities':
@@ -552,7 +554,6 @@ export default class AoSmartZone extends React.Component<
 					) : (
 						''
 					)}
-					<AoSmartCard taskId={this.props.taskId} cardStyle={hardcodedStyle} />
 				</div>
 			)
 		} else {

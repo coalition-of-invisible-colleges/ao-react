@@ -10,7 +10,6 @@ import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
 import AoGrid from './grid'
 import AoStack from './stack'
-import AoSourceStack from './sourceStack'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
 import AoAttachment from './attachment'
@@ -77,7 +76,7 @@ const AoCompleted: FunctionComponent<{}> = observer(({}) => {
 	}
 
 	return (
-		<AoSourceStack
+		<AoStack
 			inId={card.taskId}
 			cards={computed.completedCards}
 			cardStyle={'checkmark'}

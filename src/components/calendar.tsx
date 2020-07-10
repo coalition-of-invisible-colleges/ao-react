@@ -5,10 +5,9 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartZone, { Sel } from './smartZone'
 import Timecube from '../assets/images/timecube.svg'
 import AoPopupPanel from './popupPanel'
-import AoSourceStack from './sourceStack'
+import AoStack from './stack'
 
 interface State {
   page: number
@@ -44,11 +43,7 @@ export default class AoCalendar extends React.Component<{}, State> {
     return (
       <div className={'results'}>
         {' '}
-        <AoSourceStack
-          cards={events}
-          cardStyle={'priority'}
-          alwaysShowAll={true}
-        />
+        <AoStack cards={events} cardStyle={'priority'} alwaysShowAll={true} />
       </div>
     )
   }

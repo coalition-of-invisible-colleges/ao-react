@@ -5,10 +5,9 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartZone, { Sel } from './smartZone'
 import MagnifyingGlass from '../assets/images/search.svg'
 import AoPopupPanel from './popupPanel'
-import AoSourceStack from './sourceStack'
+import AoStack from './stack'
 import { hideAll } from 'tippy.js'
 
 interface State {
@@ -80,11 +79,7 @@ export default class AoSearch extends React.Component<{}, State> {
 
     return (
       <div className={'results'}>
-        <AoSourceStack
-          cards={results}
-          cardStyle={'priority'}
-          alwaysShowAll={true}
-        />
+        <AoStack cards={results} cardStyle={'priority'} alwaysShowAll={true} />
       </div>
     )
   }
