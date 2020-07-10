@@ -13,7 +13,7 @@ interface AoPaperProps {
 }
 
 const AoPaper: FunctionComponent<AoPaperProps> = observer(
-  ({ taskId, color }) => {
+  ({ color, taskId }) => {
     const computed = observable({
       get cardColor() {
         if (color) {

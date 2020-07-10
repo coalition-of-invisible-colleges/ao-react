@@ -806,7 +806,9 @@ textarea {
       right: 5em;
       bottom: 1em;
       font-size: 1.2em;
+      pointer-events: none;
     }
+
     #logout {
     }
 
@@ -1007,11 +1009,38 @@ textarea {
           transform: unset;
           left: unset;
           line-height: 2em;
+          cursor: pointer;
 
           img {
             width: 1.5em;
           }
         }
+      }
+    }
+
+    svg .checkmark {
+      &.red {
+        fill: $card-red;
+      }
+
+      &.yellow {
+        fill: $card-yellow;
+      }
+
+      &.green {
+        fill: $card-green;
+      }
+
+      &.blue {
+        fill: $card-blue;
+      }
+
+      &.purple {
+        fill: $card-purple;
+      }
+
+      &.black {
+        fill: $card-black;
       }
     }
 

@@ -48,10 +48,7 @@ interface StackProps {
 }
 
 @observer
-export default class AoSourceStack extends React.Component<
-  StackProps,
-  StackState
-> {
+export default class AoStack extends React.Component<StackProps, StackState> {
   constructor(props) {
     super(props)
     this.state = defaultState
