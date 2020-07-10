@@ -7,18 +7,17 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
 import MagnifyingGlass from '../assets/images/search.svg'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
+import AoPopupPanel from './popupPanel'
+import AoSourceStack from './sourceStack'
+import { hideAll } from 'tippy.js'
 
 interface State {
-  searchPanel: boolean
   query: string
   results: Task[]
   redirect?: string
 }
 
 export const defaultState: State = {
-  searchPanel: false,
   query: '',
   results: [],
   redirect: undefined
@@ -29,11 +28,9 @@ export default class AoSearch extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
-    this.toggleSearchPanel = this.toggleSearchPanel.bind(this)
     this.onChange = this.onChange.bind(this)
-    this.renderSearchButton = this.renderSearchButton.bind(this)
     this.updateResults = this.updateResults.bind(this)
-    this.goInResult = this.goInResult.bind(this)
+    this.onSearchPanelOpen = this.onSearchPanelOpen.bind(this)
   }
 
   private searchBox = React.createRef<HTMLInputElement>()
@@ -48,12 +45,8 @@ export default class AoSearch extends React.Component<{}, State> {
 
   clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
 
-  toggleSearchPanel() {
-    this.setState({ searchPanel: !this.state.searchPanel }, () => {
-      if (this.state.searchPanel) {
-        this.searchBox.current.select()
-      }
-    })
+  onSearchPanelOpen() {
+    this.searchBox.current.select()
   }
 
   onChange(event) {
@@ -78,45 +71,22 @@ export default class AoSearch extends React.Component<{}, State> {
     aoStore.updateSearchResults(this.state.query.trim())
   }
 
-  goInResult(selection: Sel) {
-    const trueY = aoStore.searchResults.length - selection.y - 1
-    const taskId = aoStore.searchResults[trueY].taskId
-    aoStore.addToContext([aoStore.currentCard])
-    this.setState({
-      redirect: '/task/' + taskId
-    })
-    this.setState({ searchPanel: false })
-  }
-
-  renderSearchButton() {
-    return (
-      <Tippy zIndex={2} content={'Search'} placement={'top'}>
-        <div onClick={this.toggleSearchPanel} className={'actionCircle'}>
-          <img src={MagnifyingGlass} />
-        </div>
-      </Tippy>
-    )
-  }
-
   renderSearchResults() {
     if (aoStore.searchResults.length < 1) {
       return ''
     }
 
-    const results = aoStore.searchResults
-      .slice()
-      .reverse()
-      .map((task, i) => (
-        <AoSmartZone
-          taskId={task.taskId}
-          y={i}
-          key={i}
-          cardSource={'search'}
-          onGoIn={this.goInResult}
-        />
-      ))
+    const results = aoStore.searchResults.slice().reverse()
 
-    return <div className={'results'}>{results}</div>
+    return (
+      <div className={'results'}>
+        <AoSourceStack
+          cards={results}
+          cardStyle={'priority'}
+          alwaysShowAll={true}
+        />
+      </div>
+    )
   }
 
   render() {
@@ -125,23 +95,25 @@ export default class AoSearch extends React.Component<{}, State> {
       return <Redirect to={this.state.redirect} />
     }
 
-    if (!this.state.searchPanel) {
-      return <div id={'search'}>{this.renderSearchButton()}</div>
-    }
-
     return (
-      <div id={'search'} className={'open'}>
-        <input
-          ref={this.searchBox}
-          type="text"
-          onChange={this.onChange}
-          value={this.state.query}
-          size={20}
-          placeholder={'search for a card'}
-          autoFocus
-        />
-        {this.renderSearchResults()}
-        {this.renderSearchButton()}
+      <div id={'search'}>
+        <AoPopupPanel
+          iconSrc={MagnifyingGlass}
+          tooltipText={'Search'}
+          tooltipPlacement={'right'}
+          panelPlacement={'right'}
+          onShown={this.onSearchPanelOpen}>
+          <input
+            ref={this.searchBox}
+            type="text"
+            onChange={this.onChange}
+            value={this.state.query}
+            size={24}
+            placeholder={'search for a card'}
+            autoFocus
+          />
+          {this.renderSearchResults()}
+        </AoPopupPanel>
       </div>
     )
   }

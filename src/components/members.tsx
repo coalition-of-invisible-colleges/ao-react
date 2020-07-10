@@ -5,15 +5,14 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoSmartZone, { Sel } from './smartZone'
+import { Sel } from './smartZone'
+import AoPopupPanel from './popupPanel'
+import AoSourceStack from './sourceStack'
 import MemberIcon from '../assets/images/loggedWhite.svg'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
 
 export type MemberSort = 'recents' | 'vouches'
 
 interface State {
-  membersPanel: boolean
   sort: MemberSort
   page: number
   redirect?: string
@@ -21,7 +20,6 @@ interface State {
 }
 
 export const defaultState: State = {
-  membersPanel: false,
   sort: 'recents',
   page: 0,
   redirect: undefined
@@ -32,29 +30,11 @@ export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
-    this.toggleMembersPanel = this.toggleMembersPanel.bind(this)
     this.sortByRecent = this.sortByRecent.bind(this)
     this.sortByVouches = this.sortByRecent.bind(this)
-    this.renderMembersButton = this.renderMembersButton.bind(this)
-    this.renderMembersList = this.renderMembersList.bind(this)
-    this.goInResult = this.goInResult.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onClick = this.onClick.bind(this)
-  }
-
-  toggleMembersPanel() {
-    this.setState({ membersPanel: !this.state.membersPanel })
-  }
-
-  goInResult(selection: Sel) {
-    const trueY = aoStore.searchResults.length - selection.y - 1
-    const taskId = aoStore.searchResults[trueY].taskId
-    aoStore.addToContext([aoStore.currentCard])
-    this.setState({
-      redirect: '/task/' + taskId
-    })
-    this.setState({ membersPanel: false })
   }
 
   sortByRecent() {
@@ -78,65 +58,52 @@ export default class AoMembers extends React.Component<{}, State> {
     api.createMember(this.state.text)
   }
 
-  renderMembersButton() {
-    return (
-      <Tippy zIndex={2} content={'Members'} placement={'right'}>
-        <div onClick={this.toggleMembersPanel} className={'actionCircle'}>
-          <img src={MemberIcon} />
-        </div>
-      </Tippy>
-    )
-  }
-
-  renderMembersList() {
-    if (aoStore.state.members.length < 1) {
-      return ''
-    }
-
-    const results = aoStore.state.members
-      .slice()
-      .reverse()
-      .map((member, i) => (
-        <AoSmartZone
-          taskId={member.memberId}
-          y={i}
-          key={i}
-          cardSource={'search'}
-          onGoIn={this.goInResult}
-        />
-      ))
-
-    return <div className={'results'}>{results}</div>
-  }
-
   render() {
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
       return <Redirect to={this.state.redirect} />
     }
 
-    if (!this.state.membersPanel) {
-      return <div id={'members'}>{this.renderMembersButton()}</div>
+    let list
+    const memberCards = aoStore.state.members
+      .map(member => aoStore.hashMap.get(member.memberId))
+      .slice()
+      .reverse()
+    if (memberCards && memberCards.length >= 1) {
+      list = (
+        <AoSourceStack
+          cards={memberCards}
+          cardStyle={'priority'}
+          alwaysShowAll={true}
+        />
+      )
     }
 
     return (
-      <div id={'members'} className={'open'}>
-        {this.renderMembersButton()}
-        <button onClick={this.sortByRecent}>Recents</button>
-        <button onClick={this.sortByVouches}>Vouches</button>
-        {this.renderMembersList()}
-        <div>
-          Add Member
-          <input
-            type="text"
-            value={this.state.text}
-            onChange={this.onChange}
-            onKeyDown={this.onKeyDown}
-          />
-          <button type="button" onClick={this.onClick}>
-            Add Member
-          </button>
-        </div>
+      <div id={'members'}>
+        <AoPopupPanel
+          iconSrc={MemberIcon}
+          tooltipText={'Members'}
+          tooltipPlacement={'right'}
+          panelPlacement={'right'}>
+          <React.Fragment>
+            <button onClick={this.sortByRecent}>Recents</button>
+            <button onClick={this.sortByVouches}>Vouches</button>
+            {list}
+            <div>
+              Add Member
+              <input
+                type="text"
+                value={this.state.text}
+                onChange={this.onChange}
+                onKeyDown={this.onKeyDown}
+              />
+              <button type="button" onClick={this.onClick}>
+                Add Member
+              </button>
+            </div>
+          </React.Fragment>
+        </AoPopupPanel>
       </div>
     )
   }

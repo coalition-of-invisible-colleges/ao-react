@@ -104,11 +104,20 @@ const App = observer(() => {
     <div>
       {render && (
         <Router>
-          <nav>
-            <Link to="/" id="home">
-              Home
-            </Link>
-          </nav>
+          <Switch>
+            <Route path="/login" component={Login} />
+            <ProtectedRoute
+              path="/task"
+              component={AoCard}
+              loggedIn={aoStore.state.loggedIn}
+            />
+            <ProtectedRoute
+              path="/"
+              component={AoMember}
+              loggedIn={aoStore.state.loggedIn}
+              exact={true}
+            />
+          </Switch>
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
             <Tippy
               content={<MainMenu />}
@@ -124,20 +133,6 @@ const App = observer(() => {
             <AoSearch />
             <AoScore />
           </ProtectedFragment>
-          <Switch>
-            <Route path="/login" component={Login} />
-            <ProtectedRoute
-              path="/task"
-              component={AoCard}
-              loggedIn={aoStore.state.loggedIn}
-            />
-            <ProtectedRoute
-              path="/"
-              component={AoMember}
-              loggedIn={aoStore.state.loggedIn}
-              exact={true}
-            />
-          </Switch>
         </Router>
       )}
       {!render && <div>Logging in…</div>}

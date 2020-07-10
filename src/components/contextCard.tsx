@@ -19,6 +19,7 @@ import { TaskContext } from './taskContext'
 import { CardPlay } from './dropZone'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
+import { hideAll } from 'tippy.js'
 import Completed from '../assets/images/completed.svg'
 
 export type CardStyle =
@@ -121,7 +122,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'subTasks':
 			case 'context':
 			case 'discard':
-				api.prioritizeCard(move.from.taskId, move.to.inId)
+				api.findOrCreateCardInCard(move.from.taskId, move.to.inId, true)
 				break
 			default:
 				break
@@ -176,6 +177,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.setState({
 			redirect: '/task/' + card.taskId
 		})
+		hideAll()
 	}
 
 	render() {

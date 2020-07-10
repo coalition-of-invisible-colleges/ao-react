@@ -209,6 +209,11 @@ textarea {
             padding-bottom: 0.25em;
           }
         }
+
+        .context {
+          max-height: 4em;
+          overflow-y: hidden;
+        }
       }
 
       &.mini {
@@ -727,26 +732,19 @@ textarea {
     }
 
     #hub,
-    #search,
     #members,
     #missions,
-    #calendar {
+    #calendar,
+    #search {
       z-index: 1;
-      position: fixed;
-      left: 0.5em;
-      bottom: 0.5em;
 
-      &.open {
-        background-color: rgba(0, 0, 0, 0.6);
-        padding: 0.5em;
-        width: min-content;
-        border-radius: 0.5em;
+      .actionCircle {
+        position: fixed;
+        left: 0.5em;
+      }
 
-        .actionCircle {
-          img {
-            width: 3em;
-          }
-        }
+      .popupPanel {
+        overflow-y: auto;
 
         input {
           margin: 0.5em 0.5em 0.5em 5em;
@@ -756,64 +754,57 @@ textarea {
           overflow-y: scroll;
           max-height: 50vh;
           padding-right: 0.5em;
-          width: 31vw;
+          width: 34vw;
         }
-      }
-
-      .actionCircle {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-
-        img {
-          width: 2.5em;
-        }
-      }
-    }
-
-    #hub,
-    #members,
-    #missions,
-    #calendar {
-      position: fixed;
-      top: 7em;
-      bottom: unset;
-
-      &.open .results {
-        overflow-y: auto;
-        width: 34vw;
-      }
-      .actionCircle {
-        bottom: unset;
-        top: 0;
       }
     }
 
     #hub {
-      top: 1em;
+      .actionCircle {
+        top: 0.5em;
+        width: 3em;
+        height: 3em;
 
-      &.open {
-        .actionCircle {
+        &.open {
           img {
-            width: 4.5em;
+            width: 5em;
+            height: 5em;
           }
         }
       }
+      .popupPanel {
+        width: 90vw;
+        height: 96vh;
+      }
+    }
 
+    #members {
       .actionCircle {
-        img {
-          width: 3.5em;
-        }
+        left: 0.5em;
+        top: calc(45vh - 6em);
       }
     }
 
     #missions {
-      top: 11em;
+      .actionCircle {
+        top: 45vh;
+        transform: translateY(-50%);
+      }
     }
 
     #calendar {
-      top: 15em;
+      .actionCircle {
+        top: calc(45vh + 2.5em);
+      }
     }
+
+    #search {
+      .actionCircle {
+        top: unset;
+        bottom: 0.5em;
+      }
+    }
+
     #score {
       position: fixed;
       right: 5em;
@@ -932,8 +923,7 @@ textarea {
       width: -moz-fit-content;
       width: fit-content;
       color: white;
-      margin-top: 0;
-      margin-bottom: 0;
+      margin-top: 0 auto;
       user-select: none;
     }
 
@@ -956,24 +946,32 @@ textarea {
       cursor: pointer;
       padding: 0.5em;
       user-select: none;
+      width: 2.5em;
+      height: 2.5em;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      &.open {
+        img {
+          width: 4.5em;
+          height: 4.5em;
+          position: relative;
+          left: -1em;
+          top: -1em;
+        }
+      }
     }
 
-    .popover {
-      position: fixed;
-      width: 95%;
-      height: 95%;
-      left: 2.5%;
-      right: 2.5%;
-      top: 2.5%;
-      bottom: 2.5%;
-      background-color: rgba(0, 0, 0, 0.85);
-      border-radius: 5em;
+    .popupPanel {
+      // width: min-content;
       overflow-y: scroll;
 
       .left {
-        width: 60%;
-        position: absolute;
-        top: 1.5em;
+        width: 55%;
+        float: left;
 
         & > .action {
           position: absolute;
@@ -986,9 +984,8 @@ textarea {
       }
 
       .right {
-        width: 40%;
-        left: 60%;
-        position: relative;
+        width: 45%;
+        float: right;
       }
     }
 

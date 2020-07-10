@@ -7,17 +7,15 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoSmartZone, { Sel } from './smartZone'
 import Timecube from '../assets/images/timecube.svg'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
+import AoPopupPanel from './popupPanel'
+import AoSourceStack from './sourceStack'
 
 interface State {
-  calendarPanel: boolean
   page: number
   redirect?: string
 }
 
 export const defaultState: State = {
-  calendarPanel: false,
   page: 0,
   redirect: undefined
 }
@@ -27,59 +25,32 @@ export default class AoCalendar extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
-    this.toggleCalendarPanel = this.toggleCalendarPanel.bind(this)
-    this.renderCalendarButton = this.renderCalendarButton.bind(this)
     this.renderCalendarList = this.renderCalendarList.bind(this)
-    this.goInResult = this.goInResult.bind(this)
-  }
-
-  toggleCalendarPanel() {
-    this.setState({ calendarPanel: !this.state.calendarPanel })
-  }
-
-  goInResult(selection: Sel) {
-    const trueY = aoStore.searchResults.length - selection.y - 1
-    const taskId = aoStore.searchResults[trueY].taskId
-    aoStore.addToContext([aoStore.currentCard])
-    this.setState({
-      redirect: '/task/' + taskId
-    })
-    this.setState({ calendarPanel: false })
-  }
-
-  renderCalendarButton() {
-    return (
-      <Tippy zIndex={2} content={'Calendar'} placement={'right'}>
-        <div onClick={this.toggleCalendarPanel} className={'actionCircle'}>
-          <img src={Timecube} />
-        </div>
-      </Tippy>
-    )
   }
 
   renderCalendarList() {
-    const calendar = aoStore.state.tasks.filter(task => {
-      return task.book.hasOwnProperty('startTs')
-    })
+    let events = aoStore.state.tasks
+      .filter(task => {
+        return task.book.hasOwnProperty('startTs')
+      })
+      .sort((a, b) => {
+        return b.book.startTs - a.book.startTs
+      })
 
-    if (calendar.length < 1) {
+    if (events.length < 1) {
       return ''
     }
 
-    const results = calendar
-      .slice()
-      .reverse()
-      .map((task, i) => (
-        <AoSmartZone
-          taskId={task.taskId}
-          y={i}
-          key={i}
-          cardSource={'search'}
-          onGoIn={this.goInResult}
+    return (
+      <div className={'results'}>
+        {' '}
+        <AoSourceStack
+          cards={events}
+          cardStyle={'priority'}
+          alwaysShowAll={true}
         />
-      ))
-
-    return <div className={'results'}>{results}</div>
+      </div>
+    )
   }
 
   render() {
@@ -88,14 +59,15 @@ export default class AoCalendar extends React.Component<{}, State> {
       return <Redirect to={this.state.redirect} />
     }
 
-    if (!this.state.calendarPanel) {
-      return <div id={'calendar'}>{this.renderCalendarButton()}</div>
-    }
-
     return (
-      <div id={'calendar'} className={'open'}>
-        {this.renderCalendarButton()}
-        {this.renderCalendarList()}
+      <div id={'calendar'}>
+        <AoPopupPanel
+          iconSrc={Timecube}
+          tooltipText={'Calendar'}
+          tooltipPlacement={'right'}
+          panelPlacement={'right'}>
+          {this.renderCalendarList()}
+        </AoPopupPanel>
       </div>
     )
   }

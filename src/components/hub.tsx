@@ -6,29 +6,14 @@ import Sun from '../assets/images/sun.svg'
 import AoGrid from './grid'
 import AoSmartCard from './smartCard'
 import api from '../client/api'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
-
-interface State {
-  hubPanel: boolean
-}
-
-export const defaultState: State = {
-  hubPanel: false
-}
+import AoPopupPanel from './popupPanel'
 
 @observer
-export default class AoHub extends React.Component<{}, State> {
+export default class AoHub extends React.Component<{}> {
   constructor(props) {
     super(props)
-    this.state = defaultState
-    this.toggleHubPanel = this.toggleHubPanel.bind(this)
+    this.state = {}
     this.addCommunityCard = this.addCommunityCard.bind(this)
-    this.renderHubButton = this.renderHubButton.bind(this)
-  }
-
-  toggleHubPanel() {
-    this.setState({ hubPanel: !this.state.hubPanel })
   }
 
   addCommunityCard() {
@@ -36,23 +21,7 @@ export default class AoHub extends React.Component<{}, State> {
     console.log('card added')
   }
 
-  renderHubButton() {
-    return (
-      <div id={'hub'}>
-        <Tippy zIndex={2} content={'Community Hub'} placement={'right'}>
-          <div onClick={this.toggleHubPanel} className={'actionCircle'}>
-            <img src={Sun} />
-          </div>
-        </Tippy>
-      </div>
-    )
-  }
-
   render() {
-    if (!this.state.hubPanel) {
-      return this.renderHubButton()
-    }
-
     let topMissions = aoStore.state.tasks.filter(task => {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
     })
@@ -90,33 +59,38 @@ export default class AoHub extends React.Component<{}, State> {
     console.log('communityCard is ', communityCard)
 
     return (
-      <div id={'hub'} className={'open'}>
-        {this.renderHubButton()}
-        <div className={'popover'}>
-          <div className={'left'}>
-            {communityCard && communityCard.hasOwnProperty('taskId') ? (
-              <AoSmartCard taskId={communityCard.taskId} cardStyle={'full'} />
-            ) : (
-              <p onClick={this.addCommunityCard} className={'action'}>
-                +H.U.B.
-              </p>
-            )}
-          </div>
-          <div className={'right'}>
-            <h2>Top Missions</h2>
-            <AoSourceStack
-              cards={topMissions}
-              alwaysShowAll={true}
-              cardStyle={'priority'}
-            />
-            <h2>Top Cards</h2>
-            <AoSourceStack
-              cards={topCards}
-              alwaysShowAll={true}
-              cardStyle={'priority'}
-            />
-          </div>
-        </div>
+      <div id={'hub'}>
+        <AoPopupPanel
+          iconSrc={Sun}
+          tooltipText={'Community Hub'}
+          tooltipPlacement={'right'}
+          panelPlacement={'right-start'}>
+          <React.Fragment>
+            <div className={'left'}>
+              {communityCard && communityCard.hasOwnProperty('taskId') ? (
+                <AoSmartCard taskId={communityCard.taskId} cardStyle={'full'} />
+              ) : (
+                <p onClick={this.addCommunityCard} className={'action'}>
+                  +H.U.B.
+                </p>
+              )}
+            </div>
+            <div className={'right'}>
+              <h2>Top Missions</h2>
+              <AoSourceStack
+                cards={topMissions}
+                alwaysShowAll={true}
+                cardStyle={'priority'}
+              />
+              <h2>Top Cards</h2>
+              <AoSourceStack
+                cards={topCards}
+                alwaysShowAll={true}
+                cardStyle={'priority'}
+              />
+            </div>
+          </React.Fragment>
+        </AoPopupPanel>
       </div>
     )
   }

@@ -48,8 +48,8 @@ export interface Task {
   bolt11: string
   book: {
     memberId: string
-    startTs: Date
-    endTs: Date
+    startTs: number
+    endTs: number
   }
   boost: number
   priorities: string[]
