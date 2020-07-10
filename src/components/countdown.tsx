@@ -65,27 +65,31 @@ export default class AoCountdown extends React.Component<
 
   startEditing(event) {
     if (aoStore.hashMap.get(this.props.taskId).book.startTs) {
+      let newStartTime: Date = new Date(0)
+      newStartTime.setUTCMilliseconds(
+        aoStore.hashMap.get(this.props.taskId).book.startTs
+      )
       this.setState({
-        startTime: aoStore.hashMap.get(this.props.taskId).book.startTs
+        startTime: newStartTime
       })
     }
     this.setState({ editing: true })
   }
 
   onChange(date) {
-    this.setState({ startTime: date })
+    let newStartTime: Date = new Date(0)
+    newStartTime.setUTCMilliseconds(date)
+
+    this.setState({ startTime: newStartTime })
   }
 
   bookResource() {
-    let newStartTime: Date = this.state.startTime
-      ? this.state.startTime
-      : undefined
-    if (newStartTime) {
-      let newEndTime: Date = new Date(newStartTime)
+    if (this.state.startTime) {
+      let newEndTime: Date = new Date(this.state.startTime)
       newEndTime.setDate(newEndTime.getDate() + 3)
       api.bookResource(
         this.props.taskId,
-        newStartTime.getTime(),
+        this.state.startTime.getTime(),
         newEndTime.getTime()
       )
       this.setState({ editing: false })
