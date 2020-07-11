@@ -69,7 +69,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     })
   }
 
-  show() {
+  show(event) {
     this.setState({ showAll: true })
   }
 

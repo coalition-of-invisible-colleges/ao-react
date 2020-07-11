@@ -52,12 +52,8 @@ export default class AoHub extends React.Component<{}> {
     }
     topCards.reverse()
 
-    console.log('top missions is ', topMissions, ' and top cards is ', topCards)
-
     // <AoGrid taskId={aoStore.state.tasks[0].taskId} />
     let communityCard = aoStore.cardByName.get('community hub')
-
-    console.log('communityCard is ', communityCard)
 
     return (
       <div id={'hub'}>

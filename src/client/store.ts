@@ -211,7 +211,6 @@ class AoStore {
     })
     cards.reverse()
 
-    console.log('computed context. length is ', cards.length)
     return cards
   }
   @action.bound

@@ -80,8 +80,6 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 	render() {
 		const card = this.context
 
-		console.log('history length is ', aoStore.discard.length)
-
 		return (
 			<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
 				{aoStore.discard.length >= 1 ? (

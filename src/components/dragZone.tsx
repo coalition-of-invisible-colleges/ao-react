@@ -17,8 +17,8 @@ interface DragZoneProps {
 export default class AoDragZone extends React.Component<DragZoneProps> {
 	static contextType = TaskContext
 
-	constructor(props) {
-		super(props)
+	constructor(props, context) {
+		super(props, context)
 		this.drag = this.drag.bind(this)
 	}
 
@@ -34,24 +34,10 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 		}
 		event.dataTransfer.setData('text/taskId', card.taskId)
 
-		let cardHTML = ReactDOMServer.renderToStaticMarkup(
-			<TaskContext.Provider value={card}>
-				<AoContextCard cardStyle={'compact'} />
-			</TaskContext.Provider>
-		)
-
-		let element = document.createElement('div')
-		element.innerHTML = cardHTML
-		element.id = 'dragGhost'
-		document.body.appendChild(element)
-
-		event.dataTransfer.setDragImage(element, 170, 145)
-
 		if (!this.props.dragContext) {
 			console.log('drag without dragContext')
 			return
 		}
-		// event.dataTransfer.setData('text/dragContext', this.props.dragContext) // test sending whole object
 		event.dataTransfer.setData('text/fromZone', this.props.dragContext.zone)
 		if (this.props.dragContext.inId) {
 			event.dataTransfer.setData('text/fromInId', this.props.dragContext.inId)
@@ -60,6 +46,39 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 			event.dataTransfer.setData('text/fromX', this.props.dragContext.x)
 		}
 		event.dataTransfer.setData('text/fromY', this.props.dragContext.y)
+
+		let fromId: string = event.dataTransfer.getData('text/taskId')
+		let fromInId: string = event.dataTransfer.getData('text/fromInId')
+		let fromZone = event.dataTransfer.getData('text/fromZone')
+		let fromCoords = {
+			x: event.dataTransfer.getData('text/fromX'),
+			y: event.dataTransfer.getData('text/fromY')
+		}
+		let fromLocation = {
+			taskId: fromId,
+			inId: fromInId,
+			zone: fromZone,
+			coords: fromCoords
+		}
+
+		// Do this last, because some cards don't render properly
+		// and break the rest of the dataTransfer.setData calls
+		// It seems to fail to set the image silently and then,
+		// since there is no drag image, setting other data fields
+		// fails too
+		let cardHTML = ReactDOMServer.renderToStaticMarkup(
+			<TaskContext.Provider value={card}>
+				<AoContextCard cardStyle={'compact'} />
+			</TaskContext.Provider>
+		)
+		let dragGhostElement: Element = document.createElement('div')
+		dragGhostElement.innerHTML = cardHTML
+		dragGhostElement.id = 'dragGhost'
+		dragGhostElement = document.body.appendChild(dragGhostElement)
+
+		if (dragGhostElement) {
+			event.dataTransfer.setDragImage(dragGhostElement, 170, 145)
+		}
 	}
 
 	render() {

@@ -1071,6 +1071,8 @@ textarea {
 
     #dragGhost {
       position: fixed;
+      left: -1000em;
+      top: -1000em;
     }
   }
 }
