@@ -22,9 +22,8 @@ const RenderCard = () => {
 
   return (
     <TaskContext.Provider value={card}>
-      <AoDiscardZone>
-        <AoContextCard cardStyle={'full'} />
-      </AoDiscardZone>
+      <AoDiscardZone />
+      <AoContextCard cardStyle={'full'} />
     </TaskContext.Provider>
   )
 }

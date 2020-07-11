@@ -150,6 +150,8 @@ class AoStore {
   searchResults: Task[] = []
   @observable context: string[] = []
   @observable currentCard: string = undefined
+  @observable discard: Task[] = []
+
   @computed get member(): Member {
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
@@ -300,6 +302,15 @@ class AoStore {
   @action.bound
   setCurrentCard(taskId: string) {
     this.currentCard = taskId
+  }
+  @action.bound
+  addToDiscardHistory(tasks: Task[]) {
+    if (tasks.length < 1) return
+    this.discard.push(...tasks)
+  }
+  @action.bound
+  popDiscardHistory() {
+    return this.discard.pop()
   }
 }
 const aoStore = new AoStore()

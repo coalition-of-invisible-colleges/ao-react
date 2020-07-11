@@ -39,7 +39,7 @@ export default class AoPopupPanel extends React.Component<
 	render() {
 		return (
 			<Tippy
-				zIndex={2}
+				zIndex={4}
 				content={
 					this.props.tooltipText && this.props.tooltipText.length >= 1
 						? this.props.tooltipText

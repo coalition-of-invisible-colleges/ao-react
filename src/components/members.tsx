@@ -72,6 +72,7 @@ export default class AoMembers extends React.Component<{}, State> {
       list = (
         <AoStack
           cards={memberCards}
+          zone={'panel'}
           cardStyle={'priority'}
           alwaysShowAll={true}
         />

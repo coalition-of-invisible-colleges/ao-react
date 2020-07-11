@@ -12,26 +12,15 @@ import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
 import AoDropZone, { CardPlay } from './dropZone'
 
-interface State {
-	history: Task[]
-}
-
-export const defaultState: State = {
-	history: []
-}
-
 interface DiscardProps {}
 
 @observer
-export default class AoDiscardZone extends React.Component<
-	DiscardProps,
-	State
-> {
+export default class AoDiscardZone extends React.Component<DiscardProps> {
 	static contextType = TaskContext
 
 	constructor(props) {
 		super(props)
-		this.state = defaultState
+		this.state = {}
 		this.dropToDiscard = this.dropToDiscard.bind(this)
 	}
 
@@ -39,7 +28,7 @@ export default class AoDiscardZone extends React.Component<
 		console.log('dropToGridSquare, move is ', move)
 		const card = aoStore.hashMap.get(move.from.taskId)
 		if (card) {
-			this.setState({ history: this.state.history.concat(card) })
+			aoStore.addToDiscardHistory([card])
 			console.log('Pushed discarded card to history.')
 		} else {
 			console.log('Invalid card to discard, trying anyway.')
@@ -88,21 +77,17 @@ export default class AoDiscardZone extends React.Component<
 		}
 	}
 
-	popHistory() {
-		this.setState({ history: this.state.history.slice(0, -1) })
-	}
-
 	render() {
 		const card = this.context
 
-		console.log('history length is ', this.state.history.length)
+		console.log('history length is ', aoStore.discard.length)
 
 		return (
 			<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
-				{this.state.history.length >= 1 ? (
+				{aoStore.discard.length >= 1 ? (
 					<TaskContext.Provider
-						value={this.state.history[this.state.history.length - 1]}>
-						<AoDragZone onDropSuccess={this.popHistory} />
+						value={aoStore.discard[aoStore.discard.length - 1]}>
+						<AoDragZone dragContext={{ zone: 'discard', y: 0 }} />
 						<TaskContext.Provider value={card ? card : undefined}>
 							{this.props.children}
 						</TaskContext.Provider>

@@ -38,6 +38,7 @@ export type CardZone =
 	| 'completed'
 	| 'context'
 	| 'discard'
+	| 'panel'
 
 export interface DragContext {
 	zone: CardZone
@@ -105,7 +106,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				// maybe this doesn't make sense, it's supposed to be for the whole card
 				break
 			case 'priorities':
-				api.prioritizeCard(move.from.taskId, move.from.inId)
+				if (move.from.inId === move.to.inId) {
+					api.prioritizeCard(move.from.taskId, move.from.inId)
+				} else {
+					api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
+				}
 				break
 			case 'grid':
 				api
@@ -120,10 +125,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'completed':
 				api.prioritizeCard(move.from.taskId, move.to.inId)
 				break
+			case 'discard':
+				aoStore.popDiscardHistory()
 			case 'subTasks':
 			case 'context':
-			case 'discard':
-				api.findOrCreateCardInCard(move.from.taskId, move.to.inId, true)
+			case 'panel':
+				api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
 				break
 			default:
 				break
@@ -141,7 +148,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				// maybe this doesn't make sense, it's supposed to be for the whole card
 				break
 			case 'priorities':
-				api.refocusCard(move.from.taskId, move.from.inId)
+				if (move.from.inId) {
+					api
+						.refocusCard(move.from.taskId, move.from.inId)
+						.then(() => api.findOrCreateCardInCard(nameFrom, move.to.inId))
+				} else {
+					api.findOrCreateCardInCard(nameFrom, move.to.inId)
+				}
 				break
 			case 'grid':
 				api.unpinCardFromGrid(
@@ -150,12 +163,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					move.from.inId
 				)
 				break
+			case 'discard':
+				aoStore.popDiscardHistory()
 			case 'completed':
-				api.findOrCreateCardInCard(nameFrom, move.to.inId)
-				break
 			case 'subTasks':
 			case 'context':
-			case 'discard':
+			case 'panel':
 				api.findOrCreateCardInCard(nameFrom, move.to.inId)
 				break
 			default:

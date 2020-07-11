@@ -120,7 +120,6 @@ textarea {
         .content > p {
           margin-top: 0;
           margin-bottom: 0;
-          overflow-wrap: break-word;
         }
 
         .stack {
@@ -310,10 +309,10 @@ textarea {
               right: 0;
               bottom: 0;
               background-color: rgba(0, 0, 0, 0.2);
-              font-size: 0.65em;
+              font-size: 0.6em;
               padding: 0.25em;
               pointer-events: none;
-              margin: 0 2em 0 0;
+              margin: 0 1em 0 0;
               width: max-content;
             }
 
@@ -340,11 +339,6 @@ textarea {
               font-size: 0.9em;
               padding: 0.1em 0;
             }
-
-            .stack .priority {
-              min-width: 24em;
-              font-size: 0.9em;
-            }
           }
         }
       }
@@ -353,6 +347,7 @@ textarea {
         position: relative;
         margin: 1em auto;
         max-width: 28em;
+        overflow-wrap: break-word;
 
         a {
           text-shadow: 0 0 1em #fff;
@@ -824,6 +819,13 @@ textarea {
     }
 
     .discard {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       min-height: 97vh;
       > .dragZone {
         position: absolute;
@@ -854,6 +856,17 @@ textarea {
           margin-top: 0;
           margin-bottom: 0;
           box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
+        }
+      }
+    }
+
+    .grid {
+      .stack {
+        .card {
+          &.priority {
+            min-width: 26em;
+            font-size: 0.9em;
+          }
         }
       }
     }

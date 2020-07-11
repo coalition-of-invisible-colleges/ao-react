@@ -39,7 +39,12 @@ export default class AoMissions extends React.Component<{}, State> {
 
     return (
       <div className={'results'}>
-        <AoStack cards={missions} cardStyle={'priority'} alwaysShowAll={true} />
+        <AoStack
+          cards={missions}
+          zone={'panel'}
+          cardStyle={'priority'}
+          alwaysShowAll={true}
+        />
       </div>
     )
   }

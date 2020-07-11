@@ -139,7 +139,12 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
             )
         }
         break
-      case 'subTasks':
+      case 'discard':
+        aoStore.popDiscardHistory()
+      case 'completed':
+      case 'context':
+      case 'panel':
+      default:
         if (move.to.taskId) {
           api
             .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
@@ -160,24 +165,13 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
           )
         }
         break
-      case 'completed':
-      case 'context':
-      case 'discard':
-      default:
-        api.pinCardToGrid(
-          move.to.coords.x,
-          move.to.coords.y,
-          nameFrom,
-          move.to.inId
-        )
-        break
     }
   }
 
   render() {
     const render = []
     const task = aoStore.hashMap.get(this.props.taskId)
-    const grid = task.hasOwnProperty('grid') ? task.grid : false
+    let grid = task.hasOwnProperty('grid') ? task.grid : false
 
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })

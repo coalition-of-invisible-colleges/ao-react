@@ -79,7 +79,12 @@ export default class AoSearch extends React.Component<{}, State> {
 
     return (
       <div className={'results'}>
-        <AoStack cards={results} cardStyle={'priority'} alwaysShowAll={true} />
+        <AoStack
+          cards={results}
+          zone={'panel'}
+          cardStyle={'priority'}
+          alwaysShowAll={true}
+        />
       </div>
     )
   }
