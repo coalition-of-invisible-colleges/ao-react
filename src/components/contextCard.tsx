@@ -188,7 +188,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		}
 	}
 
-	goInCard() {
+	goInCard(event) {
+		event.stopPropagation()
 		const card = this.context
 		if (!card) {
 			console.log('missing card')
