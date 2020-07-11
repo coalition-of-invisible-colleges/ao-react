@@ -122,6 +122,11 @@ textarea {
           margin-bottom: 0;
           overflow-wrap: break-word;
         }
+
+        .stack {
+          margin-right: 1em;
+          margin-left: 1em;
+        }
       }
 
       &.priority {
@@ -229,13 +234,13 @@ textarea {
         &:hover {
         }
 
-        .content {
+        & > .content {
           position: relative;
           font-size: 0.8em;
           margin: 0;
         }
 
-        .hud {
+        & > .hud {
           position: relative;
           pointer-events: none;
 
@@ -251,9 +256,9 @@ textarea {
               background-color: rgba(255, 10, 10, 0.85);
             }
 
-            .mission,
-            .countdown,
-            .value {
+            & > .mission,
+            & > .countdown,
+            & > .value {
               background-color: rgba(0, 0, 0, 0.2);
               font-size: 0.75em;
               padding: 0.25em;
@@ -261,12 +266,12 @@ textarea {
               margin: 0;
             }
 
-            .countdown,
-            .mission {
+            & > .countdown,
+            & > .mission {
               float: left;
             }
 
-            .mission {
+            & > .mission {
               text-align: left;
               .badge {
                 height: 1.1em;
@@ -277,12 +282,12 @@ textarea {
               }
             }
 
-            .value {
+            & > .value {
               font-size: 0.6em;
               float: right;
             }
 
-            .checkbox {
+            & > .checkbox {
               float: right;
               height: 0.75em;
               width: 0.75em;
@@ -312,7 +317,7 @@ textarea {
               width: max-content;
             }
 
-            .preview {
+            & > .preview {
               position: absolute;
               right: 1.2em;
               bottom: 0;
@@ -328,12 +333,17 @@ textarea {
               }
             }
 
-            .cardMenuButton {
+            & > .cardMenuButton {
               position: absolute;
               right: 0;
               bottom: 0;
               font-size: 0.9em;
               padding: 0.1em 0;
+            }
+
+            .stack .priority {
+              min-width: 24em;
+              font-size: 0.9em;
             }
           }
         }
@@ -359,7 +369,7 @@ textarea {
       }
 
       .stack > .dropZone > .action,
-      .grid .action {
+      .grid .menu .action {
         margin-top: 0.5em;
       }
 
@@ -574,11 +584,11 @@ textarea {
           margin-bottom: 2em;
         }
 
-        .grid {
+        & > .grid {
           display: grid;
 
-          .zone,
-          .dropZone {
+          & > .zone,
+          & > .dropZone.grid {
             position: relative;
             background: $square-bg;
             display: flex;
@@ -588,12 +598,12 @@ textarea {
             color: $body-color;
 
             &:hover {
-              overflow: visible;
+              // overflow: visible;
               // background: darken($square-hover, 50%);
               span {
-                margin: auto;
-                padding: 0.5em;
-                pointer-events: none;
+                // margin: auto;
+                // padding: 0.5em;
+                // pointer-events: none;
                 // background: darken($square-hover, 50%);
               }
             }
@@ -623,7 +633,7 @@ textarea {
               }
             }
 
-            .hud .action {
+            .hud .menu .action {
               left: unset;
               transform: unset;
             }
@@ -854,6 +864,7 @@ textarea {
         margin-bottom: 0.5em;
         max-width: 30em;
         &.priority {
+          min-width: 20em;
           margin-top: 0.375em;
           margin-bottom: 0.375em;
         }

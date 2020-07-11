@@ -130,7 +130,7 @@ class AoApi {
   async findOrCreateCardInCard(
     name: string,
     inId: string,
-    prioritized?: boolean
+    prioritized: boolean = false
   ): Promise<request.Response> {
     let found = aoStore.cardByName.get(name.trim())
     let act

@@ -81,6 +81,10 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
           return (
             <Tippy
               interactive={true}
+              maxWidth={'none'}
+              appendTo={() =>
+                document.getElementById('card-' + taskId).parentElement
+              }
               content={
                 <AoStack
                   inId={taskId}
