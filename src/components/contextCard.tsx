@@ -14,6 +14,7 @@ import AoCardHud from './cardHud'
 import AoMission from './mission'
 import AoAttachment from './attachment'
 import AoCoin from './coin'
+import AoPreview from './preview'
 import { TaskContext } from './taskContext'
 import { CardPlay } from './dropZone'
 import Tippy from '@tippyjs/react'
@@ -29,6 +30,7 @@ export type CardStyle =
 	| 'mini'
 	| 'checkmark'
 	| 'context'
+	| 'mission'
 
 export type CardZone =
 	| 'card'
@@ -55,6 +57,7 @@ interface CardProps {
 
 interface State {
 	showPriorities?: boolean
+	showProjects?: boolean
 	redirect?: string
 }
 
@@ -66,6 +69,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		super(props)
 		this.state = {}
 		this.togglePriorities = this.togglePriorities.bind(this)
+		this.toggleProjects = this.toggleProjects.bind(this)
 		this.newPriority = this.newPriority.bind(this)
 		this.newSubTask = this.newSubTask.bind(this)
 		this.goInCard = this.goInCard.bind(this)
@@ -73,9 +77,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	togglePriorities(event) {
 		if (!this.state.showPriorities) {
-			this.setState({ showPriorities: true })
+			this.setState({ showPriorities: true, showProjects: false })
 		} else {
 			this.setState({ showPriorities: false })
+		}
+	}
+
+	toggleProjects(event) {
+		if (!this.state.showProjects) {
+			this.setState({ showProjects: true, showPriorities: false })
+		} else {
+			this.setState({ showProjects: false })
 		}
 	}
 
@@ -270,12 +282,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							<AoStack
 								inId={card.taskId}
 								cards={priorityCards}
-								showAdd={true}
-								hideAddWhenCards={true}
-								addButtonText={'+priority'}
 								cardStyle={'priority'}
-								onNewCard={this.newPriority}
-								onDrop={this.prioritizeCard}
 								zone={'priorities'}
 							/>
 						) : null}
@@ -388,6 +395,80 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						</div>
 					</Tippy>
 				)
+			case 'mission':
+				// A format that emphasizes the mission and projects (sub-missions), for the Missions Index
+				let projectCards = () => {
+					let projectCards: Task[] = []
+					let allSubCards = card.priorities.concat(
+						card.subTasks,
+						card.completed
+					)
+
+					allSubCards.forEach(tId => {
+						let subCard = aoStore.hashMap.get(tId)
+						if (subCard) {
+							if (subCard.guild && subCard.guild.length >= 1) {
+								projectCards.push(subCard)
+							}
+						}
+					})
+
+					if (card.grid && card.grid.rows) {
+						Object.entries(card.grid.rows).forEach(([y, row]) => {
+							Object.entries(row).forEach(([x, cell]) => {
+								let gridCard = aoStore.hashMap.get(cell)
+								if (gridCard.guild && gridCard.guild.length >= 1) {
+									projectCards.push(gridCard)
+								}
+							})
+						})
+					}
+
+					return projectCards
+				}
+
+				return (
+					<div
+						className={
+							'card mission' + (this.state.showPriorities ? ' padbottom' : '')
+						}
+						id={'card-' + card.taskId}
+						onDoubleClick={this.goInCard}>
+						<AoPaper taskId={card.taskId} />
+						<AoCardHud taskId={card.taskId} hudStyle={'collapsed-mission'} />
+						<div className={'content'}>
+							<AoCoin taskId={card.taskId} />
+							<AoMission taskId={card.taskId} hudStyle={'collapsed'} />
+							<AoPreview
+								taskId={card.taskId}
+								hudStyle={'collapsed'}
+								prioritiesShown={this.state.showPriorities}
+								onTogglePriorities={this.togglePriorities}
+								projectsShown={this.state.showProjects}
+								onToggleProjects={this.toggleProjects}
+								hideSubcardCountOnCollapsed={true}
+							/>
+						</div>
+						{this.state.showProjects ? (
+							<AoStack
+								inId={card.taskId}
+								cards={projectCards()}
+								cardStyle={'mission'}
+								zone={'panel'}
+							/>
+						) : null}
+						{this.state.showPriorities ? (
+							<AoStack
+								inId={card.taskId}
+								cards={priorityCards}
+								cardStyle={'priority'}
+								zone={'panel'}
+							/>
+						) : null}
+						<div style={{ clear: 'both', height: '0.35em' }} />
+					</div>
+				)
+
 			case 'mini':
 			default:
 				let shortened = content

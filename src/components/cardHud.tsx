@@ -22,6 +22,7 @@ export type HudStyle =
 	| 'face before'
 	| 'face after'
 	| 'collapsed'
+	| 'collapsed-mission'
 	| 'mini before'
 	| 'mini after'
 	| 'menu'
@@ -31,10 +32,19 @@ interface CardHudProps {
 	hudStyle: HudStyle
 	prioritiesShown?: boolean
 	onTogglePriorities?: (any) => void
+	projectsShown?: boolean
+	onToggleProjects?: (any) => void
 }
 
 const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
-	({ taskId, hudStyle, prioritiesShown, onTogglePriorities }) => {
+	({
+		taskId,
+		hudStyle,
+		prioritiesShown,
+		onTogglePriorities,
+		projectsShown,
+		onToggleProjects
+	}) => {
 		const card: Task = aoStore.hashMap.get(taskId)
 		switch (hudStyle) {
 			case 'context':
@@ -55,6 +65,21 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 				return (
 					<div className={'hud'}>
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview
+							taskId={taskId}
+							hudStyle={hudStyle}
+							prioritiesShown={prioritiesShown}
+							onTogglePriorities={onTogglePriorities}
+						/>
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+					</div>
+				)
+			case 'collapsed-mission':
+				return (
+					<div className={'hud'}>
 						<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}

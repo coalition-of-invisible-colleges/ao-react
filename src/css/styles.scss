@@ -108,7 +108,8 @@ textarea {
       }
 
       &.priority,
-      &.context {
+      &.context,
+      &.mission {
         position: relative;
         margin-top: 0.25em;
         text-align: left;
@@ -128,7 +129,8 @@ textarea {
         }
       }
 
-      &.priority {
+      &.priority,
+      &.mission {
         padding: 0;
         margin-bottom: 0.5em;
 
@@ -788,6 +790,38 @@ textarea {
       .actionCircle {
         top: 45vh;
         transform: translateY(-50%);
+      }
+
+      .mission.summary.collapsed {
+        display: inline-block;
+      }
+
+      .content {
+        padding-bottom: 0;
+
+        & > .coin {
+          margin-top: 0.25em;
+        }
+
+        & > .preview {
+          clear: both;
+          & > .action {
+            &:first-child {
+              float: left;
+              margin-left: 10%;
+            }
+            &:nth-child(2) {
+              margin-left: 60%;
+              margin-bottom: 0;
+            }
+            font-size: 0.8em;
+            padding: 0.3em;
+          }
+        }
+      }
+
+      .stack {
+        clear: both;
       }
     }
 

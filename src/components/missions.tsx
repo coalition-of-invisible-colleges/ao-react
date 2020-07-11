@@ -42,7 +42,7 @@ export default class AoMissions extends React.Component<{}, State> {
         <AoStack
           cards={missions}
           zone={'panel'}
-          cardStyle={'priority'}
+          cardStyle={'mission'}
           alwaysShowAll={true}
         />
       </div>
