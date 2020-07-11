@@ -66,13 +66,9 @@ export default class AoMissions extends React.Component<{}, State> {
     projectCards = projectCards.concat(
       ...missions.map(task => getProjectCards(task))
     )
-    let subProjectCards = []
-    subProjectCards = subProjectCards.concat(
-      ...projectCards.map(task => getProjectCards(task))
-    )
 
     missions = missions.filter(task => {
-      return !projectCards.includes(task) && !subProjectCards.includes(task)
+      return !projectCards.includes(task)
     })
 
     return (
