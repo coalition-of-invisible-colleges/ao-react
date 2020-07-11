@@ -75,7 +75,7 @@ export default class AoSearch extends React.Component<{}, State> {
       return ''
     }
 
-    const results = aoStore.searchResults.slice().reverse()
+    const results = aoStore.searchResults.slice()
 
     return (
       <div className={'results'}>
