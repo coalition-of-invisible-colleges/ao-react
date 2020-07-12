@@ -99,7 +99,13 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
         return (
           <div className={'preview'}>
             {computed.priorityCount >= 1 ? (
-              <div className="action" onClick={onTogglePriorities}>
+              <div
+                className="action"
+                onClick={onTogglePriorities}
+                onDoubleClick={event => {
+                  event.stopPropagation()
+                  event.nativeEvent.stopImmediatePropagation()
+                }}>
                 {computed.priorityCount}{' '}
                 {computed.priorityCount > 1 ? 'priorities' : 'priority'}{' '}
                 {prioritiesShown ? (
@@ -110,7 +116,13 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
               </div>
             ) : null}
             {onToggleProjects !== undefined && computed.projectCount >= 1 ? (
-              <div className="action" onClick={onToggleProjects}>
+              <div
+                className="action"
+                onClick={onToggleProjects}
+                onDoubleClick={event => {
+                  event.stopPropagation()
+                  event.nativeEvent.stopImmediatePropagation()
+                }}>
                 {computed.projectCount}{' '}
                 {computed.projectCount > 1 ? 'projects' : 'project'}{' '}
                 {projectsShown ? (

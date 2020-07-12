@@ -216,11 +216,22 @@ textarea {
             padding-bottom: 0.25em;
           }
         }
+      }
 
-        .context {
-          max-height: 4em;
-          overflow-y: hidden;
+      &.priority {
+        min-height: 2.5em;
+
+        .coin {
+          margin-top: 0;
+          .hodls {
+            margin-top: 0.25em;
+          }
         }
+      }
+
+      .context {
+        max-height: 3.5em;
+        overflow-y: hidden;
       }
 
       &.mini {
@@ -372,6 +383,7 @@ textarea {
       .stack > .dropZone > .action,
       .grid .menu .action {
         margin-top: 0.5em;
+        margin-bottom: 0.5em;
       }
 
       .stack > .dropZone {
@@ -518,7 +530,7 @@ textarea {
         .hodls {
           position: absolute;
           left: 50%;
-          top: 0.25em;
+          top: 0.65em;
           transform: translateX(-50%);
           text-align: center;
           width: 2.75em;
@@ -1025,6 +1037,11 @@ textarea {
       }
     }
 
+    .preview {
+      .action {
+        margin-bottom: 0.5em;
+      }
+    }
     .actionCircle {
       background-color: rgba(255, 255, 255, 0.25);
       border-radius: 50%;

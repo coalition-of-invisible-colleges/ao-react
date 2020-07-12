@@ -32,6 +32,7 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
     const onClick = event => {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
+
       if (computed.isGrabbed) {
         api.dropCard(taskId)
       } else {
@@ -88,10 +89,26 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
             appendTo={() =>
               document.getElementById('card-' + taskId).parentElement
             }>
-            <img src={Coin} onClick={onClick} draggable={false} />
+            <img
+              src={Coin}
+              onClick={onClick}
+              draggable={false}
+              onDoubleClick={event => {
+                event.stopPropagation()
+                event.nativeEvent.stopImmediatePropagation()
+              }}
+            />
           </Tippy>
         ) : (
-          <img src={Coin} onClick={onClick} draggable={false} />
+          <img
+            src={Coin}
+            onClick={onClick}
+            draggable={false}
+            onDoubleClick={event => {
+              event.stopPropagation()
+              event.nativeEvent.stopImmediatePropagation()
+            }}
+          />
         )}
         {computed.hodlCount >= 2 ||
         (computed.hodlCount >= 1 && !computed.isGrabbed) ? (

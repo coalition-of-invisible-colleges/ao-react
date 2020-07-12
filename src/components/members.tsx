@@ -36,6 +36,9 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   sortBy(sort: MemberSort) {
+    if (this.state.sort === sort) {
+      return
+    }
     this.setState({ sort: sort })
   }
 

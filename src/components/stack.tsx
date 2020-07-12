@@ -70,10 +70,14 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   show(event) {
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
     this.setState({ showAll: true })
   }
 
-  hide() {
+  hide(event) {
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
     this.setState({ showAll: false })
   }
 

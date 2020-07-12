@@ -34,6 +34,9 @@ export default class AoMissions extends React.Component<{}, State> {
   }
 
   sortBy(sort: MissionSort) {
+    if (this.state.sort === sort) {
+      return
+    }
     this.setState({ sort: sort })
   }
 

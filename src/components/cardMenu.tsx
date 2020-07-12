@@ -23,7 +23,14 @@ const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
           console.log('getting the element now')
           return document.getElementById('card-' + taskId).parentElement
         }}>
-        <div className={'cardMenuButton'}>&#x22EE;</div>
+        <div
+          className={'cardMenuButton'}
+          onDoubleClick={event => {
+            event.stopPropagation()
+            event.nativeEvent.stopImmediatePropagation()
+          }}>
+          &#x22EE;
+        </div>
       </Tippy>
     )
   }

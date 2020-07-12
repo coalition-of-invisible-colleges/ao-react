@@ -30,6 +30,8 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
     })
     const onClick = event => {
       event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
+
       if (computed.isCompleted) {
         api.uncheckCard(taskId)
       } else {
@@ -46,6 +48,10 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
               className="checkbox"
               src={computed.isCompleted ? Completed : Uncompleted}
               onClick={onClick}
+              onDoubleClick={event => {
+                event.stopPropagation()
+                event.nativeEvent.stopImmediatePropagation()
+              }}
             />
           )
         }

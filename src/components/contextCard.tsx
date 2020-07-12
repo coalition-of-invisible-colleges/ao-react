@@ -77,6 +77,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	togglePriorities(event) {
+		event.stopPropagation()
+		event.nativeEvent.stopImmediatePropagation()
 		if (!this.state.showPriorities) {
 			this.setState({ showPriorities: true, showProjects: false })
 		} else {
@@ -85,6 +87,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	toggleProjects(event) {
+		event.stopPropagation()
+		event.nativeEvent.stopImmediatePropagation()
 		if (!this.state.showProjects) {
 			this.setState({ showProjects: true, showPriorities: false })
 		} else {
@@ -471,7 +475,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								zone={'panel'}
 							/>
 						) : null}
-						<div style={{ clear: 'both', height: '0.35em' }} />
+						<div style={{ clear: 'both', height: '1px' }} />
 					</div>
 				)
 
