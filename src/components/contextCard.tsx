@@ -31,6 +31,7 @@ export type CardStyle =
 	| 'checkmark'
 	| 'context'
 	| 'mission'
+	| 'member'
 
 export type CardZone =
 	| 'card'
@@ -259,6 +260,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						</div>
 					</div>
 				)
+			case 'member':
 			case 'priority':
 				return (
 					<div
@@ -275,7 +277,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className={'content'}>
-							<AoCoin taskId={card.taskId} />
+							<AoCoin
+								taskId={card.taskId}
+								noPopup={this.props.cardStyle === 'member' ? true : undefined}
+							/>
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 							<AoAttachment taskId={card.taskId} hudStyle={'collapsed'} />
 						</div>
@@ -387,7 +392,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				)
 			case 'checkmark':
 				return (
-					<Tippy zIndex={2} content={<AoContextCard cardStyle={'compact'} />}>
+					<Tippy zIndex={4} content={<AoContextCard cardStyle={'compact'} />}>
 						<div
 							id={'card-' + card.taskId}
 							className={'card checkmark'}

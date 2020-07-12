@@ -9,7 +9,7 @@ import AoPopupPanel from './popupPanel'
 import AoStack from './stack'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 
-export type MemberSort = 'recents' | 'vouches'
+export type MemberSort = 'recents' | 'vouches' | 'age'
 
 interface State {
   sort: MemberSort
@@ -29,19 +29,14 @@ export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
-    this.sortByRecent = this.sortByRecent.bind(this)
-    this.sortByVouches = this.sortByRecent.bind(this)
+    this.sortBy = this.sortBy.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onClick = this.onClick.bind(this)
   }
 
-  sortByRecent() {
-    this.setState({ sort: 'recents' })
-  }
-
-  sortByVouches() {
-    this.setState({ sort: 'vouches' })
+  sortBy(sort: MemberSort) {
+    this.setState({ sort: sort })
   }
 
   onChange(event) {
@@ -57,17 +52,47 @@ export default class AoMembers extends React.Component<{}, State> {
     api.createMember(this.state.text)
   }
 
+  renderSortButton(sort: MemberSort, label: string) {
+    if (this.state.sort === sort) {
+      return <p className={'action selected'}>{label}</p>
+    } else {
+      return (
+        <p onClick={() => this.sortBy(sort)} className={'action'}>
+          {label}
+        </p>
+      )
+    }
+  }
+
   render() {
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
       return <Redirect to={this.state.redirect} />
     }
 
-    let list
-    const memberCards = aoStore.state.members
+    const members = aoStore.state.members.slice()
+    let memberCards: Task[] = []
+
+    if (this.state.sort === 'recents') {
+      members.sort((a, b) => {
+        return a.lastUsed < b.lastUsed ? -1 : 1
+      })
+    }
+
+    memberCards = members
       .map(member => aoStore.hashMap.get(member.memberId))
       .slice()
-      .reverse()
+
+    if (this.state.sort === 'vouches') {
+      memberCards.sort((a, b) => {
+        return a.deck.length - b.deck.length
+      })
+    } else if (this.state.sort === 'age') {
+      memberCards.reverse()
+      // Default sort is database order, i.e., creation order
+    }
+
+    let list
     if (memberCards && memberCards.length >= 1) {
       list = (
         <AoStack
@@ -88,8 +113,11 @@ export default class AoMembers extends React.Component<{}, State> {
           panelPlacement={'right'}>
           <React.Fragment>
             <h2>Members</h2>
-            <button onClick={this.sortByRecent}>Recents</button>
-            <button onClick={this.sortByVouches}>Vouches</button>
+            <div className={'toolbar'}>
+              {this.renderSortButton('recents', 'Recents')}
+              {this.renderSortButton('vouches', 'Vouches')}
+              {this.renderSortButton('age', 'Order')}
+            </div>
             {list}
             <div>
               Add Member

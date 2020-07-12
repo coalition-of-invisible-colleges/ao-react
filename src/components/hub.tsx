@@ -80,7 +80,7 @@ export default class AoHub extends React.Component<{}> {
               <AoStack
                 cards={topMissions}
                 alwaysShowAll={true}
-                cardStyle={'priority'}
+                cardStyle={'mission'}
               />
               <h2>Top Cards</h2>
               <AoStack

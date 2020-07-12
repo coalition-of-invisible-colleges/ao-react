@@ -355,6 +355,10 @@ textarea {
           text-shadow: 0 0 1em #fff;
         }
 
+        p img {
+          max-width: 100%;
+        }
+
         .mission {
           .badge {
             height: 1.5em;
@@ -514,6 +518,7 @@ textarea {
         .hodls {
           position: absolute;
           left: 50%;
+          top: 0.25em;
           transform: translateX(-50%);
           text-align: center;
           width: 2.75em;
@@ -523,6 +528,7 @@ textarea {
           font-weight: bold;
           color: rgba(255, 255, 255, 1);
           pointer-events: none;
+          text-shadow: -0.2em 0.2em 0.2em #000;
         }
       }
 
@@ -747,6 +753,14 @@ textarea {
       .popupPanel {
         max-height: 96vh;
 
+        .toolbar {
+          .action {
+            display: inline-block;
+            margin-right: 0.5em;
+            padding: 0.25em 0.5em;
+          }
+        }
+
         .results {
           padding-right: 0.5em;
         }
@@ -786,7 +800,8 @@ textarea {
       }
     }
 
-    #missions {
+    #missions,
+    .popupPanel > .right > .stack .card.mission {
       .actionCircle {
         top: 45vh;
         transform: translateY(-50%);
@@ -996,6 +1011,17 @@ textarea {
 
       &:hover {
         text-decoration: underline;
+      }
+
+      &.selected {
+        border: none;
+        font-weight: bold;
+        background: none;
+        cursor: default;
+
+        &:hover {
+          text-decoration: none;
+        }
       }
     }
 
