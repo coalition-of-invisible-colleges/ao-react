@@ -120,7 +120,9 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
                 )}
               </div>
             ) : null}
-            {!hideSubcardCountOnCollapsed ? <>{computed.subCardCount}</> : null}
+            {!hideSubcardCountOnCollapsed ? (
+              <>({computed.subCardCount})</>
+            ) : null}
           </div>
         )
       case 'collapsed-mission':

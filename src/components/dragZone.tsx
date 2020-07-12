@@ -23,6 +23,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 	}
 
 	drag(event) {
+		event.stopPropagation()
 		console.log(
 			'drag event from dragZone! dragContext is ',
 			this.props.dragContext
