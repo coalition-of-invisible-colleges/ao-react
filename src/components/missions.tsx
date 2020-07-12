@@ -9,14 +9,18 @@ import AoStack from './stack'
 import Badge from '../assets/images/badge.svg'
 import AoPopupPanel from './popupPanel'
 
+type MissionSort = 'alphabetical' | 'hodls' | 'age'
+
 interface State {
   page: number
   redirect?: string
+  sort: MissionSort
 }
 
 export const defaultState: State = {
   page: 0,
-  redirect: undefined
+  redirect: undefined,
+  sort: 'alphabetical'
 }
 
 @observer
@@ -24,7 +28,25 @@ export default class AoMissions extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
+    this.sortBy = this.sortBy.bind(this)
     this.renderMissionsList = this.renderMissionsList.bind(this)
+    this.renderSortButton = this.renderSortButton.bind(this)
+  }
+
+  sortBy(sort: MissionSort) {
+    this.setState({ sort: sort })
+  }
+
+  renderSortButton(sort: MissionSort, label: string) {
+    if (this.state.sort === sort) {
+      return <p className={'action selected'}>{label}</p>
+    } else {
+      return (
+        <p onClick={() => this.sortBy(sort)} className={'action'}>
+          {label}
+        </p>
+      )
+    }
   }
 
   renderMissionsList() {
@@ -71,6 +93,19 @@ export default class AoMissions extends React.Component<{}, State> {
       return !projectCards.includes(task)
     })
 
+    if (this.state.sort === 'alphabetical') {
+      missions.sort((a, b) => {
+        return b.guild.toLowerCase().localeCompare(a.guild.toLowerCase())
+      })
+    } else if (this.state.sort === 'hodls') {
+      missions.sort((a, b) => {
+        return a.deck.length - b.deck.length
+      })
+    } else if (this.state.sort === 'age') {
+      missions.reverse()
+      // Default sort is database order, i.e., card creation order
+    }
+
     return (
       <div className={'results'}>
         <AoStack
@@ -97,6 +132,11 @@ export default class AoMissions extends React.Component<{}, State> {
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
           <h2>Missions Index</h2>
+          <div className={'toolbar'}>
+            {this.renderSortButton('alphabetical', 'A-Z')}
+            {this.renderSortButton('hodls', 'Hodls')}
+            {this.renderSortButton('age', 'Order')}
+          </div>
           {this.renderMissionsList()}
         </AoPopupPanel>
       </div>

@@ -753,14 +753,6 @@ textarea {
       .popupPanel {
         max-height: 96vh;
 
-        .toolbar {
-          .action {
-            display: inline-block;
-            margin-right: 0.5em;
-            padding: 0.25em 0.5em;
-          }
-        }
-
         .results {
           padding-right: 0.5em;
         }
@@ -1022,6 +1014,14 @@ textarea {
         &:hover {
           text-decoration: none;
         }
+      }
+    }
+
+    .toolbar {
+      .action {
+        display: inline-block;
+        margin-right: 0.5em;
+        padding: 0.25em 0.5em;
       }
     }
 

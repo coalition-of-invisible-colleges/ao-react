@@ -9,7 +9,7 @@ import AoPopupPanel from './popupPanel'
 import AoStack from './stack'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 
-export type MemberSort = 'recents' | 'vouches' | 'age'
+type MemberSort = 'alphabetical' | 'recents' | 'vouches' | 'age'
 
 interface State {
   sort: MemberSort
@@ -77,6 +77,10 @@ export default class AoMembers extends React.Component<{}, State> {
       members.sort((a, b) => {
         return a.lastUsed < b.lastUsed ? -1 : 1
       })
+    } else if (this.state.sort === 'alphabetical') {
+      members.sort((a, b) => {
+        return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+      })
     }
 
     memberCards = members
@@ -89,7 +93,7 @@ export default class AoMembers extends React.Component<{}, State> {
       })
     } else if (this.state.sort === 'age') {
       memberCards.reverse()
-      // Default sort is database order, i.e., creation order
+      // Default sort is database order, i.e., member creation order
     }
 
     let list
@@ -114,13 +118,14 @@ export default class AoMembers extends React.Component<{}, State> {
           <React.Fragment>
             <h2>Members</h2>
             <div className={'toolbar'}>
+              {this.renderSortButton('alphabetical', 'A-Z')}
               {this.renderSortButton('recents', 'Recents')}
               {this.renderSortButton('vouches', 'Vouches')}
               {this.renderSortButton('age', 'Order')}
             </div>
             {list}
             <div>
-              Add Member
+              New Member:
               <input
                 type="text"
                 value={this.state.text}
