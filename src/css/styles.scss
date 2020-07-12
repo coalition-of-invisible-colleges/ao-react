@@ -35,12 +35,14 @@ textarea {
     font-size: 1.25em;
     background-color: $body-bg;
 
+    // menu
     .menu {
       .action {
         margin: 0.5em auto;
       }
     }
 
+    // palette: color selector component
     .palette {
       width: max-content;
       .swatch {
@@ -71,6 +73,7 @@ textarea {
       }
     }
 
+    // mission: cards that are missions
     .mission {
       .badge {
         height: 1.5em;
@@ -80,6 +83,7 @@ textarea {
       }
     }
 
+    // card: main element
     .card {
       position: relative;
       left: 50%;
@@ -95,6 +99,10 @@ textarea {
         min-height: 6em;
         max-width: 98vw;
         min-width: 30em;
+
+        & > .hud > .coin > .hodls {
+          top: 0.65em;
+        }
       }
 
       &.compact {
@@ -219,12 +227,20 @@ textarea {
       }
 
       &.priority {
-        min-height: 2.5em;
+        min-height: 2.325em;
 
         .coin {
           margin-top: 0;
           .hodls {
-            margin-top: 0.25em;
+            top: 0.375em;
+          }
+        }
+      }
+
+      &.mission {
+        .coin {
+          .hodls {
+            top: 0.25em;
           }
         }
       }
@@ -530,7 +546,7 @@ textarea {
         .hodls {
           position: absolute;
           left: 50%;
-          top: 0.65em;
+          top: 0.25em;
           transform: translateX(-50%);
           text-align: center;
           width: 2.75em;
@@ -692,12 +708,14 @@ textarea {
       }
     }
 
+    // home: home link, currently unused
     #home {
       position: fixed;
       top: 0.5em;
       left: 1em;
     }
 
+    // main menu in bottom right of screen
     #mainMenuButton {
       position: fixed;
       right: 0;
@@ -710,6 +728,7 @@ textarea {
       // z-index: 1;
     }
 
+    // main menu, inside a Tippy
     #mainMenu {
       padding: 0.25em 0em;
       .action {
@@ -725,6 +744,7 @@ textarea {
       }
     }
 
+    // connection status indicator, currently unused
     #status {
       position: fixed;
       bottom: 0;
@@ -735,9 +755,11 @@ textarea {
       height: 3em;
     }
 
+    // theme changer, in main menu?
     #themer {
     }
 
+    // mute button, in main menu?
     #volume {
       margin-right: 0.5em;
       margin-bottom: 0.3em;
@@ -750,6 +772,7 @@ textarea {
       }
     }
 
+    //
     #hub,
     #members,
     #missions,
@@ -771,10 +794,12 @@ textarea {
       }
     }
 
+    //
     #members .popupPanel input {
       margin: 0.5em 0.5em 0.5em 5em;
     }
 
+    // community hub popup panel
     #hub {
       .actionCircle {
         top: 0.5em;
@@ -797,6 +822,7 @@ textarea {
       }
     }
 
+    // members popup panel
     #members {
       .actionCircle {
         left: 0.5em;
@@ -804,6 +830,7 @@ textarea {
       }
     }
 
+    // missions popup panel
     #missions,
     .popupPanel > .right > .stack .card.mission {
       .actionCircle {
@@ -845,12 +872,14 @@ textarea {
       }
     }
 
+    // calendar popup panel
     #calendar {
       .actionCircle {
         top: calc(45vh + 2.5em);
       }
     }
 
+    // search popup panel
     #search {
       .actionCircle {
         top: unset;
@@ -861,6 +890,7 @@ textarea {
       }
     }
 
+    // score / points in bottom right of screen
     #score {
       position: fixed;
       right: 5em;
@@ -869,9 +899,11 @@ textarea {
       pointer-events: none;
     }
 
+    // logout button in main menu
     #logout {
     }
 
+    // invisible/black discard zone behind everything on the page
     .discard {
       position: fixed;
       top: 0;
@@ -888,6 +920,7 @@ textarea {
       }
     }
 
+    // context / history stack above the current card on the page
     #context .stack {
       margin-top: 0.5em;
       margin-bottom: 0;
@@ -914,6 +947,7 @@ textarea {
       }
     }
 
+    // the Grid
     .grid {
       .stack {
         .card {
@@ -925,6 +959,7 @@ textarea {
       }
     }
 
+    // the Stack
     .stack {
       .card {
         margin-top: 0.5em;
@@ -944,10 +979,12 @@ textarea {
       }
     }
 
+    // drop shadow on cards in the context stack
     .context.stack ~ .card {
       box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
     }
 
+    // background to every card
     .paper {
       img {
         width: 100%;
@@ -994,6 +1031,7 @@ textarea {
       }
     }
 
+    // info summary / action button, used everywhere for consistency
     .action,
     .summary {
       position: relative;
@@ -1005,6 +1043,7 @@ textarea {
       user-select: none;
     }
 
+    // action button
     .action {
       background-color: rgba(0, 0, 0, 0.25);
       border: 0.15em solid rgba(0, 0, 0, 0.1);
@@ -1029,6 +1068,7 @@ textarea {
       }
     }
 
+    // action button inside a toolbar, currently only used on .mission-style card
     .toolbar {
       .action {
         display: inline-block;
@@ -1037,11 +1077,24 @@ textarea {
       }
     }
 
+    // action button inside a preview (count of cards inside a card)
     .preview {
       .action {
+        font-size: 0.9em;
         margin-bottom: 0.5em;
       }
     }
+
+    // action inside stack inside of a tippy popup (to make show/hide button on grid priority popup smaller)
+    .tippy-content {
+      .stack > .dropZone > .action {
+        padding-top: 0.25em;
+        margin-bottom: 0.25em;
+        font-size: 0.9em;
+      }
+    }
+
+    // circlular icon that opens one of the main popups
     .actionCircle {
       background-color: rgba(255, 255, 255, 0.25);
       border-radius: 50%;
@@ -1067,6 +1120,7 @@ textarea {
       }
     }
 
+    // panel opened by an .actionCircle button
     .popupPanel {
       // width: min-content;
       overflow-y: auto;
@@ -1091,6 +1145,7 @@ textarea {
       }
     }
 
+    // section of a card containing completed cards, which display as checkmarks
     .completed {
       max-width: 30em;
       position: relative;
@@ -1121,6 +1176,7 @@ textarea {
       }
     }
 
+    // attempt to change the color of a hardcoded SVG, failed and currently unused
     svg .checkmark {
       &.red {
         fill: $card-red;
@@ -1147,6 +1203,8 @@ textarea {
       }
     }
 
+    // ghost image when dragging and dropping, shown as the drag image.
+    // need to hide it somewhere while it exists as part of the document body.
     #dragGhost {
       position: fixed;
       left: -1000em;

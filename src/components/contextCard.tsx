@@ -352,6 +352,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 									cards={aoStore.contextCards}
 									cardStyle={'context'}
 									alwaysShowAll={true}
+									zone={'context'}
 								/>
 							</div>
 						)}
