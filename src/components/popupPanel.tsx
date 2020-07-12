@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
-import { Placement } from 'tippy.js'
+import tippy, { Placement, hideAll } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
 interface PopupPanelProps {
@@ -9,7 +9,8 @@ interface PopupPanelProps {
 	tooltipText?: string
 	tooltipPlacement?: Placement
 	panelPlacement?: Placement
-	onShown?: () => void
+	onShown?: (instance) => void
+	shortname?: string
 }
 
 interface State {
@@ -29,6 +30,10 @@ export default class AoPopupPanel extends React.Component<
 	}
 
 	onPanelOpen() {
+		// hideAll({
+		// 	// This is messy but hopefully works consistently.
+		// 	exclude: document.querySelectorAll('#hub')[1]
+		// })
 		this.setState({ isPanelOpen: true })
 	}
 
@@ -62,10 +67,13 @@ export default class AoPopupPanel extends React.Component<
 					interactive={true}
 					maxWidth={'none'}
 					onShow={this.onPanelOpen}
-					onShown={this.props.onShown}
+					onShown={instance => {
+						this.props.onShown ? this.props.onShown(instance) : undefined
+					}}
 					onHide={this.onPanelClose}
 					hideOnClick={'toggle'}>
 					<div
+						id={this.props.shortname}
 						className={
 							this.state.isPanelOpen ? 'actionCircle open' : 'actionCircle'
 						}>

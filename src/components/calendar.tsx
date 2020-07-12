@@ -5,8 +5,6 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import Timecube from '../assets/images/timecube.svg'
-import AoPopupPanel from './popupPanel'
 import AoStack from './stack'
 
 interface State {
@@ -55,16 +53,10 @@ export default class AoCalendar extends React.Component<{}, State> {
     }
 
     return (
-      <div id={'calendar'}>
-        <AoPopupPanel
-          iconSrc={Timecube}
-          tooltipText={'Calendar'}
-          tooltipPlacement={'right'}
-          panelPlacement={'right'}>
-          <h2>Upcoming Events</h2>
-          {this.renderCalendarList()}
-        </AoPopupPanel>
-      </div>
+      <React.Fragment>
+        <h2>Upcoming Events</h2>
+        {this.renderCalendarList()}
+      </React.Fragment>
     )
   }
 }

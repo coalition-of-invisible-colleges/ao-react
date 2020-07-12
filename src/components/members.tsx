@@ -5,9 +5,7 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import AoPopupPanel from './popupPanel'
 import AoStack from './stack'
-import MemberIcon from '../assets/images/loggedWhite.svg'
 
 type MemberSort = 'alphabetical' | 'recents' | 'vouches' | 'age'
 
@@ -112,36 +110,28 @@ export default class AoMembers extends React.Component<{}, State> {
     }
 
     return (
-      <div id={'members'}>
-        <AoPopupPanel
-          iconSrc={MemberIcon}
-          tooltipText={'Members'}
-          tooltipPlacement={'right'}
-          panelPlacement={'right'}>
-          <React.Fragment>
-            <h2>Members</h2>
-            <div className={'toolbar'}>
-              {this.renderSortButton('alphabetical', 'A-Z')}
-              {this.renderSortButton('recents', 'Recents')}
-              {this.renderSortButton('vouches', 'Vouches')}
-              {this.renderSortButton('age', 'Order')}
-            </div>
-            {list}
-            <div>
-              New Member:
-              <input
-                type="text"
-                value={this.state.text}
-                onChange={this.onChange}
-                onKeyDown={this.onKeyDown}
-              />
-              <button type="button" onClick={this.onClick}>
-                Add Member
-              </button>
-            </div>
-          </React.Fragment>
-        </AoPopupPanel>
-      </div>
+      <React.Fragment>
+        <h2>Members</h2>
+        <div className={'toolbar'}>
+          {this.renderSortButton('alphabetical', 'A-Z')}
+          {this.renderSortButton('recents', 'Recents')}
+          {this.renderSortButton('vouches', 'Vouches')}
+          {this.renderSortButton('age', 'Order')}
+        </div>
+        {list}
+        <div>
+          New Member:
+          <input
+            type="text"
+            value={this.state.text}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
+          />
+          <button type="button" onClick={this.onClick}>
+            Add Member
+          </button>
+        </div>
+      </React.Fragment>
     )
   }
 }

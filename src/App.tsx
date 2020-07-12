@@ -9,26 +9,14 @@ import {
   Redirect
 } from 'react-router-dom'
 import routes from './routes'
-import AoMember from './components/Member'
-import AoGrid from './components/grid'
-import AoCard from './components/Card'
 import aoStore from './client/store'
 import api from './client/api'
 import { observer } from 'mobx-react'
 import Login from './components/Login'
-import AoMembers from './components/members'
-import AoHub from './components/hub'
-import AoCalendar from './components/calendar'
-import AoMissions from './components/missions'
-import AoSearch from './components/search'
-import AoScore from './components/score'
-import AoStatus from './components/status'
-import AoServerName from './components/serverName'
-import AoUsername from './components/username'
-import AoPassword from './components/password'
-import AoVolume from './components/volume'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
+import AoMember from './components/Member'
+import AoCard from './components/Card'
+import AoHud from './components/hud'
+import AoPopupPanel from './components/popupPanel'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   return (
@@ -61,44 +49,13 @@ if (typeof window !== 'undefined') {
 
 const App = observer(() => {
   const [render, setRender] = useState(false)
-  const [theme, setTheme] = useState(1)
+
   useEffect(() => {
     document.body.className = 'theme-1'
     api.fetchState().then(() => {
       setRender(true)
     })
   }, [])
-  const changeTheme = () => {
-    if (theme == 3) {
-      setTheme(1)
-      document.body.className = 'theme-1'
-    } else {
-      const newTheme = theme + 1
-      document.body.className = 'theme-' + newTheme
-      setTheme(newTheme)
-    }
-  }
-  const onLogout = () => {
-    api.logout()
-    console.log('logged out', aoStore.state.loggedIn)
-  }
-
-  const MainMenu: React.FunctionComponent<{}> = () => {
-    return (
-      <div id={'mainMenu'}>
-        <AoServerName />
-        <AoUsername />
-        <AoPassword />
-        <AoVolume />
-        <div onClick={changeTheme} id={'themer'} className={'action'}>
-          Next Theme
-        </div>
-        <div onClick={onLogout} id="logout" className={'action'}>
-          Log Out
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div>
@@ -119,23 +76,13 @@ const App = observer(() => {
             />
           </Switch>
           <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
-            <Tippy
-              content={<MainMenu />}
-              interactive={true}
-              trigger={'click'}
-              placement={'top-end'}>
-              <div id={'mainMenuButton'}>&#x22EE;</div>
-            </Tippy>
-            <AoHub />
-            <AoMembers />
-            <AoMissions />
-            <AoCalendar />
-            <AoSearch />
-            <AoScore />
+            <AoHud />
           </ProtectedFragment>
         </Router>
       )}
-      {!render && <div>Logging in…</div>}
+      {!render && (
+        <div style={{ marginTop: '21%', fontSize: '1.25em' }}>Logging in…</div>
+      )}
     </div>
   )
 })

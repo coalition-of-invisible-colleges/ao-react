@@ -195,6 +195,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	goInCard(event) {
 		event.stopPropagation()
+		hideAll()
+
 		const card = this.context
 		if (!card) {
 			console.log('missing card')
@@ -209,7 +211,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.setState({
 			redirect: '/task/' + card.taskId
 		})
-		hideAll()
 	}
 
 	render() {

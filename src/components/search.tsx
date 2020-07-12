@@ -5,8 +5,6 @@ import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
-import MagnifyingGlass from '../assets/images/search.svg'
-import AoPopupPanel from './popupPanel'
 import AoStack from './stack'
 import { hideAll } from 'tippy.js'
 
@@ -29,7 +27,8 @@ export default class AoSearch extends React.Component<{}, State> {
     this.state = defaultState
     this.onChange = this.onChange.bind(this)
     this.updateResults = this.updateResults.bind(this)
-    this.onSearchPanelOpen = this.onSearchPanelOpen.bind(this)
+    this.componentDidMount = this.componentDidMount.bind(this)
+    this.focus = this.focus.bind(this)
   }
 
   private searchBox = React.createRef<HTMLInputElement>()
@@ -44,7 +43,11 @@ export default class AoSearch extends React.Component<{}, State> {
 
   clearPendingPromises = () => this.pendingPromises.map(p => p.cancel())
 
-  onSearchPanelOpen() {
+  componentDidMount() {
+    this.searchBox.current.select()
+  }
+
+  focus() {
     this.searchBox.current.select()
   }
 
@@ -96,25 +99,18 @@ export default class AoSearch extends React.Component<{}, State> {
     }
 
     return (
-      <div id={'search'}>
-        <AoPopupPanel
-          iconSrc={MagnifyingGlass}
-          tooltipText={'Search'}
-          tooltipPlacement={'right'}
-          panelPlacement={'right'}
-          onShown={this.onSearchPanelOpen}>
-          <input
-            ref={this.searchBox}
-            type="text"
-            onChange={this.onChange}
-            value={this.state.query}
-            size={36}
-            placeholder={'search for a card'}
-            autoFocus
-          />
-          {this.renderSearchResults()}
-        </AoPopupPanel>
-      </div>
+      <React.Fragment>
+        <input
+          ref={this.searchBox}
+          type="text"
+          onChange={this.onChange}
+          value={this.state.query}
+          size={36}
+          placeholder={'search for a card'}
+          autoFocus
+        />
+        {this.renderSearchResults()}
+      </React.Fragment>
     )
   }
 }

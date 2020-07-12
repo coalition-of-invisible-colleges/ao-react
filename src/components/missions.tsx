@@ -6,8 +6,6 @@ import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoStack from './stack'
-import Badge from '../assets/images/badge.svg'
-import AoPopupPanel from './popupPanel'
 
 type MissionSort = 'alphabetical' | 'hodls' | 'age'
 
@@ -128,21 +126,15 @@ export default class AoMissions extends React.Component<{}, State> {
     }
 
     return (
-      <div id="missions">
-        <AoPopupPanel
-          iconSrc={Badge}
-          tooltipText={'Missions Index'}
-          tooltipPlacement={'right'}
-          panelPlacement={'right'}>
-          <h2>Missions Index</h2>
-          <div className={'toolbar'}>
-            {this.renderSortButton('alphabetical', 'A-Z')}
-            {this.renderSortButton('hodls', 'Hodls')}
-            {this.renderSortButton('age', 'Order')}
-          </div>
-          {this.renderMissionsList()}
-        </AoPopupPanel>
-      </div>
+      <React.Fragment>
+        <h2>Missions Index</h2>
+        <div className={'toolbar'}>
+          {this.renderSortButton('alphabetical', 'A-Z')}
+          {this.renderSortButton('hodls', 'Hodls')}
+          {this.renderSortButton('age', 'Order')}
+        </div>
+        {this.renderMissionsList()}
+      </React.Fragment>
     )
   }
 }

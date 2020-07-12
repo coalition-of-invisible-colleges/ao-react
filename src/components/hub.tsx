@@ -61,7 +61,8 @@ export default class AoHub extends React.Component<{}> {
           iconSrc={Sun}
           tooltipText={'Community Hub'}
           tooltipPlacement={'right'}
-          panelPlacement={'right-start'}>
+          panelPlacement={'right-start'}
+          shortname={'hub'}>
           <React.Fragment>
             <div className={'left'}>
               <h2>
