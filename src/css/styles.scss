@@ -1087,6 +1087,13 @@ textarea {
 
     // action inside stack inside of a tippy popup (to make show/hide button on grid priority popup smaller)
     .tippy-content {
+      .priority {
+        .coin {
+          .hodls {
+            margin-top: 0.25em;
+          }
+        }
+      }
       .stack > .dropZone > .action {
         padding-top: 0.25em;
         margin-bottom: 0.25em;
