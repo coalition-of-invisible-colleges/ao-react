@@ -30,10 +30,10 @@ export default class AoPopupPanel extends React.Component<
 	}
 
 	onPanelOpen() {
-		// hideAll({
-		// 	// This is messy but hopefully works consistently.
-		// 	exclude: document.querySelectorAll('#hub')[1]
-		// })
+		hideAll({
+			// This is messy but hopefully works consistently.
+			exclude: document.querySelectorAll('#hub')[1]
+		})
 		this.setState({ isPanelOpen: true })
 	}
 
