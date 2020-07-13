@@ -105,6 +105,19 @@ textarea {
         }
       }
 
+      &.full {
+        .priority {
+          min-height: 2.325em;
+
+          .coin {
+            margin-top: 0;
+            .hodls {
+              top: 0.375em;
+            }
+          }
+        }
+      }
+
       &.compact {
         position: relative;
         top: 0;
@@ -228,13 +241,6 @@ textarea {
 
       &.priority {
         min-height: 2.325em;
-
-        .coin {
-          margin-top: 0;
-          .hodls {
-            top: 0.375em;
-          }
-        }
       }
 
       &.mission {
@@ -1085,15 +1091,8 @@ textarea {
       }
     }
 
-    // action inside stack inside of a tippy popup (to make show/hide button on grid priority popup smaller)
+    // action inside stack inside of a Tippy popup (to make show/hide button on grid priority popup smaller)
     .tippy-content {
-      .priority {
-        .coin {
-          .hodls {
-            margin-top: 0.25em;
-          }
-        }
-      }
       .stack > .dropZone > .action {
         padding-top: 0.25em;
         margin-bottom: 0.25em;
