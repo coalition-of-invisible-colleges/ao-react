@@ -783,7 +783,8 @@ textarea {
     #members,
     #missions,
     #calendar,
-    #search {
+    #search,
+    #returnPile {
       z-index: 1;
 
       .actionCircle {
@@ -796,6 +797,9 @@ textarea {
 
         .results {
           padding-right: 0.5em;
+          &.empty {
+            opacity: 0.8;
+          }
         }
       }
     }
@@ -893,6 +897,23 @@ textarea {
       }
       input {
         margin: 0.5em;
+      }
+    }
+
+    #returnPile {
+      .actionCircle {
+        top: unset;
+        bottom: 0.5em;
+        left: 5em;
+      }
+    }
+
+    .previewPopup {
+      & > p {
+        max-width: 9em;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 
@@ -1123,6 +1144,18 @@ textarea {
           left: -1em;
           top: -1em;
         }
+      }
+
+      .badge {
+        position: absolute;
+        top: -0.5em;
+        right: -0.5em;
+        background-color: rgba(255, 10, 10, 0.85);
+        border-radius: 5em;
+        color: white;
+        font-size: 0.9em;
+        padding: 0.2em 0.4em;
+        transform: translateX(50%);
       }
     }
 

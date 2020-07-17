@@ -35,7 +35,12 @@ export default class AoCalendar extends React.Component<{}, State> {
       })
 
     if (events.length < 1) {
-      return ''
+      return (
+        <div className={'results empty'}>
+          There are no upcoming events. Click &#x22EE;&#8594;schedule event on a
+          card to create an event.
+        </div>
+      )
     }
 
     return (

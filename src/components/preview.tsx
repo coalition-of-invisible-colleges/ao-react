@@ -150,6 +150,7 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
               animation={'scale-extreme'}
               appendTo={() =>
                 document.getElementById('card-' + taskId).parentElement
+                  .parentElement
               }
               content={
                 <AoStack

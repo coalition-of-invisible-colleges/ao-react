@@ -14,6 +14,7 @@ import AoUsername from './username'
 import AoPassword from './password'
 import AoVolume from './volume'
 import AoPopupPanel from './popupPanel'
+import AoReturnPile from './returnPile'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
 import Timecube from '../assets/images/timecube.svg'
@@ -106,12 +107,13 @@ export default class AoHud extends React.Component<{}, undefined> {
           <AoPopupPanel
             iconSrc={MagnifyingGlass}
             tooltipText={'Search'}
-            tooltipPlacement={'right'}
-            panelPlacement={'right'}
+            tooltipPlacement={'right-end'}
+            panelPlacement={'right-end'}
             onShown={() => this.searchRef.current.focus()}>
             <AoSearch ref={this.searchRef} />
           </AoPopupPanel>
         </div>
+        <AoReturnPile />
         <AoScore />
       </React.Fragment>
     )

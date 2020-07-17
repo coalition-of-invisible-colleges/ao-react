@@ -347,7 +347,9 @@ function tasksMuts(tasks, ev) {
       tasks.push(calculations.blankCard(ev.taskId, ev.filename, 'yellow'))
       break
     case 'task-created':
-      tasks.push(calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck))
+      tasks.push(
+        calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck, [ev.inId])
+      )
       tasks.forEach(task => {
         if (task.taskId === ev.inId) {
           if (ev.prioritized) {
@@ -679,6 +681,13 @@ function tasksMuts(tasks, ev) {
               task.deck.push(ev.memberId)
             }
           }
+          if (!task.hasOwnProperty('parents')) {
+            task.parents = []
+          }
+
+          if (!task.parents.some(pId => pId === ev.taskId)) {
+            task.parents.push(ev.taskId)
+          }
         }
         if (task.taskId === ev.taskId) {
           task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
@@ -692,6 +701,9 @@ function tasksMuts(tasks, ev) {
           task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
           task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
+        }
+        if (task.taskId === ev.subTask) {
+          task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
         }
       })
       break
@@ -984,6 +996,23 @@ function tasksMuts(tasks, ev) {
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
         }
+        // Same as task-sub-tasked: Grab the card and removed the pass from it, if any. And add parents.
+        if (task.taskId === ev.taskId) {
+          // task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+          // if (ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
+          //   if (ev.taskId !== ev.memberId) {
+          //     task.deck.push(ev.memberId)
+          //   }
+          // }
+          if (!task.hasOwnProperty('parents')) {
+            task.parents = []
+          }
+
+          if (!task.parents.some(pId => pId === ev.inId)) {
+            task.parents.push(ev.inId)
+          }
+        }
+
         task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
       })
       break

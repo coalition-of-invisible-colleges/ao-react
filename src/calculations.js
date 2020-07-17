@@ -57,7 +57,8 @@ function blankCard(
   color,
   deck = [],
   height = undefined,
-  width = undefined
+  width = undefined,
+  parents = []
 ) {
   let newCard = {
     taskId,
@@ -71,6 +72,7 @@ function blankCard(
     priorities: [],
     subTasks: [],
     completed: [],
+    parents: parents,
     claimed: [],
     passed: [],
     guild: false,

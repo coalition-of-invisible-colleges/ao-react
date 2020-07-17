@@ -55,6 +55,7 @@ export interface Task {
   priorities: string[]
   subTasks: string[]
   completed: string[]
+  parents: string[]
   claimed: string[]
   passed: number[]
   guild: string
@@ -212,6 +213,43 @@ class AoStore {
     cards.reverse()
 
     return cards
+  }
+  @computed get myGuilds(): Task[] {
+    let my = this.state.tasks.filter(t => {
+      if (!t.guild) return false
+      if (t.deck.indexOf(this.member.memberId) === -1) {
+        return false
+      }
+      return true
+    })
+    my = _.filter(
+      my,
+      st =>
+        !my.some(
+          t =>
+            t.subTasks.concat(t.priorities, t.completed).indexOf(st.taskId) > -1
+        )
+    )
+    let tempLastClaimeds = {}
+    my.forEach(g => {
+      tempLastClaimeds[g.taskId] = 0
+      let completions = g.completed.map(t => this.hashMap.get(t))
+      completions.forEach(c => {
+        if (typeof c === 'undefined') {
+          console.log(
+            'invalid data due to broken subTaskId links in completed list'
+          )
+          return
+        }
+        if (c.lastClaimed > tempLastClaimeds[g.taskId]) {
+          tempLastClaimeds[g.taskId] = c.lastClaimed
+        }
+      })
+    })
+    my.sort((a, b) => {
+      return tempLastClaimeds[b.taskId] - tempLastClaimeds[a.taskId]
+    })
+    return my
   }
   @action.bound
   initializeState(state: AoState) {
