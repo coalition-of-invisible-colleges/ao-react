@@ -44,20 +44,14 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
 
           reachableCards.push(task)
           if (task.hasOwnProperty('parents') && task.parents.length) {
-            if (task.name === 'ikebana') {
-              console.log('ikebana parents are ', task.parents)
-            }
-            let parents = task.parents.map(tId => aoStore.hashMap.get(tId))
-            parents.forEach(st => {
-              if (task.name === 'ikebana') {
-                console.log('ikebana parent subtasking ')
+            let parents = []
+            task.parents.forEach(tId => {
+              if (aoStore.hashMap.get(tId)) {
+                parents.push(aoStore.hashMap.get(tId))
               }
-
+            })
+            parents.forEach(st => {
               if (!visited.hasOwnProperty(st.taskId)) {
-                if (task.name === 'ikebana') {
-                  console.log('ikebana parents unvisited')
-                }
-
                 visited[st.taskId] = true
                 queue.push(st)
               }

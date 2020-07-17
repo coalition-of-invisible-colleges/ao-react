@@ -126,6 +126,10 @@ textarea {
         height: 8em;
         overflow: hidden;
         transform: unset;
+
+        .coin {
+          position: absolute;
+        }
       }
 
       &.priority,
