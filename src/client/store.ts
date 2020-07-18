@@ -222,14 +222,15 @@ class AoStore {
       }
       return true
     })
-    my = _.filter(
-      my,
-      st =>
-        !my.some(
-          t =>
-            t.subTasks.concat(t.priorities, t.completed).indexOf(st.taskId) > -1
+    my = my.filter(st => {
+      if (!st.hasOwnProperty('taskId')) {
+        console.log(
+          'Invalid mission card detected while retrieving member missions list.'
         )
-    )
+        return false
+      }
+      return true
+    })
     let tempLastClaimeds = {}
     my.forEach(g => {
       tempLastClaimeds[g.taskId] = 0

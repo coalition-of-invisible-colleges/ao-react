@@ -76,16 +76,21 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
       console.log('anchorCards is ', anchorCards)
 
       let orphans = aoStore.state.tasks.filter(t => {
-        if (t.deck.indexOf(aoStore.memberCard.taskId) < 0) {
+        if (!t.hasOwnProperty('taskId')) {
+          console.log('Broken card found while search for returned cards.')
           return false
         }
-        let parents = findAllReachableHeldParents(t)
-        if (t.name === 'ikebana') {
-          console.log('ikebana parentZZZ are ', parents)
+
+        if (t.deck.indexOf(aoStore.member.memberId) < 0) {
+          return false
         }
+        console.log('checkpointA')
+        let parents = findAllReachableHeldParents(t)
+        console.log('checkpointB')
 
         if (
           parents.some(st => {
+            console.log('checkpointC')
             return anchorCards.some(at => at.taskId === st.taskId)
           })
         ) {
@@ -93,6 +98,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         }
         return true
       })
+      console.log('checkpointD')
 
       let allChildTaskIds = []
 
@@ -101,7 +107,9 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         if (t.grid && t.grid.rows) {
           Object.entries(t.grid.rows).forEach(([y, row]) => {
             Object.entries(row).forEach(([x, cell]) => {
-              allChildTaskIds.push(cell)
+              if (cell.length >= 1) {
+                allChildTaskIds.push(cell)
+              }
             })
           })
         }
