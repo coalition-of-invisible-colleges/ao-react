@@ -840,7 +840,8 @@ textarea {
     #members {
       .actionCircle {
         left: 0.5em;
-        top: calc(45vh - 6em);
+        transform: translateY(-50%);
+        top: 45vh;
       }
     }
 
@@ -848,8 +849,7 @@ textarea {
     #missions,
     .popupPanel > .right > .stack .card.mission {
       .actionCircle {
-        top: 45vh;
-        transform: translateY(-50%);
+        top: calc(45vh - 6em);
       }
 
       .mission.summary.collapsed {
@@ -1252,6 +1252,10 @@ textarea {
       position: fixed;
       left: -1000em;
       top: -1000em;
+    }
+
+    .card iframe {
+      max-width: 100%;
     }
   }
 }

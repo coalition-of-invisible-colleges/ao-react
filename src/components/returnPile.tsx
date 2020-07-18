@@ -46,7 +46,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
           }
 
           reachableCards.push(task)
-          if (task.hasOwnProperty('parents') && task.parents.length) {
+          if (task.hasOwnProperty('parents') && task.parents.length >= 1) {
             let parents = []
             task.parents.forEach(tId => {
               if (aoStore.hashMap.get(tId)) {
@@ -87,6 +87,10 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
           return false
         }
 
+        if (t.guild && t.guild.length >= 1) {
+          return false
+        }
+
         let parents = findAllReachableHeldParents(t)
 
         if (
@@ -114,7 +118,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         }
       })
 
-      orphans = _.filter(orphans, t => allChildTaskIds.indexOf(t.taskId) < 0)
+      orphans = _.filter(orphans, t => !allChildTaskIds.includes(t.taskId))
 
       return orphans
     },
@@ -136,6 +140,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
                 zIndex={4}
                 interactive={true}
                 hideOnClick={false}
+                delay={[625, 200]}
                 content={
                   <div className={'previewPopup'}>
                     <p>

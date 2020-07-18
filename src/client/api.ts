@@ -191,7 +191,6 @@ class AoApi {
       inId: null, // add this when we have context, mutation works on server
       blame: aoStore.member.memberId
     }
-    console.log('colorCard act is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -357,7 +356,6 @@ class AoApi {
   }
 
   async refocusCard(taskId: string, inId: string): Promise<request.Response> {
-    console.log('refocusCard')
     const act = {
       type: 'task-refocused',
       taskId: taskId,
@@ -517,7 +515,6 @@ class AoApi {
   }
 
   async clockTime(seconds, taskId, date): Promise<request.Response> {
-    console.log('commitTime API')
     const act = {
       type: 'task-time-clocked',
       taskId: taskId,
@@ -584,7 +581,6 @@ class AoApi {
       color: 'blue',
       deck: [aoStore.member.memberId]
     }
-    console.log('createGrid action is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -622,8 +618,6 @@ class AoApi {
   ): Promise<request.Response> {
     const task: Task = aoStore.cardByName.get(name)
     if (_.isObject(task)) {
-      console.log('card already exists')
-
       const act = {
         type: 'grid-pin',
         taskId: task.taskId,
@@ -631,7 +625,6 @@ class AoApi {
         y: y,
         inId: inId
       }
-      console.log('act is ', act)
       return request
         .post('/events')
         .set('Authorization', aoStore.state.token)
@@ -648,7 +641,6 @@ class AoApi {
         inId: aoStore.memberCard.taskId,
         prioritized: false
       }
-      console.log('act is ', act)
       return request
         .post('/events')
         .set('Authorization', aoStore.state.token)
@@ -662,7 +654,6 @@ class AoApi {
             y: y,
             inId: inId
           }
-          console.log('act is ', act)
           return request
             .post('/events')
             .set('Authorization', aoStore.state.token)

@@ -248,7 +248,6 @@ function resourcesMuts(resources, ev) {
 function memesMuts(memes, ev) {
   switch (ev.type) {
     case 'meme-added':
-      console.log('meme-added')
       const fileHash = ev.data
       if (
         !memes.some(file => {
@@ -261,9 +260,9 @@ function memesMuts(memes, ev) {
           hash: ev.hash,
           filetype: ev.filetype
         })
-        console.log('added file: ', ev.filename)
+        console.log('added meme file: ', ev.filename)
       } else {
-        console.log('file already in state: ', ev.filename)
+        console.log('meme file already in state: ', ev.filename)
       }
       break
   }
@@ -343,12 +342,17 @@ function tasksMuts(tasks, ev) {
       tasks.push(calculations.blankCard(ev.memberId, ev.memberId, 'blue'))
       break
     case 'meme-added':
-      console.log('\n\ntask mutation for meme-added\n')
       tasks.push(calculations.blankCard(ev.taskId, ev.filename, 'yellow'))
       break
     case 'task-created':
       tasks.push(
-        calculations.blankCard(ev.taskId, ev.name, ev.color, ev.deck, [ev.inId])
+        calculations.blankCard(
+          ev.taskId,
+          ev.name,
+          ev.color,
+          ev.deck,
+          ev.inId ? [ev.inId] : undefined
+        )
       )
       tasks.forEach(task => {
         if (task.taskId === ev.inId) {

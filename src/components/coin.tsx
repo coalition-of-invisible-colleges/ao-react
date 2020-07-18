@@ -46,8 +46,46 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
       .slice()
       .reverse()
 
+    let parentCards = []
+    if (
+      aoStore.hashMap.get(taskId) &&
+      aoStore.hashMap.get(taskId).parents &&
+      aoStore.hashMap.get(taskId).hasOwnProperty('parents') &&
+      aoStore.hashMap.get(taskId).parents.length >= 1
+    ) {
+      parentCards = aoStore.hashMap
+        .get(taskId)
+        .parents.map(memberId => aoStore.hashMap.get(memberId))
+        .filter(task => {
+          if (task.taskId === task.name) {
+            return false
+          }
+          if (task.taskId === aoStore.currentCard) {
+            return false
+          }
+          return true
+        })
+        .reverse()
+    }
+
     let list = (
       <React.Fragment>
+        {parentCards && parentCards.length >= 1 ? (
+          <React.Fragment>
+            <h3>
+              Within {parentCards.length} other card
+              {parentCards.length >= 2 ? 's' : ''}
+            </h3>
+            <AoStack
+              cards={parentCards}
+              zone={'panel'}
+              cardStyle={'priority'}
+              noPopups={true}
+            />
+          </React.Fragment>
+        ) : (
+          ''
+        )}
         <h3>
           {memberCards.length}{' '}
           {!computed.isMember
@@ -64,6 +102,7 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
             zone={'panel'}
             cardStyle={'member'}
             alwaysShowAll={true}
+            noPopups={true}
           />
         ) : null}
         {!computed.isMember ? (
@@ -86,6 +125,7 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
             interactive={true}
             content={list}
             hideOnClick={false}
+            delay={[650, 200]}
             appendTo={() =>
               document.getElementById('card-' + taskId).parentElement
             }>

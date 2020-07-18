@@ -278,7 +278,6 @@ function memeAdded(filename, hash, filetype, callback) {
     hash: hash,
     filetype: filetype
   }
-  console.log('meme-added event:', newEvent)
   dctrlDb.insertEvent(newEvent, callback)
 }
 
@@ -580,7 +579,6 @@ function memberCharged(memberId, charged, notes, callback) {
 }
 
 function taskTimeClocked(taskId, memberId, seconds, date, callback) {
-  console.log('taskTimeClocked EVENTS')
   let newEvent = {
     type: 'task-time-clocked',
     taskId,
@@ -592,8 +590,6 @@ function taskTimeClocked(taskId, memberId, seconds, date, callback) {
 }
 
 function taskSeen(taskId, memberId, callback) {
-  console.log('EVENTS fire')
-
   let newEvent = {
     type: 'task-seen',
     taskId,
@@ -603,8 +599,6 @@ function taskSeen(taskId, memberId, callback) {
 }
 
 function gridCreated(name, height, width, color, deck, callback) {
-  console.log('grid-created event pre')
-
   let taskId = uuidV1()
   let newEvent = {
     type: 'grid-created',
@@ -616,12 +610,9 @@ function gridCreated(name, height, width, color, deck, callback) {
     deck
   }
   dctrlDb.insertEvent(newEvent, callback)
-  console.log('grid-created event post')
 }
 
 function gridAdded(taskId, height, width, callback) {
-  console.log('grid-added event pre')
-
   let newEvent = {
     type: 'grid-added',
     taskId,
@@ -629,7 +620,6 @@ function gridAdded(taskId, height, width, callback) {
     width
   }
   dctrlDb.insertEvent(newEvent, callback)
-  console.log('grid-added event post')
 }
 
 function gridResized(taskId, height, width, callback) {
@@ -638,11 +628,8 @@ function gridResized(taskId, height, width, callback) {
 }
 
 function gridPin(inId, taskId, x, y, callback) {
-  console.log('grid-pin event pre')
-
   let newEvent = { type: 'grid-pin', inId, taskId, x, y }
   dctrlDb.insertEvent(newEvent, callback)
-  console.log('grid-pin event pre')
 }
 
 function gridUnpin(inId, x, y, callback) {

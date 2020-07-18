@@ -76,15 +76,6 @@ export default class AoHud extends React.Component<{}, undefined> {
           <div id={'mainMenuButton'}>&#x22EE;</div>
         </Tippy>
         <AoHub />
-        <div id={'members'}>
-          <AoPopupPanel
-            iconSrc={MemberIcon}
-            tooltipText={'Members'}
-            tooltipPlacement={'right'}
-            panelPlacement={'right'}>
-            <AoMembers />
-          </AoPopupPanel>
-        </div>
         <div id="missions">
           <AoPopupPanel
             iconSrc={Badge}
@@ -92,6 +83,15 @@ export default class AoHud extends React.Component<{}, undefined> {
             tooltipPlacement={'right'}
             panelPlacement={'right'}>
             <AoMissions />
+          </AoPopupPanel>
+        </div>
+        <div id={'members'}>
+          <AoPopupPanel
+            iconSrc={MemberIcon}
+            tooltipText={'Members'}
+            tooltipPlacement={'right'}
+            panelPlacement={'right'}>
+            <AoMembers />
           </AoPopupPanel>
         </div>
         <div id={'calendar'}>

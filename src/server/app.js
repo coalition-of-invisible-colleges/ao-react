@@ -23,7 +23,7 @@ applyRouter(app)
 startDctrlAo()
 
 function startDctrlAo() {
-  console.log('starting db')
+  console.log('starting AO database...')
   let dbPath = config.sqlite3.file
   if (PORT !== 8003) {
     dbPath = dbPath.replace('database', PORT)

@@ -206,7 +206,6 @@ class AoStore {
   }
   @computed get contextCards(): Task[] {
     let cards: Task[] = []
-    console.log('context is', this.context)
     this.context.forEach(tId => {
       cards.push(this.hashMap.get(tId))
     })

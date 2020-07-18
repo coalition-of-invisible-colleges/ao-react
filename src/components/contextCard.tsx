@@ -54,6 +54,7 @@ interface CardProps {
 	cardStyle?: CardStyle
 	inlineStyle?: React.CSSProperties
 	noContextOnFull?: boolean
+	noPopups?: boolean
 }
 
 interface State {
@@ -282,10 +283,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className={'content'}>
-							<AoCoin
-								taskId={card.taskId}
-								noPopup={this.props.cardStyle === 'member' ? true : undefined}
-							/>
+							<AoCoin taskId={card.taskId} noPopup={this.props.noPopups} />
 							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
 							<AoAttachment taskId={card.taskId} hudStyle={'collapsed'} />
 						</div>

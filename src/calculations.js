@@ -56,9 +56,9 @@ function blankCard(
   name,
   color,
   deck = [],
+  parents = [],
   height = undefined,
-  width = undefined,
-  parents = []
+  width = undefined
 ) {
   let newCard = {
     taskId,
