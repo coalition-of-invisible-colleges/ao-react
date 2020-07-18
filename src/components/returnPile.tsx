@@ -25,7 +25,6 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         let i = 0
         while (queue.length >= 1) {
           let task = queue.pop()
-          console.log('task is ', task)
           if (
             task === undefined ||
             task.subTasks === undefined ||
@@ -73,7 +72,6 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
       }
 
       let anchorCards: Task[] = [aoStore.memberCard].concat(aoStore.myGuilds)
-      console.log('anchorCards is ', anchorCards)
 
       let orphans = aoStore.state.tasks.filter(t => {
         if (!t.hasOwnProperty('taskId')) {
@@ -84,13 +82,10 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         if (t.deck.indexOf(aoStore.member.memberId) < 0) {
           return false
         }
-        console.log('checkpointA')
         let parents = findAllReachableHeldParents(t)
-        console.log('checkpointB')
 
         if (
           parents.some(st => {
-            console.log('checkpointC')
             return anchorCards.some(at => at.taskId === st.taskId)
           })
         ) {
@@ -98,7 +93,6 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         }
         return true
       })
-      console.log('checkpointD')
 
       let allChildTaskIds = []
 
@@ -120,9 +114,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
       return orphans
     },
     get topReturnedCard() {
-      console.log('topReturnedCard. length is, ', this.returnedCards.length)
       if (this.returnedCards && this.returnedCards.length >= 1) {
-        // console.log('top returned card is ', this.returnedCards[0])
         return this.returnedCards[0]
       }
       return null
