@@ -38,10 +38,10 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
           }
 
           if (
-            task.deck.indexOf(aoStore.memberCard.taskId) < 0 ||
-            task.taskId === aoStore.member.memberId ||
-            task.taskId === task.name
+            task.deck.indexOf(aoStore.memberCard.taskId) < 0 &&
+            task.taskId !== aoStore.member.memberId
           ) {
+            // console.log("unheld card found: ", task.taskId)
             continue
           }
 
@@ -82,6 +82,11 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         if (t.deck.indexOf(aoStore.member.memberId) < 0) {
           return false
         }
+
+        if (t.taskId === t.name) {
+          return false
+        }
+
         let parents = findAllReachableHeldParents(t)
 
         if (
