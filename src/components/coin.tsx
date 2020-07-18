@@ -57,7 +57,7 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
         .get(taskId)
         .parents.map(memberId => aoStore.hashMap.get(memberId))
         .filter(task => {
-          if (!task.hasOwnProperty('taskId')) {
+          if (!task || !task.hasOwnProperty('taskId')) {
             return false
           }
 
