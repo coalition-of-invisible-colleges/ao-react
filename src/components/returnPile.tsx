@@ -38,9 +38,9 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
           }
 
           if (
-            task.deck.indexOf(aoStore.memberCard.taskId) < 0 &&
-            task.taskId !== aoStore.member.memberId &&
-            task.taskId !== task.name
+            task.deck.indexOf(aoStore.memberCard.taskId) < 0 ||
+            task.taskId === aoStore.member.memberId ||
+            task.taskId === task.name
           ) {
             continue
           }
