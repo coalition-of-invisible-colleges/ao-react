@@ -613,6 +613,15 @@ function tasksMuts(tasks, ev) {
           task.priorities.push(ev.taskId)
           // }
         }
+        if (task.taskId === ev.taskId) {
+          if (!task.hasOwnProperty('parents')) {
+            task.parents = []
+          }
+
+          if (!task.parents.some(pId => pId === ev.inId)) {
+            task.parents.push(ev.inId)
+          }
+        }
       })
       break
     case 'pile-prioritized':
