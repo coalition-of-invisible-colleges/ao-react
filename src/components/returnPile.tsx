@@ -14,6 +14,9 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
   const computed = observable({
     get returnedCards() {
       const findAllReachableHeldParents = (origin: Task) => {
+        if (!origin.hasOwnProperty('taskId')) {
+          return []
+        }
         let queue: Task[] = [origin]
         let reachableCards: Task[] = []
 
