@@ -25,6 +25,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
         let i = 0
         while (queue.length >= 1) {
           let task = queue.pop()
+          console.log('task is ', task)
           if (
             task === undefined ||
             task.subTasks === undefined ||
@@ -55,6 +56,9 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
             })
             parents.forEach(st => {
               if (!st.hasOwnProperty('taskId')) {
+                console.log(
+                  'Missing parent found during returned cards search.'
+                )
                 return
               }
               if (!visited.hasOwnProperty(st.taskId)) {
