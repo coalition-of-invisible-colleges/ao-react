@@ -52,7 +52,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
             })
             parents.forEach(st => {
               if (!st.hasOwnProperty('taskId')) {
-                continue
+                return
               }
               if (!visited.hasOwnProperty(st.taskId)) {
                 visited[st.taskId] = true
