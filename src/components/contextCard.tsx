@@ -15,6 +15,7 @@ import AoMission from './mission'
 import AoAttachment from './attachment'
 import AoCoin from './coin'
 import AoPreview from './preview'
+import AoCheckmark from './checkmark'
 import { TaskContext } from './taskContext'
 import { CardPlay } from './dropZone'
 import Tippy from '@tippyjs/react'
@@ -395,16 +396,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					</React.Fragment>
 				)
 			case 'checkmark':
-				return (
-					<Tippy zIndex={4} content={<AoContextCard cardStyle={'compact'} />}>
-						<div
-							id={'card-' + card.taskId}
-							className={'card checkmark'}
-							onDoubleClick={this.goInCard}>
-							<img src={Completed} />
-						</div>
-					</Tippy>
-				)
+				return <AoCheckmark onGoIn={this.goInCard} />
 			case 'mission':
 				// A format that emphasizes the mission and projects (sub-missions), for the Missions Index
 				let projectCards = () => {

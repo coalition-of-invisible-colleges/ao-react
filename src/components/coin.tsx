@@ -129,7 +129,7 @@ const AoCoin: FunctionComponent<AoCoinProps> = observer(
             interactive={true}
             content={list}
             hideOnClick={false}
-            delay={[650, 200]}
+            delay={[625, 200]}
             appendTo={() =>
               document.getElementById('card-' + taskId).parentElement
             }>

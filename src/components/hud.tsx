@@ -107,8 +107,8 @@ export default class AoHud extends React.Component<{}, undefined> {
           <AoPopupPanel
             iconSrc={MagnifyingGlass}
             tooltipText={'Search'}
-            tooltipPlacement={'right-end'}
-            panelPlacement={'right-end'}
+            tooltipPlacement={'top'}
+            panelPlacement={'top'}
             onShown={() => this.searchRef.current.focus()}>
             <AoSearch ref={this.searchRef} />
           </AoPopupPanel>

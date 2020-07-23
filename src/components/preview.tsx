@@ -148,6 +148,7 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
               maxWidth={'none'}
               placement={'bottom'}
               animation={'scale-extreme'}
+              delay={[625, 200]}
               appendTo={() =>
                 document.getElementById('card-' + taskId).parentElement
                   .parentElement
