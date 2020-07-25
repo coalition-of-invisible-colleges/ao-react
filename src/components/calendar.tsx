@@ -8,6 +8,7 @@ import { delay, cancelablePromise, noop } from '../utils'
 import AoStack from './stack'
 import AoPopupPanel from './popupPanel'
 import Timecube from '../assets/images/timecube.svg'
+import { formatDistanceToNow } from 'date-fns'
 
 interface State {
   page: number
@@ -117,7 +118,14 @@ export default class AoCalendar extends React.Component<{}, State> {
         <AoPopupPanel
           iconSrc={Timecube}
           tooltipText={'Calendar'}
-          badge={soon.length >= 1 ? soon.length.toString() : undefined}
+          badge={
+            <React.Fragment>
+              {soon.length >= 1 ? soon.length.toString() : ''}
+              <div style={{ fontSize: '0.75em' }}>
+                {formatDistanceToNow(soon[0].book.startTs, { addSuffix: true })}
+              </div>
+            </React.Fragment>
+          }
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
           {renderedCalendarList}

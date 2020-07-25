@@ -11,7 +11,7 @@ interface PopupPanelProps {
 	panelPlacement?: Placement
 	onShown?: (instance) => void
 	shortname?: string
-	badge?: string
+	badge?: any
 }
 
 interface State {
