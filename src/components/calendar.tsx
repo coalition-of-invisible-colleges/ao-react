@@ -67,50 +67,62 @@ export default class AoCalendar extends React.Component<{}, State> {
       return task.book.startTs - Date.now() < -pastBufferMs
     })
 
+    let renderedCalendarList
+
     if (soon.length + later.length + eventually.length < 1) {
-      return (
-        <div className={'results empty'}>
-          There are no upcoming events. Click &#x22EE;&#8594;schedule event on a
-          card to create an event.
+      renderedCalendarList = (
+        <div className={'results'}>
+          <div className={'results empty'}>
+            There are no upcoming events. Click &#x22EE;&#8594;schedule event on
+            a card to create an event.
+          </div>
+          {past.length >= 1 ? (
+            <AoStack
+              cards={past}
+              cardStyle={'priority'}
+              descriptor={{ singular: 'past event', plural: 'past events' }}
+              noFirstCard={true}
+            />
+          ) : (
+            ''
+          )}
+        </div>
+      )
+    } else {
+      renderedCalendarList = (
+        <div className={'results'}>
+          {soon.length >= 1 ? <h2>Soon (&lt; 18 hrs)</h2> : ''}
+          <AoStack cards={soon} cardStyle={'priority'} alwaysShowAll={true} />
+          {later.length >= 1 ? <h2>Later (&lt; 1 wk)</h2> : ''}
+          <AoStack cards={later} cardStyle={'priority'} alwaysShowAll={true} />
+          {eventually.length >= 1 ? <h2>Eventually</h2> : ''}
+          <AoStack
+            cards={eventually}
+            cardStyle={'priority'}
+            alwaysShowAll={true}
+          />
+          <div style={{ height: '1em' }} />
+          <AoStack
+            cards={past}
+            cardStyle={'priority'}
+            descriptor={{ singular: 'past event', plural: 'past events' }}
+            noFirstCard={true}
+          />
         </div>
       )
     }
 
-    const renderedCalendarList = (
-      <div className={'results'}>
-        {soon.length >= 1 ? <h2>Soon (&lt; 18 hrs)</h2> : ''}
-        <AoStack cards={soon} cardStyle={'priority'} alwaysShowAll={true} />
-        {later.length >= 1 ? <h2>Later (&lt; 1 wk)</h2> : ''}
-        <AoStack cards={later} cardStyle={'priority'} alwaysShowAll={true} />
-        {eventually.length >= 1 ? <h2>Eventually</h2> : ''}
-        <AoStack
-          cards={eventually}
-          cardStyle={'priority'}
-          alwaysShowAll={true}
-        />
-        <div style={{ height: '1em' }} />
-        <AoStack
-          cards={past}
-          cardStyle={'priority'}
-          descriptor={{ singular: 'past event', plural: 'past events' }}
-          noFirstCard={true}
-        />
-      </div>
-    )
-
     return (
-      <React.Fragment>
-        <div id={'calendar'}>
-          <AoPopupPanel
-            iconSrc={Timecube}
-            tooltipText={'Calendar'}
-            badge={soon.length >= 1 ? soon.length.toString() : undefined}
-            tooltipPlacement={'right'}
-            panelPlacement={'right'}>
-            {renderedCalendarList}
-          </AoPopupPanel>
-        </div>
-      </React.Fragment>
+      <div id={'calendar'}>
+        <AoPopupPanel
+          iconSrc={Timecube}
+          tooltipText={'Calendar'}
+          badge={soon.length >= 1 ? soon.length.toString() : undefined}
+          tooltipPlacement={'right'}
+          panelPlacement={'right'}>
+          {renderedCalendarList}
+        </AoPopupPanel>
+      </div>
     )
   }
 }
