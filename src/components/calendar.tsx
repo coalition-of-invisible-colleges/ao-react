@@ -73,6 +73,8 @@ export default class AoCalendar extends React.Component<{}, State> {
       return task.book.startTs - Date.now() < -pastBufferMs
     })
 
+    past.reverse()
+
     let renderedCalendarList
 
     if (now.length + soon.length + later.length + eventually.length < 1) {
