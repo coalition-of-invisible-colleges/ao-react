@@ -67,7 +67,7 @@ export default class AoCalendar extends React.Component<{}, State> {
       return task.book.startTs - Date.now() < -pastBufferMs
     })
 
-    if (events.length < 1) {
+    if (soon.length + later.length + eventually.length < 1) {
       return (
         <div className={'results empty'}>
           There are no upcoming events. Click &#x22EE;&#8594;schedule event on a
@@ -104,7 +104,7 @@ export default class AoCalendar extends React.Component<{}, State> {
           <AoPopupPanel
             iconSrc={Timecube}
             tooltipText={'Calendar'}
-            badge={soon.length.toString()}
+            badge={soon.length >= 1 ? soon.length.toString() : undefined}
             tooltipPlacement={'right'}
             panelPlacement={'right'}>
             {renderedCalendarList}
