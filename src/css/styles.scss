@@ -1287,6 +1287,7 @@ textarea {
       bottom: 0;
       z-index: 5;
       border: 0.2em solid yellow;
+      pointer-events: none;
     }
   }
 }
