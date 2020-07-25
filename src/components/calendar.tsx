@@ -130,7 +130,7 @@ export default class AoCalendar extends React.Component<{}, State> {
                   </div>
                 </React.Fragment>
               ) : (
-                ''
+                undefined
               )}
             </React.Fragment>
           }
