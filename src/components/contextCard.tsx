@@ -76,6 +76,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.newPriority = this.newPriority.bind(this)
 		this.newSubTask = this.newSubTask.bind(this)
 		this.goInCard = this.goInCard.bind(this)
+		this.renderCardContent = this.renderCardContent.bind(this)
 	}
 
 	togglePriorities(event) {
@@ -226,6 +227,24 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		return ''
 	}
 
+	renderCardContent(content: string) {
+		return (
+			<Markdown
+				options={{
+					forceBlock: true,
+					overrides: {
+						a: {
+							props: {
+								target: '_blank'
+							}
+						}
+					}
+				}}>
+				{content}
+			</Markdown>
+		)
+	}
+
 	render() {
 		if (this.state.redirect !== undefined) {
 			this.setState({ redirect: undefined })
@@ -237,9 +256,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			console.log('missing card')
 			return (
 				<div className={'card'}>
-					<div className={'content'}>
-						<Markdown options={{ forceBlock: true }}>missing card:</Markdown>
-					</div>
+					<div className={'content'}>{this.renderCardContent(content)}</div>
 				</div>
 			)
 		}
@@ -275,9 +292,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'context'} />
-						<div className={'content'}>
-							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
-						</div>
+						<div className={'content'}>{this.renderCardContent(content)}</div>
 					</div>
 				)
 			case 'member':
@@ -300,7 +315,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						/>
 						<div className={'content'}>
 							<AoCoin taskId={card.taskId} noPopup={this.props.noPopups} />
-							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+							{this.renderCardContent(content)}
 							<AoAttachment taskId={card.taskId} hudStyle={'collapsed'} />
 						</div>
 						{this.state.showPriorities ? (
@@ -328,7 +343,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<AoCardHud taskId={card.taskId} hudStyle={'face before'} />
 						<div className={'content'}>
 							<AoMission taskId={card.taskId} hudStyle={'face before'} />
-							<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+							{this.renderCardContent(content)}
 							<AoAttachment taskId={card.taskId} hudStyle={'face before'} />
 							{card.priorities && card.priorities.length >= 1 ? (
 								<>
@@ -388,7 +403,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							<AoCardHud taskId={card.taskId} hudStyle={'full before'} />
 							<div className="content">
 								<AoMission taskId={card.taskId} hudStyle={'full before'} />
-								<Markdown options={{ forceBlock: true }}>{content}</Markdown>
+								{this.renderCardContent(content)}
 								<AoAttachment taskId={card.taskId} hudStyle={'full before'} />
 							</div>
 							<AoStack
@@ -520,7 +535,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
-							<Markdown options={{ forceBlock: true }}>{shortened}</Markdown>
+							{this.renderCardContent(content)}
 							<AoAttachment taskId={card.taskId} hudStyle={'mini before'} />
 						</div>
 						<AoCardHud taskId={card.taskId} hudStyle={'mini after'} />
