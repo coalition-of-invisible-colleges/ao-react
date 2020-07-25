@@ -101,9 +101,9 @@ export default class AoCalendar extends React.Component<{}, State> {
         <div className={'results'}>
           {now.length >= 1 ? <h2>Now</h2> : ''}
           <AoStack cards={now} cardStyle={'priority'} alwaysShowAll={true} />
-          {soon.length >= 1 ? <h2>Soon (&lt; 18 hrs)</h2> : ''}
+          {soon.length >= 1 ? <h2>Today</h2> : ''}
           <AoStack cards={soon} cardStyle={'priority'} alwaysShowAll={true} />
-          {later.length >= 1 ? <h2>Later (&lt; 1 wk)</h2> : ''}
+          {later.length >= 1 ? <h2>This Week</h2> : ''}
           <AoStack cards={later} cardStyle={'priority'} alwaysShowAll={true} />
           {eventually.length >= 1 ? <h2>Eventually</h2> : ''}
           <AoStack
