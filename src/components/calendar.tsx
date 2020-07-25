@@ -120,10 +120,18 @@ export default class AoCalendar extends React.Component<{}, State> {
           tooltipText={'Calendar'}
           badge={
             <React.Fragment>
-              {soon.length >= 1 ? soon.length.toString() : ''}
-              <div style={{ fontSize: '0.75em' }}>
-                {formatDistanceToNow(soon[0].book.startTs, { addSuffix: true })}
-              </div>
+              {soon.length >= 1 ? (
+                <React.Fragment>
+                  {soon.length.toString()}
+                  <div style={{ fontSize: '0.75em' }}>
+                    {formatDistanceToNow(soon[0].book.startTs, {
+                      addSuffix: true
+                    })}
+                  </div>
+                </React.Fragment>
+              ) : (
+                ''
+              )}
             </React.Fragment>
           }
           tooltipPlacement={'right'}
