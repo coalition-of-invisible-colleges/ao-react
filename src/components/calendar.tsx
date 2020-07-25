@@ -41,11 +41,11 @@ export default class AoCalendar extends React.Component<{}, State> {
         return task.book.hasOwnProperty('startTs') && task.book.startTs > 0
       })
       .sort((a, b) => {
-        return a.book.startTs - b.book.startTs
+        return b.book.startTs - a.book.startTs
       })
 
-    const soonMs = 648000000 // 18 hours
-    const laterMs = 6048000000 // 1 week
+    const soonMs = 64800000 // 18 hours
+    const laterMs = 604800000 // 1 week
     const pastBufferMs = 3600000 // supposed to be 1 hour event length by default
     let eventually: Task[] = []
 
@@ -65,7 +65,7 @@ export default class AoCalendar extends React.Component<{}, State> {
         eventually.push(task)
         return false
       } else {
-        return timeToNow > soonMs
+        return timeToNow <= laterMs && timeToNow > soonMs
       }
     })
 
@@ -75,7 +75,7 @@ export default class AoCalendar extends React.Component<{}, State> {
 
     let renderedCalendarList
 
-    if (soon.length + later.length + eventually.length < 1) {
+    if (now.length + soon.length + later.length + eventually.length < 1) {
       renderedCalendarList = (
         <div className={'results'}>
           <div className={'results empty'}>
