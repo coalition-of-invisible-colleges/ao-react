@@ -8,7 +8,7 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, fromUnixTime, format } from 'date-fns'
 import { HudStyle } from './cardHud'
 
 interface State {
@@ -147,7 +147,12 @@ export default class AoCountdown extends React.Component<
           <div
             onClick={this.startEditing}
             className={'countdown action ' + this.props.hudStyle}>
-            schedule event
+            {aoStore.hashMap.get(this.props.taskId).book.startTs
+              ? format(
+                  aoStore.hashMap.get(this.props.taskId).book.startTs,
+                  'MMMM d, yyyy @ h:mm a'
+                )
+              : 'schedule event'}
           </div>
         )
       default:

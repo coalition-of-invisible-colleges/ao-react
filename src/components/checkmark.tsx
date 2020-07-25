@@ -48,7 +48,7 @@ const AoCheckmark: FunctionComponent<AoCheckmarkProps> = observer(
           width="12.96459mm"
           height="12.96459mm"
           version="1.1"
-          className={'checkmark ' + computed.cardColor}
+          className={'checkmarkImage ' + computed.cardColor}
           onDoubleClick={onGoIn}>
           <g transform="translate(178.70974,-158.92981)">
             <path

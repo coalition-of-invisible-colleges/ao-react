@@ -215,6 +215,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		})
 	}
 
+	applyClassIfCurrentSearchResult(taskId) {
+		if (
+			aoStore.searchResults.some(task => {
+				return task.taskId === taskId
+			})
+		) {
+			return ' searchedOnPage'
+		}
+		return ''
+	}
+
 	render() {
 		if (this.state.redirect !== undefined) {
 			this.setState({ redirect: undefined })
@@ -256,7 +267,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'context':
 				return (
 					<div
-						className={'card context'}
+						className={
+							'card context' + this.applyClassIfCurrentSearchResult(card.taskId)
+						}
 						id={'card-' + card.taskId}
 						onDoubleClick={this.goInCard}
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
@@ -271,10 +284,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'priority':
 				return (
 					<div
-						className={
-							'card priority' + (this.state.showPriorities ? ' padbottom' : '')
-						}
 						id={'card-' + card.taskId}
+						className={
+							'card priority' +
+							this.applyClassIfCurrentSearchResult(card.taskId) +
+							(this.state.showPriorities ? ' padbottom' : '')
+						}
 						onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud
@@ -302,8 +317,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'compact':
 				return (
 					<div
-						className={'card ' + this.props.cardStyle}
 						id={'card-' + card.taskId}
+						className={
+							'card ' +
+							this.props.cardStyle +
+							this.applyClassIfCurrentSearchResult(card.taskId)
+						}
 						onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'face before'} />
@@ -358,7 +377,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						)}
 						<div
 							id={'card-' + card.taskId}
-							className={'card full'}
+							className={
+								'card full' + this.applyClassIfCurrentSearchResult(card.taskId)
+							}
 							onDrop={e => {
 								e.preventDefault()
 								e.stopPropagation()
@@ -396,7 +417,16 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					</React.Fragment>
 				)
 			case 'checkmark':
-				return <AoCheckmark onGoIn={this.goInCard} />
+				return (
+					<div
+						id={'card-' + card.taskId}
+						className={
+							'card checkmark' +
+							this.applyClassIfCurrentSearchResult(card.taskId)
+						}>
+						<AoCheckmark onGoIn={this.goInCard} />
+					</div>
+				)
 			case 'mission':
 				// A format that emphasizes the mission and projects (sub-missions), for the Missions Index
 				let projectCards = () => {
@@ -432,7 +462,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				return (
 					<div
 						className={
-							'card mission' + (this.state.showPriorities ? ' padbottom' : '')
+							'card mission' +
+							(this.state.showPriorities ? ' padbottom' : '') +
+							this.applyClassIfCurrentSearchResult(card.taskId)
 						}
 						id={'card-' + card.taskId}
 						onDoubleClick={this.goInCard}>
@@ -481,7 +513,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				return (
 					<div
 						id={'card-' + card.taskId}
-						className={'card mini'}
+						className={
+							'card mini' + this.applyClassIfCurrentSearchResult(card.taskId)
+						}
 						onDoubleClick={this.goInCard}>
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'mini before'} />

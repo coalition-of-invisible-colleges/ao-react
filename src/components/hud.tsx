@@ -17,7 +17,6 @@ import AoPopupPanel from './popupPanel'
 import AoReturnPile from './returnPile'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
-import Timecube from '../assets/images/timecube.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -94,15 +93,7 @@ export default class AoHud extends React.Component<{}, undefined> {
             <AoMembers />
           </AoPopupPanel>
         </div>
-        <div id={'calendar'}>
-          <AoPopupPanel
-            iconSrc={Timecube}
-            tooltipText={'Calendar'}
-            tooltipPlacement={'right'}
-            panelPlacement={'right'}>
-            <AoCalendar />
-          </AoPopupPanel>
-        </div>
+        <AoCalendar />
         <div id={'search'}>
           <AoPopupPanel
             iconSrc={MagnifyingGlass}

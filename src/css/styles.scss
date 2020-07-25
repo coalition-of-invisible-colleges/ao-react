@@ -891,6 +891,9 @@ textarea {
       .actionCircle {
         top: calc(45vh + 2.5em);
       }
+      .card {
+        min-width: 28em;
+      }
     }
 
     // search popup panel
@@ -1152,6 +1155,11 @@ textarea {
           left: -1em;
           top: -1em;
         }
+
+        .badge {
+          font-size: 1.5em;
+          padding: 0.25em 0.45em;
+        }
       }
 
       .badge {
@@ -1208,13 +1216,13 @@ textarea {
 
         .card.checkmark {
           background: unset;
-          display: inline;
+          display: inline-block;
           margin: 0;
-          padding: 0.25em;
+          padding: 0 0.25em;
           transform: unset;
           left: unset;
           line-height: 2em;
-          cursor: pointer;
+          pointer-events: none;
 
           img {
             width: 1.5em;
@@ -1224,7 +1232,7 @@ textarea {
     }
 
     // attempt to change the color of a hardcoded SVG, failed and currently unused
-    .checkmark {
+    .checkmarkImage {
       height: 2em;
       fill: white;
       margin-top: 0.75em;
@@ -1265,6 +1273,18 @@ textarea {
 
     .card iframe {
       max-width: 100%;
+    }
+
+    .card.searchedOnPage:after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      border: 0.2em solid yellow;
     }
   }
 }

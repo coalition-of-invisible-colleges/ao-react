@@ -143,10 +143,7 @@ const AoReturnPile: FunctionComponent<{}> = observer(() => {
                 delay={[625, 200]}
                 content={
                   <div className={'previewPopup'}>
-                    <p>
-                      Returned cards—drag to draw next card (or click moon to
-                      drop):
-                    </p>
+                    <p>Returned cards—drag to draw (or unmoon to drop):</p>
                     <AoContextCard cardStyle={'compact'} />
                   </div>
                 }

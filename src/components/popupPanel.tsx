@@ -11,6 +11,7 @@ interface PopupPanelProps {
 	panelPlacement?: Placement
 	onShown?: (instance) => void
 	shortname?: string
+	badge?: string
 }
 
 interface State {
@@ -78,6 +79,11 @@ export default class AoPopupPanel extends React.Component<
 							this.state.isPanelOpen ? 'actionCircle open' : 'actionCircle'
 						}>
 						<img src={this.props.iconSrc} />
+						{this.props.badge ? (
+							<div className={'badge'}>{this.props.badge}</div>
+						) : (
+							''
+						)}
 					</div>
 				</Tippy>
 			</Tippy>
