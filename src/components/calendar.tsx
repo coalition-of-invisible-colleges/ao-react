@@ -119,20 +119,18 @@ export default class AoCalendar extends React.Component<{}, State> {
           iconSrc={Timecube}
           tooltipText={'Calendar'}
           badge={
-            <React.Fragment>
-              {soon.length >= 1 ? (
-                <React.Fragment>
-                  {soon.length.toString()}
-                  <div style={{ fontSize: '0.75em' }}>
-                    {formatDistanceToNow(soon[0].book.startTs, {
-                      addSuffix: true
-                    })}
-                  </div>
-                </React.Fragment>
-              ) : (
-                undefined
-              )}
-            </React.Fragment>
+            soon.length >= 1 ? (
+              <React.Fragment>
+                {soon.length.toString()}
+                <div style={{ fontSize: '0.75em' }}>
+                  {formatDistanceToNow(soon[0].book.startTs, {
+                    addSuffix: true
+                  })}
+                </div>
+              </React.Fragment>
+            ) : (
+              undefined
+            )
           }
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
