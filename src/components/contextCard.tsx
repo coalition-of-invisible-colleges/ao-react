@@ -56,6 +56,7 @@ interface CardProps {
 	inlineStyle?: React.CSSProperties
 	noContextOnFull?: boolean
 	noPopups?: boolean
+	noFindOnPage?: boolean
 }
 
 interface State {
@@ -217,6 +218,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	applyClassIfCurrentSearchResult(taskId) {
+		if (this.props.noFindOnPage) {
+			return ''
+		}
 		if (
 			aoStore.searchResults.some(task => {
 				return task.taskId === taskId
@@ -227,7 +231,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		return ''
 	}
 
-	renderCardContent(content: string) {
+	renderCardContent(content: string, hideIframes = false) {
+		// hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
+
 		return (
 			<Markdown
 				options={{
@@ -236,6 +242,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						a: {
 							props: {
 								target: '_blank'
+							}
+						},
+						iframe: {
+							props: {
+								display: hideIframes ? 'inherit' : 'none'
 							}
 						}
 					}
@@ -535,7 +546,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<AoPaper taskId={card.taskId} />
 						<AoCardHud taskId={card.taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
-							{this.renderCardContent(content)}
+							{this.renderCardContent(content, true)}
 							<AoAttachment taskId={card.taskId} hudStyle={'mini before'} />
 						</div>
 						<AoCardHud taskId={card.taskId} hudStyle={'mini after'} />

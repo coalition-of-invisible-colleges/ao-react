@@ -7,17 +7,23 @@ import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import AoStack from './stack'
 import { hideAll } from 'tippy.js'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import AoContextCard from './contextCard'
+import { TaskContext } from './taskContext'
+import AoDragZone from './dragZone'
 
 interface State {
   query: string
   results: Task[]
   redirect?: string
+  items: JSX.Element[]
 }
 
 export const defaultState: State = {
   query: '',
   results: [],
-  redirect: undefined
+  redirect: undefined,
+  items: []
 }
 
 @observer
@@ -29,6 +35,8 @@ export default class AoSearch extends React.Component<{}, State> {
     this.updateResults = this.updateResults.bind(this)
     this.componentDidMount = this.componentDidMount.bind(this)
     this.focus = this.focus.bind(this)
+    this.scrollMore = this.scrollMore.bind(this)
+    this.renderItems = this.renderItems.bind(this)
   }
 
   private searchBox = React.createRef<HTMLInputElement>()
@@ -71,6 +79,33 @@ export default class AoSearch extends React.Component<{}, State> {
 
   updateResults() {
     aoStore.updateSearchResults(this.state.query.trim())
+    const firstResults = aoStore.searchResults.slice(0, 10)
+    this.setState({ items: this.renderItems(firstResults) })
+    console.log('updateResults length is ', this.state.items.length)
+  }
+
+  scrollMore() {
+    const index = this.state.items.length
+    const nextResults = aoStore.searchResults.slice(index, index + 5)
+    console.log('nextResults is ', nextResults)
+    this.setState({
+      items: this.state.items.concat(this.renderItems(nextResults))
+    })
+    console.log('scrollMore length is ', this.state.items.length)
+  }
+
+  renderItems(items) {
+    return items.map((task, i) => (
+      <TaskContext.Provider value={task} key={task.taskId}>
+        <AoDragZone
+          dragContext={{
+            zone: 'panel',
+            y: i
+          }}>
+          <AoContextCard cardStyle={'priority'} noFindOnPage={true} />
+        </AoDragZone>
+      </TaskContext.Provider>
+    ))
   }
 
   renderSearchResults() {
@@ -78,16 +113,17 @@ export default class AoSearch extends React.Component<{}, State> {
       return ''
     }
 
-    const results = aoStore.searchResults.slice()
-
     return (
-      <div className={'results'}>
-        <AoStack
-          cards={results}
-          zone={'panel'}
-          cardStyle={'priority'}
-          alwaysShowAll={true}
-        />
+      <div id={'searchResults'} className={'results'}>
+        <InfiniteScroll
+          dataLength={this.state.items.length}
+          next={this.scrollMore}
+          scrollableTarget={'searchResults'}
+          hasMore={true}
+          loader={<h4>Loading...</h4>}
+          endMessage={<p style={{ textAlign: 'center' }}>End of results</p>}>
+          {this.state.items}
+        </InfiniteScroll>
       </div>
     )
   }

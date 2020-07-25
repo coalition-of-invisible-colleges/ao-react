@@ -62,7 +62,7 @@ export default class AoHub extends React.Component<{}> {
           tooltipText={'Community Hub'}
           tooltipPlacement={'right'}
           panelPlacement={'right-start'}
-          shortname={'hub'}>
+          id={'hub'}>
           <React.Fragment>
             <div className={'left'}>
               <h2>

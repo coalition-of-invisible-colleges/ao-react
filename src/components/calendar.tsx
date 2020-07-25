@@ -46,12 +46,17 @@ export default class AoCalendar extends React.Component<{}, State> {
 
     const soonMs = 648000000 // 18 hours
     const laterMs = 6048000000 // 1 week
-    const pastBufferMs = 36000000 // 1 hour event length by default
+    const pastBufferMs = 3600000 // supposed to be 1 hour event length by default
     let eventually: Task[] = []
+
+    const now = events.filter(task => {
+      const timeToNow = task.book.startTs - Date.now()
+      return timeToNow <= 0 && timeToNow > -pastBufferMs
+    })
 
     const soon = events.filter(task => {
       const timeToNow = task.book.startTs - Date.now()
-      return timeToNow <= soonMs && timeToNow > -pastBufferMs
+      return timeToNow <= soonMs && timeToNow > 0
     })
 
     const later = events.filter(task => {
@@ -92,6 +97,8 @@ export default class AoCalendar extends React.Component<{}, State> {
     } else {
       renderedCalendarList = (
         <div className={'results'}>
+          {now.length >= 1 ? <h2>Now</h2> : ''}
+          <AoStack cards={now} cardStyle={'priority'} alwaysShowAll={true} />
           {soon.length >= 1 ? <h2>Soon (&lt; 18 hrs)</h2> : ''}
           <AoStack cards={soon} cardStyle={'priority'} alwaysShowAll={true} />
           {later.length >= 1 ? <h2>Later (&lt; 1 wk)</h2> : ''}
@@ -113,25 +120,27 @@ export default class AoCalendar extends React.Component<{}, State> {
       )
     }
 
+    const nowPlusSoon = now.concat(soon)
+    const renderedBadge =
+      nowPlusSoon.length >= 1 ? (
+        <React.Fragment>
+          {nowPlusSoon.length.toString()}
+          <div style={{ fontSize: '0.75em' }}>
+            {formatDistanceToNow(nowPlusSoon[0].book.startTs, {
+              addSuffix: true
+            })}
+          </div>
+        </React.Fragment>
+      ) : (
+        undefined
+      )
+
     return (
       <div id={'calendar'}>
         <AoPopupPanel
           iconSrc={Timecube}
           tooltipText={'Calendar'}
-          badge={
-            soon.length >= 1 ? (
-              <React.Fragment>
-                {soon.length.toString()}
-                <div style={{ fontSize: '0.75em' }}>
-                  {formatDistanceToNow(soon[0].book.startTs, {
-                    addSuffix: true
-                  })}
-                </div>
-              </React.Fragment>
-            ) : (
-              undefined
-            )
-          }
+          badge={renderedBadge}
           tooltipPlacement={'right'}
           panelPlacement={'right'}>
           {renderedCalendarList}

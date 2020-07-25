@@ -46,6 +46,7 @@ interface StackProps {
   onDrop?: (CardPlay) => void
   zone?: CardZone
   noPopups?: boolean
+  noFindOnPage?: boolean
 }
 
 @observer
@@ -140,6 +141,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             <AoContextCard
               cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
               noPopups={this.props.noPopups}
+              noFindOnPage={this.props.noFindOnPage}
               inlineStyle={
                 this.props.cardStyle === 'context'
                   ? {
@@ -167,6 +169,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             <AoContextCard
               cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
               noPopups={this.props.noPopups}
+              noFindOnPage={this.props.noFindOnPage}
             />
           </AoDragZone>
         </TaskContext.Provider>

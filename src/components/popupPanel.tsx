@@ -10,7 +10,7 @@ interface PopupPanelProps {
 	tooltipPlacement?: Placement
 	panelPlacement?: Placement
 	onShown?: (instance) => void
-	shortname?: string
+	id?: string
 	badge?: any
 }
 
@@ -74,7 +74,7 @@ export default class AoPopupPanel extends React.Component<
 					onHide={this.onPanelClose}
 					hideOnClick={'toggle'}>
 					<div
-						id={this.props.shortname}
+						id={this.props.id}
 						className={
 							this.state.isPanelOpen ? 'actionCircle open' : 'actionCircle'
 						}>
