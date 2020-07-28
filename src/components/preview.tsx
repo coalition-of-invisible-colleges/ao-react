@@ -158,6 +158,7 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
                   inId={taskId}
                   cardStyle={'priority'}
                   cards={computed.priorityCards}
+                  zone={'panel'}
                 />
               }>
               <div className={'preview nopad'}>{computed.priorityCount}!</div>
