@@ -32,6 +32,7 @@ export default class AoSearch extends React.Component<{}, State> {
     super(props)
     this.state = defaultState
     this.onChange = this.onChange.bind(this)
+    this.onSearch = this.onSearch.bind(this)
     this.updateResults = this.updateResults.bind(this)
     this.componentDidMount = this.componentDidMount.bind(this)
     this.focus = this.focus.bind(this)
@@ -53,6 +54,8 @@ export default class AoSearch extends React.Component<{}, State> {
 
   componentDidMount() {
     this.searchBox.current.select()
+    ;(this.searchBox.current as any).onsearch = this.onSearch
+    ;(this.searchBox.current as any).incremental = true
   }
 
   focus() {
@@ -61,20 +64,11 @@ export default class AoSearch extends React.Component<{}, State> {
 
   onChange(event) {
     this.setState({ query: event.target.value })
-    this.clearPendingPromises()
-    const debounce = cancelablePromise(delay(500))
-    this.appendPendingPromise(debounce)
-    return debounce.promise
-      .then(() => {
-        this.updateResults()
-        this.removePendingPromise(debounce)
-      })
-      .catch(errorInfo => {
-        this.removePendingPromise(debounce)
-        if (!errorInfo.isCanceled) {
-          throw errorInfo.error
-        }
-      })
+  }
+
+  onSearch(event) {
+    this.setState({ query: event.target.value })
+    this.updateResults()
   }
 
   updateResults() {
@@ -138,7 +132,7 @@ export default class AoSearch extends React.Component<{}, State> {
       <React.Fragment>
         <input
           ref={this.searchBox}
-          type="text"
+          type="search"
           onChange={this.onChange}
           value={this.state.query}
           size={36}

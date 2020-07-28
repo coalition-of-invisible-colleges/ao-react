@@ -900,7 +900,7 @@ textarea {
     // search popup panel
     #search {
       .popupPanel {
-        max-height: 77vh;
+        max-height: unset;
       }
 
       .actionCircle {
@@ -1293,7 +1293,7 @@ textarea {
 
     #searchResults {
       overflow-y: scroll;
-      max-height: 39em;
+      max-height: 70vh;
     }
   }
 }

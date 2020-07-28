@@ -275,7 +275,11 @@ class AoStore {
   }
   @action.bound
   updateSearchResults(query: string) {
-    if (query.length < 1) return
+    if (query.length < 1) {
+      this.searchResults = []
+      return
+    }
+
     // for 1 letter search only first letter of guild names, 2 letters searches 1st word and also 1st initials of guild titles
     let foundCards: Task[] = []
     let foundGuilds: Task[] = []
