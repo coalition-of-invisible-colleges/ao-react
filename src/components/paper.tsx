@@ -46,13 +46,27 @@ const AoPaper: FunctionComponent<AoPaperProps> = observer(
           return false
         }
 
-        if (!card.hasOwnProperty('created')) {
+        let timestamp
+
+        if (card.name === taskId) {
+          let member = aoStore.memberById.get(taskId)
+          if (!member) {
+            return 366
+          }
+          if (!card.hasOwnProperty('timestamp')) {
+            return false
+          }
+          timestamp = member.timestamp
+        } else if (card.hasOwnProperty('created')) {
           // console.log(
           //   'Card without creation date found, please correct your database. Assuming card is old.'
           // )
+          timestamp = card.created
+        } else {
           return 366
         }
-        const msSince = now - card.created
+
+        const msSince = now - timestamp
         const days = msSince / (1000 * 60 * 60 * 24)
         return days
       }
