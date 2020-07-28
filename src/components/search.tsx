@@ -16,14 +16,14 @@ interface State {
   query: string
   results: Task[]
   redirect?: string
-  items: JSX.Element[]
+  items?: JSX.Element[]
 }
 
 export const defaultState: State = {
   query: '',
   results: [],
   redirect: undefined,
-  items: []
+  items: undefined
 }
 
 @observer
@@ -73,9 +73,13 @@ export default class AoSearch extends React.Component<{}, State> {
 
   updateResults() {
     aoStore.updateSearchResults(this.state.query.trim())
-    const firstResults = aoStore.searchResults.slice(0, 10)
-    this.setState({ items: this.renderItems(firstResults) })
-    console.log('updateResults length is ', this.state.items.length)
+
+    if (aoStore.searchResults.length <= 0) {
+      this.setState({ items: undefined })
+    } else {
+      const firstResults = aoStore.searchResults.slice(0, 10)
+      this.setState({ items: this.renderItems(firstResults) })
+    }
   }
 
   scrollMore() {
@@ -103,12 +107,28 @@ export default class AoSearch extends React.Component<{}, State> {
   }
 
   renderSearchResults() {
-    if (aoStore.searchResults.length < 1) {
+    if (this.state.items === undefined) {
       return ''
+    }
+
+    if (aoStore.searchResults.length < 1) {
+      if (this.state.query && this.state.query.trim().length >= 1) {
+        return (
+          <div id={'searchResults'} className={'results'}>
+            0 results
+          </div>
+        )
+      }
     }
 
     return (
       <div id={'searchResults'} className={'results'}>
+        <div>
+          {aoStore.searchResults.length}{' '}
+          {aoStore.searchResults.length === 1
+            ? 'search result'
+            : 'search results'}
+        </div>
         <InfiniteScroll
           dataLength={this.state.items.length}
           next={this.scrollMore}
