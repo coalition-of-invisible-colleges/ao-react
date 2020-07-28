@@ -35,17 +35,20 @@ const AoScore: FunctionComponent<> = observer(() => {
   return (
     <Tippy
       interactive={true}
-      maxWidth={'none'}
       placement={'top'}
       delay={[625, 200]}
       content={
         <React.Fragment>
           <h2>Points From Cards</h2>
-          <AoStack
-            cardStyle={'priority'}
-            cards={computed.checkedCards}
-            zone={'panel'}
-          />
+          {computed.checkedCards.length >= 1 ? (
+            <AoStack
+              cardStyle={'priority'}
+              cards={computed.checkedCards}
+              zone={'panel'}
+            />
+          ) : (
+            'You have no points from cards. Check off a card with a valued checkmark to increase your score.'
+          )}
         </React.Fragment>
       }>
       <div id={'score'}>
