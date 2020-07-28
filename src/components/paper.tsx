@@ -46,14 +46,14 @@ const AoPaper: FunctionComponent<AoPaperProps> = observer(
           return false
         }
 
-        let timestamp
+        let timestamp = Date.now()
 
         if (card.name === taskId) {
           let member = aoStore.memberById.get(taskId)
           if (!member) {
             return 366
           }
-          if (!card.hasOwnProperty('timestamp')) {
+          if (!member.hasOwnProperty('timestamp')) {
             return false
           }
           timestamp = member.timestamp

@@ -34,7 +34,7 @@ export interface Member {
   balance: number
   badges: []
   info: {}
-  timestamp: Date
+  timestamp: number
   lastUsed: Date
   muted: Boolean
 }
