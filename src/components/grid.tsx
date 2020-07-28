@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 import aoStore, { AoState, Grid } from '../client/store'
@@ -168,10 +169,19 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
     }
   }
 
+  @computed get grid() {
+    const task = aoStore.hashMap.get(this.props.taskId)
+
+    if (task.hasOwnProperty('grid') && task.grid) {
+      return task.grid
+    }
+
+    return false
+  }
+
   render() {
     const render = []
-    const task = aoStore.hashMap.get(this.props.taskId)
-    let grid = task.hasOwnProperty('grid') ? task.grid : false
+    let grid = this.grid
 
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
