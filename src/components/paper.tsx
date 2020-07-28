@@ -33,18 +33,31 @@ const AoPaper: FunctionComponent<AoPaperProps> = observer(
         }
       },
       get cardAge() {
-        // creation timestamp appears to have been removed from card creation.
-        // this would need to be fixed for aging cards to work again.
-        return false
+        if (!taskId) {
+          // console.log('Attempting to display missing card. This is bad.')
+          return false
+        }
+
         const now = Date.now()
-        const msSince = now - aoStore.hashMap.get(taskId).timestamp
-        // console.log('timestamp is ', aoStore.hashMap.get(taskId).timestamp)
+        const card = aoStore.hashMap.get(taskId)
+
+        if (!card) {
+          // console.log('Missing card in database. Clean up your database.')
+          return false
+        }
+
+        if (!card.hasOwnProperty('created')) {
+          // console.log(
+          //   'Card without creation date found, please correct your database. Assuming card is old.'
+          // )
+          return 366
+        }
+        const msSince = now - card.created
         const days = msSince / (1000 * 60 * 60 * 24)
         return days
       }
     })
     let filename = Paper1
-    // console.log('computed.cardAge is ', computed.cardAge)
     if (computed.cardAge >= 8) {
       filename = Paper2
     } else if (computed.cardAge >= 30) {

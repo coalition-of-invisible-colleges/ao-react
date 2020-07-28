@@ -331,18 +331,31 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'ao-outbound-connected':
-      tasks.push(calculations.blankCard(ev.address, ev.address, 'purple'))
+      tasks.push(
+        calculations.blankCard(ev.address, ev.address, 'purple', ev.timestamp)
+      )
       break
     case 'ao-disconnected':
       break
     case 'resource-created':
-      tasks.push(calculations.blankCard(ev.resourceId, ev.resourceId, 'red'))
+      tasks.push(
+        calculations.blankCard(
+          ev.resourceId,
+          ev.resourceId,
+          'red',
+          ev.timestamp
+        )
+      )
       break
     case 'member-created':
-      tasks.push(calculations.blankCard(ev.memberId, ev.memberId, 'blue'))
+      tasks.push(
+        calculations.blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
+      )
       break
     case 'meme-added':
-      tasks.push(calculations.blankCard(ev.taskId, ev.filename, 'yellow'))
+      tasks.push(
+        calculations.blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp)
+      )
       break
     case 'task-created':
       tasks.push(
@@ -350,6 +363,7 @@ function tasksMuts(tasks, ev) {
           ev.taskId,
           ev.name,
           ev.color,
+          ev.timestamp,
           ev.deck,
           ev.inId ? [ev.inId] : undefined
         )
@@ -953,6 +967,7 @@ function tasksMuts(tasks, ev) {
           ev.taskId,
           ev.name,
           ev.color,
+          ev.timestamp,
           ev.deck,
           ev.height,
           ev.width
