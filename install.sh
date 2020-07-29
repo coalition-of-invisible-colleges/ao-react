@@ -282,7 +282,7 @@ else
 fi
 
 # install project dependencies
-cd ao-react
+cd ~/ao-react
 
 if [ $(npm list --depth 0 AutonomousOrganization | grep AutonomousOrganization) -eq 0 ];
 then
