@@ -47,7 +47,10 @@ const AoScore: FunctionComponent<> = observer(() => {
               zone={'panel'}
             />
           ) : (
-            'You have no points from cards. Check off a card with a valued checkmark to increase your score.'
+            <p>
+              You have no points from cards. Check off a card with a valued
+              checkmark to increase your score.
+            </p>
           )}
         </React.Fragment>
       }>

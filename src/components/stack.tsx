@@ -134,7 +134,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
         <TaskContext.Provider value={task} key={task.taskId}>
           <AoDragZone
             dragContext={{
-              zone: this.props.zone,
+              zone: this.props.zone ? this.props.zone : 'panel',
               inId: this.props.inId,
               y: i
             }}>
@@ -162,7 +162,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           key={cardsToRender[0].taskId}>
           <AoDragZone
             dragContext={{
-              zone: this.props.zone,
+              zone: this.props.zone ? this.props.zone : 'panel',
               inId: this.props.inId,
               y: 0
             }}>
