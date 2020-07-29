@@ -65,16 +65,17 @@ fi
 NODEVERSION=`nvm current`
 
 # install node
-if [ $(echo $NODEVERSION | grep -c "12.16") -eq 1 ];
+if [ $(echo $NODEVERSION | grep -c "12\.16") -eq 1 ];
 then
 	echo node $NODEVERSION already installed
 else
-	nvm install stable
-	nvm use stable
+	nvm install 12.16
+	nvm use 12.16
+	nvm alias default 12.16
 fi
 
 # install npm
-if [ $(npm --v  2>/dev/null | grep -c "6\.13\.4") -eq 1 ];
+if [ $(npm --v  2>/dev/null | grep -c "6\.") -eq 1 ];
 then
 	NPMVERSION=`npm -v`
 	echo npm v$NPMVERSION already installed
