@@ -284,11 +284,11 @@ fi
 # install project dependencies
 cd ~/ao-react
 
-if [ $(npm list --depth 0 AutonomousOrganization | grep AutonomousOrganization) -eq 0 ];
+if [ $(npm list --depth 0 AutonomousOrganization | grep -c "AutonomousOrganization") -eq 1 ];
 then
-	npm install
-else
 	echo ao node module already installed.
+else
+	npm install
 fi
 
 # create configuration.js
