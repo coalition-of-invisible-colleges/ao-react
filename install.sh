@@ -282,7 +282,7 @@ else
 fi
 
 # install project dependencies
-cd ao
+cd ao-react
 
 if [ $(npm list --depth 0 AutonomousOrganization | grep AutonomousOrganization) -eq 0 ];
 then
@@ -292,7 +292,7 @@ else
 fi
 
 # create configuration.js
-if [ -f "$HOME/ao/configuration.js" ];
+if [ -f "$HOME/ao-react/configuration.js" ];
 then
 	echo configuration.js already exists
 else
@@ -314,7 +314,7 @@ else
     	hostname: '$TORHOSTNAME'
     }
 }"
-    echo "$CONFIG" > $HOME/ao/configuration.js
+    echo "$CONFIG" > $HOME/ao-react/configuration.js
     echo configuration.js file created
 fi
 
@@ -377,7 +377,7 @@ else
 Description=ao-daemon
 
 [Service]
-ExecStart=/usr/local/lib/nodejs/node-v12.16.1-linux-x64/bin/node $HOME/ao/src/server/app.js
+ExecStart=/usr/local/lib/nodejs/node-v12.16.1-linux-x64/bin/node $HOME/ao-react/src/server/app.js
 User=$USER
 Type=simple
 Restart=always
