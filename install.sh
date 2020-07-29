@@ -13,7 +13,14 @@ echo apt upgrade complete
 #sudo apt-get autoclean -yqqq
 
 # check for sudo install and fail if not
+
 # install curl
+if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
+then
+	echo curl already installed
+else
+	sudo apt install -y curl
+fi
 
 # install git
 if [ $(dpkg-query -W -f='${Status}' git 2>/dev/null | grep -c "ok installed") -eq 1 ];
@@ -35,15 +42,6 @@ cd ~
 if [ ! -d "$HOME/.ao" ];
 then
 	mkdir -p $HOME/.ao
-fi
-
-# install npm
-if [ $(npm --v  2>/dev/null | grep -c "6\.13\.4") -eq 1 ];
-then
-	NPMVERSION=`npm -v`
-	echo npm v$NPMVERSION already installed
-else
-	curl -L https://www.npmjs.com/install.sh | sh
 fi
 
 # install nvm
@@ -73,6 +71,15 @@ then
 else
 	nvm install stable
 	nvm use stable
+fi
+
+# install npm
+if [ $(npm --v  2>/dev/null | grep -c "6\.13\.4") -eq 1 ];
+then
+	NPMVERSION=`npm -v`
+	echo npm v$NPMVERSION already installed
+else
+	curl -L https://www.npmjs.com/install.sh | sh
 fi
 
 # install c-lightning
@@ -270,7 +277,7 @@ if find "ao" -mindepth 1 -print -quit 2>/dev/null | grep -q .;
 then
 	echo ao git repository already cloned
 else
-	git clone https://github.com/coalition-of-invisible-colleges/ao-react/tree/staging
+	git clone https://github.com/coalition-of-invisible-colleges/ao-react
 fi
 
 # install project dependencies
