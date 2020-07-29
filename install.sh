@@ -274,9 +274,9 @@ fi
 
 # clone the AO repository
 cd ~
-if find "ao" -mindepth 1 -print -quit 2>/dev/null | grep -q .;
+if find "ao-react" -mindepth 1 -print -quit 2>/dev/null | grep -q .;
 then
-	echo ao git repository already cloned
+	echo ao-react git repository already cloned
 else
 	git clone https://github.com/coalition-of-invisible-colleges/ao-react
 fi
