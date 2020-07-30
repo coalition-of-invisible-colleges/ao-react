@@ -123,18 +123,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			coords: toCoords
 		}
 
-		// console.log(
-		// 	'drop detected. fromId: ',
-		// 	fromId,
-		// 	'\nfromInId: ',
-		// 	fromInId,
-		// 	'\nfromZone: ',
-		// 	fromZone,
-		// 	'\nfromCoords: ',
-		// 	fromCoords,
-		// 	'\ntoCoords',
-		// 	toCoords
-		// )
 		if (toLocation === fromLocation) {
 			console.log('drag origin and destination are identical, doing nothing')
 			return
@@ -147,85 +135,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		}
 
 		return
-
-		// let nameFrom = undefined
-
-		// let fromTaskId
-		// if (fromZone === 'grid' && fromCoords.x && fromCoords.y) {
-		// 	fromTaskId = aoStore.hashMap.get(this.props.inId).grid.rows[fromCoords.y][
-		// 		fromCoords.x
-		// 	]
-
-		// 	const name = aoStore.hashMap.get(fromTaskId).name
-
-		// 	if (name) {
-		// 		nameFrom = name
-		// 	}
-		// } else if (
-		// 	(fromZone === 'priorities' || fromZone === 'subTasks') &&
-		// 	fromCoords.y
-		// ) {
-		// 	const trueY =
-		// 		aoStore.hashMap.get(this.props.inId)[fromZone].length - 1 - fromCoords.y
-		// 	fromTaskId = aoStore.hashMap.get(this.props.inId)[fromZone][trueY]
-		// 	const name = aoStore.hashMap.get(fromTaskId).name
-		// 	if (name) {
-		// 		nameFrom = name
-		// 	}
-		// } else if (fromZone === 'search' && fromCoords.y) {
-		// 	const trueY = aoStore.searchResults.length - 1 - fromCoords.y
-		// 	fromTaskId = aoStore.searchResults[trueY].taskId
-		// 	const name = aoStore.hashMap.get(fromTaskId).name
-		// 	if (name) {
-		// 		nameFrom = name
-		// 	}
-		// } else if (fromZone === 'context' && fromCoords.y) {
-		// 	const trueY = fromCoords.y
-		// 	fromTaskId = aoStore.context[trueY]
-		// 	const name = aoStore.hashMap.get(fromTaskId).name
-		// 	if (name) {
-		// 		nameFrom = name
-		// 	}
-		// }
-
-		// let nameTo = undefined
-
-		// if (aoStore.hashMap.get(this.props.taskId)) {
-		// 	nameTo = aoStore.hashMap.get(this.props.taskId).name
-		// }
-
-		// } else if (fromZone === 'grid') {
-		// 	switch (this.props.zoneStyle) {
-		// 	}
-		// } else if (fromZone === 'subTasks') {
-		// 	switch (this.props.zoneStyle) {
-		// 		case 'priorities':
-		// 			break
-		// 		case 'subTasks':
-		// 			break
-		// 	}
-		// } else if (fromZone === 'completed') {
-		// 	switch (this.props.zoneStyle) {
-		// 		case 'grid':
-		// 			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-		// 			break
-		// 	}
-		// } else if (fromZone === 'search' || fromZone === 'context') {
-		// 	switch (this.props.zoneStyle) {
-		// 		case 'priorities':
-		// 			api.prioritizeCard(fromTaskId, this.props.inId)
-		// 			break
-		// 		case 'grid':
-		// 			if (nameTo) {
-		// 				api.unpinCardFromGrid(toCoords.x, toCoords.y, this.props.inId)
-		// 			}
-		// 			api.pinCardToGrid(toCoords.x, toCoords.y, nameFrom, this.props.inId)
-		// 			break
-		// 		case 'subTasks':
-		// 			api.findOrCreateCardInCard(nameFrom, this.props.inId)
-		// 			break
-		// 	}
-		// }
 	}
 
 	emptySquare = () => {
@@ -269,46 +178,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					{this.props.children}
 				</div>
 			)
-			// }
-			// else if (this.props.y === -1) {
-			// 	if (
-			// 		this.props.zoneStyle === 'priorities' &&
-			// 		aoStore.hashMap.get(this.props.inId).priorities.length >= 1
-			// 	) {
-			// 		return ''
-			// 	}
-			// 	let message =
-			// 		'+' + (this.props.zoneStyle === 'priorities' ? 'priority' : 'card')
-			// 	switch (this.state.draggedKind) {
-			// 		case 'priorities':
-			// 			message = 'drop to deprioritize'
-			// 			break
-			// 		case 'grid':
-			// 			message = 'drop to discard'
-			// 			break
-			// 		case 'subTasks':
-			// 			message = 'drop to move to top'
-			// 			break
-			// 		case 'card':
-			// 		case 'default':
-			// 			// for some reason i can't get fromZone data in allowData to make the other cases work
-			// 			message = 'drop to move'
-			// 			if (this.props.zoneStyle === 'priorities') {
-			// 				message = 'drop to prioritize'
-			// 			}
-			// 			break
-			// 	}
-			// return (
-			// 	<p
-			// 		className={'action'}
-			// 		onClick={() => this.props.onSelect({ y: this.props.y })}
-			// 		onDragEnter={this.allowDrop}
-			// 		onDragOver={this.allowDrop}
-			// 		onDragLeave={this.hideDrop}
-			// 		onDrop={this.drop}>
-			// 		{message}
-			// 	</p>
-			// )
 		} else if (this.props.children) {
 			let hardcodedStyle: CardStyle = 'face'
 			let message = 'drop to place'
@@ -325,12 +194,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					hardcodedStyle = 'face'
 					message = 'drop here'
 					break
-				// case 'completed':
-				// 	hardcodedStyle = 'face'
-				// 	break
-				// case 'search':
-				// 	hardcodedStyle = 'priority'
-				// break
 				case 'context':
 					hardcodedStyle = 'context'
 					break

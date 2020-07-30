@@ -623,6 +623,7 @@ textarea {
         transform: translateX(-50%);
         width: min-content;
         margin-top: 1em;
+        z-index: 1; // So grid resize button show above of main stack drop zone.
 
         &.padbottom {
           margin-bottom: 2em;
@@ -692,30 +693,33 @@ textarea {
             display: block;
           }
 
-          .minusColumn,
-          .plusColumn,
-          .minusRow,
-          .plusRow {
+          .minus,
+          .plus {
             outline: none;
             font-family: monospace;
             margin: 0;
-          }
-          .minusColumn,
-          .plusColumn {
             position: relative;
-            right: -1.875em;
-            margin-top: 0.25em;
-            padding-left: 0.25em;
-            padding-right: 0.25em;
           }
-          .minusRow,
-          .plusRow {
-            display: inline;
-            position: relative;
-            left: -3.9em;
-            top: 0.6em;
-            margin-right: 0.25em;
-            padding: 0 0.75em;
+
+          .columns {
+            .minus,
+            .plus {
+              right: -1.875em;
+              margin-top: 0.25em;
+              padding-left: 0.25em;
+              padding-right: 0.25em;
+            }
+          }
+
+          .rows {
+            .minus,
+            .plus {
+              display: inline;
+              left: -3.9em;
+              margin-top: 0.6em;
+              margin-right: 0.25em;
+              padding: 0 0.75em;
+            }
           }
         }
       }
@@ -801,13 +805,6 @@ textarea {
 
       .popupPanel {
         max-height: 96vh;
-
-        .results {
-          padding-right: 0.5em;
-          &.empty {
-            opacity: 0.8;
-          }
-        }
       }
     }
 
@@ -903,6 +900,31 @@ textarea {
     #search {
       .popupPanel {
         max-height: unset;
+
+        .results {
+          padding-top: 0.5em;
+          padding-right: 0.5em;
+
+          div:first-child {
+            margin-bottom: 0.25em;
+          }
+
+          &.empty {
+            opacity: 0.8;
+          }
+
+          &::-webkit-scrollbar {
+            background-color: rgba(22, 22, 22, 0.4);
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background-color: rgba(89, 89, 89, 0.4);
+          }
+
+          &::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+          }
+        }
       }
 
       .actionCircle {
@@ -1294,7 +1316,7 @@ textarea {
     }
 
     #searchResults {
-      overflow-y: scroll;
+      overflow-y: auto;
       max-height: 70vh;
     }
   }

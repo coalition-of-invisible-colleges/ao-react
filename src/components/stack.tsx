@@ -94,7 +94,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             .slice()
             .filter(t => {
               if (!t) {
-                console.log('Missing card detected: ', t)
+                console.log('Missing card detected')
                 return false
               }
               return true

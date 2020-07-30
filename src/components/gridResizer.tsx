@@ -36,35 +36,39 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
 
   render() {
     return (
-      <div className="resizer">
-        <button
-          type="button"
-          onClick={event => this.resizeColumns(-1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.width <= 1}
-          className={'action minusColumn'}>
-          -
-        </button>
-        <button
-          type="button"
-          onClick={event => this.resizeColumns(1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.width >= 30}
-          className={'action plusColumn'}>
-          +
-        </button>
-        <button
-          type="button"
-          onClick={event => this.resizeRows(-1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.height <= 1}
-          className={'action minusRow'}>
-          -
-        </button>
-        <button
-          type="button"
-          onClick={event => this.resizeRows(1)}
-          disabled={aoStore.hashMap.get(this.props.taskId).grid.height >= 30}
-          className={'action plusRow'}>
-          +
-        </button>
+      <div className={'resizer'}>
+        <div className={'columns'}>
+          <button
+            type="button"
+            onClick={event => this.resizeColumns(-1)}
+            disabled={aoStore.hashMap.get(this.props.taskId).grid.width <= 1}
+            className={'action minus'}>
+            -
+          </button>
+          <button
+            type="button"
+            onClick={event => this.resizeColumns(1)}
+            disabled={aoStore.hashMap.get(this.props.taskId).grid.width >= 30}
+            className={'action plus'}>
+            +
+          </button>
+        </div>
+        <div className={'rows'}>
+          <button
+            type="button"
+            onClick={event => this.resizeRows(-1)}
+            disabled={aoStore.hashMap.get(this.props.taskId).grid.height <= 1}
+            className={'action minus'}>
+            -
+          </button>
+          <button
+            type="button"
+            onClick={event => this.resizeRows(1)}
+            disabled={aoStore.hashMap.get(this.props.taskId).grid.height >= 30}
+            className={'action plus'}>
+            +
+          </button>
+        </div>
       </div>
     )
   }

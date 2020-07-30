@@ -222,7 +222,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			return ''
 		}
 		if (
-			aoStore.searchResults.some(task => {
+			aoStore.searchResults &&
+			aoStore.searchResults.hasOwnProperty('all') &&
+			aoStore.searchResults.all.some(task => {
 				return task.taskId === taskId
 			})
 		) {

@@ -144,11 +144,28 @@ const defaultState: AoState = {
     info: {}
   }
 }
+
+export interface SearchResults {
+  missions: Task[]
+  members: Task[]
+  tasks: Task[]
+  all: Task[]
+  length: number
+}
+
+export const emptySearchResults = {
+  missions: [],
+  members: [],
+  tasks: [],
+  all: [],
+  length: 0
+}
+
 class AoStore {
   @observable
   state: AoState = defaultState
   @observable
-  searchResults: Task[] = []
+  searchResults?: SearchResults = undefined
   @observable context: string[] = []
   @observable currentCard: string = undefined
   @observable discard: Task[] = []
@@ -276,7 +293,7 @@ class AoStore {
   @action.bound
   updateSearchResults(query: string) {
     if (query.length < 1) {
-      this.searchResults = []
+      this.searchResults = undefined
       return
     }
 
@@ -309,7 +326,13 @@ class AoStore {
           foundMembers.push(result)
         }
       })
-      this.searchResults = foundGuilds.concat(foundMembers).concat(foundCards)
+      this.searchResults = observable({
+        missions: foundGuilds,
+        members: foundMembers,
+        tasks: foundCards,
+        all: foundGuilds.concat(foundMembers, foundCards),
+        length: foundGuilds.length + foundMembers.length + foundCards.length
+      })
     } catch (err) {
       console.log('regex search terminated in error: ', err)
     }
