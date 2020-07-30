@@ -286,7 +286,7 @@ cd ~/ao-react
 
 if [ $(npm list --depth 0 AutonomousOrganization | grep -c "AutonomousOrganization") -eq 1 ];
 then
-	echo ao node module already installed.
+	echo ao node module already installed
 else
 	npm install
 fi

@@ -106,6 +106,8 @@ textarea {
       }
 
       &.full {
+        box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
+
         .priority {
           min-height: 2.325em;
 
