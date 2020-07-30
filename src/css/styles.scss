@@ -1303,15 +1303,6 @@ textarea {
       max-width: calc(100% - 2em);
       max-height: calc(100% - 2em);
       margin: 1em;
-
-      &:after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        content: '~';
-        background-color: rgba(0, 0, 0, 0.2);
-        padding: 0.25em;
-      }
     }
 
     .card.searchedOnPage:after {
