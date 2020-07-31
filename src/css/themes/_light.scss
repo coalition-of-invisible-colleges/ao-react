@@ -12,3 +12,10 @@
 	#c0b3ff,
 	black
 );
+
+// This changes the search outline around cards to green, proving that hotswapping the CSS works.
+// Maybe we could get rid of the variables and just use pure swapping of the CSS instead
+
+.theme-2 .card.searchedOnPage:after {
+	border: 0.2em solid green;
+}

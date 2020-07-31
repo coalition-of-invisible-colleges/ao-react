@@ -33,6 +33,11 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 			console.log('drag event on missing card')
 			return
 		}
+		// This is a hack. onDragEnter and onDragOver only offer protected access to drag contents,
+		// so you can see the name of the field, e.g., 'text/taskId', but not the contents.
+		// Using the taskId as the name of the drag data field type allows us to detect in dropZone.tsx
+		// when a card is being dragged over the same card (so we can do nothing).
+		event.dataTransfer.setData(card.taskId, card.taskId)
 		event.dataTransfer.setData('text/taskId', card.taskId)
 
 		if (!this.props.dragContext) {

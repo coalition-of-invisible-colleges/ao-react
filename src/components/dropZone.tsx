@@ -56,21 +56,35 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	constructor(props) {
 		super(props)
 		this.state = {}
-		// this.onDoubleClick = this.onDoubleClick.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
 		this.drop = this.drop.bind(this)
-		// this.onHover = this.onHover.bind(this)
 	}
 
 	detectDragKind = dataTransfer => {
+		const card = this.context
+		if (!card) {
+			console.log('drop event on empty square')
+		}
+
 		let filetype = 'file'
+		let sameAsOrigin = false
+
 		if (dataTransfer.items && dataTransfer.items.length > 0) {
-			dataTransfer.items.forEach(dt => {
-				// console.log('dt.type is', dt.type)
-				if (dt.type === 'text/taskid') {
+			dataTransfer.items.forEach((dt, i) => {
+				if (sameAsOrigin || filetype === 'card') {
+					return
+				}
+
+				if (card && dt.type === card.taskId) {
+					sameAsOrigin = true
+				} else if (dt.type === 'text/taskid') {
 					filetype = 'card'
 				}
 			})
+		}
+
+		if (sameAsOrigin) {
+			return undefined
 		}
 
 		return filetype
@@ -101,6 +115,11 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		this.hideDrop(event)
 
 		let fromId: string = event.dataTransfer.getData('text/taskId')
+
+		if (card && card.taskId === fromId) {
+			return
+		}
+
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
 		let fromCoords: Sel = {
@@ -179,23 +198,16 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 				</div>
 			)
 		} else if (this.props.children) {
-			let hardcodedStyle: CardStyle = 'face'
 			let message = 'drop to place'
 			switch (this.props.zoneStyle) {
 				case 'priorities':
-					hardcodedStyle = 'priority'
 					message = 'drop to prioritize'
 					break
 				case 'grid':
-					hardcodedStyle = 'mini'
 					message = 'drop to swap'
 					break
 				case 'subTasks':
-					hardcodedStyle = 'face'
 					message = 'drop here'
-					break
-				case 'context':
-					hardcodedStyle = 'context'
 					break
 			}
 

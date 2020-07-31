@@ -98,7 +98,7 @@ textarea {
       &.face {
         min-height: 6em;
         max-width: 98vw;
-        min-width: 30em;
+        // min-width: 30em;
 
         & > .hud > .coin > .hodls {
           top: 0.65em;
@@ -419,22 +419,6 @@ textarea {
 
       .stack > .dropZone {
         position: relative;
-        & > .overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          height: 100%;
-          width: 100%;
-          background-color: rgba(0, 0, 0, 0.4);
-          pointer-events: none;
-          color: #ddd;
-
-          .label {
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-          }
-        }
       }
 
       .hud {
@@ -914,18 +898,6 @@ textarea {
           &.empty {
             opacity: 0.8;
           }
-
-          &::-webkit-scrollbar {
-            background-color: rgba(22, 22, 22, 0.4);
-          }
-
-          &::-webkit-scrollbar-thumb {
-            background-color: rgba(89, 89, 89, 0.4);
-          }
-
-          &::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(255, 255, 255, 0.75);
-          }
         }
       }
 
@@ -1014,6 +986,9 @@ textarea {
 
     // the Grid
     .grid {
+      max-width: 75vw;
+      overflow-x: auto;
+
       .stack {
         .card {
           &.priority {
@@ -1322,6 +1297,39 @@ textarea {
     #searchResults {
       overflow-y: auto;
       max-height: 70vh;
+    }
+
+    #search .popupPanel .results,
+    .grid {
+      &::-webkit-scrollbar {
+        background-color: rgba(22, 22, 22, 0.4);
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(89, 89, 89, 0.4);
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(255, 255, 255, 0.75);
+      }
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      pointer-events: none;
+      color: #ddd;
+      z-index: 3;
+
+      .label {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
   }
 }

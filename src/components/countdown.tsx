@@ -10,6 +10,9 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDistanceToNow, fromUnixTime, format } from 'date-fns'
 import { HudStyle } from './cardHud'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface State {
   editing: boolean
@@ -61,6 +64,7 @@ export default class AoCountdown extends React.Component<
     this.startEditing = this.startEditing.bind(this)
     this.onChange = this.onChange.bind(this)
     this.bookResource = this.bookResource.bind(this)
+    this.renderCountdown = this.renderCountdown.bind(this)
   }
 
   startEditing(event) {
@@ -96,29 +100,7 @@ export default class AoCountdown extends React.Component<
     }
   }
 
-  render() {
-    if (this.state.editing) {
-      return (
-        <div className={'countdown'}>
-          <RenderDatePicker
-            bookResource={this.bookResource}
-            startTime={this.state.startTime}
-            onChange={this.onChange}
-          />
-          <button type="button" onClick={this.bookResource}>
-            Schedule
-          </button>
-        </div>
-      )
-    }
-
-    if (
-      !aoStore.hashMap.get(this.props.taskId).book.startTs &&
-      this.props.hudStyle !== 'menu'
-    ) {
-      return null
-    }
-
+  renderCountdown() {
     switch (this.props.hudStyle) {
       case 'full before':
         return (
@@ -142,21 +124,62 @@ export default class AoCountdown extends React.Component<
             )}
           </div>
         )
-      case 'menu':
-        return (
-          <div
-            onClick={this.startEditing}
-            className={'countdown action ' + this.props.hudStyle}>
-            {aoStore.hashMap.get(this.props.taskId).book.startTs
-              ? format(
-                  aoStore.hashMap.get(this.props.taskId).book.startTs,
-                  'MMMM d, yyyy @ h:mm a'
-                )
-              : 'schedule event'}
-          </div>
-        )
       default:
         return null
     }
+  }
+
+  render() {
+    if (this.state.editing) {
+      return (
+        <div className={'countdown'}>
+          <RenderDatePicker
+            bookResource={this.bookResource}
+            startTime={this.state.startTime}
+            onChange={this.onChange}
+          />
+          <button type="button" onClick={this.bookResource}>
+            Schedule
+          </button>
+        </div>
+      )
+    }
+
+    if (this.props.hudStyle === 'menu') {
+      return (
+        <div
+          onClick={this.startEditing}
+          className={'countdown action ' + this.props.hudStyle}>
+          {aoStore.hashMap.get(this.props.taskId).book.startTs
+            ? format(
+                aoStore.hashMap.get(this.props.taskId).book.startTs,
+                'MMMM d, yyyy @ h:mm a'
+              )
+            : 'schedule event'}
+        </div>
+      )
+    }
+
+    if (!aoStore.hashMap.get(this.props.taskId).book.startTs) {
+      return null
+    }
+
+    return (
+      <Tippy
+        interactive={true}
+        placement={'top'}
+        delay={[475, 200]}
+        theme={'translucent'}
+        content={
+          <div style={{ width: 'max-content' }}>
+            {format(
+              aoStore.hashMap.get(this.props.taskId).book.startTs,
+              'MMMM d, yyyy @ h:mm a'
+            )}
+          </div>
+        }>
+        {this.renderCountdown()}
+      </Tippy>
+    )
   }
 }
