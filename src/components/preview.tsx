@@ -2,10 +2,12 @@ import React, { FunctionComponent } from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
 import AoStack from './stack'
+import { prioritizeCard } from '../cards'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale-extreme.css'
@@ -30,9 +32,10 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
     onToggleProjects,
     hideSubcardCountOnCollapsed
   }) => {
+    const card = aoStore.hashMap.get(taskId)
+
     const computed = observable({
       get subCardCount() {
-        const card = aoStore.hashMap.get(taskId)
         let gridCardCount = 0
         if (card.grid) {
           Object.keys(card.grid.rows).forEach(i => {
@@ -49,11 +52,9 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
         return subCardCount
       },
       get priorityCount() {
-        const card = aoStore.hashMap.get(taskId)
         return card.priorities.length
       },
       get priorityCards() {
-        const card = aoStore.hashMap.get(taskId)
         let priorityCards: Task[] = []
         card.priorities.forEach(tId => {
           let priority = aoStore.hashMap.get(tId)
@@ -66,7 +67,6 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
       },
       get projectCount() {
         let count = 0
-        const card = aoStore.hashMap.get(taskId)
         let allSubCards = card.priorities.concat(card.subTasks, card.completed)
 
         allSubCards.forEach(tId => {
@@ -151,15 +151,18 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
               delay={[625, 200]}
               appendTo={() =>
                 document.getElementById('card-' + taskId).parentElement
-                  .parentElement
+                  .parentElement.parentElement
               }
               content={
-                <AoStack
-                  inId={taskId}
-                  cardStyle={'priority'}
-                  cards={computed.priorityCards}
-                  zone={'panel'}
-                />
+                <TaskContext.Provider value={card}>
+                  <AoStack
+                    inId={taskId}
+                    cardStyle={'priority'}
+                    cards={computed.priorityCards}
+                    zone={'priorities'}
+                    onDrop={prioritizeCard}
+                  />
+                </TaskContext.Provider>
               }>
               <div className={'preview nopad'}>{computed.priorityCount}!</div>
             </Tippy>

@@ -1,4 +1,5 @@
 const M = require('../mutations')
+const _ = require('lodash')
 
 const state = []
 
@@ -10,7 +11,7 @@ const mutations = {
     tasks.length = 0
     current.tasks.forEach(task => {
       let index = tasks.push(task) - 1
-      // _.assign(tasks[index].grid, task.grid)
+      _.assign(tasks[index].grid, task.grid)
     })
   },
   applyEvent: M.tasksMuts

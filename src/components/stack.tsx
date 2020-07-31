@@ -7,10 +7,12 @@ import { Redirect } from 'react-router-dom'
 import api from '../client/api'
 import aoStore, { Task } from '../client/store'
 import Markdown from 'markdown-to-jsx'
-import AoContextCard, { CardStyle, CardZone } from './contextCard'
+import AoContextCard, { CardStyle } from './contextCard'
+import { CardZone } from '../cards'
 import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
-import AoDropZone, { CardPlay, Sel } from './dropZone'
+import AoDropZone from './dropZone'
+import { CardPlay, Sel } from '../cards'
 import AoCardComposer from './cardComposer'
 
 interface StackState {
@@ -55,7 +57,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     super(props)
     this.state = defaultState
     this.selectStackZone = this.selectStackZone.bind(this)
-    this.goInZone = this.goInZone.bind(this)
     this.show = this.show.bind(this)
     this.hide = this.hide.bind(this)
     this.toggleCompose = this.toggleCompose.bind(this)
@@ -63,12 +64,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
 
   selectStackZone(selection: Sel) {
     this.setState({ selected: selection })
-  }
-
-  goInZone(selection: Sel) {
-    this.setState({
-      redirect: '/task/' + this.props.cards[selection.y].taskId
-    })
   }
 
   show(event) {

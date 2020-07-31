@@ -10,7 +10,8 @@ import Markdown from 'markdown-to-jsx'
 import AoContextCard, { CardStyle } from './contextCard'
 import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
-import AoDropZone, { CardPlay } from './dropZone'
+import AoDropZone from './dropZone'
+import { CardPlay } from '../cards'
 
 interface DiscardProps {}
 

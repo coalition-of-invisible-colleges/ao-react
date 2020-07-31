@@ -3,7 +3,8 @@ import { observer } from 'mobx-react'
 import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { delay, cancelablePromise, noop } from '../utils'
-import { CardZone, CardStyle } from './contextCard'
+import { CardStyle } from './contextCard'
+import { CardPlay, CardZone, CardLocation, Sel } from '../cards'
 import { TaskContext } from './taskContext'
 
 interface DropZoneProps {
@@ -15,30 +16,12 @@ interface DropZoneProps {
 	// taskId?: string
 	style?: {}
 	onSelect?: (selection: Sel) => void
-	onGoIn?: (selection: Sel) => void
 	onDrop?: (move: CardPlay) => void
 }
 
 export interface State {
 	text?: string
 	draggedKind?: string
-}
-
-export interface Sel {
-	x?: number
-	y: number
-}
-
-export interface CardLocation {
-	taskId: string
-	inId: string
-	zone: CardZone
-	coords: Sel
-}
-
-export interface CardPlay {
-	from: CardLocation
-	to: CardLocation
 }
 
 export type CardSource =
@@ -92,6 +75,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	allowDrop = event => {
 		event.preventDefault()
+		event.stopPropagation()
 		this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
 	}
 
@@ -116,9 +100,9 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 		let fromId: string = event.dataTransfer.getData('text/taskId')
 
-		if (card && card.taskId === fromId) {
-			return
-		}
+		// if (card && card.taskId === fromId) {
+		// 	return
+		// }
 
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')

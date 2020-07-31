@@ -15,7 +15,7 @@ import AoMission from './mission'
 import AoAttachment from './attachment'
 import AoCoin from './coin'
 import { TaskContext } from './taskContext'
-import { CardPlay } from './dropZone'
+import { CardPlay } from '../cards'
 
 const AoCompleted: FunctionComponent<{}> = observer(({}) => {
 	const computed = observable({

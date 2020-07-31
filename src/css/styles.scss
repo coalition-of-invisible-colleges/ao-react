@@ -98,7 +98,10 @@ textarea {
       &.face {
         min-height: 6em;
         max-width: 98vw;
-        // min-width: 30em;
+
+        @media only screen and (min-width: 600px) {
+          min-width: 30em;
+        }
 
         & > .hud > .coin > .hodls {
           top: 0.65em;
@@ -167,11 +170,6 @@ textarea {
 
         .content {
           padding: 0.55em 1em 0.55em 1em;
-          // pointer-events: none;
-
-          // .coin {
-          // pointer-events: auto;
-          // }
         }
 
         .coin {
@@ -280,6 +278,18 @@ textarea {
           font-size: 0.8em;
           margin: 0;
           height: 100%;
+
+          h1 {
+            font-size: 1.1em;
+          }
+
+          h2,
+          h3,
+          h4,
+          h5,
+          h6 {
+            font-size: 1.05em;
+          }
         }
 
         & > .hud {
@@ -481,11 +491,6 @@ textarea {
 
       .value,
       .value.full {
-        // position: absolute;
-        // right: 3em;
-        // top: 0.2em;
-        // left: unset;
-        // transform: unset;
         font-size: 0.9em;
 
         &.menu {
@@ -504,9 +509,6 @@ textarea {
       }
 
       .checkbox {
-        // position: absolute;
-        // right: 0.5em;
-        // top: 0.5em;
         height: 1.5em;
         width: 1.5em;
         cursor: pointer;
@@ -628,17 +630,6 @@ textarea {
             border: $square-border;
             color: $body-color;
 
-            &:hover {
-              // overflow: visible;
-              // background: darken($square-hover, 50%);
-              span {
-                // margin: auto;
-                // padding: 0.5em;
-                // pointer-events: none;
-                // background: darken($square-hover, 50%);
-              }
-            }
-
             &.empty {
               cursor: text;
 
@@ -728,7 +719,6 @@ textarea {
       cursor: pointer;
       padding: 0.5em;
       user-select: none;
-      // z-index: 1;
     }
 
     // main menu, inside a Tippy
@@ -794,11 +784,6 @@ textarea {
       }
     }
 
-    //
-    #members .popupPanel input {
-      margin: 0.5em 0.5em 0.5em 5em;
-    }
-
     // community hub popup panel
     #hub {
       .actionCircle {
@@ -828,6 +813,10 @@ textarea {
         left: 0.5em;
         transform: translateY(-50%);
         top: 45vh;
+      }
+
+      .popupPanel input {
+        margin: 0.5em 0.5em 0.5em 5em;
       }
     }
 
@@ -1181,7 +1170,6 @@ textarea {
 
     // panel opened by an .actionCircle button
     .popupPanel {
-      // width: min-content;
       overflow-y: auto;
 
       .left {
@@ -1226,7 +1214,6 @@ textarea {
           transform: unset;
           left: unset;
           line-height: 2em;
-          // pointer-events: none;
 
           img {
             width: 1.5em;
@@ -1275,12 +1262,14 @@ textarea {
       top: -1000em;
     }
 
+    // limit iframe size on cards so that embeds show up correctly on small cards (.grid, .compact)
     .card iframe {
       max-width: calc(100% - 2em);
       max-height: calc(100% - 2em);
       margin: 1em;
     }
 
+    // outline around any card currently in search results
     .card.searchedOnPage:after {
       content: '';
       display: block;
@@ -1294,11 +1283,13 @@ textarea {
       pointer-events: none;
     }
 
+    // search results section. id is used by infinite scrolling library.
     #searchResults {
       overflow-y: auto;
       max-height: 70vh;
     }
 
+    // search results and grid scrollbars
     #search .popupPanel .results,
     .grid {
       &::-webkit-scrollbar {
@@ -1314,6 +1305,7 @@ textarea {
       }
     }
 
+    // overlay on drop zones
     .overlay {
       position: absolute;
       top: 0;
