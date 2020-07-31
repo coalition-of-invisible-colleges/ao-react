@@ -1025,7 +1025,7 @@ function tasksMuts(tasks, ev) {
           if (!task.grid) {
             task.grid = calculations.blankGrid()
           }
-          if (!_.has(task, 'grid.rows' + ev.y)) {
+          if (!_.has(task, 'grid.rows.' + ev.y)) {
             tasks[i].grid.rows[ev.y] = {}
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
@@ -1052,7 +1052,7 @@ function tasksMuts(tasks, ev) {
     case 'grid-unpin':
       tasks.some((task, i) => {
         if (task.taskId == ev.inId) {
-          if (!_.has(task, 'grid.rows' + ev.y)) {
+          if (!_.has(task, 'grid.rows.' + ev.y)) {
             return false
           }
           let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
