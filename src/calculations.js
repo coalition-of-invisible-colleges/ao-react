@@ -89,7 +89,7 @@ function blankCard(
   return newCard
 }
 
-function blankGrid(height, width) {
+function blankGrid(height = 3, width = 3) {
   let newGrid = {
     height: height,
     width: width,

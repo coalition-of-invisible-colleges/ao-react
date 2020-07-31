@@ -632,7 +632,7 @@ function tasksMuts(tasks, ev) {
           // }
         }
         if (task.taskId === ev.taskId) {
-          if (!task.hasOwnProperty('parents')) {
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
             task.parents = []
           }
 
@@ -708,7 +708,7 @@ function tasksMuts(tasks, ev) {
               task.deck.push(ev.memberId)
             }
           }
-          if (!task.hasOwnProperty('parents')) {
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
             task.parents = []
           }
 
@@ -984,6 +984,9 @@ function tasksMuts(tasks, ev) {
     case 'grid-resized':
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
+          if (!task.grid) {
+            task.grid = calculations.blankGrid(ev.height, ev.width)
+          }
           task.grid.height = ev.height
           task.grid.width = ev.width
           Object.entries(task.grid.rows).forEach(([y, row]) => {
@@ -1019,7 +1022,10 @@ function tasksMuts(tasks, ev) {
     case 'grid-pin':
       tasks.forEach((task, i) => {
         if (task.taskId === ev.inId) {
-          if (!_.has(task.grid.rows, ev.y)) {
+          if (!task.grid) {
+            task.grid = calculations.blankGrid()
+          }
+          if (!_.has(task, 'grid.rows' + ev.y)) {
             tasks[i].grid.rows[ev.y] = {}
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
@@ -1032,10 +1038,9 @@ function tasksMuts(tasks, ev) {
           //     task.deck.push(ev.memberId)
           //   }
           // }
-          if (!task.hasOwnProperty('parents')) {
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
             task.parents = []
           }
-
           if (!task.parents.some(pId => pId === ev.inId)) {
             task.parents.push(ev.inId)
           }
@@ -1047,6 +1052,9 @@ function tasksMuts(tasks, ev) {
     case 'grid-unpin':
       tasks.some((task, i) => {
         if (task.taskId == ev.inId) {
+          if (!_.has(task, 'grid.rows' + ev.y)) {
+            return false
+          }
           let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
           delete tasks[i].grid.rows[ev.y][ev.x]
           if (task.grid.rows[ev.y].length == 0) {
