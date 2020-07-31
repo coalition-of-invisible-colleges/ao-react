@@ -45,15 +45,18 @@ textarea {
     // palette: color selector component
     .palette {
       width: max-content;
+
       .swatch {
         display: inline-block;
         position: relative;
         margin: 0.75em 1em 2em 1em;
         cursor: pointer;
+
         .paper {
           width: 1em;
           height: 1em;
         }
+
         .border {
           padding: 0.9em;
           border: 0.165em solid transparent;
@@ -64,6 +67,7 @@ textarea {
             border-radius: 1em;
           }
         }
+
         .label {
           margin-top: 0.75em;
           position: absolute;
@@ -314,13 +318,13 @@ textarea {
               background-color: rgba(0, 0, 0, 0.2);
               font-size: 0.75em;
               padding: 0.25em;
-              pointer-events: none;
               margin: 0;
             }
 
             & > .countdown,
             & > .mission {
               float: left;
+              pointer-events: none;
             }
 
             & > .mission {
@@ -364,7 +368,6 @@ textarea {
               background-color: rgba(0, 0, 0, 0.2);
               font-size: 0.6em;
               padding: 0.25em;
-              pointer-events: none;
               margin: 0 1em 0 0;
               width: max-content;
             }

@@ -14,15 +14,12 @@ const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
   ({ taskId, hudStyle }) => {
     return (
       <Tippy
-        zIndex={2}
+        zIndex={5}
         content={<AoCardHud taskId={taskId} hudStyle={'menu'} />}
         interactive={true}
         trigger={'click'}
         placement={'top-end'}
-        appendTo={() => {
-          console.log('getting the element now')
-          return document.getElementById('card-' + taskId).parentElement
-        }}>
+        appendTo={document.getElementById('root')}>
         <div
           className={'cardMenuButton'}
           onDoubleClick={event => {

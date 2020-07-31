@@ -170,6 +170,7 @@ export default class AoCountdown extends React.Component<
         placement={'top'}
         delay={[475, 200]}
         theme={'translucent'}
+        appendTo={document.getElementById('root')}
         content={
           <div style={{ width: 'max-content' }}>
             {format(
