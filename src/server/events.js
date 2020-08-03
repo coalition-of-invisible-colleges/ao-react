@@ -159,6 +159,16 @@ function memberFieldUpdated(memberId, field, newfield, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function memberTickerSet(memberId, symbol, index, callback) {
+  let newEvent = {
+    type: 'member-ticker-set',
+    memberId,
+    symbol,
+    index
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function dogeBarked(memberId, callback) {
   let newEvent = {
     type: 'doge-barked',
@@ -655,6 +665,7 @@ module.exports = {
   memberPurged,
   memberActivated,
   memberFieldUpdated,
+  memberTickerSet,
   dogeBarked,
   dogeMuted,
   dogeUnmuted,

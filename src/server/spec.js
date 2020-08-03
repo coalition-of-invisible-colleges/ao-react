@@ -218,6 +218,23 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'member-ticker-set':
+      if (
+        validators.isMemberId(req.body.memberId, errRes) &&
+        validators.isNotes(req.body.symbol, errRes) &&
+        validators.isAmount(req.body.index, errRes) &&
+        req.body.symbol.length <= 5
+      ) {
+        events.memberTickerSet(
+          req.body.memberId,
+          req.body.symbol,
+          req.body.index,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'doge-barked':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events.dogeBarked(req.body.memberId, utils.buildResCallback(res))
@@ -242,84 +259,6 @@ router.post('/events', (req, res, next) => {
           })
       } else {
         res.status(200).send(errRes)
-      }
-      break
-    case 'member-created':
-      if (
-        validators.isNotes(req.body.name, errRes) &&
-        validators.isNotes(req.body.fob, errRes) &&
-        validators.isNotes(req.body.secret)
-      ) {
-        events.memberCreated(
-          req.body.name,
-          req.body.fob,
-          req.body.secret,
-          utils.buildResCallback(res)
-        )
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'member-activated':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberActivated(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'member-deactivated':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberDeactivated(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'member-purged':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberPurged(
-          req.body.memberId,
-          req.body.blame,
-          utils.buildResCallback(res)
-        )
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'member-field-updated':
-      if (
-        validators.isMemberId(req.body.memberId, errRes) &&
-        validators.isField(req.body.field, errRes) &&
-        validators.isNotes(req.body.newfield, errRes)
-      ) {
-        events.memberFieldUpdated(
-          req.body.memberId,
-          req.body.field,
-          req.body.newfield,
-          utils.buildResCallback(res)
-        )
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'doge-barked':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeBarked(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'doge-muted':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeMuted(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
-      break
-    case 'doge-unmuted':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeUnmuted(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
       }
       break
     case 'doge-migrated':

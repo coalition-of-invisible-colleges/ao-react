@@ -919,6 +919,62 @@ textarea {
       }
     }
 
+    // tickers hud region containing multiple ticker spots
+    #tickers {
+      position: fixed;
+      top: 45vh;
+      right: 1.5em;
+      transform: translateY(-50%);
+
+      .ticker {
+        margin-top: 0.7em;
+        margin-bottom: 0.7em;
+        position: relative;
+
+        .actionCircle {
+          height: 3em;
+          width: 3em;
+
+          p {
+            font-size: 0.7em;
+          }
+
+          // a + button that adds a new item to whatever the context is (e.g., a new crypto ticker)
+          &.newEntry {
+            p {
+              font-size: 2em;
+              font-weight: bold;
+              position: relative;
+              top: -0.8em;
+            }
+          }
+        }
+
+        textarea {
+          border-radius: 50%;
+          overflow: hidden;
+          height: 2.25em;
+          width: 3.5em;
+          font-size: 1em;
+          outline: none;
+          text-align: center;
+          display: inline-block;
+          vertical-align: middle;
+          padding-top: 1.25em;
+          resize: none;
+          margin: 0;
+        }
+
+        .error {
+          color: $card-red;
+          font-weight: bold;
+          position: absolute;
+          top: 90%;
+          left: 45%;
+        }
+      }
+    }
+
     // score / points in bottom right of screen
     #score {
       position: fixed;

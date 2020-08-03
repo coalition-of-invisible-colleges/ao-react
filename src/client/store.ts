@@ -33,6 +33,7 @@ export interface Member {
   active: number
   balance: number
   badges: []
+  tickers: string[]
   info: {}
   timestamp: number
   lastUsed: Date

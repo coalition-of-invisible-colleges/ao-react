@@ -514,6 +514,27 @@ class AoApi {
       })
   }
 
+  // Each member has a list of tickers. Each ticker is a string.
+  // Sets the ticker at position tickerListIndex to symbol coinSymbol.
+  async setTicker(
+    coinSymbol: string,
+    tickerListIndex: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'member-ticker-set',
+      memberId: aoStore.member.memberId,
+      symbol: coinSymbol,
+      index: tickerListIndex
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async clockTime(seconds, taskId, date): Promise<request.Response> {
     const act = {
       type: 'task-time-clocked',

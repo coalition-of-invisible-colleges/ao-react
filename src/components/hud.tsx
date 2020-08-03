@@ -7,6 +7,7 @@ import AoHub from './hub'
 import AoCalendar from './calendar'
 import AoMissions from './missions'
 import AoSearch from './search'
+import AoTickerHud from './tickerHud'
 import AoScore from './score'
 import AoStatus from './status'
 import AoServerName from './serverName'
@@ -105,6 +106,7 @@ export default class AoHud extends React.Component<{}, undefined> {
           </AoPopupPanel>
         </div>
         <AoReturnPile />
+        <AoTickerHud />
         <AoScore />
       </React.Fragment>
     )

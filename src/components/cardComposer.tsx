@@ -47,37 +47,6 @@ export default class AoCardComposer extends React.Component<
 				return
 			}
 			this.props.onNewCard(trimmed)
-			// switch (this.props.cardSource) {
-			// 	case 'grid':
-			// 		const currentGrid = aoStore.hashMap.get(aoStore.currentCard).grid
-			// 		if (
-			// 			!this.state.text ||
-			// 			(currentGrid &&
-			// 				currentGrid[this.props.y] &&
-			// 				currentGrid[this.props.y][this.props.x])
-			// 		) {
-			// 			api.unpinCardFromGrid(this.props.x, this.props.y, this.props.inId)
-			// 		} else if (this.state.text.trim().length >= 1) {
-			// 			api.pinCardToGrid(
-			// 				this.props.x,
-			// 				this.props.y,
-			// 				this.state.text.trim(),
-			// 				this.props.inId
-			// 			)
-			// 		}
-			// 		break
-			// 	case 'priorities':
-			// 	case 'subTasks':
-			// 		let newText = this.state.text.trim()
-			// 		if (newText) {
-			// 			api.findOrCreateCardInCard(
-			// 				newText,
-			// 				this.props.inId,
-			// 				this.props.cardSource === 'priorities'
-			// 			)
-			// 		}
-			// 		break
-			// }
 			this.setState({ text: undefined })
 			this.onBlur(event)
 		} else if (event.key === 'Escape') {

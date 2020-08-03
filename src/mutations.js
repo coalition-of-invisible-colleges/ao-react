@@ -174,6 +174,21 @@ function membersMuts(members, ev) {
       })
       break
 
+    case 'member-ticker-set':
+      members.forEach(member => {
+        if (member.memberId === ev.memberId) {
+          if (!member.tickers) {
+            member.tickers = []
+          }
+          if (!ev.symbol || ev.symbol.trim().length < 1) {
+            member.tickers.splice(ev.index, 1)
+          } else {
+            member.tickers[ev.index] = ev.symbol.trim().toLowerCase()
+          }
+        }
+      })
+      break
+
     case 'doge-barked':
       members.forEach(member => {
         // this should only bump up for mutual doges
