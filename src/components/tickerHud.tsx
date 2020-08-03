@@ -177,7 +177,9 @@ export default class AoTickerHud extends React.Component<{}, TickerHudState> {
   }
 
   validateCoinSymbol(symbol) {
-    return this.state.tickerData.data.rates.hasOwnProperty(symbol)
+    return this.state.tickerData.data.rates.hasOwnProperty(
+      symbol.trim().toLowerCase()
+    )
   }
 
   render() {
