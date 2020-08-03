@@ -220,7 +220,7 @@ export default class AoTickerHud extends React.Component<{}, TickerHudState> {
         {tickers}
         <AoTicker
           ticker={undefined}
-          index={myTickers.length}
+          index={myTickers ? myTickers.length : 0}
           validator={this.validateCoinSymbol}
         />
       </div>
