@@ -163,17 +163,21 @@ export default class AoTickerHud extends React.Component<{}, TickerHudState> {
     const allExchangeRates = await CoinGeckoClient.exchangeRates.all()
     this.setState({ tickerData: allExchangeRates })
 
-    let querySymbols = []
-    aoStore.member.tickers.forEach((ticker, i) => {
-      if (!this.validateCoinSymbol(ticker)) {
-        querySymbols.push(ticker)
-      }
-    })
-    const extendedResults = await CoinGeckoClient.simple.price({
-      ids: ['bitcoin'],
-      vs_currencies: querySymbols
-    })
-    this.setState({ extendedTickerData: extendedResults })
+    if (aoStore.member.tickers && aoStore.member.tickers.length >= 1) {
+      let querySymbols = []
+
+      aoStore.member.tickers.forEach((ticker, i) => {
+        if (!this.validateCoinSymbol(ticker)) {
+          querySymbols.push(ticker)
+        }
+      })
+
+      const extendedResults = await CoinGeckoClient.simple.price({
+        ids: ['bitcoin'],
+        vs_currencies: querySymbols
+      })
+      this.setState({ extendedTickerData: extendedResults })
+    }
   }
 
   validateCoinSymbol(symbol) {
