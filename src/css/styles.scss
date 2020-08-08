@@ -870,9 +870,16 @@ textarea {
       .actionCircle {
         top: calc(45vh + 2.5em);
       }
+
       .card {
         min-width: 28em;
       }
+
+      .results.empty {
+        max-width: 18em;
+        margin: 1em;
+      }
+
       .agendaTail .stack {
         margin-top: 1em;
 
