@@ -27,9 +27,14 @@ export default class AoMission extends React.Component<MissionProps, State> {
     super(props)
     this.state = defaultState
     this.startEditing = this.startEditing.bind(this)
+    this.stopEditing = this.stopEditing.bind(this)
     this.saveMission = this.saveMission.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+  }
+
+  componentDidMount() {
+    aoStore.registerCloseable(this.stopEditing)
   }
 
   startEditing(event) {
@@ -40,6 +45,10 @@ export default class AoMission extends React.Component<MissionProps, State> {
       })
     }
     this.setState({ editing: true })
+  }
+
+  stopEditing() {
+    this.setState({ editing: false, text: '' })
   }
 
   saveMission(event) {
@@ -56,7 +65,7 @@ export default class AoMission extends React.Component<MissionProps, State> {
     if (event.key === 'Enter') {
       this.saveMission(event)
     } else if (event.key === 'Escape') {
-      this.setState({ editing: false, text: '' })
+      this.stopEditing()
     }
   }
 

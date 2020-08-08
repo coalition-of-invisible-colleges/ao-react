@@ -667,7 +667,8 @@ textarea {
         .resizer {
           position: absolute;
           margin-top: -4.75em;
-          right: -3em;
+          right: 0;
+          transform: translateX(100%);
 
           button {
             display: block;
@@ -684,7 +685,7 @@ textarea {
           .columns {
             .minus,
             .plus {
-              right: -1.875em;
+              right: -0.275em;
               margin-top: 0.25em;
               padding-left: 0.25em;
               padding-right: 0.25em;
@@ -695,7 +696,7 @@ textarea {
             .minus,
             .plus {
               display: inline;
-              left: -3.9em;
+              left: -5.5em;
               margin-top: 0.6em;
               margin-right: 0.25em;
               padding: 0 0.75em;
@@ -871,6 +872,22 @@ textarea {
       }
       .card {
         min-width: 28em;
+      }
+      .agendaTail .stack {
+        margin-top: 1em;
+
+        .action.open {
+          font-size: 1.5em;
+          font-weight: bold;
+          padding: 0.25em 0.5em;
+          background: none;
+          border: none;
+          text-shadow: none;
+
+          // &:hover {
+          //   text-decoration: none;
+          // }
+        }
       }
     }
 

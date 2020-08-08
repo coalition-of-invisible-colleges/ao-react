@@ -29,6 +29,7 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 		console.log('dropToGridSquare, move is ', move)
 		const card = aoStore.hashMap.get(move.from.taskId)
 		if (card) {
+			// This should only be done if a card is actually discarded. For example should not be done on priorities that are merely deprioritized. Also it should display the action that is to happen for the black discard background zone as text next to the cursor.
 			aoStore.addToDiscardHistory([card])
 			console.log('Pushed discarded card to history.')
 		} else {

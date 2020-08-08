@@ -26,9 +26,14 @@ export default class AoValue extends React.Component<ValueProps, State> {
     super(props)
     this.state = defaultState
     this.startEditing = this.startEditing.bind(this)
+    this.stopEditing = this.stopEditing.bind(this)
     this.saveValue = this.saveValue.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+  }
+
+  componentDidMount() {
+    aoStore.registerCloseable(this.stopEditing)
   }
 
   startEditing(event) {
@@ -39,6 +44,10 @@ export default class AoValue extends React.Component<ValueProps, State> {
       })
     }
     this.setState({ editing: true })
+  }
+
+  stopEditing() {
+    this.setState({ editing: false })
   }
 
   saveValue(event) {

@@ -44,40 +44,67 @@ export default class AoCalendar extends React.Component<{}, State> {
         return b.book.startTs - a.book.startTs
       })
 
-    const soonMs = 64800000 // 18 hours
-    const laterMs = 604800000 // 1 week
-    const pastBufferMs = 3600000 // supposed to be 1 hour event length by default
-    let eventually: Task[] = []
+    const todayMs = 64800000 // 18 hours
+    const tomorrowMs = 172800000 // 48 hours
+    const thisWeekMs = 604800000 // 1 week
+    const nextWeekMs = thisWeekMs * 2 // 2 weeks
+    const thisMonthMs = thisWeekMs * 4 // 4 weeks
+    const nextMonthMs = thisMonthMs * 2 // 2 months
+    const thisYearMs = 31536000000 // 365 days
+    const pastBufferMs = 3600000 // assuming 1 hour event length by default
 
-    const now = events.filter(task => {
-      const timeToNow = task.book.startTs - Date.now()
-      return timeToNow <= 0 && timeToNow > -pastBufferMs
-    })
+    let now: Task[] = [],
+      today: Task[] = [],
+      tomorrow: Task[] = [],
+      thisWeek: Task[] = [],
+      nextWeek: Task[] = [],
+      thisMonth: Task[] = [],
+      nextMonth: Task[] = [],
+      thisYear: Task[] = [],
+      eventually: Task[] = [],
+      past: Task[] = []
 
-    const soon = events.filter(task => {
+    events.forEach(task => {
       const timeToNow = task.book.startTs - Date.now()
-      return timeToNow <= soonMs && timeToNow > 0
-    })
-
-    const later = events.filter(task => {
-      const timeToNow = task.book.startTs - Date.now()
-      if (timeToNow > laterMs) {
-        eventually.push(task)
-        return false
+      if (timeToNow < -pastBufferMs) {
+        past.push(task)
+      } else if (timeToNow > -pastBufferMs && timeToNow <= 0) {
+        now.push(task)
+      } else if (timeToNow > 0 && timeToNow <= todayMs) {
+        today.push(task)
+      } else if (timeToNow > todayMs && timeToNow <= tomorrowMs) {
+        tomorrow.push(task)
+      } else if (timeToNow > tomorrowMs && timeToNow <= thisWeekMs) {
+        thisWeek.push(task)
+      } else if (timeToNow > thisWeekMs && timeToNow <= nextWeekMs) {
+        nextWeek.push(task)
+      } else if (timeToNow > nextWeekMs && timeToNow <= thisMonthMs) {
+        thisMonth.push(task)
+      } else if (timeToNow > thisMonthMs && timeToNow <= nextMonthMs) {
+        nextMonth.push(task)
+      } else if (timeToNow > nextMonthMs && timeToNow <= thisYearMs) {
+        thisYear.push(task)
       } else {
-        return timeToNow <= laterMs && timeToNow > soonMs
+        eventually.push(task)
       }
-    })
-
-    const past = events.filter(task => {
-      return task.book.startTs - Date.now() < -pastBufferMs
     })
 
     past.reverse()
 
     let renderedCalendarList
 
-    if (now.length + soon.length + later.length + eventually.length < 1) {
+    if (
+      now.length +
+        today.length +
+        tomorrow.length +
+        thisWeek.length +
+        nextWeek.length +
+        thisMonth.length +
+        nextMonth.length +
+        thisYear.length +
+        eventually.length <
+      1
+    ) {
       renderedCalendarList = (
         <div className={'results'}>
           <div className={'results empty'}>
@@ -101,28 +128,66 @@ export default class AoCalendar extends React.Component<{}, State> {
         <div className={'results'}>
           {now.length >= 1 ? <h2>Now</h2> : ''}
           <AoStack cards={now} cardStyle={'priority'} alwaysShowAll={true} />
-          {soon.length >= 1 ? <h2>Today</h2> : ''}
-          <AoStack cards={soon} cardStyle={'priority'} alwaysShowAll={true} />
-          {later.length >= 1 ? <h2>This Week</h2> : ''}
-          <AoStack cards={later} cardStyle={'priority'} alwaysShowAll={true} />
-          {eventually.length >= 1 ? <h2>Eventually</h2> : ''}
+          {today.length >= 1 ? <h2>Today</h2> : ''}
+          <AoStack cards={today} cardStyle={'priority'} alwaysShowAll={true} />
+          {tomorrow.length >= 1 ? <h2>Tomorrow</h2> : ''}
           <AoStack
-            cards={eventually}
+            cards={tomorrow}
             cardStyle={'priority'}
             alwaysShowAll={true}
           />
-          <div style={{ height: '1em' }} />
+          {thisWeek.length >= 1 ? <h2>This Week</h2> : ''}
           <AoStack
-            cards={past}
+            cards={thisWeek}
             cardStyle={'priority'}
-            descriptor={{ singular: 'past event', plural: 'past events' }}
-            noFirstCard={true}
+            alwaysShowAll={true}
           />
+          {nextWeek.length >= 1 ? <h2>Next Week</h2> : ''}
+          <AoStack
+            cards={nextWeek}
+            cardStyle={'priority'}
+            alwaysShowAll={false}
+          />
+          <div className={'agendaTail'}>
+            <AoStack
+              cards={thisMonth}
+              cardStyle={'priority'}
+              alwaysShowAll={false}
+              descriptor={{ singular: 'This Month', plural: 'This Month' }}
+              noFirstCard={true}
+            />
+            <AoStack
+              cards={nextMonth}
+              cardStyle={'priority'}
+              alwaysShowAll={false}
+              descriptor={{ singular: 'Next Month', plural: 'Next Month' }}
+              noFirstCard={true}
+            />
+            <AoStack
+              cards={thisYear}
+              cardStyle={'priority'}
+              alwaysShowAll={false}
+              descriptor={{ singular: 'This Year', plural: 'This Year' }}
+              noFirstCard={true}
+            />
+            <AoStack
+              cards={eventually}
+              cardStyle={'priority'}
+              alwaysShowAll={false}
+              descriptor={{ singular: 'Eventually', plural: 'Eventually' }}
+            />
+            <AoStack
+              cards={past}
+              cardStyle={'priority'}
+              descriptor={{ singular: 'past event', plural: 'past events' }}
+              noFirstCard={true}
+            />
+          </div>
         </div>
       )
     }
 
-    const nowPlusSoon = now.concat(soon)
+    const nowPlusSoon = now.concat(today)
     const renderedBadge =
       nowPlusSoon.length >= 1 ? (
         <React.Fragment>

@@ -3,6 +3,7 @@ import _ from 'lodash'
 import M from '../mutations'
 import modules from '../modules'
 import calculations from '../calculations'
+import AoStack from '../components/stack'
 
 function setCurrent(state: AoState, b: AoState) {
   modules.cash.mutations.setCurrent(state.cash, b)
@@ -170,6 +171,7 @@ class AoStore {
   @observable context: string[] = []
   @observable currentCard: string = undefined
   @observable discard: Task[] = []
+  @observable guiCloseable: ((event?) => void)[] = []
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -376,6 +378,14 @@ class AoStore {
   @action.bound
   popDiscardHistory() {
     return this.discard.pop()
+  }
+  @action.bound
+  registerCloseable(onHide: (event) => void) {
+    this.guiCloseable.push(onHide)
+  }
+  @action.bound
+  closeAllCloseables() {
+    this.guiCloseable.forEach(callback => callback())
   }
 }
 const aoStore = new AoStore()

@@ -20,7 +20,7 @@ import { TaskContext } from './taskContext'
 import { prioritizeCard, subTaskCard, CardZone } from '../cards'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
-import { hideAll } from 'tippy.js'
+import { hideAll as hideAllTippys } from 'tippy.js'
 import Completed from '../assets/images/completed.svg'
 
 export type CardStyle =
@@ -108,7 +108,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	goInCard(event) {
 		event.stopPropagation()
-		hideAll()
+		hideAllTippys()
+		aoStore.closeAllCloseables()
 
 		const card = this.context
 		if (!card) {

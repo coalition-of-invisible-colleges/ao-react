@@ -62,6 +62,10 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     this.toggleCompose = this.toggleCompose.bind(this)
   }
 
+  componentDidMount() {
+    aoStore.registerCloseable(this.hide)
+  }
+
   selectStackZone(selection: Sel) {
     this.setState({ selected: selection })
   }
@@ -72,9 +76,11 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     this.setState({ showAll: true })
   }
 
-  hide(event) {
-    event.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
+  hide(event?) {
+    if (event) {
+      event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
+    }
     this.setState({ showAll: false })
   }
 
@@ -194,7 +200,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
               {numCards} {renderedDescriptor}&#8964;
             </div>
           ) : (
-            <div onClick={this.hide} className={'action'}>
+            <div onClick={this.hide} className={'action open'}>
               {this.props.noFirstCard ? (
                 <>
                   {numCards} {renderedDescriptor}
