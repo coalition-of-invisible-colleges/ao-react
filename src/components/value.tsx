@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { HudStyle } from './cardHud'
@@ -16,12 +17,13 @@ export const defaultState: State = {
 }
 
 interface ValueProps {
-  taskId: string
   hudStyle: HudStyle
 }
 
 @observer
 export default class AoValue extends React.Component<ValueProps, State> {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -38,9 +40,11 @@ export default class AoValue extends React.Component<ValueProps, State> {
 
   startEditing(event) {
     event.stopPropagation()
-    if (aoStore.hashMap.get(this.props.taskId).completeValue) {
+
+    const card = this.context
+    if (card.completeValue) {
       this.setState({
-        text: aoStore.hashMap.get(this.props.taskId).completeValue.toString()
+        text: card.completeValue.toString()
       })
     }
     this.setState({ editing: true })
@@ -52,14 +56,16 @@ export default class AoValue extends React.Component<ValueProps, State> {
 
   saveValue(event) {
     event.stopPropagation()
+
+    const card = this.context
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
-    if (newValue === aoStore.hashMap.get(this.props.taskId).completeValue) {
+    if (newValue === card.completeValue) {
       this.setState({ editing: false })
       return
     }
     if (newValue !== NaN) {
-      api.valueCard(this.props.taskId, newValue)
+      api.valueCard(card.taskId, newValue)
       this.setState({ editing: false })
     }
   }
@@ -77,6 +83,8 @@ export default class AoValue extends React.Component<ValueProps, State> {
   }
 
   render() {
+    const card = this.context
+
     if (this.state.editing) {
       return (
         <div className="value">
@@ -96,19 +104,19 @@ export default class AoValue extends React.Component<ValueProps, State> {
     }
     switch (this.props.hudStyle) {
       case 'full before':
-        if (aoStore.hashMap.get(this.props.taskId).completeValue) {
+        if (card.taskId.completeValue) {
           return (
             <div onClick={this.startEditing} className={'value full action'}>
-              {aoStore.hashMap.get(this.props.taskId).completeValue + ' points'}
+              {card.taskId.completeValue + ' points'}
             </div>
           )
         }
         return null
       case 'mini before':
-        if (aoStore.hashMap.get(this.props.taskId).completeValue) {
+        if (card.taskId.completeValue) {
           return (
             <span className={'value mini'}>
-              {aoStore.hashMap.get(this.props.taskId).completeValue + 'p'}
+              {card.taskId.completeValue + 'p'}
             </span>
           )
         }
@@ -117,10 +125,8 @@ export default class AoValue extends React.Component<ValueProps, State> {
         return (
           <div className={'value menu'}>
             <div onClick={this.startEditing} className={'action'}>
-              {aoStore.hashMap.get(this.props.taskId).completeValue
-                ? 'worth ' +
-                  aoStore.hashMap.get(this.props.taskId).completeValue +
-                  ' points if checked'
+              {card.taskId.completeValue
+                ? 'worth ' + card.taskId.completeValue + ' points if checked'
                 : 'set checkmark value'}
             </div>
           </div>
@@ -128,10 +134,10 @@ export default class AoValue extends React.Component<ValueProps, State> {
       case 'face before':
       case 'collapsed':
       default:
-        if (aoStore.hashMap.get(this.props.taskId).completeValue > 0) {
+        if (card.taskId.completeValue > 0) {
           return (
             <div className={'value summary ' + this.props.hudStyle}>
-              {aoStore.hashMap.get(this.props.taskId).completeValue + 'p'}
+              {card.taskId.completeValue + 'p'}
             </div>
           )
         }

@@ -775,7 +775,8 @@ textarea {
     #missions,
     #calendar,
     #search,
-    #returnPile {
+    #returnPile,
+    #shitposts {
       z-index: 1;
 
       .actionCircle {
@@ -996,6 +997,14 @@ textarea {
           top: 90%;
           left: 45%;
         }
+      }
+    }
+
+    #shitposts {
+      .actionCircle {
+        left: unset;
+        right: 1.5em;
+        bottom: 5em;
       }
     }
 

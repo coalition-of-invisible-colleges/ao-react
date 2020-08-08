@@ -2,13 +2,13 @@ import React, { FunctionComponent } from 'react'
 import { Link } from 'react-router-dom'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import { HudStyle } from './cardHud'
 import FileViewer from 'react-file-viewer'
 import path from 'path'
 
 interface AoAttachmentProps {
-  taskId?: string
   hudStyle: HudStyle
 }
 
@@ -16,8 +16,10 @@ const testfile = '../assets/images/buddadoge.svg'
 const testtype = 'png'
 
 const AoAttachment: FunctionComponent<AoAttachmentProps> = observer(
-  ({ taskId, hudStyle }) => {
-    let meme = aoStore.memeById.get(taskId)
+  ({ hudStyle }) => {
+    const card: Task = React.useContext(TaskContext)
+
+    let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {
       return null
     }

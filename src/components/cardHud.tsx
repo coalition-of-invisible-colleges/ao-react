@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
@@ -28,7 +29,6 @@ export type HudStyle =
 	| 'menu'
 
 interface CardHudProps {
-	taskId: string
 	hudStyle: HudStyle
 	prioritiesShown?: boolean
 	onTogglePriorities?: (any) => void
@@ -38,82 +38,78 @@ interface CardHudProps {
 
 const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 	({
-		taskId,
 		hudStyle,
 		prioritiesShown,
 		onTogglePriorities,
 		projectsShown,
 		onToggleProjects
 	}) => {
-		const card: Task = aoStore.hashMap.get(taskId)
+		const card: Task = React.useContext(TaskContext)
 		switch (hudStyle) {
 			case 'context':
 				return (
 					<div className={'hud'}>
-						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoMission hudStyle={hudStyle} />
 						<AoPreview
-							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={prioritiesShown}
 							onTogglePriorities={onTogglePriorities}
 						/>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoCountdown hudStyle={hudStyle} />
 					</div>
 				)
 				break
 			case 'collapsed':
 				return (
 					<div className={'hud'}>
-						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoMission hudStyle={hudStyle} />
 						<AoPreview
-							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={prioritiesShown}
 							onTogglePriorities={onTogglePriorities}
 						/>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						<AoCountdown hudStyle={hudStyle} />
+						<AoValue hudStyle={hudStyle} />
+						<AoCheckbox hudStyle={hudStyle} />
+						<AoCardMenu hudStyle={hudStyle} />
 					</div>
 				)
 			case 'collapsed-mission':
 				return (
 					<div className={'hud'}>
 						<AoPreview
-							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={prioritiesShown}
 							onTogglePriorities={onTogglePriorities}
 						/>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						<AoCountdown hudStyle={hudStyle} />
+						<AoValue hudStyle={hudStyle} />
+						<AoCheckbox hudStyle={hudStyle} />
+						<AoCardMenu hudStyle={hudStyle} />
 					</div>
 				)
 			case 'full before':
 			case 'face before':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						<AoCountdown hudStyle={hudStyle} />
+						<AoValue hudStyle={hudStyle} />
+						<AoCheckbox hudStyle={hudStyle} />
 					</div>
 				)
 			case 'full after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCoin taskId={taskId} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						<AoCoin />
+						<AoCardMenu hudStyle={hudStyle} />
 					</div>
 				)
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCoin taskId={taskId} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						<AoCoin />
+						<AoPreview hudStyle={hudStyle} />
+						<AoCardMenu hudStyle={hudStyle} />
 					</div>
 				)
 			case 'mini before':
@@ -127,28 +123,28 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 						) : (
 							<div className={'seen'} />
 						)}
-						<AoMission taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={card.taskId} hudStyle={hudStyle} />
+						<AoMission hudStyle={hudStyle} />
+						<AoCheckbox hudStyle={hudStyle} />
+						<AoValue hudStyle={hudStyle} />
 					</div>
 				)
 
 			case 'mini after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						<AoCountdown hudStyle={hudStyle} />
+						<AoPreview hudStyle={hudStyle} />
+						<AoCardMenu hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':
 				return (
 					<div className={'hud menu'}>
-						<AoMission taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
-						<AoPalette taskId={taskId} />
+						<AoMission hudStyle={hudStyle} />
+						<AoValue hudStyle={hudStyle} />
+						<AoCountdown hudStyle={hudStyle} />
+						<AoTimeClock hudStyle={hudStyle} />
+						<AoPalette />
 					</div>
 				)
 		}

@@ -2,7 +2,8 @@ import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-import aoStore, { AoState, Grid } from '../client/store'
+import aoStore, { AoState, Grid, Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
@@ -11,8 +12,6 @@ import AoDropZone from './dropZone'
 import { CardPlay } from '../cards'
 import AoGridResizer from './gridResizer'
 import AoContextCard from './contextCard'
-import { TaskContext } from './taskContext'
-import { Task } from '../client/store'
 import AoCardComposer from './cardComposer'
 
 interface Sel {
@@ -29,12 +28,10 @@ export const defaultState: GridState = {
   redirect: undefined
 }
 
-interface GridProps {
-  taskId: string
-}
-
 @observer
-export default class AoGrid extends React.Component<GridProps, GridState> {
+export default class AoGrid extends React.Component<{}, GridState> {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -44,7 +41,8 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   }
 
   addGrid() {
-    api.addGridToCard(this.props.taskId, 3, 3)
+    const card = this.context
+    api.addGridToCard(card.taskId, 3, 3)
   }
 
   selectGridSquare(selection: Sel) {
@@ -52,7 +50,8 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   }
 
   newGridCard(name: string, coords: Sel) {
-    api.pinCardToGrid(coords.x, coords.y, name, this.props.taskId)
+    const card = this.context
+    api.pinCardToGrid(coords.x, coords.y, name, card.taskId)
   }
 
   dropToGridSquare(move: CardPlay) {
@@ -159,17 +158,17 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   }
 
   @computed get grid() {
-    console.log('recomputing grid')
-    const task = aoStore.hashMap.get(this.props.taskId)
+    const card = this.context
 
-    if (task.hasOwnProperty('grid') && task.grid) {
-      return task.grid
+    if (card.hasOwnProperty('grid') && card.grid) {
+      return card.grid
     }
 
     return false
   }
 
   render() {
+    const card = this.context
     const render = []
     let grid = this.grid
 
@@ -224,7 +223,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
         render.push(
           <TaskContext.Provider value={task} key={i + '-' + j}>
             <AoDropZone
-              inId={this.props.taskId}
+              inId={card.taskId}
               x={i}
               y={j}
               onSelect={() => this.selectGridSquare({ x: i, y: j })}
@@ -234,7 +233,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
                 <AoDragZone
                   dragContext={{
                     zone: 'grid',
-                    inId: this.props.taskId,
+                    inId: card.taskId,
                     x: i,
                     y: j
                   }}>
@@ -257,7 +256,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
           }}>
           {render}
         </div>
-        <AoGridResizer taskId={this.props.taskId} />
+        <AoGridResizer taskId={card.taskId} />
       </div>
     )
   }

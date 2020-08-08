@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { HudStyle } from './cardHud'
@@ -17,12 +18,13 @@ export const defaultState: State = {
 }
 
 interface MissionProps {
-  taskId: string
   hudStyle: HudStyle
 }
 
 @observer
 export default class AoMission extends React.Component<MissionProps, State> {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -39,9 +41,11 @@ export default class AoMission extends React.Component<MissionProps, State> {
 
   startEditing(event) {
     event.stopPropagation()
-    if (aoStore.hashMap.get(this.props.taskId).guild) {
+
+    const card = this.context
+    if (card.guild) {
       this.setState({
-        text: aoStore.hashMap.get(this.props.taskId).guild
+        text: card.guild
       })
     }
     this.setState({ editing: true })
@@ -53,11 +57,13 @@ export default class AoMission extends React.Component<MissionProps, State> {
 
   saveMission(event) {
     event.stopPropagation()
-    if (this.state.text === aoStore.hashMap.get(this.props.taskId).guild) {
+    const card = this.context
+
+    if (this.state.text === card.guild) {
       this.setState({ editing: false })
       return
     }
-    api.titleMissionCard(this.props.taskId, this.state.text)
+    api.titleMissionCard(card.taskId, this.state.text)
     this.setState({ editing: false })
   }
 
@@ -74,6 +80,8 @@ export default class AoMission extends React.Component<MissionProps, State> {
   }
 
   render() {
+    const card = this.context
+
     if (this.state.editing) {
       return (
         <div className="mission">
@@ -93,21 +101,21 @@ export default class AoMission extends React.Component<MissionProps, State> {
     }
     switch (this.props.hudStyle) {
       case 'full before':
-        if (!aoStore.hashMap.get(this.props.taskId).guild) {
+        if (!card.guild) {
           return null
         }
         return (
           <div onClick={this.startEditing} className={'mission full action'}>
             <img className="badge" src={Badge} />
-            {aoStore.hashMap.get(this.props.taskId).guild}
+            {card.guild}
           </div>
         )
       case 'mini before':
-        if (aoStore.hashMap.get(this.props.taskId).guild) {
+        if (card.guild) {
           return (
             <span className={'mission mini'}>
               <img className="badge" src={Badge} />
-              {aoStore.hashMap.get(this.props.taskId).guild}
+              {card.guild}
             </span>
           )
         }
@@ -117,20 +125,18 @@ export default class AoMission extends React.Component<MissionProps, State> {
           <div className={'mission menu'}>
             <div onClick={this.startEditing} className={'action'}>
               <img className="badge" src={Badge} />
-              {aoStore.hashMap.get(this.props.taskId).guild
-                ? aoStore.hashMap.get(this.props.taskId).guild
-                : 'add mission title'}
+              {card.taskId.guild ? card.taskId.guild : 'add mission title'}
             </div>
           </div>
         )
       case 'face before':
       case 'collapsed':
       default:
-        if (aoStore.hashMap.get(this.props.taskId).guild) {
+        if (card.taskId.guild) {
           return (
             <div className={'mission summary ' + this.props.hudStyle}>
               <img className="badge" src={Badge} />
-              {aoStore.hashMap.get(this.props.taskId).guild}
+              {card.taskId.guild}
             </div>
           )
         }

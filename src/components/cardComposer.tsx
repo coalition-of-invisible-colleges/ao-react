@@ -10,7 +10,6 @@ import AoDropZone from './dropZone'
 import { CardPlay } from '../cards'
 import AoGridResizer from './gridResizer'
 import AoContextCard from './contextCard'
-import { TaskContext } from './taskContext'
 import { Task } from '../client/store'
 
 interface CardComposerProps {

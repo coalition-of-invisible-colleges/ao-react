@@ -1,31 +1,27 @@
 import React, { FunctionComponent } from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
 
 interface AoCheckboxProps {
-  taskId: string
   hudStyle: HudStyle
 }
 
 const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
-  ({ taskId, hudStyle }) => {
+  ({ hudStyle }) => {
+    const card: Task = React.useContext(TaskContext)
+
     const computed = observable({
       get isCompleted() {
-        return (
-          aoStore.hashMap
-            .get(taskId)
-            .claimed.indexOf(aoStore.member.memberId) >= 0
-        )
+        return card.claimed.indexOf(aoStore.member.memberId) >= 0
       },
       get isGrabbed() {
-        return (
-          aoStore.hashMap.get(taskId).deck.indexOf(aoStore.member.memberId) >= 0
-        )
+        return card.deck.indexOf(aoStore.member.memberId) >= 0
       }
     })
     const onClick = event => {
@@ -33,9 +29,9 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
       event.nativeEvent.stopImmediatePropagation()
 
       if (computed.isCompleted) {
-        api.uncheckCard(taskId)
+        api.uncheckCard(card.taskId)
       } else {
-        api.completeCard(taskId)
+        api.completeCard(card.taskId)
       }
     }
     switch (hudStyle) {

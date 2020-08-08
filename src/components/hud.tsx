@@ -16,6 +16,7 @@ import AoPassword from './password'
 import AoVolume from './volume'
 import AoPopupPanel from './popupPanel'
 import AoReturnPile from './returnPile'
+import AoShitposts from './shitposts'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
@@ -107,6 +108,7 @@ export default class AoHud extends React.Component<{}, undefined> {
         </div>
         <AoReturnPile />
         <AoTickerHud />
+        <AoShitposts />
         <AoScore />
       </React.Fragment>
     )

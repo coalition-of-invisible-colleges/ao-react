@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useState } from 'react'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-import aoStore, { AoState } from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
@@ -25,7 +26,6 @@ export const defaultState: State = {
 }
 
 interface CountdownProps {
-  taskId: string
   hudStyle: HudStyle
 }
 
@@ -58,6 +58,8 @@ export default class AoCountdown extends React.Component<
   CountdownProps,
   State
 > {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -68,11 +70,11 @@ export default class AoCountdown extends React.Component<
   }
 
   startEditing(event) {
-    if (aoStore.hashMap.get(this.props.taskId).book.startTs) {
+    const card = this.context
+
+    if (card.book.startTs) {
       let newStartTime: Date = new Date(0)
-      newStartTime.setUTCMilliseconds(
-        aoStore.hashMap.get(this.props.taskId).book.startTs
-      )
+      newStartTime.setUTCMilliseconds(card.book.startTs)
       this.setState({
         startTime: newStartTime
       })
@@ -88,11 +90,12 @@ export default class AoCountdown extends React.Component<
   }
 
   bookResource() {
+    const card = this.context
     if (this.state.startTime) {
       let newEndTime: Date = new Date(this.state.startTime)
       newEndTime.setDate(newEndTime.getDate() + 3)
       api.bookResource(
-        this.props.taskId,
+        card.taskId,
         this.state.startTime.getTime(),
         newEndTime.getTime()
       )
@@ -101,16 +104,15 @@ export default class AoCountdown extends React.Component<
   }
 
   renderCountdown() {
+    const card = this.context
+
     switch (this.props.hudStyle) {
       case 'full before':
         return (
           <div
             onClick={this.startEditing}
             className={'countdown action ' + this.props.hudStyle}>
-            {formatDistanceToNow(
-              aoStore.hashMap.get(this.props.taskId).book.startTs,
-              { addSuffix: true }
-            )}
+            {formatDistanceToNow(card.book.startTs, { addSuffix: true })}
           </div>
         )
       case 'face before':
@@ -118,10 +120,7 @@ export default class AoCountdown extends React.Component<
       case 'mini after':
         return (
           <div className={'countdown summary ' + this.props.hudStyle}>
-            {formatDistanceToNow(
-              aoStore.hashMap.get(this.props.taskId).book.startTs,
-              { addSuffix: true }
-            )}
+            {formatDistanceToNow(card.book.startTs, { addSuffix: true })}
           </div>
         )
       default:
@@ -130,6 +129,8 @@ export default class AoCountdown extends React.Component<
   }
 
   render() {
+    const card = this.context
+
     if (this.state.editing) {
       return (
         <div className={'countdown'}>
@@ -150,17 +151,14 @@ export default class AoCountdown extends React.Component<
         <div
           onClick={this.startEditing}
           className={'countdown action ' + this.props.hudStyle}>
-          {aoStore.hashMap.get(this.props.taskId).book.startTs
-            ? format(
-                aoStore.hashMap.get(this.props.taskId).book.startTs,
-                'MMMM d, yyyy @ h:mm a'
-              )
+          {card.book.startTs
+            ? format(card.book.startTs, 'MMMM d, yyyy @ h:mm a')
             : 'schedule event'}
         </div>
       )
     }
 
-    if (!aoStore.hashMap.get(this.props.taskId).book.startTs) {
+    if (!card.book.startTs) {
       return null
     }
 
@@ -173,10 +171,7 @@ export default class AoCountdown extends React.Component<
         appendTo={document.getElementById('root')}
         content={
           <div style={{ width: 'max-content' }}>
-            {format(
-              aoStore.hashMap.get(this.props.taskId).book.startTs,
-              'MMMM d, yyyy @ h:mm a'
-            )}
+            {format(card.book.startTs, 'MMMM d, yyyy @ h:mm a')}
           </div>
         }>
         {this.renderCountdown()}

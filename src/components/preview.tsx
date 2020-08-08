@@ -13,7 +13,6 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale-extreme.css'
 
 interface AoPreviewProps {
-  taskId: string
   hudStyle: HudStyle
   prioritiesShown?: boolean
   onTogglePriorities?: (any) => void
@@ -24,7 +23,6 @@ interface AoPreviewProps {
 
 const AoPreview: FunctionComponent<AoPreviewProps> = observer(
   ({
-    taskId,
     hudStyle,
     prioritiesShown,
     onTogglePriorities,
@@ -32,7 +30,7 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
     onToggleProjects,
     hideSubcardCountOnCollapsed
   }) => {
-    const card = aoStore.hashMap.get(taskId)
+    const card: Task = React.useContext(TaskContext)
 
     const computed = observable({
       get subCardCount() {
@@ -150,13 +148,13 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
               animation={'scale-extreme'}
               delay={[625, 200]}
               appendTo={() =>
-                document.getElementById('card-' + taskId).parentElement
+                document.getElementById('card-' + card.taskId).parentElement
                   .parentElement.parentElement
               }
               content={
                 <TaskContext.Provider value={card}>
                   <AoStack
-                    inId={taskId}
+                    inId={card.taskId}
                     cardStyle={'priority'}
                     cards={computed.priorityCards}
                     zone={'priorities'}

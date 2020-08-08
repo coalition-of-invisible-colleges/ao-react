@@ -10,7 +10,6 @@ import aoStore, {
 } from '../client/store'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
-import AoStack from './stack'
 import { hideAll } from 'tippy.js'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AoContextCard from './contextCard'

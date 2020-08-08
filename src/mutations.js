@@ -624,6 +624,36 @@ function tasksMuts(tasks, ev) {
         t.completed = _.filter(t.completed, st => st !== ev.taskId)
       })
       break
+    case 'tasks-purged':
+      tasks.forEach((task, i) => {
+        if (task.taskId === task.name) {
+          // console.log('member card found: ', task.name)
+          return
+        }
+
+        if (task.deck.length <= 0) {
+          tasks.forEach(t => {
+            t.subTasks = t.subTasks.filter(st => st !== task.taskId)
+            t.priorities = t.priorities.filter(st => st !== task.taskId)
+            t.completed = _.filter(t.completed, st => st !== task.taskId)
+            if (_.has(t, 'grid.rows')) {
+              Object.entries(t.grid.rows).forEach(([y, row]) => {
+                Object.entries(row).forEach(([x, cell]) => {
+                  if (cell === t.taskId) {
+                    delete tasks[i].grid.rows[y][x]
+                  }
+                })
+                if (row.length === 0) {
+                  delete tasks[i].grid.rows[y]
+                }
+              })
+            }
+          })
+          // console.log('splicing 1 task out')
+          tasks.splice(i, 1)
+        }
+      })
+      break
     case 'task-prioritized':
       tasks.forEach(task => {
         if (task.taskId === ev.inId) {

@@ -537,6 +537,14 @@ function taskRemoved(taskId, blame, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function tasksPurged(blame, callback) {
+  let newEvent = {
+    type: 'tasks-purged',
+    blame
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
   let newEvent = {
     type: 'task-swapped',
@@ -685,6 +693,7 @@ module.exports = {
   taskRefocused,
   pileRefocused,
   taskRemoved,
+  tasksPurged,
   taskSwapped,
   taskBumped,
   taskGrabbed,

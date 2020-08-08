@@ -245,6 +245,20 @@ class AoApi {
       })
   }
 
+  async cleanupUnheldCards(): Promise<request.Response> {
+    const act = {
+      type: 'tasks-purged',
+      memberId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async dropPile(taskId: string): Promise<request.Response> {
     const act = {
       type: 'pile-dropped',

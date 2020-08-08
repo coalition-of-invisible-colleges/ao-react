@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState, Task } from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import { Redirect } from 'react-router-dom'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
@@ -16,7 +17,6 @@ import AoAttachment from './attachment'
 import AoCoin from './coin'
 import AoPreview from './preview'
 import AoCheckmark from './checkmark'
-import { TaskContext } from './taskContext'
 import { prioritizeCard, subTaskCard, CardZone } from '../cards'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -213,8 +213,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						id={'card-' + card.taskId}
 						onDoubleClick={this.goInCard}
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
-						<AoPaper taskId={card.taskId} />
-						<AoCardHud taskId={card.taskId} hudStyle={'context'} />
+						<AoPaper />
+						<AoCardHud hudStyle={'context'} />
 						<div className={'content'}>{this.renderCardContent(content)}</div>
 					</div>
 				)
@@ -229,17 +229,16 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							(this.state.showPriorities ? ' padbottom' : '')
 						}
 						onDoubleClick={this.goInCard}>
-						<AoPaper taskId={card.taskId} />
+						<AoPaper />
 						<AoCardHud
-							taskId={card.taskId}
 							hudStyle={'collapsed'}
 							prioritiesShown={this.state.showPriorities}
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className={'content'}>
-							<AoCoin taskId={card.taskId} noPopup={this.props.noPopups} />
+							<AoCoin noPopup={this.props.noPopups} />
 							{this.renderCardContent(content)}
-							<AoAttachment taskId={card.taskId} hudStyle={'collapsed'} />
+							<AoAttachment hudStyle={'collapsed'} />
 						</div>
 						{this.state.showPriorities ? (
 							<AoStack
@@ -262,12 +261,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							this.applyClassIfCurrentSearchResult(card.taskId)
 						}
 						onDoubleClick={this.goInCard}>
-						<AoPaper taskId={card.taskId} />
-						<AoCardHud taskId={card.taskId} hudStyle={'face before'} />
+						<AoPaper />
+						<AoCardHud hudStyle={'face before'} />
 						<div className={'content'}>
-							<AoMission taskId={card.taskId} hudStyle={'face before'} />
+							<AoMission hudStyle={'face before'} />
 							{this.renderCardContent(content)}
-							<AoAttachment taskId={card.taskId} hudStyle={'face before'} />
+							<AoAttachment hudStyle={'face before'} />
 							{card.priorities && card.priorities.length >= 1 ? (
 								<>
 									<div className="action" onClick={this.togglePriorities}>
@@ -295,7 +294,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								</>
 							) : null}
 						</div>
-						<AoCardHud taskId={card.taskId} hudStyle={'face after'} />
+						<AoCardHud hudStyle={'face after'} />
 					</div>
 				)
 			case 'full':
@@ -322,12 +321,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								e.preventDefault()
 								e.stopPropagation()
 							}}>
-							<AoPaper taskId={card.taskId} />
-							<AoCardHud taskId={card.taskId} hudStyle={'full before'} />
+							<AoPaper />
+							<AoCardHud hudStyle={'full before'} />
 							<div className="content">
-								<AoMission taskId={card.taskId} hudStyle={'full before'} />
+								<AoMission hudStyle={'full before'} />
 								{this.renderCardContent(content)}
-								<AoAttachment taskId={card.taskId} hudStyle={'full before'} />
+								<AoAttachment hudStyle={'full before'} />
 							</div>
 							<AoStack
 								inId={card.taskId}
@@ -340,7 +339,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								onDrop={prioritizeCard}
 								zone={'priorities'}
 							/>
-							<AoGrid taskId={card.taskId} />
+							<AoGrid />
 							<AoStack
 								inId={card.taskId}
 								cards={subTaskCards}
@@ -350,7 +349,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								zone={'subTasks'}
 							/>
 							<AoCompleted />
-							<AoCardHud taskId={card.taskId} hudStyle={'full after'} />
+							<AoCardHud hudStyle={'full after'} />
 						</div>
 					</React.Fragment>
 				)
@@ -406,13 +405,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						}
 						id={'card-' + card.taskId}
 						onDoubleClick={this.goInCard}>
-						<AoPaper taskId={card.taskId} />
-						<AoCardHud taskId={card.taskId} hudStyle={'collapsed-mission'} />
+						<AoPaper />
+						<AoCardHud hudStyle={'collapsed-mission'} />
 						<div className={'content'}>
-							<AoCoin taskId={card.taskId} />
-							<AoMission taskId={card.taskId} hudStyle={'collapsed'} />
+							<AoCoin />
+							<AoMission hudStyle={'collapsed'} />
 							<AoPreview
-								taskId={card.taskId}
 								hudStyle={'collapsed'}
 								prioritiesShown={this.state.showPriorities}
 								onTogglePriorities={this.togglePriorities}
@@ -455,13 +453,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							'card mini' + this.applyClassIfCurrentSearchResult(card.taskId)
 						}
 						onDoubleClick={this.goInCard}>
-						<AoPaper taskId={card.taskId} />
-						<AoCardHud taskId={card.taskId} hudStyle={'mini before'} />
+						<AoPaper />
+						<AoCardHud hudStyle={'mini before'} />
 						<div className={'content'}>
 							{this.renderCardContent(content, true)}
-							<AoAttachment taskId={card.taskId} hudStyle={'mini before'} />
+							<AoAttachment hudStyle={'mini before'} />
 						</div>
-						<AoCardHud taskId={card.taskId} hudStyle={'mini after'} />
+						<AoCardHud hudStyle={'mini after'} />
 					</div>
 				)
 		}

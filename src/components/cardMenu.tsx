@@ -1,21 +1,24 @@
 import React, { FunctionComponent } from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
+import { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import AoCardHud, { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
 interface AoCardMenuProps {
-  taskId: string
   hudStyle: HudStyle
 }
 
 const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
-  ({ taskId, hudStyle }) => {
+  ({ hudStyle }) => {
+    const card: Task = React.useContext(TaskContext)
+
     return (
       <Tippy
         zIndex={5}
-        content={<AoCardHud taskId={taskId} hudStyle={'menu'} />}
+        content={<AoCardHud hudStyle={'menu'} />}
         interactive={true}
         trigger={'click'}
         placement={'top-end'}

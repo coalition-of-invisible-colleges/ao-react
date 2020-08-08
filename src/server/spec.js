@@ -641,6 +641,13 @@ router.post('/events', (req, res, next) => {
         res.status(200).send(errRes)
       }
       break
+    case 'tasks-purged':
+      if (true) {
+        events.tasksPurged(req.body.blame, utils.buildResCallback(res))
+      } else {
+        res.status(200).send(errRes)
+      }
+      break
     case 'task-passed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
@@ -870,27 +877,6 @@ router.post('/events', (req, res, next) => {
       }
       break
 
-    // case 'grid-add':
-    //   if (
-    //     (validators.isCoord(req.body.coord, errRes),
-    //     validators.isTaskId(req.body.taskId))
-    //   ) {
-    //     events.gridAdd(
-    //       req.body.coord,
-    //       req.body.taskId,
-    //       utils.buildResCallback(res)
-    //     )
-    //   } else {
-    //     res.status(200).send(errRes)
-    //   }
-    //   break
-    // case 'grid-del':
-    //   if (validators.isCoord(req.body.coord, errRes)) {
-    //     events.gridDel(req.body.coord, utils.buildResCallback(res))
-    //   } else {
-    //     res.status(200).send(errRes)
-    //   }
-    //   break
     default:
       next()
   }
