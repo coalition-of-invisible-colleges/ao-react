@@ -12,6 +12,7 @@ import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
 import { CardPlay } from '../cards'
+import { hideAll as hideAllTippys } from 'tippy.js'
 
 interface DiscardProps {}
 
@@ -23,6 +24,7 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 		super(props)
 		this.state = {}
 		this.dropToDiscard = this.dropToDiscard.bind(this)
+		this.closeAllCloseables = this.closeAllCloseables.bind(this)
 	}
 
 	dropToDiscard(move: CardPlay) {
@@ -79,23 +81,30 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 		}
 	}
 
+	closeAllCloseables() {
+		hideAllTippys()
+		aoStore.closeAllCloseables()
+	}
+
 	render() {
 		const card = this.context
 
 		return (
-			<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
-				{aoStore.discard.length >= 1 ? (
-					<TaskContext.Provider
-						value={aoStore.discard[aoStore.discard.length - 1]}>
-						<AoDragZone dragContext={{ zone: 'discard', y: 0 }} />
-						<TaskContext.Provider value={card ? card : undefined}>
-							{this.props.children}
+			<div onClick={this.closeAllCloseables}>
+				<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
+					{aoStore.discard.length >= 1 ? (
+						<TaskContext.Provider
+							value={aoStore.discard[aoStore.discard.length - 1]}>
+							<AoDragZone dragContext={{ zone: 'discard', y: 0 }} />
+							<TaskContext.Provider value={card ? card : undefined}>
+								{this.props.children}
+							</TaskContext.Provider>
 						</TaskContext.Provider>
-					</TaskContext.Provider>
-				) : (
-					this.props.children
-				)}
-			</AoDropZone>
+					) : (
+						this.props.children
+					)}
+				</AoDropZone>
+			</div>
 		)
 	}
 }
