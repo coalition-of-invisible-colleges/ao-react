@@ -56,19 +56,12 @@ export default class AoCard extends React.Component<CardProps, State> {
   }
 
   componentDidUpdate(prevProps) {
-    // console.log('componentDidUpdate taskId is ', this.props.match.params.taskId)
     if (this.state.redirect !== undefined) {
       this.setState({ redirect: undefined })
     }
-    // if (this.props.match.params.taskId !== prevProps.match.params.taskId) {
-    // const card = aoStore.hashMap.get(this.props.match.params.taskId)
-    // console.log('new context card is ', card)
-    // this.setState({ currentCard: card })
-    // }
   }
 
   setRedirect(taskId: string) {
-    // console.log('setRedirect taskId is ', taskId)
     const card = aoStore.hashMap.get(taskId)
     aoStore.setCurrentCard(taskId)
     aoStore.removeFromContext(taskId)

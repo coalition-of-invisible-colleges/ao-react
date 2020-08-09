@@ -48,8 +48,6 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
       .slice()
       .reverse()
 
-    if (memberCards.length >= 2)
-      console.log('\n\nmemberCards are ', memberCards)
     let parentCards = []
     if (
       card &&

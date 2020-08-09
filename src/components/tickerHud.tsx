@@ -6,6 +6,7 @@ import api from '../client/api'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import CoinGecko from 'coingecko-api'
+import _ from 'lodash'
 
 const CoinGeckoClient = new CoinGecko()
 
@@ -181,8 +182,9 @@ export default class AoTickerHud extends React.Component<{}, TickerHudState> {
   }
 
   validateCoinSymbol(symbol) {
-    return this.state.tickerData.data.rates.hasOwnProperty(
-      symbol.trim().toLowerCase()
+    return _.has(
+      this.state.tickerData,
+      'data.rates.' + symbol.trim().toLowerCase()
     )
   }
 

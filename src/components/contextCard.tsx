@@ -126,6 +126,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		if (this.props.cardStyle === 'context') {
 			aoStore.clearContextTo(card.taskId)
 		} else {
+			console.log('current card is ', aoStore.currentCard)
 			aoStore.addToContext([aoStore.currentCard])
 		}
 		setRedirect(card.taskId)
