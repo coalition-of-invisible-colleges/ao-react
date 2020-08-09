@@ -640,25 +640,25 @@ function tasksMuts(tasks, ev) {
             task.parents = []
           }
           task.parents.forEach(pId => {
-            const t = aoStore.hashMap.get(pId)
-            if (!t) {
-              return
-            }
-            t.subTasks = t.subTasks.filter(st => st !== task.taskId)
-            t.priorities = t.priorities.filter(st => st !== task.taskId)
-            t.completed = _.filter(t.completed, st => st !== task.taskId)
-            if (_.has(t, 'grid.rows')) {
-              Object.entries(t.grid.rows).forEach(([y, row]) => {
-                Object.entries(row).forEach(([x, cell]) => {
-                  if (cell === t.taskId) {
-                    delete tasks[i].grid.rows[y][x]
-                  }
-                })
-                if (row.length === 0) {
-                  delete tasks[i].grid.rows[y]
+            tasks.forEach(t => {
+              if (t.taskId === pId) {
+                t.subTasks = t.subTasks.filter(st => st !== task.taskId)
+                t.priorities = t.priorities.filter(st => st !== task.taskId)
+                t.completed = _.filter(t.completed, st => st !== task.taskId)
+                if (_.has(t, 'grid.rows')) {
+                  Object.entries(t.grid.rows).forEach(([y, row]) => {
+                    Object.entries(row).forEach(([x, cell]) => {
+                      if (cell === t.taskId) {
+                        delete tasks[i].grid.rows[y][x]
+                      }
+                    })
+                    if (row.length === 0) {
+                      delete tasks[i].grid.rows[y]
+                    }
+                  })
                 }
-              })
-            }
+              }
+            })
           })
           tasks.splice(i, 1)
         }
