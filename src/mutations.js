@@ -633,7 +633,7 @@ function tasksMuts(tasks, ev) {
         }
 
         if (task.deck.length <= 0) {
-          if (!task.parent) {
+          if (!task.parents) {
             console.log(
               'Found card with missing parents. This should never happen.'
             )
@@ -641,6 +641,9 @@ function tasksMuts(tasks, ev) {
           }
           task.parents.forEach(pId => {
             const t = aoStore.hashMap.get(pId)
+            if (!t) {
+              return
+            }
             t.subTasks = t.subTasks.filter(st => st !== task.taskId)
             t.priorities = t.priorities.filter(st => st !== task.taskId)
             t.completed = _.filter(t.completed, st => st !== task.taskId)
