@@ -1,13 +1,10 @@
 import * as React from 'react'
-import { FunctionComponent } from 'react'
 import { useState } from 'react'
 import { observer } from 'mobx-react'
 import { ObservableMap, computed } from 'mobx'
 import { Redirect } from 'react-router-dom'
 import api from '../client/api'
 import aoStore, { Task } from '../client/store'
-import Markdown from 'markdown-to-jsx'
-import AoContextCard, { CardStyle } from './contextCard'
 import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
@@ -87,16 +84,23 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 	}
 
 	render() {
-		const card = this.context
-
+		let { card, setRedirect } = this.context
+		// console.log('render discard setRedirect is ', setRedirect)
 		return (
 			<div onClick={this.closeAllCloseables}>
 				<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
 					{aoStore.discard.length >= 1 ? (
 						<TaskContext.Provider
-							value={aoStore.discard[aoStore.discard.length - 1]}>
+							value={{
+								card: aoStore.discard[aoStore.discard.length - 1],
+								setRedirect: setRedirect
+							}}>
 							<AoDragZone dragContext={{ zone: 'discard', y: 0 }} />
-							<TaskContext.Provider value={card ? card : undefined}>
+							<TaskContext.Provider
+								value={{
+									card: card ? card : undefined,
+									setRedirect: setRedirect
+								}}>
 								{this.props.children}
 							</TaskContext.Provider>
 						</TaskContext.Provider>

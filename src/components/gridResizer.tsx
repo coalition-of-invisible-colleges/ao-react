@@ -1,54 +1,64 @@
-import * as React from 'react'
+import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
+import aoStore, { Task } from '../client/store'
+import { TaskContext } from './taskContext'
 import api from '../client/api'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 
-interface GridResizerProps {
-  taskId: string
-}
-
 @observer
-export default class AoGridResizer extends React.Component<GridResizerProps> {
+export default class AoGridResizer extends React.PureComponent {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
-    this.state = {}
-    this.resizeRows = this.resizeRows.bind(this)
-    this.resizeColumns = this.resizeColumns.bind(this)
+    this.increaseRows = this.increaseRows.bind(this)
+    this.decreaseRows = this.decreaseRows.bind(this)
+    this.increaseColumns = this.increaseColumns.bind(this)
+    this.decreaseColumns = this.decreaseColumns.bind(this)
   }
 
-  resizeRows(change: number) {
-    api.resizeGrid(
-      this.props.taskId,
-      aoStore.hashMap.get(this.props.taskId).grid.height + change,
-      aoStore.hashMap.get(this.props.taskId).grid.width
-    )
+  increaseRows() {
+    const { card, setRedirect } = this.context
+    api.resizeGrid(card.taskId, card.grid.height + 1, card.grid.width)
   }
 
-  resizeColumns(change: number) {
-    api.resizeGrid(
-      this.props.taskId,
-      aoStore.hashMap.get(this.props.taskId).grid.height,
-      aoStore.hashMap.get(this.props.taskId).grid.width + change
-    )
+  decreaseRows() {
+    const { card, setRedirect } = this.context
+    api.resizeGrid(card.taskId, card.grid.height - 1, card.grid.width)
+  }
+
+  increaseColumns() {
+    const { card, setRedirect } = this.context
+    api.resizeGrid(card.taskId, card.grid.height, card.grid.width + 1)
+  }
+
+  decreaseColumns() {
+    const { card, setRedirect } = this.context
+    api.resizeGrid(card.taskId, card.grid.height, card.grid.width - 1)
   }
 
   render() {
+    const { card, setRedirect } = this.context
+
+    if (!card.grid) {
+      return null
+    }
+
     return (
       <div className={'resizer'}>
         <div className={'columns'}>
           <button
             type="button"
-            onClick={event => this.resizeColumns(-1)}
-            disabled={aoStore.hashMap.get(this.props.taskId).grid.width <= 1}
+            onClick={this.decreaseColumns}
+            disabled={card.grid.width <= 1}
             className={'action minus'}>
             -
           </button>
           <button
             type="button"
-            onClick={event => this.resizeColumns(1)}
-            disabled={aoStore.hashMap.get(this.props.taskId).grid.width >= 30}
+            onClick={this.increaseColumns}
+            disabled={card.grid.width >= 30}
             className={'action plus'}>
             +
           </button>
@@ -56,15 +66,15 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
         <div className={'rows'}>
           <button
             type="button"
-            onClick={event => this.resizeRows(-1)}
-            disabled={aoStore.hashMap.get(this.props.taskId).grid.height <= 1}
+            onClick={this.decreaseRows}
+            disabled={card.grid.height <= 1}
             className={'action minus'}>
             -
           </button>
           <button
             type="button"
-            onClick={event => this.resizeRows(1)}
-            disabled={aoStore.hashMap.get(this.props.taskId).grid.height >= 30}
+            onClick={this.increaseRows}
+            disabled={card.grid.height >= 30}
             className={'action plus'}>
             +
           </button>

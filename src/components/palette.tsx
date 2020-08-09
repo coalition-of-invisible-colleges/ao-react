@@ -30,14 +30,14 @@ export default class AoPalette extends React.Component<{}, State> {
   }
 
   onClick(event, color) {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     api.colorCard(card.taskId, color)
     this.setState({ color: color })
   }
 
   render() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     const list = ['red', 'yellow', 'green', 'blue', 'purple'].map(
       (colorName, i) => (

@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import { Task } from '../client/store'
@@ -7,13 +7,16 @@ import AoCardHud, { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
-interface AoCardMenuProps {
+interface CardMenuProps {
   hudStyle: HudStyle
 }
 
-const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
-  ({ hudStyle }) => {
-    const card: Task = React.useContext(TaskContext)
+@observer
+export default class CardMenu extends React.PureComponent<CardMenuProps> {
+  static contextType = TaskContext
+
+  render() {
+    const { card, setRedirect } = this.context
 
     return (
       <Tippy
@@ -34,6 +37,4 @@ const AoCardMenu: FunctionComponent<AoCardMenuProps> = observer(
       </Tippy>
     )
   }
-)
-
-export default AoCardMenu
+}

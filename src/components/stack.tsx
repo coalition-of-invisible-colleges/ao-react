@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { FunctionComponent } from 'react'
 import { useState } from 'react'
 import { observer } from 'mobx-react'
 import { ObservableMap, computed } from 'mobx'
@@ -53,6 +52,8 @@ interface StackProps {
 
 @observer
 export default class AoStack extends React.Component<StackProps, StackState> {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -64,6 +65,10 @@ export default class AoStack extends React.Component<StackProps, StackState> {
 
   componentDidMount() {
     aoStore.registerCloseable(this.hide)
+  }
+
+  componentWillUnmount() {
+    aoStore.unregisterCloseable(this.hide)
   }
 
   selectStackZone(selection: Sel) {
@@ -89,13 +94,19 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   render() {
+    const { card, setRedirect } = this.context
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
         ? this.props.cards
             .slice()
             .filter(t => {
               if (!t) {
-                console.log('Missing card detected')
+                console.log(
+                  'Missing card detected. card is ',
+                  card,
+                  ' and this.props.cards is ',
+                  this.props.cards
+                )
                 return false
               }
               return true
@@ -132,7 +143,9 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     if (this.state.showAll || this.props.alwaysShowAll) {
       // wrap a DropZone here to drop on the whole stack. call this.onDrop on drop
       list = cardsToRender.map((task, i) => (
-        <TaskContext.Provider value={task} key={task.taskId}>
+        <TaskContext.Provider
+          value={{ card: task, setRedirect: setRedirect }}
+          key={task.taskId}>
           <AoDragZone
             dragContext={{
               zone: this.props.zone ? this.props.zone : 'panel',
@@ -159,7 +172,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     } else if (cardsToRender.length >= 1) {
       list = [
         <TaskContext.Provider
-          value={cardsToRender[0]}
+          value={{ card: cardsToRender[0], setRedirect: setRedirect }}
           key={cardsToRender[0].taskId}>
           <AoDragZone
             dragContext={{

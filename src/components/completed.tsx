@@ -1,8 +1,7 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { observer } from 'mobx-react'
 import { observable } from 'mobx'
 import aoStore, { AoState, Task } from '../client/store'
-import { Redirect } from 'react-router-dom'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import api from '../client/api'
@@ -17,78 +16,80 @@ import AoCoin from './coin'
 import { TaskContext } from './taskContext'
 import { CardPlay } from '../cards'
 
-const AoCompleted: FunctionComponent<{}> = observer(({}) => {
-	const computed = observable({
-		get completedCards() {
-			const card: Task = React.useContext(TaskContext)
+@observer
+export default class AoCompleted extends React.PureComponent {
+	static contextType = TaskContext
 
-			if (!card.completed || card.completed.length < 1) {
-				return null
-			}
+	render() {
+		const { card, setRedirect } = this.context
 
-			let completedCards: Task[] = card.completed.map(tId =>
-				aoStore.hashMap.get(tId)
-			)
-			completedCards.reverse()
+		const computed = observable({
+			get completedCards() {
+				if (!card.completed || card.completed.length < 1) {
+					return null
+				}
 
-			return completedCards
-		}
-	})
-
-	const archiveCheckmark = (move: CardPlay) => {
-		if (!move.from.taskId) {
-			return
-		}
-		const nameFrom = aoStore.hashMap.get(move.from.taskId).name
-
-		switch (move.from.zone) {
-			case 'card':
-				// maybe this doesn't make sense, it's supposed to be for the whole card
-				break
-			case 'priorities':
-				api.refocusCard(move.from.taskId, move.from.inId)
-				break
-			case 'grid':
-				api.unpinCardFromGrid(
-					move.from.coords.x,
-					move.from.coords.y,
-					move.from.inId
+				let completedCards: Task[] = card.completed.map(tId =>
+					aoStore.hashMap.get(tId)
 				)
-				break
-			case 'subTasks':
-			case 'completed':
-			case 'context':
-			case 'discard':
-				// api.refocusCard(move.from.taskId, move.to.inId)
-				break
-			default:
-				break
+				completedCards.reverse()
+
+				return completedCards
+			}
+		})
+
+		const archiveCheckmark = (move: CardPlay) => {
+			if (!move.from.taskId) {
+				return
+			}
+			const nameFrom = aoStore.hashMap.get(move.from.taskId).name
+
+			switch (move.from.zone) {
+				case 'card':
+					// maybe this doesn't make sense, it's supposed to be for the whole card
+					break
+				case 'priorities':
+					api.refocusCard(move.from.taskId, move.from.inId)
+					break
+				case 'grid':
+					api.unpinCardFromGrid(
+						move.from.coords.x,
+						move.from.coords.y,
+						move.from.inId
+					)
+					break
+				case 'subTasks':
+				case 'completed':
+				case 'context':
+				case 'discard':
+					// api.refocusCard(move.from.taskId, move.to.inId)
+					break
+				default:
+					break
+			}
 		}
+
+		if (!card) {
+			console.log('missing card in completed')
+		}
+
+		if (computed.completedCards === null) {
+			return null
+		}
+
+		return (
+			<AoStack
+				inId={card.taskId}
+				cards={computed.completedCards}
+				cardStyle={'checkmark'}
+				onDrop={archiveCheckmark}
+				noFirstCard={true}
+				descriptor={{
+					singular: 'accomplishment',
+					plural: 'accomplishments'
+				}}
+				zone={'completed'}
+			/>
+		)
 	}
-
-	const card: Task = React.useContext(TaskContext)
-	if (!card) {
-		console.log('missing card in completed')
-	}
-
-	if (computed.completedCards === null) {
-		return null
-	}
-
-	return (
-		<AoStack
-			inId={card.taskId}
-			cards={computed.completedCards}
-			cardStyle={'checkmark'}
-			onDrop={archiveCheckmark}
-			noFirstCard={true}
-			descriptor={{
-				singular: 'accomplishment',
-				plural: 'accomplishments'
-			}}
-			zone={'completed'}
-		/>
-	)
-})
-
-export default AoCompleted
+}

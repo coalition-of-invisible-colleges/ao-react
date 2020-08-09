@@ -44,7 +44,7 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
-          console.log('initialState', res.body)
+          console.log('initial state: ', res.body)
           aoStore.initializeState(res.body)
           return true
         })
@@ -738,7 +738,7 @@ class AoApi {
         aoStore.applyEvent(ev)
       })
     })
-    this.socket.on('disconnect', () => {
+    this.socket.on('disconnect', reason => {
       console.log('disconnected')
       this.socket.connect()
     })

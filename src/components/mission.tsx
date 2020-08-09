@@ -39,10 +39,14 @@ export default class AoMission extends React.Component<MissionProps, State> {
     aoStore.registerCloseable(this.stopEditing)
   }
 
+  componentWillUnmount() {
+    aoStore.unregisterCloseable(this.stopEditing)
+  }
+
   startEditing(event) {
     event.stopPropagation()
 
-    const card = this.context
+    const { card, setRedirect } = this.context
     if (card.guild) {
       this.setState({
         text: card.guild
@@ -57,8 +61,8 @@ export default class AoMission extends React.Component<MissionProps, State> {
 
   saveMission(event) {
     event.stopPropagation()
-    const card = this.context
 
+    const { card, setRedirect } = this.context
     if (this.state.text === card.guild) {
       this.setState({ editing: false })
       return
@@ -80,7 +84,7 @@ export default class AoMission extends React.Component<MissionProps, State> {
   }
 
   render() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     if (this.state.editing) {
       return (
@@ -125,18 +129,18 @@ export default class AoMission extends React.Component<MissionProps, State> {
           <div className={'mission menu'}>
             <div onClick={this.startEditing} className={'action'}>
               <img className="badge" src={Badge} />
-              {card.taskId.guild ? card.taskId.guild : 'add mission title'}
+              {card.guild ? card.guild : 'add mission title'}
             </div>
           </div>
         )
       case 'face before':
       case 'collapsed':
       default:
-        if (card.taskId.guild) {
+        if (card.guild) {
           return (
             <div className={'mission summary ' + this.props.hudStyle}>
               <img className="badge" src={Badge} />
-              {card.taskId.guild}
+              {card.guild}
             </div>
           )
         }

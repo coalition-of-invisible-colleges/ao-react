@@ -35,6 +35,7 @@
     "@types/ramda": "^0.27.3",
     "@types/socket.io": "^2.1.4",
     "@types/superagent": "^4.1.7",
+    "@welldone-software/why-did-you-render": "^4.3.0",
     "better-sqlite3": "^5.4.3",
     "body-parser": "^1.19.0",
     "coingecko-api": "^1.0.10",

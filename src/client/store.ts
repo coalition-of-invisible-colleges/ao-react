@@ -171,7 +171,7 @@ class AoStore {
   @observable context: string[] = []
   @observable currentCard: string = undefined
   @observable discard: Task[] = []
-  @observable guiCloseable: ((event?) => void)[] = []
+  @observable guiCloseables: ((event?) => void)[] = []
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -277,7 +277,6 @@ class AoStore {
       Object.assign(this.state[key], state[key])
     )
     this.state.loggedIn = true
-    console.log('state initialized:', this.state)
   }
   @action.bound
   applyEvent(ev) {
@@ -381,11 +380,17 @@ class AoStore {
   }
   @action.bound
   registerCloseable(onHide: (event) => void) {
-    this.guiCloseable.push(onHide)
+    this.guiCloseables.push(onHide)
+  }
+  @action.bound
+  unregisterCloseable(onHide: (event) => void) {
+    this.guiCloseables = this.guiCloseables.filter(
+      callback => callback !== onHide
+    )
   }
   @action.bound
   closeAllCloseables() {
-    this.guiCloseable.forEach(callback => callback())
+    this.guiCloseables.forEach(callback => callback())
   }
 }
 const aoStore = new AoStore()

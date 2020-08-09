@@ -625,14 +625,22 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'tasks-purged':
-      tasks.forEach((task, i) => {
+      for (let i = tasks.length - 1; i >= 0; i--) {
+        const task = tasks[i]
         if (task.taskId === task.name) {
           // console.log('member card found: ', task.name)
-          return
+          continue
         }
 
         if (task.deck.length <= 0) {
-          tasks.forEach(t => {
+          if (!task.parent) {
+            console.log(
+              'Found card with missing parents. This should never happen.'
+            )
+            task.parents = []
+          }
+          task.parents.forEach(pId => {
+            const t = aoStore.hashMap.get(pId)
             t.subTasks = t.subTasks.filter(st => st !== task.taskId)
             t.priorities = t.priorities.filter(st => st !== task.taskId)
             t.completed = _.filter(t.completed, st => st !== task.taskId)
@@ -649,10 +657,36 @@ function tasksMuts(tasks, ev) {
               })
             }
           })
-          // console.log('splicing 1 task out')
           tasks.splice(i, 1)
         }
-      })
+      }
+      // // for good measure, also clean up references to missing cards
+      // tasks.forEach((task, i) => {
+      //   task.subTasks = task.subTasks.filter(st =>
+      //     tasks.some(t => t.taskId === st)
+      //   )
+      //   task.priorities = task.priorities.filter(st =>
+      //     tasks.some(t => t.taskId === st)
+      //   )
+      //   task.completed = task.completed.filter(st =>
+      //     tasks.some(t => t.taskId === st)
+      //   )
+      //   task.deck = task.deck.filter(st => tasks.some(t => t.taskId === st))
+
+      //   if (_.has(task, 'grid.rows')) {
+      //     Object.entries(task.grid.rows).forEach(([y, row]) => {
+      //       Object.entries(row).forEach(([x, cell]) => {
+      //         if (!tasks.some(t => t.taskId === cell)) {
+      //           delete tasks[i].grid.rows[y][x]
+      //         }
+      //       })
+      //       if (row.length === 0) {
+      //         delete tasks[i].grid.rows[y]
+      //       }
+      //     })
+      //   }
+      // })
+
       break
     case 'task-prioritized':
       tasks.forEach(task => {

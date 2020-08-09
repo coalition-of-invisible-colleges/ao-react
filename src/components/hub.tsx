@@ -11,6 +11,8 @@ import AoPopupPanel from './popupPanel'
 
 @observer
 export default class AoHub extends React.Component<{}> {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = {}
@@ -23,6 +25,8 @@ export default class AoHub extends React.Component<{}> {
   }
 
   render() {
+    const { card, setRedirect } = this.context
+
     let topMissions = aoStore.state.tasks.filter(task => {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
     })
@@ -71,7 +75,8 @@ export default class AoHub extends React.Component<{}> {
                   : 'Community Hub'}
               </h2>
               {communityCard && communityCard.hasOwnProperty('taskId') ? (
-                <TaskContext.Provider value={communityCard}>
+                <TaskContext.Provider
+                  value={{ card: communityCard, setRedirect }}>
                   <AoContextCard cardStyle={'full'} noContextOnFull={true} />
                 </TaskContext.Provider>
               ) : (

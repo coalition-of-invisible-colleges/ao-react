@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
@@ -12,7 +12,7 @@ import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale-extreme.css'
 
-interface AoPreviewProps {
+interface PreviewProps {
   hudStyle: HudStyle
   prioritiesShown?: boolean
   onTogglePriorities?: (any) => void
@@ -21,16 +21,12 @@ interface AoPreviewProps {
   hideSubcardCountOnCollapsed?: boolean
 }
 
-const AoPreview: FunctionComponent<AoPreviewProps> = observer(
-  ({
-    hudStyle,
-    prioritiesShown,
-    onTogglePriorities,
-    projectsShown,
-    onToggleProjects,
-    hideSubcardCountOnCollapsed
-  }) => {
-    const card: Task = React.useContext(TaskContext)
+@observer
+export default class AoPreview extends React.PureComponent<PreviewProps> {
+  static contextType = TaskContext
+
+  render() {
+    const { card, setRedirect } = this.context
 
     const computed = observable({
       get subCardCount() {
@@ -92,45 +88,46 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
     if (computed.subCardCount < 1) {
       return null
     }
-    switch (hudStyle) {
+    switch (this.props.hudStyle) {
       case 'collapsed':
         return (
           <div className={'preview'}>
             {computed.priorityCount >= 1 ? (
               <div
                 className="action"
-                onClick={onTogglePriorities}
+                onClick={this.props.onTogglePriorities}
                 onDoubleClick={event => {
                   event.stopPropagation()
                   event.nativeEvent.stopImmediatePropagation()
                 }}>
                 {computed.priorityCount}{' '}
                 {computed.priorityCount > 1 ? 'priorities' : 'priority'}{' '}
-                {prioritiesShown ? (
+                {this.props.prioritiesShown ? (
                   <React.Fragment>&#8963;</React.Fragment>
                 ) : (
                   <React.Fragment>&#8964;</React.Fragment>
                 )}
               </div>
             ) : null}
-            {onToggleProjects !== undefined && computed.projectCount >= 1 ? (
+            {this.props.onToggleProjects !== undefined &&
+            computed.projectCount >= 1 ? (
               <div
                 className="action"
-                onClick={onToggleProjects}
+                onClick={this.props.onToggleProjects}
                 onDoubleClick={event => {
                   event.stopPropagation()
                   event.nativeEvent.stopImmediatePropagation()
                 }}>
                 {computed.projectCount}{' '}
                 {computed.projectCount > 1 ? 'projects' : 'project'}{' '}
-                {projectsShown ? (
+                {this.props.projectsShown ? (
                   <React.Fragment>&#8963;</React.Fragment>
                 ) : (
                   <React.Fragment>&#8964;</React.Fragment>
                 )}
               </div>
             ) : null}
-            {!hideSubcardCountOnCollapsed ? (
+            {!this.props.hideSubcardCountOnCollapsed ? (
               <>({computed.subCardCount})</>
             ) : null}
           </div>
@@ -152,7 +149,7 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
                   .parentElement.parentElement
               }
               content={
-                <TaskContext.Provider value={card}>
+                <TaskContext.Provider value={{ card, setRedirect }}>
                   <AoStack
                     inId={card.taskId}
                     cardStyle={'priority'}
@@ -171,6 +168,4 @@ const AoPreview: FunctionComponent<AoPreviewProps> = observer(
         return null
     }
   }
-)
-
-export default AoPreview
+}

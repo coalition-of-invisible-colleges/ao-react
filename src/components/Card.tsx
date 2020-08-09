@@ -1,41 +1,90 @@
-import * as React from 'react'
+import React from 'react'
+import { Redirect } from 'react-router-dom'
 import { ObservableMap, computed } from 'mobx'
+import { observer } from 'mobx-react'
 import { Route, useParams, useRouteMatch } from 'react-router-dom'
-import aoStore from '../client/store'
+import aoStore, { Task } from '../client/store'
 import { TaskContext } from './taskContext'
 import AoContextCard from './contextCard'
 import AoDiscardZone from './discard'
+import AoHud from './hud'
 
-interface CardParams {
-  taskId: string
+interface CardProps {
+  match
 }
 
-const RenderCard = () => {
-  const { taskId }: CardParams = useParams()
-  aoStore.setCurrentCard(taskId)
-  aoStore.removeFromContext(taskId)
-  let card = aoStore.hashMap.get(taskId)
+interface RenderProps {
+  card: Task
+  redirectCallback: (string) => void
+}
 
-  if (!card) {
-    return <p>Invalid card ID.</p>
+@observer
+class RenderCard extends React.PureComponent<RenderProps> {
+  render() {
+    if (!this.props.card) {
+      return <p>Invalid card ID.</p>
+    }
+
+    const context = {
+      card: this.props.card,
+      setRedirect: this.props.redirectCallback
+    }
+    // console.log('RenderCard context is ', context)
+    return (
+      <TaskContext.Provider value={context}>
+        <AoDiscardZone />
+        <AoContextCard cardStyle={'full'} />
+        <AoHud />
+      </TaskContext.Provider>
+    )
+  }
+}
+
+interface State {
+  currentCard: Task
+  redirect?: string
+}
+
+@observer
+export default class AoCard extends React.Component<CardProps, State> {
+  constructor(props) {
+    super(props)
+    const card = aoStore.hashMap.get(this.props.match.params.taskId)
+    aoStore.setCurrentCard(this.props.match.params.taskId)
+    this.state = { currentCard: card }
+    this.setRedirect = this.setRedirect.bind(this)
   }
 
-  return (
-    <TaskContext.Provider value={card}>
-      <AoDiscardZone />
-      <AoContextCard cardStyle={'full'} />
-    </TaskContext.Provider>
-  )
-}
+  componentDidUpdate(prevProps) {
+    // console.log('componentDidUpdate taskId is ', this.props.match.params.taskId)
+    if (this.state.redirect !== undefined) {
+      this.setState({ redirect: undefined })
+    }
+    // if (this.props.match.params.taskId !== prevProps.match.params.taskId) {
+    // const card = aoStore.hashMap.get(this.props.match.params.taskId)
+    // console.log('new context card is ', card)
+    // this.setState({ currentCard: card })
+    // }
+  }
 
-const AoCard: React.FunctionComponent<{}> = () => {
-  const match = useRouteMatch()
-  console.log('match.path is ', match.path)
-  return (
-    <Route path={`${match.path}/:taskId`}>
-      <RenderCard />
-    </Route>
-  )
-}
+  setRedirect(taskId: string) {
+    // console.log('setRedirect taskId is ', taskId)
+    const card = aoStore.hashMap.get(taskId)
+    aoStore.setCurrentCard(taskId)
+    aoStore.removeFromContext(taskId)
+    this.setState({ redirect: taskId, currentCard: card })
+  }
 
-export default AoCard
+  render() {
+    if (this.state.redirect !== undefined) {
+      return <Redirect to={this.state.redirect} />
+    }
+
+    return (
+      <RenderCard
+        card={this.state.currentCard}
+        redirectCallback={this.setRedirect}
+      />
+    )
+  }
+}

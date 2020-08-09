@@ -68,7 +68,7 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
   }
 
   commit() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     if (this.state.seconds > 0) {
       if (this.state.timer === true) {
@@ -81,7 +81,7 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
   }
 
   render() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     return (
       <div className={'hourglass'}>
@@ -136,7 +136,7 @@ class AoTimeHistory extends React.Component<Props> {
   }
 
   @computed get timeLog() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     if (
       !card.taskId.time ||
@@ -168,7 +168,7 @@ class AoTimeHistory extends React.Component<Props> {
   }
 
   @computed get dateLog() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     let dateLogOut = null
 

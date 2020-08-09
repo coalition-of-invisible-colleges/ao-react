@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
@@ -7,14 +7,18 @@ import AoContextCard from './contextCard'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
-interface AoCheckmarkProps {
+interface CheckmarkProps {
   color?: string
   onGoIn?: (event) => void
 }
 
-const AoCheckmark: FunctionComponent<AoCheckmarkProps> = observer(
-  ({ color, onGoIn }) => {
-    const card: Task = React.useContext(TaskContext)
+@observer
+export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
+  static contextType = TaskContext
+
+  render() {
+    const { card, setRedirect } = this.context
+
     if (!card) {
       console.log('missing card in completed')
       return null
@@ -22,8 +26,8 @@ const AoCheckmark: FunctionComponent<AoCheckmarkProps> = observer(
 
     const computed = observable({
       get cardColor() {
-        if (color) {
-          return color
+        if (this.props.color) {
+          return this.props.color
         }
         const loadedColor = card.color
         switch (loadedColor) {
@@ -49,7 +53,7 @@ const AoCheckmark: FunctionComponent<AoCheckmarkProps> = observer(
           height="12.96459mm"
           version="1.1"
           className={'checkmarkImage ' + computed.cardColor}
-          onDoubleClick={onGoIn}>
+          onDoubleClick={this.props.onGoIn}>
           <g transform="translate(178.70974,-158.92981)">
             <path
               style={{ fillOpacity: 1, strokeWidth: 0.26458335 }}
@@ -60,6 +64,4 @@ const AoCheckmark: FunctionComponent<AoCheckmarkProps> = observer(
       </Tippy>
     )
   }
-)
-
-export default AoCheckmark
+}

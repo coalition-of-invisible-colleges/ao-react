@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
@@ -8,13 +8,16 @@ import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
 
-interface AoCheckboxProps {
+interface CheckboxProps {
   hudStyle: HudStyle
 }
 
-const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
-  ({ hudStyle }) => {
-    const card: Task = React.useContext(TaskContext)
+@observer
+export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
+  static contextType = TaskContext
+
+  render() {
+    const { card, setRedirect } = this.context
 
     const computed = observable({
       get isCompleted() {
@@ -34,7 +37,7 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
         api.completeCard(card.taskId)
       }
     }
-    switch (hudStyle) {
+    switch (this.props.hudStyle) {
       case 'full before':
       case 'face before':
       case 'collapsed':
@@ -61,6 +64,4 @@ const AoCheckbox: FunctionComponent<AoCheckboxProps> = observer(
         return null
     }
   }
-)
-
-export default AoCheckbox
+}

@@ -41,7 +41,7 @@ export default class AoGrid extends React.Component<{}, GridState> {
   }
 
   addGrid() {
-    const card = this.context
+    const { card, setRedirect } = this.context
     api.addGridToCard(card.taskId, 3, 3)
   }
 
@@ -50,7 +50,7 @@ export default class AoGrid extends React.Component<{}, GridState> {
   }
 
   newGridCard(name: string, coords: Sel) {
-    const card = this.context
+    const { card, setRedirect } = this.context
     api.pinCardToGrid(coords.x, coords.y, name, card.taskId)
   }
 
@@ -158,7 +158,8 @@ export default class AoGrid extends React.Component<{}, GridState> {
   }
 
   @computed get grid() {
-    const card = this.context
+    // console.log('rerendering grid')
+    const { card, setRedirect } = this.context
 
     if (card.hasOwnProperty('grid') && card.grid) {
       return card.grid
@@ -168,7 +169,7 @@ export default class AoGrid extends React.Component<{}, GridState> {
   }
 
   render() {
-    const card = this.context
+    const { card, setRedirect } = this.context
     const render = []
     let grid = this.grid
 
@@ -221,7 +222,9 @@ export default class AoGrid extends React.Component<{}, GridState> {
           continue
         }
         render.push(
-          <TaskContext.Provider value={task} key={i + '-' + j}>
+          <TaskContext.Provider
+            value={{ card: task, setRedirect }}
+            key={i + '-' + j}>
             <AoDropZone
               inId={card.taskId}
               x={i}
@@ -256,7 +259,7 @@ export default class AoGrid extends React.Component<{}, GridState> {
           }}>
           {render}
         </div>
-        <AoGridResizer taskId={card.taskId} />
+        <AoGridResizer />
       </div>
     )
   }

@@ -3,6 +3,15 @@ const dctrlDb = require('./dctrlDb')
 const M = require('../mutations')
 const modules = require('../modules')
 const config = require('../../configuration')
+const { formatDistanceToNow } = require('date-fns')
+const cron = require('cron')
+
+const backupJob = new cron.CronJob({
+  cronTime: '0 0 0 1 * *',
+  onTick: backupState,
+  start: true,
+  timeZone: 'America/Los_Angeles'
+})
 
 const serverState = {
   ao: [],
@@ -84,6 +93,19 @@ function initialize(callback) {
     let ts = 0
     if (backup.length > 0) {
       ts = backup[0].timestamp
+      console.log(
+        '\nFound',
+        backup.length,
+        'AO snapshot' +
+          (backup.length === 1 ? '' : 's') +
+          ' in the database. Applying' +
+          (backup.length > 1 ? ' the most recent' : '') +
+          ' backup from',
+        formatDistanceToNow(ts, {
+          addSuffix: true
+        }),
+        '...\n'
+      )
       applyBackup(backup[0])
     }
     dctrlDb.getAll(ts, (err, all) => {
@@ -98,7 +120,11 @@ function initialize(callback) {
 }
 
 function backupState() {
+  console.log(
+    "\nTaking a monthly snapshot of the AO's current loaded state to improve performance..."
+  )
   dctrlDb.insertBackup(serverState)
+  console.log('Snapshot saved.')
 }
 
 function removeSensitive(ev) {

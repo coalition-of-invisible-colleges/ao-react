@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Task } from '../client/store'
 
-// interface IContextProps {
-// 	state: IState
-// 	dispatch: ({ type }: { type: string }) => void
-// }
+interface TaskContextProps {
+	card: Task
+	setRedirect: (taskId: string) => void
+}
 
-export const TaskContext = React.createContext<Task>(null)
+export const TaskContext = React.createContext<TaskContextProps>(null)

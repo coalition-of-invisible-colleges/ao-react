@@ -1,3 +1,12 @@
+import whyDidYouRender from '@welldone-software/why-did-you-render'
+if (process.env.NODE_ENV === 'development') {
+  console.log('enabling whyDidYouRender')
+  whyDidYouRender(React, {
+    include: [/.*/],
+    trackAllPureComponents: true
+  })
+}
+
 import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
 import { useState, useEffect } from 'react'
@@ -15,7 +24,6 @@ import { observer } from 'mobx-react'
 import Login from './components/Login'
 import AoMember from './components/Member'
 import AoCard from './components/Card'
-import AoHud from './components/hud'
 import AoPopupPanel from './components/popupPanel'
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
@@ -64,7 +72,7 @@ const App = observer(() => {
           <Switch>
             <Route path="/login" component={Login} />
             <ProtectedRoute
-              path="/task"
+              path="/task/:taskId"
               component={AoCard}
               loggedIn={aoStore.state.loggedIn}
             />
@@ -75,9 +83,6 @@ const App = observer(() => {
               exact={true}
             />
           </Switch>
-          <ProtectedFragment loggedIn={aoStore.state.loggedIn}>
-            <AoHud />
-          </ProtectedFragment>
         </Router>
       )}
       {!render && (

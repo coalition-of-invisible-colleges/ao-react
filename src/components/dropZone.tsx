@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 import aoStore, { AoState, Task } from '../client/store'
 import api from '../client/api'
 import { delay, cancelablePromise, noop } from '../utils'
-import { CardStyle } from './contextCard'
 import { CardPlay, CardZone, CardLocation, Sel } from '../cards'
 import { TaskContext } from './taskContext'
 
@@ -44,7 +43,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	}
 
 	detectDragKind = dataTransfer => {
-		const card = this.context
+		const { card, setRedirect } = this.context
 		if (!card) {
 			console.log('drop event on empty square')
 		}

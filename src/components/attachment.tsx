@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
@@ -12,12 +12,14 @@ interface AoAttachmentProps {
   hudStyle: HudStyle
 }
 
-const testfile = '../assets/images/buddadoge.svg'
-const testtype = 'png'
+@observer
+export default class AoAttachment extends React.PureComponent<
+  AoAttachmentProps
+> {
+  static contextType = TaskContext
 
-const AoAttachment: FunctionComponent<AoAttachmentProps> = observer(
-  ({ hudStyle }) => {
-    const card: Task = React.useContext(TaskContext)
+  render() {
+    const { card, setRedirect } = this.context
 
     let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {
@@ -33,6 +35,4 @@ const AoAttachment: FunctionComponent<AoAttachmentProps> = observer(
       </div>
     )
   }
-)
-
-export default AoAttachment
+}

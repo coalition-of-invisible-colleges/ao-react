@@ -32,19 +32,16 @@ interface CardHudProps {
 	hudStyle: HudStyle
 	prioritiesShown?: boolean
 	onTogglePriorities?: (any) => void
-	projectsShown?: boolean
-	onToggleProjects?: (any) => void
 }
 
-const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
-	({
-		hudStyle,
-		prioritiesShown,
-		onTogglePriorities,
-		projectsShown,
-		onToggleProjects
-	}) => {
-		const card: Task = React.useContext(TaskContext)
+@observer
+export default class CardHud extends React.PureComponent<CardHudProps> {
+	static contextType = TaskContext
+
+	render() {
+		const { card, setRedirect } = this.context
+		const hudStyle = this.props.hudStyle
+
 		switch (hudStyle) {
 			case 'context':
 				return (
@@ -52,8 +49,8 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 						<AoMission hudStyle={hudStyle} />
 						<AoPreview
 							hudStyle={hudStyle}
-							prioritiesShown={prioritiesShown}
-							onTogglePriorities={onTogglePriorities}
+							prioritiesShown={this.props.prioritiesShown}
+							onTogglePriorities={this.props.onTogglePriorities}
 						/>
 						<AoCountdown hudStyle={hudStyle} />
 					</div>
@@ -65,8 +62,8 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 						<AoMission hudStyle={hudStyle} />
 						<AoPreview
 							hudStyle={hudStyle}
-							prioritiesShown={prioritiesShown}
-							onTogglePriorities={onTogglePriorities}
+							prioritiesShown={this.props.prioritiesShown}
+							onTogglePriorities={this.props.onTogglePriorities}
 						/>
 						<AoCountdown hudStyle={hudStyle} />
 						<AoValue hudStyle={hudStyle} />
@@ -79,8 +76,8 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 					<div className={'hud'}>
 						<AoPreview
 							hudStyle={hudStyle}
-							prioritiesShown={prioritiesShown}
-							onTogglePriorities={onTogglePriorities}
+							prioritiesShown={this.props.prioritiesShown}
+							onTogglePriorities={this.props.onTogglePriorities}
 						/>
 						<AoCountdown hudStyle={hudStyle} />
 						<AoValue hudStyle={hudStyle} />
@@ -149,6 +146,4 @@ const AoCardHud: React.FunctionComponent<CardHudProps> = observer(
 				)
 		}
 	}
-)
-
-export default AoCardHud
+}

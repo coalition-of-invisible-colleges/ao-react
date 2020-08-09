@@ -38,10 +38,14 @@ export default class AoValue extends React.Component<ValueProps, State> {
     aoStore.registerCloseable(this.stopEditing)
   }
 
+  componentWillUnmount() {
+    aoStore.unregisterCloseable(this.stopEditing)
+  }
+
   startEditing(event) {
     event.stopPropagation()
 
-    const card = this.context
+    const { card, setRedirect } = this.context
     if (card.completeValue) {
       this.setState({
         text: card.completeValue.toString()
@@ -57,7 +61,7 @@ export default class AoValue extends React.Component<ValueProps, State> {
   saveValue(event) {
     event.stopPropagation()
 
-    const card = this.context
+    const { card, setRedirect } = this.context
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
     if (newValue === card.completeValue) {
@@ -83,7 +87,7 @@ export default class AoValue extends React.Component<ValueProps, State> {
   }
 
   render() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     if (this.state.editing) {
       return (

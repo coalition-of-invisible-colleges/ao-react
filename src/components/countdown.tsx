@@ -29,18 +29,20 @@ interface CountdownProps {
   hudStyle: HudStyle
 }
 
-interface DatePickerParams {
+interface DatePickerProps {
   startTime: Date
-  bookResource: (event: Date) => void
   onChange: (event: Date) => void
 }
 
-const RenderDatePicker: React.FunctionComponent<DatePickerParams> = observer(
-  ({ bookResource, startTime, onChange }) => {
+@observer
+class RenderDatePicker extends React.PureComponent<DatePickerProps> {
+  static contextType = TaskContext
+
+  render() {
     return (
       <DatePicker
-        selected={startTime}
-        onChange={date => onChange(date)}
+        selected={this.props.startTime}
+        onChange={date => this.props.onChange(date)}
         showTimeSelect
         timeFormat="HH:mm"
         timeIntervals={15}
@@ -51,7 +53,7 @@ const RenderDatePicker: React.FunctionComponent<DatePickerParams> = observer(
       />
     )
   }
-)
+}
 
 @observer
 export default class AoCountdown extends React.Component<
@@ -70,7 +72,7 @@ export default class AoCountdown extends React.Component<
   }
 
   startEditing(event) {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     if (card.book.startTs) {
       let newStartTime: Date = new Date(0)
@@ -90,7 +92,7 @@ export default class AoCountdown extends React.Component<
   }
 
   bookResource() {
-    const card = this.context
+    const { card, setRedirect } = this.context
     if (this.state.startTime) {
       let newEndTime: Date = new Date(this.state.startTime)
       newEndTime.setDate(newEndTime.getDate() + 3)
@@ -104,7 +106,7 @@ export default class AoCountdown extends React.Component<
   }
 
   renderCountdown() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     switch (this.props.hudStyle) {
       case 'full before':
@@ -129,13 +131,12 @@ export default class AoCountdown extends React.Component<
   }
 
   render() {
-    const card = this.context
+    const { card, setRedirect } = this.context
 
     if (this.state.editing) {
       return (
         <div className={'countdown'}>
           <RenderDatePicker
-            bookResource={this.bookResource}
             startTime={this.state.startTime}
             onChange={this.onChange}
           />

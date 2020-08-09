@@ -23,39 +23,44 @@ import MagnifyingGlass from '../assets/images/search.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
-const MainMenu: React.FunctionComponent<{}> = () => {
-  const [theme, setTheme] = React.useState(1)
+interface State {
+  theme: number
+}
 
-  const changeTheme = () => {
-    if (theme == 3) {
-      setTheme(1)
-      document.body.className = 'theme-1'
-    } else {
-      const newTheme = theme + 1
-      document.body.className = 'theme-' + newTheme
-      setTheme(newTheme)
+@observer
+class MainMenu extends React.PureComponent<{}, State> {
+  render() {
+    const changeTheme = () => {
+      if (this.state.theme == 3) {
+        this.setState({ theme: 1 })
+        document.body.className = 'theme-1'
+      } else {
+        const newTheme = this.state.theme + 1
+        document.body.className = 'theme-' + newTheme
+        this.setState({ theme: newTheme })
+      }
     }
-  }
 
-  const onLogout = () => {
-    api.logout()
-    console.log('logged out', aoStore.state.loggedIn)
-  }
+    const onLogout = () => {
+      api.logout()
+      console.log('logged out', aoStore.state.loggedIn)
+    }
 
-  return (
-    <div id={'mainMenu'}>
-      <AoServerName />
-      <AoUsername />
-      <AoPassword />
-      <AoVolume />
-      <div onClick={changeTheme} id={'themer'} className={'action'}>
-        Next Theme
+    return (
+      <div id={'mainMenu'}>
+        <AoServerName />
+        <AoUsername />
+        <AoPassword />
+        <AoVolume />
+        <div onClick={changeTheme} id={'themer'} className={'action'}>
+          Next Theme
+        </div>
+        <div onClick={onLogout} id="logout" className={'action'}>
+          Log Out
+        </div>
       </div>
-      <div onClick={onLogout} id="logout" className={'action'}>
-        Log Out
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
 @observer

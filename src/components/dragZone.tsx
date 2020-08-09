@@ -28,7 +28,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 			'drag event from dragZone! dragContext is ',
 			this.props.dragContext
 		)
-		const card = this.context
+		const { card, setRedirect } = this.context
 		if (!card) {
 			console.log('drag event on missing card')
 			return
@@ -73,7 +73,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 		// since there is no drag image, setting other data fields
 		// fails too
 		let cardHTML = ReactDOMServer.renderToStaticMarkup(
-			<TaskContext.Provider value={card}>
+			<TaskContext.Provider value={{ card, setRedirect }}>
 				<AoContextCard cardStyle={'compact'} />
 			</TaskContext.Provider>
 		)

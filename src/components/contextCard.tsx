@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { TaskContext } from './taskContext'
-import { Redirect } from 'react-router-dom'
+// import { Redirect } from 'react-router-dom'
 import { ObservableMap } from 'mobx'
 import { delay, cancelablePromise, noop } from '../utils'
 import api from '../client/api'
@@ -52,12 +52,13 @@ interface CardProps {
 interface State {
 	showPriorities?: boolean
 	showProjects?: boolean
-	redirect?: string
+	// redirect?: string
 }
 
 @observer
 export default class AoContextCard extends React.Component<CardProps, State> {
 	static contextType = TaskContext
+	static whyDidYouRender = true
 
 	constructor(props) {
 		super(props)
@@ -69,6 +70,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.goInCard = this.goInCard.bind(this)
 		this.renderCardContent = this.renderCardContent.bind(this)
 	}
+
+	// componentDidUpdate() {
+	// 	if (this.state.redirect) {
+	// 		this.setState({ redirect: undefined })
+	// 	}
+	// }
 
 	togglePriorities(event) {
 		event.stopPropagation()
@@ -91,7 +98,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	newPriority(name: string) {
-		const card = this.context
+		const { card, setRedirect } = this.context
 		if (!card) {
 			console.log('missing card')
 		}
@@ -99,7 +106,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	newSubTask(name: string) {
-		const card = this.context
+		const { card, setRedirect } = this.context
 		if (!card) {
 			console.log('missing card')
 		}
@@ -111,7 +118,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		hideAllTippys()
 		aoStore.closeAllCloseables()
 
-		const card = this.context
+		let { card, setRedirect } = this.context
 		if (!card) {
 			console.log('missing card')
 			return
@@ -121,10 +128,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		} else {
 			aoStore.addToContext([aoStore.currentCard])
 		}
-
-		this.setState({
-			redirect: '/task/' + card.taskId
-		})
+		setRedirect(card.taskId)
 	}
 
 	applyClassIfCurrentSearchResult(taskId) {
@@ -169,12 +173,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	render() {
-		if (this.state.redirect !== undefined) {
-			this.setState({ redirect: undefined })
-			return <Redirect to={this.state.redirect} />
-		}
+		// if (this.state.redirect !== undefined) {
+		// 	return <Redirect to={this.state.redirect} />
+		// }
 
-		const card = this.context
+		let { card, setRedirect } = this.context
+		// console.log(
+		// 	'render contextCard card is ',
+		// 	card,
+		// 	' and setRedirect is ',
+		// 	setRedirect
+		// )
 		if (!card) {
 			console.log('missing card')
 			return (

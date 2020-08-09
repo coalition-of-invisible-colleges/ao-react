@@ -36,12 +36,15 @@ export const defaultState: State = {
 
 @observer
 export default class AoSearch extends React.Component<{}, State> {
+  static contextType = TaskContext
+
   constructor(props) {
     super(props)
     this.state = defaultState
     this.componentDidMount = this.componentDidMount.bind(this)
     this.focus = this.focus.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.onKeyDown = this.onKeyDown.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.scrollMore = this.scrollMore.bind(this)
     this.sortBy = this.sortBy.bind(this)
@@ -65,15 +68,40 @@ export default class AoSearch extends React.Component<{}, State> {
     this.setState({ query: event.target.value })
   }
 
+  onKeyDown(event) {
+    if (event.key === 'Escape') {
+      // this should also close the entire search box tippy
+      this.setState({ query: '' })
+    }
+  }
+
   onSearch(event) {
     const query = event.target.value
+    console.log('search. query is ', query)
+    if (query === undefined) {
+      return
+    }
+
+    if (query === '') {
+      this.setState({ query: undefined, items: undefined })
+      return
+    }
+
     if (query.length === 1) {
       // For snappier performance, you must type at least two characters to search
       return
     }
 
     aoStore.updateSearchResults(query)
-    this.setState({ query: query, items: query.length >= 1 ? 10 : undefined })
+    const minResults =
+      aoStore.searchResults.length >= 1
+        ? Math.min(aoStore.searchResults.length, 10)
+        : 0
+    let itemCount
+    if (query.length >= 1 && minResults >= 1) {
+      itemCount = Math.min(minResults)
+    }
+    this.setState({ query: query, items: itemCount })
   }
 
   @computed get sortedResults() {
@@ -167,8 +195,12 @@ export default class AoSearch extends React.Component<{}, State> {
   }
 
   renderItems(items) {
+    let { card, setRedirect } = this.context
+
     return items.map((task, i) => (
-      <TaskContext.Provider value={task} key={task.taskId}>
+      <TaskContext.Provider
+        value={{ card: task, setRedirect: setRedirect }}
+        key={task.taskId}>
         <AoDragZone
           dragContext={{
             zone: 'panel',
@@ -259,6 +291,7 @@ export default class AoSearch extends React.Component<{}, State> {
           ref={this.searchBox}
           type="search"
           onChange={this.onChange}
+          onKeyDown={this.onKeyDown}
           value={this.state.query}
           size={36}
           placeholder={'search for a card'}
