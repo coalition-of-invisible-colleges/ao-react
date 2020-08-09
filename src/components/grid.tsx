@@ -158,7 +158,6 @@ export default class AoGrid extends React.Component<{}, GridState> {
   }
 
   @computed get grid() {
-    // console.log('rerendering grid')
     const { card, setRedirect } = this.context
 
     if (card.hasOwnProperty('grid') && card.grid) {
@@ -223,7 +222,7 @@ export default class AoGrid extends React.Component<{}, GridState> {
         }
         render.push(
           <TaskContext.Provider
-            value={{ card: task, setRedirect }}
+            value={{ card: task, setRedirect: setRedirect }}
             key={i + '-' + j}>
             <AoDropZone
               inId={card.taskId}

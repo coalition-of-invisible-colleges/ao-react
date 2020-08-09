@@ -71,12 +71,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.renderCardContent = this.renderCardContent.bind(this)
 	}
 
-	// componentDidUpdate() {
-	// 	if (this.state.redirect) {
-	// 		this.setState({ redirect: undefined })
-	// 	}
-	// }
-
 	togglePriorities(event) {
 		event.stopPropagation()
 		event.nativeEvent.stopImmediatePropagation()
@@ -174,17 +168,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	render() {
-		// if (this.state.redirect !== undefined) {
-		// 	return <Redirect to={this.state.redirect} />
-		// }
-
 		let { card, setRedirect } = this.context
-		// console.log(
-		// 	'render contextCard card is ',
-		// 	card,
-		// 	' and setRedirect is ',
-		// 	setRedirect
-		// )
+
 		if (!card) {
 			console.log('missing card')
 			return (

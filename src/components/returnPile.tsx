@@ -92,6 +92,10 @@ export default class AoReturnPile extends React.PureComponent {
         return false
       }
 
+      if (t.book && t.book.startTs) {
+        return false
+      }
+
       let parents = findAllReachableHeldParents(t)
 
       if (
@@ -126,7 +130,7 @@ export default class AoReturnPile extends React.PureComponent {
 
   @computed get topReturnedCard() {
     if (this.returnedCards && this.returnedCards.length >= 1) {
-      return this.returnedCards[0]
+      return this.returnedCards[this.returnedCards.length - 1]
     }
     return null
   }

@@ -13,12 +13,11 @@ interface PaperProps {
 }
 
 @observer
-export default class AoPaper extends React.PureComponent<PaperProps> {
+export default class AoPaper extends React.Component<PaperProps> {
   static contextType = TaskContext
 
   @computed
   get cardColor() {
-    console.log('cardColor props is ', this.props)
     if (this.props && this.props.color) {
       return this.props.color
     }

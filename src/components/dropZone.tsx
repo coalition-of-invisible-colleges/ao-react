@@ -8,11 +8,9 @@ import { TaskContext } from './taskContext'
 
 interface DropZoneProps {
 	zoneStyle: CardZone
-	// cards: Task[]
 	inId?: string
 	x?: number
 	y?: number
-	// taskId?: string
 	style?: {}
 	onSelect?: (selection: Sel) => void
 	onDrop?: (move: CardPlay) => void
@@ -38,11 +36,13 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	constructor(props) {
 		super(props)
 		this.state = {}
+		this.detectDragKind = this.detectDragKind.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
+		this.hideDrop = this.hideDrop.bind(this)
 		this.drop = this.drop.bind(this)
 	}
 
-	detectDragKind = dataTransfer => {
+	detectDragKind(dataTransfer) {
 		const { card, setRedirect } = this.context
 		if (!card) {
 			console.log('drop event on empty square')
@@ -72,20 +72,23 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		return filetype
 	}
 
-	allowDrop = event => {
+	allowDrop(event) {
 		event.preventDefault()
 		event.stopPropagation()
 		this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
 	}
 
-	hideDrop = event => {
+	hideDrop(event) {
 		this.setState({ draggedKind: undefined })
 	}
 
-	drop = async event => {
+	async drop(event) {
 		event.preventDefault()
 		event.stopPropagation()
-		let card = this.context
+
+		const { card, setRedirect } = this.context
+
+		console.log('dropZone card is ', card)
 		if (document.getElementById('dragGhost')) {
 			document.getElementById('dragGhost').remove()
 		}
@@ -117,7 +120,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		}
 
 		let toCoords: Sel = { x: this.props.x, y: this.props.y }
-		// need to get this from context
+
 		let toLocation: CardLocation = {
 			taskId: card ? card.taskId : undefined,
 			inId: this.props.inId,
@@ -139,7 +142,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		return
 	}
 
-	emptySquare = () => {
+	emptySquare() {
 		let message = ''
 		if (['card', 'grid'].includes(this.state.draggedKind)) {
 			message = 'drop to place'

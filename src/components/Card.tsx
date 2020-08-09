@@ -19,7 +19,7 @@ interface RenderProps {
 }
 
 @observer
-class RenderCard extends React.PureComponent<RenderProps> {
+class RenderCard extends React.Component<RenderProps> {
   render() {
     if (!this.props.card) {
       return <p>Invalid card ID.</p>
