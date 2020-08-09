@@ -114,6 +114,7 @@ function initialize(callback) {
         applyEvent(serverState, Object.assign({}, ev))
         applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
       })
+      backupState()
       callback(null)
     })
   })

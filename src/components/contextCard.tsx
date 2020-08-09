@@ -155,7 +155,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			<Markdown
 				options={{
 					forceBlock: true,
-					disableParsingRawHTML: true,
 					overrides: {
 						a: {
 							props: {
