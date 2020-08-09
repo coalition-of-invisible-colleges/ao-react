@@ -664,31 +664,33 @@ function tasksMuts(tasks, ev) {
         }
       }
       // for good measure, also clean up references to missing cards
-      tasks.forEach((task, i) => {
-        task.subTasks = task.subTasks.filter(st =>
-          tasks.some(t => t.taskId === st)
-        )
-        task.priorities = task.priorities.filter(st =>
-          tasks.some(t => t.taskId === st)
-        )
-        task.completed = task.completed.filter(st =>
-          tasks.some(t => t.taskId === st)
-        )
-        task.deck = task.deck.filter(st => tasks.some(t => t.taskId === st))
+      // once this has been done once and backed up it shouldn't be needed again.
+      // maybe make it into a special admin cleanup event
+      // tasks.forEach((task, i) => {
+      //   task.subTasks = task.subTasks.filter(st =>
+      //     tasks.some(t => t.taskId === st)
+      //   )
+      //   task.priorities = task.priorities.filter(st =>
+      //     tasks.some(t => t.taskId === st)
+      //   )
+      //   task.completed = task.completed.filter(st =>
+      //     tasks.some(t => t.taskId === st)
+      //   )
+      //   task.deck = task.deck.filter(st => tasks.some(t => t.taskId === st))
 
-        if (_.has(task, 'grid.rows')) {
-          Object.entries(task.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              if (!tasks.some(t => t.taskId === cell)) {
-                delete tasks[i].grid.rows[y][x]
-              }
-            })
-            if (row.length === 0) {
-              delete tasks[i].grid.rows[y]
-            }
-          })
-        }
-      })
+      //   if (_.has(task, 'grid.rows')) {
+      //     Object.entries(task.grid.rows).forEach(([y, row]) => {
+      //       Object.entries(row).forEach(([x, cell]) => {
+      //         if (!tasks.some(t => t.taskId === cell)) {
+      //           delete tasks[i].grid.rows[y][x]
+      //         }
+      //       })
+      //       if (row.length === 0) {
+      //         delete tasks[i].grid.rows[y]
+      //       }
+      //     })
+      //   }
+      // })
 
       break
     case 'task-prioritized':
