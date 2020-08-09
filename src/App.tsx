@@ -1,11 +1,11 @@
-import whyDidYouRender from '@welldone-software/why-did-you-render'
-if (process.env.NODE_ENV === 'development') {
-  console.log('enabling whyDidYouRender')
-  whyDidYouRender(React, {
-    include: [/Ao/],
-    trackAllPureComponents: true
-  })
-}
+// import whyDidYouRender from '@welldone-software/why-did-you-render'
+// if (process.env.NODE_ENV === 'development') {
+//   console.log('enabling whyDidYouRender')
+//   whyDidYouRender(React, {
+//     include: [/Ao/],
+//     trackAllPureComponents: true
+//   })
+// }
 
 import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
