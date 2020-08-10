@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { TaskContext } from './taskContext'
@@ -16,6 +16,29 @@ interface CheckmarkProps {
 export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
   static contextType = TaskContext
 
+  constructor(props) {
+    super(props)
+  }
+
+  @computed get cardColor() {
+    if (this.props.color) {
+      return this.props.color
+    }
+    const { card, setRedirect } = this.context
+    const loadedColor = card.color
+    switch (loadedColor) {
+      case 'red':
+      case 'yellow':
+      case 'green':
+      case 'blue':
+      case 'purple':
+      case 'black':
+        return loadedColor
+      default:
+        return ''
+    }
+  }
+
   render() {
     const { card, setRedirect } = this.context
 
@@ -23,26 +46,6 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
       console.log('missing card in completed')
       return null
     }
-
-    const computed = observable({
-      get cardColor() {
-        if (this.props.color) {
-          return this.props.color
-        }
-        const loadedColor = card.color
-        switch (loadedColor) {
-          case 'red':
-          case 'yellow':
-          case 'green':
-          case 'blue':
-          case 'purple':
-          case 'black':
-            return loadedColor
-          default:
-            return ''
-        }
-      }
-    })
 
     return (
       <Tippy zIndex={4} content={<AoContextCard cardStyle={'compact'} />}>
@@ -52,7 +55,7 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
           width="12.96459mm"
           height="12.96459mm"
           version="1.1"
-          className={'checkmarkImage ' + computed.cardColor}
+          className={'checkmarkImage ' + this.cardColor}
           onDoubleClick={this.props.onGoIn}>
           <g transform="translate(178.70974,-158.92981)">
             <path

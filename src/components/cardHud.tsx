@@ -32,6 +32,7 @@ interface CardHudProps {
 	hudStyle: HudStyle
 	prioritiesShown?: boolean
 	onTogglePriorities?: (any) => void
+	noPopups?: boolean
 }
 
 @observer
@@ -104,9 +105,9 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCoin />
+						<AoCoin noPopups={this.props.noPopups} />
 						<AoPreview hudStyle={hudStyle} />
-						<AoCardMenu hudStyle={hudStyle} />
+						<AoCardMenu hudStyle={hudStyle} noPopups={this.props.noPopups} />
 					</div>
 				)
 			case 'mini before':

@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
@@ -8,32 +8,37 @@ import 'tippy.js/dist/tippy.css'
 
 @observer
 export default class AoScore extends React.PureComponent {
-  render() {
-    const computed = observable({
-      get checkedCards() {
-        return aoStore.state.tasks.filter(t => {
-          if (t.deck.indexOf(aoStore.member.memberId) === -1) {
-            return false
-          }
-          if (!t.claimed.some(c => c.indexOf(aoStore.member.memberId) >= 0)) {
-            return false
-          }
+  @computed
+  get myCards() {
+    return aoStore.state.tasks.filter(
+      t => t.deck.indexOf(aoStore.member.memberId) !== -1
+    )
+  }
 
-          if (!t.hasOwnProperty('completeValue') || t.completeValue <= 0) {
-            return false
-          }
-          return true
-        })
-      },
-      get pointsFromCards() {
-        let points = 0
-        this.checkedCards.forEach(t => {
-          points += t.completeValue
-        })
-        return points
+  @computed
+  get checkedCards() {
+    return this.myCards.filter(t => {
+      if (!t.claimed.some(c => c.indexOf(aoStore.member.memberId) >= 0)) {
+        return false
       }
-    })
 
+      if (!t.hasOwnProperty('completeValue') || t.completeValue <= 0) {
+        return false
+      }
+      return true
+    })
+  }
+
+  @computed
+  get pointsFromCards() {
+    let points = 0
+    this.checkedCards.forEach(t => {
+      points += t.completeValue
+    })
+    return points
+  }
+
+  render() {
     return (
       <Tippy
         interactive={true}
@@ -42,10 +47,10 @@ export default class AoScore extends React.PureComponent {
         content={
           <React.Fragment>
             <h2>Points From Cards</h2>
-            {computed.checkedCards.length >= 1 ? (
+            {this.checkedCards.length >= 1 ? (
               <AoStack
                 cardStyle={'priority'}
-                cards={computed.checkedCards}
+                cards={this.checkedCards}
                 zone={'panel'}
               />
             ) : (
@@ -57,7 +62,7 @@ export default class AoScore extends React.PureComponent {
           </React.Fragment>
         }>
         <div id={'score'}>
-          <div>Score: {computed.pointsFromCards}</div>
+          <div>Score: {this.pointsFromCards}</div>
         </div>
       </Tippy>
     )

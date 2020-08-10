@@ -74,7 +74,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 		// fails too
 		let cardHTML = ReactDOMServer.renderToStaticMarkup(
 			<TaskContext.Provider value={{ card, setRedirect }}>
-				<AoContextCard cardStyle={'compact'} />
+				<AoContextCard cardStyle={'compact'} noPopups={true} />
 			</TaskContext.Provider>
 		)
 		let dragGhostElement: Element = document.createElement('div')

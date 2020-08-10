@@ -21,7 +21,11 @@ export default class AoShitposts extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
-    // this.allUnheldCards = this.allUnheldCards.bind(this)
+    this.purgeUnheldCards = this.purgeUnheldCards.bind(this)
+  }
+
+  purgeUnheldCards() {
+    api.removeCards(this.allUnheldCards.map(task => task.taskId))
   }
 
   @computed get allUnheldCards() {
@@ -49,7 +53,7 @@ export default class AoShitposts extends React.Component<{}, State> {
           badge={renderedBadge}
           tooltipPlacement={'left'}
           panelPlacement={'left'}>
-          <button onClick={api.cleanupUnheldCards}>Purge Unheld Cards</button>
+          <button onClick={this.purgeUnheldCards}>Purge Unheld Cards</button>
           <AoStack
             cards={this.allUnheldCards}
             cardStyle={'priority'}

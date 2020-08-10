@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
@@ -24,9 +25,8 @@ export default class AoHub extends React.Component<{}> {
     console.log('card added')
   }
 
-  render() {
-    const { card, setRedirect } = this.context
-
+  @computed
+  get topMissions() {
     let topMissions = aoStore.state.tasks.filter(task => {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
     })
@@ -39,6 +39,34 @@ export default class AoHub extends React.Component<{}> {
       topMissions = topMissions.slice(0, 5)
     }
     topMissions.reverse()
+
+    return topMissions
+  }
+
+  @computed
+  get topCards() {
+    let topCards = aoStore.state.tasks.filter(task => {
+      return (
+        !task.hasOwnProperty('guild') ||
+        (task.hasOwnProperty('guild') && task.guild.length < 1)
+      )
+    })
+
+    topCards = topCards.sort((a, b) => {
+      return b.deck.length - a.deck.length
+    })
+
+    if (topCards.length > 5) {
+      topCards = topCards.slice(0, 5)
+    }
+    topCards.reverse()
+
+    return topCards
+  }
+
+  @computed
+  get renderHub() {
+    const { card, setRedirect } = this.context
 
     let topCards = aoStore.state.tasks.filter(task => {
       return (
@@ -56,7 +84,6 @@ export default class AoHub extends React.Component<{}> {
     }
     topCards.reverse()
 
-    // <AoGrid taskId={aoStore.state.tasks[0].taskId} />
     let communityCard = aoStore.cardByName.get('community hub')
 
     return (
@@ -88,13 +115,13 @@ export default class AoHub extends React.Component<{}> {
             <div className={'right'}>
               <h2>Top Missions</h2>
               <AoStack
-                cards={topMissions}
+                cards={this.topMissions}
                 alwaysShowAll={true}
                 cardStyle={'mission'}
               />
               <h2>Top Cards</h2>
               <AoStack
-                cards={topCards}
+                cards={this.topCards}
                 alwaysShowAll={true}
                 cardStyle={'priority'}
               />
@@ -103,5 +130,9 @@ export default class AoHub extends React.Component<{}> {
         </AoPopupPanel>
       </div>
     )
+  }
+
+  render() {
+    return this.renderHub
   }
 }

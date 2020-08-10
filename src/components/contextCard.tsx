@@ -231,7 +231,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className={'content'}>
-							<AoCoin noPopup={this.props.noPopups} />
+							<AoCoin noPopups={this.props.noPopups} />
 							{this.renderCardContent(content)}
 							<AoAttachment hudStyle={'collapsed'} />
 						</div>
@@ -289,7 +289,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								</>
 							) : null}
 						</div>
-						<AoCardHud hudStyle={'face after'} />
+						<AoCardHud hudStyle={'face after'} noPopups={this.props.noPopups} />
 					</div>
 				)
 			case 'full':

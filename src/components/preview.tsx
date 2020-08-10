@@ -76,7 +76,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           Object.entries(card.grid.rows).forEach(([y, row]) => {
             Object.entries(row).forEach(([x, cell]) => {
               let gridCard = aoStore.hashMap.get(cell)
-              if (gridCard.guild && gridCard.guild.length >= 1) {
+              if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
                 count++
               }
             })

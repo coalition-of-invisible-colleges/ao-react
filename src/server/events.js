@@ -528,18 +528,10 @@ function taskBoostedLightning(
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskRemoved(taskId, blame, callback) {
+function tasksRemoved(taskIds, blame, callback) {
   let newEvent = {
-    type: 'task-removed',
-    taskId,
-    blame
-  }
-  dctrlDb.insertEvent(newEvent, callback)
-}
-
-function tasksPurged(blame, callback) {
-  let newEvent = {
-    type: 'tasks-purged',
+    type: 'tasks-removed',
+    taskIds,
     blame
   }
   dctrlDb.insertEvent(newEvent, callback)
@@ -692,8 +684,7 @@ module.exports = {
   taskUnclaimed,
   taskRefocused,
   pileRefocused,
-  taskRemoved,
-  tasksPurged,
+  tasksRemoved,
   taskSwapped,
   taskBumped,
   taskGrabbed,

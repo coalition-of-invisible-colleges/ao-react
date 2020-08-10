@@ -513,7 +513,8 @@ router.post('/events', (req, res, next) => {
     case 'task-sub-tasked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
-        validators.isTaskId(req.body.subTask, errRes)
+        validators.isTaskId(req.body.subTask, errRes) &&
+        validators.isMemberId(req.body.blame)
       ) {
         events.taskSubTasked(
           req.body.taskId,
@@ -630,20 +631,13 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
-    case 'task-removed':
-      if (validators.isTaskId(req.body.taskId, errRes)) {
-        events.taskRemoved(
-          req.body.taskId,
+    case 'tasks-removed':
+      if (req.body.taskIds.every(tId => validators.isTaskId(tId, errRes))) {
+        events.tasksRemoved(
+          req.body.taskIds,
           req.body.blame,
           utils.buildResCallback(res)
         )
-      } else {
-        res.status(200).send(errRes)
-      }
-      break
-    case 'tasks-purged':
-      if (true) {
-        events.tasksPurged(req.body.blame, utils.buildResCallback(res))
       } else {
         res.status(200).send(errRes)
       }

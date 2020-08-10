@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 import aoStore, { AoState, Task } from '../client/store'
@@ -27,8 +28,8 @@ export default class AoMissions extends React.Component<{}, State> {
     super(props)
     this.state = defaultState
     this.sortBy = this.sortBy.bind(this)
-    this.renderMissionsList = this.renderMissionsList.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
+    this.getProjectCards = this.getProjectCards.bind(this)
   }
 
   sortBy(sort: MissionSort) {
@@ -50,7 +51,35 @@ export default class AoMissions extends React.Component<{}, State> {
     }
   }
 
-  renderMissionsList() {
+  getProjectCards(card) {
+    let projectCards: Task[] = []
+    let allSubCards = card.priorities.concat(card.subTasks, card.completed)
+
+    allSubCards.forEach(tId => {
+      let subCard = aoStore.hashMap.get(tId)
+      if (subCard) {
+        if (subCard.guild && subCard.guild.length >= 1) {
+          projectCards.push(subCard)
+        }
+      }
+    })
+
+    if (card.grid && card.grid.rows) {
+      Object.entries(card.grid.rows).forEach(([y, row]) => {
+        Object.entries(row).forEach(([x, cell]) => {
+          let gridCard = aoStore.hashMap.get(cell)
+          if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
+            projectCards.push(gridCard)
+          }
+        })
+      })
+    }
+
+    return projectCards
+  }
+
+  @computed
+  get renderMissionsList() {
     let missions = aoStore.state.tasks.filter(task => {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
     })
@@ -58,36 +87,9 @@ export default class AoMissions extends React.Component<{}, State> {
       return ''
     }
 
-    let getProjectCards = card => {
-      let projectCards: Task[] = []
-      let allSubCards = card.priorities.concat(card.subTasks, card.completed)
-
-      allSubCards.forEach(tId => {
-        let subCard = aoStore.hashMap.get(tId)
-        if (subCard) {
-          if (subCard.guild && subCard.guild.length >= 1) {
-            projectCards.push(subCard)
-          }
-        }
-      })
-
-      if (card.grid && card.grid.rows) {
-        Object.entries(card.grid.rows).forEach(([y, row]) => {
-          Object.entries(row).forEach(([x, cell]) => {
-            let gridCard = aoStore.hashMap.get(cell)
-            if (gridCard.guild && gridCard.guild.length >= 1) {
-              projectCards.push(gridCard)
-            }
-          })
-        })
-      }
-
-      return projectCards
-    }
-
     let projectCards = []
     projectCards = projectCards.concat(
-      ...missions.map(task => getProjectCards(task))
+      ...missions.map(task => this.getProjectCards(task))
     )
 
     missions = missions.filter(task => {
@@ -133,7 +135,7 @@ export default class AoMissions extends React.Component<{}, State> {
           {this.renderSortButton('hodls', 'Hodls')}
           {this.renderSortButton('age', 'Order')}
         </div>
-        {this.renderMissionsList()}
+        {this.renderMissionsList}
       </React.Fragment>
     )
   }

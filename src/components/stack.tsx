@@ -103,9 +103,11 @@ export default class AoStack extends React.Component<StackProps, StackState> {
               if (!t) {
                 console.log(
                   'Missing card detected. card is ',
-                  card,
+                  card.name,
                   ' and this.props.cards is ',
-                  this.props.cards
+                  this.props.cards,
+                  ' and cardStyle is ',
+                  this.props.cardStyle
                 )
                 return false
               }
@@ -145,7 +147,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       list = cardsToRender.map((task, i) => (
         <TaskContext.Provider
           value={{ card: task, setRedirect: setRedirect }}
-          key={task.taskId}>
+          key={task.taskId + this.props.inId + this.props.cardStyle}>
           <AoDragZone
             dragContext={{
               zone: this.props.zone ? this.props.zone : 'panel',
@@ -173,7 +175,9 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       list = [
         <TaskContext.Provider
           value={{ card: cardsToRender[0], setRedirect: setRedirect }}
-          key={cardsToRender[0].taskId}>
+          key={
+            cardsToRender[0].taskId + this.props.inId + this.props.cardStyle
+          }>
           <AoDragZone
             dragContext={{
               zone: this.props.zone ? this.props.zone : 'panel',

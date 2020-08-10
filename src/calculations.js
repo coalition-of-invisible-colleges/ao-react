@@ -98,36 +98,19 @@ function blankGrid(height = 3, width = 3) {
   return newGrid
 }
 
-// function safeClone(card) {
-//     // XXX type check all this
-//     let safeClone = {
-//         taskId: card.taskId,
-//         name: card.name,
-//         claimed: [],
-//         completed: card.completed,
-//         passed: [],
-//         guild: card.guild,
-//         subTasks: card.subTasks,
-//         lastClaimed: 0,
-//         book: card.book,
-//         priorities: card.priorities,
-//         deck: [],
-//         color: card.color,
-//         address: card.address,
-//         bolt11: card.bolt11,
-//         payment_hash: '',
-//         boost: 0,
-//     }
-//     return safeClone
-// }
-
 function isString(x) {
   return Object.prototype.toString.call(x) === '[object String]'
 }
 
 function safeMerge(cardA, cardZ) {
+  // grids are not merged yet
   if (!cardA || !cardZ) {
-    console.log('attempt to merge nonexistent')
+    console.log('attempt to merge nonexistent card')
+    return
+  }
+
+  if (!cardZ.taskId || !isString(cardZ.taskId)) {
+    console.log('attempt to merge card with a missing or invalid taskId')
     return
   }
 
@@ -144,16 +127,23 @@ function safeMerge(cardA, cardZ) {
     cardA.guild = cardZ.guild
   }
 
+  const filterNull = tasks => {
+    return tasks.filter(task => task !== null && task !== undefined)
+  }
+
   cardA.book = cardZ.guild
   cardA.address = cardZ.guild
   cardA.bolt11 = cardZ.guild
-  cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
-  cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
-  cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]
-  cardA.passed = [...new Set(cardA.passed.concat(cardZ.passed))]
-  cardA.subTasks = [...new Set(cardA.subTasks.concat(cardZ.subTasks))]
-  cardA.priorities = [...new Set(cardA.priorities.concat(cardZ.priorities))]
-  cardA.completed = [...new Set(cardA.completed.concat(cardZ.completed))]
+  cardA.priorities = [
+    ...new Set(cardA.priorities.concat(filterNull(cardZ.priorities)))
+  ]
+  cardA.subTasks = [
+    ...new Set(cardA.subTasks.concat(filterNull(cardZ.subTasks)))
+  ]
+  cardA.completed = [
+    ...new Set(cardA.completed.concat(filterNull(cardZ.completed)))
+  ]
+  cardA.passed = [...new Set(cardA.passed.concat(filterNull(cardZ.passed)))]
   // XXX only add in merge for now
   // XXX bolt11 / address need to clearly indicate origin ao
   // XXX book should be a list?

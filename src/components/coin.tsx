@@ -11,12 +11,16 @@ import { Placement } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
 interface CoinProps {
-  noPopup?: boolean
+  noPopups?: boolean
 }
 
 @observer
 export default class AoCoin extends React.PureComponent<CoinProps> {
   static contextType = TaskContext
+
+  constructor(props) {
+    super(props)
+  }
 
   render() {
     const { card, setRedirect } = this.context
@@ -45,6 +49,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
 
     const memberCards = card.deck
       .map(memberId => aoStore.hashMap.get(memberId))
+      .filter(memberCard => memberCard !== undefined)
       .slice()
       .reverse()
 
@@ -124,7 +129,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
     )
     return (
       <div className={computed.isGrabbed ? 'coin' : 'coin ungrabbed'}>
-        {!this.props.noPopup ? (
+        {!this.props.noPopups ? (
           <Tippy
             zIndex={4}
             interactive={true}

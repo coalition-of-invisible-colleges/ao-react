@@ -245,9 +245,10 @@ class AoApi {
       })
   }
 
-  async cleanupUnheldCards(): Promise<request.Response> {
+  async removeCards(taskIds: string[]): Promise<request.Response> {
     const act = {
-      type: 'tasks-purged',
+      type: 'tasks-removed',
+      taskIds: taskIds,
       memberId: aoStore.member.memberId
     }
     return request
