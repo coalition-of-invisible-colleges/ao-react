@@ -155,24 +155,6 @@ function membersMuts(members, ev) {
       for (let i = members.length - 1; i >= 0; i--) {
         const member = members[i]
         if (member.memberId === ev.memberId) {
-          tasks.forEach((t, j) => {
-            t.subTasks = t.subTasks.filter(st => st !== ev.memberId)
-            t.priorities = t.priorities.filter(st => st !== ev.memberId)
-            t.completed = _.filter(t.completed, st => st !== ev.memberId)
-            t.deck = _.filter(t.deck, st => st !== ev.memberId)
-            if (_.has(t, 'grid.rows')) {
-              Object.entries(t.grid.rows).forEach(([y, row]) => {
-                Object.entries(row).forEach(([x, cell]) => {
-                  if (cell === ev.memberId) {
-                    delete tasks[j].grid.rows[y][x]
-                  }
-                })
-                if (row.length === 0) {
-                  delete tasks[j].grid.rows[y]
-                }
-              })
-            }
-          })
           members.splice(i, 1)
         }
       }
@@ -624,6 +606,7 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'member-purged':
+      console.log('member-purged pre, tasks is ', tasks)
       for (let i = tasks.length - 1; i >= 0; i--) {
         const task = tasks[i]
         if (task.taskId === ev.memberId) {
@@ -633,11 +616,24 @@ function tasksMuts(tasks, ev) {
       tasks.forEach(t => {
         t.subTasks = t.subTasks.filter(st => st !== ev.memberId)
         t.priorities = t.priorities.filter(st => st !== ev.memberId)
+        t.completed.filter(st => st !== ev.memberId)
         t.claimed = t.claimed.filter(st => st !== ev.memberId)
         t.deck = t.deck.filter(st => st !== ev.memberId)
         t.passed = t.passed.filter(
           p => !(p[0] === ev.memberId || p[1] === ev.memberId)
         )
+        if (_.has(t, 'grid.rows')) {
+          Object.entries(t.grid.rows).forEach(([y, row]) => {
+            Object.entries(row).forEach(([x, cell]) => {
+              if (cell === ev.memberId) {
+                delete tasks[j].grid.rows[y][x]
+              }
+            })
+            if (row.length === 0) {
+              delete tasks[j].grid.rows[y]
+            }
+          })
+        }
       })
       break
     case 'task-removed':
