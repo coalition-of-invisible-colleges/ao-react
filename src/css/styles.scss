@@ -807,8 +807,8 @@ textarea {
       }
 
       .popupPanel {
-        width: 90vw;
-        height: 96vh;
+        width: calc(100vw - 17em);
+        height: calc(100vh - 7.5em);
       }
     }
 

@@ -1188,7 +1188,7 @@ function tasksMuts(tasks, ev) {
           if (task.grid.rows[ev.y].length == 0) {
             delete tasks[i].grid.rows[ev.y]
           }
-          if (tasks.some(tId => tId === gridTaskId)) {
+          if (tasks.some(t => t.taskId === gridTaskId)) {
             task.subTasks = task.subTasks.filter(st => st !== gridTaskId)
             task.subTasks.unshift(gridTaskId)
           }
