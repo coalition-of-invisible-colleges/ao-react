@@ -668,9 +668,9 @@ function tasksMuts(tasks, ev) {
         }
       }
       tasks.forEach((t, i) => {
-        t.subTasks = t.subTasks.filter(st => ev.taskIds.includes(st))
-        t.priorities = t.priorities.filter(st => ev.taskIds.includes(st))
-        t.completed = _.filter(t.completed, st => ev.taskIds.includes(st))
+        t.subTasks = t.subTasks.filter(st => !ev.taskIds.includes(st))
+        t.priorities = t.priorities.filter(st => !ev.taskIds.includes(st))
+        t.completed = _.filter(t.completed, st => !ev.taskIds.includes(st))
         if (_.has(t, 'grid.rows')) {
           Object.entries(t.grid.rows).forEach(([y, row]) => {
             Object.entries(row).forEach(([x, cell]) => {
