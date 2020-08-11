@@ -606,7 +606,6 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'member-purged':
-      console.log('member-purged pre, tasks is ', tasks)
       for (let i = tasks.length - 1; i >= 0; i--) {
         const task = tasks[i]
         if (task.taskId === ev.memberId) {
