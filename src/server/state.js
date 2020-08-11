@@ -110,7 +110,6 @@ function initialize(callback) {
     }
     dctrlDb.getAll(ts, (err, all) => {
       if (err) return callback(err)
-      let prevBrokenTasks = 0
       all.forEach((ev, i) => {
         applyEvent(serverState, Object.assign({}, ev))
         applyEvent(pubState, removeSensitive(Object.assign({}, ev)))

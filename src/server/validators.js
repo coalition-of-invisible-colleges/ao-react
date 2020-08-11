@@ -37,19 +37,13 @@ module.exports = {
   },
   isMemberId(val, errRes) {
     let result = false
-    let result2 = false
     state.serverState.members.forEach(member => {
       if (val === member.memberId) {
         result = true
       }
     })
-    state.serverState.tasks.forEach(task => {
-      if (val === task.taskId) {
-        result2 = true
-      }
-    })
 
-    if (!result || !result2) {
+    if (!result) {
       errRes.push('invalid member')
     }
     return result
