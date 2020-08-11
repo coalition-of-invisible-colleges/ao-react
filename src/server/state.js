@@ -111,10 +111,11 @@ function initialize(callback) {
     dctrlDb.getAll(ts, (err, all) => {
       if (err) return callback(err)
       all.forEach((ev, i) => {
-        console.log('applying event: ', ev)
         applyEvent(serverState, Object.assign({}, ev))
         applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
-        console.log('done applying ', ev)
+        if (i > 0 && i % 10000 === 0) {
+          console.log('applied ', i, '/', all.length, ' events...')
+        }
       })
       console.log('applied ', all.length, ' events from the database')
       callback(null)
