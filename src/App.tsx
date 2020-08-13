@@ -86,7 +86,9 @@ const App = observer(() => {
         </Router>
       )}
       {!render && (
-        <div style={{ marginTop: '21%', fontSize: '1.25em' }}>Logging in…</div>
+        <div style={{ marginTop: '21%', fontSize: '1.25em' }}>
+          Receiving cards from server...
+        </div>
       )}
     </div>
   )

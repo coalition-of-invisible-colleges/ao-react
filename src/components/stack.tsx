@@ -232,7 +232,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       </>
     )
     return (
-      <div className={'stack'}>
+      <div className={'stack' + (this.state.showAll ? ' open' : '')}>
         <AoDropZone
           inId={this.props.inId}
           y={0}
