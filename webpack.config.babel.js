@@ -21,7 +21,8 @@ module.exports = {
   output: {
     path: outPath,
     filename: isProduction ? '[contenthash].js' : '[hash].js',
-    chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[hash].js'
+    chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[hash].js',
+    publicPath: '/'
   },
   target: 'web',
   resolve: {
@@ -171,18 +172,19 @@ module.exports = {
     contentBase: sourcePath,
     hot: true,
     inline: true,
+    host: '0.0.0.0',
     historyApiFallback: {
       disableDotRule: true
     },
     proxy: [
       {
         context: ['/state', '/events', '/session'],
-        target: 'http://localhost:8003',
+        target: 'http://0.0.0.0:8003',
         changeOrigin: true
       }
     ],
     stats: 'minimal',
-    clientLogLevel: 'warning'
+    clientLogLevel: 'debug'
   },
   // https://webpack.js.org/configuration/devtool/
   devtool: 'eval-source-map',
