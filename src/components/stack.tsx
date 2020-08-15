@@ -23,6 +23,7 @@ interface StackProps {
   zone?: CardZone
   noPopups?: boolean
   noFindOnPage?: boolean
+  cardsBeforeFold?: number
 }
 
 interface StackState {
@@ -156,30 +157,32 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       ))
     } else if (this.props.noFirstCard) {
     } else if (cardsToRender.length >= 1) {
-      list = [
-        <AoDragZone
-          taskId={cardsToRender[0].taskId}
-          dragContext={{
-            zone: this.props.zone ? this.props.zone : 'panel',
-            inId: this.props.inId,
-            y: 0
-          }}
-          key={
-            cardsToRender[0].taskId + this.props.inId + this.props.cardStyle
-          }>
-          <AoContextCard
-            taskId={cardsToRender[0].taskId}
-            cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
-            noPopups={this.props.noPopups}
-            noFindOnPage={this.props.noFindOnPage}
-          />
-        </AoDragZone>
-      ]
+      list = cardsToRender
+        .slice(0, this.props.cardsBeforeFold ? this.props.cardsBeforeFold : 1)
+        .map((task, i) => (
+          <AoDragZone
+            taskId={task.taskId}
+            dragContext={{
+              zone: this.props.zone ? this.props.zone : 'panel',
+              inId: this.props.inId,
+              y: 0
+            }}
+            key={task.taskId + this.props.inId + this.props.cardStyle}>
+            <AoContextCard
+              taskId={task.taskId}
+              cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
+              noPopups={this.props.noPopups}
+              noFindOnPage={this.props.noFindOnPage}
+            />
+          </AoDragZone>
+        ))
     }
 
     let numCards = cardsToRender.length - 1
     if (this.props.noFirstCard) {
       numCards = cardsToRender.length
+    } else if (this.props.cardsBeforeFold >= 2) {
+      numCards = cardsToRender.length - this.props.cardsBeforeFold
     }
 
     let renderedDescriptor: string
@@ -193,8 +196,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
 
     let showButton = (
       <>
-        {(!this.props.alwaysShowAll && cardsToRender.length >= 2) ||
-        (this.props.noFirstCard && cardsToRender.length >= 1) ? (
+        {(!this.props.alwaysShowAll && numCards >= 1) ||
+        (this.props.noFirstCard && numCards >= 1) ? (
           !this.state.showAll ? (
             <div onClick={this.show} className={'action'}>
               {numCards} {renderedDescriptor}&#8964;

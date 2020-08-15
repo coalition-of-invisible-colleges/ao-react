@@ -88,6 +88,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
               cards={parentCards}
               zone={'panel'}
               cardStyle={'priority'}
+              cardsBeforeFold={3}
               noPopups={true}
             />
           </React.Fragment>
@@ -109,7 +110,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             cards={memberCards}
             zone={'panel'}
             cardStyle={'member'}
-            alwaysShowAll={true}
+            cardsBeforeFold={3}
             noPopups={true}
           />
         ) : null}
