@@ -341,7 +341,6 @@ class AoStore {
   }
   @action.bound
   addToContext(taskIds: string[]) {
-    console.log('addToContext pre:', this.context)
     if (taskIds.length < 1) return
     this.context = this.context.filter(tId => {
       return !taskIds.includes(tId)
@@ -353,7 +352,6 @@ class AoStore {
       })
       this.context.unshift(this.member.memberId)
     }
-    console.log('addToContext post:', this.context)
   }
   removeFromContext(taskId: string) {
     this.context = this.context.filter(tId => {

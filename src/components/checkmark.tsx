@@ -1,21 +1,19 @@
 import React from 'react'
-import { observable, computed } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import AoContextCard from './contextCard'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
 interface CheckmarkProps {
+  taskId: string
   color?: string
   onGoIn?: (event) => void
 }
 
 @observer
 export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
   }
@@ -40,7 +38,8 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
     if (!card) {
       console.log('missing card in completed')
@@ -48,7 +47,9 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
     }
 
     return (
-      <Tippy zIndex={4} content={<AoContextCard cardStyle={'compact'} />}>
+      <Tippy
+        zIndex={4}
+        content={<AoContextCard taskId={taskId} cardStyle={'compact'} />}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 12.96459 12.96459"

@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState, Task } from '../client/store'
-import api from '../client/api'
-import { delay, cancelablePromise, noop } from '../utils'
-import { CardPlay, CardZone, CardLocation, Sel } from '../cards'
-import { TaskContext } from './taskContext'
+import { CardPlay, CardLocation, CardZone, Sel } from '../cards'
 
 interface DropZoneProps {
+	taskId?: string
 	zoneStyle: CardZone
 	inId?: string
 	x?: number
@@ -31,8 +28,6 @@ export type CardSource =
 
 @observer
 export default class AoDropZone extends React.Component<DropZoneProps, State> {
-	static contextType = TaskContext
-
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -43,10 +38,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	}
 
 	detectDragKind(dataTransfer) {
-		const { card, setRedirect } = this.context
-		if (!card) {
-			console.log('drop event on empty square')
-		}
+		const taskId = this.props.taskId
 
 		let filetype = 'file'
 		let sameAsOrigin = false
@@ -57,7 +49,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					return
 				}
 
-				if (card && dt.type === card.taskId) {
+				if (dt.type === taskId) {
 					sameAsOrigin = true
 				} else if (dt.type === 'text/taskid') {
 					filetype = 'card'
@@ -86,9 +78,8 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		event.preventDefault()
 		event.stopPropagation()
 
-		const { card, setRedirect } = this.context
+		const taskId = this.props.taskId
 
-		console.log('dropZone card is ', card)
 		if (document.getElementById('dragGhost')) {
 			document.getElementById('dragGhost').remove()
 		}
@@ -101,10 +92,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		this.hideDrop(event)
 
 		let fromId: string = event.dataTransfer.getData('text/taskId')
-
-		// if (card && card.taskId === fromId) {
-		// 	return
-		// }
 
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
@@ -122,7 +109,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		let toCoords: Sel = { x: this.props.x, y: this.props.y }
 
 		let toLocation: CardLocation = {
-			taskId: card ? card.taskId : undefined,
+			taskId: taskId,
 			inId: this.props.inId,
 			zone: this.props.zoneStyle,
 			coords: toCoords

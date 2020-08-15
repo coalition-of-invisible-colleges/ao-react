@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
-// import { Redirect } from 'react-router-dom'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
+import { Redirect } from 'react-router-dom'
 import api from '../client/api'
 import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
@@ -18,10 +15,7 @@ import AoCoin from './coin'
 import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import { prioritizeCard, subTaskCard, CardZone } from '../cards'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
 import { hideAll as hideAllTippys } from 'tippy.js'
-import Completed from '../assets/images/completed.svg'
 
 export type CardStyle =
 	| 'priority'
@@ -42,6 +36,7 @@ export interface DragContext {
 }
 
 interface CardProps {
+	taskId: string
 	cardStyle?: CardStyle
 	inlineStyle?: React.CSSProperties
 	noContextOnFull?: boolean
@@ -52,14 +47,11 @@ interface CardProps {
 interface State {
 	showPriorities?: boolean
 	showProjects?: boolean
-	// redirect?: string
+	redirect?: string
 }
 
 @observer
 export default class AoContextCard extends React.Component<CardProps, State> {
-	static contextType = TaskContext
-	static whyDidYouRender = true
-
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -69,6 +61,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.newSubTask = this.newSubTask.bind(this)
 		this.goInCard = this.goInCard.bind(this)
 		this.renderCardContent = this.renderCardContent.bind(this)
+	}
+
+	componentDidUpdate() {
+		if (this.state.redirect !== undefined) {
+			this.setState({ redirect: undefined })
+		}
 	}
 
 	togglePriorities(event) {
@@ -92,7 +90,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	newPriority(name: string) {
-		const { card, setRedirect } = this.context
+		const card = aoStore.hashMap.get(this.props.taskId)
 		if (!card) {
 			console.log('missing card')
 		}
@@ -100,7 +98,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	newSubTask(name: string) {
-		const { card, setRedirect } = this.context
+		const card = aoStore.hashMap.get(this.props.taskId)
 		if (!card) {
 			console.log('missing card')
 		}
@@ -112,7 +110,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		hideAllTippys()
 		aoStore.closeAllCloseables()
 
-		let { card, setRedirect } = this.context
+		const taskId = this.props.taskId
+		console.log('goInCard taskId is ', taskId)
+		const card = aoStore.hashMap.get(taskId)
 		if (!card) {
 			console.log('missing card')
 			return
@@ -123,7 +123,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			console.log('current card is ', aoStore.currentCard)
 			aoStore.addToContext([aoStore.currentCard])
 		}
-		setRedirect(card.taskId)
+		aoStore.setCurrentCard(taskId)
+		aoStore.removeFromContext(taskId)
+		this.setState({ redirect: taskId })
 	}
 
 	applyClassIfCurrentSearchResult(taskId) {
@@ -168,7 +170,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	render() {
-		let { card, setRedirect } = this.context
+		if (this.state.redirect !== undefined) {
+			// this.setState({ redirect: undefined })
+			return <Redirect to={this.state.redirect} />
+		}
+
+		const taskId = this.props.taskId
+		const card = aoStore.hashMap.get(taskId)
 
 		if (!card) {
 			console.log('missing card')
@@ -180,8 +188,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		}
 
 		let content = card.name
-		if (card.taskId === content) {
-			const memberCard = aoStore.memberById.get(card.taskId)
+		if (taskId === content) {
+			const memberCard = aoStore.memberById.get(taskId)
 			if (memberCard) {
 				content = memberCard.name
 			}
@@ -203,13 +211,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				return (
 					<div
 						className={
-							'card context' + this.applyClassIfCurrentSearchResult(card.taskId)
+							'card context' + this.applyClassIfCurrentSearchResult(taskId)
 						}
-						id={'card-' + card.taskId}
+						id={'card-' + taskId}
 						onDoubleClick={this.goInCard}
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
-						<AoPaper />
-						<AoCardHud hudStyle={'context'} />
+						<AoPaper taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'context'} />
 						<div className={'content'}>{this.renderCardContent(content)}</div>
 					</div>
 				)
@@ -217,27 +225,28 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'priority':
 				return (
 					<div
-						id={'card-' + card.taskId}
+						id={'card-' + taskId}
 						className={
 							'card priority' +
-							this.applyClassIfCurrentSearchResult(card.taskId) +
+							this.applyClassIfCurrentSearchResult(taskId) +
 							(this.state.showPriorities ? ' padbottom' : '')
 						}
 						onDoubleClick={this.goInCard}>
-						<AoPaper />
+						<AoPaper taskId={taskId} />
 						<AoCardHud
+							taskId={taskId}
 							hudStyle={'collapsed'}
 							prioritiesShown={this.state.showPriorities}
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className={'content'}>
-							<AoCoin noPopups={this.props.noPopups} />
+							<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 							{this.renderCardContent(content)}
-							<AoAttachment hudStyle={'collapsed'} />
+							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
 						</div>
 						{this.state.showPriorities ? (
 							<AoStack
-								inId={card.taskId}
+								inId={taskId}
 								cards={priorityCards}
 								cardStyle={'priority'}
 								zone={'priorities'}
@@ -249,19 +258,19 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'compact':
 				return (
 					<div
-						id={'card-' + card.taskId}
+						id={'card-' + taskId}
 						className={
 							'card ' +
 							this.props.cardStyle +
-							this.applyClassIfCurrentSearchResult(card.taskId)
+							this.applyClassIfCurrentSearchResult(taskId)
 						}
 						onDoubleClick={this.goInCard}>
-						<AoPaper />
-						<AoCardHud hudStyle={'face before'} />
+						<AoPaper taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'face before'} />
 						<div className={'content'}>
-							<AoMission hudStyle={'face before'} />
+							<AoMission taskId={taskId} hudStyle={'face before'} />
 							{this.renderCardContent(content)}
-							<AoAttachment hudStyle={'face before'} />
+							<AoAttachment taskId={taskId} hudStyle={'face before'} />
 							{card.priorities && card.priorities.length >= 1 ? (
 								<>
 									<div className="action" onClick={this.togglePriorities}>
@@ -275,7 +284,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 									</div>
 									{this.state.showPriorities ? (
 										<AoStack
-											inId={card.taskId}
+											inId={taskId}
 											cards={priorityCards}
 											showAdd={true}
 											hideAddWhenCards={true}
@@ -289,7 +298,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								</>
 							) : null}
 						</div>
-						<AoCardHud hudStyle={'face after'} noPopups={this.props.noPopups} />
+						<AoCardHud
+							taskId={taskId}
+							hudStyle={'face after'}
+							noPopups={this.props.noPopups}
+						/>
 					</div>
 				)
 			case 'full':
@@ -308,23 +321,23 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							</div>
 						)}
 						<div
-							id={'card-' + card.taskId}
+							id={'card-' + taskId}
 							className={
-								'card full' + this.applyClassIfCurrentSearchResult(card.taskId)
+								'card full' + this.applyClassIfCurrentSearchResult(taskId)
 							}
 							onDrop={e => {
 								e.preventDefault()
 								e.stopPropagation()
 							}}>
-							<AoPaper />
-							<AoCardHud hudStyle={'full before'} />
+							<AoPaper taskId={taskId} />
+							<AoCardHud taskId={taskId} hudStyle={'full before'} />
 							<div className="content">
-								<AoMission hudStyle={'full before'} />
+								<AoMission taskId={taskId} hudStyle={'full before'} />
 								{this.renderCardContent(content)}
-								<AoAttachment hudStyle={'full before'} />
+								<AoAttachment taskId={taskId} hudStyle={'full before'} />
 							</div>
 							<AoStack
-								inId={card.taskId}
+								inId={taskId}
 								cards={priorityCards}
 								showAdd={true}
 								hideAddWhenCards={true}
@@ -334,29 +347,28 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								onDrop={prioritizeCard}
 								zone={'priorities'}
 							/>
-							<AoGrid />
+							<AoGrid taskId={taskId} />
 							<AoStack
-								inId={card.taskId}
+								inId={taskId}
 								cards={subTaskCards}
 								showAdd={true}
 								onNewCard={this.newSubTask}
 								onDrop={subTaskCard}
 								zone={'subTasks'}
 							/>
-							<AoCompleted />
-							<AoCardHud hudStyle={'full after'} />
+							<AoCompleted taskId={taskId} />
+							<AoCardHud taskId={taskId} hudStyle={'full after'} />
 						</div>
 					</React.Fragment>
 				)
 			case 'checkmark':
 				return (
 					<div
-						id={'card-' + card.taskId}
+						id={'card-' + taskId}
 						className={
-							'card checkmark' +
-							this.applyClassIfCurrentSearchResult(card.taskId)
+							'card checkmark' + this.applyClassIfCurrentSearchResult(taskId)
 						}>
-						<AoCheckmark onGoIn={this.goInCard} />
+						<AoCheckmark taskId={taskId} onGoIn={this.goInCard} />
 					</div>
 				)
 			case 'mission':
@@ -396,16 +408,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						className={
 							'card mission' +
 							(this.state.showPriorities ? ' padbottom' : '') +
-							this.applyClassIfCurrentSearchResult(card.taskId)
+							this.applyClassIfCurrentSearchResult(taskId)
 						}
-						id={'card-' + card.taskId}
+						id={'card-' + taskId}
 						onDoubleClick={this.goInCard}>
-						<AoPaper />
-						<AoCardHud hudStyle={'collapsed-mission'} />
+						<AoPaper taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'collapsed-mission'} />
 						<div className={'content'}>
-							<AoCoin />
-							<AoMission hudStyle={'collapsed'} />
+							<AoCoin taskId={taskId} />
+							<AoMission taskId={taskId} hudStyle={'collapsed'} />
 							<AoPreview
+								taskId={taskId}
 								hudStyle={'collapsed'}
 								prioritiesShown={this.state.showPriorities}
 								onTogglePriorities={this.togglePriorities}
@@ -416,7 +429,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						</div>
 						{this.state.showProjects ? (
 							<AoStack
-								inId={card.taskId}
+								inId={taskId}
 								cards={projectCards()}
 								cardStyle={'mission'}
 								zone={'panel'}
@@ -424,7 +437,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						) : null}
 						{this.state.showPriorities ? (
 							<AoStack
-								inId={card.taskId}
+								inId={taskId}
 								cards={priorityCards}
 								cardStyle={'priority'}
 								zone={'panel'}
@@ -443,18 +456,18 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 				return (
 					<div
-						id={'card-' + card.taskId}
+						id={'card-' + taskId}
 						className={
-							'card mini' + this.applyClassIfCurrentSearchResult(card.taskId)
+							'card mini' + this.applyClassIfCurrentSearchResult(taskId)
 						}
 						onDoubleClick={this.goInCard}>
-						<AoPaper />
-						<AoCardHud hudStyle={'mini before'} />
+						<AoPaper taskId={taskId} />
+						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
 							{this.renderCardContent(content, true)}
-							<AoAttachment hudStyle={'mini before'} />
+							<AoAttachment taskId={taskId} hudStyle={'mini before'} />
 						</div>
-						<AoCardHud hudStyle={'mini after'} />
+						<AoCardHud taskId={taskId} hudStyle={'mini after'} />
 					</div>
 				)
 		}

@@ -1,19 +1,10 @@
 import * as React from 'react'
-import { computed, autorun } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-import aoStore, {
-  AoState,
-  Task,
-  SearchResults,
-  emptySearchResults
-} from '../client/store'
-import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { hideAll } from 'tippy.js'
+import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AoContextCard from './contextCard'
-import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
 
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
@@ -36,8 +27,6 @@ export const defaultState: State = {
 
 @observer
 export default class AoSearch extends React.Component<{}, State> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -195,20 +184,20 @@ export default class AoSearch extends React.Component<{}, State> {
   }
 
   renderItems(items) {
-    let { card, setRedirect } = this.context
-
     return items.map((task, i) => (
-      <TaskContext.Provider
-        value={{ card: task, setRedirect: setRedirect }}
+      <AoDragZone
+        taskId={task.taskId}
+        dragContext={{
+          zone: 'panel',
+          y: i
+        }}
         key={task.taskId}>
-        <AoDragZone
-          dragContext={{
-            zone: 'panel',
-            y: i
-          }}>
-          <AoContextCard cardStyle={'priority'} noFindOnPage={true} />
-        </AoDragZone>
-      </TaskContext.Provider>
+        <AoContextCard
+          taskId={task.taskId}
+          cardStyle={'priority'}
+          noFindOnPage={true}
+        />
+      </AoDragZone>
     ))
   }
 

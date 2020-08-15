@@ -4,16 +4,12 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
 import Sun from '../assets/images/sun.svg'
-import AoGrid from './grid'
 import AoContextCard from './contextCard'
-import { TaskContext } from './taskContext'
 import api from '../client/api'
 import AoPopupPanel from './popupPanel'
 
 @observer
 export default class AoHub extends React.Component<{}> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
     this.state = {}
@@ -66,8 +62,6 @@ export default class AoHub extends React.Component<{}> {
 
   @computed
   get renderHub() {
-    const { card, setRedirect } = this.context
-
     let topCards = aoStore.state.tasks.filter(task => {
       return (
         !task.hasOwnProperty('guild') ||
@@ -102,10 +96,11 @@ export default class AoHub extends React.Component<{}> {
                   : 'Community Hub'}
               </h2>
               {communityCard && communityCard.hasOwnProperty('taskId') ? (
-                <TaskContext.Provider
-                  value={{ card: communityCard, setRedirect }}>
-                  <AoContextCard cardStyle={'full'} noContextOnFull={true} />
-                </TaskContext.Provider>
+                <AoContextCard
+                  taskId={communityCard.taskId}
+                  cardStyle={'full'}
+                  noContextOnFull={true}
+                />
               ) : (
                 <p onClick={this.addCommunityCard} className={'action'}>
                   +H.U.B.

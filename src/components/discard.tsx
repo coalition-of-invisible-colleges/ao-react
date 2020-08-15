@@ -1,22 +1,18 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { observer } from 'mobx-react'
-import { ObservableMap, computed } from 'mobx'
-import { Redirect } from 'react-router-dom'
 import api from '../client/api'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
 import { CardPlay } from '../cards'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
-interface DiscardProps {}
+interface DiscardProps {
+	taskId: string
+}
 
 @observer
 export default class AoDiscardZone extends React.Component<DiscardProps> {
-	static contextType = TaskContext
-
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -84,26 +80,16 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 	}
 
 	render() {
-		let { card, setRedirect } = this.context
-		// console.log('render discard setRedirect is ', setRedirect)
+		const taskId = this.props.taskId
+		const card = aoStore.hashMap.get(taskId)
 		return (
 			<div onClick={this.closeAllCloseables}>
 				<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
 					{aoStore.discard.length >= 1 ? (
-						<TaskContext.Provider
-							value={{
-								card: aoStore.discard[aoStore.discard.length - 1],
-								setRedirect: setRedirect
-							}}>
-							<AoDragZone dragContext={{ zone: 'discard', y: 0 }} />
-							<TaskContext.Provider
-								value={{
-									card: card ? card : undefined,
-									setRedirect: setRedirect
-								}}>
-								{this.props.children}
-							</TaskContext.Provider>
-						</TaskContext.Provider>
+						<AoDragZone
+							taskId={aoStore.discard[aoStore.discard.length - 1].taskId}
+							dragContext={{ zone: 'discard', y: 0 }}
+						/>
 					) : (
 						this.props.children
 					)}

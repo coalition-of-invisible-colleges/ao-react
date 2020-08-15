@@ -1,16 +1,5 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
-import aoStore, { AoState, Grid } from '../client/store'
-import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
-import AoDragZone from './dragZone'
-import AoDropZone from './dropZone'
-import { CardPlay } from '../cards'
-import AoGridResizer from './gridResizer'
-import AoContextCard from './contextCard'
-import { Task } from '../client/store'
 
 interface CardComposerProps {
 	onNewCard: (string) => void

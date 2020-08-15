@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState, Task } from '../client/store'
+import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
 import AoPopupPanel from './popupPanel'
 import Timecube from '../assets/images/timecube.svg'

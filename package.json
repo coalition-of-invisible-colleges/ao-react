@@ -62,6 +62,7 @@
     "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
     "react-file-viewer": "^1.2.1",
+    "react-helmet": "^6.1.0",
     "react-hot-loader": "^4.12.20",
     "react-infinite-scroll-component": "^5.0.5",
     "react-router-config": "^5.1.1",

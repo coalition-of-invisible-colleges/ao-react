@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
-import api from '../client/api'
+import aoStore from '../client/store'
 import AoTicker from './ticker'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
 import CoinGecko from 'coingecko-api'
 
 const CoinGeckoClient = new CoinGecko()

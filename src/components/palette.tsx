@@ -1,15 +1,12 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
-import { formatDistanceToNow } from 'date-fns'
 import AoPaper from './paper'
+
+interface PaletteProps {
+  taskId: string
+}
 
 interface State {
   color: string
@@ -20,9 +17,7 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoPalette extends React.Component<{}, State> {
-  static contextType = TaskContext
-
+export default class AoPalette extends React.Component<PaletteProps, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -32,12 +27,13 @@ export default class AoPalette extends React.Component<{}, State> {
   onClick(event, color) {
     const { card, setRedirect } = this.context
 
-    api.colorCard(card.taskId, color)
+    api.colorCard(this.props.taskId, color)
     this.setState({ color: color })
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
     const list = ['red', 'yellow', 'green', 'blue', 'purple'].map(
       (colorName, i) => (
@@ -47,22 +43,12 @@ export default class AoPalette extends React.Component<{}, State> {
           key={i}>
           <div
             className={card.color === colorName ? 'border selected' : 'border'}>
-            <AoPaper color={colorName} />
+            <AoPaper taskId={taskId} color={colorName} />
           </div>
           <div className={'label'}>{colorName}</div>
         </div>
       )
     )
     return <div className="palette">{list}</div>
-    // }
-    // return (
-    //   <div className="palette">
-    //     <button type="button" onClick={this.startEditing}>
-    //       {aoStore.hashMap.get(this.props.taskId).color
-    //         ? aoStore.hashMap.get(this.props.taskId).color
-    //         : 'Color'}
-    //     </button>
-    //   </div>
-    // )
   }
 }

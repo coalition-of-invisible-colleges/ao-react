@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
 import { HudStyle } from './cardHud'
 import Badge from '../assets/images/badge.svg'
+
+interface MissionProps {
+  taskId: string
+  hudStyle: HudStyle
+}
 
 interface State {
   editing: boolean
@@ -17,14 +20,8 @@ export const defaultState: State = {
   text: ''
 }
 
-interface MissionProps {
-  hudStyle: HudStyle
-}
-
 @observer
 export default class AoMission extends React.Component<MissionProps, State> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -46,7 +43,8 @@ export default class AoMission extends React.Component<MissionProps, State> {
   startEditing(event) {
     event.stopPropagation()
 
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
+
     if (card.guild) {
       this.setState({
         text: card.guild
@@ -62,12 +60,13 @@ export default class AoMission extends React.Component<MissionProps, State> {
   saveMission(event) {
     event.stopPropagation()
 
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
+
     if (this.state.text === card.guild) {
       this.setState({ editing: false })
       return
     }
-    api.titleMissionCard(card.taskId, this.state.text)
+    api.titleMissionCard(this.props.taskId, this.state.text)
     this.setState({ editing: false })
   }
 
@@ -84,7 +83,7 @@ export default class AoMission extends React.Component<MissionProps, State> {
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     if (this.state.editing) {
       return (

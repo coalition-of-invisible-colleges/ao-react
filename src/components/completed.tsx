@@ -1,27 +1,20 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { observable } from 'mobx'
-import aoStore, { AoState, Task } from '../client/store'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
+import aoStore, { Task } from '../client/store'
 import api from '../client/api'
-import Markdown from 'markdown-to-jsx'
-import AoPaper from './paper'
-import AoGrid from './grid'
 import AoStack from './stack'
-import AoCardHud from './cardHud'
-import AoMission from './mission'
-import AoAttachment from './attachment'
-import AoCoin from './coin'
-import { TaskContext } from './taskContext'
 import { CardPlay } from '../cards'
 
-@observer
-export default class AoCompleted extends React.PureComponent {
-	static contextType = TaskContext
+interface CompletedProps {
+	taskId: string
+}
 
+@observer
+export default class AoCompleted extends React.PureComponent<CompletedProps> {
 	render() {
-		const { card, setRedirect } = this.context
+		const taskId = this.props.taskId
+		const card = aoStore.hashMap.get(taskId)
 
 		const computed = observable({
 			get completedCards() {
@@ -79,7 +72,7 @@ export default class AoCompleted extends React.PureComponent {
 
 		return (
 			<AoStack
-				inId={card.taskId}
+				inId={taskId}
 				cards={computed.completedCards}
 				cardStyle={'checkmark'}
 				onDrop={archiveCheckmark}

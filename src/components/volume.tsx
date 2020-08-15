@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
+import aoStore from '../client/store'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
 import Muted from '../assets/images/muted.svg'
 import Unmuted from '../assets/images/unmuted.svg'
 

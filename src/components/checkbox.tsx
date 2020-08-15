@@ -1,23 +1,22 @@
 import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
 
 interface CheckboxProps {
+  taskId: string
   hudStyle: HudStyle
 }
 
 @observer
 export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
-  static contextType = TaskContext
-
   render() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
     const computed = observable({
       get isCompleted() {
@@ -32,9 +31,9 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       event.nativeEvent.stopImmediatePropagation()
 
       if (computed.isCompleted) {
-        api.uncheckCard(card.taskId)
+        api.uncheckCard(taskId)
       } else {
-        api.completeCard(card.taskId)
+        api.completeCard(taskId)
       }
     }
     switch (this.props.hudStyle) {

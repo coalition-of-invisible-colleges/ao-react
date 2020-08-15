@@ -1,15 +1,16 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
+
+interface GridResizerProps {
+  taskId: string
+}
 
 @observer
-export default class AoGridResizer extends React.PureComponent {
-  static contextType = TaskContext
-
+export default class AoGridResizer extends React.PureComponent<
+  GridResizerProps
+> {
   constructor(props) {
     super(props)
     this.increaseRows = this.increaseRows.bind(this)
@@ -19,27 +20,27 @@ export default class AoGridResizer extends React.PureComponent {
   }
 
   increaseRows() {
-    const { card, setRedirect } = this.context
-    api.resizeGrid(card.taskId, card.grid.height + 1, card.grid.width)
+    const card = aoStore.hashMap.get(this.props.taskId)
+    api.resizeGrid(this.props.taskId, card.grid.height + 1, card.grid.width)
   }
 
   decreaseRows() {
-    const { card, setRedirect } = this.context
-    api.resizeGrid(card.taskId, card.grid.height - 1, card.grid.width)
+    const card = aoStore.hashMap.get(this.props.taskId)
+    api.resizeGrid(this.props.taskId, card.grid.height - 1, card.grid.width)
   }
 
   increaseColumns() {
-    const { card, setRedirect } = this.context
-    api.resizeGrid(card.taskId, card.grid.height, card.grid.width + 1)
+    const card = aoStore.hashMap.get(this.props.taskId)
+    api.resizeGrid(this.props.taskId, card.grid.height, card.grid.width + 1)
   }
 
   decreaseColumns() {
-    const { card, setRedirect } = this.context
-    api.resizeGrid(card.taskId, card.grid.height, card.grid.width - 1)
+    const card = aoStore.hashMap.get(this.props.taskId)
+    api.resizeGrid(this.props.taskId, card.grid.height, card.grid.width - 1)
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     if (!card.grid) {
       return null

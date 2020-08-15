@@ -2,10 +2,7 @@ import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
 import { HudStyle } from './cardHud'
-import Completed from '../assets/images/completed.svg'
-import Uncompleted from '../assets/images/uncompleted.svg'
 import AoStack from './stack'
 import { prioritizeCard } from '../cards'
 import Tippy from '@tippyjs/react'
@@ -13,6 +10,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale-extreme.css'
 
 interface PreviewProps {
+  taskId: string
   hudStyle: HudStyle
   prioritiesShown?: boolean
   onTogglePriorities?: (any) => void
@@ -23,10 +21,9 @@ interface PreviewProps {
 
 @observer
 export default class AoPreview extends React.PureComponent<PreviewProps> {
-  static contextType = TaskContext
-
   render() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
     const computed = observable({
       get subCardCount() {
@@ -145,19 +142,17 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
               animation={'scale-extreme'}
               delay={[625, 200]}
               appendTo={() =>
-                document.getElementById('card-' + card.taskId).parentElement
+                document.getElementById('card-' + taskId).parentElement
                   .parentElement.parentElement
               }
               content={
-                <TaskContext.Provider value={{ card, setRedirect }}>
-                  <AoStack
-                    inId={card.taskId}
-                    cardStyle={'priority'}
-                    cards={computed.priorityCards}
-                    zone={'priorities'}
-                    onDrop={prioritizeCard}
-                  />
-                </TaskContext.Provider>
+                <AoStack
+                  inId={taskId}
+                  cardStyle={'priority'}
+                  cards={computed.priorityCards}
+                  zone={'priorities'}
+                  onDrop={prioritizeCard}
+                />
               }>
               <div className={'preview nopad'}>{computed.priorityCount}!</div>
             </Tippy>

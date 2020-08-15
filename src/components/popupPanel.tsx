@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
-import tippy, { Placement, hideAll } from 'tippy.js'
+import tippy, { Placement, hideAll as hideAllTippys } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
 interface PopupPanelProps {
@@ -31,7 +31,7 @@ export default class AoPopupPanel extends React.Component<
 	}
 
 	onPanelOpen() {
-		hideAll({
+		hideAllTippys({
 			// This is messy but hopefully works consistently.
 			exclude: document.querySelectorAll('#hub')[1]
 		})

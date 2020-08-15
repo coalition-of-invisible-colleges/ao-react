@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
 import { HudStyle } from './cardHud'
+
+interface ValueProps {
+  taskId: string
+  hudStyle: HudStyle
+}
 
 interface State {
   editing: boolean
@@ -16,14 +19,8 @@ export const defaultState: State = {
   text: ''
 }
 
-interface ValueProps {
-  hudStyle: HudStyle
-}
-
 @observer
 export default class AoValue extends React.Component<ValueProps, State> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -45,7 +42,8 @@ export default class AoValue extends React.Component<ValueProps, State> {
   startEditing(event) {
     event.stopPropagation()
 
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
+
     if (card.completeValue) {
       this.setState({
         text: card.completeValue.toString()
@@ -61,7 +59,9 @@ export default class AoValue extends React.Component<ValueProps, State> {
   saveValue(event) {
     event.stopPropagation()
 
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
     if (newValue === card.completeValue) {
@@ -69,7 +69,7 @@ export default class AoValue extends React.Component<ValueProps, State> {
       return
     }
     if (newValue !== NaN) {
-      api.valueCard(card.taskId, newValue)
+      api.valueCard(taskId, newValue)
       this.setState({ editing: false })
     }
   }
@@ -87,7 +87,7 @@ export default class AoValue extends React.Component<ValueProps, State> {
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     if (this.state.editing) {
       return (
@@ -108,20 +108,18 @@ export default class AoValue extends React.Component<ValueProps, State> {
     }
     switch (this.props.hudStyle) {
       case 'full before':
-        if (card.taskId.completeValue) {
+        if (card.completeValue) {
           return (
             <div onClick={this.startEditing} className={'value full action'}>
-              {card.taskId.completeValue + ' points'}
+              {card.completeValue + ' points'}
             </div>
           )
         }
         return null
       case 'mini before':
-        if (card.taskId.completeValue) {
+        if (card.completeValue) {
           return (
-            <span className={'value mini'}>
-              {card.taskId.completeValue + 'p'}
-            </span>
+            <span className={'value mini'}>{card.completeValue + 'p'}</span>
           )
         }
         return null
@@ -129,8 +127,8 @@ export default class AoValue extends React.Component<ValueProps, State> {
         return (
           <div className={'value menu'}>
             <div onClick={this.startEditing} className={'action'}>
-              {card.taskId.completeValue
-                ? 'worth ' + card.taskId.completeValue + ' points if checked'
+              {card.completeValue
+                ? 'worth ' + card.completeValue + ' points if checked'
                 : 'set checkmark value'}
             </div>
           </div>
@@ -138,10 +136,10 @@ export default class AoValue extends React.Component<ValueProps, State> {
       case 'face before':
       case 'collapsed':
       default:
-        if (card.taskId.completeValue > 0) {
+        if (card.completeValue > 0) {
           return (
             <div className={'value summary ' + this.props.hudStyle}>
-              {card.taskId.completeValue + 'p'}
+              {card.completeValue + 'p'}
             </div>
           )
         }

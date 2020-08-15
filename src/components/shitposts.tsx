@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
+import aoStore from '../client/store'
 import api from '../client/api'
 import AoPopupPanel from './popupPanel'
 import Pepe from '../assets/images/pepe.svg'
 import AoStack from './stack'
-// import InfiniteScroll from 'react-infinite-scroll-component'
 
 interface State {
   page: number

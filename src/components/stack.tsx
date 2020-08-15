@@ -1,37 +1,12 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { observer } from 'mobx-react'
-import { ObservableMap, computed } from 'mobx'
-import { Redirect } from 'react-router-dom'
-import api from '../client/api'
 import aoStore, { Task } from '../client/store'
-import Markdown from 'markdown-to-jsx'
 import AoContextCard, { CardStyle } from './contextCard'
 import { CardZone } from '../cards'
-import { TaskContext } from './taskContext'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
 import { CardPlay, Sel } from '../cards'
 import AoCardComposer from './cardComposer'
-
-interface StackState {
-  redirect?: string
-  selected?: Sel
-  showAll: boolean
-  showCompose: boolean
-}
-
-interface CounterWord {
-  singular: string
-  plural: string
-}
-
-export const defaultState: StackState = {
-  redirect: undefined,
-  selected: undefined,
-  showAll: false,
-  showCompose: false
-}
 
 interface StackProps {
   inId?: string
@@ -50,10 +25,25 @@ interface StackProps {
   noFindOnPage?: boolean
 }
 
+interface StackState {
+  selected?: Sel
+  showAll: boolean
+  showCompose: boolean
+}
+
+interface CounterWord {
+  singular: string
+  plural: string
+}
+
+export const defaultState: StackState = {
+  selected: undefined,
+  showAll: false,
+  showCompose: false
+}
+
 @observer
 export default class AoStack extends React.Component<StackProps, StackState> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -94,7 +84,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   render() {
-    const { card, setRedirect } = this.context
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
         ? this.props.cards
@@ -103,7 +92,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
               if (!t) {
                 console.log(
                   'Missing card detected. card is ',
-                  card.name,
+                  t.name,
                   ' and this.props.cards is ',
                   this.props.cards,
                   ' and cardStyle is ',
@@ -115,10 +104,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             })
             .reverse()
         : []
-    if (this.state.redirect !== undefined) {
-      this.setState({ redirect: undefined })
-      return <Redirect to={this.state.redirect} />
-    }
 
     let addButton
     if (this.state.showCompose) {
@@ -145,52 +130,50 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     if (this.state.showAll || this.props.alwaysShowAll) {
       // wrap a DropZone here to drop on the whole stack. call this.onDrop on drop
       list = cardsToRender.map((task, i) => (
-        <TaskContext.Provider
-          value={{ card: task, setRedirect: setRedirect }}
+        <AoDragZone
+          taskId={task.taskId}
+          dragContext={{
+            zone: this.props.zone ? this.props.zone : 'panel',
+            inId: this.props.inId,
+            y: i
+          }}
           key={task.taskId + this.props.inId + this.props.cardStyle}>
-          <AoDragZone
-            dragContext={{
-              zone: this.props.zone ? this.props.zone : 'panel',
-              inId: this.props.inId,
-              y: i
-            }}>
-            <AoContextCard
-              cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
-              noPopups={this.props.noPopups}
-              noFindOnPage={this.props.noFindOnPage}
-              inlineStyle={
-                this.props.cardStyle === 'context'
-                  ? {
-                      maxWidth:
-                        (30 - (cardsToRender.length - i)).toString() + 'em'
-                    }
-                  : {}
-              }
-            />
-          </AoDragZone>
-        </TaskContext.Provider>
+          <AoContextCard
+            taskId={task.taskId}
+            cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
+            noPopups={this.props.noPopups}
+            noFindOnPage={this.props.noFindOnPage}
+            inlineStyle={
+              this.props.cardStyle === 'context'
+                ? {
+                    maxWidth:
+                      (30 - (cardsToRender.length - i)).toString() + 'em'
+                  }
+                : {}
+            }
+          />
+        </AoDragZone>
       ))
     } else if (this.props.noFirstCard) {
     } else if (cardsToRender.length >= 1) {
       list = [
-        <TaskContext.Provider
-          value={{ card: cardsToRender[0], setRedirect: setRedirect }}
+        <AoDragZone
+          taskId={cardsToRender[0].taskId}
+          dragContext={{
+            zone: this.props.zone ? this.props.zone : 'panel',
+            inId: this.props.inId,
+            y: 0
+          }}
           key={
             cardsToRender[0].taskId + this.props.inId + this.props.cardStyle
           }>
-          <AoDragZone
-            dragContext={{
-              zone: this.props.zone ? this.props.zone : 'panel',
-              inId: this.props.inId,
-              y: 0
-            }}>
-            <AoContextCard
-              cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
-              noPopups={this.props.noPopups}
-              noFindOnPage={this.props.noFindOnPage}
-            />
-          </AoDragZone>
-        </TaskContext.Provider>
+          <AoContextCard
+            taskId={cardsToRender[0].taskId}
+            cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
+            noPopups={this.props.noPopups}
+            noFindOnPage={this.props.noFindOnPage}
+          />
+        </AoDragZone>
       ]
     }
 

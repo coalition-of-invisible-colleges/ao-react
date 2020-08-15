@@ -1,11 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
-import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
-import Markdown from 'markdown-to-jsx'
+import aoStore from '../client/store'
 import AoPalette from './palette'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
@@ -29,6 +24,7 @@ export type HudStyle =
 	| 'menu'
 
 interface CardHudProps {
+	taskId: string
 	hudStyle: HudStyle
 	prioritiesShown?: boolean
 	onTogglePriorities?: (any) => void
@@ -37,77 +33,83 @@ interface CardHudProps {
 
 @observer
 export default class CardHud extends React.PureComponent<CardHudProps> {
-	static contextType = TaskContext
-
 	render() {
-		const { card, setRedirect } = this.context
+		const taskId = this.props.taskId
+		const card = aoStore.hashMap.get(taskId)
 		const hudStyle = this.props.hudStyle
 
 		switch (hudStyle) {
 			case 'context':
 				return (
 					<div className={'hud'}>
-						<AoMission hudStyle={hudStyle} />
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
+							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
 						/>
-						<AoCountdown hudStyle={hudStyle} />
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 				break
 			case 'collapsed':
 				return (
 					<div className={'hud'}>
-						<AoMission hudStyle={hudStyle} />
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
+							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
 						/>
-						<AoCountdown hudStyle={hudStyle} />
-						<AoValue hudStyle={hudStyle} />
-						<AoCheckbox hudStyle={hudStyle} />
-						<AoCardMenu hudStyle={hudStyle} />
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'collapsed-mission':
 				return (
 					<div className={'hud'}>
 						<AoPreview
+							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
 						/>
-						<AoCountdown hudStyle={hudStyle} />
-						<AoValue hudStyle={hudStyle} />
-						<AoCheckbox hudStyle={hudStyle} />
-						<AoCardMenu hudStyle={hudStyle} />
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'full before':
 			case 'face before':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCountdown hudStyle={hudStyle} />
-						<AoValue hudStyle={hudStyle} />
-						<AoCheckbox hudStyle={hudStyle} />
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'full after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCoin />
-						<AoCardMenu hudStyle={hudStyle} />
+						<AoCoin taskId={taskId} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCoin noPopups={this.props.noPopups} />
-						<AoPreview hudStyle={hudStyle} />
-						<AoCardMenu hudStyle={hudStyle} noPopups={this.props.noPopups} />
+						<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
+						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu
+							taskId={taskId}
+							hudStyle={hudStyle}
+							noPopups={this.props.noPopups}
+						/>
 					</div>
 				)
 			case 'mini before':
@@ -121,28 +123,28 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 						) : (
 							<div className={'seen'} />
 						)}
-						<AoMission hudStyle={hudStyle} />
-						<AoCheckbox hudStyle={hudStyle} />
-						<AoValue hudStyle={hudStyle} />
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						<AoValue taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 
 			case 'mini after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCountdown hudStyle={hudStyle} />
-						<AoPreview hudStyle={hudStyle} />
-						<AoCardMenu hudStyle={hudStyle} />
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':
 				return (
 					<div className={'hud menu'}>
-						<AoMission hudStyle={hudStyle} />
-						<AoValue hudStyle={hudStyle} />
-						<AoCountdown hudStyle={hudStyle} />
-						<AoTimeClock hudStyle={hudStyle} />
-						<AoPalette />
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
+						<AoPalette taskId={taskId} />
 					</div>
 				)
 		}

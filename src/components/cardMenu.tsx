@@ -1,21 +1,19 @@
 import React from 'react'
-import { observable, computed } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import AoCardHud, { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
 interface CardMenuProps {
+  taskId: string
   hudStyle: HudStyle
   noPopups?: boolean
 }
 
 @observer
 export default class CardMenu extends React.PureComponent<CardMenuProps> {
-  static contextType = TaskContext
-
   @computed
   get renderMenuButton() {
     return (
@@ -31,8 +29,6 @@ export default class CardMenu extends React.PureComponent<CardMenuProps> {
   }
 
   render() {
-    const { card, setRedirect } = this.context
-
     if (this.props.noPopups) {
       return this.renderMenuButton
     }
@@ -40,7 +36,7 @@ export default class CardMenu extends React.PureComponent<CardMenuProps> {
     return (
       <Tippy
         zIndex={5}
-        content={<AoCardHud hudStyle={'menu'} />}
+        content={<AoCardHud taskId={this.props.taskId} hudStyle={'menu'} />}
         interactive={true}
         trigger={'click'}
         placement={'top-end'}

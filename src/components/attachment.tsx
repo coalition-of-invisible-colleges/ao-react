@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
 import { HudStyle } from './cardHud'
 import FileViewer from 'react-file-viewer'
 import path from 'path'
 
 interface AoAttachmentProps {
+  taskId: string
   hudStyle: HudStyle
 }
 
@@ -16,10 +16,8 @@ interface AoAttachmentProps {
 export default class AoAttachment extends React.PureComponent<
   AoAttachmentProps
 > {
-  static contextType = TaskContext
-
   render() {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {

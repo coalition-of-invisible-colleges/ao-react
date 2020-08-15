@@ -1,8 +1,7 @@
 import React from 'react'
-import { observable, computed } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { AoState, Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore, { Task } from '../client/store'
 import AoDragZone from './dragZone'
 import AoContextCard from './contextCard'
 import MoonBag from '../assets/images/moonbag.svg'
@@ -12,8 +11,6 @@ import _ from 'lodash'
 
 @observer
 export default class AoReturnPile extends React.PureComponent {
-  static contextType = TaskContext
-
   @computed
   get returnedCards() {
     const findAllReachableHeldParents = (origin: Task) => {
@@ -142,31 +139,30 @@ export default class AoReturnPile extends React.PureComponent {
       <React.Fragment>
         {this.topReturnedCard ? (
           <div id={'returnPile'}>
-            <TaskContext.Provider
-              value={{
-                card: this.topReturnedCard,
-                setRedirect: setRedirect
-              }}>
-              <AoDragZone dragContext={{ zone: 'panel', y: 0 }}>
-                <Tippy
-                  zIndex={4}
-                  interactive={true}
-                  hideOnClick={false}
-                  delay={[625, 200]}
-                  content={
-                    <div className={'previewPopup'}>
-                      <p>Returned cards—drag to draw (or unmoon to drop):</p>
-                      <AoContextCard cardStyle={'compact'} />
-                    </div>
-                  }
-                  placement={'top'}>
-                  <div className={'actionCircle'}>
-                    <img src={MoonBag} />
-                    <div className={'badge'}>{this.returnedCards.length}</div>
+            <AoDragZone
+              taskId={this.topReturnedCard.taskId}
+              dragContext={{ zone: 'panel', y: 0 }}>
+              <Tippy
+                zIndex={4}
+                interactive={true}
+                hideOnClick={false}
+                delay={[625, 200]}
+                content={
+                  <div className={'previewPopup'}>
+                    <p>Returned cards—drag to draw (or unmoon to drop):</p>
+                    <AoContextCard
+                      taskId={this.topReturnedCard.taskId}
+                      cardStyle={'compact'}
+                    />
                   </div>
-                </Tippy>
-              </AoDragZone>
-            </TaskContext.Provider>
+                }
+                placement={'top'}>
+                <div className={'actionCircle'}>
+                  <img src={MoonBag} />
+                  <div className={'badge'}>{this.returnedCards.length}</div>
+                </div>
+              </Tippy>
+            </AoDragZone>
           </div>
         ) : null}
       </React.Fragment>

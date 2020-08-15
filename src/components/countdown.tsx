@@ -1,15 +1,10 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { formatDistanceToNow, fromUnixTime, format } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
 import { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -26,6 +21,7 @@ export const defaultState: State = {
 }
 
 interface CountdownProps {
+  taskId: string
   hudStyle: HudStyle
 }
 
@@ -36,8 +32,6 @@ interface DatePickerProps {
 
 @observer
 class RenderDatePicker extends React.PureComponent<DatePickerProps> {
-  static contextType = TaskContext
-
   render() {
     return (
       <DatePicker
@@ -60,8 +54,6 @@ export default class AoCountdown extends React.Component<
   CountdownProps,
   State
 > {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -72,7 +64,7 @@ export default class AoCountdown extends React.Component<
   }
 
   startEditing(event) {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     if (card.book.startTs) {
       let newStartTime: Date = new Date(0)
@@ -92,12 +84,11 @@ export default class AoCountdown extends React.Component<
   }
 
   bookResource() {
-    const { card, setRedirect } = this.context
     if (this.state.startTime) {
       let newEndTime: Date = new Date(this.state.startTime)
       newEndTime.setDate(newEndTime.getDate() + 3)
       api.bookResource(
-        card.taskId,
+        this.props.taskId,
         this.state.startTime.getTime(),
         newEndTime.getTime()
       )
@@ -106,7 +97,7 @@ export default class AoCountdown extends React.Component<
   }
 
   renderCountdown() {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     switch (this.props.hudStyle) {
       case 'full before':
@@ -131,7 +122,7 @@ export default class AoCountdown extends React.Component<
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
 
     if (this.state.editing) {
       return (

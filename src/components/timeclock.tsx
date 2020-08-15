@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
-import { ObservableMap } from 'mobx'
-import { delay, cancelablePromise, noop } from '../utils'
 import { HudStyle } from './cardHud'
+
+interface TimeClockProps {
+  taskId: string
+  hudStyle: HudStyle
+}
 
 interface TimeClockState {
   seconds: number
@@ -14,13 +16,7 @@ interface TimeClockState {
   t: any
 }
 
-interface Props {
-  hudStyle: HudStyle
-}
-
-class AoTimeClock extends React.Component<Props, TimeClockState> {
-  static contextType = TaskContext
-
+class AoTimeClock extends React.Component<TimeClockProps, TimeClockState> {
   constructor(props) {
     super(props)
     this.state = {
@@ -68,21 +64,17 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
   }
 
   commit() {
-    const { card, setRedirect } = this.context
-
     if (this.state.seconds > 0) {
       if (this.state.timer === true) {
         this.setState({ timer: false })
         clearTimeout(this.state.t)
       }
-      api.clockTime(this.state.seconds, card.taskId, Date.now())
+      api.clockTime(this.state.seconds, this.props.taskId, Date.now())
       this.setState({ t: null, seconds: 0 })
     }
   }
 
   render() {
-    const { card, setRedirect } = this.context
-
     return (
       <div className={'hourglass'}>
         <div
@@ -92,7 +84,7 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
         </div>
         <div className={'history'}>
           <p>Activity Log</p>
-          <AoTimeHistory hudStyle={this.props.hudStyle} />
+          <AoTimeHistory taskId={this.props.taskId} />
         </div>
         {this.state.timer || this.state.seconds > 0 ? (
           <div>{this.toHHMMSS()}</div>
@@ -111,10 +103,12 @@ class AoTimeClock extends React.Component<Props, TimeClockState> {
   }
 }
 
-@observer
-class AoTimeHistory extends React.Component<Props> {
-  static contextType = TaskContext
+interface TimeHistoryProps {
+  taskId: string
+}
 
+@observer
+class AoTimeHistory extends React.Component<TimeHistoryProps> {
   constructor(props) {
     super(props)
     this.state = {}
@@ -136,23 +130,21 @@ class AoTimeHistory extends React.Component<Props> {
   }
 
   @computed get timeLog() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
-    if (
-      !card.taskId.time ||
-      (card.taskId.time && card.taskId.time.length < 1)
-    ) {
+    if (!card.time || (card.time && card.time.length < 1)) {
       return ''
     }
     let timeLogOut = null
     if (
-      card.taskId.time.length > 0 &&
-      card.taskId.time.find(t => {
+      card.time.length > 0 &&
+      card.time.find(t => {
         return t.memberId === aoStore.member.memberId
       })
     ) {
       timeLogOut = aoStore.hashMap
-        .get(card.taskId)
+        .get(taskId)
         .time.find(t => {
           return t.memberId === aoStore.member.memberId
         })
@@ -168,19 +160,20 @@ class AoTimeHistory extends React.Component<Props> {
   }
 
   @computed get dateLog() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
     let dateLogOut = null
 
     if (
-      card.taskId.time &&
-      card.taskId.time.length > 0 &&
-      card.taskId.time.some(t => {
+      card.time &&
+      card.time.length > 0 &&
+      card.time.some(t => {
         return t.memberId === aoStore.member.memberId
       })
     ) {
       dateLogOut = aoStore.hashMap
-        .get(card.taskId)
+        .get(taskId)
         .time.find(t => {
           return t.memberId === aoStore.member.memberId
         })

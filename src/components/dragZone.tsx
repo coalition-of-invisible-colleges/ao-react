@@ -1,22 +1,17 @@
 import * as React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { observer } from 'mobx-react'
-import aoStore, { AoState, Task } from '../client/store'
-import api from '../client/api'
-import { delay, cancelablePromise, noop } from '../utils'
-import AoContextCard, { CardStyle } from './contextCard'
-import { TaskContext } from './taskContext'
+import AoContextCard from './contextCard'
 import { DragContext } from './contextCard'
 
 interface DragZoneProps {
+	taskId: string
 	dragContext?: DragContext
 	onDropSuccess?: () => void
 }
 
 @observer
 export default class AoDragZone extends React.Component<DragZoneProps> {
-	static contextType = TaskContext
-
 	constructor(props, context) {
 		super(props, context)
 		this.drag = this.drag.bind(this)
@@ -28,17 +23,14 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 			'drag event from dragZone! dragContext is ',
 			this.props.dragContext
 		)
-		const { card, setRedirect } = this.context
-		if (!card) {
-			console.log('drag event on missing card')
-			return
-		}
+		const taskId = this.props.taskId
+
 		// This is a hack. onDragEnter and onDragOver only offer protected access to drag contents,
 		// so you can see the name of the field, e.g., 'text/taskId', but not the contents.
 		// Using the taskId as the name of the drag data field type allows us to detect in dropZone.tsx
 		// when a card is being dragged over the same card (so we can do nothing).
-		event.dataTransfer.setData(card.taskId, card.taskId)
-		event.dataTransfer.setData('text/taskId', card.taskId)
+		event.dataTransfer.setData(taskId, taskId)
+		event.dataTransfer.setData('text/taskId', taskId)
 
 		if (!this.props.dragContext) {
 			console.log('drag without dragContext')
@@ -73,9 +65,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 		// since there is no drag image, setting other data fields
 		// fails too
 		let cardHTML = ReactDOMServer.renderToStaticMarkup(
-			<TaskContext.Provider value={{ card, setRedirect }}>
-				<AoContextCard cardStyle={'compact'} noPopups={true} />
-			</TaskContext.Provider>
+			<AoContextCard taskId={taskId} cardStyle={'compact'} noPopups={true} />
 		)
 		let dragGhostElement: Element = document.createElement('div')
 		dragGhostElement.innerHTML = cardHTML

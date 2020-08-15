@@ -1,36 +1,34 @@
 import React from 'react'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
-import { TaskContext } from './taskContext'
+import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
 import Coin from '../assets/images/coin.svg'
 import Tippy from '@tippyjs/react'
-import { Placement } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
 interface CoinProps {
+  taskId: string
   noPopups?: boolean
 }
 
 @observer
 export default class AoCoin extends React.PureComponent<CoinProps> {
-  static contextType = TaskContext
-
   constructor(props) {
     super(props)
   }
 
   render() {
-    const { card, setRedirect } = this.context
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
 
     const computed = observable({
       get isGrabbed() {
         return card.deck.indexOf(aoStore.member.memberId) >= 0
       },
       get isMember() {
-        return card.name === card.taskId
+        return card.name === taskId
       },
       get hodlCount() {
         return card.deck.length
@@ -41,9 +39,9 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
       event.nativeEvent.stopImmediatePropagation()
 
       if (computed.isGrabbed) {
-        api.dropCard(card.taskId)
+        api.dropCard(taskId)
       } else {
-        api.grabCard(card.taskId)
+        api.grabCard(taskId)
       }
     }
 
@@ -137,7 +135,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             hideOnClick={false}
             delay={[625, 200]}
             appendTo={() =>
-              document.getElementById('card-' + card.taskId).parentElement
+              document.getElementById('card-' + taskId).parentElement
             }>
             <img
               src={Coin}
