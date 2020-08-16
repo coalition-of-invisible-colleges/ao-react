@@ -173,7 +173,7 @@ export default class AoCalendar extends React.PureComponent {
       )
     }
 
-    const nowPlusSoon = now.concat(today)
+    const nowPlusSoon = overdue.concat(now, today)
     const renderedBadge =
       nowPlusSoon.length >= 1 ? (
         <React.Fragment>
