@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoPalette from './palette'
+import AoUnread from './unread'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
@@ -42,6 +43,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'context':
 				return (
 					<div className={'hud'}>
+						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
 							taskId={taskId}
@@ -56,6 +58,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'collapsed':
 				return (
 					<div className={'hud'}>
+						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
 							taskId={taskId}
@@ -72,6 +75,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'collapsed-mission':
 				return (
 					<div className={'hud'}>
+						<AoUnread taskId={taskId} />
 						<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}
@@ -88,6 +92,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'face before':
 				return (
 					<div className={'hud ' + hudStyle}>
+						<AoUnread taskId={taskId} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
@@ -115,14 +120,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'mini before':
 				return (
 					<div className={'hud ' + hudStyle}>
-						{card.seen &&
-						card.seen.some(t => {
-							return t.memberId === aoStore.member.memberId
-						}) ? (
-							''
-						) : (
-							<div className={'seen'} />
-						)}
+						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />

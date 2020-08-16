@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { Redirect } from 'react-router-dom'
 import api from '../client/api'
+import { delay, cancelablePromise } from '../utils'
 import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
 import AoGrid from './grid'
@@ -60,13 +61,28 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.newPriority = this.newPriority.bind(this)
 		this.newSubTask = this.newSubTask.bind(this)
 		this.goInCard = this.goInCard.bind(this)
+		this.onHover = this.onHover.bind(this)
 		this.renderCardContent = this.renderCardContent.bind(this)
+		this.clearPendingPromise = this.clearPendingPromise.bind(this)
 	}
 
 	componentDidUpdate() {
 		if (this.state.redirect !== undefined) {
 			this.setState({ redirect: undefined })
 		}
+	}
+
+	componentWillUnmount() {
+		this.clearPendingPromise()
+	}
+
+	pendingPromise = undefined
+
+	clearPendingPromise() {
+		if (this.pendingPromise) {
+			this.pendingPromise.cancel()
+		}
+		this.pendingPromise = undefined
 	}
 
 	togglePriorities(event) {
@@ -126,6 +142,43 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		aoStore.setCurrentCard(taskId)
 		aoStore.removeFromContext(taskId)
 		this.setState({ redirect: taskId })
+	}
+
+	async onHover(event) {
+		event.preventDefault()
+		event.stopPropagation()
+		const card = aoStore.hashMap.get(this.props.taskId)
+		if (
+			card.seen &&
+			card.seen.some(s => s.memberId === aoStore.member.memberId)
+		) {
+			return
+		}
+
+		if (this.pendingPromise !== undefined) {
+			return
+		}
+
+		this.pendingPromise = cancelablePromise(delay(2000))
+		return this.pendingPromise.promise
+			.then(() => {
+				if (
+					!card.seen ||
+					(card.seen &&
+						!card.seen.some(s => s.memberId === aoStore.member.memberId))
+				) {
+					api.markSeen(this.props.taskId)
+				}
+				this.clearPendingPromise()
+			})
+			.catch(errorInfo => {
+				// rethrow the error if the promise wasn't
+				// rejected because of a cancelation
+				this.clearPendingPromise()
+				if (!errorInfo.isCanceled) {
+					throw errorInfo.error
+				}
+			})
 	}
 
 	applyClassIfCurrentSearchResult(taskId) {
@@ -215,6 +268,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						}
 						id={'card-' + taskId}
 						onDoubleClick={this.goInCard}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'context'} />
@@ -231,7 +287,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							this.applyClassIfCurrentSearchResult(taskId) +
 							(this.state.showPriorities ? ' padbottom' : '')
 						}
-						onDoubleClick={this.goInCard}>
+						onDoubleClick={this.goInCard}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud
 							taskId={taskId}
@@ -264,7 +323,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							this.props.cardStyle +
 							this.applyClassIfCurrentSearchResult(taskId)
 						}
-						onDoubleClick={this.goInCard}>
+						onDoubleClick={this.goInCard}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'face before'} />
 						<div className={'content'}>
@@ -328,7 +390,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onDrop={e => {
 								e.preventDefault()
 								e.stopPropagation()
-							}}>
+							}}
+							onMouseEnter={this.onHover}
+							onMouseOver={this.onHover}
+							onMouseOut={this.clearPendingPromise}>
 							<AoPaper taskId={taskId} />
 							<AoCardHud taskId={taskId} hudStyle={'full before'} />
 							<div className="content">
@@ -367,7 +432,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						id={'card-' + taskId}
 						className={
 							'card checkmark' + this.applyClassIfCurrentSearchResult(taskId)
-						}>
+						}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}>
 						<AoCheckmark taskId={taskId} onGoIn={this.goInCard} />
 					</div>
 				)
@@ -411,7 +479,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							this.applyClassIfCurrentSearchResult(taskId)
 						}
 						id={'card-' + taskId}
-						onDoubleClick={this.goInCard}>
+						onDoubleClick={this.goInCard}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'collapsed-mission'} />
 						<div className={'content'}>
@@ -460,7 +531,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						className={
 							'card mini' + this.applyClassIfCurrentSearchResult(taskId)
 						}
-						onDoubleClick={this.goInCard}>
+						onDoubleClick={this.goInCard}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
