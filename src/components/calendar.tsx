@@ -35,12 +35,18 @@ export default class AoCalendar extends React.PureComponent {
       nextMonth: Task[] = [],
       thisYear: Task[] = [],
       eventually: Task[] = [],
-      past: Task[] = []
+      past: Task[] = [],
+      overdue: Task[] = []
 
     events.forEach(task => {
       const timeToNow = task.book.startTs - Date.now()
-      if (timeToNow < -pastBufferMs) {
+      const isChecked = task.claimed.indexOf(aoStore.member.memberId) !== -1
+      const isHodld = task.deck.indexOf(aoStore.member.memberId) !== -1
+
+      if (timeToNow < -pastBufferMs && (!isHodld || isChecked)) {
         past.push(task)
+      } else if (timeToNow < -pastBufferMs) {
+        overdue.push(task)
       } else if (timeToNow > -pastBufferMs && timeToNow <= 0) {
         now.push(task)
       } else if (timeToNow > 0 && timeToNow <= todayMs) {
@@ -67,7 +73,8 @@ export default class AoCalendar extends React.PureComponent {
     let renderedCalendarList
 
     if (
-      now.length +
+      overdue.length +
+        now.length +
         today.length +
         tomorrow.length +
         thisWeek.length +
@@ -99,6 +106,12 @@ export default class AoCalendar extends React.PureComponent {
     } else {
       renderedCalendarList = (
         <div className={'results'}>
+          {overdue.length >= 1 ? <h2>Overdue</h2> : ''}
+          <AoStack
+            cards={overdue}
+            cardStyle={'priority'}
+            alwaysShowAll={true}
+          />
           {now.length >= 1 ? <h2>Now</h2> : ''}
           <AoStack cards={now} cardStyle={'priority'} alwaysShowAll={true} />
           {today.length >= 1 ? <h2>Today</h2> : ''}
