@@ -61,13 +61,8 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
     }
     const nameFrom = cardFrom.name
 
-    let nameTo = move.to.name
-    if (!nameTo) {
-      const cardTo = aoStore.hashMap.get(move.to.taskId)
-      if (cardTo) {
-        nameTo = cardTo.name
-      }
-    }
+    const cardTo = aoStore.hashMap.get(move.to.taskId)
+    const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
 
     switch (move.from.zone) {
       case 'card':

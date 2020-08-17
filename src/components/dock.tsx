@@ -13,29 +13,23 @@ export default class AoDock extends React.Component {
     let myBookmarks = aoStore.cardByName.get(dockCardName)
 
     if (!myBookmarks) {
-      console.log('missing card')
-
       api
         .createCard(dockCardName)
-        .then(() => {
+        .then(res => {
           const taskId = JSON.parse(res.text).event.taskId
-          api.addGridToCard(taskId, 1, 6)
+          return api.addGridToCard(taskId, 1, 6)
         })
-        .then(() => {
+        .then(res => {
+          const taskId = JSON.parse(res.text).event.taskId
           api.pinCardToGrid(0, 0, 'drop bookmarks here', taskId)
         })
     } else if (!myBookmarks.hasOwnProperty('grid')) {
-      console.log('missing grid')
-
       api.addGridToCard(myBookmarks.taskId, 1, 6).then(() => {
         api.pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
       })
     } else if (!_.has(myBookmarks, 'grid.rows.0')) {
-      console.log('missing row')
-
       api.pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
     }
-    console.log('exists')
   }
 
   render() {
