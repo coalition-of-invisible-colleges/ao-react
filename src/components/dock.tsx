@@ -9,7 +9,6 @@ import _ from 'lodash'
 export default class AoDock extends React.Component {
   componentDidMount() {
     const dockCardName = aoStore.member.memberId + '-bookmarks'
-    console.log('dockCardName is ', dockCardName)
     let myBookmarks = aoStore.cardByName.get(dockCardName)
 
     if (!myBookmarks) {
@@ -36,11 +35,8 @@ export default class AoDock extends React.Component {
     const dockCardName = aoStore.member.memberId + '-bookmarks'
     let myBookmarks = aoStore.cardByName.get(dockCardName)
     if (!_.has(myBookmarks, 'grid.rows.0')) {
-      console.log('no bookmarks to display')
       return null
     }
-    console.log('rendering dock. card is ', myBookmarks)
-    console.log('taskId is ', myBookmarks.taskId)
     return (
       <div id={'dock'}>
         <AoGrid taskId={myBookmarks.taskId} />

@@ -185,7 +185,6 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
       !grid.hasOwnProperty('height') ||
       !grid.hasOwnProperty('width')
     ) {
-      console.log('task missing grid. grid: ', this.grid)
       return (
         <div className={'gridContainer'}>
           <p onClick={this.addGrid} className={'action'}>
