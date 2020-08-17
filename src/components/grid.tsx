@@ -55,11 +55,19 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
     if (!move.from.taskId) {
       return
     }
-    const nameFrom = aoStore.hashMap.get(move.from.taskId).name
+    const cardFrom = aoStore.hashMap.get(move.from.taskId)
+    if (!cardFrom) {
+      return
+    }
+    const nameFrom = cardFrom.name
 
-    const nameTo = move.to.taskId
-      ? aoStore.hashMap.get(move.to.taskId).name
-      : undefined
+    let nameTo = move.to.name
+    if (!nameTo) {
+      const cardTo = aoStore.hashMap.get(move.to.taskId)
+      if (cardTo) {
+        nameTo = cardTo.name
+      }
+    }
 
     switch (move.from.zone) {
       case 'card':
@@ -157,7 +165,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
   @computed get grid() {
     const card = aoStore.hashMap.get(this.props.taskId)
 
-    if (card.hasOwnProperty('grid') && card.grid) {
+    if (card && card.hasOwnProperty('grid') && card.grid) {
       return card.grid
     }
 
@@ -182,6 +190,7 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
       !grid.hasOwnProperty('height') ||
       !grid.hasOwnProperty('width')
     ) {
+      console.log('task missing grid. grid: ', this.grid)
       return (
         <div className={'gridContainer'}>
           <p onClick={this.addGrid} className={'action'}>

@@ -152,6 +152,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                   cards={computed.priorityCards}
                   zone={'priorities'}
                   onDrop={prioritizeCard}
+                  cardsBeforeFold={3}
                 />
               }>
               <div className={'preview nopad'}>{computed.priorityCount}!</div>

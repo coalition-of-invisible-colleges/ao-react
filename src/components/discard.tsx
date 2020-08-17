@@ -34,7 +34,11 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 		if (!move.from.taskId) {
 			return
 		}
-		const nameFrom = aoStore.hashMap.get(move.from.taskId).name
+		const cardFrom = aoStore.hashMap.get(move.from.taskId)
+		if (!cardFrom) {
+			return
+		}
+		const nameFrom = card.name
 
 		switch (move.from.zone) {
 			case 'card':

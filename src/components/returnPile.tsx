@@ -93,6 +93,15 @@ export default class AoReturnPile extends React.PureComponent {
         return false
       }
 
+      if (t.name === 'community hub') {
+        return false
+      }
+
+      const dockCardName = aoStore.member.memberId + '-bookmarks'
+      if (t.name === dockCardName) {
+        return false
+      }
+
       let parents = findAllReachableHeldParents(t)
 
       if (

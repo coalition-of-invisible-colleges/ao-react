@@ -93,7 +93,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
               if (!t) {
                 console.log(
                   'Missing card detected. card is ',
-                  t.name,
+                  t,
                   ' and this.props.cards is ',
                   this.props.cards,
                   ' and cardStyle is ',

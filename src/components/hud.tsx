@@ -4,6 +4,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import AoMembers from './members'
 import AoHub from './hub'
+import AoDock from './dock'
 import AoCalendar from './calendar'
 import AoMissions from './missions'
 import AoSearch from './search'
@@ -81,6 +82,7 @@ export default class AoHud extends React.Component<{}, undefined> {
           <div id={'mainMenuButton'}>&#x22EE;</div>
         </Tippy>
         <AoHub />
+        <AoDock />
         <div id="missions">
           <AoPopupPanel
             iconSrc={Badge}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { AoState } from '../client/store'
+import aoStore from '../client/store'
 import api from '../client/api'
 import CoinGecko from 'coingecko-api'
 import _ from 'lodash'
