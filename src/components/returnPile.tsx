@@ -11,6 +11,29 @@ import _ from 'lodash'
 
 @observer
 export default class AoReturnPile extends React.PureComponent {
+  @computed get myEvents(): Task[] {
+    let my = aoStore.state.tasks
+      .filter(t => {
+        if (!t.hasOwnProperty('taskId')) {
+          console.log(
+            'Invalid event card detected while retrieving member events list.'
+          )
+          return false
+        }
+
+        if (!t.book || !t.book.startTs || t.book.startTs <= 0) return false
+        if (t.deck.indexOf(aoStore.member.memberId) === -1) {
+          return false
+        }
+        return true
+      })
+      .sort((a, b) => {
+        return b.book.startTs - a.book.startTs
+      })
+
+    return my
+  }
+
   @computed
   get returnedCards() {
     const findAllReachableHeldParents = (origin: Task) => {
@@ -69,7 +92,10 @@ export default class AoReturnPile extends React.PureComponent {
       return reachableCards
     }
 
-    let anchorCards: Task[] = [aoStore.memberCard].concat(aoStore.myGuilds)
+    let anchorCards: Task[] = [aoStore.memberCard].concat(
+      aoStore.myGuilds,
+      this.myEvents
+    )
 
     let orphans = aoStore.state.tasks.filter(t => {
       if (!t.hasOwnProperty('taskId')) {

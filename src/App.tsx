@@ -66,7 +66,7 @@ const App = observer(() => {
   }, [])
 
   return (
-    <div>
+    <React.Fragment>
       {render && (
         <Router>
           <Switch>
@@ -90,7 +90,7 @@ const App = observer(() => {
           Receiving cards from server...
         </div>
       )}
-    </div>
+    </React.Fragment>
   )
 })
 export default hot(App)

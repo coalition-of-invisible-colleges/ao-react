@@ -1432,13 +1432,19 @@ textarea {
       border-radius: 50%;
       background-color: rgba(255, 10, 10, 0.85);
     }
-  }
 
-  #dock {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    // the dock at the bottom of the screen
+    #dock {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    // the card that is the current page (Card.tsx)
+    #root > .card {
+      margin-bottom: 7em;
+    }
   }
 }
 
