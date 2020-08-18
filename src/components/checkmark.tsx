@@ -22,7 +22,7 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
     if (this.props.color) {
       return this.props.color
     }
-    const { card, setRedirect } = this.context
+    const card = aoStore.hashMap.get(this.props.taskId)
     const loadedColor = card.color
     switch (loadedColor) {
       case 'red':

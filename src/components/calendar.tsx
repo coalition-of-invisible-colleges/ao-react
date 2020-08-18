@@ -177,11 +177,13 @@ export default class AoCalendar extends React.PureComponent {
     const renderedBadge =
       nowPlusSoon.length >= 1 ? (
         <React.Fragment>
-          {nowPlusSoon.length.toString()}
+          {overdue.length >= 1 ? overdue.length : nowPlusSoon.length.toString()}
           <div style={{ fontSize: '0.75em' }}>
-            {formatDistanceToNow(nowPlusSoon[0].book.startTs, {
-              addSuffix: true
-            })}
+            {overdue.length >= 1
+              ? 'overdue'
+              : formatDistanceToNow(nowPlusSoon[0].book.startTs, {
+                  addSuffix: true
+                })}
           </div>
         </React.Fragment>
       ) : (
