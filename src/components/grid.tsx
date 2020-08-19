@@ -13,6 +13,7 @@ import AoCardComposer from './cardComposer'
 
 interface GridProps {
   taskId: string
+  dropActsLikeFolder?: boolean
 }
 
 interface Sel {
@@ -69,7 +70,13 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
         // maybe this doesn't make sense, it's supposed to be for the whole card
         break
       case 'priorities':
-        if (move.to.taskId) {
+        if (move.to.taskId && this.props.dropActsLikeFolder) {
+          api
+            .discardCardFromCard(move.from.taskId, move.from.inId)
+            .then(() =>
+              api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+            )
+        } else if (move.to.taskId) {
           api
             .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
             .then(() => api.refocusCard(move.from.taskId, move.from.inId))
@@ -95,7 +102,20 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
         }
         break
       case 'grid':
-        if (move.to.taskId) {
+        if (move.to.taskId && this.props.dropActsLikeFolder) {
+          api
+            .unpinCardFromGrid(
+              move.from.coords.x,
+              move.from.coords.y,
+              move.from.inId
+            )
+            .then(() => {
+              api.discardCardFromCard(move.from.taskId, move.from.inId)
+            })
+            .then(() =>
+              api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+            )
+        } else if (move.to.taskId) {
           api
             .pinCardToGrid(
               move.to.coords.x,
@@ -128,13 +148,40 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
             )
         }
         break
+      case 'subTasks':
+        if (move.to.taskId && this.props.dropActsLikeFolder) {
+          api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
+            api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+          })
+        } else if (move.to.taskId) {
+          api
+            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+        } else {
+          api.pinCardToGrid(
+            move.to.coords.x,
+            move.to.coords.y,
+            nameFrom,
+            move.to.inId
+          )
+        }
+        break
       case 'discard':
         aoStore.popDiscardHistory()
       case 'completed':
       case 'context':
       case 'panel':
       default:
-        if (move.to.taskId) {
+        if (move.to.taskId && this.props.dropActsLikeFolder) {
+          api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+        } else if (move.to.taskId) {
           api
             .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
             .then(() =>
@@ -230,7 +277,8 @@ export default class AoGrid extends React.Component<GridProps, GridState> {
             onSelect={() => this.selectGridSquare({ x: i, y: j })}
             onDrop={this.dropToGridSquare}
             zoneStyle={'grid'}
-            key={i + '-' + j}>
+            key={i + '-' + j}
+            dropActsLikeFolder={this.props.dropActsLikeFolder}>
             {tId ? (
               <AoDragZone
                 taskId={tId}

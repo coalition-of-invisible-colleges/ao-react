@@ -39,7 +39,7 @@ export default class AoDock extends React.Component {
     }
     return (
       <div id={'dock'}>
-        <AoGrid taskId={myBookmarks.taskId} />
+        <AoGrid taskId={myBookmarks.taskId} dropActsLikeFolder={true} />
       </div>
     )
   }
