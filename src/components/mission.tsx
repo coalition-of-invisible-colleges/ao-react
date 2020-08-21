@@ -89,6 +89,7 @@ export default class AoMission extends React.PureComponent<
 
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     if (this.state.editing) {
       return (

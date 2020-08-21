@@ -21,24 +21,30 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
 
   @computed get isGrabbed() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return undefined
+
     return card.deck.indexOf(aoStore.member.memberId) >= 0
   }
 
   @computed get isMember() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
+    if (!card) return undefined
 
     return card.name === taskId
   }
 
   @computed get hodlCount() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card || !card.hasOwnProperty('deck')) return undefined
+
     return card.deck.length
   }
 
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
+    if (!card) return null
 
     const onClick = event => {
       event.stopPropagation()

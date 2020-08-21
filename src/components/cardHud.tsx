@@ -37,6 +37,8 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 	render() {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
+		if (!card) return null
+
 		const hudStyle = this.props.hudStyle
 
 		switch (hudStyle) {

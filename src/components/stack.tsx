@@ -129,31 +129,40 @@ export default class AoStack extends React.PureComponent<
 
     let list = []
     if (this.state.showAll || this.props.alwaysShowAll) {
-      list = cardsToRender.map((task, i) => (
-        <AoDragZone
-          taskId={task.taskId}
-          dragContext={{
-            zone: this.props.zone ? this.props.zone : 'panel',
-            inId: this.props.inId,
-            y: i
-          }}
-          key={task.taskId + this.props.inId + this.props.cardStyle}>
-          <AoContextCard
-            task={task}
-            cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
-            noPopups={this.props.noPopups}
-            noFindOnPage={this.props.noFindOnPage}
-            inlineStyle={
-              this.props.cardStyle === 'context'
-                ? {
-                    maxWidth:
-                      (30 - (cardsToRender.length - i)).toString() + 'em'
-                  }
-                : {}
-            }
-          />
-        </AoDragZone>
-      ))
+      list = cardsToRender.map((task, i) => {
+        console.log(
+          'taskId is ',
+          task.hasOwnProperty('taskId') ? task.taskId : 'missing taskId',
+          ' and task is ',
+          task
+        )
+
+        return (
+          <AoDragZone
+            taskId={task.taskId}
+            dragContext={{
+              zone: this.props.zone ? this.props.zone : 'panel',
+              inId: this.props.inId,
+              y: i
+            }}
+            key={task.taskId + this.props.inId + this.props.cardStyle}>
+            <AoContextCard
+              task={task}
+              cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
+              noPopups={this.props.noPopups}
+              noFindOnPage={this.props.noFindOnPage}
+              inlineStyle={
+                this.props.cardStyle === 'context'
+                  ? {
+                      maxWidth:
+                        (30 - (cardsToRender.length - i)).toString() + 'em'
+                    }
+                  : {}
+              }
+            />
+          </AoDragZone>
+        )
+      })
     } else if (this.props.noFirstCard) {
     } else if (cardsToRender.length >= 1) {
       list = cardsToRender

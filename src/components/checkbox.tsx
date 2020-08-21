@@ -16,17 +16,20 @@ interface CheckboxProps {
 export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
   @computed get isCompleted() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return undefined
     return card.claimed.indexOf(aoStore.member.memberId) >= 0
   }
 
   @computed get isGrabbed() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return undefined
     return card.deck.indexOf(aoStore.member.memberId) >= 0
   }
 
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
+    if (!card) return null
 
     const onClick = event => {
       event.stopPropagation()

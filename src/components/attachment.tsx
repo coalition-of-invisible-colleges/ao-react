@@ -18,6 +18,7 @@ export default class AoAttachment extends React.PureComponent<
 > {
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {

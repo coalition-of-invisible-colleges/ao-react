@@ -43,6 +43,7 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
     event.stopPropagation()
 
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     if (card.completeValue) {
       this.setState({
@@ -61,6 +62,7 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
 
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
+    if (!card) return null
 
     let newValue: number =
       this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
@@ -88,6 +90,7 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
 
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     if (this.state.editing) {
       return (

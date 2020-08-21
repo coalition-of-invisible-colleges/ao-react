@@ -65,6 +65,7 @@ export default class AoCountdown extends React.Component<
 
   startEditing(event) {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     if (card.book.startTs) {
       let newStartTime: Date = new Date(0)
@@ -98,6 +99,7 @@ export default class AoCountdown extends React.Component<
 
   renderCountdown() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     switch (this.props.hudStyle) {
       case 'full before':
@@ -123,6 +125,7 @@ export default class AoCountdown extends React.Component<
 
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return null
 
     if (this.state.editing) {
       return (
