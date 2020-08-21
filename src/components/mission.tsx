@@ -21,7 +21,10 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoMission extends React.Component<MissionProps, State> {
+export default class AoMission extends React.PureComponent<
+  MissionProps,
+  State
+> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -54,7 +57,9 @@ export default class AoMission extends React.Component<MissionProps, State> {
   }
 
   stopEditing() {
-    this.setState({ editing: false, text: '' })
+    if (this.state.editing) {
+      this.setState({ editing: false, text: '' })
+    }
   }
 
   saveMission(event) {

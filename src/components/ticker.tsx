@@ -7,7 +7,7 @@ import CoinGecko from 'coingecko-api'
 const CoinGeckoClient = new CoinGecko()
 
 @observer
-export default class AoTickerHud extends React.Component<{}, undefined> {
+export default class AoTickerHud extends React.PureComponent<{}, undefined> {
   constructor(props) {
     super(props)
   }

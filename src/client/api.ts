@@ -674,7 +674,7 @@ class AoApi {
         name: name,
         color: 'blue',
         deck: [aoStore.member.memberId],
-        inId: aoStore.memberCard.taskId,
+        inId: inId,
         prioritized: false
       }
       return request

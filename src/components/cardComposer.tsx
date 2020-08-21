@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import { Coords } from '../cards'
 
 interface CardComposerProps {
-	onNewCard: (string) => void
+	onNewCard: (string, coords?) => void
 	onBlur: (event) => void
+	coords?: Coords
 }
 
 interface State {
@@ -11,7 +13,7 @@ interface State {
 }
 
 @observer
-export default class AoCardComposer extends React.Component<
+export default class AoCardComposer extends React.PureComponent<
 	CardComposerProps,
 	State
 > {
@@ -34,7 +36,7 @@ export default class AoCardComposer extends React.Component<
 				console.log('Empty card—nothing created.')
 				return
 			}
-			this.props.onNewCard(trimmed)
+			this.props.onNewCard(trimmed, this.props.coords)
 			this.setState({ text: undefined })
 			this.onBlur(event)
 		} else if (event.key === 'Escape') {

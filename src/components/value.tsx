@@ -20,7 +20,7 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoValue extends React.Component<ValueProps, State> {
+export default class AoValue extends React.PureComponent<ValueProps, State> {
   constructor(props) {
     super(props)
     this.state = defaultState

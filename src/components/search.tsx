@@ -26,7 +26,7 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoSearch extends React.Component<{}, State> {
+export default class AoSearch extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -176,7 +176,8 @@ export default class AoSearch extends React.Component<{}, State> {
     })
   }
 
-  sortBy(sort: SearchSort) {
+  sortBy(event) {
+    const sort = event.currentTarget.getAttribute('data-sort')
     if (this.state.sort === sort) {
       return
     }
@@ -192,11 +193,7 @@ export default class AoSearch extends React.Component<{}, State> {
           y: i
         }}
         key={task.taskId}>
-        <AoContextCard
-          taskId={task.taskId}
-          cardStyle={'priority'}
-          noFindOnPage={true}
-        />
+        <AoContextCard task={task} cardStyle={'priority'} noFindOnPage={true} />
       </AoDragZone>
     ))
   }
@@ -261,7 +258,7 @@ export default class AoSearch extends React.Component<{}, State> {
       return <p className={'action selected'}>{label}</p>
     } else {
       return (
-        <p onClick={() => this.sortBy(sort)} className={'action'}>
+        <p onClick={this.sortBy} data-sort={sort} className={'action'}>
           {label}
         </p>
       )

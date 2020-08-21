@@ -17,7 +17,7 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoPassword extends React.Component<{}, State> {
+export default class AoPassword extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState

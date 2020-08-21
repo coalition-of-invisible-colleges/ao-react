@@ -91,23 +91,23 @@ function applyEvent(state, ev) {
 function initialize(callback) {
   dctrlDb.recover((err, backup) => {
     let ts = 0
-    if (backup.length > 0) {
-      ts = backup[0].timestamp
-      console.log(
-        '\nFound',
-        backup.length,
-        'AO snapshot' +
-          (backup.length === 1 ? '' : 's') +
-          ' in the database. Applying' +
-          (backup.length > 1 ? ' the most recent' : '') +
-          ' backup from',
-        formatDistanceToNow(ts, {
-          addSuffix: true
-        }),
-        '...\n'
-      )
-      applyBackup(backup[0])
-    }
+    // if (backup.length > 0) {
+    //   ts = backup[0].timestamp
+    //   console.log(
+    //     '\nFound',
+    //     backup.length,
+    //     'AO snapshot' +
+    //       (backup.length === 1 ? '' : 's') +
+    //       ' in the database. Applying' +
+    //       (backup.length > 1 ? ' the most recent' : '') +
+    //       ' backup from',
+    //     formatDistanceToNow(ts, {
+    //       addSuffix: true
+    //     }),
+    //     '...\n'
+    //   )
+    //   applyBackup(backup[0])
+    // }
     dctrlDb.getAll(ts, (err, all) => {
       if (err) return callback(err)
       all.forEach((ev, i) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -14,23 +14,25 @@ interface CheckboxProps {
 
 @observer
 export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
+  @computed get isCompleted() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    return card.claimed.indexOf(aoStore.member.memberId) >= 0
+  }
+
+  @computed get isGrabbed() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    return card.deck.indexOf(aoStore.member.memberId) >= 0
+  }
+
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
 
-    const computed = observable({
-      get isCompleted() {
-        return card.claimed.indexOf(aoStore.member.memberId) >= 0
-      },
-      get isGrabbed() {
-        return card.deck.indexOf(aoStore.member.memberId) >= 0
-      }
-    })
     const onClick = event => {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
 
-      if (computed.isCompleted) {
+      if (this.isCompleted) {
         api.uncheckCard(taskId)
       } else {
         api.completeCard(taskId)
@@ -40,11 +42,11 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'full before':
       case 'face before':
       case 'collapsed':
-        if (computed.isCompleted || computed.isGrabbed) {
+        if (this.isCompleted || this.isGrabbed) {
           return (
             <img
               className="checkbox"
-              src={computed.isCompleted ? Completed : Uncompleted}
+              src={this.isCompleted ? Completed : Uncompleted}
               onClick={onClick}
               onDoubleClick={event => {
                 event.stopPropagation()
@@ -55,7 +57,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
         }
         return null
       case 'mini before':
-        if (computed.isCompleted) {
+        if (this.isCompleted) {
           return <img src={Completed} className={'checkbox mini'} />
         }
         return null

@@ -5,7 +5,7 @@ import AoContextCard, { CardStyle } from './contextCard'
 import { CardZone } from '../cards'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay, Sel } from '../cards'
+import { CardPlay, Coords } from '../cards'
 import AoCardComposer from './cardComposer'
 
 interface StackProps {
@@ -27,7 +27,7 @@ interface StackProps {
 }
 
 interface StackState {
-  selected?: Sel
+  selected?: Coords
   showAll: boolean
   showCompose: boolean
 }
@@ -44,7 +44,10 @@ export const defaultState: StackState = {
 }
 
 @observer
-export default class AoStack extends React.Component<StackProps, StackState> {
+export default class AoStack extends React.PureComponent<
+  StackProps,
+  StackState
+> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -62,7 +65,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     aoStore.unregisterCloseable(this.hide)
   }
 
-  selectStackZone(selection: Sel) {
+  selectStackZone(selection: Coords) {
     this.setState({ selected: selection })
   }
 
@@ -77,7 +80,9 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
     }
-    this.setState({ showAll: false })
+    if (this.state.showAll) {
+      this.setState({ showAll: false })
+    }
   }
 
   toggleCompose() {
@@ -109,17 +114,12 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     let addButton
     if (this.state.showCompose) {
       addButton = (
-        <AoCardComposer
-          onNewCard={this.props.onNewCard}
-          onBlur={() => this.setState({ showCompose: false })}
-        />
+        <AoCardComposer onNewCard={this.props.onNewCard} onBlur={this.hide} />
       )
     } else if (
       this.props.showAdd &&
       !(this.props.hideAddWhenCards && cardsToRender.length >= 1)
     ) {
-      // onClick={() => this.props.onSelect({ y: this.props.y })}
-
       addButton = (
         <p className={'action'} onClick={this.toggleCompose}>
           {this.props.addButtonText ? this.props.addButtonText : '+card'}
@@ -129,7 +129,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
 
     let list = []
     if (this.state.showAll || this.props.alwaysShowAll) {
-      // wrap a DropZone here to drop on the whole stack. call this.onDrop on drop
       list = cardsToRender.map((task, i) => (
         <AoDragZone
           taskId={task.taskId}
@@ -140,7 +139,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           }}
           key={task.taskId + this.props.inId + this.props.cardStyle}>
           <AoContextCard
-            taskId={task.taskId}
+            task={task}
             cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
             noPopups={this.props.noPopups}
             noFindOnPage={this.props.noFindOnPage}
@@ -169,7 +168,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             }}
             key={task.taskId + this.props.inId + this.props.cardStyle}>
             <AoContextCard
-              taskId={task.taskId}
+              task={task}
               cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
               noPopups={this.props.noPopups}
               noFindOnPage={this.props.noFindOnPage}

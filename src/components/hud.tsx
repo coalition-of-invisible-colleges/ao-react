@@ -29,33 +29,33 @@ interface State {
 
 @observer
 class MainMenu extends React.PureComponent<{}, State> {
+  changeTheme = () => {
+    if (this.state.theme == 3) {
+      this.setState({ theme: 1 })
+      document.body.className = 'theme-1'
+    } else {
+      const newTheme = this.state.theme + 1
+      document.body.className = 'theme-' + newTheme
+      this.setState({ theme: newTheme })
+    }
+  }
+
+  onLogout = () => {
+    api.logout()
+    console.log('logged out', aoStore.state.loggedIn)
+  }
+
   render() {
-    const changeTheme = () => {
-      if (this.state.theme == 3) {
-        this.setState({ theme: 1 })
-        document.body.className = 'theme-1'
-      } else {
-        const newTheme = this.state.theme + 1
-        document.body.className = 'theme-' + newTheme
-        this.setState({ theme: newTheme })
-      }
-    }
-
-    const onLogout = () => {
-      api.logout()
-      console.log('logged out', aoStore.state.loggedIn)
-    }
-
     return (
       <div id={'mainMenu'}>
         <AoServerName />
         <AoUsername />
         <AoPassword />
         <AoVolume />
-        <div onClick={changeTheme} id={'themer'} className={'action'}>
+        <div onClick={this.changeTheme} id={'themer'} className={'action'}>
           Next Theme
         </div>
-        <div onClick={onLogout} id="logout" className={'action'}>
+        <div onClick={this.onLogout} id="logout" className={'action'}>
           Log Out
         </div>
       </div>
@@ -69,9 +69,15 @@ export default class AoHud extends React.Component<{}, undefined> {
 
   constructor(props) {
     super(props)
+    this.focusSearchbox = this.focusSearchbox.bind(this)
+  }
+
+  focusSearchbox() {
+    this.searchRef.current.focus()
   }
 
   render() {
+    console.log('rerendering AoHub')
     return (
       <React.Fragment>
         <Tippy
@@ -108,7 +114,7 @@ export default class AoHud extends React.Component<{}, undefined> {
             tooltipText={'Search'}
             tooltipPlacement={'top'}
             panelPlacement={'top'}
-            onShown={() => this.searchRef.current.focus()}>
+            onShown={this.focusSearchbox}>
             <AoSearch ref={this.searchRef} />
           </AoPopupPanel>
         </div>

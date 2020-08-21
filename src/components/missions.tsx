@@ -20,16 +20,16 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoMissions extends React.Component<{}, State> {
+export default class AoMissions extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
     this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
-    this.getProjectCards = this.getProjectCards.bind(this)
   }
 
-  sortBy(sort: MissionSort) {
+  sortBy(event) {
+    const sort = event.currentTarget.getAttribute('data-sort')
     if (this.state.sort === sort) {
       return
     }
@@ -41,38 +41,11 @@ export default class AoMissions extends React.Component<{}, State> {
       return <p className={'action selected'}>{label}</p>
     } else {
       return (
-        <p onClick={() => this.sortBy(sort)} className={'action'}>
+        <p onClick={this.sortBy} data-sort={sort} className={'action'}>
           {label}
         </p>
       )
     }
-  }
-
-  getProjectCards(card) {
-    let projectCards: Task[] = []
-    let allSubCards = card.priorities.concat(card.subTasks, card.completed)
-
-    allSubCards.forEach(tId => {
-      let subCard = aoStore.hashMap.get(tId)
-      if (subCard) {
-        if (subCard.guild && subCard.guild.length >= 1) {
-          projectCards.push(subCard)
-        }
-      }
-    })
-
-    if (card.grid && card.grid.rows) {
-      Object.entries(card.grid.rows).forEach(([y, row]) => {
-        Object.entries(row).forEach(([x, cell]) => {
-          let gridCard = aoStore.hashMap.get(cell)
-          if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
-            projectCards.push(gridCard)
-          }
-        })
-      })
-    }
-
-    return projectCards
   }
 
   @computed
@@ -86,7 +59,7 @@ export default class AoMissions extends React.Component<{}, State> {
 
     let projectCards = []
     projectCards = projectCards.concat(
-      ...missions.map(task => this.getProjectCards(task))
+      ...missions.map(task => aoStore.subGuildsByGuild.get(task.taskId))
     )
 
     missions = missions.filter(task => {

@@ -3,21 +3,14 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
-import Tippy from '@tippyjs/react'
+import { LazyTippy } from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
 @observer
 export default class AoScore extends React.PureComponent {
   @computed
-  get myCards() {
-    return aoStore.state.tasks.filter(
-      t => t.deck.indexOf(aoStore.member.memberId) !== -1
-    )
-  }
-
-  @computed
   get checkedCards() {
-    return this.myCards.filter(t => {
+    return aoStore.myCards.filter(t => {
       if (!t.claimed.some(c => c.indexOf(aoStore.member.memberId) >= 0)) {
         return false
       }
@@ -40,7 +33,7 @@ export default class AoScore extends React.PureComponent {
 
   render() {
     return (
-      <Tippy
+      <LazyTippy
         interactive={true}
         placement={'top'}
         delay={[625, 200]}
@@ -64,7 +57,7 @@ export default class AoScore extends React.PureComponent {
         <div id={'score'}>
           <div>Score: {this.pointsFromCards}</div>
         </div>
-      </Tippy>
+      </LazyTippy>
     )
   }
 }

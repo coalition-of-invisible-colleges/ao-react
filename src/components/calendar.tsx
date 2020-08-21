@@ -9,13 +9,7 @@ import { formatDistanceToNow } from 'date-fns'
 @observer
 export default class AoCalendar extends React.PureComponent {
   render() {
-    let events = aoStore.state.tasks
-      .filter(task => {
-        return task.book.hasOwnProperty('startTs') && task.book.startTs > 0
-      })
-      .sort((a, b) => {
-        return b.book.startTs - a.book.startTs
-      })
+    let events = aoStore.allEvents
 
     const todayMs = 64800000 // 18 hours
     const tomorrowMs = 172800000 // 48 hours

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
@@ -9,7 +8,7 @@ import api from '../client/api'
 import AoPopupPanel from './popupPanel'
 
 @observer
-export default class AoHub extends React.Component<{}> {
+export default class AoHub extends React.PureComponent<{}> {
   constructor(props) {
     super(props)
     this.state = {}
@@ -21,64 +20,10 @@ export default class AoHub extends React.Component<{}> {
     console.log('card added')
   }
 
-  @computed
-  get topMissions() {
-    let topMissions = aoStore.state.tasks.filter(task => {
-      return task.hasOwnProperty('guild') && task.guild.length >= 1
-    })
-
-    topMissions = topMissions.sort((a, b) => {
-      return b.deck.length - a.deck.length
-    })
-
-    if (topMissions.length > 5) {
-      topMissions = topMissions.slice(0, 5)
-    }
-    topMissions.reverse()
-
-    return topMissions
-  }
-
-  @computed
-  get topCards() {
-    let topCards = aoStore.state.tasks.filter(task => {
-      return (
-        !task.hasOwnProperty('guild') ||
-        (task.hasOwnProperty('guild') && task.guild.length < 1)
-      )
-    })
-
-    topCards = topCards.sort((a, b) => {
-      return b.deck.length - a.deck.length
-    })
-
-    if (topCards.length > 5) {
-      topCards = topCards.slice(0, 5)
-    }
-    topCards.reverse()
-
-    return topCards
-  }
-
-  @computed
-  get renderHub() {
-    let topCards = aoStore.state.tasks.filter(task => {
-      return (
-        !task.hasOwnProperty('guild') ||
-        (task.hasOwnProperty('guild') && task.guild.length < 1)
-      )
-    })
-
-    topCards = topCards.sort((a, b) => {
-      return b.deck.length - a.deck.length
-    })
-
-    if (topCards.length > 5) {
-      topCards = topCards.slice(0, 5)
-    }
-    topCards.reverse()
-
+  render() {
     let communityCard = aoStore.cardByName.get('community hub')
+    let topMissions = aoStore.topMissions
+    let topCards = aoStore.topCards
 
     return (
       <div id={'hub'}>
@@ -97,7 +42,7 @@ export default class AoHub extends React.Component<{}> {
               </h2>
               {communityCard && communityCard.hasOwnProperty('taskId') ? (
                 <AoContextCard
-                  taskId={communityCard.taskId}
+                  task={communityCard}
                   cardStyle={'full'}
                   noContextOnFull={true}
                 />
@@ -110,13 +55,13 @@ export default class AoHub extends React.Component<{}> {
             <div className={'right'}>
               <h2>Top Missions</h2>
               <AoStack
-                cards={this.topMissions}
+                cards={topMissions}
                 alwaysShowAll={true}
                 cardStyle={'mission'}
               />
               <h2>Top Cards</h2>
               <AoStack
-                cards={this.topCards}
+                cards={topCards}
                 alwaysShowAll={true}
                 cardStyle={'priority'}
               />
@@ -125,9 +70,5 @@ export default class AoHub extends React.Component<{}> {
         </AoPopupPanel>
       </div>
     )
-  }
-
-  render() {
-    return this.renderHub
   }
 }

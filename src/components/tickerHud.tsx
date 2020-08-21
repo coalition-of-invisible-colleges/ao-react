@@ -32,7 +32,7 @@ const defaultTickerState: TickerState = {
 }
 
 @observer
-class AoTicker extends React.Component<TickerProps, TickerState> {
+class AoTicker extends React.PureComponent<TickerProps, TickerState> {
   constructor(props) {
     super(props)
     this.state = defaultTickerState

@@ -5,9 +5,64 @@ import aoStore, { Task } from '../client/store'
 import AoDragZone from './dragZone'
 import AoContextCard from './contextCard'
 import MoonBag from '../assets/images/moonbag.svg'
-import Tippy from '@tippyjs/react'
+import { LazyTippy } from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 import _ from 'lodash'
+
+const RenderNumberOfReturned = observer(props => props.getReturnedCardsLength())
+
+function allReachableHeldParents(origin: Task): Task[] {
+  if (!origin.hasOwnProperty('taskId')) {
+    return []
+  }
+  let queue: Task[] = [origin]
+  let reachableCards: Task[] = []
+
+  let visited = {}
+  visited[origin.taskId] = true
+  let i = 0
+  while (queue.length >= 1) {
+    let task = queue.pop()
+    if (
+      task === undefined ||
+      task.subTasks === undefined ||
+      task.priorities === undefined ||
+      task.completed === undefined
+    ) {
+      console.log('Invalid task found during returned cards search, skipping.')
+      continue
+    }
+
+    if (
+      task.deck.indexOf(aoStore.memberCard.taskId) < 0 &&
+      task.taskId !== aoStore.member.memberId
+    ) {
+      continue
+    }
+
+    reachableCards.push(task)
+    if (task.hasOwnProperty('parents') && task.parents.length >= 1) {
+      let parents = []
+      task.parents.forEach(tId => {
+        if (aoStore.hashMap.get(tId)) {
+          parents.push(aoStore.hashMap.get(tId))
+        }
+      })
+      parents.forEach(st => {
+        if (!st.hasOwnProperty('taskId')) {
+          console.log('Missing parent found during returned cards search.')
+          return
+        }
+        if (!visited.hasOwnProperty(st.taskId)) {
+          visited[st.taskId] = true
+          queue.push(st)
+        }
+      })
+    }
+  }
+
+  return reachableCards
+}
 
 @observer
 export default class AoReturnPile extends React.PureComponent {
@@ -34,70 +89,8 @@ export default class AoReturnPile extends React.PureComponent {
     return my
   }
 
-  @computed
-  get returnedCards() {
-    const findAllReachableHeldParents = (origin: Task) => {
-      if (!origin.hasOwnProperty('taskId')) {
-        return []
-      }
-      let queue: Task[] = [origin]
-      let reachableCards: Task[] = []
-
-      let visited = {}
-      visited[origin.taskId] = true
-      let i = 0
-      while (queue.length >= 1) {
-        let task = queue.pop()
-        if (
-          task === undefined ||
-          task.subTasks === undefined ||
-          task.priorities === undefined ||
-          task.completed === undefined
-        ) {
-          console.log(
-            'Invalid task found during returned cards search, skipping.'
-          )
-          continue
-        }
-
-        if (
-          task.deck.indexOf(aoStore.memberCard.taskId) < 0 &&
-          task.taskId !== aoStore.member.memberId
-        ) {
-          // console.log("unheld card found: ", task.taskId)
-          continue
-        }
-
-        reachableCards.push(task)
-        if (task.hasOwnProperty('parents') && task.parents.length >= 1) {
-          let parents = []
-          task.parents.forEach(tId => {
-            if (aoStore.hashMap.get(tId)) {
-              parents.push(aoStore.hashMap.get(tId))
-            }
-          })
-          parents.forEach(st => {
-            if (!st.hasOwnProperty('taskId')) {
-              console.log('Missing parent found during returned cards search.')
-              return
-            }
-            if (!visited.hasOwnProperty(st.taskId)) {
-              visited[st.taskId] = true
-              queue.push(st)
-            }
-          })
-        }
-      }
-
-      return reachableCards
-    }
-
-    let anchorCards: Task[] = [aoStore.memberCard].concat(
-      aoStore.myGuilds,
-      this.myEvents
-    )
-
-    let orphans = aoStore.state.tasks.filter(t => {
+  @computed get orphans() {
+    return aoStore.state.tasks.filter(t => {
       if (!t.hasOwnProperty('taskId')) {
         console.log('Broken card found while search for returned cards.')
         return false
@@ -128,7 +121,12 @@ export default class AoReturnPile extends React.PureComponent {
         return false
       }
 
-      let parents = findAllReachableHeldParents(t)
+      let parents = allReachableHeldParents(t)
+
+      let anchorCards: Task[] = [aoStore.memberCard].concat(
+        aoStore.myGuilds,
+        this.myEvents
+      )
 
       if (
         parents.some(st => {
@@ -139,10 +137,17 @@ export default class AoReturnPile extends React.PureComponent {
       }
       return true
     })
+  }
+
+  @computed
+  get returnedCards() {
+    console.log(
+      'recomputing returned cards. this should only happen once or twice when you create a card'
+    )
 
     let allChildTaskIds = []
 
-    orphans.forEach(t => {
+    this.orphans.forEach(t => {
       allChildTaskIds.push(...t.subTasks, ...t.priorities, ...t.completed)
       if (t.grid && t.grid.rows) {
         Object.entries(t.grid.rows).forEach(([y, row]) => {
@@ -155,9 +160,12 @@ export default class AoReturnPile extends React.PureComponent {
       }
     })
 
-    orphans = _.filter(orphans, t => !allChildTaskIds.includes(t.taskId))
+    const filteredOrphans = _.filter(
+      this.orphans,
+      t => !allChildTaskIds.includes(t.taskId)
+    )
 
-    return orphans
+    return filteredOrphans
   }
 
   @computed get topReturnedCard() {
@@ -166,6 +174,8 @@ export default class AoReturnPile extends React.PureComponent {
     }
     return null
   }
+
+  getReturnedCardsLength = () => this.returnedCards.length
 
   render() {
     const { card, setRedirect } = this.context
@@ -177,7 +187,7 @@ export default class AoReturnPile extends React.PureComponent {
             <AoDragZone
               taskId={this.topReturnedCard.taskId}
               dragContext={{ zone: 'panel', y: 0 }}>
-              <Tippy
+              <LazyTippy
                 zIndex={4}
                 interactive={true}
                 hideOnClick={false}
@@ -186,7 +196,7 @@ export default class AoReturnPile extends React.PureComponent {
                   <div className={'previewPopup'}>
                     <p>Returned cards—drag to draw (or unmoon to drop):</p>
                     <AoContextCard
-                      taskId={this.topReturnedCard.taskId}
+                      task={this.topReturnedCard}
                       cardStyle={'compact'}
                     />
                   </div>
@@ -194,9 +204,13 @@ export default class AoReturnPile extends React.PureComponent {
                 placement={'top'}>
                 <div className={'actionCircle'}>
                   <img src={MoonBag} />
-                  <div className={'badge'}>{this.returnedCards.length}</div>
+                  <div className={'badge'}>
+                    <RenderNumberOfReturned
+                      getReturnedCardsLength={this.getReturnedCardsLength}
+                    />
+                  </div>
                 </div>
-              </Tippy>
+              </LazyTippy>
             </AoDragZone>
           </div>
         ) : null}

@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
+import { LazyTippy } from './lazyTippy'
 import tippy, { Placement, hideAll as hideAllTippys } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
@@ -19,7 +21,7 @@ interface State {
 }
 
 @observer
-export default class AoPopupPanel extends React.Component<
+export default class AoPopupPanel extends React.PureComponent<
 	PopupPanelProps,
 	State
 > {
@@ -42,6 +44,14 @@ export default class AoPopupPanel extends React.Component<
 		this.setState({ isPanelOpen: false })
 	}
 
+	@computed get renderContent() {
+		return React.createElement(
+			'div',
+			{ className: 'popupPanel' },
+			this.props.children
+		)
+	}
+
 	render() {
 		return (
 			<Tippy
@@ -54,14 +64,10 @@ export default class AoPopupPanel extends React.Component<
 				placement={
 					this.props.tooltipPlacement ? this.props.tooltipPlacement : 'auto'
 				}>
-				<Tippy
+				<LazyTippy
 					zIndex={3}
 					trigger={'click'}
-					content={React.createElement(
-						'div',
-						{ className: 'popupPanel' },
-						this.props.children
-					)}
+					content={this.renderContent}
 					placement={
 						this.props.panelPlacement ? this.props.panelPlacement : 'auto'
 					}
@@ -85,7 +91,7 @@ export default class AoPopupPanel extends React.Component<
 							''
 						)}
 					</div>
-				</Tippy>
+				</LazyTippy>
 			</Tippy>
 		)
 	}

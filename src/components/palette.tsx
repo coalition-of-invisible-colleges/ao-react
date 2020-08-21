@@ -17,18 +17,28 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoPalette extends React.Component<PaletteProps, State> {
+export default class AoPalette extends React.PureComponent<
+  PaletteProps,
+  State
+> {
   constructor(props) {
     super(props)
     this.state = defaultState
     this.onClick = this.onClick.bind(this)
   }
 
-  onClick(event, color) {
+  onClick(event) {
     const { card, setRedirect } = this.context
-
-    api.colorCard(this.props.taskId, color)
-    this.setState({ color: color })
+    console.log('event.target is ', event.currentTarget)
+    console.log(
+      'getAttribute is ',
+      event.currentTarget.getAttribute('data-color')
+    )
+    api.colorCard(
+      this.props.taskId,
+      event.currentTarget.getAttribute('data-color')
+    )
+    this.setState({ color: event.target.getAttribute('data-color') })
   }
 
   render() {
@@ -38,7 +48,8 @@ export default class AoPalette extends React.Component<PaletteProps, State> {
     const list = ['red', 'yellow', 'green', 'blue', 'purple'].map(
       (colorName, i) => (
         <div
-          onClick={event => this.onClick(event, colorName)}
+          onClick={this.onClick}
+          data-color={colorName}
           className={'swatch'}
           key={i}>
           <div

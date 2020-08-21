@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { CardPlay, CardLocation, CardZone, Sel } from '../cards'
+import { CardPlay, CardLocation, CardZone, Coords } from '../cards'
 
 interface DropZoneProps {
 	taskId?: string
@@ -9,7 +9,7 @@ interface DropZoneProps {
 	x?: number
 	y?: number
 	style?: {}
-	onSelect?: (selection: Sel) => void
+	onSelect?: (selection: Coords) => void
 	onDrop?: (move: CardPlay) => void
 	dropActsLikeFolder?: boolean
 }
@@ -28,14 +28,25 @@ export type CardSource =
 	| 'context'
 
 @observer
-export default class AoDropZone extends React.Component<DropZoneProps, State> {
+export default class AoDropZone extends React.PureComponent<
+	DropZoneProps,
+	State
+> {
 	constructor(props) {
 		super(props)
 		this.state = {}
+		this.onClick = this.onClick.bind(this)
 		this.detectDragKind = this.detectDragKind.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
 		this.hideDrop = this.hideDrop.bind(this)
 		this.drop = this.drop.bind(this)
+	}
+
+	onClick() {
+		this.props.onSelect({
+			y: this.props.y,
+			x: this.props.x ? this.props.x : undefined
+		})
 	}
 
 	detectDragKind(dataTransfer) {
@@ -96,7 +107,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
-		let fromCoords: Sel = {
+		let fromCoords: Coords = {
 			x: event.dataTransfer.getData('text/fromX'),
 			y: event.dataTransfer.getData('text/fromY')
 		}
@@ -107,7 +118,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			coords: fromCoords
 		}
 
-		let toCoords: Sel = { x: this.props.x, y: this.props.y }
+		let toCoords: Coords = { x: this.props.x, y: this.props.y }
 
 		let toLocation: CardLocation = {
 			taskId: taskId,
@@ -144,12 +155,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		return (
 			<div
 				className="zone empty"
-				onClick={() =>
-					this.props.onSelect({
-						y: this.props.y,
-						x: this.props.x ? this.props.x : undefined
-					})
-				}
+				onClick={this.onClick}
 				onDragEnter={this.allowDrop}
 				onDragOver={this.allowDrop}
 				onDragLeave={this.hideDrop}

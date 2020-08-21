@@ -19,7 +19,10 @@ export default class AoUnread extends React.PureComponent<UnreadProps> {
 
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
-
+    if (!card) {
+      console.log('missing card for unread, taskId is', this.props.taskId)
+      return null
+    }
     if (
       !card.seen ||
       (card.seen &&
@@ -27,7 +30,7 @@ export default class AoUnread extends React.PureComponent<UnreadProps> {
           return t.memberId === aoStore.member.memberId
         }))
     ) {
-      return ''
+      return null
     }
     return <div className={'unread'} />
   }

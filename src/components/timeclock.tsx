@@ -16,7 +16,7 @@ interface TimeClockState {
   t: any
 }
 
-class AoTimeClock extends React.Component<TimeClockProps, TimeClockState> {
+class AoTimeClock extends React.PureComponent<TimeClockProps, TimeClockState> {
   constructor(props) {
     super(props)
     this.state = {

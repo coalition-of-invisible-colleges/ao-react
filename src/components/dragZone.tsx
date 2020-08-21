@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import { observer } from 'mobx-react'
+import aoStore from '../client/store'
 import AoContextCard from './contextCard'
 import { DragContext } from './contextCard'
 
@@ -11,7 +12,7 @@ interface DragZoneProps {
 }
 
 @observer
-export default class AoDragZone extends React.Component<DragZoneProps> {
+export default class AoDragZone extends React.PureComponent<DragZoneProps> {
 	constructor(props, context) {
 		super(props, context)
 		this.drag = this.drag.bind(this)
@@ -24,6 +25,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 			this.props.dragContext
 		)
 		const taskId = this.props.taskId
+		const card = aoStore.hashMap.get(taskId)
 
 		// This is a hack. onDragEnter and onDragOver only offer protected access to drag contents,
 		// so you can see the name of the field, e.g., 'text/taskId', but not the contents.
@@ -65,7 +67,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 		// since there is no drag image, setting other data fields
 		// fails too
 		let cardHTML = ReactDOMServer.renderToStaticMarkup(
-			<AoContextCard taskId={taskId} cardStyle={'compact'} noPopups={true} />
+			<AoContextCard task={card} cardStyle={'compact'} noPopups={true} />
 		)
 		let dragGhostElement: Element = document.createElement('div')
 		dragGhostElement.innerHTML = cardHTML

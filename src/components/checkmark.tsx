@@ -49,7 +49,7 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
     return (
       <Tippy
         zIndex={4}
-        content={<AoContextCard taskId={taskId} cardStyle={'compact'} />}>
+        content={<AoContextCard task={card} cardStyle={'compact'} />}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 12.96459 12.96459"

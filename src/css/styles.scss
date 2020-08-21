@@ -306,6 +306,11 @@ textarea {
           h6 {
             font-size: 1.05em;
           }
+
+          ol {
+            list-style-position: inside;
+            padding-inline-start: 0;
+          }
         }
 
         & > .hud {

@@ -233,6 +233,30 @@ class AoStore {
 
     return cards
   }
+  @computed
+  get myCards() {
+    return aoStore.state.tasks.filter(
+      t => t.deck.indexOf(aoStore.member.memberId) !== -1
+    )
+  }
+  @computed get allUnheldCards() {
+    // Will not catch cards that are still held by deleted members (need to filter task.deck for existing members for that)
+    return aoStore.state.tasks
+      .filter(task => {
+        return task.deck.length <= 0 && task.name !== task.taskId
+      })
+      .reverse()
+  }
+  @computed get allGuilds(): Task[] {
+    return aoStore.state.tasks.filter(task => {
+      return task.hasOwnProperty('guild') && task.guild.length >= 1
+    })
+  }
+  @computed get allNonGuilds(): Task[] {
+    return aoStore.state.tasks.filter(task => {
+      return !(task.hasOwnProperty('guild') && task.guild.length >= 1)
+    })
+  }
   @computed get myGuilds(): Task[] {
     let my = this.state.tasks.filter(t => {
       if (!t.guild) return false
@@ -271,6 +295,73 @@ class AoStore {
     })
     return my
   }
+  @computed get subGuildsByGuild(): Map<string, Task[]> {
+    let subGuildsByGuild: Map<string, Task[]> = new Map()
+
+    this.allGuilds.forEach(card => {
+      let projectCards: Task[] = []
+      let allSubCards = card.priorities.concat(card.subTasks, card.completed)
+
+      allSubCards.forEach(tId => {
+        let subCard = aoStore.hashMap.get(tId)
+        if (subCard) {
+          if (subCard.guild && subCard.guild.length >= 1) {
+            projectCards.push(subCard)
+          }
+        }
+      })
+
+      if (card.grid && card.grid.rows) {
+        Object.entries(card.grid.rows).forEach(([y, row]) => {
+          Object.entries(row).forEach(([x, cell]) => {
+            let gridCard = aoStore.hashMap.get(cell)
+            if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
+              projectCards.push(gridCard)
+            }
+          })
+        })
+      }
+      subGuildsByGuild.set(card.taskId, projectCards)
+    })
+
+    return subGuildsByGuild
+  }
+  @computed get allEvents(): Task[] {
+    return aoStore.state.tasks
+      .filter(task => {
+        return task.book.hasOwnProperty('startTs') && task.book.startTs > 0
+      })
+      .sort((a, b) => {
+        return b.book.startTs - a.book.startTs
+      })
+  }
+  @computed get topMissions(): Task[] {
+    let topMissions = aoStore.allGuilds.sort((a, b) => {
+      if (b.deck.length === a.deck.length) {
+        return b.priorities.length - a.priorities.length
+      }
+      return b.deck.length - a.deck.length
+    })
+
+    if (topMissions.length > 5) {
+      topMissions = topMissions.slice(0, 5)
+    }
+    topMissions.reverse()
+    return topMissions
+  }
+  @computed get topCards(): Task[] {
+    let topCards = aoStore.allNonGuilds
+
+    topCards = topCards.sort((a, b) => {
+      return b.deck.length - a.deck.length
+    })
+
+    if (topCards.length > 5) {
+      topCards = topCards.slice(0, 5)
+    }
+    topCards.reverse()
+    return topCards
+  }
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -308,7 +399,8 @@ class AoStore {
     try {
       let regex = new RegExp(query, 'i')
       this.state.tasks.forEach(t => {
-        if (t.guild && regex.test(t.guild)) {
+        const testName = regex.test(t.name)
+        if (t.guild && (testName || regex.test(t.guild))) {
           foundGuilds.push(t)
         } else if (regex.test(t.name)) {
           if (

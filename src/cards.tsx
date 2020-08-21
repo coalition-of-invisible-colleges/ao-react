@@ -11,7 +11,7 @@ export type CardZone =
 	| 'discard'
 	| 'panel'
 
-export interface Sel {
+export interface Coords {
 	x?: number
 	y: number
 }
@@ -20,7 +20,7 @@ export interface CardLocation {
 	taskId: string
 	inId: string
 	zone: CardZone
-	coords: Sel
+	coords: Coords
 }
 
 export interface CardPlay {

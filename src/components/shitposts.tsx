@@ -16,7 +16,7 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoShitposts extends React.Component<{}, State> {
+export default class AoShitposts extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -24,24 +24,15 @@ export default class AoShitposts extends React.Component<{}, State> {
   }
 
   purgeUnheldCards() {
-    api.removeCards(this.allUnheldCards.map(task => task.taskId))
-  }
-
-  @computed get allUnheldCards() {
-    // Will not catch cards that are still held by deleted members (need to filter task.deck for existing members for that)
-    return aoStore.state.tasks
-      .filter(task => {
-        return task.deck.length <= 0 && task.name !== task.taskId
-      })
-      .reverse()
+    api.removeCards(aoStore.allUnheldCards.map(task => task.taskId))
   }
 
   render() {
-    if (this.allUnheldCards.length < 1) {
+    if (aoStore.allUnheldCards.length < 1) {
       return null
     }
 
-    const renderedBadge = this.allUnheldCards.length.toString()
+    const renderedBadge = aoStore.allUnheldCards.length.toString()
 
     // console.log('unheldcards is', this.allUnheldCards)
     return (
@@ -54,7 +45,7 @@ export default class AoShitposts extends React.Component<{}, State> {
           panelPlacement={'left'}>
           <button onClick={this.purgeUnheldCards}>Purge Unheld Cards</button>
           <AoStack
-            cards={this.allUnheldCards}
+            cards={aoStore.allUnheldCards}
             cardStyle={'priority'}
             alwaysShowAll={true}
           />

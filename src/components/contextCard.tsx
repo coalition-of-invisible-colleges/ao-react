@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { Redirect } from 'react-router-dom'
@@ -37,7 +38,7 @@ export interface DragContext {
 }
 
 interface CardProps {
-	taskId: string
+	task: Task
 	cardStyle?: CardStyle
 	inlineStyle?: React.CSSProperties
 	noContextOnFull?: boolean
@@ -52,7 +53,10 @@ interface State {
 }
 
 @observer
-export default class AoContextCard extends React.Component<CardProps, State> {
+export default class AoContextCard extends React.PureComponent<
+	CardProps,
+	State
+> {
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -66,7 +70,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.clearPendingPromise = this.clearPendingPromise.bind(this)
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps, prevState) {
 		if (this.state.redirect !== undefined) {
 			this.setState({ redirect: undefined })
 		}
@@ -106,7 +110,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	newPriority(name: string) {
-		const card = aoStore.hashMap.get(this.props.taskId)
+		const card = this.props.task
 		if (!card) {
 			console.log('missing card')
 		}
@@ -114,7 +118,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	newSubTask(name: string) {
-		const card = aoStore.hashMap.get(this.props.taskId)
+		const card = this.props.task
 		if (!card) {
 			console.log('missing card')
 		}
@@ -126,9 +130,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		hideAllTippys()
 		aoStore.closeAllCloseables()
 
-		const taskId = this.props.taskId
+		const card = this.props.task
+		const taskId = card.taskId
 		console.log('goInCard taskId is ', taskId)
-		const card = aoStore.hashMap.get(taskId)
 		if (!card) {
 			console.log('missing card')
 			return
@@ -136,7 +140,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		if (this.props.cardStyle === 'context') {
 			aoStore.clearContextTo(card.taskId)
 		} else {
-			console.log('current card is ', aoStore.currentCard)
 			aoStore.addToContext([aoStore.currentCard])
 		}
 		aoStore.setCurrentCard(taskId)
@@ -147,7 +150,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	async onHover(event) {
 		event.preventDefault()
 		event.stopPropagation()
-		const card = aoStore.hashMap.get(this.props.taskId)
+		const card = this.props.task
 		if (
 			card.seen &&
 			card.seen.some(s => s.memberId === aoStore.member.memberId)
@@ -167,7 +170,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					(card.seen &&
 						!card.seen.some(s => s.memberId === aoStore.member.memberId))
 				) {
-					api.markSeen(this.props.taskId)
+					api.markSeen(this.props.task.taskId)
 				}
 				this.clearPendingPromise()
 			})
@@ -181,7 +184,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			})
 	}
 
-	applyClassIfCurrentSearchResult(taskId) {
+	@computed get applyClassIfCurrentSearchResult() {
 		if (this.props.noFindOnPage) {
 			return ''
 		}
@@ -189,7 +192,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			aoStore.searchResults &&
 			aoStore.searchResults.hasOwnProperty('all') &&
 			aoStore.searchResults.all.some(task => {
-				return task.taskId === taskId
+				return task.taskId === this.props.task.taskId
 			})
 		) {
 			return ' searchedOnPage'
@@ -222,23 +225,54 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		)
 	}
 
+	projectCards() {
+		if (this.props.cardStyle !== 'mission') {
+			return undefined
+		}
+		const card = this.props.task
+
+		let projectCards: Task[] = []
+		let allSubCards = card.priorities.concat(card.subTasks, card.completed)
+
+		allSubCards.forEach(tId => {
+			let subCard = aoStore.hashMap.get(tId)
+			if (subCard) {
+				if (subCard.guild && subCard.guild.length >= 1) {
+					projectCards.push(subCard)
+				}
+			}
+		})
+
+		if (card.grid && card.grid.rows) {
+			Object.entries(card.grid.rows).forEach(([y, row]) => {
+				Object.entries(row).forEach(([x, cell]) => {
+					let gridCard = aoStore.hashMap.get(cell)
+					if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
+						projectCards.push(gridCard)
+					}
+				})
+			})
+		}
+
+		return projectCards
+	}
+
 	render() {
 		if (this.state.redirect !== undefined) {
-			// this.setState({ redirect: undefined })
 			return <Redirect to={this.state.redirect} />
 		}
 
-		const taskId = this.props.taskId
-		const card = aoStore.hashMap.get(taskId)
-
+		const card = this.props.task
 		if (!card) {
 			console.log('missing card')
 			return (
-				<div className={'card'}>
+				<div className={'card ' + this.props.cardStyle}>
 					<div className={'content'}>missing card</div>
 				</div>
 			)
 		}
+
+		const taskId = card.taskId
 
 		let content = card.name
 		if (taskId === content) {
@@ -263,9 +297,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			case 'context':
 				return (
 					<div
-						className={
-							'card context' + this.applyClassIfCurrentSearchResult(taskId)
-						}
+						className={'card context' + this.applyClassIfCurrentSearchResult}
 						id={'card-' + taskId}
 						onDoubleClick={this.goInCard}
 						onMouseEnter={this.onHover}
@@ -284,7 +316,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						id={'card-' + taskId}
 						className={
 							'card priority' +
-							this.applyClassIfCurrentSearchResult(taskId) +
+							this.applyClassIfCurrentSearchResult +
 							(this.state.showPriorities ? ' padbottom' : '')
 						}
 						onDoubleClick={this.goInCard}
@@ -321,7 +353,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						className={
 							'card ' +
 							this.props.cardStyle +
-							this.applyClassIfCurrentSearchResult(taskId)
+							this.applyClassIfCurrentSearchResult
 						}
 						onDoubleClick={this.goInCard}
 						onMouseEnter={this.onHover}
@@ -384,9 +416,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						)}
 						<div
 							id={'card-' + taskId}
-							className={
-								'card full' + this.applyClassIfCurrentSearchResult(taskId)
-							}
+							className={'card full' + this.applyClassIfCurrentSearchResult}
 							onDrop={e => {
 								e.preventDefault()
 								e.stopPropagation()
@@ -430,9 +460,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				return (
 					<div
 						id={'card-' + taskId}
-						className={
-							'card checkmark' + this.applyClassIfCurrentSearchResult(taskId)
-						}
+						className={'card checkmark' + this.applyClassIfCurrentSearchResult}
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
@@ -441,42 +469,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				)
 			case 'mission':
 				// A format that emphasizes the mission and projects (sub-missions), for the Missions Index
-				let projectCards = () => {
-					let projectCards: Task[] = []
-					let allSubCards = card.priorities.concat(
-						card.subTasks,
-						card.completed
-					)
-
-					allSubCards.forEach(tId => {
-						let subCard = aoStore.hashMap.get(tId)
-						if (subCard) {
-							if (subCard.guild && subCard.guild.length >= 1) {
-								projectCards.push(subCard)
-							}
-						}
-					})
-
-					if (card.grid && card.grid.rows) {
-						Object.entries(card.grid.rows).forEach(([y, row]) => {
-							Object.entries(row).forEach(([x, cell]) => {
-								let gridCard = aoStore.hashMap.get(cell)
-								if (gridCard.guild && gridCard.guild.length >= 1) {
-									projectCards.push(gridCard)
-								}
-							})
-						})
-					}
-
-					return projectCards
-				}
-
+				const projectCards = this.projectCards()
 				return (
 					<div
 						className={
 							'card mission' +
 							(this.state.showPriorities ? ' padbottom' : '') +
-							this.applyClassIfCurrentSearchResult(taskId)
+							this.applyClassIfCurrentSearchResult
 						}
 						id={'card-' + taskId}
 						onDoubleClick={this.goInCard}
@@ -501,7 +500,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						{this.state.showProjects ? (
 							<AoStack
 								inId={taskId}
-								cards={projectCards()}
+								cards={projectCards}
 								cardStyle={'mission'}
 								zone={'panel'}
 							/>
@@ -528,9 +527,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				return (
 					<div
 						id={'card-' + taskId}
-						className={
-							'card mini' + this.applyClassIfCurrentSearchResult(taskId)
-						}
+						className={'card mini' + this.applyClassIfCurrentSearchResult}
 						onDoubleClick={this.goInCard}
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}

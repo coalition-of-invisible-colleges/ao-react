@@ -8,7 +8,7 @@ interface AoStatusState {
 }
 
 @observer
-export default class AoStatus extends React.Component<{}, AoStatusState> {
+export default class AoStatus extends React.PureComponent<{}, AoStatusState> {
   buttonPressTimer: NodeJS.Timeout
   constructor(props) {
     super(props)

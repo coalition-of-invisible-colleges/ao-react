@@ -1,11 +1,11 @@
 import React from 'react'
-import { observable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
 import Coin from '../assets/images/coin.svg'
-import Tippy from '@tippyjs/react'
+import { LazyTippy } from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
 interface CoinProps {
@@ -19,26 +19,32 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
     super(props)
   }
 
+  @computed get isGrabbed() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    return card.deck.indexOf(aoStore.member.memberId) >= 0
+  }
+
+  @computed get isMember() {
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+
+    return card.name === taskId
+  }
+
+  @computed get hodlCount() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    return card.deck.length
+  }
+
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
 
-    const computed = observable({
-      get isGrabbed() {
-        return card.deck.indexOf(aoStore.member.memberId) >= 0
-      },
-      get isMember() {
-        return card.name === taskId
-      },
-      get hodlCount() {
-        return card.deck.length
-      }
-    })
     const onClick = event => {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
 
-      if (computed.isGrabbed) {
+      if (this.isGrabbed) {
         api.dropCard(taskId)
       } else {
         api.grabCard(taskId)
@@ -97,7 +103,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
         )}
         <h3>
           {memberCards.length}{' '}
-          {!computed.isMember
+          {!this.isMember
             ? memberCards.length === 1
               ? 'Hodl'
               : 'Hodlers'
@@ -114,12 +120,12 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             noPopups={true}
           />
         ) : null}
-        {!computed.isMember ? (
-          <p>Click to {computed.isGrabbed ? 'drop' : 'grab'} this card.</p>
+        {!this.isMember ? (
+          <p>Click to {this.isGrabbed ? 'drop' : 'grab'} this card.</p>
         ) : (
           <p>
             Click to{' '}
-            {computed.isGrabbed
+            {this.isGrabbed
               ? 'unvouch.'
               : 'vouch for this member within this community.'}
           </p>
@@ -127,9 +133,9 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
       </React.Fragment>
     )
     return (
-      <div className={computed.isGrabbed ? 'coin' : 'coin ungrabbed'}>
+      <div className={this.isGrabbed ? 'coin' : 'coin ungrabbed'}>
         {!this.props.noPopups ? (
-          <Tippy
+          <LazyTippy
             zIndex={4}
             interactive={true}
             content={list}
@@ -147,7 +153,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
                 event.nativeEvent.stopImmediatePropagation()
               }}
             />
-          </Tippy>
+          </LazyTippy>
         ) : (
           <img
             src={Coin}
@@ -159,9 +165,8 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             }}
           />
         )}
-        {computed.hodlCount >= 2 ||
-        (computed.hodlCount >= 1 && !computed.isGrabbed) ? (
-          <div className="hodls">{computed.hodlCount}</div>
+        {this.hodlCount >= 2 || (this.hodlCount >= 1 && !this.isGrabbed) ? (
+          <div className="hodls">{this.hodlCount}</div>
         ) : (
           ''
         )}

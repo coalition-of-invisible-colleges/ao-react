@@ -1,6 +1,6 @@
 import React from 'react'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { observable } from 'mobx'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
@@ -12,24 +12,24 @@ interface CompletedProps {
 
 @observer
 export default class AoCompleted extends React.PureComponent<CompletedProps> {
+	@computed get completedCards() {
+		const card = aoStore.hashMap.get(this.props.taskId)
+
+		if (!card.completed || card.completed.length < 1) {
+			return null
+		}
+
+		let completedCards: Task[] = card.completed.map(tId =>
+			aoStore.hashMap.get(tId)
+		)
+		completedCards.reverse()
+
+		return completedCards
+	}
+
 	render() {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
-
-		const computed = observable({
-			get completedCards() {
-				if (!card.completed || card.completed.length < 1) {
-					return null
-				}
-
-				let completedCards: Task[] = card.completed.map(tId =>
-					aoStore.hashMap.get(tId)
-				)
-				completedCards.reverse()
-
-				return completedCards
-			}
-		})
 
 		const archiveCheckmark = (move: CardPlay) => {
 			if (!move.from.taskId) {
@@ -66,14 +66,14 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 			console.log('missing card in completed')
 		}
 
-		if (computed.completedCards === null) {
+		if (this.completedCards === null) {
 			return null
 		}
 
 		return (
 			<AoStack
 				inId={taskId}
-				cards={computed.completedCards}
+				cards={this.completedCards}
 				cardStyle={'checkmark'}
 				onDrop={archiveCheckmark}
 				noFirstCard={true}

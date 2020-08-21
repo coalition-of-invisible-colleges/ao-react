@@ -7,12 +7,8 @@ import AoDropZone from './dropZone'
 import { CardPlay } from '../cards'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
-interface DiscardProps {
-	taskId: string
-}
-
 @observer
-export default class AoDiscardZone extends React.Component<DiscardProps> {
+export default class AoDiscardZone extends React.PureComponent {
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -84,8 +80,6 @@ export default class AoDiscardZone extends React.Component<DiscardProps> {
 	}
 
 	render() {
-		const taskId = this.props.taskId
-		const card = aoStore.hashMap.get(taskId)
 		return (
 			<div onClick={this.closeAllCloseables}>
 				<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>

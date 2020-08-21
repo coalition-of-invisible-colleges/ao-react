@@ -10,7 +10,7 @@ const mutations = {
     })
     tasks.length = 0
     current.tasks.forEach(task => {
-      let index = tasks.push(task) - 1
+      tasks.push(task)
       // _.assign(tasks[index].grid, task.grid) // does not solve the +grid not rerendering glitch... or does it?
     })
   },

@@ -13,7 +13,7 @@ interface PaperProps {
 }
 
 @observer
-export default class AoPaper extends React.Component<PaperProps> {
+export default class AoPaper extends React.PureComponent<PaperProps> {
   @computed
   get cardColor() {
     if (this.props && this.props.color) {

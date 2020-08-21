@@ -3,7 +3,7 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoCardHud, { HudStyle } from './cardHud'
-import Tippy from '@tippyjs/react'
+import { LazyTippy } from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
 interface CardMenuProps {
@@ -34,7 +34,7 @@ export default class CardMenu extends React.PureComponent<CardMenuProps> {
     }
 
     return (
-      <Tippy
+      <LazyTippy
         zIndex={5}
         content={<AoCardHud taskId={this.props.taskId} hudStyle={'menu'} />}
         interactive={true}
@@ -42,7 +42,7 @@ export default class CardMenu extends React.PureComponent<CardMenuProps> {
         placement={'top-end'}
         appendTo={document.getElementById('root')}>
         {this.renderMenuButton}
-      </Tippy>
+      </LazyTippy>
     )
   }
 }

@@ -42,8 +42,8 @@ class RenderCard extends React.Component<RenderProps> {
             {cardText} - {aoStore.state.cash.alias}
           </title>
         </Helmet>
-        <AoDiscardZone taskId={taskId} />
-        <AoContextCard taskId={taskId} cardStyle={'full'} />
+        <AoDiscardZone />
+        <AoContextCard task={card} cardStyle={'full'} />
         <AoHud />
       </React.Fragment>
     )

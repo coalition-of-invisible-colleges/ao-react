@@ -84,7 +84,7 @@ function blankCard(
     highlights: [],
     seen: [],
     time: [],
-    grid: height >= 1 && width >= 1 ? blankGrid(height, width) : undefined
+    grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false
   }
   return newCard
 }

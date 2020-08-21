@@ -6,7 +6,7 @@ import Muted from '../assets/images/muted.svg'
 import Unmuted from '../assets/images/unmuted.svg'
 
 @observer
-export default class AoVolume extends React.Component<{}> {
+export default class AoVolume extends React.PureComponent<{}> {
   constructor(props) {
     super(props)
     this.toggleMute = this.toggleMute.bind(this)
