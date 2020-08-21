@@ -67,8 +67,11 @@ module.exports = {
     return result
   },
   isTaskId(val, errRes) {
-    let result = state.serverState.tasks.some(task => {
-      return task.taskId == val
+    let result = false
+    state.serverState.tasks.forEach(task => {
+      if (task.taskId == val) {
+        result = true
+      }
     })
     if (!result) {
       errRes.push('invalid task')

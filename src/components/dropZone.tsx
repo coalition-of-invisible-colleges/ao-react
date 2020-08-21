@@ -108,8 +108,8 @@ export default class AoDropZone extends React.PureComponent<
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
 		let fromCoords: Coords = {
-			x: event.dataTransfer.getData('text/fromX'),
-			y: event.dataTransfer.getData('text/fromY')
+			x: parseInt(event.dataTransfer.getData('text/fromX'), 10),
+			y: parseInt(event.dataTransfer.getData('text/fromY'), 10)
 		}
 		let fromLocation: CardLocation = {
 			taskId: fromId,

@@ -210,9 +210,6 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
 
     for (let j = 0; j < grid.height; j++) {
       for (let i = 0; i < grid.width; i++) {
-        if (i === 0) {
-          console.log('i is zero. this.state.selected is ', this.state.selected)
-        }
         if (
           this.state.selected &&
           this.state.selected.x == i &&

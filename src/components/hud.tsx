@@ -77,7 +77,6 @@ export default class AoHud extends React.Component<{}, undefined> {
   }
 
   render() {
-    console.log('rerendering AoHub')
     return (
       <React.Fragment>
         <Tippy

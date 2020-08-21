@@ -33,7 +33,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'highlighted':
@@ -49,35 +49,35 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'ao-disconnected':
       if (validators.isAddress(req.body.address, errRes)) {
         events.aoDisconnected(req.body.address, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'ao-named':
       if (validators.isNotes(req.body.alias, errRes)) {
         events.aoNamed(req.body.alias, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'rent-set':
       if (validators.isAmount(req.body.amount, errRes)) {
         events.rentSet(req.body.amount, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'cap-set':
       if (validators.isAmount(req.body.amount, errRes)) {
         events.capSet(req.body.amount, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'ao-outbound-connected':
@@ -113,7 +113,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'ao-relay':
@@ -158,7 +158,7 @@ router.post('/events', (req, res, next) => {
             res.status(200).send('attempt failed')
           })
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'member-created':
@@ -429,7 +429,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
 
     case 'session-killed':
@@ -475,7 +475,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-guilded':
@@ -489,25 +489,21 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-seen':
-      console.log('SPEC fire')
-
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        console.log('SPEC validators fire')
-
         events.taskSeen(
           req.body.taskId,
           req.body.memberId,
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-sub-tasked':
@@ -523,7 +519,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-de-sub-tasked':
@@ -538,7 +534,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-valued':
@@ -639,7 +635,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-passed':
@@ -670,7 +666,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'pile-grabbed':
@@ -685,7 +681,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-dropped':
@@ -699,7 +695,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'pile-dropped':
@@ -713,7 +709,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-swapped':
@@ -731,7 +727,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-bumped':
@@ -748,7 +744,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
 
@@ -765,7 +761,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'task-time-clocked':
@@ -781,14 +777,14 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'pile-prioritized':
       if (validators.isTaskId(req.body.inId, errRes)) {
         events.pilePrioritized(req.body.inId, utils.buildResCallback(res))
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
     case 'tasks-received':
       if (true) {
@@ -799,11 +795,17 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
     case 'grid-created':
-      if (true) {
+      if (
+        validators.isNotes(req.body.name, errRes) &&
+        Number.isInteger(req.body.height, errRes) &&
+        Number.isInteger(req.body.width) &&
+        validators.isColor(req.body.color) &&
+        Array.isArray(req.body.deck)
+      ) {
         events.gridCreated(
           req.body.name,
           req.body.height,
@@ -813,12 +815,16 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
 
     case 'grid-added':
-      if (true) {
+      if (
+        validators.isTaskId(req.body.taskId) &&
+        Number.isInteger(req.body.height, errRes) &&
+        Number.isInteger(req.body.width)
+      ) {
         events.gridAdded(
           req.body.taskId,
           req.body.height,
@@ -826,12 +832,18 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
 
     case 'grid-resized':
-      if (req.body.height >= 1 && req.body.width >= 1) {
+      if (
+        validators.isTaskId(req.body.taskId) &&
+        Number.isInteger(req.body.height) &&
+        req.body.height >= 1 &&
+        Number.isInteger(req.body.width) &&
+        req.body.width >= 1
+      ) {
         events.gridResized(
           req.body.taskId,
           req.body.height,
@@ -839,12 +851,19 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
 
     case 'grid-pin':
-      if (true) {
+      if (
+        validators.isTaskId(req.body.inId) &&
+        validators.isTaskId(req.body.taskId) &&
+        Number.isInteger(req.body.x) &&
+        req.body.x >= 0 &&
+        Number.isInteger(req.body.y) &&
+        req.body.y >= 0
+      ) {
         events.gridPin(
           req.body.inId,
           req.body.taskId,
@@ -853,13 +872,19 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
 
       break
 
     case 'grid-unpin':
-      if (true) {
+      if (
+        validators.isTaskId(req.body.inId) &&
+        Number.isInteger(req.body.x) &&
+        req.body.x >= 0 &&
+        Number.isInteger(req.body.y) &&
+        req.body.y >= 0
+      ) {
         events.gridUnpin(
           req.body.inId,
           req.body.x,
@@ -867,7 +892,7 @@ router.post('/events', (req, res, next) => {
           utils.buildResCallback(res)
         )
       } else {
-        res.status(200).send(errRes)
+        res.status(400).send(errRes)
       }
       break
 
