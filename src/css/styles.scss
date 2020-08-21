@@ -860,11 +860,11 @@ textarea {
         & > .preview {
           clear: both;
           & > .action {
-            &:first-child {
+            &.togglePriorities {
               float: left;
               margin-left: 10%;
             }
-            &:nth-child(2) {
+            &.toggleProjects {
               margin-left: 60%;
               margin-bottom: 0;
             }

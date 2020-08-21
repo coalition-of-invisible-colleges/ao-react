@@ -84,7 +84,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           <div className={'preview'}>
             {this.priorityCount >= 1 ? (
               <div
-                className="action"
+                className="action togglePriorities"
                 onClick={this.props.onTogglePriorities}
                 onDoubleClick={event => {
                   event.stopPropagation()
@@ -101,7 +101,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
             ) : null}
             {this.props.onToggleProjects !== undefined && projectCount >= 1 ? (
               <div
-                className="action"
+                className="action toggleProjects"
                 onClick={this.props.onToggleProjects}
                 onDoubleClick={this.preventDoubleClick}>
                 {projectCount} {projectCount > 1 ? 'projects' : 'project'}{' '}
