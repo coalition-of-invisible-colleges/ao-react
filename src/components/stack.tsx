@@ -114,7 +114,10 @@ export default class AoStack extends React.PureComponent<
     let addButton
     if (this.state.showCompose) {
       addButton = (
-        <AoCardComposer onNewCard={this.props.onNewCard} onBlur={this.hide} />
+        <AoCardComposer
+          onNewCard={this.props.onNewCard}
+          onBlur={this.toggleCompose}
+        />
       )
     } else if (
       this.props.showAdd &&
