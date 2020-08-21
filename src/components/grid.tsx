@@ -44,7 +44,6 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
   }
 
   newGridCard(name: string, coords: Coords) {
-    console.log('newGridCard name is ', name, ' and coords are ', coords)
     api.pinCardToGrid(coords.x, coords.y, name, this.props.taskId)
   }
 
@@ -98,7 +97,11 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
         }
         break
       case 'grid':
-        if (move.to.taskId && this.props.dropActsLikeFolder) {
+        if (
+          move.to.taskId &&
+          this.props.dropActsLikeFolder &&
+          move.from.inId !== move.to.inId
+        ) {
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -207,13 +210,8 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
 
     for (let j = 0; j < grid.height; j++) {
       for (let i = 0; i < grid.width; i++) {
-        let tId: string
-        if (
-          grid.rows[j] &&
-          grid.rows[j][i] &&
-          typeof (grid.rows[j][i] === 'string')
-        ) {
-          tId = grid.rows[j][i]
+        if (i === 0) {
+          console.log('i is zero. this.state.selected is ', this.state.selected)
         }
         if (
           this.state.selected &&
@@ -231,18 +229,16 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
           )
           continue
         }
-        const card = aoStore.hashMap.get(tId)
-        let renderCard
-        if (card) {
-          renderCard = <AoContextCard task={card} cardStyle={'mini'} />
-        } else {
-          console.log('missing card in grid, taskId is ', tId)
-          renderCard = (
-            <div className={'card mini'}>
-              <div className={'content'}>missing card</div>
-            </div>
-          )
+        let tId: string
+        if (
+          grid.rows[j] &&
+          grid.rows[j][i] &&
+          typeof (grid.rows[j][i] === 'string')
+        ) {
+          tId = grid.rows[j][i]
         }
+
+        const card = aoStore.hashMap.get(tId)
         render.push(
           <AoDropZone
             taskId={tId}
@@ -263,7 +259,7 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
                   x: i,
                   y: j
                 }}>
-                {renderCard}
+                <AoContextCard task={card} cardStyle={'mini'} />
               </AoDragZone>
             ) : null}
           </AoDropZone>

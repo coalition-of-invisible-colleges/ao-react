@@ -45,7 +45,7 @@ export default class AoDropZone extends React.PureComponent<
 	onClick() {
 		this.props.onSelect({
 			y: this.props.y,
-			x: this.props.x ? this.props.x : undefined
+			x: this.props.x
 		})
 	}
 
