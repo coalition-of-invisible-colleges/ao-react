@@ -210,10 +210,16 @@ class AoStore {
     })
     return hashMap
   }
+  // Returns a map of card names to cards.
+  // Card names (keys) are in lowercase for case-insensitive comparison.
+  // Guild (mission) names take precedence over card names for exact card lookup.
   @computed get cardByName(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
-      hashMap.set(t.name, t)
+      hashMap.set(t.name.toLowerCase(), t)
+    })
+    this.allGuilds.forEach(t => {
+      hashMap.set(t.guild.toLowerCase(), t)
     })
     return hashMap
   }

@@ -132,7 +132,7 @@ class AoApi {
     inId: string,
     prioritized: boolean = false
   ): Promise<request.Response> {
-    let found = aoStore.cardByName.get(name.trim())
+    let found = aoStore.cardByName.get(name.toLowerCase())
     let act
     if (found) {
       if (prioritized) {
@@ -652,7 +652,7 @@ class AoApi {
     name: string,
     inId: string
   ): Promise<request.Response> {
-    const task: Task = aoStore.cardByName.get(name)
+    const task: Task = aoStore.cardByName.get(name.toLowerCase())
     if (_.isObject(task)) {
       const act = {
         type: 'grid-pin',
