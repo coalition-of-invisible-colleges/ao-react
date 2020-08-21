@@ -53,7 +53,7 @@ export default class AoCardComposer extends React.PureComponent<
 			<textarea
 				autoFocus
 				onBlur={this.onBlur}
-				className={'zone'}
+				className={'zone cardComposer'}
 				onChange={this.onChange}
 				onKeyDown={this.onKeyDown}
 			/>

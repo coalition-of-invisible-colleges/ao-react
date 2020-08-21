@@ -802,6 +802,15 @@ textarea {
       }
     }
 
+    #members,
+    #missions,
+    #calendar,
+    #shitposts {
+      .results {
+        margin-right: 0.5em;
+      }
+    }
+
     // community hub popup panel
     #hub {
       .actionCircle {
@@ -820,6 +829,7 @@ textarea {
       }
 
       .popupPanel {
+        padding-right: 0;
         width: calc(100vw - 17em);
         height: calc(100vh - 7.5em);
       }
@@ -1223,6 +1233,8 @@ textarea {
 
     // action inside stack inside of a Tippy popup (to make show/hide button on grid priority popup smaller)
     .tippy-content {
+      padding: 0;
+
       .stack > .dropZone > .action {
         padding-top: 0.25em;
         margin-bottom: 0.25em;
@@ -1277,6 +1289,7 @@ textarea {
 
     // panel opened by an .actionCircle button
     .popupPanel {
+      padding-left: 0.5em;
       overflow-y: auto;
 
       .left {
@@ -1397,8 +1410,13 @@ textarea {
     }
 
     // search results and grid scrollbars
+    #hub .popupPanel,
     #search .popupPanel .results,
-    .grid {
+    #calendar .popupPanel,
+    #members .popupPanel,
+    #missions .popupPanel,
+    .grid,
+    .cardComposer {
       &::-webkit-scrollbar {
         background-color: rgba(22, 22, 22, 0.4);
       }
