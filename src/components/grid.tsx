@@ -296,7 +296,7 @@ export default class AoGrid extends React.PureComponent<GridProps, GridState> {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(this.props.taskId)
 
-    if (!card || !card.hasOwnProperty('grid')) {
+    if (!card) {
       return null
     }
 

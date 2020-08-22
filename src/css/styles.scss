@@ -678,6 +678,7 @@ textarea {
           }
         }
       }
+
       .resizer {
         position: absolute;
         margin-top: -4.75em;
@@ -716,6 +717,10 @@ textarea {
             padding: 0 0.75em;
           }
         }
+      }
+
+      .action {
+        margin-top: -0.5em;
       }
     }
 
@@ -1469,6 +1474,10 @@ textarea {
     // the card that is the current page (Card.tsx)
     #root > .card {
       margin-bottom: 7em;
+    }
+    // the card menu
+    .hud.menu {
+      padding-top: 0.25em;
     }
   }
 }
