@@ -5,7 +5,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
 import Coin from '../assets/images/coin.svg'
-import { LazyTippy } from './lazyTippy'
+import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
 interface CoinProps {

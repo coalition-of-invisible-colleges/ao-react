@@ -1203,6 +1203,15 @@ textarea {
       padding: 0.5em;
       cursor: pointer;
 
+      &:disabled {
+        color: #888;
+
+        &:hover {
+          text-decoration: none;
+          cursor: default;
+        }
+      }
+
       &:hover {
         text-decoration: underline;
       }
@@ -1237,10 +1246,14 @@ textarea {
     }
 
     // action inside stack inside of a Tippy popup (to make show/hide button on grid priority popup smaller)
-    .tippy-content {
+    .tippy-tooltip {
       padding: 0;
 
-      .stack > .dropZone > .action {
+      &.tooltip {
+        padding: 0.5em;
+      }
+
+      .tippy-content > .stack > .dropZone > .action {
         padding-top: 0.25em;
         margin-bottom: 0.25em;
         font-size: 0.9em;
@@ -1475,6 +1488,7 @@ textarea {
     #root > .card {
       margin-bottom: 7em;
     }
+
     // the card menu
     .hud.menu {
       padding-top: 0.25em;

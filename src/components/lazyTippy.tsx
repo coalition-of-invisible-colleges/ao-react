@@ -1,9 +1,14 @@
 import React from 'react'
+import { observer } from 'mobx-react'
 import Tippy, { TippyProps } from '@tippyjs/react'
 
 export type LazyTippyProps = TippyProps
 
-export const LazyTippy = (props: LazyTippyProps) => {
+interface State {
+  mounted?: boolean
+}
+
+const LazyTippy: React.FunctionComponent<LazyTippyProps> = props => {
   const [mounted, setMounted] = React.useState(false)
 
   const lazyPlugin = {
@@ -26,3 +31,5 @@ export const LazyTippy = (props: LazyTippyProps) => {
 
   return <Tippy {...computedProps} />
 }
+
+export default LazyTippy

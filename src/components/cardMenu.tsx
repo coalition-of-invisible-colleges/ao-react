@@ -3,7 +3,7 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoCardHud, { HudStyle } from './cardHud'
-import { LazyTippy } from './lazyTippy'
+import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
 interface CardMenuProps {

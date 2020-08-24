@@ -2,7 +2,7 @@ import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
-import { LazyTippy } from './lazyTippy'
+import LazyTippy from './lazyTippy'
 import tippy, { Placement, hideAll as hideAllTippys } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 
@@ -54,31 +54,32 @@ export default class AoPopupPanel extends React.PureComponent<
 
 	render() {
 		return (
-			<Tippy
-				zIndex={4}
-				content={
-					this.props.tooltipText && this.props.tooltipText.length >= 1
-						? this.props.tooltipText
-						: 'click to open'
-				}
+			<LazyTippy
+				zIndex={3}
+				trigger={'click'}
+				content={this.renderContent}
 				placement={
-					this.props.tooltipPlacement ? this.props.tooltipPlacement : 'auto'
-				}>
-				<LazyTippy
-					zIndex={3}
-					trigger={'click'}
-					content={this.renderContent}
-					placement={
-						this.props.panelPlacement ? this.props.panelPlacement : 'auto'
+					this.props.panelPlacement ? this.props.panelPlacement : 'auto'
+				}
+				interactive={true}
+				maxWidth={'none'}
+				onShow={this.onPanelOpen}
+				onShown={instance => {
+					this.props.onShown ? this.props.onShown(instance) : undefined
+				}}
+				onHide={this.onPanelClose}
+				hideOnClick={'toggle'}>
+				<Tippy
+					zIndex={4}
+					theme={'tooltip'}
+					content={
+						this.props.tooltipText && this.props.tooltipText.length >= 1
+							? this.props.tooltipText
+							: 'click to open'
 					}
-					interactive={true}
-					maxWidth={'none'}
-					onShow={this.onPanelOpen}
-					onShown={instance => {
-						this.props.onShown ? this.props.onShown(instance) : undefined
-					}}
-					onHide={this.onPanelClose}
-					hideOnClick={'toggle'}>
+					placement={
+						this.props.tooltipPlacement ? this.props.tooltipPlacement : 'auto'
+					}>
 					<div
 						id={this.props.id}
 						className={
@@ -91,8 +92,8 @@ export default class AoPopupPanel extends React.PureComponent<
 							''
 						)}
 					</div>
-				</LazyTippy>
-			</Tippy>
+				</Tippy>
+			</LazyTippy>
 		)
 	}
 }

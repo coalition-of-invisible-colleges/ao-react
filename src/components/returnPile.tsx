@@ -5,7 +5,7 @@ import aoStore, { Task } from '../client/store'
 import AoDragZone from './dragZone'
 import AoContextCard from './contextCard'
 import MoonBag from '../assets/images/moonbag.svg'
-import { LazyTippy } from './lazyTippy'
+import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 import _ from 'lodash'
 

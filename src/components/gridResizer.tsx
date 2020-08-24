@@ -59,7 +59,7 @@ export default class AoGridResizer extends React.PureComponent<
           <button
             type="button"
             onClick={this.increaseColumns}
-            disabled={card.grid.width >= 30}
+            disabled={card.grid.width >= 100}
             className={'action plus'}>
             +
           </button>
@@ -75,7 +75,7 @@ export default class AoGridResizer extends React.PureComponent<
           <button
             type="button"
             onClick={this.increaseRows}
-            disabled={card.grid.height >= 30}
+            disabled={card.grid.height >= 100}
             className={'action plus'}>
             +
           </button>

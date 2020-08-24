@@ -44,7 +44,7 @@ export default class AoCardComposer extends React.PureComponent<
 		}
 	}
 
-	onChange = event => {
+	onChange(event) {
 		this.setState({ text: event.target.value })
 	}
 

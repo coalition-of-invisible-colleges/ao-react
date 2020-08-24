@@ -31,8 +31,8 @@ class RenderCard extends React.Component<RenderProps> {
       cardText = card.name
     }
 
-    if (cardText.length > 10) {
-      cardText = cardText.substring(0, 10) + '…'
+    if (cardText.length > 12) {
+      cardText = cardText.substring(0, 12) + '…'
     }
 
     return (
