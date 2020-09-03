@@ -789,6 +789,7 @@ textarea {
 
     //
     #hub,
+    #controls,
     #members,
     #missions,
     #calendar,
@@ -817,7 +818,8 @@ textarea {
     }
 
     // community hub popup panel
-    #hub {
+    #hub,
+    #controls {
       .actionCircle {
         top: 0.5em;
         width: 3.5em;
@@ -837,6 +839,23 @@ textarea {
         padding-right: 0;
         width: calc(100vw - 17em);
         height: calc(100vh - 7.5em);
+      }
+    }
+
+    #controls {
+      .actionCircle {
+        left: unset;
+        right: 0.5em;
+
+        img {
+          position: relative;
+          left: -0.05em;
+          top: -0.2em;
+        }
+      }
+
+      .popupPanel {
+        width: 40em;
       }
     }
 
@@ -950,6 +969,7 @@ textarea {
         top: unset;
         bottom: 0.5em;
       }
+
       input {
         margin: 0.5em;
       }
@@ -1429,6 +1449,7 @@ textarea {
 
     // search results and grid scrollbars
     #hub .popupPanel,
+    #controls .popupPanel,
     #search .popupPanel .results,
     #calendar .popupPanel,
     #members .popupPanel,

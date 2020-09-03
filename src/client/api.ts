@@ -465,6 +465,91 @@ class AoApi {
       })
   }
 
+  async createResource(
+    resourceId: string,
+    name: string,
+    charged: number,
+    secret: string,
+    trackStock: boolean
+  ): Promise<request.Response> {
+    const act = {
+      type: 'resource-created',
+      resourceId: resourceId,
+      name: name,
+      charged: charged,
+      secret: secret,
+      trackStock: trackStock
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async useResource(
+    resourceId: string,
+    amount: number,
+    charged: number,
+    notes: string = ''
+  ): Promise<request.Response> {
+    const act = {
+      type: 'resource-used',
+      resourceId: resourceId,
+      memberId: aoStore.member.memberId,
+      amount: amount,
+      charged: charged,
+      notes: notes
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async stockResource(
+    resourceId: string,
+    amount: number,
+    paid: number,
+    notes: string = ''
+  ): Promise<request.Response> {
+    const act = {
+      type: 'resource-stocked',
+      resourceId: resourceId,
+      memberId: aoStore.member.memberId,
+      amount: amount,
+      paid: paid,
+      notes: notes
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async purgeResource(resourceId: string): Promise<request.Response> {
+    const act = {
+      type: 'resource-purged',
+      resourceId: resourceId,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async bookResource(
     taskId: string,
     startTime: number,

@@ -78,6 +78,23 @@ export interface Meme {
   filetype: string
 }
 
+export interface Resource {
+  resourceId: string
+  name: string
+  charged: number
+  secret: string
+  trackStock: boolean
+  stock: number
+}
+
+export interface ConnectedAo {
+  address: string
+  outboundSecret: false | string
+  inboundSecret: string
+  lastContact: number
+  links: string[]
+}
+
 interface Usertime {
   memberId: string
   timelog: number[]
@@ -87,6 +104,14 @@ interface Usertime {
 interface Userseen {
   memberId: string
   timestamp: Date
+}
+
+interface Output {
+  value: number
+}
+
+interface Channel {
+  channel_sat: number
 }
 
 export interface Session {
@@ -101,11 +126,11 @@ export interface AoState {
   token: string
   loggedIn: boolean
   user: string
-  ao: number[]
+  ao: ConnectedAo[]
   sessions: Session[]
   members: Member[]
   tasks: Task[]
-  resources: []
+  resources: Resource[]
   memes: Meme[]
   cash: {
     address: string
@@ -116,11 +141,12 @@ export interface AoState {
     cap: number
     pay_index: number
     usedTxIds: number[]
-    outputs: number[]
-    channels: number[]
+    outputs: Output[]
+    channels: Channel[]
     info: {}
   }
 }
+
 const defaultState: AoState = {
   session: '',
   token: '',

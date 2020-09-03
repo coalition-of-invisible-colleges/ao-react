@@ -66,11 +66,13 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
         break
       case 'priorities':
         if (move.to.taskId && this.props.dropActsLikeFolder) {
-          api
-            .discardCardFromCard(move.from.taskId, move.from.inId)
-            .then(() =>
-              api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
-            )
+          api.refocusCard(move.from.taskId, move.from.inId).then(() => {
+            api
+              .discardCardFromCard(move.from.taskId, move.from.inId)
+              .then(() =>
+                api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+              )
+          })
         } else if (move.to.taskId) {
           api
             .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
