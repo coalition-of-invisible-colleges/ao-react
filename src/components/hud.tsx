@@ -15,7 +15,6 @@ import AoUsername from './username'
 import AoPassword from './password'
 import AoVolume from './volume'
 import AoPopupPanel from './popupPanel'
-import AoReturnPile from './returnPile'
 import AoShitposts from './shitposts'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
@@ -122,7 +121,6 @@ export default class AoHud extends React.Component<{}, undefined> {
             <AoSearch ref={this.searchRef} />
           </AoPopupPanel>
         </div>
-        <AoReturnPile />
         <AoTickerHud />
         <AoShitposts />
         <AoScore prefix={<span>Score: </span>} />

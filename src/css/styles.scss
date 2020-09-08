@@ -974,9 +974,10 @@ textarea {
 
     #returnPile {
       .actionCircle {
+        position: absolute;
+        left: calc(100% + 3.25em);
         top: unset;
         bottom: 0.5em;
-        left: 5em;
       }
     }
 
