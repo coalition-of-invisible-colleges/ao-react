@@ -3,7 +3,7 @@ html {
   height: 100%;
 }
 
-span,
+.mini .content > span,
 button,
 textarea {
   margin: 0.5em;
@@ -437,7 +437,7 @@ textarea {
         }
 
         & > span:first-child {
-          margin-top: 0.7em;
+          // margin-top: 0.7em;
           display: block;
         }
       }
