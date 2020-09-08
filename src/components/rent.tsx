@@ -68,7 +68,7 @@ export default class AoRent extends React.PureComponent<{}> {
         ) : (
           'No active members to charge a monthly membership fee.'
         )}
-        {this.renderPendingDeactivation}
+        {this.renderPendingDeactivation()}
       </React.Fragment>
     )
   }

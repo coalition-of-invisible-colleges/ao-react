@@ -730,13 +730,6 @@ textarea {
       }
     }
 
-    // home: home link, currently unused
-    #home {
-      position: fixed;
-      top: 0.5em;
-      left: 1em;
-    }
-
     // main menu in bottom right of screen
     #mainMenuButton {
       position: fixed;
@@ -1225,6 +1218,8 @@ textarea {
       img {
         max-height: 1em;
         margin-right: 0.5em;
+        position: relative;
+        top: 0.1em;
       }
     }
 
@@ -1263,6 +1258,13 @@ textarea {
 
       &.mission {
         margin-bottom: 1em;
+      }
+
+      &.inline {
+        display: inline-block;
+        font-size: 0.85em;
+        padding: 0.3em 0.5em;
+        margin-left: 0.5em;
       }
     }
 
@@ -1608,6 +1610,20 @@ textarea {
     // score when it's in the member icon popup
     .memberInfo .score {
       margin: -1.5em 0 0.5em -1em;
+    }
+
+    // home button (unicorn)
+    #home {
+      height: 4.5em;
+      position: absolute;
+      left: -6.75em;
+      bottom: 0;
+      cursor: pointer;
+      transform: scaleX(-1);
+
+      &.dabbed {
+        transform: unset;
+      }
     }
   }
 }

@@ -10,7 +10,7 @@ export default class AoResources extends React.PureComponent<{}> {
   constructor(props) {
     super(props)
     this.renderResources = this.renderResources.bind(this)
-    this.createTestResource = this.createTestResource.bind(this)
+    this.createResource = this.createResource.bind(this)
     this.purgeResource = this.purgeResource.bind(this)
   }
 
@@ -18,26 +18,32 @@ export default class AoResources extends React.PureComponent<{}> {
     const list = aoStore.state.resources.map(r => (
       <li>
         {r.name}{' '}
-        <div
-          className="action"
+        <span
+          className="action inline"
           onClick={this.purgeResource}
           data-resourceid={r.resourceId}>
-          Purge
-        </div>
+          Delete
+        </span>
       </li>
     ))
-    return <ul>{list}</ul>
+    return <ul style={{ listStyleType: 'none' }}>{list}</ul>
   }
 
-  createTestResource() {
+  createResource() {
     api.createResource(uuidV1(), 'test', 0, 'asd', true)
   }
 
   purgeResource(event) {
-    const resourceId: string = event.currentTarget.getAttribute(
-      'data-resourceid'
-    )
-    api.purgeResource(resourceId)
+    if (
+      window.confirm(
+        'Are you sure you want to delete this resource? You will have to set up the resource again.'
+      )
+    ) {
+      const resourceId: string = event.currentTarget.getAttribute(
+        'data-resourceid'
+      )
+      api.purgeResource(resourceId)
+    }
   }
 
   render() {
@@ -50,9 +56,9 @@ export default class AoResources extends React.PureComponent<{}> {
           a raspberry pi. See dctrl-fobtap project on GitHub."
           />
         </h3>
-        <button type="button" onClick={this.createTestResource}>
-          Create Test Resource
-        </button>
+        <div className="action" onClick={this.createResource}>
+          Create Resource
+        </div>
         {this.renderResources()}
       </React.Fragment>
     )

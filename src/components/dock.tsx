@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoGrid from './grid'
+import AoHome from './home'
 import _ from 'lodash'
 
 interface State {
@@ -71,6 +72,7 @@ export default class AoDock extends React.PureComponent<{}, State> {
     }
     return (
       <div id={'dock'}>
+        <AoHome />
         <AoGrid taskId={this.state.bookmarksTaskId} dropActsLikeFolder={true} />
       </div>
     )

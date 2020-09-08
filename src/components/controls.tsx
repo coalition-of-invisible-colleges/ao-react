@@ -15,7 +15,7 @@ import AoConnect from './connect'
 import AoLightning from './lightning'
 import AoRent from './rent'
 // import AoReserve from './reserve'
-// import AoOptions from './options'
+import AoOptions from './options'
 
 interface State {
   page: ServerPage

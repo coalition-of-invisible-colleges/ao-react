@@ -132,12 +132,12 @@ export default class AoContextCard extends React.PureComponent<
 		aoStore.closeAllCloseables()
 
 		const card = this.props.task
-		const taskId = card.taskId
-		console.log('goInCard taskId is ', taskId)
 		if (!card) {
 			console.log('missing card')
 			return
 		}
+		const taskId = card.taskId
+		console.log('goInCard taskId is ', taskId)
 		if (this.props.cardStyle === 'context') {
 			aoStore.clearContextTo(card.taskId)
 		} else {

@@ -17,18 +17,19 @@ export default class AoConnect extends React.PureComponent<{}> {
     return (
       <React.Fragment>
         <h3>
-          Connect AOs <AoTip text="Connect AOs securely over tor." />
+          Connect AOs{' '}
+          <AoTip text="Connect AOs peer-to-peer securely over tor." />
         </h3>
-        <p>
+        <div>
           Name this AO: <AoServerName />
-        </p>
+        </div>
         <p>Tor status: Offline</p>
         {list.length >= 1 ? (
           <React.Fragment>
             <ul>{list}</ul>
           </React.Fragment>
         ) : (
-          'No AOs connected.'
+          <p>No AOs connected.</p>
         )}
       </React.Fragment>
     )
