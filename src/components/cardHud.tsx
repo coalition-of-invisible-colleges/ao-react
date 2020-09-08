@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoPalette from './palette'
+// import AoBird from './bird'
 import AoUnread from './unread'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
@@ -11,6 +12,7 @@ import AoTimeClock from './timeclock'
 import AoCardMenu from './cardMenu'
 import AoPreview from './preview'
 import AoMission from './mission'
+import AoBark from './bark'
 
 export type HudStyle =
 	| 'context'
@@ -38,6 +40,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
 		if (!card) return null
+		const isMember = this.props.taskId === card.name
 
 		const hudStyle = this.props.hudStyle
 
@@ -62,6 +65,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 					<div className={'hud'}>
 						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						{isMember ? <AoBark memberId={taskId} /> : ''}
 						<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}
@@ -94,6 +98,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'face before':
 				return (
 					<div className={'hud ' + hudStyle}>
+						{/*<AoBird taskId={taskId} />*/}
 						<AoUnread taskId={taskId} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />

@@ -3,6 +3,10 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
 import Bull from '../assets/images/bull.svg'
+import Dolphins from '../assets/images/loader.svg'
+import RedBoat from '../assets/images/boatbtnselected.svg'
+import LightningBolt from '../assets/images/lightning.svg'
+import GoldenDoge from '../assets/images/goldendoge.svg'
 import AoContextCard from './contextCard'
 import api from '../client/api'
 import AoPopupPanel from './popupPanel'
@@ -11,24 +15,25 @@ import AoConnect from './connect'
 import AoLightning from './lightning'
 import AoRent from './rent'
 // import AoReserve from './reserve'
+// import AoOptions from './options'
 
 interface State {
   page: ServerPage
 }
 
 type ServerPage =
-  | 'Resources'
-  | 'Connect P2P'
-  | 'Lightning'
-  | 'Rent'
-  | 'Reserve'
-  | 'Options'
+  | 'resources'
+  | 'connect'
+  | 'lightning'
+  | 'rent'
+  | 'reserve'
+  | 'options'
 
 @observer
 export default class AoControls extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
-    this.state = { page: 'Resources' }
+    this.state = { page: 'resources' }
     this.goToPage = this.goToPage.bind(this)
     this.renderPageButton = this.renderPageButton.bind(this)
   }
@@ -41,47 +46,44 @@ export default class AoControls extends React.PureComponent<{}, State> {
     this.setState({ page: page })
   }
 
-  renderPageButton(page: ServerPage) {
+  renderPageButton(page: ServerPage, label: string, imgSrc?: string) {
     if (this.state.page === page) {
-      return <p className={'action selected'}>{page}</p>
+      return (
+        <p className={'action selected'}>
+          {imgSrc && <img src={imgSrc} />}
+          {label}
+        </p>
+      )
     } else {
       return (
         <p onClick={this.goToPage} data-page={page} className={'action'}>
-          {page}
+          {imgSrc && <img src={imgSrc} />}
+          {label}
         </p>
       )
     }
   }
 
   render() {
-    const title = aoStore.state.cash.alias
-      ? aoStore.state.cash.alias + ' Server Controls'
-      : 'Server Controls'
-
     let renderedPage
 
     switch (this.state.page) {
-      case 'Connect P2P':
+      case 'connect':
         renderedPage = <AoConnect />
         break
-      case 'Lightning':
+      case 'lightning':
         renderedPage = <AoLightning />
         break
-      case 'Rent':
+      case 'rent':
         renderedPage = <AoRent />
         break
-      case 'Reserve':
+      case 'reserve':
         // renderedPage = <AoReserve />
         break
-      case 'Options':
-        renderedPage = (
-          <React.Fragment>
-            <h3>Server Options</h3>
-            <p>No options yet.</p>
-          </React.Fragment>
-        )
+      case 'options':
+        renderedPage = <AoOptions />
         break
-      case 'Resources':
+      case 'resources':
       default:
         renderedPage = <AoResources />
     }
@@ -92,16 +94,16 @@ export default class AoControls extends React.PureComponent<{}, State> {
           tooltipText={'Server Controls'}
           tooltipPlacement={'left'}
           panelPlacement={'left-start'}
-          id={'controls'}>
+          id={'controls'}
+          alsoHideHub={true}>
           <React.Fragment>
-            <h2>{title}</h2>
             <div className={'toolbar'}>
-              {this.renderPageButton('Resources')}
-              {this.renderPageButton('Connect P2P')}
-              {this.renderPageButton('Lightning')}
-              {this.renderPageButton('Rent')}
+              {this.renderPageButton('resources', 'Hardware', Dolphins)}
+              {this.renderPageButton('connect', 'AO p2p', RedBoat)}
+              {this.renderPageButton('lightning', 'Crypto', LightningBolt)}
+              {this.renderPageButton('rent', 'Membership', GoldenDoge)}
               {/*this.renderPageButton('Reserve')*/}
-              {this.renderPageButton('Options')}
+              {/*this.renderPageButton('options', 'Options')*/}
             </div>
             <div className={'controlPanel'}>{renderedPage}</div>
           </React.Fragment>

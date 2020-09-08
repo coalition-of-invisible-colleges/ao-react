@@ -218,7 +218,8 @@ textarea {
 
           .mission,
           .preview,
-          .countdown {
+          .countdown,
+          .barkButton {
             margin-right: 0.75em;
           }
 
@@ -433,6 +434,11 @@ textarea {
             position: relative;
             top: 0.33em;
           }
+        }
+
+        & > span:first-child {
+          margin-top: 0.7em;
+          display: block;
         }
       }
 
@@ -834,7 +840,9 @@ textarea {
           }
         }
       }
+    }
 
+    #hub {
       .popupPanel {
         padding-right: 0;
         width: calc(100vw - 17em);
@@ -852,10 +860,6 @@ textarea {
           left: -0.05em;
           top: -0.2em;
         }
-      }
-
-      .popupPanel {
-        width: 40em;
       }
     }
 
@@ -1057,7 +1061,7 @@ textarea {
     }
 
     // score / points in bottom right of screen
-    #score {
+    #hud > .score {
       position: fixed;
       right: 5em;
       bottom: 1em;
@@ -1095,11 +1099,15 @@ textarea {
       .dropZone {
         margin: 0 auto;
 
-        .content > p {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
+        .content {
           text-align: center;
+
+          & > p {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            text-align: center;
+          }
         }
       }
       .card {
@@ -1212,6 +1220,12 @@ textarea {
       color: white;
       margin: 0 auto;
       user-select: none;
+      outline: none;
+
+      img {
+        max-height: 1em;
+        margin-right: 0.5em;
+      }
     }
 
     // action button
@@ -1245,6 +1259,10 @@ textarea {
         &:hover {
           text-decoration: none;
         }
+      }
+
+      &.mission {
+        margin-bottom: 1em;
       }
     }
 
@@ -1513,6 +1531,83 @@ textarea {
     // the card menu
     .hud.menu {
       padding-top: 0.25em;
+    }
+
+    // server name display/editor, on options page
+    .serverName {
+      display: inline-block;
+    }
+
+    // bark button on member cards
+    .barkButton {
+      max-height: 1.5em;
+      display: inline-block;
+      position: relative;
+      top: 0.45em;
+      cursor: pointer;
+
+      &.senpai {
+        filter: hue-rotate(42deg);
+      }
+
+      &.kohai {
+        filter: hue-rotate(-38deg);
+        transform: scaleX(-1);
+      }
+
+      &.noPopups {
+        cursor: default;
+      }
+    }
+
+    // member online/offline status icon
+    .memberIcon {
+      height: 1em;
+      display: inline-block;
+      position: relative;
+      top: 0.1em;
+    }
+
+    // member icon on the full-sized card
+    .full .memberIcon {
+      height: 1.5em;
+      top: 0.35em;
+      margin-right: 0;
+    }
+
+    // membership active/inactive status icon
+    .membership,
+    .inlineIcon {
+      height: 1.5em;
+      display: inline-block;
+      position: relative;
+      top: 0.35em;
+      margin-right: 0.5em;
+
+      &.inactive {
+        opacity: 0.25;
+      }
+    }
+
+    // checkmark when it's inline as an icon
+    .inlineIcon > svg {
+      transform: scale(0.75);
+      margin-right: -1em;
+      position: relative;
+      top: 0.25em;
+    }
+
+    // membership icon when it's in the bark menu
+    .menu .membership {
+      height: 1.5em;
+      max-height: unset;
+      margin-right: 0.75em;
+      margin-top: -0.35em;
+    }
+
+    // score when it's in the member icon popup
+    .memberInfo .score {
+      margin: -1.5em 0 0.5em -1em;
     }
   }
 }

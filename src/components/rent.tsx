@@ -3,6 +3,7 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
+import AoTip from './tip'
 
 @observer
 export default class AoRent extends React.PureComponent<{}> {
@@ -55,12 +56,18 @@ export default class AoRent extends React.PureComponent<{}> {
 
     return (
       <React.Fragment>
-        <h3>Rent Split</h3>
-        <p>Each month the node cost is split between accounts.</p>
+        <h3>
+          Rent Split{' '}
+          <AoTip text="Each month the node cost is split between accounts." />
+        </h3>
         <p>Monthly cost: {monthlyCost} [set]</p>
+        <p>Monthly cap: {monthlyCap} max [set]</p>
         <p>Active members: {this.activeMembers}</p>
-        <p>= {this.perMember} each</p>
-        <p>{monthlyCap} max [set]</p>
+        {this.activeMembers >= 1 ? (
+          <p>= {this.perMember} each</p>
+        ) : (
+          'No active members to charge a monthly membership fee.'
+        )}
         {this.renderPendingDeactivation}
       </React.Fragment>
     )

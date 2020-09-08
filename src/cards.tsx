@@ -108,3 +108,30 @@ export function subTaskCard(move: CardPlay) {
 			break
 	}
 }
+
+// this is actually about members, not cards, but not gonna split the file yet
+export function isSenpai(memberId: string) {
+	const theirCard = aoStore.hashMap.get(memberId)
+	if (!theirCard) {
+		console.log('invalid member detected')
+		return 0
+	}
+	const theirVouches = theirCard.deck
+		.map(mId => aoStore.hashMap.get(mId))
+		.filter(memberCard => memberCard !== undefined).length
+
+	const myVouches = aoStore.memberCard.deck
+		.map(mId => aoStore.hashMap.get(mId))
+		.filter(memberCard => memberCard !== undefined).length
+
+	let theirRank = aoStore.state.members.findIndex(m => m.memberId === memberId)
+	let myRank = aoStore.state.members.findIndex(
+		m => m.memberId === aoStore.member.memberId
+	)
+	if (theirRank < myRank && theirVouches > myVouches) {
+		return 1
+	} else if (myRank < theirRank && myVouches > theirVouches) {
+		return -1
+	}
+	return 0
+}

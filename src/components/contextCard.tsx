@@ -16,6 +16,7 @@ import AoAttachment from './attachment'
 import AoCoin from './coin'
 import AoPreview from './preview'
 import AoCheckmark from './checkmark'
+import AoMemberIcon from './memberIcon'
 import { prioritizeCard, subTaskCard, CardZone } from '../cards'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
@@ -206,7 +207,7 @@ export default class AoContextCard extends React.PureComponent<
 		return (
 			<Markdown
 				options={{
-					forceBlock: true,
+					forceBlock: false,
 					overrides: {
 						a: {
 							props: {
@@ -273,12 +274,12 @@ export default class AoContextCard extends React.PureComponent<
 		}
 
 		const taskId = card.taskId
-
+		let member
 		let content = card.name
 		if (taskId === content) {
-			const memberCard = aoStore.memberById.get(taskId)
-			if (memberCard) {
-				content = memberCard.name
+			member = aoStore.memberById.get(taskId)
+			if (member) {
+				content = member.name
 			}
 		}
 
@@ -306,7 +307,10 @@ export default class AoContextCard extends React.PureComponent<
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'context'} />
-						<div className={'content'}>{this.renderCardContent(content)}</div>
+						<div className={'content'}>
+							{member && <AoMemberIcon memberId={taskId} />}
+							{this.renderCardContent(content)}
+						</div>
 					</div>
 				)
 			case 'member':
@@ -332,6 +336,7 @@ export default class AoContextCard extends React.PureComponent<
 						/>
 						<div className={'content'}>
 							<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
+							{member && <AoMemberIcon memberId={taskId} />}
 							{this.renderCardContent(content)}
 							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
 						</div>
@@ -363,6 +368,7 @@ export default class AoContextCard extends React.PureComponent<
 						<AoCardHud taskId={taskId} hudStyle={'face before'} />
 						<div className={'content'}>
 							<AoMission taskId={taskId} hudStyle={'face before'} />
+							{member && <AoMemberIcon memberId={taskId} />}
 							{this.renderCardContent(content)}
 							<AoAttachment taskId={taskId} hudStyle={'face before'} />
 							{card.priorities && card.priorities.length >= 1 ? (
@@ -428,6 +434,7 @@ export default class AoContextCard extends React.PureComponent<
 							<AoCardHud taskId={taskId} hudStyle={'full before'} />
 							<div className="content">
 								<AoMission taskId={taskId} hudStyle={'full before'} />
+								{member && <AoMemberIcon memberId={taskId} />}
 								{this.renderCardContent(content)}
 								<AoAttachment taskId={taskId} hudStyle={'full before'} />
 							</div>
@@ -535,6 +542,7 @@ export default class AoContextCard extends React.PureComponent<
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
+							{member && <AoMemberIcon memberId={taskId} />}
 							{this.renderCardContent(content, true)}
 							<AoAttachment taskId={taskId} hudStyle={'mini before'} />
 						</div>

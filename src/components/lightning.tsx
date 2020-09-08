@@ -18,7 +18,8 @@ export default class AoRent extends React.PureComponent<{}> {
       return (
         <React.Fragment>
           <h3>Lightning Status</h3>
-          <p>Install lightning-cli to connect a wallet.</p>
+          <p>Install clightning to enable crypto features.</p>
+          {/*<p>Info: {JSON.stringify(aoStore.state.cash.info)}</p>*/}
         </React.Fragment>
       )
     }

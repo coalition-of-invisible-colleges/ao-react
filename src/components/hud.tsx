@@ -11,7 +11,6 @@ import AoMissions from './missions'
 import AoSearch from './search'
 import AoTickerHud from './tickerHud'
 import AoScore from './score'
-import AoServerName from './serverName'
 import AoUsername from './username'
 import AoPassword from './password'
 import AoVolume from './volume'
@@ -30,6 +29,11 @@ interface State {
 
 @observer
 class MainMenu extends React.PureComponent<{}, State> {
+  constructor(props) {
+    super(props)
+    this.state = { theme: 1 }
+  }
+
   changeTheme = () => {
     if (this.state.theme == 3) {
       this.setState({ theme: 1 })
@@ -49,7 +53,6 @@ class MainMenu extends React.PureComponent<{}, State> {
   render() {
     return (
       <div id={'mainMenu'}>
-        <AoServerName />
         <AoUsername />
         <AoPassword />
         <AoVolume />
@@ -79,7 +82,7 @@ export default class AoHud extends React.Component<{}, undefined> {
 
   render() {
     return (
-      <React.Fragment>
+      <div id="hud">
         <Tippy
           content={<MainMenu />}
           interactive={true}
@@ -122,8 +125,8 @@ export default class AoHud extends React.Component<{}, undefined> {
         <AoReturnPile />
         <AoTickerHud />
         <AoShitposts />
-        <AoScore />
-      </React.Fragment>
+        <AoScore prefix={<span>Score: </span>} />
+      </div>
     )
   }
 }

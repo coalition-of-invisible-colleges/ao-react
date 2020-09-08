@@ -591,6 +591,34 @@ class AoApi {
       })
   }
 
+  async activateMember(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-activated',
+      memberId: memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async deactivateMember(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-deactivated',
+      memberId: memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async updateMemberField(
     field: string,
     newValue: string

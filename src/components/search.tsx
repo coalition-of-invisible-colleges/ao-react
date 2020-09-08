@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
 import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AoContextCard from './contextCard'
@@ -11,7 +10,6 @@ type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
 
 interface State {
   query: string
-  redirect?: string
   sort: SearchSort
   items?: number
   hasMore: boolean
@@ -20,7 +18,6 @@ interface State {
 export const defaultState: State = {
   query: '',
   sort: 'newest',
-  redirect: undefined,
   items: undefined,
   hasMore: true
 }
@@ -266,11 +263,6 @@ export default class AoSearch extends React.PureComponent<{}, State> {
   }
 
   render() {
-    if (this.state.redirect !== undefined) {
-      this.setState({ redirect: undefined })
-      return <Redirect to={this.state.redirect} />
-    }
-
     return (
       <React.Fragment>
         <input

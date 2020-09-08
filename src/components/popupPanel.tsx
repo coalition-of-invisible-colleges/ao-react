@@ -3,8 +3,9 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
 import LazyTippy from './lazyTippy'
-import tippy, { Placement, hideAll as hideAllTippys } from 'tippy.js'
+import { Placement, hideAll as hideAllTippys } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface PopupPanelProps {
 	iconSrc: string
@@ -14,6 +15,7 @@ interface PopupPanelProps {
 	onShown?: (instance) => void
 	id?: string
 	badge?: any
+	alsoHideHub?: boolean
 }
 
 interface State {
@@ -33,10 +35,14 @@ export default class AoPopupPanel extends React.PureComponent<
 	}
 
 	onPanelOpen() {
-		hideAllTippys({
-			// This is messy but hopefully works consistently.
-			exclude: document.querySelectorAll('#hub')[1]
-		})
+		if (this.props.alsoHideHub) {
+			hideAllTippys()
+		} else {
+			hideAllTippys({
+				// This is messy but hopefully works consistently.
+				exclude: document.querySelectorAll('#hub')[1]
+			})
+		}
 		this.setState({ isPanelOpen: true })
 	}
 
@@ -71,7 +77,7 @@ export default class AoPopupPanel extends React.PureComponent<
 				hideOnClick={'toggle'}>
 				<Tippy
 					zIndex={4}
-					theme={'tooltip'}
+					theme={'translucent'}
 					content={
 						this.props.tooltipText && this.props.tooltipText.length >= 1
 							? this.props.tooltipText
