@@ -44,19 +44,21 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
     }).length
   }
 
-  render() {
-    const memberId = this.props.memberId
-    const member = aoStore.memberById.get(memberId)
-    const card = aoStore.hashMap.get(memberId)
-    if (!card) return null
-
-    const renderLoggedInStatusIcon = (
+  @computed get renderLoggedInStatusIcon() {
+    return (
       <img
         src={this.isLoggedIn ? LoggedIn : LoggedOut}
         className="memberIcon"
         draggable={false}
       />
     )
+  }
+
+  @computed get renderMemberInfo() {
+    const memberId = this.props.memberId
+    const member = aoStore.memberById.get(memberId)
+    const card = aoStore.hashMap.get(memberId)
+    if (!card) return null
 
     const renderActiveIcon = (
       <img
@@ -66,12 +68,12 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
       />
     )
 
-    const memberInfo = (
+    return (
       <div className="memberInfo">
         <p>
           {member.name} is{' '}
           <span style={{ marginRight: '0.5em' }}>
-            {renderLoggedInStatusIcon}
+            {this.renderLoggedInStatusIcon}
           </span>
           {this.isLoggedIn ? 'online' : 'offline'}
         </p>
@@ -111,6 +113,13 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
         />
       </div>
     )
+  }
+
+  render() {
+    const memberId = this.props.memberId
+    const member = aoStore.memberById.get(memberId)
+    const card = aoStore.hashMap.get(memberId)
+    if (!card) return null
 
     return (
       <React.Fragment>
@@ -118,16 +127,16 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
           <LazyTippy
             zIndex={4}
             interactive={true}
-            content={memberInfo}
+            content={this.renderMemberInfo}
             hideOnClick={false}
             delay={[625, 200]}
             appendTo={() =>
               document.getElementById('card-' + memberId).parentElement
             }>
-            {renderLoggedInStatusIcon}
+            {this.renderLoggedInStatusIcon}
           </LazyTippy>
         ) : (
-          { renderLoggedInStatusIcon }
+          this.renderLoggedInStatusIcon
         )}
       </React.Fragment>
     )

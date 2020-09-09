@@ -973,11 +973,12 @@ textarea {
     }
 
     #returnPile {
-      .actionCircle {
+      img.actionIcon {
         position: absolute;
         left: calc(100% + 3.25em);
         top: unset;
         bottom: 0.5em;
+        height: 4.5em;
       }
     }
 
@@ -1575,7 +1576,12 @@ textarea {
     .full .memberIcon {
       height: 1.5em;
       top: 0.35em;
-      margin-right: 0;
+      margin-right: 0.25em;
+    }
+
+    // member icon on a priority
+    .priority .memberIcon {
+      margin-right: 0.4em;
     }
 
     // membership active/inactive status icon

@@ -4,9 +4,10 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoDragZone from './dragZone'
 import AoContextCard from './contextCard'
-import MoonBag from '../assets/images/moonbag.svg'
+import MoonBag from '../assets/images/archive.svg'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 import _ from 'lodash'
 
 const RenderNumberOfReturned = observer(props => props.getReturnedCardsLength())
@@ -192,6 +193,7 @@ export default class AoReturnPile extends React.PureComponent {
                 interactive={true}
                 hideOnClick={false}
                 delay={[625, 200]}
+                theme="translucent"
                 content={
                   <div className={'previewPopup'}>
                     <p>Returned cards—drag to draw (or unmoon to drop):</p>
@@ -202,14 +204,11 @@ export default class AoReturnPile extends React.PureComponent {
                   </div>
                 }
                 placement={'top'}>
-                <div className={'actionCircle'}>
-                  <img src={MoonBag} />
-                  <div className={'badge'}>
-                    <RenderNumberOfReturned
-                      getReturnedCardsLength={this.getReturnedCardsLength}
-                    />
-                  </div>
-                </div>
+                <img
+                  src={MoonBag}
+                  style={{ height: '4.5em' }}
+                  className="actionIcon"
+                />
               </LazyTippy>
             </AoDragZone>
           </div>
