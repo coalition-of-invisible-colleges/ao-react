@@ -97,13 +97,15 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'full before':
 			case 'face before':
 				return (
-					<div className={'hud ' + hudStyle}>
+					<React.Fragment>
 						<AoBird taskId={taskId} />
-						<AoUnread taskId={taskId} />
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-					</div>
+						<div className={'hud ' + hudStyle}>
+							<AoUnread taskId={taskId} />
+							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+							<AoValue taskId={taskId} hudStyle={hudStyle} />
+							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						</div>
+					</React.Fragment>
 				)
 			case 'full after':
 				return (

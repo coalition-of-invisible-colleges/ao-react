@@ -1637,6 +1637,10 @@ textarea {
     .bird {
       height: 1em;
       cursor: pointer;
+      position: absolute;
+      top: 0.75em;
+      left: 0.65em;
+      opacity: 0.5;
     }
   }
 }

@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { Task, emptySearchResults } from '../client/store'
+import aoStore from '../client/store'
+import api from '../client/api'
 import Bird from '../assets/images/send.svg'
 import LazyTippy from './lazyTippy'
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -13,6 +14,7 @@ interface BirdProps {
 
 interface State {
   query: string
+  memberId?: string
 }
 
 @observer
@@ -23,21 +25,30 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
     this.passCard = this.passCard.bind(this)
     this.focus = this.focus.bind(this)
     this.onChange = this.onChange.bind(this)
+    this.onChangeSelect = this.onChangeSelect.bind(this)
   }
 
   private birdBox = React.createRef<HTMLInputElement>()
 
   passCard(event) {
     console.log("passCard!")
+    if(this.state.memberId !== undefined) {
+      api.passCard(this.props.taskId, this.state.memberId)
+    }
   }
 
   focus() {
-    console.log('focus called')
-    this.birdBox.current.select()
+    document.getElementById('autocomplete-' +this.props.taskId).focus()
   }
 
   onChange(event) {
+    console.log("onChange", event)
     this.setState({ query: event.target.value })
+  }
+
+  onChangeSelect(event, value) {
+     console.log('onChangeSelect', event, value)
+     this.setState({memberId: value.memberId })
   }
 
   @computed get localMembers() {
@@ -45,7 +56,7 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
       return []
     }
 
-    return aoStore.state.members.map(member => member.name)
+    return aoStore.state.members.map(member => {return {label: member.name, memberId: member.memberId}})
   }
 
   render() {
@@ -53,13 +64,15 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
       <LazyTippy
         zIndex={4}
         trigger="click"
-        content={<React.Fragment><Autocomplete options={this.localMembers} renderInput={params => {
-          console.log(params)
-          return (
+        onShown={this.focus}
+        hideOnClick="toggle"
+        content={<React.Fragment><Autocomplete id={ 'autocomplete-' + this.props.taskId } onChange={this.onChangeSelect} options={this.localMembers} openOnFocus={true} style={{display: 'inline-block'}}
+        getOptionLabel={option => option.label}
+        renderInput={params => (
         <div ref={params.InputProps.ref}>
-          <TextField {...params.inputProps} placeholder="type member name" onChange={this.onChange} variant="outlined" style={{minWidth: '7em'}} autoFocus />
+          <input type="text" placeholder="type member name" onChange={this.onChange} value={this.state.query} autoFocus {...params.inputProps} />
         </div>
-      )}} />        <div className="action" onClick={this.passCard}>give</div>
+      )} />        <div className="action inline" onClick={this.passCard}>give</div>
 </React.Fragment>}
         placement="right-start"
         interactive={true}>
