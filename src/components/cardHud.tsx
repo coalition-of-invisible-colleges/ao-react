@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoPalette from './palette'
-// import AoBird from './bird'
+import AoBird from './bird'
 import AoUnread from './unread'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
@@ -98,7 +98,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 			case 'face before':
 				return (
 					<div className={'hud ' + hudStyle}>
-						{/*<AoBird taskId={taskId} />*/}
+						<AoBird taskId={taskId} />
 						<AoUnread taskId={taskId} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />

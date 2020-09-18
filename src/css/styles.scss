@@ -1632,6 +1632,12 @@ textarea {
         transform: unset;
       }
     }
+
+    // bird icon in top-left of card
+    .bird {
+      height: 1em;
+      cursor: pointer;
+    }
   }
 }
 
