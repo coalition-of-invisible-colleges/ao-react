@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
 import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
 
@@ -9,13 +8,11 @@ type MissionSort = 'alphabetical' | 'hodls' | 'age'
 
 interface State {
   page: number
-  redirect?: string
   sort: MissionSort
 }
 
 export const defaultState: State = {
   page: 0,
-  redirect: undefined,
   sort: 'alphabetical'
 }
 
@@ -92,11 +89,6 @@ export default class AoMissions extends React.PureComponent<{}, State> {
   }
 
   render() {
-    if (this.state.redirect !== undefined) {
-      this.setState({ redirect: undefined })
-      return <Redirect to={this.state.redirect} />
-    }
-
     return (
       <React.Fragment>
         <h2>Missions Index</h2>

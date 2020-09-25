@@ -2,12 +2,13 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
-import AoMembers from './members'
 import AoHub from './hub'
 import AoControls from './controls'
 import AoDock from './dock'
-import AoCalendar from './calendar'
+import AoGifts from './gifts'
 import AoMissions from './missions'
+import AoMembers from './members'
+import AoCalendar from './calendar'
 import AoSearch from './search'
 import AoTickerHud from './tickerHud'
 import AoScore from './score'
@@ -92,6 +93,7 @@ export default class AoHud extends React.Component<{}, undefined> {
         <AoHub />
         <AoControls />
         <AoDock />
+        <AoGifts />
         <div id="missions">
           <AoPopupPanel
             iconSrc={Badge}

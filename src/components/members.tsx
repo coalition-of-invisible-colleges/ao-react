@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { Redirect } from 'react-router-dom'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
@@ -10,14 +9,12 @@ type MemberSort = 'alphabetical' | 'recents' | 'vouches' | 'age'
 interface State {
   sort: MemberSort
   page: number
-  redirect?: string
   text?: string
 }
 
 export const defaultState: State = {
   sort: 'recents',
-  page: 0,
-  redirect: undefined
+  page: 0
 }
 
 @observer
@@ -64,11 +61,6 @@ export default class AoMembers extends React.PureComponent<{}, State> {
   }
 
   render() {
-    if (this.state.redirect !== undefined) {
-      this.setState({ redirect: undefined })
-      return <Redirect to={this.state.redirect} />
-    }
-
     const members = aoStore.state.members.slice()
     let memberCards: Task[] = []
 

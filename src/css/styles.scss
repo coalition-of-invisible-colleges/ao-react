@@ -789,6 +789,7 @@ textarea {
     //
     #hub,
     #controls,
+    #gifts,
     #members,
     #missions,
     #calendar,
@@ -807,6 +808,7 @@ textarea {
       }
     }
 
+    #gifts,
     #members,
     #missions,
     #calendar,
@@ -853,6 +855,14 @@ textarea {
           left: -0.05em;
           top: -0.2em;
         }
+      }
+    }
+
+    // gifts popup panel
+    #gifts {
+      .actionCircle {
+        left: 0.5em;
+        top: 8em;
       }
     }
 
@@ -1331,19 +1341,31 @@ textarea {
           padding: 0.25em 0.45em;
         }
       }
+    }
 
-      .badge {
-        position: absolute;
-        top: -0.5em;
-        right: -0.5em;
-        background-color: rgba(255, 10, 10, 0.85);
-        border-radius: 5em;
-        color: white;
-        font-size: 0.9em;
-        padding: 0.2em 0.4em;
-        transform: translateX(50%);
-        width: max-content;
-        max-width: 4em;
+    // badge used on .actionCircle and on the bird on cards
+    .actionCircle .badge,
+    .bird > .badge {
+      position: absolute;
+      top: -0.5em;
+      right: -0.5em;
+      background-color: rgba(255, 10, 10, 0.85);
+      border-radius: 5em;
+      color: white;
+      font-size: 0.9em;
+      padding: 0.2em 0.4em;
+      transform: translateX(50%);
+      width: max-content;
+      max-width: 4em;
+      cursor: pointer;
+
+      // on bird
+      &.subscript {
+        background-color: transparent;
+        right: 0.225em;
+        top: 0.625em;
+        font-size: 0.65em;
+        opacity: 0.5;
       }
     }
 
@@ -1474,6 +1496,7 @@ textarea {
     #controls .popupPanel,
     #search .popupPanel .results,
     #calendar .popupPanel,
+    #gifts .popupPanel,
     #members .popupPanel,
     #missions .popupPanel,
     .grid,
@@ -1579,8 +1602,9 @@ textarea {
       margin-right: 0.25em;
     }
 
-    // member icon on a priority
-    .priority .memberIcon {
+    // member icon on a priority or context
+    .priority .memberIcon,
+    .context .memberIcon {
       margin-right: 0.4em;
     }
 
@@ -1635,12 +1659,24 @@ textarea {
 
     // bird icon in top-left of card
     .bird {
-      height: 1em;
       cursor: pointer;
       position: absolute;
       top: 0.75em;
       left: 0.65em;
       opacity: 0.5;
+
+      img {
+        height: 1em;
+      }
+    }
+
+    // tooltip with more extensive info than a one-line popup
+    .infoTooltip {
+      padding: 0.5em;
+
+      h4 {
+        margin: 0.5em 0;
+      }
     }
   }
 }

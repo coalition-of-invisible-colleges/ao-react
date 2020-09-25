@@ -179,8 +179,6 @@ export default class AoReturnPile extends React.PureComponent {
   getReturnedCardsLength = () => this.returnedCards.length
 
   render() {
-    const { card, setRedirect } = this.context
-
     return (
       <React.Fragment>
         {this.topReturnedCard ? (
