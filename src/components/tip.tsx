@@ -21,14 +21,7 @@ export default class AoTip extends React.PureComponent<PopupPanelProps> {
 				content={this.props.text}
 				placement={this.props.placement ? this.props.placement : 'right'}
 				maxWidth="15em">
-				<strong
-					style={{
-						opacity: '0.5',
-						cursor: 'default',
-						display: 'inline-block'
-					}}>
-					&#10067;
-				</strong>
+				<span className="tipMarker">&#10067;</span>
 			</Tippy>
 		)
 	}

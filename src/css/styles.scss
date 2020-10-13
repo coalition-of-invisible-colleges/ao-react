@@ -427,10 +427,13 @@ textarea {
 
         & > .mission.badge {
           position: absolute;
-          top: 35%;
+          top: 44%;
           left: 50%;
-          transform: translateX(-50%);
+          transform: translateX(-50%) translateY(-50%);
           font-size: 0.75em;
+          padding: 0;
+          word-break: break-all;
+          width: calc(100% - 1.25em);
         }
 
         & > .hud.badge {
@@ -451,7 +454,7 @@ textarea {
 
             .label {
               position: absolute;
-              top: 3.55em;
+              top: 4em;
               left: 50%;
               transform: translateX(-50%);
             }
@@ -1773,6 +1776,19 @@ textarea {
       left: 0.5em;
       opacity: 0.4;
       pointer-events: none;
+    }
+
+    // the question mark that you can hover on to show an AoTip
+    .tipMarker {
+      font-size: 1.4em;
+      font-weight: bold;
+      opacity: 0.5;
+      cursor: default;
+      display: inline-block;
+    }
+
+    h3 .tipMarker {
+      font-size: 1.05em;
     }
   }
 }
