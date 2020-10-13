@@ -412,6 +412,61 @@ textarea {
         }
       }
 
+      &.badge {
+        transform: unset;
+        left: unset;
+        position: unset;
+
+        .background {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 100%;
+        }
+
+        & > .mission.badge {
+          position: absolute;
+          top: 35%;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 0.75em;
+        }
+
+        & > .hud.badge {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+
+          & > .preview.nopad {
+            width: 100%;
+            height: 100%;
+            cursor: default;
+            padding: 0;
+            font-size: 0.8em;
+            right: unset;
+            position: absolute;
+
+            .label {
+              position: absolute;
+              top: 3.55em;
+              left: 50%;
+              transform: translateX(-50%);
+            }
+          }
+
+          .cardMenuButton {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding-bottom: 0.05em;
+            padding-right: 0.1em;
+          }
+        }
+      }
+
       .content {
         position: relative;
         margin: 1em auto;
@@ -428,7 +483,7 @@ textarea {
         }
 
         .mission {
-          .badge {
+          .missionTitle {
             height: 1.5em;
             margin-right: 0.5em;
             position: relative;

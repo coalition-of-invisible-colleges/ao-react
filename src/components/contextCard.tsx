@@ -17,6 +17,7 @@ import AoCoin from './coin'
 import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import AoMemberIcon from './memberIcon'
+import BlankBadge from '../assets/images/badge_blank.svg'
 import { prioritizeCard, subTaskCard, CardZone } from '../cards'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
@@ -26,6 +27,7 @@ export type CardStyle =
 	| 'full'
 	| 'compact'
 	| 'mini'
+	| 'badge'
 	| 'checkmark'
 	| 'context'
 	| 'mission'
@@ -523,7 +525,22 @@ export default class AoContextCard extends React.PureComponent<
 						<div style={{ clear: 'both', height: '1px' }} />
 					</div>
 				)
-
+			case 'badge':
+				return (
+					<div
+						id={'card-' + taskId}
+						className={'card badge' + this.applyClassIfCurrentSearchResult}
+						onDoubleClick={this.goInCard}
+						onMouseEnter={this.onHover}
+						onMouseOver={this.onHover}
+						onMouseOut={this.clearPendingPromise}>
+						<AoPaper taskId={taskId} />
+						<img className="background" src={BlankBadge} />
+						<AoMission taskId={taskId} hudStyle={'badge'} />
+						<AoCardHud taskId={taskId} hudStyle={'badge'} />
+					</div>
+				)
+				break
 			case 'mini':
 			default:
 				let shortened = content

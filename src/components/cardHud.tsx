@@ -24,6 +24,7 @@ export type HudStyle =
 	| 'collapsed-mission'
 	| 'mini before'
 	| 'mini after'
+	| 'badge'
 	| 'menu'
 
 interface CardHudProps {
@@ -137,6 +138,14 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 				)
 
 			case 'mini after':
+				return (
+					<div className={'hud ' + hudStyle}>
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+					</div>
+				)
+			case 'badge':
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />

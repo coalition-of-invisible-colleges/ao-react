@@ -78,6 +78,9 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
     const projects = aoStore.subGuildsByGuild.get(taskId)
     const projectCount = projects ? projects.length : undefined
 
+    let delay
+    let wrappedPriorityCount
+
     switch (this.props.hudStyle) {
       case 'collapsed':
         return (
@@ -120,7 +123,22 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
       case 'collapsed-mission':
       case 'face after':
         return <div className={'preview'}>({this.subCardCount})</div>
+      case 'badge':
+        delay = [0, 0]
+        if (this.priorityCount >= 1) {
+          wrappedPriorityCount = (
+            <div className="label">{this.priorityCount}!</div>
+          )
+        } else {
+          return null
+        }
       case 'mini after':
+        if (delay === undefined) {
+          delay = [625, 200]
+        }
+        if (wrappedPriorityCount == undefined) {
+          wrappedPriorityCount = this.priorityCount + '!'
+        }
         if (this.priorityCount >= 1) {
           return (
             <Tippy
@@ -128,22 +146,29 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
               maxWidth={'none'}
               placement={'bottom'}
               animation={'scale-extreme'}
-              delay={[625, 200]}
+              delay={delay}
               appendTo={() =>
                 document.getElementById('card-' + taskId).parentElement
                   .parentElement.parentElement
               }
               content={
-                <AoStack
-                  inId={taskId}
-                  cardStyle={'priority'}
-                  cards={this.priorityCards}
-                  zone={'priorities'}
-                  onDrop={prioritizeCard}
-                  cardsBeforeFold={3}
-                />
+                <React.Fragment>
+                  {this.props.hudStyle === 'badge' &&
+                  card.guild &&
+                  card.guild.length >= 1 ? (
+                    <h3>{card.guild}</h3>
+                  ) : null}
+                  <AoStack
+                    inId={taskId}
+                    cardStyle={'priority'}
+                    cards={this.priorityCards}
+                    zone={'priorities'}
+                    onDrop={prioritizeCard}
+                    cardsBeforeFold={3}
+                  />
+                </React.Fragment>
               }>
-              <div className={'preview nopad'}>{this.priorityCount}!</div>
+              <div className={'preview nopad'}>{wrappedPriorityCount}</div>
             </Tippy>
           )
         }

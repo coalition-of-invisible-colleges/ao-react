@@ -129,6 +129,11 @@ export default class AoMission extends React.PureComponent<
           )
         }
         return null
+      case 'badge':
+        if (card.guild) {
+          return <span className={'mission badge'}>{card.guild}</span>
+        }
+        return null
       case 'menu':
         return (
           <div className={'mission menu'}>

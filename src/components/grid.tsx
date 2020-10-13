@@ -258,7 +258,16 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
                   x: i,
                   y: j
                 }}>
-                <AoContextCard task={card} cardStyle={'mini'} />
+                <AoContextCard
+                  task={card}
+                  cardStyle={
+                    this.props.dropActsLikeFolder &&
+                    card.guild &&
+                    card.guild.length >= 1
+                      ? 'badge'
+                      : 'mini'
+                  }
+                />
               </AoDragZone>
             ) : null}
           </AoDropZone>

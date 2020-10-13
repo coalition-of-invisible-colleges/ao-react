@@ -129,6 +129,32 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
     return renderedSignatures
   }
 
+  @computed get renderHodlCount() {
+    if (this.signCount >= 1) {
+      console.log('signCount is ', this.signCount)
+      return (
+        <React.Fragment>
+          <img
+            src={Paw}
+            className="moonpaw spin"
+            draggable={false}
+            onDoubleClick={event => {
+              event.stopPropagation()
+              event.nativeEvent.stopImmediatePropagation()
+            }}
+          />
+          <div className="hodls">{this.signCount}</div>
+        </React.Fragment>
+      )
+    }
+
+    if (this.hodlCount >= 2 || (this.hodlCount >= 1 && !this.isGrabbed)) {
+      return <div className="hodls">{this.hodlCount}</div>
+    } else {
+      return ''
+    }
+  }
+
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
@@ -263,28 +289,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             }}
           />
         )}
-        {(this.hodlCount >= 2 || (this.hodlCount >= 1 && !this.isGrabbed)) &&
-        this.signCount < 1 ? (
-          <div className="hodls">{this.hodlCount}</div>
-        ) : (
-          ''
-        )}
-        {this.signCount >= 1 ? (
-          <React.Fragment>
-            <img
-              src={Paw}
-              className="moonpaw spin"
-              draggable={false}
-              onDoubleClick={event => {
-                event.stopPropagation()
-                event.nativeEvent.stopImmediatePropagation()
-              }}
-            />
-            <div className="hodls">{this.signCount}</div>
-          </React.Fragment>
-        ) : (
-          ''
-        )}
+        {this.renderHodlCount}
       </div>
     )
   }
