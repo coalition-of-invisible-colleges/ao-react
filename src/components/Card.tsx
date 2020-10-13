@@ -21,7 +21,11 @@ class RenderCard extends React.Component<RenderProps> {
   }
   render() {
     const taskId = this.props.taskId
+    console.log('taskId is ', taskId)
     const card = aoStore.hashMap.get(taskId)
+    if (!card) {
+      return null
+    }
     let cardText = ''
     if (card.name === taskId) {
       cardText = aoStore.memberById.get(taskId).name

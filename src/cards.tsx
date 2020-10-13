@@ -1,5 +1,5 @@
 import api from './client/api'
-import aoStore from './client/store'
+import aoStore, { Signature } from './client/store'
 
 export type CardZone =
 	| 'card'
@@ -134,4 +134,20 @@ export function isSenpai(memberId: string) {
 		return -1
 	}
 	return 0
+}
+
+export function countCurrentSignatures(signed: Signature[]) {
+	let mostRecentSignaturesOnly = signed.filter((signature, index) => {
+		let lastIndex
+		for (let i = signed.length - 1; i--; i >= 0) {
+			if (signed[i].memberId === signature.memberId) {
+				lastIndex = i
+				break
+			}
+		}
+		return lastIndex === index
+	})
+	console.log('mostRecentSignaturesOnly is ', mostRecentSignaturesOnly)
+	return mostRecentSignaturesOnly.filter(signature => signature.opinion >= 1)
+		.length
 }

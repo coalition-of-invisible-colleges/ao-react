@@ -59,6 +59,7 @@ export interface Task {
   completed: string[]
   parents: string[]
   claimed: string[]
+  signed: Signature[]
   passed: number[]
   guild: string
   lastClaimed: number
@@ -104,6 +105,12 @@ interface Usertime {
 interface Userseen {
   memberId: string
   timestamp: Date
+}
+
+export interface Signature {
+  memberId: string
+  timestamp: Date
+  opinion: number
 }
 
 interface Output {

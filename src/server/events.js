@@ -599,6 +599,16 @@ function taskTimeClocked(taskId, memberId, seconds, date, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskSigned(taskId, memberId, opinion, callback) {
+  let newEvent = {
+    type: 'task-signed',
+    taskId,
+    memberId,
+    opinion
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function taskSeen(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-seen',
@@ -709,5 +719,6 @@ module.exports = {
   gridPin,
   gridUnpin,
   taskSeen,
-  taskTimeClocked
+  taskTimeClocked,
+  taskSigned
 }

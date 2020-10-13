@@ -5,6 +5,7 @@ import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AoContextCard from './contextCard'
 import AoDragZone from './dragZone'
+import _ from 'lodash'
 
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
 
@@ -13,6 +14,7 @@ interface State {
   sort: SearchSort
   items?: number
   hasMore: boolean
+  debounce?
 }
 
 export const defaultState: State = {
@@ -42,8 +44,8 @@ export default class AoSearch extends React.PureComponent<{}, State> {
 
   componentDidMount() {
     this.searchBox.current.select()
-    ;(this.searchBox.current as any).onsearch = this.onSearch
-    ;(this.searchBox.current as any).incremental = true
+    // ;(this.searchBox.current as any).onsearch = this.onSearch
+    // ;(this.searchBox.current as any).incremental = true
   }
 
   focus() {
@@ -51,7 +53,15 @@ export default class AoSearch extends React.PureComponent<{}, State> {
   }
 
   onChange(event) {
-    this.setState({ query: event.target.value })
+    console.log('about to debounce')
+    if (this.state.debounce) {
+      clearTimeout(this.state.debounce)
+    }
+
+    this.setState({
+      query: event.target.value,
+      debounce: setTimeout(this.onSearch, 500)
+    })
   }
 
   onKeyDown(event) {
@@ -61,8 +71,8 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     }
   }
 
-  onSearch(event) {
-    const query = event.target.value
+  onSearch() {
+    const query = this.state.query
     console.log('search. query is ', query)
     if (query === undefined) {
       return

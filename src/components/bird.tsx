@@ -86,7 +86,7 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
       const toMember = aoStore.memberById.get(toId)
       const toName = toMember ? toMember.name : 'deleted member'
       return (
-        <React.Fragment>
+        <React.Fragment key={fromId + '-' + toId}>
           <AoMemberIcon memberId={fromId} /> {fromName}{' '}
           <img src={Bird} style={{ height: '1em' }} />{' '}
           <AoMemberIcon memberId={toId} /> {toName}

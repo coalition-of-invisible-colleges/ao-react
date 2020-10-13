@@ -485,6 +485,23 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-signed':
+      // First make sure they have a valid member card to sign with
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+          if (task.deck.indexOf(ev.memberId) === -1) {
+            task.deck.push(ev.memberId)
+          }
+          let newSig = {
+            memberId: ev.memberId,
+            timestamp: ev.timestamp,
+            opinion: ev.opinion
+          }
+          task.signed.push(newSig)
+        }
+      })
+      break
     case 'pile-grabbed':
       if (!ev.memberId) {
         break

@@ -496,7 +496,7 @@ textarea {
 
         &.full.after,
         &.face.after {
-          .preview {
+          & > .preview {
             position: absolute;
             right: 2em;
             bottom: 0.75em;
@@ -557,11 +557,12 @@ textarea {
         cursor: pointer;
         user-select: none;
 
-        &.ungrabbed {
+        &.ungrabbed > img,
+        &.ungrabbed > .hodls {
           opacity: 0.3;
         }
 
-        img {
+        img.spin {
           animation: spin 32s linear infinite;
         }
 
@@ -578,7 +579,7 @@ textarea {
           font-weight: bold;
           color: rgba(255, 255, 255, 1);
           pointer-events: none;
-          text-shadow: -0.2em 0.2em 0.2em #000;
+          text-shadow: -0.1em 0.1em 0.2em #000;
         }
       }
 
@@ -793,6 +794,7 @@ textarea {
     #members,
     #missions,
     #calendar,
+    #proposals,
     #search,
     #returnPile,
     #shitposts {
@@ -812,6 +814,7 @@ textarea {
     #members,
     #missions,
     #calendar,
+    #proposals,
     #shitposts {
       .results {
         margin-right: 0.5em;
@@ -862,7 +865,7 @@ textarea {
     #gifts {
       .actionCircle {
         left: 0.5em;
-        top: 8em;
+        top: calc(45vh - 14em);
       }
     }
 
@@ -950,6 +953,14 @@ textarea {
           //   text-decoration: none;
           // }
         }
+      }
+    }
+
+    // proposals popup panel
+    #proposals {
+      .actionCircle {
+        left: 0.5em;
+        top: calc(45vh + 6.5em);
       }
     }
 
@@ -1501,6 +1512,9 @@ textarea {
     #missions .popupPanel,
     .grid,
     .cardComposer {
+      scrollbar-color: rgba(89, 89, 89, 0.4) rgba(22, 22, 22, 0.4);
+      scrollbar-width: thin;
+
       &::-webkit-scrollbar {
         background-color: rgba(22, 22, 22, 0.4);
       }
@@ -1677,6 +1691,33 @@ textarea {
       h4 {
         margin: 0.5em 0;
       }
+    }
+
+    .signatureDecorated {
+      min-width: 25em;
+      position: relative;
+
+      .card.priority {
+        left: unset;
+        transform: unset;
+        width: 70%;
+      }
+
+      .decorator {
+        position: absolute;
+        top: 0.5em;
+        right: 1.5em;
+      }
+    }
+
+    // the paw in the moon, shown when a card has signatures
+    .moonpaw {
+      height: 1.5em;
+      position: absolute;
+      top: 0.5em;
+      left: 0.5em;
+      opacity: 0.4;
+      pointer-events: none;
     }
   }
 }

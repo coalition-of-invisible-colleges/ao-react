@@ -9,6 +9,7 @@ import AoGifts from './gifts'
 import AoMissions from './missions'
 import AoMembers from './members'
 import AoCalendar from './calendar'
+import AoProposals from './proposals'
 import AoSearch from './search'
 import AoTickerHud from './tickerHud'
 import AoScore from './score'
@@ -113,6 +114,7 @@ export default class AoHud extends React.Component<{}, undefined> {
           </AoPopupPanel>
         </div>
         <AoCalendar />
+        <AoProposals />
         <div id={'search'}>
           <AoPopupPanel
             iconSrc={MagnifyingGlass}

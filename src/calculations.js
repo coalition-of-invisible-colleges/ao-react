@@ -76,6 +76,7 @@ function blankCard(
     parents: parents,
     claimed: [],
     passed: [],
+    signed: [],
     guild: false,
     created: created,
     lastClaimed: 0,

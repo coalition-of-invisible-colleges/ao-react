@@ -4,7 +4,9 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
+import { countCurrentSignatures } from '../cards'
 import Coin from '../assets/images/coin.svg'
+import Paw from '../assets/images/paw.svg'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
@@ -15,8 +17,12 @@ interface CoinProps {
 
 @observer
 export default class AoCoin extends React.PureComponent<CoinProps> {
+  private imageRef = React.createRef<HTMLImageElement>()
+
   constructor(props) {
     super(props)
+    this.sign = this.sign.bind(this)
+    this.signatureDecorators = this.signatureDecorators.bind(this)
   }
 
   @computed get isGrabbed() {
@@ -39,6 +45,88 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
     if (!card || !card.hasOwnProperty('deck')) return undefined
 
     return card.deck.length
+  }
+
+  @computed get signCount() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card || !card.hasOwnProperty('signed')) return undefined
+    console.log('card.signed length is ', card.signed.length)
+    return countCurrentSignatures(card.signed)
+  }
+
+  @computed get isSigned() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return undefined
+
+    return card.signed.some(
+      signature => signature.memberId === aoStore.member.memberId
+    )
+  }
+
+  sign() {
+    api.signCard(this.props.taskId)
+  }
+
+  signatureDecorators(memberCards) {
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+    if (!card) return null
+
+    let renderedSignatures = {}
+    renderedSignatures[aoStore.member.memberId] = (
+      <span onClick={this.sign} className="action inline decorator">
+        sign
+      </span>
+    )
+
+    memberCards.forEach(memberCard => {
+      if (!card.hasOwnProperty('signed') || card.signed.length < 1) return
+
+      let lastFoundSig
+      for (let i = card.signed.length - 1; i >= 0; i--) {
+        if (card.signed[i].memberId == memberCard.taskId) {
+          lastFoundSig = card.signed[i]
+          break
+        }
+      }
+
+      if (!lastFoundSig) return null
+      if (memberCard.taskId === aoStore.member.memberId) {
+        if (lastFoundSig.opinion === 1) {
+          renderedSignatures[aoStore.member.memberId] = (
+            <React.Fragment>
+              <img
+                src={Paw}
+                className="decorator"
+                style={{ height: '1.5em' }}
+                draggable={false}
+                onDoubleClick={event => {
+                  event.stopPropagation()
+                  event.nativeEvent.stopImmediatePropagation()
+                }}
+              />
+              <span onClick={this.sign} className="action inline decorator">
+                unsign
+              </span>
+            </React.Fragment>
+          )
+        }
+      } else if (lastFoundSig.opinion === 1) {
+        renderedSignatures[memberCard.taskId] = (
+          <img
+            src={Paw}
+            className="decorator"
+            style={{ height: '1.5em' }}
+            draggable={false}
+            onDoubleClick={event => {
+              event.stopPropagation()
+              event.nativeEvent.stopImmediatePropagation()
+            }}
+          />
+        )
+      }
+    })
+    return renderedSignatures
   }
 
   render() {
@@ -124,6 +212,8 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             cardStyle={'member'}
             cardsBeforeFold={3}
             noPopups={true}
+            decorators={this.signatureDecorators(memberCards)}
+            className="signatureDecorated"
           />
         ) : null}
         {!this.isMember ? (
@@ -147,12 +237,12 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             content={list}
             hideOnClick={false}
             delay={[625, 200]}
-            appendTo={() =>
-              document.getElementById('card-' + taskId).parentElement
-            }>
+            appendTo={document.getElementById('root')}>
             <img
               src={Coin}
+              ref={this.imageRef}
               onClick={onClick}
+              className="spin"
               draggable={false}
               onDoubleClick={event => {
                 event.stopPropagation()
@@ -163,7 +253,9 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
         ) : (
           <img
             src={Coin}
+            ref={this.imageRef}
             onClick={onClick}
+            className="spin"
             draggable={false}
             onDoubleClick={event => {
               event.stopPropagation()
@@ -171,8 +263,25 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             }}
           />
         )}
-        {this.hodlCount >= 2 || (this.hodlCount >= 1 && !this.isGrabbed) ? (
+        {(this.hodlCount >= 2 || (this.hodlCount >= 1 && !this.isGrabbed)) &&
+        this.signCount < 1 ? (
           <div className="hodls">{this.hodlCount}</div>
+        ) : (
+          ''
+        )}
+        {this.signCount >= 1 ? (
+          <React.Fragment>
+            <img
+              src={Paw}
+              className="moonpaw spin"
+              draggable={false}
+              onDoubleClick={event => {
+                event.stopPropagation()
+                event.nativeEvent.stopImmediatePropagation()
+              }}
+            />
+            <div className="hodls">{this.signCount}</div>
+          </React.Fragment>
         ) : (
           ''
         )}

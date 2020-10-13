@@ -680,6 +680,25 @@ class AoApi {
       })
   }
 
+  async signCard(
+    taskId: string,
+    opinion: number = 1
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-signed',
+      taskId: taskId,
+      memberId: aoStore.member.memberId,
+      opinion: opinion
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async markSeen(taskId): Promise<request.Response> {
     const task: Task = aoStore.hashMap.get(taskId)
     const act = {

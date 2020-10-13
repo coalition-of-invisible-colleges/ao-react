@@ -99,8 +99,8 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 				return (
 					<React.Fragment>
 						<AoBird taskId={taskId} />
+						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
-							<AoUnread taskId={taskId} />
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />

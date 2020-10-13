@@ -780,6 +780,23 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'task-signed':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isMemberId(req.body.memberId, errRes) &&
+        !validators.isMemberId(req.body.taskId, errRes) &&
+        Number.isInteger(req.body.opinion)
+      ) {
+        events.taskSigned(
+          req.body.taskId,
+          req.body.memberId,
+          req.body.opinion,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'pile-prioritized':
       if (validators.isTaskId(req.body.inId, errRes)) {
         events.pilePrioritized(req.body.inId, utils.buildResCallback(res))
