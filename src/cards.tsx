@@ -139,7 +139,7 @@ export function isSenpai(memberId: string) {
 export function countCurrentSignatures(signed: Signature[]) {
 	let mostRecentSignaturesOnly = signed.filter((signature, index) => {
 		let lastIndex
-		for (let i = signed.length - 1; i--; i >= 0) {
+		for (let i = signed.length - 1; i >= 0; i--) {
 			if (signed[i].memberId === signature.memberId) {
 				lastIndex = i
 				break

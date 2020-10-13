@@ -680,10 +680,7 @@ class AoApi {
       })
   }
 
-  async signCard(
-    taskId: string,
-    opinion: number = 1
-  ): Promise<request.Response> {
+  async signCard(taskId: string, opinion = 1): Promise<request.Response> {
     const act = {
       type: 'task-signed',
       taskId: taskId,

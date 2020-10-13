@@ -22,6 +22,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
   constructor(props) {
     super(props)
     this.sign = this.sign.bind(this)
+    this.unsign = this.unsign.bind(this)
     this.signatureDecorators = this.signatureDecorators.bind(this)
   }
 
@@ -67,6 +68,10 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
     api.signCard(this.props.taskId)
   }
 
+  unsign() {
+    api.signCard(this.props.taskId, 0)
+  }
+
   signatureDecorators(memberCards) {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
@@ -90,7 +95,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
         }
       }
 
-      if (!lastFoundSig) return null
+      if (lastFoundSig === undefined) return
       if (memberCard.taskId === aoStore.member.memberId) {
         if (lastFoundSig.opinion === 1) {
           renderedSignatures[aoStore.member.memberId] = (
@@ -105,7 +110,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
                   event.nativeEvent.stopImmediatePropagation()
                 }}
               />
-              <span onClick={this.sign} className="action inline decorator">
+              <span onClick={this.unsign} className="action inline decorator">
                 unsign
               </span>
             </React.Fragment>
