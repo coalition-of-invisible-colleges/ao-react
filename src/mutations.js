@@ -497,8 +497,8 @@ function tasksMuts(tasks, ev) {
             timestamp: ev.timestamp,
             opinion: ev.opinion
           }
-          if (!member.signed) {
-            member.signed = []
+          if (!task.signed) {
+            task.signed = []
           }
           task.signed.push(newSig)
         }
