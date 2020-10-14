@@ -486,7 +486,6 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-signed':
-      // First make sure they have a valid member card to sign with
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
@@ -497,6 +496,9 @@ function tasksMuts(tasks, ev) {
             memberId: ev.memberId,
             timestamp: ev.timestamp,
             opinion: ev.opinion
+          }
+          if (!member.signed) {
+            member.signed = []
           }
           task.signed.push(newSig)
         }
