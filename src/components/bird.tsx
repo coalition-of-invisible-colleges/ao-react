@@ -146,7 +146,8 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
           zIndex={4}
           theme={'translucent'}
           content={this.renderPassList}
-          delay={[625, 200]}>
+          delay={[625, 200]}
+          placement="right-start">
           <div className="bird">
             <img src={Bird} />
             {this.pendingPasses >= 1 && (

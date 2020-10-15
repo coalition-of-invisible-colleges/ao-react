@@ -295,6 +295,7 @@ textarea {
           font-size: 0.8em;
           margin: 0;
           height: 100%;
+          cursor: default;
 
           h1 {
             font-size: 1.1em;
@@ -394,6 +395,7 @@ textarea {
               // pointer-events: none;
               margin: 0;
               background-color: rgba(0, 0, 0, 0.2);
+              cursor: default;
 
               & .nopad {
                 padding-left: 0;
@@ -1569,6 +1571,7 @@ textarea {
     #gifts .popupPanel,
     #members .popupPanel,
     #missions .popupPanel,
+    #proposals .popupPanel,
     .grid,
     .cardComposer {
       scrollbar-color: rgba(89, 89, 89, 0.4) rgba(22, 22, 22, 0.4);
