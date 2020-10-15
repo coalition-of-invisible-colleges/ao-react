@@ -51,7 +51,6 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
   @computed get signCount() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card || !card.hasOwnProperty('signed')) return undefined
-    console.log('card.signed length is ', card.signed.length)
     return countCurrentSignatures(card.signed)
   }
 

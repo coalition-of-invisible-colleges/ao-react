@@ -13,7 +13,7 @@ interface State {
 
 export const defaultState: State = {
   page: 0,
-  sort: 'alphabetical'
+  sort: 'hodls'
 }
 
 @observer
@@ -82,7 +82,7 @@ export default class AoMissions extends React.PureComponent<{}, State> {
           cards={missions}
           zone={'panel'}
           cardStyle={'mission'}
-          alwaysShowAll={true}
+          cardsBeforeFold={5}
         />
       </div>
     )

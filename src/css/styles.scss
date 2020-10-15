@@ -848,8 +848,7 @@ textarea {
       }
     }
 
-    //
-    #hub,
+    // actionCircle and popup panel
     #controls,
     #gifts,
     #members,
@@ -871,6 +870,7 @@ textarea {
       }
     }
 
+    // margin for icons on left edge of page
     #gifts,
     #members,
     #missions,
@@ -883,7 +883,6 @@ textarea {
     }
 
     // community hub popup panel
-    #hub,
     #controls {
       .actionCircle {
         top: 0.5em;
@@ -898,14 +897,6 @@ textarea {
             top: -0.75em;
           }
         }
-      }
-    }
-
-    #hub {
-      .popupPanel {
-        padding-right: 0;
-        width: calc(100vw - 17em);
-        height: calc(100vh - 7.5em);
       }
     }
 
@@ -1564,7 +1555,6 @@ textarea {
     }
 
     // search results and grid scrollbars
-    #hub .popupPanel,
     #controls .popupPanel,
     #search .popupPanel .results,
     #calendar .popupPanel,
@@ -1794,6 +1784,22 @@ textarea {
     // the question mark when it's already inside a heading
     h3 .tipMarker {
       font-size: 1.05em;
+    }
+
+    // sun / community hub icon in top left
+    #hub {
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0.5em 0 0 0.5em;
+        width: 5em;
+        cursor: pointer;
+
+        &.open {
+          width: 6.5em;
+        }
+      }
     }
   }
 }

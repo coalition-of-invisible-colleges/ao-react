@@ -94,7 +94,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
           cards={memberCards}
           zone={'panel'}
           cardStyle={'priority'}
-          alwaysShowAll={true}
+          cardsBeforeFold={10}
         />
       )
     }
