@@ -444,6 +444,7 @@ textarea {
           height: 100%;
           left: 0;
           top: 0;
+          cursor: pointer;
 
           & > .preview.nopad {
             width: 100%;
@@ -1789,7 +1790,7 @@ textarea {
     // sun / community hub icon in top left
     #hub {
       img {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         padding: 0.5em 0 0 0.5em;
