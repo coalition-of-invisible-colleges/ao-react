@@ -27,7 +27,7 @@ export default class AoGifts extends React.PureComponent {
       <div className="results">
         <AoStack
           cards={this.myGifts}
-          zone="panel"
+          zone="gifts"
           cardStyle="face"
           alwaysShowAll={true}
         />

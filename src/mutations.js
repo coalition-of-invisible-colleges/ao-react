@@ -566,6 +566,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           task.deck = _.filter(task.deck, d => d !== ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
         }
       })
       break

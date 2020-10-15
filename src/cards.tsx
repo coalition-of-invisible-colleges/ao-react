@@ -10,6 +10,7 @@ export type CardZone =
 	| 'context'
 	| 'discard'
 	| 'panel'
+	| 'gifts'
 
 export interface Coords {
 	x?: number
@@ -147,7 +148,6 @@ export function countCurrentSignatures(signed: Signature[]) {
 		}
 		return lastIndex === index
 	})
-	console.log('mostRecentSignaturesOnly is ', mostRecentSignaturesOnly)
 	return mostRecentSignaturesOnly.filter(signature => signature.opinion >= 1)
 		.length
 }

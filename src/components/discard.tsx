@@ -70,6 +70,9 @@ export default class AoDiscardZone extends React.PureComponent {
 			case 'context':
 				aoStore.removeFromContext(move.from.taskId)
 				break
+			case 'gifts':
+				api.dropCard(move.from.taskId)
+				break
 		}
 	}
 
