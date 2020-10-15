@@ -79,24 +79,20 @@ export default class AoHub extends React.PureComponent<{}, State> {
     }
 
     let communityCard = aoStore.cardByName.get('community hub')
-    let topMissions = aoStore.topMissions
-    let topCards = aoStore.topCards
+    let youAreHere =
+      communityCard && aoStore.currentCard === communityCard.taskId
 
     return (
       <div id={'hub'}>
         <Tippy
           zIndex={4}
           theme="translucent"
-          content="Community Hub"
+          content={youAreHere ? 'Hide' : 'Community Hub'}
           placement="right">
           <img
             src={Sun}
             onClick={this.goHub}
-            className={
-              communityCard && aoStore.currentCard === communityCard.taskId
-                ? 'open'
-                : undefined
-            }
+            className={youAreHere ? 'open' : undefined}
           />
         </Tippy>
       </div>
