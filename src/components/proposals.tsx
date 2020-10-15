@@ -28,6 +28,17 @@ export default class AoProposals extends React.PureComponent {
       )
   }
 
+  @computed get proposalsToSign() {
+    return this.proposals.filter(task => {
+      return (
+        task.hasOwnProperty('signed') &&
+        task.signed.every(
+          signature => signature.memberId !== aoStore.member.memberId
+        )
+      )
+    }).length
+  }
+
   @computed get renderProposalsList() {
     if (this.proposals.length < 1) {
       return ''
@@ -49,9 +60,10 @@ export default class AoProposals extends React.PureComponent {
     if (this.proposals.length < 1) {
       return null
     }
-    const renderedBadge = (
-      <React.Fragment>{this.proposals.length}</React.Fragment>
-    )
+    const renderedBadge =
+      this.proposalsToSign >= 1 ? (
+        <React.Fragment>{this.proposalsToSign}</React.Fragment>
+      ) : null
 
     return (
       <div id="proposals">
