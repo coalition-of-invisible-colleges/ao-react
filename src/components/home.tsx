@@ -62,8 +62,9 @@ export default class AoHome extends React.PureComponent<{}, State> {
 
   render() {
     if (
-      aoStore.currentCard === aoStore.memberCard.taskId &&
-      !this.state.dabbed
+      (aoStore.currentCard === aoStore.memberCard.taskId &&
+        !this.state.dabbed) ||
+      (aoStore.currentCard === this.state.memory && this.state.dabbed)
     ) {
       return null
     }
