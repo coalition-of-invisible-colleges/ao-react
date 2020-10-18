@@ -1047,21 +1047,15 @@ textarea {
     }
 
     #returnPile {
+      position: absolute;
+      left: 100%;
+
       img.actionIcon {
         position: absolute;
         left: calc(100% + 3.25em);
         top: unset;
         bottom: 0.5em;
         height: 4.5em;
-      }
-    }
-
-    .previewPopup {
-      & > p {
-        max-width: 9em;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
       }
     }
 

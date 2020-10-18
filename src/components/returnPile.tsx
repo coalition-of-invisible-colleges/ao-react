@@ -10,8 +10,6 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import _ from 'lodash'
 
-const RenderNumberOfReturned = observer(props => props.getReturnedCardsLength())
-
 function allReachableHeldParents(origin: Task): Task[] {
   if (!origin.hasOwnProperty('taskId')) {
     return []
@@ -67,31 +65,18 @@ function allReachableHeldParents(origin: Task): Task[] {
 
 @observer
 export default class AoReturnPile extends React.PureComponent {
-  @computed get myEvents(): Task[] {
-    let my = aoStore.state.tasks
-      .filter(t => {
-        if (!t.hasOwnProperty('taskId')) {
-          console.log(
-            'Invalid event card detected while retrieving member events list.'
-          )
-          return false
-        }
-
-        if (!t.book || !t.book.startTs || t.book.startTs <= 0) return false
-        if (t.deck.indexOf(aoStore.member.memberId) === -1) {
-          return false
-        }
-        return true
-      })
-      .sort((a, b) => {
-        return b.book.startTs - a.book.startTs
-      })
-
-    return my
+  constructor(props) {
+    super(props)
+    this.findOrphans = this.findOrphans.bind(this)
   }
 
-  @computed get orphans() {
+  findOrphans(count: number) {
+    let found = 0
     return aoStore.state.tasks.filter(t => {
+      if (found >= count) {
+        return false
+      }
+
       if (!t.hasOwnProperty('taskId')) {
         console.log('Broken card found while search for returned cards.')
         return false
@@ -136,49 +121,44 @@ export default class AoReturnPile extends React.PureComponent {
       ) {
         return false
       }
+      found++
       return true
     })
   }
 
-  @computed
-  get returnedCards() {
-    console.log(
-      'recomputing returned cards. this should only happen once or twice when you create a card'
-    )
+  @computed get myEvents(): Task[] {
+    let my = aoStore.state.tasks
+      .filter(t => {
+        if (!t.hasOwnProperty('taskId')) {
+          console.log(
+            'Invalid event card detected while retrieving member events list.'
+          )
+          return false
+        }
 
-    let allChildTaskIds = []
+        if (!t.book || !t.book.startTs || t.book.startTs <= 0) return false
+        if (t.deck.indexOf(aoStore.member.memberId) === -1) {
+          return false
+        }
+        return true
+      })
+      .sort((a, b) => {
+        return b.book.startTs - a.book.startTs
+      })
 
-    this.orphans.forEach(t => {
-      allChildTaskIds.push(...t.subTasks, ...t.priorities, ...t.completed)
-      if (t.grid && t.grid.rows) {
-        Object.entries(t.grid.rows).forEach(([y, row]) => {
-          Object.entries(row).forEach(([x, cell]) => {
-            if (cell.length >= 1) {
-              allChildTaskIds.push(cell)
-            }
-          })
-        })
-      }
-    })
-
-    const filteredOrphans = _.filter(
-      this.orphans,
-      t => !allChildTaskIds.includes(t.taskId)
-    )
-
-    return filteredOrphans
+    return my
   }
 
   @computed get topReturnedCard() {
-    if (this.returnedCards && this.returnedCards.length >= 1) {
-      return this.returnedCards[this.returnedCards.length - 1]
+    const orphans = this.findOrphans(1)
+    if (orphans.length >= 1) {
+      return orphans[0]
     }
     return null
   }
 
-  getReturnedCardsLength = () => this.returnedCards.length
-
   render() {
+    console.log('topReturnedCard is ', this.topReturnedCard)
     return (
       <React.Fragment>
         {this.topReturnedCard ? (
@@ -188,18 +168,11 @@ export default class AoReturnPile extends React.PureComponent {
               dragContext={{ zone: 'panel', y: 0 }}>
               <LazyTippy
                 zIndex={4}
-                interactive={true}
-                hideOnClick={false}
-                delay={[625, 200]}
                 theme="translucent"
                 content={
-                  <div className={'previewPopup'}>
-                    <p>Returned cards—drag to draw (or unmoon to drop):</p>
-                    <AoContextCard
-                      task={this.topReturnedCard}
-                      cardStyle={'compact'}
-                    />
-                  </div>
+                  <React.Fragment>
+                    <p>Discarded cards (drag to draw)</p>
+                  </React.Fragment>
                 }
                 placement={'top'}>
                 <img

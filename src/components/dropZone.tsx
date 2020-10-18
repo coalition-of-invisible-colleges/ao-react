@@ -32,12 +32,15 @@ export default class AoDropZone extends React.PureComponent<
 	DropZoneProps,
 	State
 > {
+	private nestedDragCounter: number = 0
+
 	constructor(props) {
 		super(props)
 		this.state = {}
 		this.onClick = this.onClick.bind(this)
 		this.detectDragKind = this.detectDragKind.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
+		this.continueDrop = this.continueDrop.bind(this)
 		this.hideDrop = this.hideDrop.bind(this)
 		this.drop = this.drop.bind(this)
 	}
@@ -79,11 +82,25 @@ export default class AoDropZone extends React.PureComponent<
 	allowDrop(event) {
 		event.preventDefault()
 		event.stopPropagation()
+		this.nestedDragCounter++
 		this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
 	}
 
+	continueDrop(event) {
+		event.preventDefault()
+		event.stopPropagation()
+		if (!this.state.draggedKind) {
+			this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
+		}
+	}
+
 	hideDrop(event) {
-		this.setState({ draggedKind: undefined })
+		this.nestedDragCounter--
+		if (this.nestedDragCounter > 0) {
+			// Webkit fires onDragLeave whenever there is motion on a child, need to filter
+			return false
+		}
+		this.setState({ draggedKind: null })
 	}
 
 	async drop(event) {
@@ -157,7 +174,7 @@ export default class AoDropZone extends React.PureComponent<
 				className="zone empty"
 				onClick={this.onClick}
 				onDragEnter={this.allowDrop}
-				onDragOver={this.allowDrop}
+				onDragOver={this.continueDrop}
 				onDragLeave={this.hideDrop}
 				onDrop={this.drop}>
 				{message}
@@ -171,7 +188,7 @@ export default class AoDropZone extends React.PureComponent<
 				<div
 					className={'discard'}
 					onDragEnter={this.allowDrop}
-					onDragOver={this.allowDrop}
+					onDragOver={this.continueDrop}
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}>
 					{this.props.children}
@@ -208,7 +225,7 @@ export default class AoDropZone extends React.PureComponent<
 					id={this.props.x + '-' + this.props.y}
 					className={'dropZone ' + this.props.zoneStyle}
 					onDragEnter={this.allowDrop}
-					onDragOver={this.allowDrop}
+					onDragOver={this.continueDrop}
 					onDragLeave={this.hideDrop}
 					onDrop={this.drop}
 					style={style}>
