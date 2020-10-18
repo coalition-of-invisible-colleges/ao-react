@@ -98,7 +98,7 @@ export default class AoDropZone extends React.PureComponent<
 		this.nestedDragCounter--
 		if (this.nestedDragCounter > 0) {
 			// Webkit fires onDragLeave whenever there is motion on a child, need to filter
-			return false
+			return
 		}
 		this.setState({ draggedKind: null })
 	}

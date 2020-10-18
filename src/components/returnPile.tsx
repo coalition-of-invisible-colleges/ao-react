@@ -1,4 +1,5 @@
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
@@ -9,6 +10,7 @@ import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import _ from 'lodash'
+import { hideAll as hideAllTippys } from 'tippy.js'
 
 function allReachableHeldParents(origin: Task): Task[] {
   if (!origin.hasOwnProperty('taskId')) {
@@ -63,11 +65,23 @@ function allReachableHeldParents(origin: Task): Task[] {
   return reachableCards
 }
 
+interface State {
+  redirect?: string
+}
+
 @observer
-export default class AoReturnPile extends React.PureComponent {
+export default class AoReturnPile extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
+    this.state = {}
     this.findOrphans = this.findOrphans.bind(this)
+    this.goInCard = this.goInCard.bind(this)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.redirect !== undefined) {
+      this.setState({ redirect: undefined })
+    }
   }
 
   findOrphans(count: number) {
@@ -126,6 +140,24 @@ export default class AoReturnPile extends React.PureComponent {
     })
   }
 
+  goInCard(event) {
+    event.stopPropagation()
+    hideAllTippys()
+    aoStore.closeAllCloseables()
+
+    const card = this.topReturnedCard
+    if (!card) {
+      console.log('missing card')
+      return
+    }
+    const taskId = card.taskId
+    console.log('goInCard taskId is ', taskId)
+    aoStore.addToContext([aoStore.currentCard])
+    aoStore.setCurrentCard(taskId)
+    aoStore.removeFromContext(taskId)
+    this.setState({ redirect: taskId })
+  }
+
   @computed get myEvents(): Task[] {
     let my = aoStore.state.tasks
       .filter(t => {
@@ -158,6 +190,10 @@ export default class AoReturnPile extends React.PureComponent {
   }
 
   render() {
+    if (this.state.redirect !== undefined) {
+      return <Redirect to={this.state.redirect} />
+    }
+
     console.log('topReturnedCard is ', this.topReturnedCard)
     return (
       <React.Fragment>
@@ -177,6 +213,7 @@ export default class AoReturnPile extends React.PureComponent {
                 placement={'top'}>
                 <img
                   src={MoonBag}
+                  onDoubleClick={this.goInCard}
                   style={{ height: '4.5em' }}
                   className="actionIcon"
                 />
