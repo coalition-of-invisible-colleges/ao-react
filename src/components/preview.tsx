@@ -153,19 +153,25 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
               }
               content={
                 <React.Fragment>
-                  {this.props.hudStyle === 'badge' &&
-                  card.guild &&
-                  card.guild.length >= 1 ? (
-                    <h3>{card.guild}</h3>
-                  ) : null}
-                  <AoStack
-                    inId={taskId}
-                    cardStyle={'priority'}
-                    cards={this.priorityCards}
-                    zone={'priorities'}
-                    onDrop={prioritizeCard}
-                    cardsBeforeFold={3}
-                  />
+                  {aoStore.currentCard === taskId ? (
+                    <p>You Are Here</p>
+                  ) : (
+                    <React.Fragment>
+                      {this.props.hudStyle === 'badge' &&
+                      card.guild &&
+                      card.guild.length >= 1 ? (
+                        <h3>{card.guild}</h3>
+                      ) : null}
+                      <AoStack
+                        inId={taskId}
+                        cardStyle={'priority'}
+                        cards={this.priorityCards}
+                        zone={'priorities'}
+                        onDrop={prioritizeCard}
+                        cardsBeforeFold={3}
+                      />
+                    </React.Fragment>
+                  )}
                 </React.Fragment>
               }>
               <div className={'preview nopad'}>{wrappedPriorityCount}</div>
