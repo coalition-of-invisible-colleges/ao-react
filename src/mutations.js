@@ -168,6 +168,7 @@ function membersMuts(members, ev) {
       break
 
     case 'member-field-updated':
+      console.log('member-field-updated mutation: ', ev)
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
           member[ev.field] = ev.newfield

@@ -2,7 +2,7 @@ import request from 'superagent'
 import uuidV1 from 'uuid/v1'
 import cryptoUtils from '../crypto'
 import _ from 'lodash'
-import configuration from '../../client-configuration'
+import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
 import io from 'socket.io-client'
 import { composeP } from 'ramda'
@@ -623,7 +623,6 @@ class AoApi {
     field: string,
     newValue: string
   ): Promise<request.Response> {
-    const secret = cryptoUtils.createHash(name)
     if (field === 'secret') {
       newValue = cryptoUtils.createHash(newValue)
     }
@@ -874,11 +873,8 @@ class AoApi {
     })
   }
 }
-const socket = io.connect(
-  configuration.socketUrl ? configuration.socketUrl : '/',
-  {
-    autoConnect: false
-  }
-)
+const socket = io.connect(config.socketUrl ? config.socketUrl : '/', {
+  autoConnect: false
+})
 const api = new AoApi(socket)
 export default api

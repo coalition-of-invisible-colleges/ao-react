@@ -205,11 +205,7 @@ export default class AoReturnPile extends React.PureComponent<{}, State> {
               <LazyTippy
                 zIndex={4}
                 theme="translucent"
-                content={
-                  <React.Fragment>
-                    <p>Discarded cards (drag to draw)</p>
-                  </React.Fragment>
-                }
+                content="Discarded cards (drag to draw)"
                 placement={'top'}>
                 <img
                   src={MoonBag}

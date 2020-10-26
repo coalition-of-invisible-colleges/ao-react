@@ -39,6 +39,7 @@ export interface Member {
   timestamp: number
   lastUsed: Date
   muted: Boolean
+  fob: string
 }
 
 export interface Task {

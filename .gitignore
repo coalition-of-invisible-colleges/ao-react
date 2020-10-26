@@ -9,7 +9,6 @@ build
 .env
 .env.local
 .env.*.local
-client-configuration.js
 
 # Log files
 npm-debug.log*

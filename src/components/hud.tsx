@@ -15,6 +15,7 @@ import AoTickerHud from './tickerHud'
 import AoScore from './score'
 import AoUsername from './username'
 import AoPassword from './password'
+import AoFob from './fob'
 import AoVolume from './volume'
 import AoPopupPanel from './popupPanel'
 import AoShitposts from './shitposts'
@@ -56,6 +57,7 @@ class MainMenu extends React.PureComponent<{}, State> {
       <div id={'mainMenu'}>
         <AoUsername />
         <AoPassword />
+        <AoFob />
         <AoVolume />
         <div onClick={this.changeTheme} id={'themer'} className={'action'}>
           Next Theme
