@@ -232,7 +232,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
         {!!this.senpai ? (
           <div className="menu">
             <div className="action" onClick={this.promoteMember}>
-              <img src={Ascend} />
+              <img src={Ascend} className="ascend" />
               Promote Above
             </div>
             <div
