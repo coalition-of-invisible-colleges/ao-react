@@ -17,6 +17,7 @@ import AoUsername from './username'
 import AoPassword from './password'
 import AoFob from './fob'
 import AoVolume from './volume'
+import AoReactivator from './reactivator'
 import AoPopupPanel from './popupPanel'
 import AoShitposts from './shitposts'
 import MemberIcon from '../assets/images/loggedWhite.svg'
@@ -58,6 +59,7 @@ class MainMenu extends React.PureComponent<{}, State> {
         <AoUsername />
         <AoPassword />
         <AoFob />
+        <AoReactivator />
         <AoVolume />
         <div onClick={this.changeTheme} id={'themer'} className={'action'}>
           Next Theme

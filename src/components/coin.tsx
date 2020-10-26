@@ -6,6 +6,7 @@ import api from '../client/api'
 import AoStack from './stack'
 import { countCurrentSignatures } from '../cards'
 import Coin from '../assets/images/coin.svg'
+import GoldenDoge from '../assets/images/goldendoge.svg'
 import Paw from '../assets/images/paw.svg'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
@@ -28,7 +29,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
 
   @computed get isGrabbed() {
     const card = aoStore.hashMap.get(this.props.taskId)
-    if (!card) return undefined
+    if (!card) return null
 
     return card.deck.indexOf(aoStore.member.memberId) >= 0
   }
@@ -36,27 +37,37 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
   @computed get isMember() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
-    if (!card) return undefined
+    if (!card) return null
 
     return card.name === taskId
   }
 
+  @computed get isActiveMember() {
+    const member = aoStore.memberById.get(this.props.taskId)
+    if (!member) {
+      return null
+    }
+    const isActive = member.active >= 1
+
+    return this.isMember && isActive
+  }
+
   @computed get hodlCount() {
     const card = aoStore.hashMap.get(this.props.taskId)
-    if (!card || !card.hasOwnProperty('deck')) return undefined
+    if (!card || !card.hasOwnProperty('deck')) return null
 
     return card.deck.length
   }
 
   @computed get signCount() {
     const card = aoStore.hashMap.get(this.props.taskId)
-    if (!card || !card.hasOwnProperty('signed')) return undefined
+    if (!card || !card.hasOwnProperty('signed')) return null
     return countCurrentSignatures(card.signed)
   }
 
   @computed get isSigned() {
     const card = aoStore.hashMap.get(this.props.taskId)
-    if (!card) return undefined
+    if (!card) return null
 
     return card.signed.some(
       signature => signature.memberId === aoStore.member.memberId
@@ -269,7 +280,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             delay={[625, 200]}
             appendTo={document.getElementById('root')}>
             <img
-              src={Coin}
+              src={this.isActiveMember ? GoldenDoge : Coin}
               ref={this.imageRef}
               onClick={onClick}
               className="spin"

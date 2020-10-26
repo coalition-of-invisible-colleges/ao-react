@@ -184,8 +184,6 @@ textarea {
         }
 
         .coin {
-          width: 2em;
-          height: 2em;
           transform: unset;
           margin: 0;
           left: -0.5em;
@@ -193,6 +191,11 @@ textarea {
           top: -0.35em;
           display: inline-block;
           float: left;
+
+          img {
+            width: 2em;
+            // height: 2em;
+          }
         }
 
         & > .hud {
@@ -610,8 +613,6 @@ textarea {
       }
 
       .coin {
-        width: 2.5em;
-        height: 2.5em;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
@@ -619,6 +620,11 @@ textarea {
         margin-top: 1.5em;
         cursor: pointer;
         user-select: none;
+
+        img {
+          width: 2.5em;
+          // height: 2.5em;
+        }
 
         &.ungrabbed > img,
         &.ungrabbed > .hodls {

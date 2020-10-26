@@ -872,13 +872,10 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-claimed':
+      let paid = parseFloat(ev.paid) > 0 ? parseFloat(ev.paid) : 0
       let bounty = 0
       tasks.forEach(task => {
         // let found = false
-        if (task.taskId === ev.memberId) {
-          task.boost += parseFloat(ev.paid)
-        }
-
         // task.priorities.some(taskId => {
         //   if (taskId !== ev.taskId) {
         //     return false
@@ -905,6 +902,9 @@ function tasksMuts(tasks, ev) {
         //   }
         // }
         if (task.taskId === ev.taskId) {
+          if (task.hasOwnProperty('completeValue') && task.completeValue > 0) {
+            bounty = task.completeValue
+          }
           task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {
@@ -915,6 +915,11 @@ function tasksMuts(tasks, ev) {
             task.claimed.push(ev.memberId)
           }
           task.lastClaimed = ev.timestamp
+        }
+      })
+      tasks.forEach(task => {
+        if (task.taskId === ev.memberId) {
+          task.boost += paid + bounty
         }
       })
       break
