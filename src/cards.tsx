@@ -117,9 +117,15 @@ export function isSenpai(memberId: string) {
 		console.log('invalid member detected')
 		return 0
 	}
-	const theirVouches = theirCard.deck
+	const theirVouchCards = theirCard.deck
 		.map(mId => aoStore.hashMap.get(mId))
-		.filter(memberCard => memberCard !== undefined).length
+		.filter(memberCard => memberCard !== undefined)
+
+	let theirVouches = theirVouchCards.length
+
+	theirVouchCards.forEach(card => {
+		theirVouches = Math.max(theirVouches, countVouches(card.taskId))
+	})
 
 	const myVouches = aoStore.memberCard.deck
 		.map(mId => aoStore.hashMap.get(mId))
@@ -150,4 +156,21 @@ export function countCurrentSignatures(signed: Signature[]) {
 	})
 	return mostRecentSignaturesOnly.filter(signature => signature.opinion >= 1)
 		.length
+}
+
+export function countVouches(memberId: string) {
+	const card = aoStore.hashMap.get(memberId)
+	if (!card || !card.hasOwnProperty('deck')) return null
+
+	let count = 0
+
+	const memberCards = card.deck
+		.map(memberId => aoStore.hashMap.get(memberId))
+		.forEach(memberCard => {
+			if (memberCard !== undefined) {
+				count++
+			}
+		})
+
+	return count
 }

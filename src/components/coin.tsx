@@ -4,12 +4,14 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
-import { countCurrentSignatures } from '../cards'
+import { countCurrentSignatures, countVouches } from '../cards'
 import Coin from '../assets/images/coin.svg'
 import GoldenDoge from '../assets/images/goldendoge.svg'
 import Paw from '../assets/images/paw.svg'
 import LazyTippy from './lazyTippy'
+import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface CoinProps {
   taskId: string
@@ -72,6 +74,25 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
     return card.signed.some(
       signature => signature.memberId === aoStore.member.memberId
     )
+  }
+
+  @computed get defenseScore() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card || !card.hasOwnProperty('deck')) return null
+    const member = aoStore.memberById.get(this.props.taskId)
+    if (!member) return null
+
+    let max = countVouches(this.props.taskId)
+
+    const memberCards = card.deck
+      .map(memberId => aoStore.hashMap.get(memberId))
+      .forEach(memberCard => {
+        if (memberCard !== undefined) {
+          max = Math.max(max, countVouches(memberCard.taskId))
+        }
+      })
+
+    return max
   }
 
   sign() {
@@ -247,15 +268,46 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             : 'Vouches'}
         </h3>
         {memberCards && memberCards.length >= 1 ? (
-          <AoStack
-            cards={memberCards}
-            zone={'panel'}
-            cardStyle={'member'}
-            cardsBeforeFold={3}
-            noPopups={true}
-            decorators={this.signatureDecorators(memberCards)}
-            className="signatureDecorated"
-          />
+          <React.Fragment>
+            <Tippy
+              zIndex={4}
+              theme={'translucent'}
+              content={'Your Attack is the same as your vouches'}
+              delay={[625, 200]}>
+              <span
+                style={{
+                  cursor: 'default',
+                  marginRight: '1em',
+                  display: 'inline-block'
+                }}>
+                Attack: {memberCards.length}
+              </span>
+            </Tippy>
+            <Tippy
+              zIndex={4}
+              theme={'translucent'}
+              content={
+                'Your Defense is the highest Attack score amongst you and everyone who vouches for you. To ban or delete your account, another member must have a higher Attack than your Defense AND be listed before you in the ordered list of members (sort members by "Order")'
+              }
+              delay={[625, 200]}>
+              <span
+                style={{
+                  cursor: 'default',
+                  display: 'inline-block'
+                }}>
+                Defense: {this.defenseScore}
+              </span>
+            </Tippy>
+            <AoStack
+              cards={memberCards}
+              zone={'panel'}
+              cardStyle={'member'}
+              cardsBeforeFold={3}
+              noPopups={true}
+              decorators={this.signatureDecorators(memberCards)}
+              className="signatureDecorated"
+            />
+          </React.Fragment>
         ) : null}
         {!this.isMember ? (
           <p>Click to {this.isGrabbed ? 'drop' : 'grab'} this card.</p>

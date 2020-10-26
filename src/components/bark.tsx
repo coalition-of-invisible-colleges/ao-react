@@ -44,7 +44,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   promoteMember() {
     if (
       !window.confirm(
-        'Are you sure you want to promote this member ahead of you in the list of members?\n\nThis may give this user the ability to ban or delete your account. By default, the order of members is their creation order. If you promote this member, they will step ahead of you in line, becoming your superior. This action cannot be undone.'
+        'Are you sure you want to promote this member ahead of you in the list of members?\n\nThis may give this user the ability to ban or delete your account. By default, the order of members is their creation order. If you promote this member, they will step ahead of you in line, becoming your superior. The current order may viewed in the Members panel under "Order"'
       )
     ) {
       return
