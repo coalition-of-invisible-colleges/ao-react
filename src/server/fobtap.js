@@ -18,6 +18,7 @@ function access(member, resource) {
 }
 
 function resourceCheck(req, res, next) {
+  console.log('resourceCheck')
   let member = utils.memberFromFob(req.body.fob)
   let resource = utils.getResource(req.body.resourceId)
   if (member && resource && access(member, resource)) {
