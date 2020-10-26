@@ -132,6 +132,24 @@ function memberDeactivated(memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function memberBanned(kohaiId, senpaiId, callback) {
+  let newEvent = {
+    type: 'member-banned',
+    kohaiId,
+    senpaiId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
+function memberUnbanned(kohaiId, senpaiId, callback) {
+  let newEvent = {
+    type: 'member-unbanned',
+    kohaiId,
+    senpaiId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function memberPurged(memberId, blame, callback) {
   let newEvent = {
     type: 'member-purged',
@@ -672,6 +690,8 @@ module.exports = {
   getNodeInfo,
   memberCreated,
   memberDeactivated,
+  memberBanned,
+  memberUnbanned,
   memberPurged,
   memberActivated,
   memberFieldUpdated,

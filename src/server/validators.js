@@ -142,5 +142,58 @@ module.exports = {
   isColor(val, errRes) {
     let colors = ['red', 'yellow', 'green', 'purple', 'blue']
     return colors.indexOf(val) >= 0
+  },
+  isSenpaiOf(senpaiId, kohaiId, errRes) {
+    const senpaiCard = state.serverState.tasks.find(t => t.taskId === senpaiId)
+    if (!senpaiCard) {
+      errRes.push('invalid member detected')
+      return false
+    }
+    const kohaiCard = state.serverState.tasks.find(t => t.taskId === kohaiId)
+    if (!kohaiCard) {
+      errRes.push('invalid member detected')
+      return false
+    }
+
+    const senpaiVouches = senpaiCard.deck
+      .map(mId => state.serverState.tasks.find(t => t.taskId === mId))
+      .filter(memberCard => memberCard !== undefined).length
+
+    const kohaiVouches = kohaiCard.deck
+      .map(mId => state.serverState.tasks.find(t => t.taskId === mId))
+      .filter(memberCard => memberCard !== undefined).length
+
+    let senpaiRank = state.serverState.members.findIndex(
+      m => m.memberId === senpaiId
+    )
+    let kohaiRank = state.serverState.members.findIndex(
+      m => m.memberId === kohaiId
+    )
+
+    if (senpaiRank < kohaiRank && senpaiVouches > kohaiVouches) {
+      return true
+    }
+
+    errRes.push('member is not a senpai of the other member')
+    return false
+  },
+  hasBanOn(senpaiId, kohaiId, errRes) {
+    const kohai = state.serverState.members.find(t => t.memberId === kohaiId)
+    if (!kohai) {
+      console.log('invalid member detected')
+      errRes.push('invalid member detected')
+      return false
+    }
+    if (!kohai.hasOwnProperty('potentials')) {
+      console.log('no ban to remove')
+
+      errRes.push('no ban exists to remove')
+      return false
+    }
+    console.log('will return true if it finds it now')
+
+    return kohai.potentials.some(
+      pot => pot.memberId === senpaiId && pot.opinion === 'member-banned'
+    )
   }
 }

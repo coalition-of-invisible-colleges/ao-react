@@ -619,6 +619,38 @@ class AoApi {
       })
   }
 
+  async banMember(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-banned',
+      kohaiId: memberId,
+      senpaiId: aoStore.member.memberId
+    }
+
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async unbanMember(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-unbanned',
+      kohaiId: memberId,
+      senpaiId: aoStore.member.memberId
+    }
+
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async updateMemberField(
     field: string,
     newValue: string

@@ -191,6 +191,36 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'member-banned':
+      if (
+        validators.isMemberId(req.body.kohaiId, errRes) &&
+        validators.isMemberId(req.body.senpaiId, errRes) &&
+        validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes)
+      ) {
+        events.memberBanned(
+          req.body.kohaiId,
+          req.body.senpaiId,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
+    case 'member-unbanned':
+      if (
+        validators.isMemberId(req.body.kohaiId, errRes) &&
+        validators.isMemberId(req.body.senpaiId, errRes) &&
+        validators.hasBanOn(req.body.senpaiId, req.body.kohaiId, errRes)
+      ) {
+        events.memberUnbanned(
+          req.body.kohaiId,
+          req.body.senpaiId,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'member-purged':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events.memberPurged(

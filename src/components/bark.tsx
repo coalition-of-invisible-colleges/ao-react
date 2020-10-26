@@ -12,6 +12,8 @@ import GoldenDoge from '../assets/images/goldendoge.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
+import { formatDistanceToNow, format } from 'date-fns'
+import AoMemberIcon from './memberIcon'
 
 interface CardMenuProps {
   memberId: string
@@ -22,6 +24,8 @@ interface CardMenuProps {
 export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   constructor(props) {
     super(props)
+    this.banMember = this.banMember.bind(this)
+    this.unbanMember = this.unbanMember.bind(this)
     this.purgeMember = this.purgeMember.bind(this)
     this.activateMember = this.activateMember.bind(this)
     this.deactivateMember = this.deactivateMember.bind(this)
@@ -35,6 +39,38 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     api.deactivateMember(this.props.memberId)
   }
 
+  banMember() {
+    if (this.banCount < 3) {
+      let actionText = [
+        'propose a ban',
+        'second this ban',
+        'execute this ban right now'
+      ]
+      let confirmMessage =
+        'Are you sure you want to ' +
+        actionText[this.banCount] +
+        "?\n\nIf banned, the member's account will deactivate, and the member will be unable to use their fob or activate resources such as the door or soda machine. They will be effectively locked-out until the ban is lifted (when ban votes go below 3 again)."
+
+      if (!window.confirm(confirmMessage)) {
+        return
+      }
+    }
+    api.banMember(this.props.memberId)
+  }
+
+  unbanMember() {
+    if (this.banCount === 3) {
+      if (
+        !window.confirm(
+          'Are you sure you want to unban this member?\n\nPlease consider carefully before allowing a potentially dangerous or toxic person back into the community.'
+        )
+      ) {
+        return
+      }
+    }
+    api.unbanMember(this.props.memberId)
+  }
+
   purgeMember() {
     if (
       window.confirm(
@@ -43,6 +79,27 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     ) {
       console.log('member delete attempted')
     }
+  }
+
+  @computed get banCount() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member || !member.hasOwnProperty('potentials')) {
+      return 0
+    }
+    return member.potentials.filter(pot => pot.opinion === 'member-banned')
+      .length
+  }
+
+  @computed get doIBan() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member || !member.hasOwnProperty('potentials')) {
+      return null
+    }
+    return member.potentials.some(
+      pot =>
+        pot.opinion === 'member-banned' &&
+        pot.memberId === aoStore.member.memberId
+    )
   }
 
   @computed get senpai() {
@@ -66,6 +123,33 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return 'Dominance cannot be established.'
   }
 
+  @computed get renderBanList() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member) {
+      return null
+    }
+
+    const renderedBans = member.potentials
+      .filter(pot => pot.opinion === 'member-banned')
+      .map(pot => {
+        const senpaiId = pot.memberId
+        const senpai = aoStore.memberById.get(pot.memberId)
+        const senpaiName = senpai ? senpai.name : 'deleted member'
+        const distanceToNow = formatDistanceToNow(pot.timestamp, {
+          addSuffix: true
+        })
+
+        return (
+          <li key={senpaiId}>
+            <AoMemberIcon memberId={senpaiId} /> {senpaiName} voted to ban{' '}
+            {distanceToNow}
+          </li>
+        )
+      })
+
+    return <ul>{renderedBans}</ul>
+  }
+
   @computed get renderBarkMenu() {
     const member = aoStore.memberById.get(this.props.memberId)
     if (!member) {
@@ -77,10 +161,15 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
 
     if (isActive) {
       membershipActivator = (
-        <div className="action" onClick={this.deactivateMember}>
-          <img src={GoldenDoge} className="membership" />
-          Deactivate Membership
-        </div>
+        <p>
+          <small>Membership is active.</small>
+        </p>
+      )
+    } else if (member.banned) {
+      membershipActivator = (
+        <p>
+          <small>Member is banned and cannot be reactivated.</small>
+        </p>
       )
     } else if (aoStore.member.active >= 1) {
       membershipActivator = (
@@ -100,12 +189,41 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
       )
     }
 
+    let banLabel = ''
+    if (this.doIBan) {
+      switch (this.banCount) {
+        case 3:
+          banLabel = 'Unban'
+          break
+        default:
+          banLabel = 'Remove Ban Vote'
+      }
+    } else {
+      switch (this.banCount) {
+        case 0:
+          banLabel = 'Propose Ban'
+          break
+        case 1:
+          banLabel = 'Second Ban'
+          break
+        case 2:
+          banLabel = 'Execute Ban'
+          break
+        default:
+          banLabel = 'Increase Ban Vote'
+      }
+    }
     return (
       <React.Fragment>
         <div>{this.message}</div>
         {!!this.senpai ? (
           <div className="menu">
-            <div className="action">Propose Ban</div>
+            <div
+              className="action"
+              onClick={this.doIBan ? this.unbanMember : this.banMember}>
+              {banLabel} ({this.banCount}/3)
+            </div>
+            {this.banCount >= 1 && this.renderBanList}
             <div className="action" onClick={this.purgeMember}>
               <img src={Gun} />
               Delete Account

@@ -40,6 +40,8 @@ export interface Member {
   lastUsed: Date
   muted: Boolean
   fob: string
+  potentials: Signature[]
+  banned: boolean
 }
 
 export interface Task {
@@ -111,7 +113,7 @@ interface Userseen {
 export interface Signature {
   memberId: string
   timestamp: Date
-  opinion: number
+  opinion: number | string
 }
 
 interface Output {

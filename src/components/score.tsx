@@ -30,7 +30,7 @@ export default class AoScore extends React.PureComponent<ScoreProps> {
     if (!this.props.memberId) {
       return aoStore.memberCard.boost
     }
-    const memberCard = aoStore.memberById.get(this.props.memberId)
+    const memberCard = aoStore.memberCard
     if (!memberCard) return null
     return memberCard.boost
   }

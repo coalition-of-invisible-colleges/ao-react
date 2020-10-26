@@ -111,7 +111,7 @@ function membersMuts(members, ev) {
       break
     case 'member-activated':
       members.forEach(member => {
-        if (member.memberId === ev.memberId) {
+        if (member.memberId === ev.memberId && !member.banned) {
           if (member.active < 0) {
             member.active = -1 * member.active
           } else {
@@ -147,6 +147,62 @@ function membersMuts(members, ev) {
         if (member.memberId === ev.memberId) {
           if (member.active >= 0) {
             member.active = -1 * member.active - 1
+          }
+        }
+      })
+      break
+    case 'member-banned':
+      members.forEach(member => {
+        if (member.memberId === ev.kohaiId) {
+          if (!member.potentials) {
+            member.potentials = []
+          }
+          member.potentials = member.potentials.filter(
+            pot => !(pot.opinion === ev.opinion && pot.memberId === ev.senpaiId)
+          )
+
+          let newSig = {
+            memberId: ev.senpaiId,
+            timestamp: ev.timestamp,
+            opinion: ev.type
+          }
+
+          member.potentials.push(newSig)
+
+          let totalBans = member.potentials.filter(
+            pot => pot.opinion === 'member-banned'
+          )
+
+          if (totalBans.length >= 3) {
+            member.banned = true
+            if (member.active >= 0) {
+              member.active = -1 * member.active - 1
+            }
+          }
+        }
+      })
+      break
+    case 'member-unbanned':
+      members.forEach(member => {
+        if (
+          member.memberId === ev.kohaiId &&
+          member.hasOwnProperty('potentials') &&
+          member.potentials.length >= 1
+        ) {
+          const beforeBans = member.potentials.filter(
+            p => p.opinion === 'member-banned'
+          ).length
+
+          member.potentials = member.potentials.filter(
+            p => !(p.opinion === 'member-banned' && p.memberId === ev.senpaiId)
+          )
+
+          const afterBans = member.potentials.filter(
+            p => p.opinion === 'member-banned'
+          ).length
+
+          if (beforeBans >= 3 && afterBans < 3) {
+            member.banned = false
           }
         }
       })
