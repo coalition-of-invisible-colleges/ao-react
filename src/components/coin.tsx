@@ -267,7 +267,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             ? 'Vouch'
             : 'Vouches'}
         </h3>
-        {memberCards && memberCards.length >= 1 ? (
+        {this.isMember && memberCards && memberCards.length >= 1 ? (
           <React.Fragment>
             <Tippy
               zIndex={4}
