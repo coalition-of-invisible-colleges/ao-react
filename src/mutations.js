@@ -151,6 +151,25 @@ function membersMuts(members, ev) {
         }
       })
       break
+    case 'member-promoted':
+      let toIndex
+      let fromIndex
+      if (
+        members.some((member, i) => {
+          if (member.memberId === ev.senpaiId) {
+            toIndex = i
+            return true
+          }
+        }) &&
+        members.some((member, i) => {
+          if (member.memberId === ev.kohaiId) {
+            fromIndex = i
+            return true
+          }
+        })
+      ) {
+        members.splice(toIndex, 0, members.splice(fromIndex, 1)[0])
+      }
     case 'member-banned':
       members.forEach(member => {
         if (member.memberId === ev.kohaiId) {

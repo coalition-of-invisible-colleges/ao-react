@@ -143,7 +143,22 @@ module.exports = {
     let colors = ['red', 'yellow', 'green', 'purple', 'blue']
     return colors.indexOf(val) >= 0
   },
-  isSenpaiOf(senpaiId, kohaiId, errRes) {
+  isAheadOf(senpaiId, kohaiId, errRes) {
+    let senpaiRank = state.serverState.members.findIndex(
+      m => m.memberId === senpaiId
+    )
+    let kohaiRank = state.serverState.members.findIndex(
+      m => m.memberId === kohaiId
+    )
+
+    if (senpaiRank < kohaiRank) {
+      return true
+    }
+
+    errRes.push('member is not ahead of other member in order of member list')
+    return false
+  },
+  isMorePopularThan(senpaiId, kohaiId, errRes) {
     const senpaiCard = state.serverState.tasks.find(t => t.taskId === senpaiId)
     if (!senpaiCard) {
       errRes.push('invalid member detected')
@@ -163,14 +178,18 @@ module.exports = {
       .map(mId => state.serverState.tasks.find(t => t.taskId === mId))
       .filter(memberCard => memberCard !== undefined).length
 
-    let senpaiRank = state.serverState.members.findIndex(
-      m => m.memberId === senpaiId
-    )
-    let kohaiRank = state.serverState.members.findIndex(
-      m => m.memberId === kohaiId
-    )
+    if (senpaiVouches > kohaiVouches) {
+      return true
+    }
 
-    if (senpaiRank < kohaiRank && senpaiVouches > kohaiVouches) {
+    errRes.push('member does not have more vouches than other member')
+    return false
+  },
+  isSenpaiOf(senpaiId, kohaiId, errRes) {
+    if (
+      module.exports.isAheadOf(senpaiId, kohaiId) &&
+      module.exports.isMorePopularThan(senpaiId, kohaiId)
+    ) {
       return true
     }
 

@@ -8,6 +8,7 @@ import LazyTippy from './lazyTippy'
 import { isSenpai } from '../cards'
 import Bark from '../assets/images/loud.svg'
 import Gun from '../assets/images/goodbye.svg'
+import Ascend from '../assets/images/ascend.svg'
 import GoldenDoge from '../assets/images/goldendoge.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -24,6 +25,7 @@ interface CardMenuProps {
 export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   constructor(props) {
     super(props)
+    this.promoteMember = this.promoteMember.bind(this)
     this.banMember = this.banMember.bind(this)
     this.unbanMember = this.unbanMember.bind(this)
     this.purgeMember = this.purgeMember.bind(this)
@@ -37,6 +39,17 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
 
   deactivateMember() {
     api.deactivateMember(this.props.memberId)
+  }
+
+  promoteMember() {
+    if (
+      !window.confirm(
+        'Are you sure you want to promote this member ahead of you in the list of members?\n\nThis may give this user the ability to ban or delete your account. By default, the order of members is their creation order. If you promote this member, they will step ahead of you in line, becoming your superior. This action cannot be undone.'
+      )
+    ) {
+      return
+    }
+    api.promoteMember(this.props.memberId)
   }
 
   banMember() {
@@ -218,6 +231,10 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
         <div>{this.message}</div>
         {!!this.senpai ? (
           <div className="menu">
+            <div className="action" onClick={this.promoteMember}>
+              <img src={Ascend} />
+              Promote Above
+            </div>
             <div
               className="action"
               onClick={this.doIBan ? this.unbanMember : this.banMember}>

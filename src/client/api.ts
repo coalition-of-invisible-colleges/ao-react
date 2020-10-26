@@ -619,6 +619,22 @@ class AoApi {
       })
   }
 
+  async promoteMember(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-promoted',
+      kohaiId: memberId,
+      senpaiId: aoStore.member.memberId
+    }
+
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async banMember(memberId: string): Promise<request.Response> {
     const act = {
       type: 'member-banned',

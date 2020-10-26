@@ -125,7 +125,7 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
       <React.Fragment>
         {!this.props.noPopups ? (
           <LazyTippy
-            zIndex={4}
+            zIndex={5}
             interactive={true}
             content={this.renderMemberInfo}
             hideOnClick={false}

@@ -191,6 +191,21 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'member-promoted':
+      if (
+        validators.isMemberId(req.body.kohaiId, errRes) &&
+        validators.isMemberId(req.body.senpaiId, errRes) &&
+        validators.isAheadOf(req.body.senpaiId, req.body.kohaiId, errRes)
+      ) {
+        events.memberPromoted(
+          req.body.kohaiId,
+          req.body.senpaiId,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'member-banned':
       if (
         validators.isMemberId(req.body.kohaiId, errRes) &&
