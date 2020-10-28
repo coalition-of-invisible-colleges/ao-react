@@ -619,6 +619,23 @@ class AoApi {
       })
   }
 
+  // senpai function
+  async resetPassword(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-secret-reset',
+      kohaiId: memberId,
+      senpaiId: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  // senpai function
   async promoteMember(memberId: string): Promise<request.Response> {
     const act = {
       type: 'member-promoted',
@@ -635,6 +652,7 @@ class AoApi {
       })
   }
 
+  // senpai function
   async banMember(memberId: string): Promise<request.Response> {
     const act = {
       type: 'member-banned',
@@ -651,6 +669,7 @@ class AoApi {
       })
   }
 
+  // senpai function
   async unbanMember(memberId: string): Promise<request.Response> {
     const act = {
       type: 'member-unbanned',

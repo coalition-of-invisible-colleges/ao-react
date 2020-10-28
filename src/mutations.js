@@ -151,6 +151,37 @@ function membersMuts(members, ev) {
         }
       })
       break
+    case 'member-secret-reset':
+      members.forEach(member => {
+        if (member.memberId === ev.kohaiId) {
+          if (!member.potentials) {
+            member.potentials = []
+          }
+          member.potentials = member.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.senpaiId)
+          )
+
+          let newSig = {
+            memberId: ev.senpaiId,
+            timestamp: ev.timestamp,
+            opinion: ev.type
+          }
+
+          member.potentials.push(newSig)
+
+          let totalResets = member.potentials.filter(
+            pot => pot.opinion === 'member-secret-reset'
+          )
+
+          if (totalResets.length >= 3) {
+            member.secret = cryptoUtils.createHash(member.name)
+            member.potentials = member.potentials.filter(
+              pot => pot.opinion !== 'member-secret-reset'
+            )
+          }
+        }
+      })
+      break
     case 'member-promoted':
       let toIndex
       let fromIndex
@@ -177,7 +208,7 @@ function membersMuts(members, ev) {
             member.potentials = []
           }
           member.potentials = member.potentials.filter(
-            pot => !(pot.opinion === ev.opinion && pot.memberId === ev.senpaiId)
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.senpaiId)
           )
 
           let newSig = {

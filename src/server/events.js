@@ -132,6 +132,15 @@ function memberDeactivated(memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function memberSecretReset(kohaiId, senpaiId, callback) {
+  let newEvent = {
+    type: 'member-secret-reset',
+    kohaiId,
+    senpaiId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function memberPromoted(kohaiId, senpaiId, callback) {
   let newEvent = {
     type: 'member-promoted',
@@ -699,6 +708,7 @@ module.exports = {
   getNodeInfo,
   memberCreated,
   memberDeactivated,
+  memberSecretReset,
   memberPromoted,
   memberBanned,
   memberUnbanned,

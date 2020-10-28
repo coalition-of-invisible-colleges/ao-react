@@ -54,6 +54,19 @@ module.exports = {
     }
     return result
   },
+  isMemberName(val, errRes) {
+    let result = false
+    state.serverState.members.forEach(member => {
+      if (val === member.name) {
+        result = true
+      }
+    })
+
+    if (!result || !result2) {
+      errRes.push('invalid member')
+    }
+    return result
+  },
   isActiveMemberId(val, errRes) {
     let result = false
     state.serverState.members.forEach(member => {

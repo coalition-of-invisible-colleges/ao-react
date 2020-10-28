@@ -25,12 +25,13 @@ interface CardMenuProps {
 export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   constructor(props) {
     super(props)
+    this.activateMember = this.activateMember.bind(this)
+    this.deactivateMember = this.deactivateMember.bind(this)
+    this.resetPassword = this.resetPassword.bind(this)
     this.promoteMember = this.promoteMember.bind(this)
     this.banMember = this.banMember.bind(this)
     this.unbanMember = this.unbanMember.bind(this)
     this.purgeMember = this.purgeMember.bind(this)
-    this.activateMember = this.activateMember.bind(this)
-    this.deactivateMember = this.deactivateMember.bind(this)
   }
 
   activateMember() {
@@ -39,6 +40,19 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
 
   deactivateMember() {
     api.deactivateMember(this.props.memberId)
+  }
+
+  resetPassword() {
+    if (this.resetCount === 2) {
+      if (
+        !window.confirm(
+          "Are you sure you want to reset this member's password?\n\nTheir password will be reset to the same as their current username. This means the account is p0wned and completely unsecured until someone logs in and changes the password to a new secure password. Please inform the member that their password has changed and remind them to set a new secure password."
+        )
+      ) {
+        return
+      }
+    }
+    api.resetPassword(this.props.memberId)
   }
 
   promoteMember() {
@@ -103,6 +117,16 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
       .length
   }
 
+  @computed get resetCount() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member || !member.hasOwnProperty('potentials')) {
+      return 0
+    }
+    return member.potentials.filter(
+      pot => pot.opinion === 'member-secret-reset'
+    ).length
+  }
+
   @computed get doIBan() {
     const member = aoStore.memberById.get(this.props.memberId)
     if (!member || !member.hasOwnProperty('potentials')) {
@@ -111,6 +135,18 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return member.potentials.some(
       pot =>
         pot.opinion === 'member-banned' &&
+        pot.memberId === aoStore.member.memberId
+    )
+  }
+
+  @computed get doIReset() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member || !member.hasOwnProperty('potentials')) {
+      return null
+    }
+    return member.potentials.some(
+      pot =>
+        pot.opinion === 'member-secret-reset' &&
         pot.memberId === aoStore.member.memberId
     )
   }
@@ -226,6 +262,21 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
           banLabel = 'Increase Ban Vote'
       }
     }
+
+    let resetLabel = ''
+    switch (this.resetCount) {
+      case 1:
+        resetLabel = 'Second Password Reset'
+        break
+      case 2:
+        resetLabel = 'Execute Password Reset'
+        break
+      case 0:
+      default:
+        resetLabel = 'Propose Password Reset'
+        break
+    }
+
     return (
       <React.Fragment>
         <div>{this.message}</div>
@@ -241,6 +292,12 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
               {banLabel} ({this.banCount}/3)
             </div>
             {this.banCount >= 1 && this.renderBanList}
+            <div
+              className={this.doIReset ? undefined : 'action'}
+              onClick={this.doIReset ? undefined : this.resetPassword}>
+              {this.doIReset ? 'Voted to Reset Password' : resetLabel} (
+              {this.resetCount}/3)
+            </div>
             <div className="action" onClick={this.purgeMember}>
               <img src={Gun} />
               Delete Account

@@ -165,7 +165,8 @@ router.post('/events', (req, res, next) => {
       if (
         validators.isNotes(req.body.name, errRes) &&
         validators.isNotes(req.body.fob, errRes) &&
-        validators.isNotes(req.body.secret)
+        validators.isNotes(req.body.secret) &&
+        !isMemberName
       ) {
         events.memberCreated(
           req.body.name,
@@ -187,6 +188,21 @@ router.post('/events', (req, res, next) => {
     case 'member-deactivated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events.memberDeactivated(req.body.memberId, utils.buildResCallback(res))
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
+    case 'member-secret-reset':
+      if (
+        validators.isMemberId(req.body.kohaiId, errRes) &&
+        validators.isMemberId(req.body.senpaiId, errRes) &&
+        validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes)
+      ) {
+        events.memberSecretReset(
+          req.body.kohaiId,
+          req.body.senpaiId,
+          utils.buildResCallback(res)
+        )
       } else {
         res.status(400).send(errRes)
       }
