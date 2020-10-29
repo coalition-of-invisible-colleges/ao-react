@@ -412,7 +412,7 @@ textarea {
               right: 0;
               bottom: 0;
               font-size: 0.9em;
-              padding: 0.1em 0;
+              padding: 0.1em 0.25em 0.185em 0.5em;
             }
           }
         }
@@ -520,7 +520,7 @@ textarea {
 
       .hud {
         .cardMenuButton {
-          padding: 0.5em;
+          padding: 0.5em 0.5em 0.5em 0.75em;
           font-size: 1.15em;
           font-size: 1.25em;
           font-weight: bold;
@@ -1189,6 +1189,7 @@ textarea {
           box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
           max-height: 3em;
           overflow: hidden;
+          cursor: pointer;
         }
       }
     }

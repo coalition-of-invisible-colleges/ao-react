@@ -302,7 +302,7 @@ export default class AoContextCard extends React.PureComponent<
 					<div
 						className={'card context' + this.applyClassIfCurrentSearchResult}
 						id={'card-' + taskId}
-						onDoubleClick={this.goInCard}
+						onClick={this.goInCard}
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}
