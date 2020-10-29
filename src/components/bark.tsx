@@ -392,7 +392,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
               className={this.doIDelete ? undefined : 'action'}
               onClick={this.purgeMember}>
               <img src={Gun} className="icon" />
-              {this.doIDelete ? 'Voted to Delete Account' : deleteLabel} ( (
+              {this.doIDelete ? 'Voted to Delete Account' : deleteLabel} (
               {this.deleteCount}/3)
             </div>
             {this.deleteCount >= 1 && this.renderDeleteList}
