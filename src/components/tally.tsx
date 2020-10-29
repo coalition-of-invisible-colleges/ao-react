@@ -64,7 +64,7 @@ export default class AoTally extends React.PureComponent<Props> {
 
     return (
       <div className="infoTooltip">
-        <h4>Checkmarks</h4>
+        <h4>Completed By</h4>
         {renderedClaims}
       </div>
     )
