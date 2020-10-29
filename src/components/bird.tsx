@@ -60,9 +60,18 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
       return []
     }
 
-    return aoStore.state.members.map(member => {
-      return { label: member.name, memberId: member.memberId }
-    })
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+
+    return aoStore.state.members
+      .filter(
+        member =>
+          !card.passed.some(p => p[1] === member.memberId) &&
+          !card.deck.some(mId => mId === member.memberId)
+      )
+      .map(member => {
+        return { label: member.name, memberId: member.memberId }
+      })
   }
 
   @computed get pendingPasses() {
@@ -86,11 +95,11 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
       const toMember = aoStore.memberById.get(toId)
       const toName = toMember ? toMember.name : 'deleted member'
       return (
-        <React.Fragment key={fromId + '-' + toId}>
+        <div key={fromId + '-' + toId}>
           <AoMemberIcon memberId={fromId} /> {fromName}{' '}
           <img src={Bird} style={{ height: '1em' }} />{' '}
           <AoMemberIcon memberId={toId} /> {toName}
-        </React.Fragment>
+        </div>
       )
     })
 

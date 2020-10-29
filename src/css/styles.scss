@@ -1814,6 +1814,11 @@ textarea {
       position: relative;
       top: 0.4em;
     }
+
+    // bulleted list in a menu, used in the bark menu
+    .menu ul li {
+      list-style-type: none;
+    }
   }
 }
 

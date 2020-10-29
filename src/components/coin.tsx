@@ -267,7 +267,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             ? 'Vouch'
             : 'Vouches'}
         </h3>
-        {this.isMember && memberCards && memberCards.length >= 1 ? (
+        {this.isMember && memberCards ? (
           <React.Fragment>
             <Tippy
               zIndex={4}
@@ -298,16 +298,18 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
                 Defense: {this.defenseScore}
               </span>
             </Tippy>
-            <AoStack
-              cards={memberCards}
-              zone={'panel'}
-              cardStyle={'member'}
-              cardsBeforeFold={3}
-              noPopups={true}
-              decorators={this.signatureDecorators(memberCards)}
-              className="signatureDecorated"
-            />
           </React.Fragment>
+        ) : null}
+        {memberCards.length >= 1 ? (
+          <AoStack
+            cards={memberCards}
+            zone={'panel'}
+            cardStyle={'member'}
+            cardsBeforeFold={3}
+            noPopups={true}
+            decorators={this.signatureDecorators(memberCards)}
+            className="signatureDecorated"
+          />
         ) : null}
         {!this.isMember ? (
           <p>Click to {this.isGrabbed ? 'drop' : 'grab'} this card.</p>

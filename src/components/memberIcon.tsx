@@ -107,7 +107,7 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
               <span className="inlineIcon">
                 <AoCheckmark />
               </span>
-              Points from cards:{' '}
+              Points:{' '}
             </small>
           }
         />
