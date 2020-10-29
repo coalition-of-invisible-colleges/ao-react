@@ -13,6 +13,7 @@ import AoCardMenu from './cardMenu'
 import AoPreview from './preview'
 import AoMission from './mission'
 import AoBark from './bark'
+import AoTally from './tally'
 
 export type HudStyle =
 	| 'context'
@@ -74,6 +75,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 							onTogglePriorities={this.props.onTogglePriorities}
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
@@ -90,6 +92,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 							onTogglePriorities={this.props.onTogglePriorities}
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
@@ -103,6 +106,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
@@ -132,6 +136,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 					<div className={'hud ' + hudStyle}>
 						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 					</div>

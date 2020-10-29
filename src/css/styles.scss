@@ -1819,6 +1819,21 @@ textarea {
     .menu ul li {
       list-style-type: none;
     }
+
+    // tally marks
+    .tally {
+      position: absolute;
+      top: -0.03em;
+      right: 2.1em;
+      width: max-content;
+      max-width: 10em;
+
+      img {
+        max-height: 1.5em;
+        padding: 0 0.1em;
+        display: inline;
+      }
+    }
   }
 }
 
