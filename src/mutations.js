@@ -261,9 +261,31 @@ function membersMuts(members, ev) {
       for (let i = members.length - 1; i >= 0; i--) {
         const member = members[i]
         if (member.memberId === ev.memberId) {
-          members.splice(i, 1)
+          if (!member.potentials) {
+            member.potentials = []
+          }
+          member.potentials = member.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.blame)
+          )
+
+          let newSig = {
+            memberId: ev.blame,
+            timestamp: ev.timestamp,
+            opinion: ev.type
+          }
+
+          member.potentials.push(newSig)
+
+          let totalPurges = member.potentials.filter(
+            pot => pot.opinion === 'member-purged'
+          )
+
+          if (totalPurges.length >= 3) {
+            members.splice(i, 1)
+          }
         }
       }
+
       break
     case 'resource-used':
       members.forEach(member => {
@@ -476,8 +498,65 @@ function tasksMuts(tasks, ev) {
       )
       break
     case 'member-purged':
-      break
+      // This is terribly reduntant since the same potential builds up on the member.
+      // Maybe the potentials system should be abstracted out to the spec or validation layer;
+      // Attempts to call limited functions instead produce an action-potential event.
+      // The original idea was potentials would only build up on members, not tasks.
+      let purgedMemberCard = false
+      for (let i = tasks.length - 1; i >= 0; i--) {
+        const task = tasks[i]
+        if (task.taskId === ev.memberId) {
+          if (!task.potentials) {
+            task.potentials = []
+          }
+          task.potentials = task.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.blame)
+          )
 
+          let newSig = {
+            memberId: ev.blame,
+            timestamp: ev.timestamp,
+            opinion: ev.type
+          }
+
+          task.potentials.push(newSig)
+
+          let totalPurges = task.potentials.filter(
+            pot => pot.opinion === 'member-purged'
+          )
+
+          if (totalPurges.length >= 3) {
+            tasks.splice(i, 1)
+            purgedMemberCard = true
+          }
+        }
+      }
+
+      if (purgedMemberCard) {
+        tasks.forEach(t => {
+          t.subTasks = t.subTasks.filter(st => st !== ev.memberId)
+          t.priorities = t.priorities.filter(st => st !== ev.memberId)
+          t.completed.filter(st => st !== ev.memberId)
+          t.claimed = t.claimed.filter(st => st !== ev.memberId)
+          t.deck = t.deck.filter(st => st !== ev.memberId)
+          t.passed = t.passed.filter(
+            p => !(p[0] === ev.memberId || p[1] === ev.memberId)
+          )
+          if (_.has(t, 'grid.rows')) {
+            Object.entries(t.grid.rows).forEach(([y, row]) => {
+              Object.entries(row).forEach(([x, cell]) => {
+                if (cell === ev.memberId) {
+                  delete tasks[j].grid.rows[y][x]
+                }
+              })
+              if (row.length === 0) {
+                delete tasks[j].grid.rows[y]
+              }
+            })
+          }
+        })
+      }
+      break
     case 'meme-added':
       tasks.push(
         calculations.blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp)
@@ -729,36 +808,6 @@ function tasksMuts(tasks, ev) {
             })
             crawler = newCards
           } while (crawler.length > 0)
-        }
-      })
-      break
-    case 'member-purged':
-      for (let i = tasks.length - 1; i >= 0; i--) {
-        const task = tasks[i]
-        if (task.taskId === ev.memberId) {
-          tasks.splice(i, 1)
-        }
-      }
-      tasks.forEach(t => {
-        t.subTasks = t.subTasks.filter(st => st !== ev.memberId)
-        t.priorities = t.priorities.filter(st => st !== ev.memberId)
-        t.completed.filter(st => st !== ev.memberId)
-        t.claimed = t.claimed.filter(st => st !== ev.memberId)
-        t.deck = t.deck.filter(st => st !== ev.memberId)
-        t.passed = t.passed.filter(
-          p => !(p[0] === ev.memberId || p[1] === ev.memberId)
-        )
-        if (_.has(t, 'grid.rows')) {
-          Object.entries(t.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              if (cell === ev.memberId) {
-                delete tasks[j].grid.rows[y][x]
-              }
-            })
-            if (row.length === 0) {
-              delete tasks[j].grid.rows[y]
-            }
-          })
         }
       })
       break

@@ -686,6 +686,23 @@ class AoApi {
       })
   }
 
+  // senpai function
+  async purgeMember(memberId: string): Promise<request.Response> {
+    const act = {
+      type: 'member-purged',
+      memberId: memberId,
+      blame: aoStore.member.memberId
+    }
+
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async updateMemberField(
     field: string,
     newValue: string

@@ -1291,13 +1291,16 @@ textarea {
       margin: 0 auto;
       user-select: none;
       outline: none;
+    }
 
-      img {
-        max-height: 1em;
-        margin-right: 0.5em;
-        position: relative;
-        top: 0.1em;
-      }
+    // small image on an action button
+    .action img,
+    .summary img,
+    img.icon {
+      max-height: 1em;
+      margin-right: 0.5em;
+      position: relative;
+      top: 0.1em;
     }
 
     // action button

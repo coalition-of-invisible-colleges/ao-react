@@ -10,6 +10,7 @@ import Bark from '../assets/images/loud.svg'
 import Gun from '../assets/images/goodbye.svg'
 import Ascend from '../assets/images/ascend.svg'
 import GoldenDoge from '../assets/images/goldendoge.svg'
+import Banhammer from '../assets/images/banhammer.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -99,13 +100,22 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   purgeMember() {
-    if (
-      window.confirm(
-        'Are you sure you want to delete this member? This action cannot be undone.'
-      )
-    ) {
-      console.log('member delete attempted')
+    if (this.deleteCount < 3) {
+      let actionText = [
+        'propose deleting this member',
+        'second deleting this member',
+        "delete this member' and member card right now"
+      ]
+      let confirmMessage =
+        'Are you sure you want to ' +
+        actionText[this.deleteCount] +
+        '?\n\nThis will delete the member and their member card, and erase their hodls. This action cannot be undone.'
+
+      if (!window.confirm(confirmMessage)) {
+        return
+      }
     }
+    api.purgeMember(this.props.memberId)
   }
 
   @computed get banCount() {
@@ -127,6 +137,15 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     ).length
   }
 
+  @computed get deleteCount() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member || !member.hasOwnProperty('potentials')) {
+      return 0
+    }
+    return member.potentials.filter(pot => pot.opinion === 'member-purged')
+      .length
+  }
+
   @computed get doIBan() {
     const member = aoStore.memberById.get(this.props.memberId)
     if (!member || !member.hasOwnProperty('potentials')) {
@@ -135,6 +154,18 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return member.potentials.some(
       pot =>
         pot.opinion === 'member-banned' &&
+        pot.memberId === aoStore.member.memberId
+    )
+  }
+
+  @computed get doIDelete() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member || !member.hasOwnProperty('potentials')) {
+      return null
+    }
+    return member.potentials.some(
+      pot =>
+        pot.opinion === 'member-purged' &&
         pot.memberId === aoStore.member.memberId
     )
   }
@@ -165,7 +196,24 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
 
   @computed get message() {
     if (this.senpai === 'senpai') {
-      return 'This member is your senpai. Respect them, for they can ban you.'
+      return (
+        <React.Fragment>
+          <div>
+            This member is your senpai because they both have more vouches than
+            you, and they are first in the members list.
+          </div>
+          <div>
+            Senpai can use the following powers on you if 3 of them agree:
+          </div>
+          <ul>
+            <li>Promote you above them in the members list</li>
+            <li>Reset your password</li>
+            <li>Ban you, locking your fob</li>
+            <li>Delete your account</li>
+          </ul>
+          <div>Respect your senpai, for they can ban you!</div>
+        </React.Fragment>
+      )
     } else if (this.senpai === 'kohai') {
       return 'This member is your kohai and a target for enforcement action.'
     }
@@ -197,6 +245,33 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
       })
 
     return <ul>{renderedBans}</ul>
+  }
+
+  @computed get renderDeleteList() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member) {
+      return null
+    }
+
+    const renderedDeletes = member.potentials
+      .filter(pot => pot.opinion === 'member-purged')
+      .map(pot => {
+        const senpaiId = pot.memberId
+        const senpai = aoStore.memberById.get(pot.memberId)
+        const senpaiName = senpai ? senpai.name : 'deleted member'
+        const distanceToNow = formatDistanceToNow(pot.timestamp, {
+          addSuffix: true
+        })
+
+        return (
+          <li key={senpaiId}>
+            <AoMemberIcon memberId={senpaiId} /> {senpaiName} voted to delete
+            account {distanceToNow}
+          </li>
+        )
+      })
+
+    return <ul>{renderedDeletes}</ul>
   }
 
   @computed get renderBarkMenu() {
@@ -277,6 +352,20 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
         break
     }
 
+    let deleteLabel = ''
+    switch (this.deleteCount) {
+      case 1:
+        deleteLabel = 'Second Delete Account'
+        break
+      case 2:
+        deleteLabel = 'Execute Delete Account'
+        break
+      case 0:
+      default:
+        deleteLabel = 'Propose Delete Account'
+        break
+    }
+
     return (
       <React.Fragment>
         <div>{this.message}</div>
@@ -289,6 +378,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
             <div
               className="action"
               onClick={this.doIBan ? this.unbanMember : this.banMember}>
+              <img src={Banhammer} />
               {banLabel} ({this.banCount}/3)
             </div>
             {this.banCount >= 1 && this.renderBanList}
@@ -298,10 +388,14 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
               {this.doIReset ? 'Voted to Reset Password' : resetLabel} (
               {this.resetCount}/3)
             </div>
-            <div className="action" onClick={this.purgeMember}>
-              <img src={Gun} />
-              Delete Account
+            <div
+              className={this.doIDelete ? undefined : 'action'}
+              onClick={this.purgeMember}>
+              <img src={Gun} className="icon" />
+              {this.doIDelete ? 'Voted to Delete Account' : deleteLabel} ( (
+              {this.deleteCount}/3)
             </div>
+            {this.deleteCount >= 1 && this.renderDeleteList}
             {membershipActivator}
           </div>
         ) : (
