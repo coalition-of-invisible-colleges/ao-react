@@ -1,3 +1,4 @@
+const config = require('../../configuration')
 const path = require('path')
 const fs = require('fs')
 const FileType = require('file-type')
@@ -8,7 +9,7 @@ const { serverState } = require('./state')
 function scanMemes() {
 	const homeDir =
 		process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
-	const memeFolder = path.join(homeDir, '.ao/memes')
+	const memeFolder = config.memes.dir
 	console.log('\nmemeFolder is ', memeFolder)
 
 	fs.readdir(memeFolder, function(err, files) {

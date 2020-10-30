@@ -194,7 +194,6 @@ export default class AoReturnPile extends React.PureComponent<{}, State> {
       return <Redirect to={this.state.redirect} />
     }
 
-    console.log('topReturnedCard is ', this.topReturnedCard)
     return (
       <React.Fragment>
         {this.topReturnedCard ? (

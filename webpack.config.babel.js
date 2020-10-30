@@ -21,7 +21,9 @@ module.exports = {
   output: {
     path: outPath,
     filename: isProduction ? '[contenthash].js' : '[hash].js',
-    chunkFilename: isProduction ? '[name].[contenthash].js' : '[name].[hash].js',
+    chunkFilename: isProduction
+      ? '[name].[contenthash].js'
+      : '[name].[hash].js',
     publicPath: '/'
   },
   target: 'web',
@@ -178,7 +180,7 @@ module.exports = {
     },
     proxy: [
       {
-        context: ['/state', '/events', '/session'],
+        context: ['/state', '/events', '/session', '/meme'],
         target: 'http://0.0.0.0:8003',
         changeOrigin: true
       }

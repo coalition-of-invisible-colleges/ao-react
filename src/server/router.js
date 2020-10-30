@@ -69,37 +69,37 @@ module.exports = function applyRouter(app) {
   // })
 
   // // XXX restrict to only memberIds not ao or resourceIds
-  app.all('/meme/:memeHash', (req, res) => {
+  app.get('/meme/:memeHash', (req, res) => {
     console.log('meme route detected, hash is ', req.params.memeHash)
-    const meme = state.memes.find(meme => {
+    const meme = state.serverState.memes.find(meme => {
       return meme.hash === req.params.memeHash
     })
     const memePath = path.join(config.memes.dir, meme.filename)
     // const memePath = process.env.PUBLIC_URL + '/doge.jpg'
     console.log('meme path is ', memePath)
-    // res.sendFile(memePath)
+    res.sendFile(memePath)
     // res.sendFile(path)
     // res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/doge.jpg'))
     // console.log('meme route completed')
 
     ////////
 
-    var stream = fs.readStream(memePath)
-    var filename = 'WhateverFilenameYouWant.pdf'
-    // Be careful of special characters
+    // var stream = fs.readStream(memePath)
+    // var filename = 'WhateverFilenameYouWant.pdf'
+    // // Be careful of special characters
 
-    filename = encodeURIComponent(filename)
-    // Ideally this should strip them
+    // filename = encodeURIComponent(filename)
+    // // Ideally this should strip them
 
-    res.setHeader('Content-disposition', 'inline; filename="' + filename + '"')
-    res.setHeader('Content-type', 'application/pdf')
+    // res.setHeader('Content-disposition', 'inline; filename="' + filename + '"')
+    // res.setHeader('Content-type', 'application/pdf')
 
-    stream.pipe(res)
+    // stream.pipe(res)
   })
 
   app.all('/download/:memeHash', (req, res) => {
     console.log('download route detected, hash is ', req.params.memeHash)
-    const meme = state.memes.find(meme => {
+    const meme = state.serverState.memes.find(meme => {
       return meme.hash === req.params.memeHash
     })
     const memePath = path.join(config.memes.dir, meme.filename)
