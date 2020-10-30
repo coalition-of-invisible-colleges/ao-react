@@ -22,4 +22,5 @@ npm-debug.log*
 *.sln
 *.code-workspace
 configuration.js
+client-configuration.js
 database.sqlite3
