@@ -930,6 +930,17 @@ class AoApi {
       })
   }
 
+  async fetchMeme(memeHash: string): Promise<request.Response> {
+    return request
+      .get('/meme/' + memeHash)
+      .responseType('blob')
+      .set('Authorization', aoStore.state.token)
+      .then(res => {
+        console.log('got meme! res is ', res)
+        return res
+      })
+  }
+
   logout() {
     aoStore.resetState()
     window.localStorage.clear()
