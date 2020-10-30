@@ -8,6 +8,7 @@ import AoMemberIcon from './memberIcon'
 import One from '../assets/images/one.svg'
 import Five from '../assets/images/five.svg'
 import AoCheckmark from './checkmark'
+import uuidV1 from 'uuid/v1'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -31,10 +32,10 @@ export default class AoTally extends React.PureComponent<Props> {
 
     let render = []
     for (let i = 0; i < fives; i++) {
-      render.push(<img src={Five} />)
+      render.push(<img src={Five} key={uuidV1()} />)
     }
     for (let i = 0; i < ones; i++) {
-      render.push(<img src={One} />)
+      render.push(<img src={One} key={uuidV1()} />)
     }
 
     return render
