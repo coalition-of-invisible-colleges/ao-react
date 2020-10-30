@@ -166,7 +166,7 @@ router.post('/events', (req, res, next) => {
         validators.isNotes(req.body.name, errRes) &&
         validators.isNotes(req.body.fob, errRes) &&
         validators.isNotes(req.body.secret) &&
-        !validators.isMemberName(req.body.name)
+        !validators.isMemberName(req.body.name, errRes)
       ) {
         events.memberCreated(
           req.body.name,
