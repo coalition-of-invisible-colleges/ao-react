@@ -941,6 +941,27 @@ class AoApi {
       })
   }
 
+  async downloadMeme(memeHash: string): Promise<request.Response> {
+    return request
+      .get('/download/' + memeHash)
+      .set('Authorization', aoStore.state.token)
+      .then(res => {
+        console.log('got meme! res is ', res)
+        return res
+      })
+  }
+
+  async uploadMemes(formData): Promise<request.Response> {
+    return request
+      .post('/upload')
+      .set('Authorization', aoStore.state.token)
+      .send(formData)
+      .then(res => {
+        console.log('sent files. res is', res)
+        return res
+      })
+  }
+
   logout() {
     aoStore.resetState()
     window.localStorage.clear()

@@ -9,13 +9,16 @@ const calculations = require('../calculations')
 const { serverAuth } = require('./auth')
 const { lightningRouter } = require('./lightning')
 const fs = require('fs')
+const multer = require('multer')
+const { addMeme } = require('./files')
+const events = require('./events')
 
 module.exports = function applyRouter(app) {
-  var myLogger = function(req, res, next) {
-    console.log('REQUEST: ', req)
-    next()
-  }
-  app.use(myLogger)
+  // var myLogger = function(req, res, next) {
+  //   console.log('REQUEST: ', req)
+  //   next()
+  // }
+  // app.use(myLogger)
   app.use(express.static(path.join(__dirname, '../../dist')))
   app.use(express.static(path.join(__dirname, '../../public')))
   // app.use('/meme', express.static(config.memes.dir))
@@ -97,7 +100,52 @@ module.exports = function applyRouter(app) {
     // stream.pipe(res)
   })
 
-  app.all('/download/:memeHash', (req, res) => {
+  // app.post('/upload', (req, res) => {
+  //   console.log('upload route detected')
+
+  const handleError = (err, res) => {
+    res
+      .status(500)
+      .contentType('text/plain')
+      .end('Oops! Something went wrong!')
+  }
+
+  const upload = multer({
+    dest: path.join(config.memes.dir, '/.temp')
+    // you might also want to set some limits: https://github.com/expressjs/multer#limits
+  })
+
+  const uploadFormName = 'file'
+
+  app.post('/upload', upload.single(uploadFormName), (req, res) => {
+    const tempPath = req.file.path
+    const targetPath = path.join(config.memes.dir, req.file.originalname)
+    console.log('originalname is ', req.file.originalname)
+    console.log('temppath is ', tempPath)
+    console.log('targepath is ', targetPath)
+    console.log('req is ', req)
+    // if (path.extname(req.file.originalname).toLowerCase() === '.png') {
+    fs.rename(tempPath, targetPath, err => {
+      if (err) return handleError(err, res)
+      addMeme(req.file.originalname, targetPath)
+      res
+        .status(200)
+        .contentType('text/plain')
+        .end('File uploaded!')
+    })
+    // } else {
+    //   fs.unlink(tempPath, err => {
+    //     if (err) return handleError(err, res)
+
+    //     res
+    //       .status(403)
+    //       .contentType('text/plain')
+    //       .end('Only .png files are allowed!')
+    //   })
+  })
+  // })
+
+  app.get('/download/:memeHash', (req, res) => {
     console.log('download route detected, hash is ', req.params.memeHash)
     const meme = state.serverState.memes.find(meme => {
       return meme.hash === req.params.memeHash

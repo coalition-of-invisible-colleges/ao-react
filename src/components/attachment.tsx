@@ -25,6 +25,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     super(props)
     this.state = {}
     this.setFile = this.setFile.bind(this)
+    this.download = this.download.bind(this)
   }
 
   componentDidMount() {
@@ -43,8 +44,8 @@ export default class AoAttachment extends React.Component<Props, State> {
         downloadPath: '/download/' + meme.hash
       })
       var reader = new FileReader()
-      reader.readAsDataURL(res.body)
       reader.onload = this.setFile
+      reader.readAsDataURL(res.body)
     })
   }
 
@@ -55,14 +56,22 @@ export default class AoAttachment extends React.Component<Props, State> {
     })
   }
 
+  download(e) {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return
+
+    let meme = aoStore.memeById.get(card.taskId)
+    if (!meme) {
+      return
+    }
+    api.downloadMeme(meme.hash)
+  }
+
   onError(e) {
     console.log(e, 'error in file-viewer')
   }
 
   render() {
-    console.log('file data is ', this.state.file)
-    console.log('file type is ', this.state.filetype)
-
     if (!this.state.file || !this.state.filetype) {
       return null
     }
@@ -70,7 +79,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     // otherwise, display a download button
     return (
       <div key={Math.random()}>
-        <Link to={this.state.downloadPath}>Attachment</Link>
+        <div onClick={this.download}>Attachment</div>
         {this.state.file && (
           <React.Fragment>
             <FileViewer

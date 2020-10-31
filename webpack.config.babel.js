@@ -180,7 +180,14 @@ module.exports = {
     },
     proxy: [
       {
-        context: ['/state', '/events', '/session', '/meme'],
+        context: [
+          '/state',
+          '/events',
+          '/session',
+          '/meme',
+          '/upload',
+          '/download'
+        ],
         target: 'http://0.0.0.0:8003',
         changeOrigin: true
       }

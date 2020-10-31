@@ -21,35 +21,58 @@ function scanMemes() {
 			console.log(filename)
 			const filepath = path.join(memeFolder, filename)
 			fs.readFile(filepath, (err, data) => {
-				if (err) throw err
-				const hash = crypto.createHash(data)
-				const filetype = 'jpg' //Promise.all(FileType.fromFile(filepath)).then(() => {
-
-				console.log(
-					'file data loaded. filepath: ',
-					filepath,
-					' and data: ',
-					data,
-					' and hash: ',
-					hash
-				)
-				const foundMeme = serverState.memes.find(m => {
-					return m.hash === hash
-				})
-				if (!foundMeme) {
-					events.memeAdded(filename, hash, filetype, (err, event) => {
-						console.log(
-							'\n\n\nmeme-added callback\n\nerr: ',
-							err,
-							'\n event: ',
-							event,
-							'\n\n'
-						)
-					})
+				if (err) {
+					console.log('Directory or other error-causing file found, ignoring')
+					return
 				}
+				addMeme(data, filename, filepath)
 			})
 		})
 	})
 }
 
-module.exports = { scanMemes }
+function addMeme(name, path, data = null) {
+	if (!data) {
+		fs.readFile(path, (err, data) => {
+			if (err) {
+				console.log('Directory or other error-causing file found, ignoring')
+				return
+			}
+			if (data) {
+				addMeme(name, path, data)
+				return
+			}
+		})
+		return
+	}
+
+	const hash = crypto.createHash(data)
+	const filetype = 'jpg' //Promise.all(FileType.fromFile(filepath)).then(() => {
+
+	console.log(
+		'file data loaded. path: ',
+		path,
+		' and data: ',
+		data,
+		' and hash: ',
+		hash
+	)
+	const foundMeme = serverState.memes.find(m => {
+		return m.hash === hash
+	})
+	if (!foundMeme) {
+		events.memeAdded(name, hash, filetype, (err, event) => {
+			console.log(
+				'\n\n\nmeme-added callback\n\nerr: ',
+				err,
+				'\n event: ',
+				event,
+				'\n\n'
+			)
+		})
+		return
+	}
+	return
+}
+
+module.exports = { scanMemes, addMeme }
