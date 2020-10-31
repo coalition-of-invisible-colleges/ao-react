@@ -489,7 +489,7 @@ textarea {
           word-break: break-all;
         }
 
-        p img {
+        img {
           max-width: 100%;
         }
 
@@ -1383,13 +1383,17 @@ textarea {
 
     // circlular icon that opens one of the main popups
     .actionCircle {
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: rgba(200, 200, 200, 0.25);
       border-radius: 50%;
       cursor: pointer;
       padding: 0.5em;
       user-select: none;
       width: 2.5em;
       height: 2.5em;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
 
       img {
         width: 100%;
@@ -1802,6 +1806,42 @@ textarea {
         width: 5em;
         cursor: pointer;
 
+        &:hover {
+          animation: shake 16s cubic-bezier(0.36, 0.15, 0.19, 0.85) 0s infinite
+            alternate both running;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+          width: 6.5em;
+        }
+
+        @keyframes shake {
+          10%,
+          90% {
+            transform: translate3d(-2px, 6px, 0)
+              rotate3d(0.03, 0.05, 1, -0.06turn) scale(1);
+          }
+
+          20%,
+          80% {
+            transform: translate3d(3px, 0, 0)
+              rotate3d(0.1, 0.2, 1, 0.122332232112123121turn) scale(1);
+          }
+
+          30%,
+          50%,
+          70% {
+            transform: translate3d(-5px, 8px, 0)
+              rotate3d(0.2, 0.37888534343344333212, 1, -0.08turn) scale(1.05);
+          }
+
+          40%,
+          60% {
+            transform: translate3d(4px, 0, 0) rotate3d(0.1, 0.4, 1, 0.105turn)
+              scale(1.1);
+          }
+        }
+
         &.open {
           width: 6.5em;
         }
@@ -1834,6 +1874,15 @@ textarea {
         padding: 0 0.1em;
         display: inline;
       }
+    }
+
+    // Jitsi Meet video chatroom panel
+    #chatroom {
+      position: fixed;
+      top: 5em;
+      left: 5em;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 1em;
     }
   }
 }
