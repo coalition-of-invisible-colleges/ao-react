@@ -25,7 +25,7 @@ if [ ! -d "$HOME/.ao" ]; then
 fi
 
 # update system and install prereqs (Debian)
-if [ $DISTRO == "debian" ]; then
+if [ "$DISTRO" = "debian" ]; then
 	# update
 	sudo apt update -yqqq 2>/dev/null
 	sudo apt autoremove -yqqq
@@ -145,7 +145,7 @@ else
 fi
 
 # install c-lightning prereqs (Debian)
-if [ $DISTRO == "debian" ]; then
+if [ "$DISTRO" = "debian" ]; then
 	# test these to see which are optional. autodev-tools might be optional.
 	if [ $(dpkg-query -W -f='${Status}' zlib1g-dev 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
 		echo zlib1g-dev already installed
@@ -277,7 +277,7 @@ fi
 if [ $(tor --version  2>/dev/null | grep -c "0\.4\.0\.5") -eq 1 ]; then
 	echo tor v0.4.0.5 already installed
 else
-	if [ $DISTRO == "debian" ]; then
+	if [ "$DISTRO" = "debian" ]; then
 		if [ $(dpkg-query -W -f='${Status}' build-essential 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
 			sudo apt install -y build-essential
 		fi
@@ -369,7 +369,7 @@ if [ -f "/var/lib/tor/ao/hostname" ]; then
 fi
 
 # install borgbackup (Debian)
-if [ $DISTRO == "debian" ]; then
+if [ "$DISTRO" = "debian" ]; then
 	if [ $(dpkg-query -W -f='${Status}' borgbackup 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
 		echo borgbackup already installed
 	else
@@ -382,6 +382,21 @@ else
 		sudo pacman -S borg
 	fi
 fi
+
+# # install docker (Debian)
+# sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+# curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+# sudo apt-key fingerprint 0EBFCD88 # should match
+# sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+# sudo apt-get update # required?
+# sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
+
+# # install jitsi meet (Debian)
+# git clone https://github.com/jitsi/docker-jitsi-meet && cd docker-jitsi-meet
+# cp env.example .env
+# ./gen-passwords.sh
+# mkdir -p ~/.jitsi-meet-cfg/{web/letsencrypt,transcripts,prosody/config,prosody/prosody-plugins-custom,jicofo,jvb,jigasi,jibri}
+# docker-compose up -d
 
 # clone the AO repository
 cd ~
@@ -420,7 +435,12 @@ else
     },
     tor: {
     	hostname: '$TORHOSTNAME'
-    }
+    },
+    memes: {
+        dir: '$HOME/.ao/memes'
+    },
+    socketUrl: 'http://localhost:8003' // development
+    // socketUrl: null // production
 }"
     echo "$CONFIG" > $HOME/ao-react/configuration.js
     echo configuration.js file created
@@ -520,7 +540,6 @@ fi
 
 # cleanup tor install
 if [ "$tor" = true ]; then
-	rm -rf tor-*
 	rm tor-0.4.0.5.tar.gz
 fi
 
