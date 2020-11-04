@@ -43,6 +43,10 @@ export default class AoChatroom extends React.PureComponent<{}, State> {
           domain="meet.dctrl.ca"
           roomName={chatroomName}
           displayName={aoStore.member.name}
+          containerStyle={{
+            width: 'calc((100vw - 39em)/2)',
+            height: 'calc(((100vw - 39em)/2)*4/6)'
+          }}
         />
         <div className="action" onClick={this.hide}>
           Hide Chatroom
