@@ -72,6 +72,7 @@
     "react-jitsi": "^1.0.4",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.1.2",
+    "react-user-tour": "^3.0.0",
     "regenerator-runtime": "^0.13.3",
     "sass-loader": "^8.0.2",
     "socket.io": "^2.3.0",

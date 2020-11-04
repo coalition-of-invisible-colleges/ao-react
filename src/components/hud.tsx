@@ -18,8 +18,10 @@ import AoPassword from './password'
 import AoFob from './fob'
 import AoVolume from './volume'
 import AoReactivator from './reactivator'
+import AoTour from './tour'
 import AoPopupPanel from './popupPanel'
 import AoShitposts from './shitposts'
+import AoChatroom from './chatroom'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
@@ -64,6 +66,7 @@ class MainMenu extends React.PureComponent<{}, State> {
         <div onClick={this.changeTheme} id={'themer'} className={'action'}>
           Next Theme
         </div>
+        <AoTour />
         <div onClick={this.onLogout} id="logout" className={'action'}>
           Log Out
         </div>
@@ -131,6 +134,7 @@ export default class AoHud extends React.Component<{}, undefined> {
         </div>
         <AoTickerHud />
         <AoShitposts />
+        <AoChatroom />
         <AoScore prefix={<span>Score: </span>} />
       </div>
     )

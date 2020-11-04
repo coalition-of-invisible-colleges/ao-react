@@ -1879,10 +1879,12 @@ textarea {
     // Jitsi Meet video chatroom panel
     #chatroom {
       position: fixed;
-      top: 5em;
-      left: 5em;
+      right: 2em;
+      top: 45%;
+      transform: translateY(-50%);
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 1em;
+      max-width: calc((100vw - 33em) / 2);
     }
   }
 }
