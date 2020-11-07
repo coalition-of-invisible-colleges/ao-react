@@ -122,8 +122,11 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
         allExchangeRates = await CoinGeckoClient.exchangeRates.all()
       }
       console.log('already have exchange rates:', allExchangeRates)
-      const exchangeRate =
-        toBtcExchange / allExchangeRates.data.rates[ticker.from].value
+      let denominator =
+        allExchangeRates.data.rates[ticker.from].value < 1
+          ? 1 / allExchangeRates.data.rates[ticker.from].value
+          : allExchangeRates.data.rates[ticker.from].value
+      const exchangeRate = toBtcExchange / denominator
       this.setState({
         fromSymbol: ticker.from,
         exchangeRate: exchangeRate
@@ -149,7 +152,8 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
 
       const price = Object.values(priceData.data)[0]['btc']
 
-      const exchangeRate = toBtcExchange / price
+      let denominator = price < 1 ? 1 / price : price
+      let exchangeRate = toBtcExchange / denominator
 
       this.setState({ fromSymbol: symbol, exchangeRate: exchangeRate })
       console.log(
