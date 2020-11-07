@@ -55,113 +55,73 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
   }
 
   async componentDidMount() {
-    console.log('ticker loading')
-
     this.loadTickerData()
     setInterval(() => {
       console.log('Refreshing tickers')
       this.loadTickerData()
     }, 300000)
-
-    // this.setState({ extendedTickerData: extendedResults })
   }
 
   async loadTickerData() {
     const ticker = this.props.ticker
-    console.log('loadTickerData, ticker is ', ticker)
     let allExchangeRates
     let toIsSimple = false
     let toBtcExchange
 
     if (!_.has(ticker, 'to.length') || !_.has(ticker, 'from.length')) {
-      console.log('invalid ticker, skipping')
+      console.log('invalid ticker, skipping (clean up your database)')
       return
     }
-    console.log('valid ticker, loading...')
     if (ticker.to.length <= 5) {
       allExchangeRates = await CoinGeckoClient.exchangeRates.all()
       if (_.has(allExchangeRates, 'data.rates.' + ticker.to)) {
         this.setState({ toSymbol: ticker.to })
         toIsSimple = true
         toBtcExchange = allExchangeRates.data.rates[ticker.to].value
-        console.log(
-          'loaded simple to symbol: ',
-          ticker.to,
-          ' with exchange rate',
-          toBtcExchange
-        )
       } else {
         console.log('Invalid symbol. Contract address is required for tokens')
         return
       }
     } else if (isAddress(ticker.to)) {
-      console.log('to is an ETH address')
       const symbolData = await CoinGeckoClient.coins.fetchCoinContractInfo(
         ticker.to
       )
       const symbol = symbolData.data.symbol
 
-      console.log('to symbol info is ', symbolData, 'and symbol is ', symbol)
-
       const toBtcExchangeData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.to,
         vs_currencies: ['btc', 'usd', 'cad', 'eth']
       })
-      console.log('price data is', toBtcExchangeData)
-      toBtcExchange = Object.values(toBtcExchangeData.data)[0]['btc']
-      console.log('extracted price is ', toBtcExchange)
+      toBtcExchange = 1 / Object.values(toBtcExchangeData.data)[0]['btc']
       this.setState({ toSymbol: symbol })
     }
 
     if (ticker.from.length <= 5) {
-      console.log(
-        'from symbol is simple, allExchangeRates is ',
-        allExchangeRates
-      )
       if (!_.has(allExchangeRates, 'data.rates.' + ticker.from)) {
         allExchangeRates = await CoinGeckoClient.exchangeRates.all()
       }
-      console.log('already have exchange rates:', allExchangeRates)
-      let denominator =
-        allExchangeRates.data.rates[ticker.from].value < 1
-          ? 1 / allExchangeRates.data.rates[ticker.from].value
-          : allExchangeRates.data.rates[ticker.from].value
-      const exchangeRate = toBtcExchange / denominator
+      const exchangeRate =
+        toBtcExchange / allExchangeRates.data.rates[ticker.from].value
       this.setState({
         fromSymbol: ticker.from,
         exchangeRate: exchangeRate
       })
-      console.log(
-        'loaded simple from symbol & set exchangeRate: ',
-        exchangeRate
-      )
     } else if (isAddress(ticker.from)) {
-      console.log('from is an ETH address')
       const symbolData = await CoinGeckoClient.coins.fetchCoinContractInfo(
         ticker.from
       )
 
       const symbol = symbolData.data.symbol
 
-      console.log('from symbol info is ', symbolData, 'and symbol is ', symbol)
-
       const priceData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.from,
         vs_currencies: 'btc'
       })
 
-      const price = Object.values(priceData.data)[0]['btc']
-
-      let denominator = price < 1 ? 1 / price : price
-      let exchangeRate = toBtcExchange / denominator
+      const price = 1 / Object.values(priceData.data)[0]['btc']
+      let exchangeRate = toBtcExchange / price
 
       this.setState({ fromSymbol: symbol, exchangeRate: exchangeRate })
-      console.log(
-        'set exchangeRate to ',
-        exchangeRate,
-        ' based on price ',
-        price
-      )
     }
   }
 
@@ -188,7 +148,6 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
 
     const price = Object.values(priceData.data)[0]['btc']
 
-    console.log('price is', price)
     return !!price
   }
 
