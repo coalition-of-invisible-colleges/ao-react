@@ -316,8 +316,8 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
       <div className={'ticker'}>
         <div className={'actionCircle'} onClick={this.startEditing}>
           <p>
-            1 {this.state.toSymbol.toUpperCase()} = {exchangeRate}{' '}
-            {this.state.fromSymbol.toUpperCase()}
+            1 {this.state.fromSymbol.toUpperCase()} = {exchangeRate}{' '}
+            {this.state.toSymbol.toUpperCase()}
           </p>
         </div>
       </div>

@@ -72,7 +72,10 @@ export const steps = [
     title: 'Welcome!',
     text: renderHTMLElement(
       <div>
-        <p>The AO is open-source tool for online and offline communities.</p>
+        <p>
+          The AO, or <strong>Autonomous Organization</strong> is an open-source
+          tool for online and offline communities.
+        </p>
         <p>
           <em>Let's start!</em>
         </p>
