@@ -42,8 +42,9 @@ export default class AoChatroom extends React.PureComponent<{}, State> {
       <div id="chatroom">
         <Jitsi
           domain={
-            config.hasOwnProperty('jitsiDomain')
-              ? config.jitsiDomain
+            config.hasOwnProperty('jitsi') &&
+            config.jitsi.hasOwnProperty('domain')
+              ? config.jitsi.domain
               : 'meet.dctrl.ca'
           }
           roomName={chatroomName}
