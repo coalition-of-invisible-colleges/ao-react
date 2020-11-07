@@ -281,15 +281,16 @@ router.post('/events', (req, res, next) => {
       break
     case 'member-ticker-set':
       if (
-        validators.isMemberId(req.body.memberId, errRes) &&
-        validators.isNotes(req.body.symbol, errRes) &&
+        validators.isNotes(req.body.fromCoin, errRes) &&
+        validators.isNotes(req.body.toCoin, errRes) &&
         validators.isAmount(req.body.index, errRes) &&
-        req.body.symbol.length <= 5
+        validators.isMemberId(req.body.memberId, errRes)
       ) {
         events.memberTickerSet(
-          req.body.memberId,
-          req.body.symbol,
+          req.body.fromCoin,
+          req.body.toCoin,
           req.body.index,
+          req.body.memberId,
           utils.buildResCallback(res)
         )
       } else {

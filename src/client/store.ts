@@ -34,7 +34,7 @@ export interface Member {
   active: number
   balance: number
   badges: []
-  tickers: string[]
+  tickers: Ticker[]
   info: {}
   timestamp: number
   lastUsed: Date
@@ -89,6 +89,11 @@ export interface Resource {
   secret: string
   trackStock: boolean
   stock: number
+}
+
+export interface Ticker {
+  from: string
+  to: string
 }
 
 export interface ConnectedAo {
@@ -208,6 +213,7 @@ class AoStore {
   @observable currentCard: string = undefined
   @observable discard: Task[] = []
   @observable guiCloseables: ((event?) => void)[] = []
+  @observable currentChatroom: string = undefined
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -502,6 +508,10 @@ class AoStore {
   @action.bound
   setCurrentCard(taskId: string) {
     this.currentCard = taskId
+  }
+  @action.bound
+  setCurrentChatroom(roomName: string) {
+    this.currentChatroom = roomName
   }
   @action.bound
   addToDiscardHistory(tasks: Task[]) {

@@ -310,10 +310,18 @@ function membersMuts(members, ev) {
           if (!member.tickers) {
             member.tickers = []
           }
-          if (!ev.symbol || ev.symbol.trim().length < 1) {
+          if (
+            !ev.fromCoin ||
+            ev.fromCoin.trim().length < 1 ||
+            !ev.toCoin ||
+            ev.toCoin.trim().length < 1
+          ) {
             member.tickers.splice(ev.index, 1)
           } else {
-            member.tickers[ev.index] = ev.symbol.trim().toLowerCase()
+            member.tickers[ev.index] = {
+              from: ev.fromCoin.trim().toLowerCase(),
+              to: ev.toCoin.trim().toLowerCase()
+            }
           }
         }
       })

@@ -185,13 +185,14 @@ export default class AoCalendar extends React.PureComponent {
       )
 
     return (
-      <div id={'calendar'}>
+      <div id="calendar">
         <AoPopupPanel
           iconSrc={Timecube}
           tooltipText={'Calendar'}
           badge={renderedBadge}
           tooltipPlacement={'right'}
-          panelPlacement={'right'}>
+          panelPlacement={'right'}
+          id="tour-calendar">
           {renderedCalendarList}
         </AoPopupPanel>
       </div>

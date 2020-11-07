@@ -16,7 +16,7 @@ export default class AoTip extends React.PureComponent<PopupPanelProps> {
 		return (
 			<Tippy
 				zIndex={4}
-				theme={'translucent'}
+				theme="translucent"
 				delay={[475, 200]}
 				content={this.props.text}
 				placement={this.props.placement ? this.props.placement : 'right'}

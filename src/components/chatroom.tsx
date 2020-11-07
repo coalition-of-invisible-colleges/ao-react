@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import Jitsi from 'react-jitsi'
+import config from '../../configuration'
 
 const chatroomName = 'Lounge'
 
@@ -31,8 +32,8 @@ export default class AoChatroom extends React.PureComponent<{}, State> {
   render() {
     if (!this.state.show) {
       return (
-        <div id="chatroom" className="action" onClick={this.show}>
-          Show Chatroom
+        <div id="chatroom" className="action closed" onClick={this.show}>
+          Chat
         </div>
       )
     }
@@ -40,7 +41,11 @@ export default class AoChatroom extends React.PureComponent<{}, State> {
     return (
       <div id="chatroom">
         <Jitsi
-          domain="meet.dctrl.ca"
+          domain={
+            config.hasOwnProperty('jitsiDomain')
+              ? config.jitsiDomain
+              : 'meet.dctrl.ca'
+          }
           roomName={chatroomName}
           displayName={aoStore.member.name}
           containerStyle={{

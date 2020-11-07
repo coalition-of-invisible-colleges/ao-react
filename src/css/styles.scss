@@ -621,6 +621,16 @@ textarea {
         cursor: pointer;
         user-select: none;
 
+        // the paw in the moon, shown when a card has signatures
+        img.moonpaw {
+          height: 1.5em;
+          position: absolute;
+          top: 0.5em;
+          left: calc(50% - 0.75em);
+          opacity: 0.4;
+          pointer-events: none;
+        }
+
         img {
           width: 2.5em;
           // height: 2.5em;
@@ -1772,16 +1782,6 @@ textarea {
       }
     }
 
-    // the paw in the moon, shown when a card has signatures
-    .moonpaw {
-      height: 1.5em;
-      position: absolute;
-      top: 0.5em;
-      left: 0.5em;
-      opacity: 0.4;
-      pointer-events: none;
-    }
-
     // the question mark that you can hover on to show an AoTip
     .tipMarker {
       font-size: 1.4em;
@@ -1884,6 +1884,29 @@ textarea {
       transform: translateY(-50%);
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 1em;
+
+      &.closed {
+        top: 9.25em;
+      }
+    }
+
+    // Tour popups
+    .shepherd-element {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 0 1em 1em 1em;
+      max-width: 24em;
+      border-radius: 1em;
+      border: 0.15em solid rgba(255, 255, 255, 0.15);
+
+      .action {
+        display: inline-block;
+        border-color: rgba(255, 255, 255, 0.15);
+        margin: 0.3231em 0.5em 0 0.5em;
+      }
+
+      .shepherd-text + .shepherd-footer {
+        margin-top: 1em;
+      }
     }
   }
 }

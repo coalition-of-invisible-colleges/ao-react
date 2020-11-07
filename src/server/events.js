@@ -195,12 +195,13 @@ function memberFieldUpdated(memberId, field, newfield, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function memberTickerSet(memberId, symbol, index, callback) {
+function memberTickerSet(fromCoin, toCoin, index, memberId, callback) {
   let newEvent = {
     type: 'member-ticker-set',
-    memberId,
-    symbol,
-    index
+    fromCoin,
+    toCoin,
+    index,
+    memberId
   }
   dctrlDb.insertEvent(newEvent, callback)
 }

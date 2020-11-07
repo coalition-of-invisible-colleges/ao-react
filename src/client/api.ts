@@ -728,13 +728,15 @@ class AoApi {
   // Each member has a list of tickers. Each ticker is a string.
   // Sets the ticker at position tickerListIndex to symbol coinSymbol.
   async setTicker(
-    coinSymbol: string,
+    fromCoin: string,
+    toCoin: string,
     tickerListIndex: number
   ): Promise<request.Response> {
     const act = {
       type: 'member-ticker-set',
       memberId: aoStore.member.memberId,
-      symbol: coinSymbol,
+      fromCoin: fromCoin,
+      toCoin: toCoin,
       index: tickerListIndex
     }
     return request

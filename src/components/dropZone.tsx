@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { CardPlay, CardLocation, CardZone, Coords } from '../cards'
+import api from '../client/api'
+import crypto from '../crypto'
 
 interface DropZoneProps {
 	taskId?: string
@@ -115,7 +117,29 @@ export default class AoDropZone extends React.PureComponent<
 
 		if (this.detectDragKind(event.dataTransfer) === 'file') {
 			console.log('file transfer, aborting card swap')
-			// api.uploadFile(event.dataTransfer)
+			const data = new FormData()
+			let lastUploadedName = ''
+			event.dataTransfer.items.forEach((dt, i) => {
+				var file = event.dataTransfer.items[i].getAsFile()
+				data.append('file', file)
+				lastUploadedName = file.name
+				console.log('... file[' + i + '].name = ' + file.name)
+			})
+			const hash = crypto.createHash(data)
+
+			// todo: api.createCard() first but you have to include the hash so it links retroactively
+
+			api.uploadMemes(data).then(res => {
+				console.log('uploaded file. res is ', res, '. About to pin card')
+				// todo: allow uploads on stacks as well
+				// todo: if there are multiple uploads, make one card and put all the files inside on more cards
+				api.pinCardToGrid(
+					this.props.x,
+					this.props.y,
+					lastUploadedName,
+					this.props.inId
+				)
+			})
 			return
 		}
 		this.hideDrop(event)

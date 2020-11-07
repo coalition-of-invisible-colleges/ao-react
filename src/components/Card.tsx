@@ -5,6 +5,8 @@ import AoContextCard from './contextCard'
 import AoDiscardZone from './discard'
 import AoHud from './hud'
 import { Helmet } from 'react-helmet'
+import { ShepherdTour as Tour } from 'react-shepherd'
+import { steps, tourOptions } from './tour'
 
 interface CardProps {
   match
@@ -40,16 +42,18 @@ class RenderCard extends React.Component<RenderProps> {
     }
 
     return (
-      <React.Fragment>
-        <Helmet>
-          <title>
-            {cardText} - {aoStore.state.cash.alias}
-          </title>
-        </Helmet>
-        <AoDiscardZone />
-        <AoContextCard task={card} cardStyle={'full'} />
-        <AoHud />
-      </React.Fragment>
+      <Tour steps={steps} tourOptions={tourOptions}>
+        <div id="tourCurrentCard">
+          <Helmet>
+            <title>
+              {cardText} - {aoStore.state.cash.alias}
+            </title>
+          </Helmet>
+          <AoDiscardZone />
+          <AoContextCard task={card} cardStyle={'full'} />
+          <AoHud />
+        </div>
+      </Tour>
     )
   }
 }

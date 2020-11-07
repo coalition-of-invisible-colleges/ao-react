@@ -1,68 +1,115 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import Tour from 'react-user-tour'
+import { ShepherdTourContext } from 'react-shepherd'
+import { renderToStaticMarkup } from 'react-dom/server'
 
-interface State {
-  started: boolean
-  step: number
+type PopperPlacement =
+  | 'auto'
+  | 'auto-start'
+  | 'auto-end'
+  | 'top'
+  | 'top-start'
+  | 'top-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end'
+const placeLeft: PopperPlacement = 'left'
+const placeRight: PopperPlacement = 'right'
+
+function cancelAction() {
+  return this.cancel()
 }
 
-@observer
-export default class AoTour extends React.PureComponent<{}, State> {
-  private tourStart = React.createRef<HTMLDivElement>()
+function backAction() {
+  return this.back()
+}
 
-  constructor(props) {
-    super(props)
-    this.state = { started: false, step: 1 }
-    this.startTour = this.startTour.bind(this)
-  }
+function nextAction() {
+  return this.next()
+}
 
-  startTour() {
-    console.log('starting tour')
-    this.setState({ started: true, step: 1 })
-  }
+function completeAction() {
+  return this.next()
+}
 
-  render() {
-    return (
-      <div className="tour menu" id="#tourStart">
-        <Tour
-          active={this.state.started}
-          step={this.state.step}
-          onNext={step => this.setState({ step })}
-          onBack={step => this.setState({ step })}
-          onCancel={() => this.setState({ started: false })}
-          steps={[
-            {
-              step: 1,
-              selector: '#tourCurrentCard',
-              position: 'top-left',
-              title: <div style={{ color: 'blue' }}>Welcome!</div>,
-              body: (
-                <div style={{ color: 'green' }}>
-                  {' '}
-                  "<strong>Welcome to the AO!</strong>
-                  <br />
-                  An open-source tool for online and offline communities.{' '}
-                  <em>Let's start!</em>"
-                </div>
-              )
-            },
-            {
-              step: 2,
-              selector: '#calendar',
-              title: <div style={{ color: 'blue' }}>Community Calendar</div>,
-              body: (
-                <div style={{ color: 'yellow' }}>
-                  This is the calendar. See events here!
-                </div>
-              )
-            }
-          ]}
-        />
-        <div onClick={this.startTour} className={'action'} ref={this.tourStart}>
-          Start Tour
-        </div>
+const cancelButton = {
+  text: 'Skip Tour',
+  classes: 'action',
+  action: cancelAction
+}
+
+const backButton = {
+  text: 'Back',
+  classes: 'action',
+  action: backAction
+}
+
+const nextButton = {
+  text: 'Next',
+  classes: 'action',
+  action: nextAction
+}
+
+const standardButtons = [cancelButton, backButton, nextButton]
+
+function renderHTMLElement(element): HTMLElement {
+  const output = document.createElement('div')
+  const staticElement = renderToStaticMarkup(element)
+  output.innerHTML = `<div>${staticElement}</div>`
+  return output
+}
+
+export const steps = [
+  {
+    id: 'welcome',
+    attachTo: { element: '#tourCurrentCard', on: placeLeft },
+    title: 'Welcome!',
+    text: renderHTMLElement(
+      <div>
+        <p>The AO is open-source tool for online and offline communities.</p>
+        <p>
+          <em>Let's start!</em>
+        </p>
       </div>
-    )
+    ),
+    buttons: [cancelButton, nextButton]
+  },
+  {
+    id: 'calendar',
+    attachTo: { element: '#tour-calendar', on: placeRight },
+    title: 'Community Calendar',
+    text: 'This is the calendar. See events here!',
+    buttons: standardButtons
+  },
+  {
+    id: 'the_end',
+    title: 'End of Tour',
+    text:
+      'Help make the tour longer by suggesting tour stops in the AO Guild card!',
+    buttons: [
+      backButton,
+      { text: 'End Tour', classes: 'action', action: completeAction }
+    ]
   }
+]
+
+export const tourOptions = {
+  defaultStepOptions: { scrollTo: true },
+  useModalOverlay: false
+}
+
+export default function AoTour() {
+  const tour = React.useContext(ShepherdTourContext)
+
+  return (
+    <div onClick={tour.start} className={'tour menu action'} id="tourStart">
+      Start Tour
+    </div>
+  )
 }
