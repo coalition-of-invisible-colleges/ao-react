@@ -153,7 +153,7 @@ export default class AoBird extends React.PureComponent<BirdProps, State> {
         interactive={true}>
         <Tippy
           zIndex={4}
-          theme={'translucent'}
+          theme="translucent"
           content={this.renderPassList}
           delay={[625, 200]}
           placement="right-start">
