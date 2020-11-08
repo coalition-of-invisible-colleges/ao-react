@@ -68,7 +68,7 @@ function renderHTMLElement(element): HTMLElement {
 export const steps = [
   {
     id: 'welcome',
-    attachTo: { element: '#tour-current-card', on: placeLeft },
+    attachTo: { element: '#tour-current-card' },
     title: 'Welcome!',
     text: renderHTMLElement(
       <div>
@@ -92,6 +92,14 @@ export const steps = [
     buttons: standardButtons
   },
   {
+    id: 'chatroom',
+    attachTo: { element: '#chatroom', on: placeLeft },
+    title: 'Secure Video Chat',
+    text:
+      "Jitsi is an open-source, end-to-end encrypted video chat that can be installed alongside the AO on a server. Click 'chat' to open up a live video chatroom! You can also do audio-only or use the text chat box within Jitsi. If you want more than one room, go to meet.yourdomain.com to manually create additional rooms (guildhalls coming soon).",
+    buttons: standardButtons
+  },
+  {
     id: 'hub',
     attachTo: { element: '#tour-hub', on: placeRight },
     title: 'The Hub',
@@ -112,7 +120,7 @@ export const steps = [
     attachTo: { element: '#tour-members', on: placeRight },
     title: 'Members',
     text:
-      'This panel contains a list of every member on the server. You can vouch for other members by grabbing their card (clicking the sun/moon).',
+      "This panel contains a list of every member on the server. You can vouch for other members by grabbing their card (clicking the sun/moon). You can sort members alphabetically, by recent events (account creation, fob tap, or bark), by number of vouches from other members, or by 'order'. The order can change consensually, but starts out as the order accounts are created in.",
     buttons: standardButtons
   },
   {
