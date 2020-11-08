@@ -94,7 +94,7 @@ export default class AoControls extends React.PureComponent<{}, State> {
           tooltipText={'Server Controls'}
           tooltipPlacement={'left'}
           panelPlacement={'left-start'}
-          id={'controls'}
+          id="tour-controls"
           alsoHideHub={true}>
           <React.Fragment>
             <div className={'toolbar'}>

@@ -72,7 +72,8 @@ export default class AoProposals extends React.PureComponent {
           tooltipText="Proposals"
           badge={renderedBadge}
           tooltipPlacement="right"
-          panelPlacement="right">
+          panelPlacement="right"
+          id="tour-proposals">
           <React.Fragment>
             <h2>Proposals</h2>
             <div

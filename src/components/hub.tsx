@@ -90,6 +90,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
           content={youAreHere ? 'Hide' : 'Community Hub'}
           placement="right">
           <img
+            id="tour-hub"
             src={Sun}
             onClick={this.goHub}
             className={youAreHere ? 'open' : undefined}

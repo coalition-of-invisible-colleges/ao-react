@@ -108,7 +108,8 @@ export default class AoHud extends React.Component<{}, undefined> {
             iconSrc={Badge}
             tooltipText={'Missions Index'}
             tooltipPlacement={'right'}
-            panelPlacement={'right'}>
+            panelPlacement={'right'}
+            id="tour-missions">
             <AoMissions />
           </AoPopupPanel>
         </div>
@@ -117,7 +118,8 @@ export default class AoHud extends React.Component<{}, undefined> {
             iconSrc={MemberIcon}
             tooltipText={'Members'}
             tooltipPlacement={'right'}
-            panelPlacement={'right'}>
+            panelPlacement={'right'}
+            id="tour-members">
             <AoMembers />
           </AoPopupPanel>
         </div>
@@ -130,7 +132,8 @@ export default class AoHud extends React.Component<{}, undefined> {
             tooltipText={'Search'}
             tooltipPlacement={'top'}
             panelPlacement={'top'}
-            onShown={this.focusSearchbox}>
+            onShown={this.focusSearchbox}
+            id="tour-search">
             <AoSearch ref={this.searchRef} />
           </AoPopupPanel>
         </div>

@@ -43,7 +43,7 @@ class RenderCard extends React.Component<RenderProps> {
 
     return (
       <Tour steps={steps} tourOptions={tourOptions}>
-        <div id="tourCurrentCard">
+        <div id="tour-current-card">
           <Helmet>
             <title>
               {cardText} - {aoStore.state.cash.alias}

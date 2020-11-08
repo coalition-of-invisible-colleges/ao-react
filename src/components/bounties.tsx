@@ -53,7 +53,8 @@ export default class AoBounties extends React.PureComponent {
           iconSrc={Chest}
           tooltipText="Bounties"
           tooltipPlacement="right"
-          panelPlacement="right">
+          panelPlacement="right"
+          id="tour-bounties">
           <React.Fragment>
             <h2>Bounties</h2>
             <div

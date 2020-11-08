@@ -68,7 +68,7 @@ function renderHTMLElement(element): HTMLElement {
 export const steps = [
   {
     id: 'welcome',
-    attachTo: { element: '#tourCurrentCard', on: placeLeft },
+    attachTo: { element: '#tour-current-card', on: placeLeft },
     title: 'Welcome!',
     text: renderHTMLElement(
       <div>
@@ -84,10 +84,75 @@ export const steps = [
     buttons: [cancelButton, nextButton]
   },
   {
+    id: 'mainMenu',
+    attachTo: { element: '#mainMenu', on: placeLeft },
+    title: 'Main Menu',
+    text:
+      'The main menu allows you to change your username and password. You should change your password now if you havent done so yet. You can also set your RFID fob number here.',
+    buttons: standardButtons
+  },
+  {
+    id: 'hub',
+    attachTo: { element: '#tour-hub', on: placeRight },
+    title: 'The Hub',
+    text:
+      'Ah, the Hub! The beating hearmt of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
+    buttons: standardButtons
+  },
+  {
+    id: 'missions',
+    attachTo: { element: '#tour-missions', on: placeRight },
+    title: 'Missions Index',
+    text:
+      "Put it on the Index! Missions, also known as groups, guilds, categories, or rooms, are a basic way to organize cards. Any card with a mission title shows up here. Click 'add mission title' in a card's menu to give it a title and upgrade it to a mission",
+    buttons: standardButtons
+  },
+  {
+    id: 'members',
+    attachTo: { element: '#tour-members', on: placeRight },
+    title: 'Members',
+    text:
+      'This panel contains a list of every member on the server. You can vouch for other members by grabbing their card (clicking the sun/moon).',
+    buttons: standardButtons
+  },
+  {
     id: 'calendar',
     attachTo: { element: '#tour-calendar', on: placeRight },
     title: 'Community Calendar',
-    text: 'This is the calendar. See events here!',
+    text:
+      "This is the calendar. See events here! Schedule an event on a card by clicking 'schedule event' in its card menu. Events that you hodl (mooned) will remain as 'overdue' until you check them off or drop the card (unmoon).",
+    buttons: standardButtons
+  },
+  {
+    id: 'proposals',
+    attachTo: { element: '#tour-proposals', on: placeRight },
+    title: 'Proposals',
+    text:
+      'Sign cards and they show up here: most signatures first. Work with your community to craft an evolving, distributed constitution, and form a voluntary self-govenment!',
+    buttons: standardButtons
+  },
+  {
+    id: 'bounties',
+    attachTo: { element: '#tour-bounties', on: placeRight },
+    title: 'Bounties',
+    text:
+      "Need some points? Open up Bounties and see what the community has put rewards on. When you check off a card, you will immediately get the points, so don't click the checkmark until the job is done!",
+    buttons: standardButtons
+  },
+  {
+    id: 'controls',
+    attachTo: { element: '#tour-controls', on: placeLeft },
+    title: 'Server Controls',
+    text:
+      "The Bull represents the physical server hardware (the element of Earth). Whoever controls the server could delete everything or manually read the database. The Bull allows you to connect to hardware resources, connect two AOs over tor, connect the AO to the lightning network, and control monthly memberships. Anyone can edit server settings, reflecting the AO's do-ocratic and trust-oriented design.",
+    buttons: standardButtons
+  },
+  {
+    id: 'tickers',
+    attachTo: { element: '#tickers', on: placeLeft },
+    title: 'Crypto Tickers',
+    text:
+      'The AO comes equipped with convenient and comprehensive crypto tickers, so you can monitor the relative worthlessness of various shitcoins. Click a crypto ticker to set it (and display further instructions).',
     buttons: standardButtons
   },
   {
