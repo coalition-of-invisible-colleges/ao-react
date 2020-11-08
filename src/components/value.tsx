@@ -92,6 +92,10 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return null
 
+    const base = card.completeValue || 0
+    const bonus = card.boost || 0
+    const hasPoints = base > 0 || bonus > 0
+
     if (this.state.editing) {
       return (
         <div className="value">
@@ -111,27 +115,29 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
     }
     switch (this.props.hudStyle) {
       case 'full before':
-        if (card.completeValue) {
+        if (hasPoints) {
           return (
             <div onClick={this.startEditing} className={'value full action'}>
-              {card.completeValue + ' points'}
+              {base + ' points +' + bonus + ' bonus'}
             </div>
           )
         }
         return null
       case 'mini before':
-        if (card.completeValue) {
-          return (
-            <span className={'value mini'}>{card.completeValue + 'p'}</span>
-          )
+        if (hasPoints) {
+          return <span className={'value mini'}>{base + bonus + 'p'}</span>
         }
         return null
       case 'menu':
         return (
           <div className={'value menu'}>
             <div onClick={this.startEditing} className={'action'}>
-              {card.completeValue
-                ? 'worth ' + card.completeValue + ' points if checked'
+              {hasPoints
+                ? 'worth ' +
+                  base +
+                  ' points plus ' +
+                  bonus +
+                  ' bonus points if checked'
                 : 'set checkmark value'}
             </div>
           </div>
@@ -139,10 +145,10 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
       case 'face before':
       case 'collapsed':
       default:
-        if (card.completeValue > 0) {
+        if (hasPoints) {
           return (
             <div className={'value summary ' + this.props.hudStyle}>
-              {card.completeValue + 'p'}
+              {base + 'p' + (bonus > 0 ? '+' + bonus : '')}
             </div>
           )
         }

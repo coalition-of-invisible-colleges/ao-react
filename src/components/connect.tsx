@@ -4,6 +4,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import AoServerName from './serverName'
 import AoTip from './tip'
+import config from '../../configuration'
 
 @observer
 export default class AoConnect extends React.PureComponent<{}> {
@@ -23,7 +24,13 @@ export default class AoConnect extends React.PureComponent<{}> {
         <div>
           Name this AO: <AoServerName />
         </div>
-        <p>Tor status: Offline</p>
+        <p>
+          {config.hasOwnProperty('tor') && config.tor.hasOwnProperty('hostname')
+            ? 'Tor address: ' + config.tor.hostname
+            : 'Tor not set up.'}
+        </p>
+        {/*<p>Secret: {aoStore.state.loader.token}</p>*/}
+
         {list.length >= 1 ? (
           <React.Fragment>
             <ul>{list}</ul>

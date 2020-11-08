@@ -237,7 +237,7 @@ textarea {
           }
 
           .value {
-            margin-right: 0.5em;
+            margin-right: 2.5em;
           }
 
           .checkbox {
@@ -873,6 +873,7 @@ textarea {
     #missions,
     #calendar,
     #proposals,
+    #bounties,
     #search,
     #returnPile,
     #shitposts {
@@ -894,6 +895,7 @@ textarea {
     #missions,
     #calendar,
     #proposals,
+    #bounties,
     #shitposts {
       .results {
         margin-right: 0.5em;
@@ -1031,6 +1033,14 @@ textarea {
       .actionCircle {
         left: 0.5em;
         top: calc(45vh + 6.75em);
+      }
+    }
+
+    // bounties popup panel
+    #bounties {
+      .actionCircle {
+        left: 0.5em;
+        top: calc(45vh + 11em);
       }
     }
 
