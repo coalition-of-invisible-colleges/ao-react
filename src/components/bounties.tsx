@@ -17,8 +17,9 @@ export default class AoBounties extends React.PureComponent {
     return aoStore.state.tasks
       .filter(task => {
         return (
-          (task.hasOwnProperty('boost') && task.boost > 0) ||
-          (task.hasOwnProperty('completeValue') && task.completeValue > 0)
+          ((task.hasOwnProperty('boost') && task.boost > 0) ||
+            (task.hasOwnProperty('completeValue') && task.completeValue > 0)) &&
+          task.name !== task.taskId
         )
       })
       .sort((a, b) => a.boost - b.boost)
