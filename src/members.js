@@ -4,17 +4,22 @@ function isAheadOf(senpaiId, kohaiId, state, errRes) {
   }
   let senpaiRank = state.members.findIndex(m => m.memberId === senpaiId)
   let kohaiRank = state.members.findIndex(m => m.memberId === kohaiId)
-
+  console.log('senpaiRank is ', senpaiRank, 'and kohaiRank is ', kohaiRank)
   if (senpaiRank < kohaiRank) {
+    console.log('returning rank of 1')
     return 1
-  } else if (kohaiRank > senpaiRank) {
+  } else if (kohaiRank < senpaiRank) {
+    console.log('returning rank of -1')
     return -1
   }
+  console.log('returning rank of 0')
 
   errRes.push('member is not ahead of other member in order of member list')
   return 0
 }
 
+// This method does not check if vouchers exist, therefore it depends on the mutations being perfect
+// and there not being any invalid members leftover in the .deck / vouchers list of the other member
 function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
   if (errRes === undefined) {
     errRes = []
@@ -31,32 +36,47 @@ function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
     return null
   }
 
-  const senpaiVouches = senpaiCard.deck
-    .map(mId => state.tasks.find(t => t.taskId === mId))
-    .filter(memberCard => memberCard !== undefined).length
+  // let senpaiVouches = 0
 
-  let kohaiVouchCards = kohaiCard.deck
-    .map(mId => state.tasks.find(t => t.taskId === mId))
-    .filter(memberCard => memberCard !== undefined)
+  // state.tasks.forEach(t => {
+  //   if (senpaiCard.deck.indexOf(t.taskId) >= 0) {
+  //     senpaiVouches++
+  //   }
+  // })
+
+  const senpaiVouches = senpaiCard.deck.length
+
+  let kohaiVouchCards = state.tasks.filter(
+    t => kohaiCard.deck.indexOf(t.taskId) >= 0
+  )
 
   let kohaiVouches = kohaiVouchCards.length
 
   kohaiVouchCards.forEach(card => {
-    const memberCards = card.deck
-      .map(memberId => state.tasks.find(t => t.taskId === memberId))
-      .forEach(memberCard => {
-        if (memberCard !== undefined) {
-          let subVouchCount = 0
-          memberCard.deck.forEach(subcard => {
-            if (subcard !== undefined) {
-              subVouchCount++
-            }
-          })
-          kohaiVouches = Math.max(kohaiVouches, subVouchCount)
-        }
-      })
+    // state.tasks
+    //   .filter(t => t.deck.indexOf(t.taskId) >= 0)
+    //   .forEach(memberCard => {
+    //     if (memberCard !== undefined) {
+    //       let subVouchCount = 0
+    //       state.tasks.forEach(t => {
+    //         if (memberCard.deck.indexOf(t.taskId) >= 0) {
+    //           subVouchCount++
+    //         }
+    //       })
+    kohaiVouches = Math.max(kohaiVouches, card.deck.length)
+    //   }
+    // })
   })
-
+  // console.log(
+  //   'senpai is ',
+  //   senpaiCard.name,
+  //   ' and kohai is ',
+  //   kohaiCard.name,
+  //   ' senpaiVouches are ',
+  //   senpaiCard.deck,
+  //   ' and kohaiVouches are ',
+  //   kohaiCard.deck
+  // )
   if (senpaiVouches > kohaiVouches) {
     return 1
   } else if (kohaiVouches > senpaiVouches) {
