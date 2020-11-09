@@ -198,7 +198,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
       } else {
         return 'peer'
       }
-    } else if (rank === -1) {
+    } else {
       const vouches = isDecidedlyMorePopularThan(
         aoStore.member.memberId,
         this.props.memberId,
