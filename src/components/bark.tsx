@@ -230,7 +230,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return 'Promote above'
   }
 
-  @computed get renderBanList() {
+  renderBanList() {
     const member = aoStore.memberById.get(this.props.memberId)
     if (!member) {
       return null
@@ -257,7 +257,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return <ul>{renderedBans}</ul>
   }
 
-  @computed get renderDeleteList() {
+  renderDeleteList() {
     const member = aoStore.memberById.get(this.props.memberId)
     if (!member) {
       return null
@@ -284,7 +284,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return <ul>{renderedDeletes}</ul>
   }
 
-  @computed get renderBarkMenu() {
+  renderBarkMenu() {
     const member = aoStore.memberById.get(this.props.memberId)
     if (!member) {
       return null
@@ -391,7 +391,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
               <img src={Banhammer} />
               {banLabel} ({this.banCount}/3)
             </div>
-            {this.banCount >= 1 && this.renderBanList}
+            {this.banCount >= 1 && this.renderBanList()}
             <div
               className={this.doIReset ? undefined : 'action'}
               onClick={this.doIReset ? undefined : this.resetPassword}>
@@ -405,7 +405,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
               {this.doIDelete ? 'Voted to Delete Account' : deleteLabel} (
               {this.deleteCount}/3)
             </div>
-            {this.deleteCount >= 1 && this.renderDeleteList}
+            {this.deleteCount >= 1 && this.renderDeleteList()}
             {membershipActivator}
           </div>
         ) : (
@@ -415,8 +415,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     )
   }
 
-  @computed
-  get renderMenuButton() {
+  renderMenuButton() {
     return (
       <Tippy
         zIndex={4}
@@ -440,8 +439,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     )
   }
 
-  @computed
-  get renderPromoteButton() {
+  renderPromoteButton() {
     return (
       <Tippy
         zIndex={4}
@@ -465,24 +463,24 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   render() {
     if (this.senpai === 'peer') {
       if (this.canPromote) {
-        return this.renderPromoteButton
+        return this.renderPromoteButton()
       }
       return ''
     }
 
     if (this.props.noPopups || this.senpai === 'senpai') {
-      return this.renderMenuButton
+      return this.renderMenuButton()
     }
 
     return (
       <LazyTippy
         zIndex={5}
-        content={this.renderBarkMenu}
+        content={this.renderBarkMenu()}
         interactive={true}
         trigger={'click'}
         placement={'top-end'}
         appendTo={document.getElementById('root')}>
-        {this.renderMenuButton}
+        {this.renderMenuButton()}
       </LazyTippy>
     )
   }
