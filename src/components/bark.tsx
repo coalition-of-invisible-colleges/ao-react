@@ -185,18 +185,31 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   // cached version of the function in members.js
   @computed get senpai() {
     const rank = this.isAheadOf
-    const vouches = isDecidedlyMorePopularThan(
-      this.props.memberId,
-      aoStore.member.memberId,
-      aoStore.state
-    )
-    if (rank === 1 && vouches === 1) {
-      return 'senpai'
-    } else if (rank === -1 && vouches === -1) {
-      return 'kohai'
+    if (rank === 0) {
+      return 'peer'
+    } else if (rank === 1) {
+      const vouches = isDecidedlyMorePopularThan(
+        this.props.memberId,
+        aoStore.member.memberId,
+        aoStore.state
+      )
+      if (vouches === 1) {
+        return 'senpai'
+      } else {
+        return 'peer'
+      }
+    } else if (rank === -1) {
+      const vouches = isDecidedlyMorePopularThan(
+        aoStore.member.memberId,
+        this.props.memberId,
+        aoStore.state
+      )
+      if (vouches === 1) {
+        return 'kohai'
+      } else {
+        return 'peer'
+      }
     }
-
-    return 'peer'
   }
 
   canPromote() {
