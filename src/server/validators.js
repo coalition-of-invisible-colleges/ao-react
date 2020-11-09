@@ -157,75 +157,18 @@ module.exports = {
     return colors.indexOf(val) >= 0
   },
   isAheadOf(senpaiId, kohaiId, errRes) {
-    let senpaiRank = state.serverState.members.findIndex(
-      m => m.memberId === senpaiId
-    )
-    let kohaiRank = state.serverState.members.findIndex(
-      m => m.memberId === kohaiId
-    )
-
-    if (senpaiRank < kohaiRank) {
-      return true
-    }
-
-    errRes.push('member is not ahead of other member in order of member list')
-    return false
+    return members.isAheadOf(senpaiId, kohaiId, state.serverState, errRes)
   },
   isDecidedlyMorePopularThan(senpaiId, kohaiId, errRes) {
-    const senpaiCard = state.serverState.tasks.find(t => t.taskId === senpaiId)
-    if (!senpaiCard) {
-      errRes.push('invalid member detected')
-      return false
-    }
-    const kohaiCard = state.serverState.tasks.find(t => t.taskId === kohaiId)
-    if (!kohaiCard) {
-      errRes.push('invalid member detected')
-      return false
-    }
-
-    const senpaiVouches = senpaiCard.deck
-      .map(mId => state.serverState.tasks.find(t => t.taskId === mId))
-      .filter(memberCard => memberCard !== undefined).length
-
-    let kohaiVouchCards = kohaiCard.deck
-      .map(mId => state.serverState.tasks.find(t => t.taskId === mId))
-      .filter(memberCard => memberCard !== undefined)
-
-    let kohaiVouches = kohaiVouchCards.length
-
-    kohaiVouchCards.forEach(card => {
-      const memberCards = card.deck
-        .map(memberId => aoStore.hashMap.get(memberId))
-        .forEach(memberCard => {
-          if (memberCard !== undefined) {
-            const subVouchCount = 0
-            memberCard.deck.forEach(subcard => {
-              if (subcard !== undefined) {
-                subVouchCount++
-              }
-            })
-            kohaiVouches = Math.max(kohaiVouches, subVouchCount)
-          }
-        })
-    })
-
-    if (senpaiVouches > kohaiVouches) {
-      return true
-    }
-
-    errRes.push('member does not have more vouches than other member')
-    return false
+    return members.isDecidedlyMorePopularThan(
+      senpaiId,
+      kohaiId,
+      state.serverState,
+      errRes
+    )
   },
   isSenpaiOf(senpaiId, kohaiId, errRes) {
-    if (
-      module.exports.isAheadOf(senpaiId, kohaiId) &&
-      module.exports.isDecidedlyMorePopularThan(senpaiId, kohaiId)
-    ) {
-      return true
-    }
-
-    errRes.push('member is not a senpai of the other member')
-    return false
+    return members.isSenpaiOf(senpaiId, kohaiId, state.serverState, errRes)
   },
   hasBanOn(senpaiId, kohaiId, errRes) {
     const kohai = state.serverState.members.find(t => t.memberId === kohaiId)

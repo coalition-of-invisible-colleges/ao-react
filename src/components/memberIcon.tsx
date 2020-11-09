@@ -12,7 +12,7 @@ import GoldenDoge from '../assets/images/goldendoge.svg'
 import Coin from '../assets/images/coin.svg'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
-import { isSenpai } from '../cards'
+import { isSenpaiOf } from '../members'
 import AoBark from './bark'
 
 interface MemberIconProps {
@@ -81,7 +81,11 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
           Membership: {renderActiveIcon}
           {this.isActive ? 'Active' : 'Inactive'}
         </p>
-        {!!isSenpai(this.props.memberId) ? (
+        {isSenpaiOf(
+          aoStore.member.memberId,
+          this.props.memberId,
+          aoStore.state
+        ) === 1 ? (
           <p>
             <small>
               <AoBark memberId={this.props.memberId} noPopups={true} /> You may{' '}

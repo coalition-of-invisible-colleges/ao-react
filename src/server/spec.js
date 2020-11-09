@@ -3,6 +3,7 @@ const uuidV1 = require('uuid/v1')
 const state = require('./state')
 const utils = require('./utils')
 const validators = require('./validators')
+const members = require('../members')
 const calculations = require('../calculations')
 const events = require('./events')
 const connector = require('./connector')
@@ -196,7 +197,7 @@ router.post('/events', (req, res, next) => {
       if (
         validators.isMemberId(req.body.kohaiId, errRes) &&
         validators.isMemberId(req.body.senpaiId, errRes) &&
-        validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes)
+        validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes) === 1
       ) {
         events.memberSecretReset(
           req.body.kohaiId,
@@ -211,7 +212,7 @@ router.post('/events', (req, res, next) => {
       if (
         validators.isMemberId(req.body.kohaiId, errRes) &&
         validators.isMemberId(req.body.senpaiId, errRes) &&
-        validators.isAheadOf(req.body.senpaiId, req.body.kohaiId, errRes)
+        validators.isAheadOf(req.body.senpaiId, req.body.kohaiId, errRes) === 1
       ) {
         events.memberPromoted(
           req.body.kohaiId,
@@ -226,7 +227,7 @@ router.post('/events', (req, res, next) => {
       if (
         validators.isMemberId(req.body.kohaiId, errRes) &&
         validators.isMemberId(req.body.senpaiId, errRes) &&
-        validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes)
+        validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes) === 1
       ) {
         events.memberBanned(
           req.body.kohaiId,

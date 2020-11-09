@@ -5,7 +5,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import AoCardHud, { HudStyle } from './cardHud'
 import LazyTippy from './lazyTippy'
-import { isSenpai } from '../cards'
+import { isSenpaiOf, isAheadOf } from '../members'
 import Bark from '../assets/images/loud.svg'
 import Gun from '../assets/images/goodbye.svg'
 import Ascend from '../assets/images/ascend.svg'
@@ -183,15 +183,25 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   @computed get senpai() {
-    const senpai = isSenpai(this.props.memberId)
-    switch (senpai) {
-      case 1:
-        return 'senpai'
-      case -1:
-        return 'kohai'
-      case 0:
-        return false
+    const senpai = isSenpaiOf(
+      this.props.memberId,
+      aoStore.member.memberId,
+      aoStore.state
+    )
+    console.log('senpai is ', senpai)
+    if (senpai === 1) {
+      return 'senpai'
+    } else if (senpai === -1) {
+      return 'kohai'
     }
+    return 'peer'
+  }
+
+  @computed get canPromote() {
+    return (
+      isAheadOf(aoStore.member.memberId, this.props.memberId, aoStore.state) ===
+      1
+    )
   }
 
   @computed get message() {
@@ -217,7 +227,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     } else if (this.senpai === 'kohai') {
       return 'This member is your kohai and a target for enforcement action.'
     }
-    return 'Dominance cannot be established.'
+    return 'Promote above'
   }
 
   @computed get renderBanList() {
@@ -416,8 +426,8 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
         <img
           src={Bark}
           className={
-            'barkButton' +
-            (this.senpai ? ' ' + this.senpai : '') +
+            'barkButton ' +
+            this.senpai +
             (this.props.noPopups ? ' noPopups' : '')
           }
           draggable={false}
@@ -430,8 +440,33 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     )
   }
 
+  @computed
+  get renderPromoteButton() {
+    return (
+      <Tippy
+        zIndex={4}
+        theme={'translucent'}
+        content={this.message}
+        hideOnClick={false}>
+        <img
+          src={Ascend}
+          className={'barkButton' + (this.props.noPopups ? ' noPopups' : '')}
+          draggable={false}
+          onClick={this.promoteMember}
+          onDoubleClick={event => {
+            event.stopPropagation()
+            event.nativeEvent.stopImmediatePropagation()
+          }}
+        />
+      </Tippy>
+    )
+  }
+
   render() {
-    if (!this.senpai) {
+    if (this.senpai === 'peer') {
+      if (this.canPromote) {
+        return this.renderPromoteButton
+      }
       return ''
     }
 
