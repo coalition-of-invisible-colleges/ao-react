@@ -274,8 +274,8 @@ fi
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
 # install tor
-if [ $(tor --version  2>/dev/null | grep -c "0\.4\.0\.5") -eq 1 ]; then
-	echo tor v0.4.0.5 already installed
+if [ $(tor --version  2>/dev/null | grep -c "0\.4\.4\.6") -eq 1 ]; then
+	echo tor v0.4.4.6 already installed
 else
 	if [ "$DISTRO" = "debian" ]; then
 		if [ $(dpkg-query -W -f='${Status}' build-essential 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
