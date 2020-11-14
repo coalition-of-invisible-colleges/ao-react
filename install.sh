@@ -320,10 +320,10 @@ else
 	fi
 
 	cd ~
-	wget https://dist.torproject.org/tor-0.4.0.5.tar.gz
+	wget https://dist.torproject.org/tor-0.4.4.6.tar.gz
 	tor=true
-	tar xf tor-0.4.0.5.tar.gz
-	cd tor-0.4.0.5
+	tar xf tor-0.4.4.6.tar.gz
+	cd tor-0.4.4.6
 	./configure
 	make
 	sudo make install
@@ -439,6 +439,9 @@ else
     memes: {
         dir: '$HOME/.ao/memes'
     },
+    jitsi: {
+    	domain: 'meet.dctrl.ca'
+    },
     socketUrl: 'http://localhost:8003' // development
     // socketUrl: null // production
 }"
@@ -540,7 +543,7 @@ fi
 
 # cleanup tor install
 if [ "$tor" = true ]; then
-	rm tor-0.4.0.5.tar.gz
+	rm tor-0.4.4.6.tar.gz
 fi
 
 echo the AO is installed
