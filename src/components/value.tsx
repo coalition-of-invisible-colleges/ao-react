@@ -133,11 +133,7 @@ export default class AoValue extends React.PureComponent<ValueProps, State> {
           <div className={'value menu'}>
             <div onClick={this.startEditing} className={'action'}>
               {hasPoints
-                ? 'worth ' +
-                  base +
-                  ' points plus ' +
-                  bonus +
-                  ' bonus points if checked'
+                ? 'worth ' + base + ' points plus ' + bonus + ' bonus points'
                 : 'set checkmark value'}
             </div>
           </div>

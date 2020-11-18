@@ -51,3 +51,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose
 
 # set permissions for docker-compose. need to log out and in after this maybe
 sudo usermod -aG docker ${USER}
+
+# finally
+
+docker-compose up -d

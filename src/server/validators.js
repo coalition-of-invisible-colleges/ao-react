@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const state = require('./state')
+const members = require('../members')
 
 module.exports = {
   isAmount(val, errRes) {

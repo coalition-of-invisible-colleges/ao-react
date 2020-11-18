@@ -140,7 +140,7 @@ export default class AoHud extends React.Component<{}, undefined> {
         <AoTickerHud />
         <AoShitposts />
         <AoChatroom />
-        <AoScore prefix={<span>Score: </span>} />
+        <AoScore prefix={<span>Points: </span>} />
       </div>
     )
   }

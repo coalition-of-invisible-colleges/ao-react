@@ -40,7 +40,7 @@ module.exports = {
     rules: [
       {
         test: /\.(j|t)s(x)?$/,
-        exclude: /node_modules/,
+        include: [path.resolve(__dirname, 'src')],
         use: {
           loader: 'babel-loader',
           options: {
