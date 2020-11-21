@@ -18,10 +18,10 @@ else
 	exit 1
 fi
 
-# make AO data directory
+# make AO data and memes directories
 cd ~
-if [ ! -d "$HOME/.ao" ]; then
-	mkdir -p $HOME/.ao
+if [ ! -d "$HOME/.ao/memes" ]; then
+	mkdir -p $HOME/.ao/memes
 fi
 
 # update system and install prereqs (Debian)
@@ -127,12 +127,12 @@ fi
 NODEVERSION=`nvm current`
 
 # install node
-if [ $(echo $NODEVERSION | grep -c "12\.16") -eq 1 ]; then
+if [ $(echo $NODEVERSION | grep -c "15\.2") -eq 1 ]; then
 	echo node $NODEVERSION already installed
 else
-	nvm install 12.16
-	nvm use 12.16
-	nvm alias default 12.16
+	nvm install 15.2
+	nvm use 15.2
+	nvm alias default 15.2
 fi
 
 # install npm
@@ -506,7 +506,7 @@ else
 Description=ao-daemon
 
 [Service]
-ExecStart=/usr/local/lib/nodejs/node-v12.16.1-linux-x64/bin/node $HOME/ao-react/src/server/app.js
+ExecStart=$HOME/.nvm/versions/node/v15.2.1/bin/node $HOME/ao-react/src/server/app.js
 User=$USER
 Type=simple
 Restart=always
