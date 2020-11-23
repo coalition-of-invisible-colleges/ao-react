@@ -954,13 +954,15 @@ router.post('/events', (req, res, next) => {
         Number.isInteger(req.body.x) &&
         req.body.x >= 0 &&
         Number.isInteger(req.body.y) &&
-        req.body.y >= 0
+        req.body.y >= 0 &&
+        validators.isMemberId(req.body.memberId, errRes)
       ) {
         events.gridPin(
           req.body.inId,
           req.body.taskId,
           req.body.x,
           req.body.y,
+          req.body.memberId,
           utils.buildResCallback(res)
         )
       } else {

@@ -888,10 +888,11 @@ class AoApi {
     if (_.isObject(task)) {
       const act = {
         type: 'grid-pin',
+        inId: inId,
         taskId: task.taskId,
         x: x,
         y: y,
-        inId: inId
+        memberId: aoStore.member.memberId
       }
       return request
         .post('/events')

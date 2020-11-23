@@ -693,8 +693,8 @@ function gridResized(taskId, height, width, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function gridPin(inId, taskId, x, y, callback) {
-  let newEvent = { type: 'grid-pin', inId, taskId, x, y }
+function gridPin(inId, taskId, x, y, memberId, callback) {
+  let newEvent = { type: 'grid-pin', inId, taskId, x, y, memberId }
   dctrlDb.insertEvent(newEvent, callback)
 }
 

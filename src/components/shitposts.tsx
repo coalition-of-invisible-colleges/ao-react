@@ -35,6 +35,14 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
     this.onKeyDown = this.onKeyDown.bind(this)
   }
 
+  componentWillMount() {
+    let shitpostCard = aoStore.cardByName.get('shitposts')
+
+    if (!shitpostCard) {
+      api.createCard('shitposts')
+    }
+  }
+
   focusShitpostBox(instance?) {
     this.shitpostBox.current.focus()
   }
@@ -43,17 +51,6 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
     let shitpostCard = aoStore.cardByName.get('shitposts')
 
     if (!shitpostCard) {
-      api.createCard('shitposts').then(res => {
-        const inId = JSON.parse(res.text).event.taskId
-        api.findOrCreateCardInCard(
-          this.state.text,
-          inId,
-          false,
-          this.state.color,
-          true
-        )
-      })
-      this.setState({ text: '' })
       return
     }
 
@@ -119,6 +116,12 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
   }
 
   render() {
+    let shitpostCard = aoStore.cardByName.get('shitposts')
+
+    if (!shitpostCard) {
+      return
+    }
+
     const renderedBadge =
       this.allShitposts.length >= 1 ? this.allShitposts.length.toString() : null
 
@@ -157,6 +160,8 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
             cards={this.allShitposts}
             cardStyle="priority"
             alwaysShowAll={true}
+            inId={shitpostCard.taskId}
+            zone="subTasks"
           />
           <div className="palette">{palette}</div>
           <input

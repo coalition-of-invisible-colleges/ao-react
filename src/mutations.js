@@ -1025,11 +1025,11 @@ function tasksMuts(tasks, ev) {
           task.subTasks = []
         }
       })
-      // tasks.forEach(task => {
-      //   if (updateParents.indexOf(task.taskId) >= 0) {
-      //     task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
-      //   }
-      // })
+      tasks.forEach(task => {
+        if (updateParents.indexOf(task.taskId) >= 0) {
+          task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
+        }
+      })
       break
     case 'task-guilded':
       tasks.forEach(task => {
@@ -1371,12 +1371,12 @@ function tasksMuts(tasks, ev) {
         }
         // Same as task-sub-tasked: Grab the card and removed the pass from it, if any. And add parents.
         if (task.taskId === ev.taskId) {
-          // task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
-          // if (ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
-          //   if (ev.taskId !== ev.memberId) {
-          //     task.deck.push(ev.memberId)
-          //   }
-          // }
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+          if (ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
+            if (ev.taskId !== ev.memberId) {
+              task.deck.push(ev.memberId)
+            }
+          }
           if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
             task.parents = []
           }

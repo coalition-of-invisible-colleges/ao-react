@@ -150,29 +150,33 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
         }
         break
       case 'subTasks':
-        if (move.to.taskId && this.props.dropActsLikeFolder) {
-          api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
+        api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
+          if (move.to.taskId && this.props.dropActsLikeFolder) {
             api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
-          })
-        } else if (move.to.taskId) {
-          api
-            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-            .then(() =>
-              api.pinCardToGrid(
+          } else if (move.to.taskId) {
+            api
+              .unpinCardFromGrid(
                 move.to.coords.x,
                 move.to.coords.y,
-                nameFrom,
                 move.to.inId
               )
+              .then(() =>
+                api.pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                )
+              )
+          } else {
+            api.pinCardToGrid(
+              move.to.coords.x,
+              move.to.coords.y,
+              nameFrom,
+              move.to.inId
             )
-        } else {
-          api.pinCardToGrid(
-            move.to.coords.x,
-            move.to.coords.y,
-            nameFrom,
-            move.to.inId
-          )
-        }
+          }
+        })
         break
       case 'discard':
         aoStore.popDiscardHistory()
