@@ -63,12 +63,6 @@ function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
     //           subVouchCount++
     //         }
     //       })
-    console.log(
-      'kohai vouch card has deck of length ',
-      card.deck.length,
-      ' vs kohaiVouches of ',
-      kohaiVouches
-    )
     kohaiVouches = Math.max(kohaiVouches, card.deck.length)
     //   }
     // })
