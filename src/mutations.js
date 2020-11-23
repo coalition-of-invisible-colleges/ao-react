@@ -582,7 +582,7 @@ function tasksMuts(tasks, ev) {
         )
       )
       tasks.forEach(task => {
-        if (task.taskId === ev.inId) {
+        if (ev.inId && task.taskId === ev.inId) {
           if (ev.prioritized) {
             task.priorities = _.filter(task.subTasks, tId => tId !== ev.taskId)
             task.priorities.push(ev.taskId)
@@ -622,6 +622,13 @@ function tasksMuts(tasks, ev) {
       // since it will show up on the "Where is this card" list
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
+          if (task.passed.find(d => d[1] === ev.memberId)) {
+            tasks.forEach(t => {
+              if (t.taskId === ev.memberId) {
+                t.subTasks.push(ev.taskId)
+              }
+            })
+          }
           task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {

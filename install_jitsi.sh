@@ -25,6 +25,10 @@ sudo apt-get remove certbot, sudo dnf remove certbot, or sudo yum remove certbot
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
+# install nginx
+
+sudo apt install nginx
+
 # get certificate
 
 sudo certbot certonly --nginx # add -d domain to force new cert

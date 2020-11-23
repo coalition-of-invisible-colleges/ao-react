@@ -43,41 +43,6 @@ textarea {
       }
     }
 
-    // palette: color selector component
-    .palette {
-      width: max-content;
-
-      .swatch {
-        display: inline-block;
-        position: relative;
-        margin: 0.75em 1em 2em 1em;
-        cursor: pointer;
-
-        .paper {
-          width: 1em;
-          height: 1em;
-        }
-
-        .border {
-          padding: 0.9em;
-          border: 0.165em solid transparent;
-          margin: -0.6em;
-          &.selected,
-          &:hover {
-            border-color: white;
-            border-radius: 1em;
-          }
-        }
-
-        .label {
-          margin-top: 0.75em;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-      }
-    }
-
     // mission: cards that are missions
     .mission {
       .badge {
@@ -1145,8 +1110,7 @@ textarea {
 
     #shitposts {
       .actionCircle {
-        left: unset;
-        right: 1.5em;
+        left: 0.5em;
         bottom: 5em;
       }
     }
@@ -1917,6 +1881,55 @@ textarea {
 
       .shepherd-text + .shepherd-footer {
         margin-top: 1em;
+      }
+    }
+
+    // palette: color selector component
+    .palette {
+      width: max-content;
+
+      .swatch {
+        display: inline-block;
+        position: relative;
+        margin: 0.75em 1em 2em 1em;
+        cursor: pointer;
+
+        .paper {
+          width: 1em;
+          height: 1em;
+        }
+
+        .border {
+          padding: 0.9em;
+          border: 0.165em solid transparent;
+          margin: -0.6em;
+          &.selected,
+          &:hover {
+            border-color: white;
+            border-radius: 1em;
+          }
+        }
+
+        .label {
+          margin-top: 0.75em;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+      }
+    }
+
+    // palette in the shitposts box
+    #shitposts .palette {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 0.42em;
+
+      .swatch {
+        margin-bottom: 0.3em;
+        position: relative;
+        top: -0.275em;
       }
     }
   }

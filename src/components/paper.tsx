@@ -8,7 +8,7 @@ import Paper3 from '../assets/images/paper_3.svg'
 import Paper4 from '../assets/images/paper_4.svg'
 
 interface PaperProps {
-  taskId: string
+  taskId?: string
   color?: string
 }
 
@@ -43,6 +43,10 @@ export default class AoPaper extends React.PureComponent<PaperProps> {
 
   @computed get cardAge() {
     const taskId = this.props.taskId
+    if (!taskId) {
+      return false
+    }
+
     const card = aoStore.hashMap.get(taskId)
 
     if (!card) {
@@ -83,19 +87,22 @@ export default class AoPaper extends React.PureComponent<PaperProps> {
 
   render() {
     const taskId = this.props.taskId
-    const card = aoStore.hashMap.get(taskId)
-
-    if (!card) {
-      console.log('missing card on render paper')
-    }
-
     let filename = Paper1
-    if (this.cardAge >= 8) {
-      filename = Paper2
-    } else if (this.cardAge >= 30) {
-      filename = Paper3
-    } else if (this.cardAge >= 90) {
-      filename = Paper4
+
+    if (taskId) {
+      const card = aoStore.hashMap.get(taskId)
+
+      if (!card) {
+        console.log('missing card on render paper')
+      }
+
+      if (this.cardAge >= 8) {
+        filename = Paper2
+      } else if (this.cardAge >= 30) {
+        filename = Paper3
+      } else if (this.cardAge >= 90) {
+        filename = Paper4
+      }
     }
     return (
       <div className={'paper'}>

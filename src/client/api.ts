@@ -130,7 +130,9 @@ class AoApi {
   async findOrCreateCardInCard(
     name: string,
     inId: string,
-    prioritized: boolean = false
+    prioritized: boolean = false,
+    color: string = 'blue',
+    anonymous?: boolean
   ): Promise<request.Response> {
     let found = aoStore.cardByName.get(name.toLowerCase())
     let act
@@ -142,7 +144,7 @@ class AoApi {
           type: 'task-sub-tasked',
           taskId: inId,
           subTask: found.taskId,
-          memberId: aoStore.member.memberId
+          memberId: anonymous ? null : aoStore.member.memberId
         }
       }
     } else {
@@ -150,7 +152,7 @@ class AoApi {
         type: 'task-created',
         name: name,
         color: 'blue',
-        deck: [aoStore.member.memberId],
+        deck: anonymous ? [] : [aoStore.member.memberId],
         inId: inId,
         prioritized: prioritized
       }
