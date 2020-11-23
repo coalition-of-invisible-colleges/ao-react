@@ -481,31 +481,28 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   render() {
-    if (this.senpai === 'senpai') {
+    if (this.props.noPopups || this.senpai === 'senpai') {
       return this.renderMenuButton()
     }
 
-    if (this.senpai === 'peer') {
-      if (this.canPromote()) {
-        return this.renderPromoteButton()
-      }
-      return ''
+    if (this.senpai === 'kohai') {
+      return (
+        <LazyTippy
+          zIndex={5}
+          content={this.renderBarkMenu()}
+          interactive={true}
+          trigger={'click'}
+          placement={'top-end'}
+          appendTo={document.getElementById('root')}>
+          {this.renderMenuButton()}
+        </LazyTippy>
+      )
     }
 
-    if (this.props.noPopups) {
-      return this.renderMenuButton()
+    if (this.senpai === 'peer' && this.canPromote()) {
+      return this.renderPromoteButton()
     }
 
-    return (
-      <LazyTippy
-        zIndex={5}
-        content={this.renderBarkMenu()}
-        interactive={true}
-        trigger={'click'}
-        placement={'top-end'}
-        appendTo={document.getElementById('root')}>
-        {this.renderMenuButton()}
-      </LazyTippy>
-    )
+    return ''
   }
 }
