@@ -119,7 +119,7 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
     let shitpostCard = aoStore.cardByName.get('shitposts')
 
     if (!shitpostCard) {
-      return
+      return null
     }
 
     const renderedBadge =
