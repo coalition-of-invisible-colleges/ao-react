@@ -481,6 +481,10 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   render() {
+    if (this.senpai === 'senpai') {
+      return this.renderMenuButton()
+    }
+
     if (this.senpai === 'peer') {
       if (this.canPromote()) {
         return this.renderPromoteButton()
@@ -488,7 +492,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
       return ''
     }
 
-    if (this.props.noPopups || this.senpai === 'senpai') {
+    if (this.props.noPopups) {
       return this.renderMenuButton()
     }
 
