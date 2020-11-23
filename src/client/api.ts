@@ -185,6 +185,22 @@ class AoApi {
       })
   }
 
+  // Empties a card's priorities and subtasks
+  async emptyCard(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'task-emptied',
+      taskId: taskId,
+      blame: aoStore.member.memberId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async colorCard(taskId: string, color: string): Promise<request.Response> {
     const act = {
       type: 'task-colored',

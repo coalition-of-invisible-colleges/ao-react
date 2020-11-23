@@ -93,14 +93,17 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
   }
 
   purgeUnheldCards() {
-    api.removeCards(aoStore.allUnheldCards.map(task => task.taskId))
+    api
+      .removeCards(aoStore.allUnheldCards.map(task => task.taskId))
+      .then(() => {
+        const shitpostCard = aoStore.cardByName.get('shitposts')
+        if (shitpostCard && shitpostCard.hasOwnProperty('taskId')) {
+          api.emptyCard(shitpostCard.taskId)
+        }
+      })
   }
 
   setColor(event) {
-    console.log(
-      'setColor color is ',
-      event.currentTarget.getAttribute('data-color')
-    )
     this.setState({ color: event.currentTarget.getAttribute('data-color') })
     this.shitpostBox.current.focus()
   }

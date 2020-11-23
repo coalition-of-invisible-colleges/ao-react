@@ -441,6 +441,15 @@ function taskDeSubTasked(taskId, subTask, memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskEmptied(taskId, memberId, callback) {
+  let newEvent = {
+    type: 'task-emptied',
+    taskId,
+    memberId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function taskPrioritized(taskId, inId, position, callback) {
   let newEvent = {
     type: 'task-prioritized',
@@ -750,6 +759,7 @@ module.exports = {
   taskGuilded,
   taskSubTasked,
   taskDeSubTasked,
+  taskEmptied,
   addressUpdated,
   invoiceCreated,
   taskBoostedLightning,

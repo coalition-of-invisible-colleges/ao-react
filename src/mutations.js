@@ -1016,6 +1016,21 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-emptied':
+      let updateParents = []
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          updateParents = [...task.priorities, ...task.subTasks]
+          task.priorities = []
+          task.subTasks = []
+        }
+      })
+      // tasks.forEach(task => {
+      //   if (updateParents.indexOf(task.taskId) >= 0) {
+      //     task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
+      //   }
+      // })
+      break
     case 'task-guilded':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {

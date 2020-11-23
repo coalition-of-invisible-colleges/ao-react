@@ -601,6 +601,17 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'task-emptied':
+      if (validators.isTaskId(req.body.taskId, errRes)) {
+        events.taskEmptied(
+          req.body.taskId,
+          req.body.blame,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'task-valued':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
