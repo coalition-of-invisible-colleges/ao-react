@@ -150,7 +150,7 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
           onShown={this.focusShitpostBox}>
           {this.allShitposts.length >= 1 && (
             <div onClick={this.purgeUnheldCards} className="action">
-              Purge All Shitposts
+              Cull Shitposts
             </div>
           )}
           <AoStack
