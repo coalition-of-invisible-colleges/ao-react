@@ -63,7 +63,9 @@ function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
     //           subVouchCount++
     //         }
     //       })
-    kohaiVouches = Math.max(kohaiVouches, card.deck.length)
+    if (card.taskId !== senpaiCard.taskId) {
+      kohaiVouches = Math.max(kohaiVouches, card.deck.length)
+    }
     //   }
     // })
   })
