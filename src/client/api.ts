@@ -151,7 +151,7 @@ class AoApi {
       act = {
         type: 'task-created',
         name: name,
-        color: 'blue',
+        color: color,
         deck: anonymous ? [] : [aoStore.member.memberId],
         inId: inId,
         prioritized: prioritized
