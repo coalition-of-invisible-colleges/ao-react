@@ -24,11 +24,22 @@ export default class AoAttachment extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     this.state = {}
+    this.loadMeme = this.loadMeme.bind(this)
     this.setFile = this.setFile.bind(this)
     this.download = this.download.bind(this)
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    this.loadMeme()
+  }
+
+  componentDidUpdate(props, newProps) {
+    if (newProps.taskId !== props.taskId) {
+      this.loadMeme()
+    }
+  }
+
+  loadMeme() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return
 
