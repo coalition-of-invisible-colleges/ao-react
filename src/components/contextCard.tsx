@@ -339,8 +339,8 @@ export default class AoContextCard extends React.PureComponent<
 						<div className={'content'}>
 							<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 							{member && <AoMemberIcon memberId={taskId} />}
-							{this.renderCardContent(content)}
 							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
+							{this.renderCardContent(content)}
 						</div>
 						{this.state.showPriorities ? (
 							<AoStack
@@ -371,8 +371,8 @@ export default class AoContextCard extends React.PureComponent<
 						<div className={'content'}>
 							<AoMission taskId={taskId} hudStyle={'face before'} />
 							{member && <AoMemberIcon memberId={taskId} />}
-							{this.renderCardContent(content)}
 							<AoAttachment taskId={taskId} hudStyle={'face before'} />
+							{this.renderCardContent(content)}
 							{card.priorities && card.priorities.length >= 1 ? (
 								<>
 									<div className="action" onClick={this.togglePriorities}>
@@ -437,8 +437,8 @@ export default class AoContextCard extends React.PureComponent<
 							<div className="content">
 								<AoMission taskId={taskId} hudStyle={'full before'} />
 								{member && <AoMemberIcon memberId={taskId} />}
-								{this.renderCardContent(content)}
 								<AoAttachment taskId={taskId} hudStyle={'full before'} />
+								{this.renderCardContent(content)}
 							</div>
 							<AoStack
 								inId={taskId}
@@ -560,8 +560,8 @@ export default class AoContextCard extends React.PureComponent<
 						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
 							{member && <AoMemberIcon memberId={taskId} />}
-							{this.renderCardContent(content, true)}
 							<AoAttachment taskId={taskId} hudStyle={'mini before'} />
+							{this.renderCardContent(content, true)}
 						</div>
 						<AoCardHud taskId={taskId} hudStyle={'mini after'} />
 					</div>

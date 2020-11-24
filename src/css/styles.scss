@@ -1932,6 +1932,11 @@ textarea {
         top: -0.275em;
       }
     }
+
+    // apparently inaccurate error messages above attachments
+    .pg-viewer-wrapper {
+      display: none;
+    }
   }
 }
 

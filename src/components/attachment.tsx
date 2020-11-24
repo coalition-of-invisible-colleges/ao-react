@@ -79,7 +79,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     // otherwise, display a download button
     return (
       <div key={Math.random()}>
-        <div onClick={this.download}>Attachment</div>
+        {/*<div onClick={this.download}>Attachment</div>*/}
         {this.state.file && (
           <React.Fragment>
             <FileViewer
