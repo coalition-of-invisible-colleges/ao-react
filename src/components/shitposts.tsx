@@ -77,8 +77,6 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
       })
     }
 
-    console.log('found shitposts: ', shitposts.length)
-
     let all = [...aoStore.allUnheldCards, ...shitposts]
     all = Array.from(new Set(all))
 

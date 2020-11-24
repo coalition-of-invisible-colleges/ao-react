@@ -7,6 +7,9 @@ import { HudStyle } from './cardHud'
 import FileViewer from 'react-file-viewer'
 import path from 'path'
 import api from '../client/api'
+import render from 'render-media'
+import From from 'from2'
+import dataUriToBuffer from 'data-uri-to-buffer'
 
 interface Props {
   taskId: string
@@ -21,6 +24,8 @@ interface State {
 
 @observer
 export default class AoAttachment extends React.Component<Props, State> {
+  private attachmentRef = React.createRef<HTMLDivElement>()
+
   constructor(props) {
     super(props)
     this.state = {}
@@ -29,12 +34,14 @@ export default class AoAttachment extends React.Component<Props, State> {
     this.download = this.download.bind(this)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.loadMeme()
   }
 
-  componentDidUpdate(props, newProps) {
-    if (newProps.taskId !== props.taskId) {
+  componentDidUpdate(prevProps) {
+    console.log('attachment updated: ', this.props.taskId)
+
+    if (this.props.taskId !== prevProps.taskId) {
       this.loadMeme()
     }
   }
@@ -61,9 +68,23 @@ export default class AoAttachment extends React.Component<Props, State> {
   }
 
   setFile(e) {
-    console.log('DataURL:', e.target.result)
-    this.setState({
-      file: e.target.result
+    // console.log('DataURI:', e.target.result)
+    var buffer = dataUriToBuffer(e.target.result)
+
+    var file = {
+      name: 'attachment.jpg',
+      createReadStream: function(opts) {
+        if (!opts) opts = {}
+        return From([
+          buffer.slice(opts.start || 0, opts.end || buffer.length - 1)
+        ])
+      }
+    }
+
+    render.append(file, this.attachmentRef.current, function(err, elem) {
+      if (err) return console.error(err.message)
+
+      // console.log(elem) // new element
     })
   }
 
@@ -78,30 +99,8 @@ export default class AoAttachment extends React.Component<Props, State> {
     api.downloadMeme(meme.hash)
   }
 
-  onError(e) {
-    console.log(e, 'error in file-viewer')
-  }
-
   render() {
-    if (!this.state.file || !this.state.filetype) {
-      return null
-    }
-    // if it's an image, display it
-    // otherwise, display a download button
-    return (
-      <div key={Math.random()}>
-        {/*<div onClick={this.download}>Attachment</div>*/}
-        {this.state.file && (
-          <React.Fragment>
-            <FileViewer
-              fileType={this.state.filetype}
-              filePath={this.state.file}
-              onError={this.onError}
-            />
-            <img src={this.state.file} />
-          </React.Fragment>
-        )}
-      </div>
-    )
+    // element only attaches when meme downloads
+    return <div ref={this.attachmentRef} />
   }
 }
