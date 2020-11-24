@@ -152,6 +152,7 @@ module.exports = function applyRouter(app) {
     })
     const memePath = path.join(config.memes.dir, meme.filename)
     console.log('meme path is ', memePath)
+    res.contentType(memePath)
     res.download(memePath)
   })
 

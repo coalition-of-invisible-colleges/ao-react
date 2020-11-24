@@ -52,7 +52,7 @@ export default class AoTally extends React.PureComponent<Props> {
       const member = aoStore.memberById.get(mId)
       const name = member ? member.name : 'deleted member'
       return (
-        <div key={mId}>
+        <div key={mId + '-claimed-' + this.props.taskId}>
           <AoCheckmark />
           <AoMemberIcon memberId={mId} /> {name}{' '}
         </div>
