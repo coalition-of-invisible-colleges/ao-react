@@ -67,23 +67,24 @@ export default class AoAttachment extends React.Component<Props, State> {
 
   setFile(e) {
     console.log('DataURI:', e.target.result)
-    var buffer = dataUriToBuffer(e.target.result)
+    this.setState({ file: e.target.result })
+    // var buffer = dataUriToBuffer(e.target.result)
 
-    var file = {
-      name: 'attachment.jpg',
-      createReadStream: function(opts) {
-        if (!opts) opts = {}
-        return From([
-          buffer.slice(opts.start || 0, opts.end || buffer.length - 1)
-        ])
-      }
-    }
+    // var file = {
+    //   name: 'attachment.jpg',
+    //   createReadStream: function(opts) {
+    //     if (!opts) opts = {}
+    //     return From([
+    //       buffer.slice(opts.start || 0, opts.end || buffer.length - 1)
+    //     ])
+    //   }
+    // }
 
-    render.append(file, this.attachmentRef.current, function(err, elem) {
-      if (err) return console.error(err.message)
+    // render.append(file, this.attachmentRef.current, function(err, elem) {
+    //   if (err) return console.error(err.message)
 
-      console.log(elem) // new element
-    })
+    //   console.log(elem) // new element
+    // })
   }
 
   download(e) {
@@ -99,6 +100,11 @@ export default class AoAttachment extends React.Component<Props, State> {
 
   render() {
     // element only attaches when meme downloads
-    return <div ref={this.attachmentRef} />
+    // return <div ref={this.attachmentRef} />
+    if (!this.state.file) {
+      return null
+    }
+
+    return <img src={this.state.file} alt="attachment" />
   }
 }
