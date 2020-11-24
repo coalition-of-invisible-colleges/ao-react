@@ -39,8 +39,6 @@ export default class AoAttachment extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('attachment updated: ', this.props.taskId)
-
     if (this.props.taskId !== prevProps.taskId) {
       this.loadMeme()
     }
@@ -68,7 +66,7 @@ export default class AoAttachment extends React.Component<Props, State> {
   }
 
   setFile(e) {
-    // console.log('DataURI:', e.target.result)
+    console.log('DataURI:', e.target.result)
     var buffer = dataUriToBuffer(e.target.result)
 
     var file = {
@@ -84,7 +82,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     render.append(file, this.attachmentRef.current, function(err, elem) {
       if (err) return console.error(err.message)
 
-      // console.log(elem) // new element
+      console.log(elem) // new element
     })
   }
 

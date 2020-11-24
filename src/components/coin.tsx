@@ -167,7 +167,6 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
 
   @computed get renderHodlCount() {
     if (this.signCount >= 1) {
-      console.log('signCount is ', this.signCount)
       return (
         <React.Fragment>
           <img
