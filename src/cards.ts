@@ -145,7 +145,9 @@ export function subTaskCard(move: CardPlay) {
 // return 0
 // }
 
-export function countCurrentSignatures(signed: Signature[]) {
+// A card's .signed is an append-only list of all signing events.
+// This function reduces it to just each member's current opinion
+export function mostRecentSignaturesOnly(signed: Signature[]) {
 	let mostRecentSignaturesOnly = signed.filter((signature, index) => {
 		let lastIndex
 		for (let i = signed.length - 1; i >= 0; i--) {
@@ -156,8 +158,13 @@ export function countCurrentSignatures(signed: Signature[]) {
 		}
 		return lastIndex === index
 	})
-	return mostRecentSignaturesOnly.filter(signature => signature.opinion >= 1)
-		.length
+	return mostRecentSignaturesOnly
+}
+
+export function countCurrentSignatures(signed: Signature[]) {
+	return mostRecentSignaturesOnly(signed).filter(
+		signature => signature.opinion >= 1
+	).length
 }
 
 export function countVouches(memberId: string) {

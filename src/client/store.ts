@@ -154,6 +154,7 @@ export interface AoState {
     spot: number
     rent: number
     cap: number
+    quorum: number
     pay_index: number
     usedTxIds: number[]
     outputs: Output[]
@@ -180,6 +181,7 @@ const defaultState: AoState = {
     spot: 0,
     rent: 0,
     cap: 75,
+    quorum: 3,
     pay_index: 0,
     usedTxIds: [],
     outputs: [],

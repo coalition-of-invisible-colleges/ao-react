@@ -67,6 +67,20 @@ class AoApi {
       })
   }
 
+  async setQuorum(quorum: number): Promise<request.Response> {
+    const act = {
+      type: 'quorum-set',
+      quorum: quorum
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async bark(): Promise<request.Response> {
     const act = {
       type: 'doge-barked',

@@ -86,6 +86,9 @@ function cashMuts(cash, ev) {
       cash.outputs = ev.outputs
       cash.channels = ev.channels
       break
+    case 'quorum-set':
+      cash.quorum = ev.quorum
+      break
     case 'task-boosted':
       cash.usedTxIds.push(ev.txid)
       break

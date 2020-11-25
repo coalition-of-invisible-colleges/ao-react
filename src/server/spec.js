@@ -81,6 +81,13 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'quorum-set':
+      if (validators.isAmount(req.body.quorum, errRes)) {
+        events.quorumSet(req.body.amount, utils.buildResCallback(res))
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'ao-outbound-connected':
       connector.postEvent(
         req.body.address,

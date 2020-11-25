@@ -128,7 +128,7 @@ export default class AoCalendar extends React.PureComponent {
             cardStyle={'priority'}
             alwaysShowAll={false}
           />
-          <div className={'agendaTail'}>
+          <div className={'tail'}>
             <AoStack
               cards={thisMonth}
               cardStyle={'priority'}

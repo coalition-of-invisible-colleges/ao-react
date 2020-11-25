@@ -107,6 +107,15 @@ function fundsSet(outputs, channels, callback) {
   dctrlDb.triggerShadow(newEvent)
 }
 
+function quorumSet(outputs, channels, callback) {
+  let newEvent = {
+    type: 'quorum-set',
+    outputs,
+    channels
+  }
+  dctrlDb.triggerShadow(newEvent)
+}
+
 function memberCreated(name, fob, secret, callback) {
   let memberId = uuidV1()
   let newEvent = {
@@ -715,6 +724,7 @@ module.exports = {
   rentSet,
   capSet,
   fundsSet,
+  quorumSet,
   getNodeInfo,
   memberCreated,
   memberDeactivated,
