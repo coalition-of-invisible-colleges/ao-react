@@ -54,9 +54,11 @@ export default class AoProposals extends React.Component {
   @computed get passed() {
     return this.proposals.filter(task => {
       let ayes = 0
-      mostRecentSignaturesOnly(task.signed).forEach(
-        signature => (ayes += Number(signature.opinion))
-      )
+      mostRecentSignaturesOnly(task.signed).forEach(signature => {
+        if (signature.opinion >= 1) {
+          ayes++
+        }
+      })
       return ayes >= aoStore.state.cash.quorum
     })
   }
@@ -93,7 +95,7 @@ export default class AoProposals extends React.Component {
         />
         <div className={'tail'}>
           <AoStack
-            cards={this.previouslySigned}
+            cards={this.passed}
             cardStyle="face"
             alwaysShowAll={false}
             descriptor={{
