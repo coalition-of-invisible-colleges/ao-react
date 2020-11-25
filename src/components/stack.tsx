@@ -46,10 +46,7 @@ export const defaultState: StackState = {
 }
 
 @observer
-export default class AoStack extends React.PureComponent<
-  StackProps,
-  StackState
-> {
+export default class AoStack extends React.Component<StackProps, StackState> {
   constructor(props) {
     super(props)
     this.state = defaultState
