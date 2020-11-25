@@ -36,15 +36,17 @@ export default class AoServerName extends React.PureComponent<{}, State> {
 
   saveValue(event) {
     event.stopPropagation()
-    if (
-      this.state.text.length <= 0 ||
-      parseInt(this.state.text) === aoStore.state.cash.quorum
-    ) {
+    let newValue: number =
+      this.state.text.length > 0 ? parseInt(this.state.text, 10) : 0
+    console.log('newValue is ', newValue)
+    if (newValue === aoStore.state.cash.quorum) {
       this.setState({ editing: false })
       return
     }
-    api.setQuorum(parseInt(this.state.text))
-    this.setState({ editing: false })
+    if (newValue !== NaN) {
+      api.setQuorum(newValue)
+      this.setState({ editing: false })
+    }
   }
 
   onKeyDown(event) {

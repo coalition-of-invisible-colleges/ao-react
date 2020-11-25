@@ -72,6 +72,7 @@ class AoApi {
       type: 'quorum-set',
       quorum: quorum
     }
+    console.log('act is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)

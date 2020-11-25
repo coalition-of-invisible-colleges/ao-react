@@ -310,11 +310,19 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
             className="signatureDecorated"
           />
         ) : null}
+        <div>
+          <span onClick={this.sign} className="action inline decorator">
+            sign
+          </span>
+          <span onClick={this.unsign} className="action inline decorator">
+            don't sign
+          </span>
+        </div>
         {!this.isMember ? (
-          <p>Click to {this.isGrabbed ? 'drop' : 'grab'} this card.</p>
+          <p>Click moon to {this.isGrabbed ? 'drop' : 'grab'} this card.</p>
         ) : (
           <p>
-            Click to{' '}
+            Click moon to{' '}
             {this.isGrabbed
               ? 'unvouch.'
               : 'vouch for this member within this community.'}

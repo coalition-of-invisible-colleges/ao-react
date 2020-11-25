@@ -80,10 +80,6 @@ export default class AoProposals extends React.Component {
   }
 
   @computed get renderProposalsList() {
-    // if (this.proposals.length < 1) {
-    //   return ''
-    // }
-
     return (
       <div className="results">
         {this.toSign.length >= 1 ? <h2>To Sign</h2> : ''}
@@ -111,8 +107,8 @@ export default class AoProposals extends React.Component {
             cardStyle="face"
             alwaysShowAll={false}
             descriptor={{
-              singular: 'Rejected Proposal',
-              plural: 'Rejected Proposals'
+              singular: 'Unpassed Proposal',
+              plural: 'Unpassed Proposals'
             }}
             noFirstCard={true}
           />

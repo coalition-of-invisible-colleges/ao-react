@@ -107,13 +107,12 @@ function fundsSet(outputs, channels, callback) {
   dctrlDb.triggerShadow(newEvent)
 }
 
-function quorumSet(outputs, channels, callback) {
+function quorumSet(quorum, callback) {
   let newEvent = {
     type: 'quorum-set',
-    outputs,
-    channels
+    quorum: quorum
   }
-  dctrlDb.triggerShadow(newEvent)
+  dctrlDb.insertEvent(newEvent)
 }
 
 function memberCreated(name, fob, secret, callback) {
