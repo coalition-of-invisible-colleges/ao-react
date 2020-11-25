@@ -237,6 +237,16 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
         .reverse()
     }
 
+    let mySignature
+    if (card.hasOwnProperty('signed')) {
+      for (let i = card.signed.length - 1; i >= 0; i--) {
+        if (card.signed[i].memberId == aoStore.member.memberId) {
+          mySignature = card.signed[i]
+          break
+        }
+      }
+    }
+
     let list = (
       <React.Fragment>
         {parentCards && parentCards.length >= 1 ? (
@@ -311,12 +321,27 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
           />
         ) : null}
         <div>
-          <span onClick={this.sign} className="action inline decorator">
-            sign
-          </span>
-          <span onClick={this.unsign} className="action inline decorator">
-            don't sign
-          </span>
+          {mySignature && mySignature.opinion >= 1 ? (
+            <span>
+              <strong>signed</strong>
+            </span>
+          ) : (
+            <span onClick={this.sign} className="action inline decorator">
+              sign
+            </span>
+          )}
+          {!mySignature || (mySignature && mySignature.opinion) >= 1 ? (
+            <span
+              onClick={this.unsign}
+              className="action inline decorator"
+              style={{ marginLeft: '1em' }}>
+              {!mySignature || mySignature.opinion ? 'un' : "don't "}sign
+            </span>
+          ) : (
+            <span style={{ marginLeft: '1em' }}>
+              <strong>declined to sign</strong>
+            </span>
+          )}
         </div>
         {!this.isMember ? (
           <p>Click moon to {this.isGrabbed ? 'drop' : 'grab'} this card.</p>
