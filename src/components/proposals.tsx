@@ -157,8 +157,10 @@ export default class AoProposals extends React.Component {
                 top: '-0.5em'
               }}>
               <small>
-                Sign cards to pin them here.{' '}
-                <AoTip text="To sign a card, hover over its moon, then click 'sign' next to your name in the list. This is the official pinned bulletin for this server, for posting proposals, propositions, motions, announcements, rules, guidelines, policies, rulings, etc." />
+                {this.toSign.length >= 1
+                  ? 'The community awaits your decision.'
+                  : 'You have no proposals to sign.'}{' '}
+                <AoTip text="Any card signed by at least one member is called a 'proposal' and listed here. To sign a card, hover over its moon and click 'sign'. This is the official pinned bulletin for this server, for posting proposals, propositions, motions, announcements, rules, guidelines, policies, rulings, etc." />
               </small>
             </div>
             {this.renderProposalsList}
