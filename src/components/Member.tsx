@@ -14,7 +14,7 @@ export default async function AoMember() {
 				setHubId(newTaskId)
 			})
 		}
-	})
+	}, [])
 	if (hubId) {
 		const redirect = <Redirect to={'/task/' + hubId} />
 		return redirect
