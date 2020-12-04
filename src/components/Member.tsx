@@ -7,7 +7,10 @@ export default async function AoMember() {
 	let communityCard = aoStore.cardByName.get('community hub')
 	const redirect = <Redirect to={'/task/' + communityCard.taskId} />
 	if (!communityCard) {
-		return await api.createCard('community hub').then(() => redirect)
+		return await api.createCard('community hub').then(result => {
+			const newTaskId = JSON.parse(res.text).event.taskId
+			return <Redirect to={'/task/' + newTaskId} />
+		})
 	}
 	return redirect
 }
