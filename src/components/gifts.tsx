@@ -119,7 +119,7 @@ export default class AoGifts extends React.PureComponent<{}, State> {
                 )}
               </div>
             )}
-            {(this.state.openSend || this.myGifts.length) < 1 && (
+            {(this.state.openSend || this.myGifts.length < 1) && (
               <form>
                 <label>To:</label>
                 <AoBirdAutocomplete onChange={this.onChangeTo} />
