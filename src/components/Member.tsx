@@ -10,7 +10,7 @@ export default function AoMember() {
 		let communityCard = aoStore.cardByName.get('community hub')
 		if (!communityCard) {
 			api.createCard('community hub').then(result => {
-				const newTaskId = JSON.parse(res.text).event.taskId
+				const newTaskId = JSON.parse(result.text).event.taskId
 				setHubId(newTaskId)
 			})
 		}
@@ -19,4 +19,5 @@ export default function AoMember() {
 		const redirect = <Redirect to={'/task/' + hubId} />
 		return redirect
 	}
+	return 'Creating Community Hub, please refresh page if it does not appear.'
 }
