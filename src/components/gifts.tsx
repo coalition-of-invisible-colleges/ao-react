@@ -119,30 +119,29 @@ export default class AoGifts extends React.PureComponent<{}, State> {
                 )}
               </div>
             )}
-            {this.state.openSend ||
-              (this.myGifts.length < 1 && (
-                <form>
-                  <label>To:</label>
-                  <AoBirdAutocomplete onChange={this.onChangeTo} />
-                  <div style={{ position: 'relative' }}>
-                    <label style={{ position: 'relative', top: '-1em' }}>
-                      Topic:
-                    </label>
-                    <AoCardComposer
-                      ref={this.composeRef}
-                      onNewCard={this.newGift}
-                      onChange={this.onChangeName}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="action"
-                    onClick={this.onClick}
-                    disabled={!this.isValid}>
-                    give
-                  </button>
-                </form>
-              ))}
+            {(this.state.openSend || this.myGifts.length) < 1 && (
+              <form>
+                <label>To:</label>
+                <AoBirdAutocomplete onChange={this.onChangeTo} />
+                <div style={{ position: 'relative' }}>
+                  <label style={{ position: 'relative', top: '-1em' }}>
+                    Topic:
+                  </label>
+                  <AoCardComposer
+                    ref={this.composeRef}
+                    onNewCard={this.newGift}
+                    onChange={this.onChangeName}
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="action"
+                  onClick={this.onClick}
+                  disabled={!this.isValid}>
+                  give
+                </button>
+              </form>
+            )}
           </React.Fragment>
         </AoPopupPanel>
       </div>
