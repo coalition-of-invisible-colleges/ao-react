@@ -1969,6 +1969,13 @@ textarea {
     .pg-viewer-wrapper {
       display: none;
     }
+
+    // code blocks
+    pre {
+      padding: 0.5em;
+      background-color: rgba(0, 0, 0, 0.4);
+      overflow-x: auto;
+    }
   }
 }
 

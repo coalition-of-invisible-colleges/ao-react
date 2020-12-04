@@ -4,11 +4,15 @@ import api from '../client/api'
 import { Redirect } from 'react-router-dom'
 
 export default function AoMember() {
-	const [hubId, setHubId] = React.useState()
+	const [hubId, setHubId]: string = React.useState()
 
 	React.useEffect(() => {
 		let communityCard = aoStore.cardByName.get('community hub')
-		if (!communityCard) {
+		if (
+			!communityCard ||
+			!communityCard.hasOwnProperty('taskId') ||
+			!communityCard.taskId
+		) {
 			api.createCard('community hub').then(result => {
 				const newTaskId = JSON.parse(result.text).event.taskId
 				setHubId(newTaskId)
