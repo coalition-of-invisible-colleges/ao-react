@@ -46,10 +46,14 @@ export default class AoAttachment extends React.Component<Props, State> {
 
   loadMeme() {
     const card = aoStore.hashMap.get(this.props.taskId)
-    if (!card) return
+    if (!card) {
+      this.setState({ file: null })
+      return
+    }
 
     let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {
+      this.setState({ file: null })
       return
     }
 
@@ -89,11 +93,13 @@ export default class AoAttachment extends React.Component<Props, State> {
 
   download(e) {
     const card = aoStore.hashMap.get(this.props.taskId)
-    if (!card) return
+    if (!card) {
+      return null
+    }
 
     let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {
-      return
+      return null
     }
     api.downloadMeme(meme.hash)
   }

@@ -56,10 +56,7 @@ interface State {
 }
 
 @observer
-export default class AoContextCard extends React.PureComponent<
-	CardProps,
-	State
-> {
+export default class AoContextCard extends React.Component<CardProps, State> {
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -336,18 +333,18 @@ export default class AoContextCard extends React.PureComponent<
 							prioritiesShown={this.state.showPriorities}
 							onTogglePriorities={this.togglePriorities}
 						/>
-						<div className={'content'}>
+						<div className="content">
 							<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 							{member && <AoMemberIcon memberId={taskId} />}
-							<AoAttachment taskId={taskId} hudStyle={'collapsed'} />
+							<AoAttachment taskId={taskId} hudStyle="collapsed" />
 							{this.renderCardContent(content)}
 						</div>
 						{this.state.showPriorities ? (
 							<AoStack
 								inId={taskId}
 								cards={priorityCards}
-								cardStyle={'priority'}
-								zone={'priorities'}
+								cardStyle="priority"
+								zone="priorities"
 							/>
 						) : null}
 					</div>

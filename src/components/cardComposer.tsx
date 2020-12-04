@@ -4,7 +4,8 @@ import { Coords } from '../cards'
 
 interface CardComposerProps {
 	onNewCard: (string, coords?) => void
-	onBlur: (event) => void
+	onChange?: (newName: string) => void
+	onBlur?: (event) => void
 	coords?: Coords
 }
 
@@ -25,8 +26,14 @@ export default class AoCardComposer extends React.PureComponent<
 		this.onChange = this.onChange.bind(this)
 	}
 
+	public clear() {
+		this.setState({ text: '' })
+	}
+
 	onBlur(event) {
-		this.props.onBlur(event)
+		if (this.props.onBlur) {
+			this.props.onBlur(event)
+		}
 	}
 
 	onKeyDown(event) {
@@ -37,7 +44,7 @@ export default class AoCardComposer extends React.PureComponent<
 				return
 			}
 			this.props.onNewCard(trimmed, this.props.coords)
-			this.setState({ text: undefined })
+			this.setState({ text: '' })
 			this.onBlur(event)
 		} else if (event.key === 'Escape') {
 			this.onBlur(event)
@@ -46,6 +53,9 @@ export default class AoCardComposer extends React.PureComponent<
 
 	onChange(event) {
 		this.setState({ text: event.target.value })
+		if (this.props.onChange) {
+			this.props.onChange(event.target.value)
+		}
 	}
 
 	render() {
@@ -56,6 +66,7 @@ export default class AoCardComposer extends React.PureComponent<
 				className={'zone cardComposer'}
 				onChange={this.onChange}
 				onKeyDown={this.onKeyDown}
+				value={this.state.text}
 			/>
 		)
 	}

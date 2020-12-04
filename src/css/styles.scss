@@ -457,6 +457,7 @@ textarea {
 
         img {
           max-width: 100%;
+          max-height: 100%;
         }
 
         .mission {
@@ -904,6 +905,35 @@ textarea {
       .actionCircle {
         left: 0.5em;
         top: calc(45vh - 14em);
+      }
+
+      .popupPanel {
+        position: relative;
+
+        & > .action {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+
+      .cardComposer {
+        width: calc(100% - 6em);
+      }
+
+      form {
+        margin-top: 1em;
+
+        .MuiAutocomplete-root {
+          width: calc(100% - 6em);
+          position: relative;
+          left: -0.5em;
+          margin-left: 1.5em;
+
+          #autocomplete- {
+            width: 100%;
+          }
+        }
       }
     }
 
