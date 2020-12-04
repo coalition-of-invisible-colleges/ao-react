@@ -71,7 +71,9 @@ export default class AoGifts extends React.PureComponent<{}, State> {
     }
 
     return (
-      <div className="results">
+      <div
+        className="results"
+        style={{ marginBottom: this.myGifts.length === 1 ? '3em' : null }}>
         <AoStack cards={this.myGifts} zone="gifts" cardStyle="face" />
       </div>
     )
