@@ -13,6 +13,8 @@ export default function AoMember() {
 				const newTaskId = JSON.parse(result.text).event.taskId
 				setHubId(newTaskId)
 			})
+		} else {
+			setHubId(communityCard.taskId)
 		}
 	}, [])
 	if (hubId) {
