@@ -917,6 +917,7 @@ class AoApi {
           return res
         })
     } else {
+      console.log('creating new task')
       const act = {
         type: 'task-created',
         name: name,
@@ -933,15 +934,28 @@ class AoApi {
           const taskId = JSON.parse(res.text).event.taskId
           const gridAct = {
             type: 'grid-pin',
+            inId: inId,
             taskId: taskId,
             x: x,
             y: y,
-            inId: inId
+            memberId: aoStore.member.memberId
           }
+          console.log(
+            'task was created, id is ',
+            taskId,
+            ' and gridAct is ',
+            gridAct
+          )
           return request
             .post('/events')
             .set('Authorization', aoStore.state.token)
             .send(gridAct)
+            .catch((err, res) => {
+              console.log('err is ', err, ' and res is ', res)
+            })
+            .then(res => {
+              console.log('result was ', res)
+            })
         })
     }
   }

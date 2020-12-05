@@ -4,7 +4,7 @@ import api from '../client/api'
 import { Redirect } from 'react-router-dom'
 
 export default function AoMember() {
-	const [hubId, setHubId]: string = React.useState()
+	const [hubId, setHubId] = React.useState('')
 
 	React.useEffect(() => {
 		let communityCard = aoStore.cardByName.get('community hub')
