@@ -950,12 +950,6 @@ class AoApi {
             .post('/events')
             .set('Authorization', aoStore.state.token)
             .send(gridAct)
-            .catch((err, res) => {
-              console.log('err is ', err, ' and res is ', res)
-            })
-            .then(res => {
-              console.log('result was ', res)
-            })
         })
     }
   }
