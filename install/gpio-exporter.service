@@ -1,0 +1,10 @@
+[Unit]
+Description=Enable GPIO pins
+After=generic-board-startup.service
+
+[Service]
+Type=simple
+ExecStart=/home/pi/pi/setupSamples/enable-gpio-pins.sh
+
+[Install]
+WantedBy=multi-user.target
