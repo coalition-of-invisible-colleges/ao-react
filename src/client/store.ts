@@ -254,6 +254,13 @@ class AoStore {
     })
     return hashMap
   }
+  @computed get resourceById(): Map<string, Resource> {
+    let hashMap: Map<string, Resource> = new Map()
+    this.state.resources.forEach(m => {
+      hashMap.set(m.resourceId, m)
+    })
+    return hashMap
+  }
   // Returns a map of card names to cards.
   // Card names (keys) are in lowercase for case-insensitive comparison.
   // Guild (mission) names take precedence over card names for exact card lookup.

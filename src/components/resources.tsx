@@ -4,6 +4,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import uuidV1 from 'uuid/v1'
 import AoTip from './tip'
+import AoResourcePanel from './resourcePanel'
 
 @observer
 export default class AoResources extends React.PureComponent<{}> {
@@ -16,7 +17,7 @@ export default class AoResources extends React.PureComponent<{}> {
 
   renderResources() {
     const list = aoStore.state.resources.map(r => (
-      <li>
+      <li className="resource" key={r.resourceId}>
         {r.name}{' '}
         <span
           className="action inline"
@@ -24,6 +25,7 @@ export default class AoResources extends React.PureComponent<{}> {
           data-resourceid={r.resourceId}>
           Delete
         </span>
+        <AoResourcePanel resourceId={r.resourceId} />
       </li>
     ))
     return <ul style={{ listStyleType: 'none' }}>{list}</ul>

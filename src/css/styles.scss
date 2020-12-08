@@ -1976,6 +1976,14 @@ textarea {
       background-color: rgba(0, 0, 0, 0.4);
       overflow-x: auto;
     }
+
+    // resource panels in Bull
+    .resource {
+      button {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+    }
   }
 }
 

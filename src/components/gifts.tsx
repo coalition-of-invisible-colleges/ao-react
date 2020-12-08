@@ -8,6 +8,7 @@ import AoPopupPanel from './popupPanel'
 import AoTip from './tip'
 import AoBirdAutocomplete from './birdAutocomplete'
 import AoCardComposer from './cardComposer'
+import Bird from '../assets/images/send.svg'
 import Gift from '../assets/images/gifts.svg'
 
 interface State {
@@ -91,7 +92,7 @@ export default class AoGifts extends React.PureComponent<{}, State> {
     return (
       <div id="gifts">
         <AoPopupPanel
-          iconSrc={Gift}
+          iconSrc={this.myGifts.length <= 0 ? Bird : Gift}
           tooltipText={this.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
           badge={renderedBadge}
           tooltipPlacement="right"
