@@ -452,10 +452,15 @@ class AoApi {
       })
   }
 
-  async valueCard(taskId: string, value: number): Promise<request.Response> {
+  async setCardProperty(
+    taskId: string,
+    property: string,
+    value: number
+  ): Promise<request.Response> {
     const act = {
-      type: 'task-valued',
+      type: 'task-property-set',
       taskId: taskId,
+      property: property,
       value: value,
       blame: aoStore.member.memberId
     }

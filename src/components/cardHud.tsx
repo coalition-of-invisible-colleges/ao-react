@@ -7,6 +7,7 @@ import AoUnread from './unread'
 import AoCoin from './coin'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
+import AoCrowdfund from './crowdfund'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
 import AoCardMenu from './cardMenu'
@@ -77,6 +78,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
@@ -94,6 +96,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
@@ -108,6 +111,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
+							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
 					</React.Fragment>
@@ -139,6 +143,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 
@@ -162,7 +167,7 @@ export default class CardHud extends React.PureComponent<CardHudProps> {
 				return (
 					<div className={'hud menu'}>
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 						<AoPalette taskId={taskId} />

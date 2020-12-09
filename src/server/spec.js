@@ -619,13 +619,16 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
-    case 'task-valued':
+    case 'task-property-set':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
-        validators.isAmount(req.body.value, errRes)
+        (typeof req.body.property === 'string' ||
+          req.body.property instanceof String) &&
+        validators.isNotes(req.body.value, errRes)
       ) {
-        events.taskValued(
+        events.taskPropertySet(
           req.body.taskId,
+          req.body.property,
           req.body.value,
           req.body.blame,
           utils.buildResCallback(res)

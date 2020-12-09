@@ -1041,10 +1041,10 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
-    case 'task-valued':
+    case 'task-property-set':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          task.completeValue = Number(ev.value)
+          task[ev.property] = ev.value
         }
       })
       break
@@ -1090,9 +1090,6 @@ function tasksMuts(tasks, ev) {
         //   }
         // }
         if (task.taskId === ev.taskId) {
-          if (task.hasOwnProperty('completeValue') && task.completeValue > 0) {
-            bounty = task.completeValue
-          }
           task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {

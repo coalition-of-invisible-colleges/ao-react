@@ -174,6 +174,7 @@ textarea {
           .preview,
           .countdown,
           .value,
+          .goal,
           .checkbox,
           .cardMenuButton {
             display: inline-block;
@@ -182,7 +183,8 @@ textarea {
           .mission,
           .preview,
           .countdown,
-          .value {
+          .value,
+          .goal {
             font-size: 0.8em;
           }
 
@@ -202,7 +204,8 @@ textarea {
             }
           }
 
-          .value {
+          .value,
+          .goal {
             margin-right: 2.5em;
           }
 
@@ -298,7 +301,8 @@ textarea {
 
             & > .mission,
             & > .countdown,
-            & > .value {
+            & > .value,
+            & > .goal {
               background-color: rgba(0, 0, 0, 0.2);
               font-size: 0.75em;
               padding: 0.25em;
@@ -322,7 +326,8 @@ textarea {
               }
             }
 
-            & > .value {
+            & > .value,
+            & > .goal {
               font-size: 0.6em;
               float: right;
             }
@@ -508,21 +513,24 @@ textarea {
 
           .countdown,
           .value,
-          .checkbox {
+          .goal .checkbox {
             font-size: 0.9em;
             display: inline-block;
           }
 
           .countdown,
-          .value {
+          .value,
+          .goal {
             position: relative;
             top: -0.4em;
             margin-right: 0.5em;
+            float: left;
           }
         }
 
         &.face.before {
-          .value {
+          .value,
+          .goal {
             margin-left: 0.5em;
           }
         }
@@ -544,7 +552,9 @@ textarea {
       }
 
       .value,
-      .value.full {
+      .value.full,
+      .goal,
+      .goal.full {
         font-size: 0.9em;
 
         &.menu {
@@ -1877,9 +1887,9 @@ textarea {
 
     // tally marks
     .tally {
-      position: absolute;
-      top: -0.03em;
-      right: 2.1em;
+      position: relative;
+      top: -0.1em;
+      float: left;
       width: max-content;
       max-width: 10em;
 

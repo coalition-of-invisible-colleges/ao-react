@@ -80,7 +80,6 @@ function blankCard(
     guild: false,
     created: created,
     lastClaimed: 0,
-    completeValue: 0,
     payment_hash: '',
     highlights: [],
     seen: [],

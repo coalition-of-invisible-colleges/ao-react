@@ -514,10 +514,11 @@ function taskPassed(taskId, fromMemberId, toMemberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
-function taskValued(taskId, value, blame, callback) {
+function taskPropertySet(taskId, property, value, blame, callback) {
   let newEvent = {
-    type: 'task-valued',
+    type: 'task-property-set',
     taskId,
+    property,
     value,
     blame
   }
@@ -763,6 +764,7 @@ module.exports = {
   pilePrioritized,
   taskDropped,
   taskPassed,
+  taskPropertySet,
   taskValued,
   taskColored,
   taskGuilded,

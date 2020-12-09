@@ -17,8 +17,8 @@ export default class AoBounties extends React.PureComponent {
     return aoStore.state.tasks
       .filter(task => {
         return (
-          ((task.hasOwnProperty('boost') && task.boost > 0) ||
-            (task.hasOwnProperty('completeValue') && task.completeValue > 0)) &&
+          task.hasOwnProperty('boost') &&
+          task.boost > 0 &&
           task.name !== task.taskId
         )
       })
@@ -37,7 +37,7 @@ export default class AoBounties extends React.PureComponent {
           zone="panel"
           cardStyle="face"
           alwaysShowAll={false}
-          cardsBeforeFold={3}
+          cardsBeforeFold={1}
         />
       </div>
     )

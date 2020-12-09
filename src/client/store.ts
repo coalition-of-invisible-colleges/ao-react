@@ -66,7 +66,7 @@ export interface Task {
   passed: number[]
   guild: string
   lastClaimed: number
-  completeValue: number
+  goal?: number
   payment_hash: string
   highlights: number[]
   seen: Userseen[]
