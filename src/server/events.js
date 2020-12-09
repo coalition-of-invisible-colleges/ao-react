@@ -765,7 +765,6 @@ module.exports = {
   taskDropped,
   taskPassed,
   taskPropertySet,
-  taskValued,
   taskColored,
   taskGuilded,
   taskSubTasked,
