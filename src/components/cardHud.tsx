@@ -38,7 +38,7 @@ interface CardHudProps {
 }
 
 @observer
-export default class CardHud extends React.PureComponent<CardHudProps> {
+export default class CardHud extends React.Component<CardHudProps> {
 	render() {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
