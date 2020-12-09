@@ -29,7 +29,14 @@ export default class AoRent extends React.PureComponent<{}> {
 
   @computed get pendingDeactivations() {
     return aoStore.state.members
-      .filter(m => m.active > 0 && aoStore.hashMap.get(m.memberId).boost <= 0)
+      .filter(m => {
+        const member = aoStore.hashMap.get(m.memberId)
+
+        if (!member || !member.hasOwnProperty('boost')) {
+          return false
+        }
+        return m.active > 0 && member.boost <= 0
+      })
       .map(m => m.memberId)
   }
 
