@@ -1357,11 +1357,18 @@ textarea {
         margin-bottom: 1em;
       }
 
-      &.inline {
+      &.inline,
+      &.corner {
         display: inline-block;
         font-size: 0.85em;
         padding: 0.3em 0.5em;
         margin-left: 0.5em;
+      }
+
+      &.corner {
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
       }
     }
 
@@ -1979,9 +1986,33 @@ textarea {
 
     // resource panels in Bull
     .resource {
-      button {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 0.5em;
+      padding: 0.25em;
+      background-color: black;
+      max-width: 30em;
+
+      .name {
+        pointer-events: none;
+        position: relative;
+        font-weight: bold;
+        margin: 0.5em;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .option {
+        position: relative;
+        display: inline-block;
+        margin: 0.5em;
+      }
+
+      .paper,
+      .paper > img,
+      .paper > .color {
+        border-radius: 0.5em;
       }
     }
   }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
+import aoStore, { Task, Member, Resource } from '../client/store'
 import { Redirect } from 'react-router-dom'
 import api from '../client/api'
 import { delay, cancelablePromise } from '../utils'
@@ -18,8 +18,7 @@ import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import AoMemberIcon from './memberIcon'
 import BlankBadge from '../assets/images/badge_blank.svg'
-import { prioritizeCard, subTaskCard, CardZone } from '../cards'
-import { hideAll as hideAllTippys } from 'tippy.js'
+import { goInCard, prioritizeCard, subTaskCard, CardZone } from '../cards'
 
 export type CardStyle =
 	| 'priority'
@@ -127,24 +126,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	goInCard(event) {
 		event.stopPropagation()
-		hideAllTippys()
-		aoStore.closeAllCloseables()
 
 		const card = this.props.task
 		if (!card) {
 			console.log('missing card')
 			return
 		}
-		const taskId = card.taskId
-		console.log('goInCard taskId is ', taskId)
-		if (this.props.cardStyle === 'context') {
-			aoStore.clearContextTo(card.taskId)
-		} else {
-			aoStore.addToContext([aoStore.currentCard])
-		}
-		aoStore.setCurrentCard(taskId)
-		aoStore.removeFromContext(taskId)
-		this.setState({ redirect: taskId })
+
+		goInCard(card, this.props.cardStyle === 'context')
+		this.setState({ redirect: card.taskId })
 	}
 
 	async onHover(event) {
@@ -276,9 +266,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		let member
 		let content = card.name
 		if (taskId === content) {
-			member = aoStore.memberById.get(taskId)
-			if (member) {
-				content = member.name
+			let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
+			if (!memberOrResource) {
+				memberOrResource = aoStore.resourceById.get(taskId)
+			}
+			if (memberOrResource) {
+				content = memberOrResource.name
 			}
 		}
 

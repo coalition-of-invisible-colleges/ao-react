@@ -12,19 +12,11 @@ export default class AoResources extends React.PureComponent<{}> {
     super(props)
     this.renderResources = this.renderResources.bind(this)
     this.createResource = this.createResource.bind(this)
-    this.purgeResource = this.purgeResource.bind(this)
   }
 
   renderResources() {
     const list = aoStore.state.resources.map(r => (
-      <li className="resource" key={r.resourceId}>
-        {r.name}{' '}
-        <span
-          className="action inline"
-          onClick={this.purgeResource}
-          data-resourceid={r.resourceId}>
-          Delete
-        </span>
+      <li key={r.resourceId}>
         <AoResourcePanel resourceId={r.resourceId} />
       </li>
     ))
@@ -33,19 +25,6 @@ export default class AoResources extends React.PureComponent<{}> {
 
   createResource() {
     api.createResource(uuidV1(), 'test', 0, 'asd', true)
-  }
-
-  purgeResource(event) {
-    if (
-      window.confirm(
-        'Are you sure you want to delete this resource? You will have to set up the resource again.'
-      )
-    ) {
-      const resourceId: string = event.currentTarget.getAttribute(
-        'data-resourceid'
-      )
-      api.purgeResource(resourceId)
-    }
   }
 
   render() {
@@ -58,10 +37,10 @@ export default class AoResources extends React.PureComponent<{}> {
           a raspberry pi. See dctrl-fobtap project on GitHub."
           />
         </h3>
-        <div className="action" onClick={this.createResource}>
-          Create Resource
-        </div>
         {this.renderResources()}
+        <div className="action" onClick={this.createResource}>
+          Create Test Resource
+        </div>
       </React.Fragment>
     )
   }

@@ -1,6 +1,6 @@
 import api from './client/api'
-import aoStore, { Signature } from './client/store'
-// import { isSenpaiOf } from './server/validators'
+import aoStore, { Task, Signature } from './client/store'
+import { hideAll as hideAllTippys } from 'tippy.js'
 
 export type CardZone =
 	| 'card'
@@ -28,6 +28,21 @@ export interface CardLocation {
 export interface CardPlay {
 	from: CardLocation
 	to: CardLocation
+}
+
+export function goInCard(card: Task, isContext = false) {
+	hideAllTippys()
+	aoStore.closeAllCloseables()
+
+	const taskId = card.taskId
+	console.log('goInCard taskId is ', taskId)
+	if (isContext) {
+		aoStore.clearContextTo(card.taskId)
+	} else {
+		aoStore.addToContext([aoStore.currentCard])
+	}
+	aoStore.setCurrentCard(taskId)
+	aoStore.removeFromContext(taskId)
 }
 
 export function prioritizeCard(move: CardPlay) {

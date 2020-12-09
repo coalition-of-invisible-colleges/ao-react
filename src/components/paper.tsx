@@ -105,7 +105,7 @@ export default class AoPaper extends React.PureComponent<PaperProps> {
       }
     }
     return (
-      <div className={'paper'}>
+      <div className="paper">
         <img src={filename} />
         <div className={'color ' + this.cardColor} />
       </div>

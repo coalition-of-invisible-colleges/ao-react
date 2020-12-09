@@ -1,19 +1,34 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import { computed } from 'mobx'
+import { Redirect } from 'react-router-dom'
 import aoStore from '../client/store'
 import api from '../client/api'
+import { goInCard } from '../cards'
 import AoPaper from './paper'
 
 interface Props {
   resourceId: string
 }
 
+interface State {
+  redirect?: string
+}
+
 @observer
-export default class AoResourcePanel extends React.PureComponent<Props> {
+export default class AoResourcePanel extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props)
+    this.state = {}
     this.useResource = this.useResource.bind(this)
+    this.purgeResource = this.purgeResource.bind(this)
+    this.goInCard = this.goInCard.bind(this)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.redirect !== undefined) {
+      this.setState({ redirect: undefined })
+    }
   }
 
   @computed get canAfford() {
@@ -31,6 +46,20 @@ export default class AoResourcePanel extends React.PureComponent<Props> {
     }
     const notes = event.currentTarget.getAttribute('data-letter')
     api.useResource(this.props.resourceId, 1, resource.charged, notes)
+  }
+
+  purgeResource(event) {
+    const resource = aoStore.resourceById.get(this.props.resourceId)
+    if (!resource) {
+      return
+    }
+    if (
+      window.confirm(
+        'Are you sure you want to delete this resource? You will have to set up the resource again.'
+      )
+    ) {
+      api.purgeResource(this.props.resourceId)
+    }
   }
 
   @computed get optionsList() {
@@ -58,9 +87,26 @@ export default class AoResourcePanel extends React.PureComponent<Props> {
     // })
     return ol
   }
-  // <AoPaper taskId={this.props.resourceId} />
+
+  goInCard(event) {
+    console.log('goinCardResource')
+    event.stopPropagation()
+
+    const card = aoStore.hashMap.get(this.props.resourceId)
+    if (!card) {
+      console.log('missing card')
+      return
+    }
+
+    goInCard(card)
+    this.setState({ redirect: this.props.resourceId })
+  }
 
   render() {
+    if (this.state.redirect !== undefined) {
+      return <Redirect to={this.state.redirect} />
+    }
+
     const resource = aoStore.resourceById.get(this.props.resourceId)
     if (!resource) {
       return <div>Invalid resource</div>
@@ -68,20 +114,31 @@ export default class AoResourcePanel extends React.PureComponent<Props> {
     const renderOptions = this.optionsList.map(option => {
       const [notes, name, color] = option
       return (
-        <button
-          type="button"
-          className="action"
-          onClick={this.useResource}
-          data-letter={notes}
-          disabled={!this.canAfford}
-          key={notes + '-' + name}>
-          {notes}: {name}
-        </button>
+        <div className="option">
+          <AoPaper color={color} />
+          <button
+            type="button"
+            className="action"
+            onClick={this.useResource}
+            data-letter={notes}
+            disabled={!this.canAfford}
+            key={notes + '-' + name}>
+            {notes}: {name}
+          </button>
+        </div>
       )
     })
+
     return (
-      <div>
-        {/*<h4>{resource.name}</h4>*/}
+      <div className="resource" onDoubleClick={this.goInCard}>
+        <AoPaper taskId={this.props.resourceId} />
+        <div className="name">{resource.name}</div>
+        <span
+          className="action corner"
+          onClick={this.purgeResource}
+          data-resourceid={resource.resourceId}>
+          Delete
+        </span>
         {renderOptions}
       </div>
     )

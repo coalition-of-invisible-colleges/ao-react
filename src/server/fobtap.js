@@ -3,7 +3,6 @@ const router = express.Router()
 
 const state = require('./state')
 const utils = require('./utils')
-const validators = require('./validators')
 const events = require('./events')
 
 function access(member, resource) {

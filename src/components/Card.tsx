@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { Member, Resource } from '../client/store'
 import AoContextCard from './contextCard'
 import AoDiscardZone from './discard'
 import AoHud from './hud'
@@ -30,7 +30,13 @@ class RenderCard extends React.Component<RenderProps> {
     }
     let cardText = ''
     if (card.name === taskId) {
-      cardText = aoStore.memberById.get(taskId).name
+      let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
+      if (!memberOrResource) {
+        memberOrResource = aoStore.resourceById.get(taskId)
+      }
+      if (memberOrResource) {
+        cardText = memberOrResource.name
+      }
     } else if (card.guild) {
       cardText = card.guild
     } else {
