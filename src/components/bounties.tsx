@@ -8,7 +8,7 @@ import AoTip from './tip'
 import Chest from '../assets/images/chest.svg'
 
 @observer
-export default class AoBounties extends React.PureComponent {
+export default class AoBounties extends React.Component {
   constructor(props) {
     super(props)
   }
