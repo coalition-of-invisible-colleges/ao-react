@@ -199,7 +199,7 @@ export default class AoAttachment extends React.Component<Props, State> {
       return null
     }
 
-    const meme = aoStore.memeById.get(props.taskId)
+    const meme = aoStore.memeById.get(this.props.taskId)
     if (!meme) {
       return null
     }
