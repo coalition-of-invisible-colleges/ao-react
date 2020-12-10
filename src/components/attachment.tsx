@@ -18,7 +18,7 @@ interface Props {
 }
 
 interface State {
-  file?
+  blob?
   mimeType?: string
   downloadPath?: string
 }
@@ -61,13 +61,13 @@ export default class AoAttachment extends React.Component<Props, State> {
   loadMeme() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) {
-      this.setState({ file: null })
+      this.setState({ blob: null })
       return
     }
 
     let meme = aoStore.memeById.get(card.taskId)
     if (!meme) {
-      this.setState({ file: null })
+      this.setState({ blob: null })
       return
     }
 
@@ -83,28 +83,54 @@ export default class AoAttachment extends React.Component<Props, State> {
   }
 
   setFile(e) {
-    console.log('DataURI:', e.target.result)
-    console.log('type is, ', e.target.result.type)
-    const base64Content = e.target.result
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    let dataURI = e.target.result
+    var byteString = atob(dataURI.split(',')[1])
 
-    // base64 encoded data doesn't contain commas
-    let base64ContentArray = base64Content.split(',')
+    // separate out the mime component
+    var mimeString = dataURI
+      .split(',')[0]
+      .split(':')[1]
+      .split(';')[0]
+    console.log('mimeString is ', mimeString)
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length)
 
-    // base64 content cannot contain whitespaces but nevertheless skip if there are!
-    let mimeType = base64ContentArray[0].match(
-      /[^:\s*]\w+\/[\w-+\d.]+(?=[;| ])/
-    )[0]
+    // create a view into the buffer
+    var ia = new Uint8Array(ab)
 
-    // base64 encoded data - pure
-    let base64Data = base64ContentArray[1]
+    // set the bytes of the buffer to the correct values
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i)
+    }
 
-    // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
-    const newDataURI = 'data:' + this.state.mimeType + ';base64,' + base64Data
-    console.log('newDataURI:', newDataURI)
+    // write the ArrayBuffer to a blob, and you're done
+    var blob = new Blob([ab], { type: this.state.mimeType })
+    // return blob
 
-    this.setState({
-      file: newDataURI
-    })
+    // console.log('DataURI:', e.target.result)
+    // console.log('type is, ', e.target.result.type)
+    // const base64Content = e.target.result
+
+    // // base64 encoded data doesn't contain commas
+    // let base64ContentArray = base64Content.split(',')
+
+    // // base64 content cannot contain whitespaces but nevertheless skip if there are!
+    // let mimeType = base64ContentArray[0].match(
+    //   /[^:\s*]\w+\/[\w-+\d.]+(?=[;| ])/
+    // )[0]
+
+    // // base64 encoded data - pure
+    // let base64Data = base64ContentArray[1]
+
+    // // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
+    // const newDataURI = 'data:' + this.state.mimeType + ';base64,' + base64Data
+    // console.log('newDataURI:', newDataURI)
+
+    // this.setState({
+    //   file: newDataURI
+    // })
     // var buffer = dataUriToBuffer(e.target.result)
 
     // var file = {
@@ -140,7 +166,7 @@ export default class AoAttachment extends React.Component<Props, State> {
   render() {
     // element only attaches when meme downloads
     // return <div ref={this.attachmentRef} />
-    if (!this.state.file) {
+    if (!this.state.blob) {
       return null
     }
 
@@ -150,7 +176,7 @@ export default class AoAttachment extends React.Component<Props, State> {
       case 'image/png':
       case 'image/gif':
       default:
-        return <img src={this.state.file} alt="attachment" />
+        return <img src={this.state.blob} alt="attachment" />
     }
   }
 }
