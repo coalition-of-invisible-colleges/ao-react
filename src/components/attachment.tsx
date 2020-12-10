@@ -80,8 +80,11 @@ export default class AoAttachment extends React.Component<Props, State> {
         ' and typeof blob is ',
         typeof res.body
       )
+      let mimeType = mime.lookup(meme.filetype)
+
       this.setState({
-        downloadPath: '/download/' + meme.hash
+        downloadPath: '/download/' + meme.hash,
+        mimeType
         // blob: res.body
       })
       let blob = res.body
