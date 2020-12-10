@@ -33,6 +33,18 @@ export default class AoAttachment extends React.Component<Props, State> {
     this.loadMeme = this.loadMeme.bind(this)
     this.setFile = this.setFile.bind(this)
     this.download = this.download.bind(this)
+
+    let meme = aoStore.memeById.get(props.taskId)
+    if (meme) {
+      let mimeType = mime.lookup(meme.filetype)
+
+      console.log(
+        'looked up filetype ',
+        meme.filetype,
+        ' and got MIME type: ',
+        mimeType
+      )
+    }
   }
 
   componentDidMount() {
@@ -58,19 +70,9 @@ export default class AoAttachment extends React.Component<Props, State> {
       return
     }
 
-    let mimeType = mime.lookup(meme.filetype)
-
-    console.log(
-      'looked up filetype ',
-      meme.filetype,
-      ' and got MIME type: ',
-      mimeType
-    )
-
     api.fetchMeme(meme.hash).then(res => {
       console.log('type is ', res.body.type)
       this.setState({
-        mimeType: res.body.type,
         downloadPath: '/download/' + meme.hash
       })
       var reader = new FileReader()
@@ -81,6 +83,9 @@ export default class AoAttachment extends React.Component<Props, State> {
 
   setFile(e) {
     console.log('DataURI:', e.target.result)
+    console.log('type is, ', e.target.result.type)
+    // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
+    e.target.result.type = this.state.mimeType
     this.setState({ file: e.target.result })
     // var buffer = dataUriToBuffer(e.target.result)
 
