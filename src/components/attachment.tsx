@@ -84,9 +84,23 @@ export default class AoAttachment extends React.Component<Props, State> {
   setFile(e) {
     console.log('DataURI:', e.target.result)
     console.log('type is, ', e.target.result.type)
+    const base64Content = e.target.result
+
+    // base64 encoded data doesn't contain commas
+    let base64ContentArray = base64Content.split(',')
+
+    // base64 content cannot contain whitespaces but nevertheless skip if there are!
+    let mimeType = base64ContentArray[0].match(
+      /[^:\s*]\w+\/[\w-+\d.]+(?=[;| ])/
+    )[0]
+
+    // base64 encoded data - pure
+    let base64Data = base64ContentArray[1]
+
     // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
-    e.target.result.type = this.state.mimeType
-    this.setState({ file: e.target.result })
+    this.setState({
+      file: 'data:' + this.state.mimeType + ';base64,' + base64Data
+    })
     // var buffer = dataUriToBuffer(e.target.result)
 
     // var file = {
