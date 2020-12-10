@@ -92,7 +92,7 @@ export default class AoAttachment extends React.Component<Props, State> {
         // blob: res.body
       })
       let blob = res.body
-      blob = blob.slice(0, blob.size, meme.filetype)
+      blob = blob.slice(0, blob.size, mimeType)
       var objectURL = URL.createObjectURL(res.body)
       console.log('blob is now', blob)
       this.attachmentRef.current.src = objectURL
