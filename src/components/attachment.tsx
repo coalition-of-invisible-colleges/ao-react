@@ -10,6 +10,7 @@ import api from '../client/api'
 import render from 'render-media'
 import From from 'from2'
 import dataUriToBuffer from 'data-uri-to-buffer'
+import mime from 'mime-types'
 
 interface Props {
   taskId: string
@@ -18,7 +19,7 @@ interface Props {
 
 interface State {
   file?
-  filetype?: string
+  mimeType?: string
   downloadPath?: string
 }
 
@@ -57,10 +58,19 @@ export default class AoAttachment extends React.Component<Props, State> {
       return
     }
 
+    let mimeType = mime.lookup(meme.filetype)
+
+    console.log(
+      'looked up filetype ',
+      meme.filetype,
+      ' and got MIME type: ',
+      mimeType
+    )
+
     api.fetchMeme(meme.hash).then(res => {
       console.log('type is ', res.body.type)
       this.setState({
-        filetype: res.body.type,
+        mimeType: res.body.type,
         downloadPath: '/download/' + meme.hash
       })
       var reader = new FileReader()
@@ -111,6 +121,13 @@ export default class AoAttachment extends React.Component<Props, State> {
       return null
     }
 
-    return <img src={this.state.file} alt="attachment" />
+    switch (this.state.mimeType) {
+      case 'img/jpeg':
+      case 'img/jpg':
+      case 'img/png':
+      case 'img/gif':
+      default:
+        return <img src={this.state.file} alt="attachment" />
+    }
   }
 }

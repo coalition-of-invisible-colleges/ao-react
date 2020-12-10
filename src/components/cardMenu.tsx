@@ -6,14 +6,14 @@ import AoCardHud, { HudStyle } from './cardHud'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 
-interface CardMenuProps {
+interface Props {
   taskId: string
   hudStyle: HudStyle
   noPopups?: boolean
 }
 
 @observer
-export default class CardMenu extends React.PureComponent<CardMenuProps> {
+export default class CardMenu extends React.Component<Props> {
   @computed
   get renderMenuButton() {
     return (
