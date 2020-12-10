@@ -84,7 +84,7 @@ export default class AoAttachment extends React.Component<Props, State> {
         downloadPath: '/download/' + meme.hash
         // blob: res.body
       })
-      blob = res.body
+      let blob = res.body
       blob = blob.slice(0, blob.size, this.state.mimeType)
       var objectURL = URL.createObjectURL(res.body)
       this.attachmentRef.current.src = objectURL
