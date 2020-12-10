@@ -44,6 +44,7 @@ export default class AoAttachment extends React.Component<Props, State> {
         ' and got MIME type: ',
         mimeType
       )
+      this.state = { mimeType }
     }
   }
 
@@ -98,8 +99,11 @@ export default class AoAttachment extends React.Component<Props, State> {
     let base64Data = base64ContentArray[1]
 
     // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
+    const newDataURI = 'data:' + this.state.mimeType + ';base64,' + base64Data
+    console.log('newDataURI:', newDataURI)
+
     this.setState({
-      file: 'data:' + this.state.mimeType + ';base64,' + base64Data
+      file: newDataURI
     })
     // var buffer = dataUriToBuffer(e.target.result)
 
@@ -141,10 +145,10 @@ export default class AoAttachment extends React.Component<Props, State> {
     }
 
     switch (this.state.mimeType) {
-      case 'img/jpeg':
-      case 'img/jpg':
-      case 'img/png':
-      case 'img/gif':
+      case 'image/jpeg':
+      case 'image/jpg':
+      case 'image/png':
+      case 'image/gif':
       default:
         return <img src={this.state.file} alt="attachment" />
     }
