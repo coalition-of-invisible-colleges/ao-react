@@ -25,5 +25,5 @@ export default function AoMember() {
 		const redirect = <Redirect to={'/task/' + hubId} />
 		return redirect
 	}
-	return 'Creating Community Hub, please refresh page if it does not appear.'
+	return 'Loading Community Hub...'
 }

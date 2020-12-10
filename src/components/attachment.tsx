@@ -25,7 +25,7 @@ interface State {
 
 @observer
 export default class AoAttachment extends React.Component<Props, State> {
-  private attachmentRef = React.createRef<HTMLDivElement>()
+  private attachmentRef = React.createRef<HTMLImageElement>()
 
   constructor(props) {
     super(props)
@@ -107,7 +107,10 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     // write the ArrayBuffer to a blob, and you're done
     var blob = new Blob([ab], { type: this.state.mimeType })
-    this.setState({ blob })
+    var urlCreator = window.URL || window.webkitURL
+    var imageUrl = urlCreator.createObjectURL(blob)
+    this.attachmentRef.current.src = imageUrl
+    // this.setState({ blob })
     // return blob
 
     // console.log('DataURI:', e.target.result)
@@ -167,9 +170,9 @@ export default class AoAttachment extends React.Component<Props, State> {
   render() {
     // element only attaches when meme downloads
     // return <div ref={this.attachmentRef} />
-    if (!this.state.blob) {
-      return null
-    }
+    // if (!this.state.blob) {
+    //   return null
+    // }
 
     switch (this.state.mimeType) {
       case 'image/jpeg':
@@ -177,7 +180,7 @@ export default class AoAttachment extends React.Component<Props, State> {
       case 'image/png':
       case 'image/gif':
       default:
-        return <img src={this.state.blob} alt="attachment" />
+        return <img ref={this.attachmentRef} alt="attachment" />
     }
   }
 }
