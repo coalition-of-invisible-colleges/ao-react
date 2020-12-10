@@ -65,11 +65,17 @@ export default class AoAttachment extends React.Component<Props, State> {
       return
     }
 
-    let meme = aoStore.memeById.get(card.taskId)
+    const meme = aoStore.memeById.get(card.taskId)
     if (!meme) {
       this.setState({ blob: null })
       return
     }
+    const mimeType = mime.lookup(meme.filetype)
+
+    this.setState({
+      mimeType
+      // blob: res.body
+    })
 
     api.fetchMeme(meme.hash).then(res => {
       console.log('res is ', res, ' and typeof res is ', typeof res)
@@ -80,15 +86,13 @@ export default class AoAttachment extends React.Component<Props, State> {
         ' and typeof blob is ',
         typeof res.body
       )
-      let mimeType = mime.lookup(meme.filetype)
-
       this.setState({
-        downloadPath: '/download/' + meme.hash,
-        mimeType
+        downloadPath: '/download/' + meme.hash
+
         // blob: res.body
       })
       let blob = res.body
-      blob = blob.slice(0, blob.size, this.state.mimeType)
+      blob = blob.slice(0, blob.size, meme.filetype)
       var objectURL = URL.createObjectURL(res.body)
       console.log('blob is now', blob)
       this.attachmentRef.current.src = objectURL
