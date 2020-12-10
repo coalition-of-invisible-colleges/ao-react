@@ -72,72 +72,83 @@ export default class AoAttachment extends React.Component<Props, State> {
     }
 
     api.fetchMeme(meme.hash).then(res => {
+      console.log('res is ', res, ' and typeof res is ', typeof res)
       console.log('type is ', res.body.type)
+      console.log(
+        'res as blob is ',
+        res.body,
+        ' and typeof blob is ',
+        typeof res.body
+      )
       this.setState({
         downloadPath: '/download/' + meme.hash
+        // blob: res.body
       })
-      var reader = new FileReader()
-      reader.onload = this.setFile
-      reader.readAsDataURL(res.body)
+      var objectURL = URL.createObjectURL(res.body)
+      this.attachmentRef.current.src = objectURL
+      // this.attachmentRef.current.src = imageUrl
+      // var reader = new FileReader()
+      // reader.onload = this.setFile
+      // reader.readAsDataURL(res.body)
     })
   }
 
   setFile(e) {
     // convert base64 to raw binary data held in a string
     // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-    let dataURI = e.target.result
-    var byteString = atob(dataURI.split(',')[1])
+    // let dataURI = e.target.result
+    // var byteString = atob(dataURI.split(',')[1])
 
-    // separate out the mime component
-    var mimeString = dataURI
-      .split(',')[0]
-      .split(':')[1]
-      .split(';')[0]
-    console.log('mimeString is ', mimeString)
-    // write the bytes of the string to an ArrayBuffer
-    var ab = new ArrayBuffer(byteString.length)
+    // // separate out the mime component
+    // var mimeString = dataURI
+    //   .split(',')[0]
+    //   .split(':')[1]
+    //   .split(';')[0]
+    // console.log('mimeString is ', mimeString)
+    // // write the bytes of the string to an ArrayBuffer
+    // var ab = new ArrayBuffer(byteString.length)
 
-    // create a view into the buffer
-    var ia = new Uint8Array(ab)
+    // // create a view into the buffer
+    // var ia = new Uint8Array(ab)
 
-    // set the bytes of the buffer to the correct values
-    for (var i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i)
-    }
+    // // set the bytes of the buffer to the correct values
+    // for (var i = 0; i < byteString.length; i++) {
+    //   ia[i] = byteString.charCodeAt(i)
+    // }
 
-    // write the ArrayBuffer to a blob, and you're done
-    var blob = new Blob([ab], { type: this.state.mimeType })
-    console.log('blob is ', blob)
-    var urlCreator = window.URL || window.webkitURL
-    console.log('urlCreator is ', urlCreator)
-    var imageUrl = urlCreator.createObjectURL(blob)
-    console.log('imageUrl is ', imageUrl)
-    this.attachmentRef.current.src = imageUrl
+    // // write the ArrayBuffer to a blob, and you're done
+    // var blob = new Blob([ab], { type: this.state.mimeType })
+    // console.log('blob is ', blob)
+    // var urlCreator = window.URL || window.webkitURL
+    // console.log('urlCreator is ', urlCreator)
+    // var imageUrl = urlCreator.createObjectURL(blob)
+    // console.log('imageUrl is ', imageUrl)
+    // this.attachmentRef.current.src = imageUrl
     // this.setState({ blob })
     // return blob
 
-    // console.log('DataURI:', e.target.result)
-    // console.log('type is, ', e.target.result.type)
-    // const base64Content = e.target.result
+    console.log('DataURI:', e.target.result)
+    console.log('type is, ', e.target.result.type)
+    const base64Content = e.target.result
 
-    // // base64 encoded data doesn't contain commas
-    // let base64ContentArray = base64Content.split(',')
+    // base64 encoded data doesn't contain commas
+    let base64ContentArray = base64Content.split(',')
 
-    // // base64 content cannot contain whitespaces but nevertheless skip if there are!
-    // let mimeType = base64ContentArray[0].match(
-    //   /[^:\s*]\w+\/[\w-+\d.]+(?=[;| ])/
-    // )[0]
+    // base64 content cannot contain whitespaces but nevertheless skip if there are!
+    let mimeType = base64ContentArray[0].match(
+      /[^:\s*]\w+\/[\w-+\d.]+(?=[;| ])/
+    )[0]
 
-    // // base64 encoded data - pure
-    // let base64Data = base64ContentArray[1]
+    // base64 encoded data - pure
+    let base64Data = base64ContentArray[1]
 
-    // // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
-    // const newDataURI = 'data:' + this.state.mimeType + ';base64,' + base64Data
-    // console.log('newDataURI:', newDataURI)
+    // Inject our hardcoded MIME type from the card, since nginx doesn't forward it correctly
+    const newDataURI = 'data:' + this.state.mimeType + ';base64,' + base64Data
+    console.log('newDataURI:', newDataURI)
 
-    // this.setState({
-    //   file: newDataURI
-    // })
+    this.setState({
+      blob: newDataURI
+    })
     // var buffer = dataUriToBuffer(e.target.result)
 
     // var file = {
@@ -174,7 +185,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     // element only attaches when meme downloads
     // return <div ref={this.attachmentRef} />
     // if (!this.state.blob) {
-    //   return null
+    // return null
     // }
 
     switch (this.state.mimeType) {
@@ -183,7 +194,13 @@ export default class AoAttachment extends React.Component<Props, State> {
       case 'image/png':
       case 'image/gif':
       default:
-        return <img ref={this.attachmentRef} alt="attachment" />
+        return (
+          <img
+            // src={this.state.blob}
+            ref={this.attachmentRef}
+            alt="attachment"
+          />
+        )
     }
   }
 }
