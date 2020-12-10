@@ -107,6 +107,7 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     // write the ArrayBuffer to a blob, and you're done
     var blob = new Blob([ab], { type: this.state.mimeType })
+    this.setState({ blob })
     // return blob
 
     // console.log('DataURI:', e.target.result)
