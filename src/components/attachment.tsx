@@ -107,8 +107,11 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     // write the ArrayBuffer to a blob, and you're done
     var blob = new Blob([ab], { type: this.state.mimeType })
+    console.log('blob is ', blob)
     var urlCreator = window.URL || window.webkitURL
+    console.log('urlCreator is ', urlCreator)
     var imageUrl = urlCreator.createObjectURL(blob)
+    console.log('imageUrl is ', imageUrl)
     this.attachmentRef.current.src = imageUrl
     // this.setState({ blob })
     // return blob
