@@ -37,8 +37,8 @@ module.exports = function applyRouter(app) {
       extended: true
     })
   )
-  app.use(serverAuth) // below here requires auth token
   app.use('/memes', express.static(config.memes.dir))
+  app.use(serverAuth) // below here requires auth token
   app.use(spec) // handles event creation
   app.use(fobtap) // handles rfid scan devices
   app.use(lightningRouter)
