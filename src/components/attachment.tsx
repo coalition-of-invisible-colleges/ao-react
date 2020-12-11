@@ -212,7 +212,7 @@ export default class AoAttachment extends React.Component<Props, State> {
       default:
         return (
           <img
-            src={'/meme/' + meme.filename}
+            src={'/memes/' + meme.filename}
             // ref={this.attachmentRef}
             alt="attachment"
           />
