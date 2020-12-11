@@ -52,11 +52,22 @@ export default class AoAttachment extends React.Component<Props, State> {
   //   this.loadMeme()
   // }
 
-  // componentDidUpdate(prevProps) {
-  //   if (this.props.taskId !== prevProps.taskId) {
-  //     this.loadMeme()
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (this.props.taskId !== prevProps.taskId) {
+      const meme = aoStore.memeById.get(this.props.taskId)
+      if (meme) {
+        let mimeType = mime.lookup(meme.filetype)
+
+        console.log(
+          'looked up filetype ',
+          meme.filetype,
+          ' and got MIME type: ',
+          mimeType
+        )
+        this.setState({ mimeType })
+      }
+    }
+  }
 
   // loadMeme() {
   //   const card = aoStore.hashMap.get(this.props.taskId)
