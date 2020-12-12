@@ -25,7 +25,7 @@ function scanMemes() {
 					console.log('Directory or other error-causing file found, ignoring')
 					return
 				}
-				addMeme(data, filename, filepath)
+				addMeme(filename, filepath, data)
 			})
 		})
 	})
@@ -47,7 +47,8 @@ function addMeme(name, path, data = null) {
 	}
 
 	const hash = crypto.createHash(data)
-	const filetype = 'jpg' //Promise.all(FileType.fromFile(filepath)).then(() => {
+	const lastIndex = name.lastIndexOf('.')
+	const filetype = lastIndex < 0 ? '' : name.substr(lastIndex + 1)
 
 	console.log(
 		'file data loaded. path: ',
