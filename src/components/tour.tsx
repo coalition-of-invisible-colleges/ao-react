@@ -112,7 +112,7 @@ export const steps = [
     attachTo: { element: '#tour-missions', on: placeRight },
     title: 'Missions Index',
     text:
-      "Put it on the Index! Missions, also known as groups, guilds, categories, or rooms, are a basic way to organize cards. Any card with a mission title shows up here. Click 'add mission title' in a card's menu to give it a title and upgrade it to a mission",
+      "Put it on the Index! Missions, also known as groups, guilds, categories, or rooms, are a basic way to organize cards. Any card with a mission title shows up here. Click 'add mission title' in a card's menu to give it a title and upgrade it to a mission.",
     buttons: standardButtons
   },
   {

@@ -216,6 +216,10 @@ export default class AoAttachment extends React.Component<Props, State> {
     }
 
     switch (this.state.mimeType) {
+      case 'video/mp4':
+      case 'video/ogg':
+      case 'video/webm':
+        return <video src={'/memes/' + meme.filename} controls />
       case 'image/jpeg':
       case 'image/jpg':
       case 'image/png':

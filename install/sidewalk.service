@@ -1,0 +1,9 @@
+[Service]
+WorkingDirectory=/home/rhodes/sidewalk
+ExecStart=/usr/bin/npm run compile
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=rhodes
+User=rhodes
+Group=rhodes
