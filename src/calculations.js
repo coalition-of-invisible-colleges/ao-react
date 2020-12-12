@@ -65,7 +65,7 @@ function blankCard(
     taskId,
     color,
     deck,
-    name: String(name).trim(),
+    name: name,
     address: '',
     bolt11: '',
     book: {},
