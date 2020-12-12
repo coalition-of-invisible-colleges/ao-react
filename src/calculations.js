@@ -65,7 +65,7 @@ function blankCard(
     taskId,
     color,
     deck,
-    name: name,
+    name: typeof name !== 'string' ? 'invalid filename' : name.trim(),
     address: '',
     bolt11: '',
     book: {},
