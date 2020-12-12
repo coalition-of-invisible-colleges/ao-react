@@ -65,7 +65,7 @@ function blankCard(
     taskId,
     color,
     deck,
-    name: name.hasOwnProperty('trim') ? name.trim() : name,
+    name: String(name).trim(),
     address: '',
     bolt11: '',
     book: {},
