@@ -474,7 +474,7 @@ Array and list are used as synonyms.
 
 - `.created`: the Unix timestamp when the card was created
 
-## Grabbing cards to your deck
+### Grabbing cards to your deck
 
 Each member has a deck of cards, also known as their collection, library, or moonbag. To grab a card and add it to your collection, click the moon (aka coin) icon on the card. This grabs (aka "moons" or "coins") the card.
 
@@ -484,7 +484,7 @@ Cards have the following property that allows them to be grabbed:
 
 So, a member's list of cards is not stored in their Member object. Instead, every card keeps track of who is hodling it. This is for efficiency.
 
-## Cards in other cards
+### Cards in other cards
 
 There are five ways that cards can point or link to other cards. In the GUI, this is usually represented as cards being stored within other cards, to create a physical metaphor of paper being kept in different locations.
 
@@ -502,7 +502,7 @@ Just like the basic card properties above, each of these is a property a card ca
 
 Cards being within other cards is completely separate from whether a card is in a member's deck or not. The Archive feature is designed to deal with this discrepency by returning "lost cards" that are grabbed.
 
-# Passing cards to other members
+### Passing cards to other members
 
 Using the Gifts panel on the left edge of the screen or the Bird icon in the top left corner of every card, members can give (aka pass, send) cards to each other.
 
@@ -510,7 +510,7 @@ Using the Gifts panel on the left edge of the screen or the Bird icon in the top
 
 Cards that are passed show the list of pending passes on the bird. When the card is accepted or rejected by the recipient, the pass is removed. This design decision balances respecting the privacy of user history, while also sharing activity in real time within the local community for social purposes.
 
-# Adding points on a card with bitcoin or lightning
+### Adding points on a card with bitcoin or lightning
 
 - `.address`: The generated wallet QR code on the card.
 
@@ -518,15 +518,17 @@ Cards that are passed show the list of pending passes on the bird. When the card
 
 - `.payment_hash`: Unknown, possibly QR for lightning.
 
-# Checking off cards to claim the bounty
+### Checking off cards to claim the bounty
 
-One of the main features of the AO is a local bounty economy that allows members to put up bounties in community points and claim bounties immediately by checking of bounty cards.
+One of the main features of the AO is a local bounty economy that allows members to put up bounties in community points and claim bounties immediately by checking off bounty cards.
 
-Any card that has a `.boost` value above 0 has had points put on it as a bounty, and will show up in the Bounties panel. Points must be carefully conserved to prevent double-spending issues, so if `.boost` is increased on a card, the source of those points should be decreased by the same amount.
+Any card that has a `.boost` value above 0 has had points put on it as a bounty, and will show up in the Bounties panel. An the server, points are carefully conserved to prevent double-spending issues, so if `.boost` is increased on a card, the source of those points will be decreased by the same amount.
 
 Points from a bounty are disbursed immediately when the card is checked in order to enhance the sense of immediacy and responsibility in the local community.
 
-If a card has no bounty, it can still be checked/claimed, but
+If a card has no bounty, it can still be checked/claimed, but no points will be disbursed.
+
+A card gains the following properties to allow it to function as a bounty:
 
 - `.claimed`: An Array of memberIds of members who have checked off the card and claimed the bounty that was on the task at the time (if any)
 
@@ -534,7 +536,7 @@ If a card has no bounty, it can still be checked/claimed, but
 
 - `.lastClaimed`: The UNIX timestamp of the last time the bounty was claimed by anyone.
 
-# Upgrading cards to missions (groups)
+### Upgrading cards to missions (groups)
 
 Missions, also known as groups or guilds, are cards that have been given an additional title beyond their card text. This title is searchable and is listed in the Missions Index.
 
@@ -542,17 +544,21 @@ Missions do many different things, acting as interest groups, hubs of card-tradi
 
 The `.name` text of a card cannot currently be edited, but the mission title can be, making it a useful way to add tags, synonyms, or a more accurate title to a card.
 
+A mission is defined as a card with the following property set:
+
 - `.guild`: The title of the mission.
 
-# Booking an event on a card
+### Booking an event on a card
 
 Each card can store one calendar event, which can be set in the card's menu in the GUI. Cards with an event set are considered agenda items and show up in the Calendar panel.
 
 The bookings system is integrated with hardware resources; the idea is that you book a room or other hardware resource which is assigned a resourceId.
 
+An event is defined as a card that has the following property set:
+
 - `.book:` An object containing the `.resourceId` of the resource to be booked, the `.memberId` of the member booking the resource, the `.startTs` UNIX timestamp of the start of the event, and the `.endTs` timestamp of when the event ends.
 
-# Signing a card as a proposal
+### Signing a card as a proposal
 
 Members can sign cards to designate their agreement with, approval of, support for, or recommendation of a card. In the GUI, hover over a card's moon to display a tooltip containing the list of signers and buttons to "sign" or "decline to sign" the card.
 
@@ -560,27 +566,33 @@ Any card that has ever been signed at least once shows up in the Proposals panel
 
 A badge appears on the Proposals panel button showing how many proposals you haven't signed. Every proposal is presented to every member, so this feature is a good way to broadcast cards to the server and build a shared history of cards many have signed.
 
+A proposal is defined as a card that has the following property set:
+
 - `.signed`: A list of all the times the card was signed or re-signed—an Array of Signature Objects. A Signature is an object containing the `.memberId` of the signer, the `.timestamp` of when the signing event occured, as well as a `.opinion` of the signer. The `.opinion` can be 1 (signed/approved), 0 (declined to sign/unsign), or a String describing a textual opinion (more options such as -1 for signing against a proposal are planned).
 
-# Leaderboard
+### Leaderboard
 
 - `.highlights`: Something for the leaderboard
 
-# Marking a card as read
+### Marking a card as read
 
 Cards that you haven't seen yet have a red dot on them. If you hover your cursor over a card for two seconds, it will be marked as seen. Cards keep track of who has seen them.
+
+The following card property is used for the unread marker feature:
 
 - `.seen`: A list of memberIds of who has seen the card
 
 In terms of privacy, seen is not used for anything else; the full list of which members on the server have seen the card is available in the client, but is not currently displayed anywhere to the user. This could be cleaned up later to increase privacy. (The purpose of this feature is to provide individual users with unread dots, not a social feature.)
 
-# Clocking time on a card with the timeclock
+### Clocking time on a card with the timeclock
 
 Cards that are in the priorities list of another card are displayed with a checkbox as well as a (planned) play/pause or "Do It!" button that starts and stops a timeclock on that task. This is intended to seamlessly integrate personal time-tracking with social time-tracking, bounty, and telepresence features. For example, when you click "Do It!", your avatar will move to the current card, so people can see where you are on the AO and what you are doing. By integrating these features as seamless, fun, and convenient everyday features, we can prevent them from becoming dominating parts of our lives ("the Timeclock").
 
+Cards use the following property to track time clocked on them:
+
 . `.time`: A list of Usertime objects, each of which contains the timelog for a single member. Each Usertime object has a `.memberId` of the member, a `.timelog` Array of numbers of millisecends clocked, and another array of `.date` Date objects of the events when these times were clocked. `.timelog` and `.date` are kept in lockstep by the server, so `.timelog[2]` and `.date[2]` are the amount of time clocked and when it was clocked, for the third item in the log (index 2).
 
-# Member cards
+### Member cards
 
 Every Member object has created in lockstep with it a corresponding member card. Member cards are just like any other card, except that their `.name` is the memberId of the Member object that the card is associated with. This means that if the card were to be displayed without modification, it would show a confusing UUID to the user instead of the member's name. The member's username is stored in the Member object; member cards must be detected by the client and the member name looked up to display them correctly. All of this is also true of Resource cards.
 
@@ -588,7 +600,17 @@ All member cards can be accessed on the client via `aoStore.members` (an Array o
 
 This means that there are multiple valid ways to get the taskId of the currently logged-in member. You can use `aoStore.member.memberId` or `aoStore.memberCard.taskId` and it should always return the same string. However, to be on the safe side, it's good practice to use the more accurate one depending on what is intended in the context. For example, if you are comparing a list of cards to see if any of them is the current member's member card, use `aoStore.memberCard.taskId` to guarantee an identical match; whereas, if you are comparing a list of cards to see if any of them is in the current user's collection, use `aoStore.member.memberId`.
 
-Member cards have the following properties:
+### Resource cards
+
+Resource cards are created in lockstep with Resource objects, and are special in exactly the same ways as Member cards, except that instead of the `.name` of the resource card matching the `memberId` of a Member object, it matches the `.resourceId` of the corresponding Resource object.
+
+Hardware resources can be connected to the AO using the [AO pi](https://github.com/AutonomousOrganization/pi) and [sidewalk](https://github.com/DctrlVan/sidewalk) repositories. When a resource connects to the AO, it uses an existing username and password to log in, and then it invokes the resource-created event. This creates the Resource object on the server and the corresponding resource card. Then, the resource can log back in to the AO server whenever it reboots to stay connected for when it is used. When a resource it used, it generates a resource-used event.
+
+## Other core classes
+
+## Members
+
+Member objects (not cards) have the following properties:
 
 - `memberId`: A unique UUID identifier, randomly-generated when the user is created.
 
@@ -618,13 +640,23 @@ Member cards have the following properties:
 
 - `banned`: A boolean of whether the member is currently banned.
 
-# Resource cards
+## Resources
 
-Resource cards are created in lockstep with Resource objects, and are special in exactly the same ways as Member cards, except that instead of the `.name` of the resource card matching the `memberId` of a Member object, it matches the `.resourceId` of the corresponding Resource object.
+Resource objects (not their associated cards) have the following properties:
 
-Hardware resources can be connected to the AO using the [AO pi](https://github.com/AutonomousOrganization/pi) and [sidewalk](https://github.com/DctrlVan/sidewalk) repositories. When a resource connects to the AO, it uses an existing username and password to log in, and then it invokes the resource-created event. This creates the Resource object on the server and the corresponding resource card. Then, the resource can log back in to the AO server whenever it reboots to stay connected for when it is used. When a resource it used, it generates a resource-used event.
+- `resourceId`: A randomly-generated UUID to identify the resource.
 
-# Memes
+- `name`: The name of the resource (set during the initialize.js step of [resource creation](https://github.com/AutonomousOrganization/pi))
+
+- `charged`: The number of points charged each time the resource is used.
+
+- `secret`: Deprecated?
+
+- `trackStock`: A boolean of whether to track finite stock on the resource (e.g., sodas in the soda machine).
+
+- `stock`: Current stock, if tracked.
+
+## Memes
 
 Memes, aka attachments are files stored in the ~/.ao/memes folder of the AO server. When the AO server starts, it scans the ~/.ao/memes folder and adds every file it finds there as a card, based on a hash of the file (to prevent duplicates). When a user uploads a file, a card is also created. The card that is created has text that is the same as the filename.
 
@@ -638,7 +670,7 @@ The Meme object is the attachment part of a card and has the following propertie
 
 - `filetype`: A string containing the filetype, e.g., 'jpg', 'avi', 'pdf'. This can be used to manually set how the file will be displayed without altering its filename.
 
-# Connected peer AOs
+## Connected peer AOs
 
 The AO helps install and correctly configure tor, and the tor address of the AO server will display in the AO p2p tab of the Bull panel for members to see and share. When you enter the hostname and address of another AO into the AO p2p tab, it attempts to connect to that AO privately over tor.
 
