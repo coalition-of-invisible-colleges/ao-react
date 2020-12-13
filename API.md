@@ -464,15 +464,15 @@ Array and list are used as synonyms.
 
 "Everything is a card". A card is a Task object (as defined by the Task class in store.ts). A blank card has:
 
-- `.taskId`: a randomly-generated UUID to identify the card uniquely (will be deprecated in favor of hash)
+- `.taskId`: A randomly-generated UUID to identify the card uniquely (will be deprecated in favor of hash).
 
-- `.name`: the text of the card
+- `.name`: The text of the card.
 
-- `.color`: every card can be 'red', 'yellow', 'blue', 'green', 'purple', or 'black'; color has no effect yet and is just for appearance.
+- `.color`: Every card can be 'red', 'yellow', 'blue', 'green', 'purple', or 'black'; color has no effect yet and is just for appearance.
 
-- `.hash`: the hash of the text of the card
+- `.hash`: The hash of the text of the card.
 
-- `.created`: the Unix timestamp when the card was created
+- `.created`: The Unix timestamp when the card was created.
 
 ### Grabbing cards to your deck
 
@@ -498,7 +498,7 @@ Just like the basic card properties above, each of these is a property a card ca
 
 - `.completed`: A list of taskIds of cards which were completed (checked off) and then discarded from within this card. Completed cards are not discarded but instead saved in this list as a history of accomplishments. This is displayed as checkmarks in a leaderboard below the main stack in a card.
 
-- `.parents`: This is a list of taskIds the cards this card is within. Any card which is in the `.priorities`, `.subTasks`, or the grid of another card is considered within that card. The parents list should be kept perfectly updated and in sync with where cards are actually located; however there might still be bugs in this. The list of parents a card has can be seen by hovering over its moon in the GUI.
+- `.parents`: This is a list of taskIds of the cards this card is within. Any card which is in the `.priorities`, `.subTasks`, or the grid of another card is considered within that card. The parents list is kept perfectly updated and in sync with where cards are actually located; however there might still be bugs in this. The list of parents a card has can be seen by hovering over its moon in the GUI.
 
 Cards being within other cards is completely separate from whether a card is in a member's deck or not. The Archive feature is designed to deal with this discrepency by returning "lost cards" that are grabbed.
 
@@ -506,7 +506,9 @@ Cards being within other cards is completely separate from whether a card is in 
 
 Using the Gifts panel on the left edge of the screen or the Bird icon in the top left corner of every card, members can give (aka pass, send) cards to each other.
 
-- `.passed`: An Array of two-element Arrays, the first element containing the memberId of the sender, the second element the recipient. That is, .passed[0][0] is the memberId of the first pass currently pending on a card, and passed[0][1] is the recipient of the first pass pending on a card. The second pass pending is .passed[1], a similar two-element Array.
+Cards have the following property allowing them to be passed:
+
+- `.passed`: An Array of two-element Arrays, the first element containing the memberId of the sender, the second element the recipient. That is, `.passed[0][0]` is the memberId of the first pass currently pending on a card, and `passed[0][1]` is the recipient of the first pass pending on a card. The second pass pending is `.passed[1]`, a similar two-element Array.
 
 Cards that are passed show the list of pending passes on the bird. When the card is accepted or rejected by the recipient, the pass is removed. This design decision balances respecting the privacy of user history, while also sharing activity in real time within the local community for social purposes.
 
@@ -520,9 +522,9 @@ Cards that are passed show the list of pending passes on the bird. When the card
 
 ### Checking off cards to claim the bounty
 
-One of the main features of the AO is a local bounty economy that allows members to put up bounties in community points and claim bounties immediately by checking off bounty cards.
+The AO includes a local bounty economy that allows members to put up bounties in community points and claim bounties immediately by checking off bounty cards.
 
-Any card that has a `.boost` value above 0 has had points put on it as a bounty, and will show up in the Bounties panel. An the server, points are carefully conserved to prevent double-spending issues, so if `.boost` is increased on a card, the source of those points will be decreased by the same amount.
+Any card that has a `.boost` value above 0 has had points put on it as a bounty, and will show up in the Bounties panel. On the server, points are carefully conserved to prevent double-spending issues, so if `.boost` is increased on a card, the source of those points will be decreased by the same amount.
 
 Points from a bounty are disbursed immediately when the card is checked in order to enhance the sense of immediacy and responsibility in the local community.
 
@@ -658,7 +660,7 @@ Resource objects (not their associated cards) have the following properties:
 
 ## Memes
 
-Memes, aka attachments are files stored in the ~/.ao/memes folder of the AO server. When the AO server starts, it scans the ~/.ao/memes folder and adds every file it finds there as a card, based on a hash of the file (to prevent duplicates). When a user uploads a file, a card is also created. The card that is created has text that is the same as the filename.
+Memes, also known as attachments, are files stored in the ~/.ao/memes folder of the AO server. When the AO server starts, it scans the ~/.ao/memes folder and adds every file it finds there as a card, based on a hash of the file (to prevent duplicates). When a user uploads a file, a card is also created. The card that is created has text that is the same as the filename.
 
 The Meme object is the attachment part of a card and has the following properties:
 
