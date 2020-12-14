@@ -606,7 +606,7 @@ This means that there are multiple valid ways to get the taskId of the currently
 
 Resource cards are created in lockstep with Resource objects, and are special in exactly the same ways as Member cards, except that instead of the `.name` of the resource card matching the `memberId` of a Member object, it matches the `.resourceId` of the corresponding Resource object.
 
-Hardware resources can be connected to the AO using the [AO pi](https://github.com/AutonomousOrganization/pi) and [sidewalk](https://github.com/DctrlVan/sidewalk) repositories. When a resource connects to the AO, it uses an existing username and password to log in, and then it invokes the resource-created event. This creates the Resource object on the server and the corresponding resource card. Then, the resource can log back in to the AO server whenever it reboots to stay connected for when it is used. When a resource it used, it generates a resource-used event.
+Hardware resources can be connected to the AO using the [AO pi](https://github.com/AutonomousOrganization/pi) and [sidewalk](https://github.com/DctrlVan/sidewalk) repositories. When a resource connects to the AO, it uses an existing username and password to log in, and then it invokes the resource-created event. This creates the Resource object on the server and the corresponding resource card. Then, the resource can log back in to the AO server whenever it reboots to stay connected for when it is used. When a resource is used, it generates a resource-used event.
 
 ## Other core classes
 

@@ -216,6 +216,16 @@ export default class AoAttachment extends React.Component<Props, State> {
     }
 
     switch (this.state.mimeType) {
+      case 'audio/m4a':
+      case 'audio/aac':
+      case 'audio/aiff':
+      case 'audio/mpeg':
+      case 'audio/mp3':
+      case 'audio/m4a':
+      case 'audio/wav':
+      case 'audio/wave':
+      case 'audio/x-ms-wma':
+        return <audio src={'/memes/' + meme.filename} controls />
       case 'video/mp4':
       case 'video/ogg':
       case 'video/webm':
