@@ -126,7 +126,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
+        test: /\.(gif|bmp|mp3|m4a|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
         use: 'file-loader'
       }
     ]
