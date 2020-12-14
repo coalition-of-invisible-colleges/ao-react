@@ -221,6 +221,7 @@ export default class AoAttachment extends React.Component<Props, State> {
       case 'audio/aiff':
       case 'audio/mpeg':
       case 'audio/mp3':
+      case 'audio/mp4':
       case 'audio/m4a':
       case 'audio/wav':
       case 'audio/wave':
