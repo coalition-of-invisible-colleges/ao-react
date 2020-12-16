@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
+import AoTip from './tip'
 
 type MemberSort = 'alphabetical' | 'recents' | 'vouches' | 'age'
 
@@ -137,6 +138,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
                 size={16}
               />
             </div>
+            <AoTip text="Create a new member account on this AO server. The default password is the same as the username. Please log in and change your password promptly to maintain community security." />
             <button type="button" onClick={this.addMember} className="action">
               Add Member
             </button>

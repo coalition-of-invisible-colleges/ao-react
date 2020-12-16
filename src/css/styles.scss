@@ -922,7 +922,13 @@ textarea {
       }
 
       .cardComposer {
+        display: inline-block;
         width: calc(100% - 6em);
+
+        .zone {
+          width: 100%;
+          height: 11em;
+        }
       }
 
       form {
@@ -970,6 +976,12 @@ textarea {
             // margin: 0.5em 0.5em 0.5em 5em;
             width: calc(100% - 8em);
           }
+        }
+
+        .tipMarker {
+          position: absolute;
+          left: 0;
+          bottom: 0.15em;
         }
       }
     }
@@ -1611,6 +1623,11 @@ textarea {
       max-height: 70vh;
     }
 
+    // card compose box
+    .cardComposer {
+      position: relative;
+    }
+
     // search results and grid scrollbars
     #controls .popupPanel,
     #search .popupPanel .results,
@@ -1620,7 +1637,7 @@ textarea {
     #missions .popupPanel,
     #proposals .popupPanel,
     .grid,
-    .cardComposer {
+    .cardComposer .zone {
       scrollbar-color: rgba(89, 89, 89, 0.4) rgba(22, 22, 22, 0.4);
       scrollbar-width: thin;
 

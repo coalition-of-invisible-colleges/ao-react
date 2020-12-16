@@ -76,11 +76,11 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 
 	render() {
 		return (
-			<div style={{ position: 'relative' }}>
+			<div className="cardComposer">
 				<textarea
 					autoFocus
 					onBlur={this.onBlur}
-					className="zone cardComposer"
+					className="zone"
 					onChange={this.onChange}
 					onKeyDown={this.onKeyDown}
 					value={aoStore.draft}
