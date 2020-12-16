@@ -460,16 +460,6 @@ textarea {
           word-break: break-all;
         }
 
-        img {
-          max-width: 100%;
-          max-height: 100%;
-        }
-
-        video {
-          max-width: 100%;
-          max-height: 100%;
-        }
-
         .mission {
           .missionTitle {
             height: 1.5em;
@@ -695,7 +685,6 @@ textarea {
       left: 50%;
       transform: translateX(-50%);
       width: min-content;
-      margin-top: 1em;
       z-index: 1; // So grid resize button show above of main stack drop zone.
 
       &.padbottom {
@@ -960,8 +949,28 @@ textarea {
         top: 45vh;
       }
 
-      .popupPanel input {
-        margin: 0.5em 0.5em 0.5em 5em;
+      .popupPanel {
+        position: relative;
+        // padding-bottom: 2.5em;
+
+        .stack {
+          margin-bottom: 3em;
+        }
+
+        & > .action {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+
+        form {
+          margin-top: 1em;
+
+          input {
+            // margin: 0.5em 0.5em 0.5em 5em;
+            width: calc(100% - 8em);
+          }
+        }
       }
     }
 
@@ -2028,6 +2037,54 @@ textarea {
       .paper > img,
       .paper > .color {
         border-radius: 0.5em;
+      }
+    }
+
+    // attachment preview embeds
+    .attachment {
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        margin-bottom: 1em;
+      }
+
+      video {
+        max-width: 100%;
+        max-height: 100%;
+        margin-bottom: 1em;
+      }
+
+      audio {
+        height: 100%;
+        margin: 1em 0;
+      }
+    }
+
+    // button to open the main card create box
+    #gem {
+      cursor: pointer;
+      width: min-content;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+
+      .action {
+        margin-bottom: 0;
+        border-radius: 50% 50% 0 0;
+        background-color: rgba(200, 200, 200, 0.25);
+
+        &:hover,
+        &.open:hover {
+          background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        &.open {
+          background-color: rgba(225, 225, 225, 0.25);
+        }
+      }
+      textarea {
+        width: 24em;
+        height: 11em;
       }
     }
   }

@@ -62,22 +62,22 @@ export default class AoPopupPanel extends React.PureComponent<
 		return (
 			<LazyTippy
 				zIndex={3}
-				trigger={'click'}
+				trigger="click"
 				content={this.renderContent}
 				placement={
 					this.props.panelPlacement ? this.props.panelPlacement : 'auto'
 				}
 				interactive={true}
-				maxWidth={'none'}
+				maxWidth="none"
 				onShow={this.onPanelOpen}
 				onShown={instance => {
 					this.props.onShown ? this.props.onShown(instance) : undefined
 				}}
 				onHide={this.onPanelClose}
-				hideOnClick={'toggle'}>
+				hideOnClick="toggle">
 				<Tippy
 					zIndex={4}
-					theme={'translucent'}
+					theme="translucent"
 					content={
 						this.props.tooltipText && this.props.tooltipText.length >= 1
 							? this.props.tooltipText

@@ -10,6 +10,7 @@ interface State {
   sort: MemberSort
   page: number
   text?: string
+  openNew?: boolean
 }
 
 export const defaultState: State = {
@@ -23,9 +24,10 @@ export default class AoMembers extends React.PureComponent<{}, State> {
     super(props)
     this.state = defaultState
     this.sortBy = this.sortBy.bind(this)
+    this.toggleNew = this.toggleNew.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
-    this.onClick = this.onClick.bind(this)
+    this.addMember = this.addMember.bind(this)
   }
 
   sortBy(sort: MemberSort) {
@@ -35,16 +37,21 @@ export default class AoMembers extends React.PureComponent<{}, State> {
     this.setState({ sort: sort })
   }
 
+  toggleNew() {
+    this.setState({ openNew: !this.state.openNew })
+  }
+
   onChange(event) {
     this.setState({ text: event.target.value })
   }
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
-      this.onClick(event)
+      this.addMember(event)
     }
   }
-  onClick(event) {
+
+  addMember(event) {
     api.createMember(this.state.text)
   }
 
@@ -102,25 +109,39 @@ export default class AoMembers extends React.PureComponent<{}, State> {
     return (
       <React.Fragment>
         <h2>Members</h2>
-        <div className={'toolbar'}>
+        <div className="toolbar">
           {this.renderSortButton('alphabetical', 'A-Z')}
           {this.renderSortButton('recents', 'Recents')}
           {this.renderSortButton('vouches', 'Vouches')}
           {this.renderSortButton('age', 'Order')}
         </div>
         {list}
-        <div>
-          New Member:
-          <input
-            type="text"
-            value={this.state.text}
-            onChange={this.onChange}
-            onKeyDown={this.onKeyDown}
-          />
-          <button type="button" onClick={this.onClick}>
-            Add Member
-          </button>
+        <div className="action" onClick={this.toggleNew}>
+          {this.state.openNew ? (
+            <React.Fragment>Invite &#8963;</React.Fragment>
+          ) : (
+            <React.Fragment>Invite &#8964;</React.Fragment>
+          )}
         </div>
+        {this.state.openNew && (
+          <form>
+            <div style={{ position: 'relative', top: '-1em' }}>
+              <label style={{ position: 'relative', top: '0em' }}>
+                Username:
+              </label>
+              <input
+                type="text"
+                value={this.state.text}
+                onChange={this.onChange}
+                onKeyDown={this.onKeyDown}
+                size={16}
+              />
+            </div>
+            <button type="button" onClick={this.addMember} className="action">
+              Add Member
+            </button>
+          </form>
+        )}
       </React.Fragment>
     )
   }

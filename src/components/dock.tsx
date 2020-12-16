@@ -3,8 +3,9 @@ import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
-import AoGrid from './grid'
 import AoHome from './home'
+import AoGem from './gem'
+import AoGrid from './grid'
 import AoReturnPile from './returnPile'
 import _ from 'lodash'
 
@@ -72,8 +73,9 @@ export default class AoDock extends React.PureComponent<{}, State> {
       return null
     }
     return (
-      <div id={'dock'}>
+      <div id="dock">
         <AoHome />
+        <AoGem />
         <AoGrid taskId={this.state.bookmarksTaskId} dropActsLikeFolder={true} />
         <AoReturnPile />
       </div>

@@ -215,6 +215,8 @@ export default class AoAttachment extends React.Component<Props, State> {
       return null
     }
 
+    let preview
+
     switch (this.state.mimeType) {
       case 'audio/m4a':
       case 'audio/aac':
@@ -226,17 +228,17 @@ export default class AoAttachment extends React.Component<Props, State> {
       case 'audio/wav':
       case 'audio/wave':
       case 'audio/x-ms-wma':
-        return <audio src={'/memes/' + meme.filename} controls />
+        preview = <audio src={'/memes/' + meme.filename} controls />
       case 'video/mp4':
       case 'video/ogg':
       case 'video/webm':
-        return <video src={'/memes/' + meme.filename} controls />
+        preview = <video src={'/memes/' + meme.filename} controls />
       case 'image/jpeg':
       case 'image/jpg':
       case 'image/png':
       case 'image/gif':
       default:
-        return (
+        preview = (
           <img
             src={'/memes/' + meme.filename}
             // ref={this.attachmentRef}
@@ -244,5 +246,7 @@ export default class AoAttachment extends React.Component<Props, State> {
           />
         )
     }
+
+    return <div className="attachment">{preview}</div>
   }
 }

@@ -17,7 +17,11 @@ module.exports = {
   },
   isField(val, errRes) {
     let isField =
-      val === 'name' || val === 'email' || val === 'secret' || val === 'fob'
+      val === 'name' ||
+      val === 'email' ||
+      val === 'secret' ||
+      val === 'fob' ||
+      val === 'draft'
     if (!isField) {
       errRes.push('invalid field')
       return false

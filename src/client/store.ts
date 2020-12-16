@@ -42,6 +42,7 @@ export interface Member {
   fob: string
   potentials: Signature[]
   banned: boolean
+  draft: string
 }
 
 export interface Task {
@@ -210,12 +211,13 @@ class AoStore {
   @observable
   state: AoState = defaultState
   @observable
-  searchResults?: SearchResults = undefined
+  searchResults?: SearchResults
   @observable context: string[] = []
-  @observable currentCard: string = undefined
+  @observable currentCard: string
   @observable discard: Task[] = []
   @observable guiCloseables: ((event?) => void)[] = []
-  @observable currentChatroom: string = undefined
+  @observable currentChatroom: string
+  @observable draft: string
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -530,6 +532,14 @@ class AoStore {
   @action.bound
   popDiscardHistory() {
     return this.discard.pop()
+  }
+  @action.bound
+  saveDraft(newDraft: string) {
+    this.draft = newDraft
+  }
+  @action.bound
+  clearDraft() {
+    this.draft = null
   }
   @action.bound
   registerCloseable(onHide: (event) => void) {

@@ -29,7 +29,8 @@ function removeSensitive(ev) {
     'email',
     'payment_hash',
     'inboundSecret',
-    'outboundSecret'
+    'outboundSecret',
+    'draft'
   ]
   if (ev.type === 'member-field-updated') {
     ;['fob', 'secret', 'email'].forEach(str => {

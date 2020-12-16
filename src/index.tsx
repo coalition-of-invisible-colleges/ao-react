@@ -10,8 +10,8 @@ import api from './client/api'
 api.startSocketListeners()
 
 render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+	<React.StrictMode>
+		<App />
+	</React.StrictMode>,
+	document.getElementById('root')
 )
