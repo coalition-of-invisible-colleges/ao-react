@@ -90,7 +90,7 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 					<div
 						style={{
 							position: 'absolute',
-							right: '1.1em',
+							right: '1.25em',
 							bottom: '1em',
 							fontSize: '0.8em',
 							color: 'gray'
