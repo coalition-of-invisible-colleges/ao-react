@@ -13,6 +13,7 @@ interface Props {
 
 interface State {
 	uploadDraftTimer?
+	saved?: boolean
 }
 
 @observer
@@ -32,6 +33,7 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 
 	uploadDraft() {
 		api.updateMemberField('draft', aoStore.draft)
+		this.setState({ saved: true })
 	}
 
 	public clear() {
@@ -39,6 +41,7 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 	}
 
 	onBlur(event) {
+		this.setState({ saved: false })
 		if (this.props.onBlur) {
 			this.props.onBlur(event)
 		}
@@ -73,15 +76,29 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 
 	render() {
 		return (
-			<textarea
-				autoFocus
-				onBlur={this.onBlur}
-				className="zone cardComposer"
-				onChange={this.onChange}
-				onKeyDown={this.onKeyDown}
-				value={aoStore.draft}
-				placeholder="idea"
-			/>
+			<div style={{ position: 'relative' }}>
+				<textarea
+					autoFocus
+					onBlur={this.onBlur}
+					className="zone cardComposer"
+					onChange={this.onChange}
+					onKeyDown={this.onKeyDown}
+					value={aoStore.draft}
+					placeholder="idea"
+				/>
+				{this.state.saved && (
+					<div
+						style={{
+							position: 'absolute',
+							right: '1.1em',
+							bottom: '1em',
+							fontSize: '0.8em',
+							color: 'gray'
+						}}>
+						saved
+					</div>
+				)}
+			</div>
 		)
 	}
 }
