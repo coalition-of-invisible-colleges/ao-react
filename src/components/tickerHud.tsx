@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import { computed } from 'mobx'
+import ReactDOM from 'react-dom'
 import aoStore, { Ticker } from '../client/store'
 import api from '../client/api'
 import CoinGecko from 'coingecko-api'
@@ -11,11 +13,11 @@ import 'tippy.js/themes/translucent.css'
 
 const CoinGeckoClient = new CoinGecko()
 
-interface TickerInfo {
-  from: string
-  to: string
-  exchangeRate?: number
-}
+// interface TickerInfo {
+//   from: string
+//   to: string
+//   exchangeRate?: number
+// }
 
 interface TickerProps {
   // ticker: TickerInfo
@@ -29,8 +31,10 @@ interface TickerState {
   text: string
   error?: boolean
   fromSymbol?: string
+  fromCoinId?: string
   toSymbol?: string
   exchangeRate?: number
+  loadedScript?: boolean
 }
 
 const defaultTickerState: TickerState = {
@@ -43,7 +47,11 @@ const defaultTickerState: TickerState = {
 }
 
 @observer
-class AoTicker extends React.PureComponent<TickerProps, TickerState> {
+class AoTicker extends React.Component<TickerProps, TickerState> {
+  private infoRef
+  private tippyRef
+  private tickerRef
+
   constructor(props) {
     super(props)
     this.state = defaultTickerState
@@ -52,6 +60,9 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
     this.stopEditing = this.stopEditing.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+    this.loadScript = this.loadScript.bind(this)
+
+    this.tickerRef = React.createRef()
   }
 
   async componentDidMount() {
@@ -60,6 +71,23 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
       console.log('Refreshing tickers')
       this.loadTickerData()
     }, 300000)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.fromCoinId != prevState.fromCoinId) {
+    }
+  }
+
+  loadScript() {
+    if (!this.state.loadedScript) {
+      console.log('loading the fucking script')
+      const script = document.createElement('script')
+      script.src =
+        'https://widgets.coingecko.com/div/coingecko-coin-price-chart-widget-div.js'
+      script.async = false
+      this.tickerRef.current.appendChild(script)
+      this.setState({ loadedScript: true })
+    }
   }
 
   async loadTickerData() {
@@ -112,6 +140,7 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
       )
 
       const symbol = symbolData.data.symbol
+      const coinId = symbolData.data.id
 
       const priceData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.from,
@@ -121,7 +150,11 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
       const price = 1 / Object.values(priceData.data)[0]['btc']
       let exchangeRate = toBtcExchange / price
 
-      this.setState({ fromSymbol: symbol, exchangeRate: exchangeRate })
+      this.setState({
+        fromSymbol: symbol,
+        fromCoinId: coinId,
+        exchangeRate: exchangeRate
+      })
     }
   }
 
@@ -211,8 +244,24 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
     }
   }
 
+  @computed get renderInfo() {
+    return (
+      <div
+        data-background-color=""
+        data-currency={this.state.toSymbol ? this.state.toSymbol : 'usd'}
+        data-coin-id={this.state.fromCoinId ? this.state.fromCoinId : 'bitcoin'}
+        data-locale="en"
+        data-height="300"
+        data-width="400"
+        className="coingecko-coin-price-chart-widget"
+        style={{ maxWidth: '100%' }}></div>
+    )
+  }
+
   render() {
     const ticker = this.props.ticker
+
+    // const info = document.getElementById('tickerinfo-' + this.props.index)
 
     if (this.state.editing) {
       return (
@@ -228,7 +277,7 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
           showOnCreate={true}
           hideOnClick={false}
           trigger="manual">
-          <div className={'ticker'}>
+          <div className="ticker">
             <textarea
               autoFocus
               onChange={this.onChange}
@@ -240,7 +289,7 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
                 this.state.toSymbol ? this.state.toSymbol.toUpperCase() : 'SYMB'
               }
             />
-            {this.state.error ? <div className={'error'}>wut?</div> : ''}
+            {this.state.error ? <div className="error">wut?</div> : ''}
           </div>
         </Tippy>
       )
@@ -248,8 +297,8 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
 
     if (!ticker) {
       return (
-        <div className={'ticker'}>
-          <div className={'actionCircle newEntry'} onClick={this.startEditing}>
+        <div className="ticker">
+          <div className="actionCircle newEntry" onClick={this.startEditing}>
             <p>+</p>
           </div>
         </div>
@@ -258,8 +307,8 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
 
     if (this.state.exchangeRate === undefined) {
       return (
-        <div className={'ticker'}>
-          <div className={'actionCircle'} onClick={this.startEditing}>
+        <div className="ticker">
+          <div className="actionCircle" onClick={this.startEditing}>
             <p>Loading&hellip;</p>
           </div>
         </div>
@@ -275,14 +324,27 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
     const exchangeRate = this.state.exchangeRate.toLocaleString('en-US', {
       maximumFractionDigits: decimalPlaces
     })
+
+    const actionCircle = (
+      <div className="actionCircle" onClick={this.startEditing}>
+        <p>
+          1 {this.state.fromSymbol.toUpperCase()} = {exchangeRate}{' '}
+          {this.state.toSymbol.toUpperCase()}
+        </p>
+      </div>
+    )
+
     return (
-      <div className={'ticker'}>
-        <div className={'actionCircle'} onClick={this.startEditing}>
-          <p>
-            1 {this.state.fromSymbol.toUpperCase()} = {exchangeRate}{' '}
-            {this.state.toSymbol.toUpperCase()}
-          </p>
-        </div>
+      <div className="ticker" ref={this.tickerRef}>
+        <Tippy
+          zIndex={4}
+          placement="left"
+          maxWidth="30em"
+          interactive={true}
+          content={this.renderInfo}
+          onShown={this.loadScript}>
+          {actionCircle}
+        </Tippy>
       </div>
     )
   }
@@ -290,6 +352,10 @@ class AoTicker extends React.PureComponent<TickerProps, TickerState> {
 
 @observer
 export default class AoTickerHud extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
   render() {
     const myTickers: Ticker[] = aoStore.member.tickers
 
@@ -310,7 +376,7 @@ export default class AoTickerHud extends React.Component {
     }
 
     return (
-      <div id={'tickers'}>
+      <div id="tickers">
         {tickers}
         <AoTicker ticker={null} index={myTickers ? myTickers.length : 0} />
       </div>

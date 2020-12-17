@@ -661,7 +661,6 @@ textarea {
       transform: translateX(-50%);
       width: min-content;
       z-index: 1; // So grid resize button show above of main stack drop zone.
-      margin-bottom: 2.5em;
 
       &.padbottom {
         margin-bottom: 2em;
@@ -764,6 +763,11 @@ textarea {
           }
         }
       }
+    }
+
+    // gridContainer inside the main card on the page
+    .full .gridContainer {
+      margin-bottom: 2.5em;
     }
 
     // main menu in bottom right of screen
@@ -1262,11 +1266,6 @@ textarea {
       }
     }
 
-    // // stack inside the main card
-    // .card.full .gridContainer + .stack {
-    //   margin-top: 2.5em;
-    // }
-
     // drop shadow on cards in the context stack
     .context.stack ~ .card {
       box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
@@ -1623,7 +1622,8 @@ textarea {
     #missions .popupPanel,
     #proposals .popupPanel,
     .grid,
-    .cardComposer .zone {
+    .cardComposer .zone,
+    .chatStack {
       scrollbar-color: rgba(89, 89, 89, 0.4) rgba(22, 22, 22, 0.4);
       scrollbar-width: thin;
 
