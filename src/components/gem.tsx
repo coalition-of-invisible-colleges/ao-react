@@ -43,10 +43,28 @@ export default class AoGem extends React.PureComponent<{}, State> {
 		if (name.trim().length < 1) {
 			return
 		}
+
+		let taskId = aoStore.currentCard
+		if (!taskId) {
+			taskId = aoStore.memberCard.taskId
+		}
+
+		let card
+		if (taskId) {
+			card = aoStore.hashMap.get(taskId)
+			if (!card) {
+				console.log('missing card')
+			}
+		}
+
 		this.setState({ open: false })
 		this.composeRef.current.clear()
 
-		api.createCard(name)
+		if (card) {
+			api.findOrCreateCardInCard(name, card.taskId)
+		} else {
+			api.createCard(name)
+		}
 	}
 
 	render() {
