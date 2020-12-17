@@ -9,6 +9,7 @@ import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
 import AoGrid from './grid'
 import AoStack from './stack'
+import AoChatStack from './chatStack'
 import AoCompleted from './completed'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
@@ -46,6 +47,7 @@ interface CardProps {
 	noContextOnFull?: boolean
 	noPopups?: boolean
 	noFindOnPage?: boolean
+	onNextTrack?: (taskId: string) => void
 }
 
 interface State {
@@ -329,7 +331,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<div className="content">
 							<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 							{member && <AoMemberIcon memberId={taskId} />}
-							<AoAttachment taskId={taskId} hudStyle="collapsed" />
+							<AoAttachment
+								taskId={taskId}
+								hudStyle="collapsed"
+								onNextTrack={this.props.onNextTrack}
+							/>
 							{this.renderCardContent(content)}
 						</div>
 						{this.state.showPriorities ? (
@@ -361,7 +367,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<div className={'content'}>
 							<AoMission taskId={taskId} hudStyle={'face before'} />
 							{member && <AoMemberIcon memberId={taskId} />}
-							<AoAttachment taskId={taskId} hudStyle={'face before'} />
+							<AoAttachment
+								taskId={taskId}
+								hudStyle={'face before'}
+								onNextTrack={this.props.onNextTrack}
+							/>
 							{this.renderCardContent(content)}
 							{card.priorities && card.priorities.length >= 1 ? (
 								<>
@@ -427,7 +437,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							<div className="content">
 								<AoMission taskId={taskId} hudStyle={'full before'} />
 								{member && <AoMemberIcon memberId={taskId} />}
-								<AoAttachment taskId={taskId} hudStyle={'full before'} />
+								<AoAttachment
+									taskId={taskId}
+									hudStyle="full before"
+									onNextTrack={this.props.onNextTrack}
+								/>
 								{this.renderCardContent(content)}
 							</div>
 							<AoStack
@@ -435,23 +449,21 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								cards={priorityCards}
 								showAdd={true}
 								hideAddWhenCards={true}
-								addButtonText={'+priority'}
-								cardStyle={'priority'}
+								addButtonText="+priority"
+								cardStyle="priority"
 								onNewCard={this.newPriority}
 								onDrop={prioritizeCard}
-								zone={'priorities'}
+								zone="priorities"
 							/>
 							<AoGrid taskId={taskId} />
-							<AoStack
+							<AoChatStack
 								inId={taskId}
 								cards={subTaskCards}
-								showAdd={true}
 								onNewCard={this.newSubTask}
 								onDrop={subTaskCard}
-								zone={'subTasks'}
 							/>
 							<AoCompleted taskId={taskId} />
-							<AoCardHud taskId={taskId} hudStyle={'full after'} />
+							<AoCardHud taskId={taskId} hudStyle="full after" />
 						</div>
 					</React.Fragment>
 				)
@@ -550,7 +562,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<AoCardHud taskId={taskId} hudStyle={'mini before'} />
 						<div className={'content'}>
 							{member && <AoMemberIcon memberId={taskId} />}
-							<AoAttachment taskId={taskId} hudStyle={'mini before'} />
+							<AoAttachment
+								taskId={taskId}
+								hudStyle={'mini before'}
+								onNextTrack={this.props.onNextTrack}
+							/>
 							{this.renderCardContent(content, true)}
 						</div>
 						<AoCardHud taskId={taskId} hudStyle={'mini after'} />

@@ -72,7 +72,7 @@ export default class AoGem extends React.PureComponent<{}, State> {
 			<div
 				className={'action' + (this.state.open ? ' open' : '')}
 				onClick={this.toggle}>
-				{aoStore.member.draft ? 'draft' : '+card'}
+				{aoStore.member.draft || aoStore.draft.length >= 1 ? 'draft' : '+card'}
 			</div>
 		)
 

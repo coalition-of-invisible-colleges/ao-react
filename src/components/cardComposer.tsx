@@ -17,11 +17,14 @@ interface State {
 }
 
 @observer
-export default class AoCardComposer extends React.PureComponent<Props, State> {
+export default class AoCardComposer extends React.Component<Props, State> {
+	private _ismounted
+
 	constructor(props) {
 		super(props)
 		this.state = {}
 		this.uploadDraft = this.uploadDraft.bind(this)
+		this.clear = this.clear.bind(this)
 		this.onBlur = this.onBlur.bind(this)
 		this.onKeyDown = this.onKeyDown.bind(this)
 		this.onChange = this.onChange.bind(this)
@@ -31,13 +34,24 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 		}
 	}
 
+	componentDidMount() {
+		this._ismounted = true
+	}
+
+	componentWillUnmount() {
+		this._ismounted = false
+	}
+
 	uploadDraft() {
 		api.updateMemberField('draft', aoStore.draft)
-		this.setState({ saved: true })
+		if (this._ismounted) {
+			this.setState({ saved: true })
+		}
 	}
 
 	public clear() {
 		aoStore.clearDraft()
+		api.updateMemberField('draft', null)
 	}
 
 	onBlur(event) {
@@ -49,13 +63,18 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 
 	onKeyDown(event) {
 		if (event.key === 'Enter' && !event.shiftKey) {
+			event.preventDefault()
+			if (this.state.uploadDraftTimer) {
+				clearTimeout(this.state.uploadDraftTimer)
+			}
+
 			const trimmed = aoStore.draft ? aoStore.draft.trim() : null
 			if (!trimmed || trimmed.length < 1) {
 				console.log('Empty card—nothing created.')
 				return
 			}
 			this.props.onNewCard(trimmed, this.props.coords)
-			aoStore.clearDraft()
+			this.clear()
 			this.onBlur(event)
 		} else if (event.key === 'Escape') {
 			this.onBlur(event)
@@ -63,12 +82,19 @@ export default class AoCardComposer extends React.PureComponent<Props, State> {
 	}
 
 	onChange(event) {
+		console.log('onChange value is ', event.target.value)
 		aoStore.saveDraft(event.target.value)
-		if (this.state.uploadDraftTimer) {
-			clearTimeout(this.state.uploadDraftTimer)
+		if (
+			aoStore.draft !== aoStore.member.draft &&
+			aoStore.draft.length >= 1 &&
+			event.target.value.trim().length >= 1
+		) {
+			if (this.state.uploadDraftTimer) {
+				clearTimeout(this.state.uploadDraftTimer)
+			}
+			const uploadDraftTimer = setTimeout(this.uploadDraft, 3000)
+			this.setState({ uploadDraftTimer })
 		}
-		const uploadDraftTimer = setTimeout(this.uploadDraft, 3000)
-		this.setState({ uploadDraftTimer })
 		if (this.props.onChange) {
 			this.props.onChange(event.target.value)
 		}

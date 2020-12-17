@@ -217,7 +217,7 @@ class AoStore {
   @observable discard: Task[] = []
   @observable guiCloseables: ((event?) => void)[] = []
   @observable currentChatroom: string
-  @observable draft: string
+  @observable draft: string = ''
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -539,7 +539,7 @@ class AoStore {
   }
   @action.bound
   clearDraft() {
-    this.draft = null
+    this.draft = ''
   }
   @action.bound
   registerCloseable(onHide: (event) => void) {
