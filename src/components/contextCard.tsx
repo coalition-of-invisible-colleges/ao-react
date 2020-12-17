@@ -193,6 +193,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	renderCardContent(content: string, hideIframes = false) {
 		// hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
+		const meme = aoStore.memeById.get(this.props.task.taskId)
+		let memeContent
+		if (meme) {
+			memeContent =
+				'<a href="' +
+				'/memes/' +
+				meme.filename +
+				'" download >' +
+				content +
+				'</a>'
+		}
 
 		return (
 			<Markdown
@@ -211,7 +222,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						}
 					}
 				}}>
-				{content}
+				{memeContent ? memeContent : content}
 			</Markdown>
 		)
 	}
@@ -266,6 +277,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		const taskId = card.taskId
 		let member
 		let content = card.name
+
 		if (taskId === content) {
 			let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
 			if (!memberOrResource) {
