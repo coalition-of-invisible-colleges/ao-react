@@ -1899,10 +1899,10 @@ textarea {
     // tally marks
     .tally {
       position: relative;
-      top: -0.1em;
       float: left;
       width: max-content;
       max-width: 10em;
+      margin-right: 0.5em;
 
       img {
         max-height: 1.5em;
