@@ -595,10 +595,11 @@ textarea {
 
         // the paw in the moon, shown when a card has signatures
         img.moonpaw {
-          height: 1.5em;
+          height: 1.45em;
+          width: 1.6em;
           position: absolute;
           top: 0.5em;
-          left: calc(50% - 0.75em);
+          left: calc(50% - 0.7em);
           opacity: 0.4;
           pointer-events: none;
         }
@@ -694,8 +695,8 @@ textarea {
       & > .grid {
         display: grid;
 
-        & > .zone,
-        & > .dropZone.grid {
+        .zone,
+        .dropZone.grid {
           position: relative;
           background: $square-bg;
           display: flex;
@@ -733,6 +734,19 @@ textarea {
             left: unset;
             transform: unset;
           }
+        }
+
+        .cardComposer,
+        .cardComposer .zone {
+          width: 99%;
+          height: 98%;
+          margin: 0;
+          padding: 0;
+          position: relative;
+          top: 50%;
+          left: 50%;
+          transform: translateX(-50%) translateY(-50%);
+          background-color: rgba(0, 0, 0, 0.01);
         }
       }
 
@@ -959,10 +973,6 @@ textarea {
         position: relative;
         // padding-bottom: 2.5em;
 
-        .stack {
-          margin-bottom: 3em;
-        }
-
         & > .action {
           position: absolute;
           right: 0;
@@ -970,7 +980,7 @@ textarea {
         }
 
         form {
-          margin-top: 1em;
+          margin-top: 2em;
 
           input {
             // margin: 0.5em 0.5em 0.5em 5em;
