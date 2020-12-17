@@ -449,32 +449,6 @@ textarea {
         }
       }
 
-      .content {
-        position: relative;
-        margin: 1em auto;
-        max-width: 28em;
-
-        a {
-          text-shadow: 0 0 1em #fff, 0 0 0.5em #fff;
-          overflow-wrap: break-word;
-          word-break: break-all;
-        }
-
-        .mission {
-          .missionTitle {
-            height: 1.5em;
-            margin-right: 0.5em;
-            position: relative;
-            top: 0.33em;
-          }
-        }
-
-        & > span:first-child {
-          // margin-top: 0.7em;
-          display: block;
-        }
-      }
-
       .stack > .dropZone > .action,
       .grid .menu .action {
         margin-top: 0.5em;
@@ -2112,6 +2086,37 @@ textarea {
       textarea {
         width: 24em;
         height: 11em;
+      }
+    }
+
+    // card content
+    .content {
+      position: relative;
+      margin: 1em auto;
+      max-width: 28em;
+
+      a {
+        text-shadow: 0 0 1em #fff, 0 0 0.5em #fff;
+        overflow-wrap: break-word;
+        word-break: break-all;
+      }
+
+      .mission {
+        .missionTitle {
+          height: 1.5em;
+          margin-right: 0.5em;
+          position: relative;
+          top: 0.33em;
+        }
+      }
+
+      & > span:first-child {
+        // margin-top: 0.7em;
+        display: block;
+      }
+
+      img {
+        max-width: 100%;
       }
     }
   }
