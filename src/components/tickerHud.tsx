@@ -73,14 +73,8 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
     }, 300000)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.fromCoinId != prevState.fromCoinId) {
-    }
-  }
-
   loadScript() {
     if (!this.state.loadedScript) {
-      console.log('loading the fucking script')
       const script = document.createElement('script')
       script.src =
         'https://widgets.coingecko.com/div/coingecko-coin-price-chart-widget-div.js'
@@ -260,8 +254,6 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
 
   render() {
     const ticker = this.props.ticker
-
-    // const info = document.getElementById('tickerinfo-' + this.props.index)
 
     if (this.state.editing) {
       return (
