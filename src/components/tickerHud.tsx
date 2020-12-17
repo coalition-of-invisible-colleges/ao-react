@@ -81,6 +81,11 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
       script.async = false
       this.tickerRef.current.appendChild(script)
       this.setState({ loadedScript: true })
+
+      const el = document.getElementById('ticker-' + this.props.index)
+      if (el) {
+        el.innerHTML = ''
+      }
     }
   }
 
@@ -124,8 +129,24 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
       }
       const exchangeRate =
         toBtcExchange / allExchangeRates.data.rates[ticker.from].value
+
+      const coin = allExchangeRates.data.rates[ticker.from]
+      let coinName
+      let coinId
+      if (coin) {
+        coinName = coin.name.toLowerCase()
+        if (coinName === 'ether') {
+          coinName = 'ethereum'
+        }
+        const list = await CoinGeckoClient.coins.list()
+        let match = list.data.find(coin => coin.name.toLowerCase() === coinName)
+        if (match) {
+          coinId = match.id
+        }
+      }
       this.setState({
         fromSymbol: ticker.from,
+        fromCoinId: coinId,
         exchangeRate: exchangeRate
       })
     } else if (isAddress(ticker.from)) {
@@ -241,6 +262,7 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
   @computed get renderInfo() {
     return (
       <div
+        id={'ticker-' + this.props.index}
         data-background-color=""
         data-currency={this.state.toSymbol ? this.state.toSymbol : 'usd'}
         data-coin-id={this.state.fromCoinId ? this.state.fromCoinId : 'bitcoin'}
@@ -248,7 +270,9 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
         data-height="300"
         data-width="400"
         className="coingecko-coin-price-chart-widget"
-        style={{ maxWidth: '100%' }}></div>
+        style={{ maxWidth: '100%' }}>
+        loading info...
+      </div>
     )
   }
 
