@@ -100,15 +100,19 @@ export default class AoMembers extends React.PureComponent<{}, State> {
       list = (
         <AoStack
           cards={memberCards}
-          zone={'panel'}
-          cardStyle={'priority'}
+          zone="panel"
+          cardStyle="priority"
           cardsBeforeFold={10}
         />
       )
     }
 
     return (
-      <React.Fragment>
+      <div
+        style={{
+          paddingBottom:
+            memberCards.length <= 10 && !this.state.openNew ? '2.7em' : null
+        }}>
         <h2>Members</h2>
         <div className="toolbar">
           {this.renderSortButton('alphabetical', 'A-Z')}
@@ -144,7 +148,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
             </button>
           </form>
         )}
-      </React.Fragment>
+      </div>
     )
   }
 }
