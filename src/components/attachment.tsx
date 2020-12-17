@@ -15,6 +15,7 @@ import mime from 'mime-types'
 interface Props {
   taskId: string
   hudStyle: HudStyle
+  onNextTrack?: (taskId: string) => void
 }
 
 interface State {
@@ -26,6 +27,7 @@ interface State {
 @observer
 export default class AoAttachment extends React.Component<Props, State> {
   // private attachmentRef = React.createRef<HTMLImageElement>()
+  private audioRef = React.createRef<HTMLAudioElement>()
 
   constructor(props) {
     super(props)
@@ -66,6 +68,11 @@ export default class AoAttachment extends React.Component<Props, State> {
         )
         this.setState({ mimeType })
       }
+    }
+    if (this.audioRef.current) {
+      this.audioRef.current.addEventListener('ended', function() {
+        console.log('track finished playing')
+      })
     }
   }
 
@@ -228,7 +235,9 @@ export default class AoAttachment extends React.Component<Props, State> {
       case 'audio/wav':
       case 'audio/wave':
       case 'audio/x-ms-wma':
-        preview = <audio src={'/memes/' + meme.filename} controls />
+        preview = (
+          <audio src={'/memes/' + meme.filename} ref={this.audioRef} controls />
+        )
       case 'video/mp4':
       case 'video/ogg':
       case 'video/webm':
