@@ -10,7 +10,11 @@ Parameters and and Examples have been omitted where there are no parameters and 
 
 API calls with a triple asterisk (\*\*\*) are reducible to another API call and therefore may be removed to clean up the API.
 
-## createSession(user: string, pass: string)
+## Session-handling methods
+
+These methods allow a user to log in, fetch the state of the server, and log out.
+
+### createSession(user: string, pass: string)
 
 Creates a new session, attempting to log a user in.
 
@@ -20,7 +24,7 @@ Creates a new session, attempting to log a user in.
 
 **See Also:**
 
-## fetchState()
+### fetchState()
 
 Fetches the entire state object from the server, including all cards on the server (but not their attachments). This is the bottleneck.
 
@@ -28,7 +32,11 @@ Fetches the entire state object from the server, including all cards on the serv
 
 **See Also:**
 
-## nameAo(newName: string)
+## AO methods
+
+These methods are for handling the server as a whole.
+
+### nameAo(newName: string)
 
 Renames the AO server.
 
@@ -38,7 +46,27 @@ Renames the AO server.
 
 **See Also:**
 
-## setQuorum(quorum: number)
+### connectToAo(address: string, secret: string)
+
+Adds another AO to this AO's list of peer connected AOs, and attempts to connect over tor.
+
+**Parameters:** `address` is the tor hostname (address) of the other AO server (including '.onion'). `secret` is the secret string provided on the p2p connect tab of the Bull panel of the other AO server.
+
+**Example:**
+
+**See Also:**
+
+### linkCardOnAo(taskId: string, address: string)
+
+Links the given card to the same card on another AO server. The contents of linked cards syncs both ways across AOs every few minutes (add only, no delete).
+
+**Parameters:** `taskId` is the taskId of the card. `address` is the tor address of the other server.
+
+**Example:** `newName('Home Media Center')`
+
+**See Also:**
+
+### setQuorum(quorum: number)
 
 Sets the global quorum for votes for the AO server. This affects which proposals are marked as "Passed" in the Proposals box. It has no server-side effect.
 
@@ -48,7 +76,45 @@ Sets the global quorum for votes for the AO server. This affects which proposals
 
 **See Also:** createMember
 
-## bark(taskId?: string)
+## Member methods
+
+These methods are used to handle member accounts on a server.
+
+### createMember(name: string, fob: string = '')
+
+Create a new member.
+
+**Parameters:** `name` is a name for the new member. Member creation will fail if a member with the specified name already exists. `fob` is an option RFID fob code, to link the account with a fob.
+
+**Example:**
+
+**See Also:**
+
+### purgeMember(memberId: string)
+
+Deletes a member from the AO server (requires three senpais to invoke).
+
+Senpai function: Only a senpai may use this function on another member.
+
+Voting function: Three senpais must call the function before it activates..
+
+**Parameters:** `memberId` is the `.memberId` of the member to delete.
+
+**Example:**
+
+**See Also:** createMember
+
+### updateMemberField(field: string, newValue: string)
+
+Sets the specified field of a member's account to the specified value. This can be used to set arbitrary values and extend an AO server with new features, without having to add new mutations.
+
+**Parameters:** `field` is the name of the field. `newValue` is a value to replace the previous value of the member's `.field` property.
+
+**Example:** updateMemberField('banned', true) is a trick to ban a member without having to vote on it.
+
+**See Also:**
+
+### bark(taskId?: string)
 
 Immediately announces your presence to other AO members on the same server.
 
@@ -60,19 +126,105 @@ Planned: Bark with a taskId to check-in to that card. When you visit the Communi
 
 **See Also:** unmute
 
-## mute()
+### mute()\*\*\*
 
 Mutes sound effects and bark notifications displayed to the member. This sets a property in their account, so it will persist across logins and on multiple devices.
 
 **See Also:** unmute
 
-## unmute()
+### unmute()\*\*\*
 
 Unmutes sound effects and bark notifications displayed to the member.
 
 **See Also:** mute
 
-## createCard(name: string)
+### activateMember(memberId: string)\*\*\*
+
+Sets a member's membership status to active.
+
+**Parameters:** `memberId` is the `.memberId` of the member to re-activate.
+
+**Example:**
+
+**See Also:** deactivateMember
+
+### deactivateMember(memberId: string)\*\*\*
+
+Sets a member's membership status to inactive.
+
+**Parameters:** `memberId` is the `.memberId` of the member to deactivate.
+
+**Example:**
+
+**See Also:** activateMember
+
+### resetPassword(memberId: string)
+
+Resets the member's password (requires three senpais to invoke).
+
+Senpai function: Only a senpai may use this function on another member.
+
+Voting function: Three senpais must call the function before it activates.
+
+**Parameters:** `memberId` is the `.memberId` of the member whose password will be reset.
+
+**Example:**
+
+**See Also:** updateMemberField
+
+### promoteMember(memberId: string)
+
+Promotes the specified member above you in the list of members. This list can be seen in the members popup under "Order". Unless modified with `promoteMember`, the order of this list is the order that members were created in.
+
+**Parameters:** `memberId` is the `.memberId` of a member currently below you in the list who will be moved above you.
+
+**Example:**
+
+**See Also:** grabCard (how you vouch for other members)
+
+### banMember(memberId: string)
+
+Sets a members ban status to true (requires three senpais to invoke).
+
+Senpai function: Only a senpai may use this function on another member.
+
+Voting function: Three senpais must call the function before it activates.
+
+**Parameters:** `memberId` is the `.memberId` of the member to ban.
+
+**Example:**
+
+**See Also:** unbanMember
+
+### unbanMember(memberId: string)
+
+Unbans a member (requires three senpais to invoke).
+
+Senpai function: Only a senpai may use this function on another member.
+
+Voting function: Three senpais must call the function before it activates.
+
+**Parameters:** `memberId` is the `.memberId` of the member to unban.
+
+**Example:**
+
+**See Also:** banMember
+
+### setTicker(fromCoin: string, toCoin: string, tickerListIndex: number)\*\*\*
+
+Adds a crypto ticker to a member's list of crypto tickers. These display on the right side of the screen when the member is logged in. The exchange rate of the `fromCoin` to the `toCoin` is display.
+
+**Parameters:** `fromCoin` is the abbreviation (such as USD or BTC) of a currency, or the address (0x...) of an ERC-20 smart contract. `toCoin` is the same. `tickerListIndex` is the index number to replace in the list of tickers.
+
+**Example:**
+
+**See Also:**
+
+## Card methods
+
+These methods are for creating and working with cards on the AO.
+
+### createCard(name: string)
 
 Creates a new card on the server, held by you. The card is timestamped. If the card already exists, nothing happens.
 
@@ -82,7 +234,7 @@ Creates a new card on the server, held by you. The card is timestamped. If the c
 
 **See Also:** findOrCreateCardInCard, createCardWithGrid, createResource, createMember
 
-## findOrCreateCardInCard(name: string, inId: string, prioritized: boolean = false, color: string = blue', anonymous?: boolean)
+### findOrCreateCardInCard(name: string, inId: string, prioritized: boolean = false, color: string = blue', anonymous?: boolean)
 
 If the card is already in the current card, it moves it to the top of the stack. A card can be in both the priorities the stack below the grid, if it is explicitly done using findOrCreateCardInCard. However, most clients make this difficult to do in the GUI, because having the same card in multiple places within another card can be confusing.
 
@@ -94,7 +246,133 @@ Cards match on their `.name` property. Cards match case-insensitively, so a card
 
 **See Also:** createCard
 
-## emptyCard(taskId: string)
+### emptyCard(taskId: string)
+
+Empties the `.priorities` and `.subTasks` lists of cards within the specified card. The `.parents` field of other cards will be correctly updated, if they are removed from this card.
+
+This could be extended to also clear the grid, but currently doesn't for performance reasons.
+
+**Parameters:** `taskId` is the `.taskId` of the card to empty.
+
+**Example:**
+
+**See Also:**
+
+### colorCard(taskId: string, color: string)\*\*\*
+
+Changes the color of a card.
+
+**Parameters:** `taskId` is the taskId of the card that will have its `.color` changed. `color` is the new color and is normally "blue", "red", "yellow", "green", "purple", or "black".
+
+**Example:**
+
+**See Also:**
+
+### grabCard(taskId: string)
+
+Grabs a or "moons" a card to your collection. Grabbing a card lights up the moon on the card. If a card is held by at least one member on the server, it cannot be deleted.
+
+Which members are holding (or "hodling") which cards is separate from which cards are in other cards.
+
+**Parameters:** `taskId` is the `.taskId` of the card to grab.
+
+**Example:**
+
+**See Also:** findOrCreateCardInCard
+
+### grabPile(taskId: string)
+
+Grabs the specified card and all the cards in that card, recursively, to your collection. This includes cards in `.priorities`, `.subTasks`, and `.completed`, but not currently the grid.
+
+**Parameters:** `taskId` is the `.taskId` of the parent card of all the cards that will be grabbed.
+
+**Example:**
+
+**See Also:** dropPile, pilePrioritized, pileRefocused
+
+### dropCard(taskId: string)
+
+Drops a card from your collection.
+
+**Parameters:** `taskId` is the `.taskId` of the card to drop.
+
+**Example:**
+
+**See Also:**
+
+### removeCards(taskIds: string[])
+
+Deletes the specified cards from the server. Cards can be deleted even if they are in someone's collection (maybe this should change).
+
+**Parameters:** `taskIds` is an array of taskIds of cards to delete.
+
+**Example:**
+
+**See Also:**
+
+### dropPile(taskId: string)
+
+Drops the specified card and all the cards in it, recursively. This includes cards in `.priorities`, `.subTasks`, and `.completed`, but not currently the grid.
+
+**Parameters:** `taskId` is the `.taskId` of the parent card of all the cards that will be dropped.
+
+**Example:**
+
+**See Also:**
+
+### prioritizePile(inId: string)
+
+Prioritizes all of the cards in the pile below the grid (to above the grid).
+
+**Parameters:** `inId` is the `.taskId` of the card in which to prioritize all the `.subTasks`.
+
+**Example:**
+
+**See Also:**
+
+### refocusCard(taskId: string, inId: string)
+
+Deprioritizes (refocuses) the card within another card, moving it from the `.priorities` above the grid to the `.subTasks` below the grid.
+
+**Parameters:** `taskId` is the `.taskId` of the card to be deprioritized. `inId` is the card within which to deprioritize it.
+
+**Example:**
+
+**See Also:**
+
+### refocusPile(inId: string)
+
+Refocuses (deprioritizes) all of the priorities in the specified card, movig them from above to below the grid.
+
+**Parameters:** `inId` is the `.taskId` of the card within which to dump all the priorities.
+
+**Example:**
+
+**See Also:**
+
+### completeCard(taskId: string)
+
+Checks off a card, marking it as completed and claiming its bounty, if any. Each member can check off the same card.
+
+**Parameters:** `taskId` is the `.taskId` of the card to check off and claim.
+
+**Example:**
+
+**See Also:**
+
+### uncheckCard(taskId: string)
+
+Unchecks a card. (Bounties previously claimed will NOT be reversed.)
+
+**Parameters:** `taskId` is the `.taskId` of the card to uncheck.
+
+**Example:**
+
+**See Also:**
+
+### clockTime(seconds, taskId, date)
+
+Clocks time on the server. This will be replaced by more realtime API calls that clock in and out with the server.
 
 **Parameters:**
 
@@ -102,353 +380,243 @@ Cards match on their `.name` property. Cards match case-insensitively, so a card
 
 **See Also:**
 
-## colorCard(taskId: string, color: string)
+### signCard(taskId: string, opinion = 1)
 
-**Parameters:**
+Signs a card with the specified opinion.
+
+**Parameters:** `taskId` is the `.taskId` of the card to sign. `opinion` is 1 for For/Agree/Support, 0 for "Decline to Sign", with -1 planned as Against. `opinion` can also be a string, so an opinin can be written-in, or the field used for more complex functionality, as is the case with the senpai voting API calls.
+
+**Example:**
+
+**See Also:** resetPassword, banMember, unbanMember, purgeMember
+
+### markSeen(taskId)
+
+Marks a card as read.
+
+**Parameters:** `taskId` is the `.taskId` of the card to mark as read.
 
 **Example:**
 
 **See Also:**
 
-## grabCard(taskId: string)
+### discardCardFromCard(taskId: string, inId: string)
 
-**Parameters:**
+Removes a card from within the specified parent card. If prioritized, the card will not be removed but just dropped below the grid to the `.subTasks` pile. If the card was checked, it will not be discarded, but will instead move to `.completed`.
+
+**Parameters:** `taskId` is the `.taskId` of the card to remove. `inId` is the `.taskId` of the card from which to remove the card specified by the first argument.
+
+**Example:**
+
+**See Also:** findOrCreateCardInCard
+
+### passCard(taskId: string, toMemberId: string)
+
+Sends a card to another member on the same AO server. The card will show up in their inbox as a "gift". They can accept the card with grabCard or reject it with dropCard or discardCardFromCard.
+
+**Parameters:** `taskId` is the `.taskId` of the card to send. `toMemberId` is the `.memberId` of the member to whom to send the card.
+
+**Example:**
+
+**See Also:** grabCard, discardCardFromCard
+
+### swapCard(inId: string, taskId1: string, taskId2: string)
+
+Swaps two cards wherever they are (except the grid) within another card.
+
+**Parameters:** `inId` is the `.taskId`
+
+**Example:**
+
+**See Also:** bumpCard
+
+### bumpCard(taskId: string, inId: string, direction: number)
+
+Moves a card from the top (front) of the subTasks to the bottom (back), or the bottom (back) to the top (front).
+
+**Parameters:** `taskId` is the `.taskId` of the card to move. `inId` is the `.taskId` of the parent card. `direction` is 1 to move the card forward, or -1 to move it backward.
+
+**Example:**
+
+**See Also:** swapCard
+
+### prioritizeCard(taskId: string, inId: string, position: number = 0)
+
+Moves a card from `.subTasks` to `.priorities` within another card.
+
+**Parameters:** `taskId` is the `.taskId` of the card to prioritize. `inId` is the `.taskId` of the card within which to prioritize the card. position is currently unused, but is intended to allow drag-and-drop of priorities to specific indices within the priorities list.
 
 **Example:**
 
 **See Also:**
 
-## grabPile(taskId: string)
+### titleMissionCard(taskId: string, newTitle: string)\*\*\*
 
-**Parameters:**
+Sets a mission title for the card, upgrading the card to a mission and listing it in the Missions Index.
 
-**Example:**
-
-**See Also:**
-
-## dropCard(taskId: string)
-
-**Parameters:**
+**Parameters:** `taskId` is the `.taskId` of the card to set a mission title on. `newTitle` is a new mission title for the card.
 
 **Example:**
 
 **See Also:**
 
-## removeCards(taskIds: string[])
+### setCardProperty(taskId: string, property: string, value: any)
 
-**Parameters:**
+Sets the specified property to the specified value on a card. This is the card equivalent of updateMemberField() (named "property" instead of "field" to distinguish cards from members).
+
+**Parameters:** `taskId` is the `.taskId` of the card to modify. `property` is the name of the property to update. `value` is the new value of the property.
+
+**Example:** setCardProperty(aoStore.memberCard.taskId, 'color', 'red') is equivalent to colorCard(aoStore.memberCard.taskId, 'red')
+
+**See Also:** updateMemberField
+
+## Card grid methods
+
+These methods are for working with grids of cards on the AO, which are themselves part of a card.
+
+### createCardWithGrid(name: string, height: number, width: number)
+
+Creates a new card with a grid of the specified size.
+
+**Parameters:** `name` is the text of the new card. `height` and `width` are the dimension of the grid to create.
+
+**Example:** createCardWithGrid("chess", 8, 8) // make a chessboard
+
+**See Also:**
+
+### addGridToCard(taskId: string, height: number, width: number)
+
+Adds a grid to an existing card. If the card already has a grid, it will be RESET TO BLANK (change this).
+
+**Parameters:** `taskId` is the `.taskId` of the card to add a grid to. `height` and `width` are the starting size of the new grid.
 
 **Example:**
 
 **See Also:**
 
-## dropPile(taskId: string)
+### resizeGrid(taskId: string, newHeight: number, newWidth: number)
 
-**Parameters:**
+Resize the grid on a card. If the new size is smaller than the old size, any cards that get dumped off the side will fall down into the `.subTasks` of the resized card, rather than being lost.
 
-**Example:**
-
-**See Also:**
-
-## prioritizePile(inId: string)
-
-**Parameters:**
+**Parameters:** `taskId` is the `.taskId` of the card with the grid to resize. `newHeight` and `newWidth` are the new height and width to resize the grid to.
 
 **Example:**
 
 **See Also:**
 
-## refocusCard(taskId: string, inId: string)
+### removeGridFromCard(taskId: string)
 
-**Parameters:**
+Deletes the grid from a card, dumping all the cards that were on the grid into `.subTasks`.
 
-**Example:**
-
-**See Also:**
-
-## refocusPile(taskId: string, inId: string)
-
-**Parameters:**
+**Parameters:** `taskId` is the `.taskId` of the card that will have its grid removed.
 
 **Example:**
 
 **See Also:**
 
-## completeCard(taskId: string)
+### pinCardToGrid(x: number, y: number, name: string, inId: string)
 
-**Parameters:**
+Pins the card to the grid of another card at the specified coordinates.
 
-**Example:**
-
-**See Also:**
-
-## uncheckCard(taskId: string)
-
-**Parameters:**
+**Parameters:** `x` and `y` are coordinates specifying the column (leftmost = 0) and row (topmost = 0), respectively, of the a square on the grid. `name` is the text of the card to pin there. `inId` is the `.taskId` of the card in which to pin the other card.
 
 **Example:**
 
 **See Also:**
 
-## purgeResource(resourceId: string)
+### unpinCardFromGrid(x: number, y: number, inId: string)
 
-**Parameters:**
+Unpins a card from a grid, dropping it below to the `.subTasks`.
 
-**Example:**
-
-**See Also:**
-
-## activateMember(memberId: string)
-
-**Parameters:**
+**Parameters:** `x` and `y` are the coordinates of the card to unpin. `inId` is the `.taskId` of the card within which to unpin the card.
 
 **Example:**
 
 **See Also:**
 
-## deactivateMember(memberId: string)
+## Attachment methods
 
-**Parameters:**
+These methods are for working with card attachments.
+
+### fetchMeme(memeHash: string)
+
+Gets an attachment from the server for display on a webpage.
+
+**Parameters:** `memeHash` is the hash of the attachment file.
+
+**Example:**
+
+**See Also:** downloadMeme, uploadMemes
+
+### downloadMeme(memeHash: string)
+
+Downloads an attachment using the Save As... dialog.
+
+**Parameters:** `memeHash` is the hash of the attachment file.
+
+**Example:**
+
+**See Also:** fetchMeme, uploadMemes
+
+### uploadMemes(formData)
+
+Uploads the attachments in the form data.
+
+**Parameters:** `formData` is form data with one or more attached files.
 
 **Example:**
 
 **See Also:**
 
-## resetPassword(memberId: string)
+## Resource methods
 
-**Parameters:**
+These methods are for connecting, using, and restocking hardware resources.
+
+### createResource(resourceId: string, name: string, charged: number, secret: string, trackStock: boolean)
+
+Creates a new resource on the server.
+
+**Parameters:** `resourceId` is a new UUID for the resource. `name` is a new name for the resource. `charged` is how many points will be charged each time the resource is used. `secret` is a secret string for the resource. `trackStack` is a boolean specifying whether or not the resource tracks finite stock (e.g., for a vending machine).
+
+**Example:**
+
+**See Also:** purgeResource, useResource
+
+### purgeResource(resourceId: string)
+
+Deletes a resource from the server. A deleted resource must be re-added using the pi repo's iniatilize.js script before it can be used again.
+
+**Parameters:** `resourceId` is the `.resourceId` of the resource to delete.
 
 **Example:**
 
 **See Also:**
 
-## promoteMember(memberId: string)
+### useResource(resourceId: string, amount: number, charged: number, notes: string = '')
 
-**Parameters:**
+Uses the resource, charging you the resouce's `.charged` and triggering the resource to activate. Only active members with enough points can use a resource.
 
-**Example:**
-
-**See Also:**
-
-## banMember(memberId: string)
-
-**Parameters:**
+**Parameters:** `resourceId` is the `.resourceId` of the resource to use. `amount` is the number of units to use. `charged` is how many to charge per unit. `notes` is a field for specifying additional information the hardware resource might need, such as which hopper/flavor to activate on a vending machine.
 
 **Example:**
 
 **See Also:**
 
-## unbanMember(memberId: string)
+### stockResource(resourceId: string, amount: number, paid: number, notes: string = '')
 
-**Parameters:**
+Increases the stock on a resource.
 
-**Example:**
-
-**See Also:**
-
-## purgeMember(memberId: string)
-
-**Parameters:**
+**Parameters:** `resourceId` is the `.resourceId` of the resource to restock. `amount` is how much the stock will be increased. `paid` is how much the member doing the restocking paid for the supplies being restocked into the machine (?). `notes` is a field for additional information that may be needed by certain hardware, for example which hopper was restocked on a vending machine.
 
 **Example:**
 
 **See Also:**
 
-## clockTime(seconds, taskId, date)
+### bookResource(taskId: string, startTime: number, endTime: number)
 
-**Parameters:**
+Books a resource as an event. (Every resource has an associated card which can be booked.)
 
-**Example:**
-
-**See Also:**
-
-## signCard(taskId: string, opinion = 1)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## markSeen(taskId)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## fetchMeme(memeHash: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## downloadMeme(memeHash: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## uploadMemes(formData)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## discardCardFromCard(taskId: string, inId: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## passCard(taskId: string, toMemberId: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## swapCard(inId: string, taskId1: string, taskId2: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## bumpCard(taskId: string, inId: string, direction: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## prioritizeCard(taskId: string, inId: string, position: number = 0)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## titleMissionCard(taskId: string, newTitle: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## setCardProperty(taskId: string, property: string, value: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## createResource(resourceId: string, name: string, charged: number, secret: string, trackStock: boolean)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## useResource(resourceId: string, amount: number, charged: number, notes: string = '')
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## stockResource(resourceId: string, amount: number, paid: number, notes: string = '')
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## bookResource(taskId: string, startTime: number, endTime: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## createMember(name: string, fob: string = '')
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## updateMemberField(field: string, newValue: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## setTicker(fromCoin: string, toCoin: string, tickerListIndex: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## resizeGrid(taskId: string, newHeight: number, newWidth: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## createCardWithGrid(name: string, height: number, width: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## addGridToCard(taskId: string, height: number, width: number)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## pinCardToGrid(x: number, y: number, name: string, inId: string)
-
-**Parameters:**
-
-**Example:**
-
-**See Also:**
-
-## unpinCardFromGrid(x: number, y: number, inId: string)
-
-**Parameters:**
+**Parameters:** `taskId` is the `.taskId` of the card or resource to be booked. `startTime` and `endTime` are the start and end time of the event (Unix timestamps?).
 
 **Example:**
 

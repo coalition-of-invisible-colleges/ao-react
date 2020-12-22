@@ -17,6 +17,7 @@ export default class AoGridResizer extends React.PureComponent<
     this.decreaseRows = this.decreaseRows.bind(this)
     this.increaseColumns = this.increaseColumns.bind(this)
     this.decreaseColumns = this.decreaseColumns.bind(this)
+    this.removeGrid = this.removeGrid.bind(this)
   }
 
   increaseRows() {
@@ -37,6 +38,10 @@ export default class AoGridResizer extends React.PureComponent<
   decreaseColumns() {
     const card = aoStore.hashMap.get(this.props.taskId)
     api.resizeGrid(this.props.taskId, card.grid.height, card.grid.width - 1)
+  }
+
+  removeGrid() {
+    api.removeGridFromCard(this.props.taskId)
   }
 
   render() {
@@ -64,21 +69,29 @@ export default class AoGridResizer extends React.PureComponent<
             +
           </button>
         </div>
-        <div className={'rows'}>
+        <div className="rows">
           <button
             type="button"
             onClick={this.decreaseRows}
             disabled={card.grid.height <= 1}
-            className={'action minus'}>
+            className="action minus">
             -
           </button>
           <button
             type="button"
             onClick={this.increaseRows}
             disabled={card.grid.height >= 100}
-            className={'action plus'}>
+            className="action plus">
             +
           </button>
+          {card.grid.width <= 1 && card.grid.height <= 1 && (
+            <button
+              type="button"
+              onClick={this.removeGrid}
+              className="action remove">
+              -grid
+            </button>
+          )}
         </div>
       </div>
     )

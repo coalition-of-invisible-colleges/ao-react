@@ -1320,6 +1320,19 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'grid-removed':
+      tasks.forEach((task, i) => {
+        if (task.taskId === ev.taskId) {
+          Object.entries(task.grid.rows).forEach(([y, row]) => {
+            Object.entries(row).forEach(([x, cell]) => {
+              task.subTasks = _.filter(task.subTasks, taskId => taskId !== cell)
+              task.subTasks.unshift(cell)
+            })
+          })
+          task.grid = false
+        }
+      })
+      break
     case 'grid-resized':
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {

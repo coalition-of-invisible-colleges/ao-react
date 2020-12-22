@@ -89,26 +89,33 @@ router.post('/events', (req, res, next) => {
       }
       break
     case 'ao-outbound-connected':
-      connector.postEvent(
-        req.body.address,
-        req.body.secret,
-        {
-          type: 'ao-inbound-connected',
-          address: state.serverState.cash.address,
-          secret: req.body.secret //
-        },
-        subscriptionResponse => {
-          if (!subscriptionResponse.lastInsertRowid) {
-            return res.status(200).send(['ao-connect failed'])
+      if (
+        validators.isNotes(req.body.address, errRes) &&
+        validators.isNotes(req.body.secret, errRes)
+      ) {
+        connector.postEvent(
+          req.body.address,
+          req.body.secret,
+          {
+            type: 'ao-inbound-connected',
+            address: state.serverState.cash.address,
+            secret: req.body.secret //
+          },
+          subscriptionResponse => {
+            if (!subscriptionResponse.lastInsertRowid) {
+              return res.status(200).send(['ao-connect failed'])
+            }
+            console.log('subscribe success, attempt ao connect')
+            events.aoOutboundConnected(
+              req.body.address,
+              req.body.secret,
+              utils.buildResCallback(res)
+            )
           }
-          console.log('subscribe success, attempt ao connect')
-          events.aoOutboundConnected(
-            req.body.address,
-            req.body.secret,
-            utils.buildResCallback(res)
-          )
-        }
-      )
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
       break
     case 'ao-inbound-connected':
       if (
@@ -933,6 +940,14 @@ router.post('/events', (req, res, next) => {
           req.body.width,
           utils.buildResCallback(res)
         )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
+
+    case 'grid-removed':
+      if (validators.isTaskId(req.body.taskId)) {
+        events.gridRemoved(req.body.taskId, utils.buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }

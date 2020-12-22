@@ -67,6 +67,42 @@ class AoApi {
       })
   }
 
+  async connectToAo(
+    address: string,
+    secret: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'ao-outbound-connected',
+      address: address,
+      secret: secret
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async linkCardOnAo(
+    taskId: string,
+    address: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'ao-linked',
+      address: address,
+      taskId: taskId
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async setQuorum(quorum: number): Promise<request.Response> {
     const act = {
       type: 'quorum-set',
@@ -419,7 +455,7 @@ class AoApi {
       })
   }
 
-  async refocusPile(taskId: string, inId: string): Promise<request.Response> {
+  async refocusPile(inId: string): Promise<request.Response> {
     const act = {
       type: 'pile-refocused',
       inId: inId
@@ -455,7 +491,7 @@ class AoApi {
   async setCardProperty(
     taskId: string,
     property: string,
-    value: number
+    value: any
   ): Promise<request.Response> {
     const act = {
       type: 'task-property-set',
@@ -888,6 +924,20 @@ class AoApi {
       taskId: taskId,
       height: height,
       width: width
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async removeGridFromCard(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'grid-removed',
+      taskId: taskId
     }
     return request
       .post('/events')

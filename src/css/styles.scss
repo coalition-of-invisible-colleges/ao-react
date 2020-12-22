@@ -735,7 +735,8 @@ textarea {
         }
 
         .minus,
-        .plus {
+        .plus,
+        .remove {
           outline: none;
           font-family: monospace;
           margin: 0;
@@ -754,12 +755,19 @@ textarea {
 
         .rows {
           .minus,
-          .plus {
+          .plus,
+          .remove {
             display: inline;
             left: -5.5em;
             margin-top: 0.6em;
             margin-right: 0.25em;
             padding: 0 0.75em;
+          }
+
+          .remove {
+            margin-top: 0;
+            left: 0;
+            top: -1.5em;
           }
         }
       }
@@ -768,6 +776,7 @@ textarea {
     // gridContainer inside the main card on the page
     .full .gridContainer {
       margin-bottom: 2.5em;
+      margin-top: 0.5em;
     }
 
     // main menu in bottom right of screen
@@ -2132,6 +2141,38 @@ textarea {
         width: 100%;
         height: 4em;
         margin: 0;
+      }
+    }
+
+    // jitsi watermark. iirc their website says they don't mind you hiding this if you're not for-profit.
+    .watermark {
+      display: none;
+    }
+
+    // p2p connect panel
+    #connect {
+      margin-bottom: 1em;
+
+      form {
+        margin-top: 1em;
+
+        .fieldset {
+          text-align: right;
+          position: relative;
+          transform: translateX(-15%);
+          margin-bottom: 0.5em;
+
+          input {
+            margin-left: 1em;
+            margin-bottom: 0.5em;
+          }
+        }
+
+        .tipMarker {
+          position: absolute;
+          left: 1em;
+          bottom: 1em;
+        }
       }
     }
   }

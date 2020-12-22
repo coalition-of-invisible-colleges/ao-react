@@ -697,6 +697,14 @@ function gridAdded(taskId, height, width, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function gridRemoved(taskId, callback) {
+  let newEvent = {
+    type: 'grid-removed',
+    taskId
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function gridResized(taskId, height, width, callback) {
   let newEvent = { type: 'grid-resized', taskId, height, width }
   dctrlDb.insertEvent(newEvent, callback)
@@ -776,6 +784,7 @@ module.exports = {
   tasksReceived,
   gridCreated,
   gridAdded,
+  gridRemoved,
   gridResized,
   gridPin,
   gridUnpin,
