@@ -18,7 +18,7 @@ export default class CardMenu extends React.Component<Props> {
   get renderMenuButton() {
     return (
       <div
-        className={'cardMenuButton'}
+        className="cardMenuButton"
         onDoubleClick={event => {
           event.stopPropagation()
           event.nativeEvent.stopImmediatePropagation()

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
+import api from '../client/api'
 import AoPalette from './palette'
 import AoBird from './bird'
 import AoUnread from './unread'
@@ -40,6 +41,15 @@ interface CardHudProps {
 
 @observer
 export default class CardHud extends React.Component<CardHudProps> {
+	constructor(props) {
+		super(props)
+		this.addGrid = this.addGrid.bind(this)
+	}
+
+	addGrid() {
+		api.addGridToCard(this.props.taskId, 3, 3)
+	}
+
 	render() {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
@@ -166,11 +176,26 @@ export default class CardHud extends React.Component<CardHudProps> {
 					</div>
 				)
 			case 'menu':
+				const grid = card.grid
+				const noGrid =
+					!grid ||
+					(grid.hasOwnProperty('height') && grid.height < 1) ||
+					(grid.hasOwnProperty('width') && grid.width < 1) ||
+					!grid.hasOwnProperty('height') ||
+					!grid.hasOwnProperty('width')
+
 				return (
-					<div className={'hud menu'}>
+					<div className="hud menu">
+						{noGrid && (
+							<div className="gridMenu action" onClick={this.addGrid}>
+								+grid
+							</div>
+						)}
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
-						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						{card.guild && card.guild.length >= 1 && (
+							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
+						)}
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 						<AoPalette taskId={taskId} />
 					</div>

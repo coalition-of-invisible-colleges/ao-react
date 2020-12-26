@@ -114,7 +114,7 @@ export default class AoMission extends React.PureComponent<
           return null
         }
         return (
-          <div onClick={this.startEditing} className={'mission full action'}>
+          <div onClick={this.startEditing} className="mission full action">
             <img className="badge" src={Badge} />
             {card.guild}
           </div>
@@ -122,7 +122,7 @@ export default class AoMission extends React.PureComponent<
       case 'mini before':
         if (card.guild) {
           return (
-            <span className={'mission mini'}>
+            <span className="mission mini">
               <img className="badge" src={Badge} />
               {card.guild}
             </span>
@@ -131,13 +131,13 @@ export default class AoMission extends React.PureComponent<
         return null
       case 'badge':
         if (card.guild) {
-          return <span className={'mission badge'}>{card.guild}</span>
+          return <span className="mission badge">{card.guild}</span>
         }
         return null
       case 'menu':
         return (
-          <div className={'mission menu'}>
-            <div onClick={this.startEditing} className={'action'}>
+          <div className="mission menu">
+            <div onClick={this.startEditing} className="action">
               <img className="badge" src={Badge} />
               {card.guild ? card.guild : 'add mission title'}
             </div>

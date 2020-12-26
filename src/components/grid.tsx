@@ -324,9 +324,10 @@ export default class AoGrid extends React.PureComponent<GridProps, GridState> {
       !grid.hasOwnProperty('height') ||
       !grid.hasOwnProperty('width')
     ) {
+      return null
       return (
-        <div className={'gridContainer'}>
-          <p onClick={this.addGrid} className={'action'}>
+        <div className="gridContainer noPad">
+          <p onClick={this.addGrid} className="action">
             +grid
           </p>
         </div>
@@ -336,7 +337,7 @@ export default class AoGrid extends React.PureComponent<GridProps, GridState> {
     return (
       <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>
         <div
-          className={'grid'}
+          className="grid"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(' + grid.width.toString() + ', 5em)',

@@ -39,7 +39,7 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
     let shitpostCard = aoStore.cardByName.get('shitposts')
 
     if (!shitpostCard) {
-      api.createCard('shitposts')
+      api.createCard('shitposts', true)
     }
   }
 

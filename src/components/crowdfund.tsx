@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
+import Chest from '../assets/images/chest.svg'
 
 interface Props {
   taskId: string
@@ -131,6 +132,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
         return (
           <div className="goal menu">
             <div onClick={this.startEditing} className="action">
+              <img src={Chest} />
               {hasGoal ? 'Goal: ' + goal : 'set crowdfund goal'}
             </div>
           </div>

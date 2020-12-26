@@ -224,11 +224,11 @@ Adds a crypto ticker to a member's list of crypto tickers. These display on the 
 
 These methods are for creating and working with cards on the AO.
 
-### createCard(name: string)
+### createCard(name: string, anonymous?: boolean)
 
-Creates a new card on the server, held by you. The card is timestamped. If the card already exists, nothing happens.
+Creates a new card on the server, held by you. The card is timestamped. If the card already exists, nothing happens. The new card will be placed in the `.subTasks` of your member card (unless anonymous).
 
-**Parameters:** `name` is the text of the card to create.
+**Parameters:** `name` is the text of the card to create. `anonymous`, if `true`, will cause the card to be created anonymously, without creator info and without putting the card in your member card.
 
 **Example:** createCard(aoStore.member.name + "'s secret stash") // create stash card for current user
 
@@ -298,7 +298,7 @@ Drops a card from your collection.
 
 **Example:**
 
-**See Also:**
+**See Also:** dropPile
 
 ### removeCards(taskIds: string[])
 
@@ -318,7 +318,7 @@ Drops the specified card and all the cards in it, recursively. This includes car
 
 **Example:**
 
-**See Also:**
+**See Also:** dropCard
 
 ### prioritizePile(inId: string)
 
@@ -328,7 +328,7 @@ Prioritizes all of the cards in the pile below the grid (to above the grid).
 
 **Example:**
 
-**See Also:**
+**See Also:** prioritizeCard
 
 ### refocusCard(taskId: string, inId: string)
 
@@ -338,17 +338,17 @@ Deprioritizes (refocuses) the card within another card, moving it from the `.pri
 
 **Example:**
 
-**See Also:**
+**See Also:** refocusPile
 
 ### refocusPile(inId: string)
 
-Refocuses (deprioritizes) all of the priorities in the specified card, movig them from above to below the grid.
+Refocuses (deprioritizes) all of the priorities in the specified card, moving them from above to below the grid.
 
 **Parameters:** `inId` is the `.taskId` of the card within which to dump all the priorities.
 
-**Example:**
+**Example:** refocusPile(aoStore.member.memberId) // dump all member priorities
 
-**See Also:**
+**See Also:** refocusCard
 
 ### completeCard(taskId: string)
 

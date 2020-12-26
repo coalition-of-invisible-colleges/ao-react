@@ -467,11 +467,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								</div>
 							)}
 							<AoGrid taskId={taskId} />
-							<AoChatStack
+							<AoStack
 								inId={taskId}
 								cards={subTaskCards}
+								cardStyle="face"
 								onNewCard={this.newSubTask}
 								onDrop={subTaskCard}
+								zone="subTasks"
 							/>
 							<AoCompleted taskId={taskId} />
 							<AoCardHud taskId={taskId} hudStyle="full after" />

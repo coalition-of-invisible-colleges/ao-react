@@ -52,7 +52,7 @@ export default class AoGridResizer extends React.PureComponent<
     }
 
     return (
-      <div className={'resizer'}>
+      <div className="resizer">
         <div className={'columns'}>
           <button
             type="button"
@@ -84,7 +84,7 @@ export default class AoGridResizer extends React.PureComponent<
             className="action plus">
             +
           </button>
-          {card.grid.width <= 1 && card.grid.height <= 1 && (
+          {(card.grid.width <= 1 || card.grid.height <= 1) && (
             <button
               type="button"
               onClick={this.removeGrid}

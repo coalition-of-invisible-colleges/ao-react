@@ -777,6 +777,10 @@ textarea {
     .full .gridContainer {
       margin-bottom: 2.5em;
       margin-top: 0.5em;
+
+      &.noPad {
+        margin-bottom: 0;
+      }
     }
 
     // main menu in bottom right of screen
@@ -1716,8 +1720,8 @@ textarea {
           0deg,
           rgba(102, 102, 102, 1) 0%,
           rgba(238, 238, 238, 1) 20%,
-          rgba(255, 255, 255, 1) 37%,
-          rgba(255, 255, 255, 1) 80%,
+          rgba(242, 242, 242, 1) 37%,
+          rgba(242, 242, 242, 1) 80%,
           rgba(102, 102, 102, 1) 100%
         );
       }
@@ -1989,7 +1993,7 @@ textarea {
 
     // palette: color selector component
     .palette {
-      width: max-content;
+      width: 100%;
 
       .swatch {
         background: grey;
@@ -2158,6 +2162,10 @@ textarea {
 
       img {
         max-width: 100%;
+      }
+
+      .action {
+        margin-top: 0.5em;
       }
     }
 

@@ -160,13 +160,16 @@ class AoApi {
       })
   }
 
-  async createCard(name: string): Promise<request.Response> {
+  async createCard(
+    name: string,
+    anonymous?: boolean
+  ): Promise<request.Response> {
     const act = {
       type: 'task-created',
       name: name,
       color: 'blue',
-      deck: [aoStore.member.memberId],
-      inId: aoStore.memberCard.taskId,
+      deck: anonymous ? [] : [aoStore.member.memberId],
+      inId: anonymous ? null : aoStore.memberCard.taskId,
       prioritized: false
     }
     return request

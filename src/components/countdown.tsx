@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDistanceToNow, format } from 'date-fns'
 import { HudStyle } from './cardHud'
+import Timecube from '../assets/images/timecube.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -129,7 +130,7 @@ export default class AoCountdown extends React.Component<
 
     if (this.state.editing) {
       return (
-        <div className={'countdown'}>
+        <div className="countdown">
           <RenderDatePicker
             startTime={this.state.startTime}
             onChange={this.onChange}
@@ -146,6 +147,7 @@ export default class AoCountdown extends React.Component<
         <div
           onClick={this.startEditing}
           className={'countdown action ' + this.props.hudStyle}>
+          <img src={Timecube} />
           {card.book.startTs
             ? format(card.book.startTs, 'MMMM d, yyyy @ h:mm a')
             : 'schedule event'}
@@ -160,9 +162,9 @@ export default class AoCountdown extends React.Component<
     return (
       <Tippy
         interactive={true}
-        placement={'top'}
+        placement="top"
         delay={[475, 200]}
-        theme={'translucent'}
+        theme="translucent"
         appendTo={document.getElementById('root')}
         content={
           <div style={{ width: 'max-content' }}>
