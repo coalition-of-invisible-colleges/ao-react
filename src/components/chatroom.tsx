@@ -1,41 +1,53 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
+import api from '../client/api'
 import Jitsi from 'react-jitsi'
 import config from '../../configuration'
 
-const chatroomName = 'Lounge'
-
-interface State {
-  show?: boolean
-}
-
 @observer
-export default class AoChatroom extends React.PureComponent<{}, State> {
+export default class AoChatroom extends React.PureComponent {
   constructor(props) {
     super(props)
-    this.state = { show: false }
-    this.show = this.show.bind(this)
+    // this.state = { show: false }
+    // this.show = this.show.bind(this)
     this.hide = this.hide.bind(this)
   }
 
-  show() {
-    console.log('showing chatroom')
-    this.setState({ show: true })
+  componentWillUnmount() {
+    aoStore.setCurrentChatroom(null)
+    api.visitCard(aoStore.currentChatroom, false)
   }
+
+  // show() {
+  //   console.log('showing chatroom')
+  //   this.setState({ show: true })
+  //   api.visitCard(aoStore.currentChatroom, true)
+  // }
 
   hide() {
     console.log('hiding chatroom')
-    this.setState({ show: false })
+    api.visitCard(aoStore.currentChatroom, false)
+    aoStore.setCurrentChatroom(null)
   }
 
   render() {
-    if (!this.state.show) {
-      return (
-        <div id="chatroom" className="action closed" onClick={this.show}>
-          Chat
-        </div>
-      )
+    // if (!this.state.show) {
+    //   return (
+    //     <div id="chatroom" className="action closed" onClick={this.show}>
+    //       {aoStore.currentChatroom && 'Rejoin '}Chat
+    //     </div>
+    //   )
+    // }
+
+    if (!aoStore.currentChatroom) {
+      return null
+    }
+
+    const card = aoStore.hashMap.get(aoStore.currentChatroom)
+    if (!card) {
+      console.log('Attempt to access chatroom on missing card.')
+      return null
     }
 
     return (
@@ -47,7 +59,7 @@ export default class AoChatroom extends React.PureComponent<{}, State> {
               ? config.jitsi.domain
               : 'meet.dctrl.ca'
           }
-          roomName={chatroomName}
+          roomName={card.name.substring(0, 60)}
           displayName={aoStore.member.name}
           containerStyle={{
             width: 'calc((100vw - 39em)/2)',
@@ -55,7 +67,7 @@ export default class AoChatroom extends React.PureComponent<{}, State> {
           }}
         />
         <div className="action" onClick={this.hide}>
-          Hide Chatroom
+          Leave {card.guild} Chatroom
         </div>
       </div>
     )

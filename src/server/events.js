@@ -673,6 +673,16 @@ function taskSeen(taskId, memberId, callback) {
   dctrlDb.insertEvent(newEvent, callback)
 }
 
+function taskVisited(taskId, memberId, area, callback) {
+  let newEvent = {
+    type: 'task-visited',
+    taskId,
+    memberId,
+    area
+  }
+  dctrlDb.insertEvent(newEvent, callback)
+}
+
 function gridCreated(name, height, width, color, deck, callback) {
   let taskId = uuidV1()
   let newEvent = {
@@ -782,6 +792,7 @@ module.exports = {
   invoiceCreated,
   taskBoostedLightning,
   tasksReceived,
+  taskVisited,
   gridCreated,
   gridAdded,
   gridRemoved,

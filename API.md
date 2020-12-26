@@ -460,6 +460,16 @@ Sets a mission title for the card, upgrading the card to a mission and listing i
 
 **See Also:**
 
+### visitCard(taskId: string, inChat: boolean)\*\*\*
+
+Moves your avatar to a card, so others can see where you are.
+
+**Parameters:** `taskId` is the `.taskId` of the card where your avatar will be moved. `inChat` is whether you are in the chatroom (true) or visiting the card without being in the video chatroom (false).
+
+**Example:**
+
+**See Also:**
+
 ### setCardProperty(taskId: string, property: string, value: any)
 
 Sets the specified property to the specified value on a card. This is the card equivalent of updateMemberField() (named "property" instead of "field" to distinguish cards from members).
@@ -842,7 +852,7 @@ The Meme object is the attachment part of a card and has the following propertie
 
 ## Connected peer AOs
 
-The AO helps install and correctly configure tor, and the tor address of the AO server will display in the AO p2p tab of the Bull panel for members to see and share. When you enter the hostname and address of another AO into the AO p2p tab, it attempts to connect to that AO privately over tor.
+The AO helps install and correctly configure tor, and the tor address of the AO server will display in the AO p2p tab of the Bull panel for members to see and share. When you enter the hostname and secret of another AO into the AO p2p tab, it attempts to connect to that AO privately over tor.
 
 When two AOs are connected, they can see each other's AO server name. They can also sync the contents of specified cards over tor, allowing the syndication of content through multiple secure hops within an AO network.
 

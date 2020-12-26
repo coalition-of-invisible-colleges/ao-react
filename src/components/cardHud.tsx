@@ -15,6 +15,7 @@ import AoPreview from './preview'
 import AoMission from './mission'
 import AoBark from './bark'
 import AoTally from './tally'
+import AoLilypad from './lilypad'
 
 export type HudStyle =
 	| 'context'
@@ -120,6 +121,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCoin taskId={taskId} />
+						<AoLilypad taskId={taskId} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)

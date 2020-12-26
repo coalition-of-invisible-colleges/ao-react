@@ -56,7 +56,7 @@ class RenderCard extends React.Component<RenderProps> {
             </title>
           </Helmet>
           <AoDiscardZone />
-          <AoContextCard task={card} cardStyle={'full'} />
+          <AoContextCard task={card} cardStyle="full" />
           <AoHud />
         </div>
       </Tour>

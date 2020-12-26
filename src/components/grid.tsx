@@ -114,7 +114,7 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
               api.discardCardFromCard(move.from.taskId, move.from.inId)
             })
             .then(() =>
-              api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+              api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
             )
         } else if (move.to.taskId) {
           api

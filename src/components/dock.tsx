@@ -14,7 +14,7 @@ interface State {
 }
 
 @observer
-export default class AoDock extends React.PureComponent<{}, State> {
+export default class AoDock extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = {}

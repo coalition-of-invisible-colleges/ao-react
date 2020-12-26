@@ -907,6 +907,22 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'task-visited':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isMemberId(req.body.memberId, errRes) &&
+        Number.isInteger(req.body.area)
+      ) {
+        events.taskVisited(
+          req.body.taskId,
+          req.body.memberId,
+          req.body.area,
+          utils.buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'grid-created':
       if (
         validators.isNotes(req.body.name, errRes) &&

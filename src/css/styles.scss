@@ -1936,7 +1936,7 @@ textarea {
       border-radius: 1em;
 
       &.closed {
-        top: 9.25em;
+        top: 6.75em;
       }
     }
 
@@ -2174,6 +2174,66 @@ textarea {
           bottom: 1em;
         }
       }
+    }
+
+    // about section on the login page
+    #login {
+      & > .about {
+        width: 90vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+
+        & > h1 {
+          display: block;
+        }
+
+        & > p {
+          max-width: 60vw;
+          display: block;
+          text-align: center;
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        & > .flex {
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: row;
+          justify-content: center;
+          align-items: auto;
+          align-content: start;
+
+          & > div {
+            flex: 0 0 auto;
+            margin: 1em;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5em;
+            border-radius: 0.5em;
+            width: 22vw;
+
+            ul {
+              text-align: left;
+              // text-indent: 1em;
+              padding-left: 2em;
+              padding-right: 1em;
+              margin-left: 0em;
+
+              li {
+                margin-bottom: 0.5em;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // area for avatars on the card
+    .lilypad {
+      position: absolute;
+      bottom: 0.5em;
+      left: 0.5em;
     }
   }
 }

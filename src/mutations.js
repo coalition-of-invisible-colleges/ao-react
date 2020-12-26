@@ -1290,6 +1290,21 @@ function tasksMuts(tasks, ev) {
         // so they do not need to be checked for valid references to other cards (yet)
       })
       break
+    case 'task-visited':
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          task.avatars = _.filter(
+            task.avatars,
+            avatarLocation => avatarLocation.memberId !== ev.memberId
+          )
+          task.avatars.push({
+            memberId: ev.memberId,
+            timestamp: ev.timestamp,
+            area: ev.area
+          })
+        }
+      })
+      break
     case 'member-charged':
       tasks.forEach(task => {
         if (task.taskId === ev.memberId) {

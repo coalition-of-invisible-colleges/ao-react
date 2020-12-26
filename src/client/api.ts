@@ -855,6 +855,22 @@ class AoApi {
       })
   }
 
+  async visitCard(taskId: string, inChat = false): Promise<request.Response> {
+    const act = {
+      type: 'task-visited',
+      taskId: taskId,
+      memberId: aoStore.member.memberId,
+      area: inChat ? 1 : 0
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async markSeen(taskId): Promise<request.Response> {
     const task: Task = aoStore.hashMap.get(taskId)
     const act = {

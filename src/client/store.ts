@@ -74,6 +74,7 @@ export interface Task {
   time: Usertime[]
   created: number
   grid?: Grid
+  avatars?: AvatarLocation[]
 }
 
 export interface Meme {
@@ -120,6 +121,12 @@ export interface Signature {
   memberId: string
   timestamp: Date
   opinion: number | string
+}
+
+export interface AvatarLocation {
+  memberId: string
+  timestamp: Date
+  area: number
 }
 
 interface Output {
@@ -521,8 +528,8 @@ class AoStore {
     this.currentCard = taskId
   }
   @action.bound
-  setCurrentChatroom(roomName: string) {
-    this.currentChatroom = roomName
+  setCurrentChatroom(taskId: string) {
+    this.currentChatroom = taskId
   }
   @action.bound
   addToDiscardHistory(tasks: Task[]) {
