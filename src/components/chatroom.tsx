@@ -63,7 +63,7 @@ export default class AoChatroom extends React.Component<Props, State> {
               ? config.jitsi.domain
               : 'meet.dctrl.ca'
           }
-          roomName={card.name.substring(0, 60)}
+          roomName={card.guild.substring(0, 60)}
           displayName={aoStore.member.name}
           containerStyle={{
             width: 'calc((100vw - 39em)/2)',
