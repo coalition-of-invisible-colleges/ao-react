@@ -2145,7 +2145,8 @@ textarea {
     }
 
     // jitsi watermark. iirc their website says they don't mind you hiding this if you're not for-profit.
-    .watermark {
+    .watermark,
+    .leftwatermark {
       display: none;
     }
 

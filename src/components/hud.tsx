@@ -139,7 +139,7 @@ export default class AoHud extends React.Component<{}, undefined> {
         </div>
         <AoTickerHud />
         <AoShitposts />
-        <AoChatroom />
+        <AoChatroom taskId={aoStore.currentChatroom} />
         <AoScore prefix={<span>Points: </span>} />
       </div>
     )

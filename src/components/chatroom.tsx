@@ -5,30 +5,50 @@ import api from '../client/api'
 import Jitsi from 'react-jitsi'
 import config from '../../configuration'
 
+interface Props {
+  taskId: string
+}
+
+interface State {
+  flash?: boolean
+}
+
 @observer
-export default class AoChatroom extends React.Component {
+export default class AoChatroom extends React.Component<Props, State> {
   constructor(props) {
     super(props)
+    this.state = {}
     this.hide = this.hide.bind(this)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.taskId !== this.props.taskId) {
+      this.setState({ flash: true })
+      process.nextTick(() => this.setState({ flash: false }))
+    }
+  }
+
   componentWillUnmount() {
+    api.visitCard(this.props.taskId, false)
     aoStore.setCurrentChatroom(null)
-    api.visitCard(aoStore.currentChatroom, false)
   }
 
   hide() {
     console.log('hiding chatroom')
-    api.visitCard(aoStore.currentChatroom, false)
+    api.visitCard(this.props.taskId, false)
     aoStore.setCurrentChatroom(null)
   }
 
   render() {
-    if (!aoStore.currentChatroom) {
+    if (this.state.flash) {
+      return <div>Reloading chatroom...</div>
+    }
+
+    if (!this.props.taskId) {
       return null
     }
 
-    const card = aoStore.hashMap.get(aoStore.currentChatroom)
+    const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) {
       console.log('Attempt to access chatroom on missing card.')
       return null
