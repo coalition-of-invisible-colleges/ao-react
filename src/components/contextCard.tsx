@@ -470,6 +470,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							<AoStack
 								inId={taskId}
 								cards={subTaskCards}
+								showAdd={priorityCards && priorityCards.length >= 1}
+								addButtonText="+card"
+								hideAddWhenCards={true}
 								cardStyle="face"
 								onNewCard={this.newSubTask}
 								onDrop={subTaskCard}

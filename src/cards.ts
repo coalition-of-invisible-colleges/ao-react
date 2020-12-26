@@ -101,11 +101,15 @@ export function subTaskCard(move: CardPlay) {
 			}
 			break
 		case 'grid':
-			api.unpinCardFromGrid(
-				move.from.coords.x,
-				move.from.coords.y,
-				move.from.inId
-			)
+			api
+				.unpinCardFromGrid(
+					move.from.coords.x,
+					move.from.coords.y,
+					move.from.inId
+				)
+				.then(res => {
+					api.findOrCreateCardInCard(nameFrom, move.to.inId)
+				})
 			break
 		case 'discard':
 			aoStore.popDiscardHistory()
