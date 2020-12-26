@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { observable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
-import { HudStyle } from './cardHud'
 import FileViewer from 'react-file-viewer'
 import path from 'path'
 import api from '../client/api'
@@ -14,7 +13,6 @@ import mime from 'mime-types'
 
 interface Props {
   taskId: string
-  hudStyle: HudStyle
   onNextTrack?: (taskId: string) => void
 }
 

@@ -865,3 +865,650 @@ When two AOs are connected, they can see each other's AO server name. They can a
 - `lastContact`: The UNIX timestamp of the last time contact was had with this server.
 
 - `links`: Linked cards across the two AOs (?). Their contents are kept in sync (append-only).
+
+# ao-react Component Model
+
+React and other reactive web frameworks structure the page as a hierarchy of nested components. ao-react shares most of its server code with <a href=https://github.com/AutonomousOrganization/ao-3>ao-3</a>, but the front-end application, composed of components, has been rewritten from the ground up. Following is a list of the components in ao-react, including their purpose, an explanation of the props (arguments) they take, and which other components they are used with. The components are the most rapidly-changing part of the codebase, and also the most specific to the GUI of ao-react, so this is less of a standard and more a description of how this version of the AO looks and acts (whereas the API is meant to evolve into a standard).
+
+The **Used By** and **Uses** fields denote which other ao-react components refer to or are referred to by the current component.
+
+# Components on cards
+
+These components are part of a card, e.g., the bonus points on a card.
+
+### AoAttachment
+
+If the card has a meme (file attachment) associated with it, the attachment component displays a preview of the meme associated with a card, if the filetype is supported. Below this, its filename is displayed as a link, which can be clicked to download the file. The attachment displays below the card's name (main text).
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card that may have an attachment to display.
+- **onNextTrack?: (taskId: string) => void:** Currently unused. Plans for a playlist feature.
+
+**Used By:** AoContextCard
+
+**Uses:** None
+
+### AoBirdAutocomplete
+
+A dropdown autocomplete component containing a list of all members who are not currently holding the card, and to whom a pass is not pending. (You can still send a card to someone who is already holding it, but you must type their full username exactly without aid of this autocomplete.)
+
+The component uses [Google's Material UI Autocomplete component](https://material-ui.com/api/autocomplete/).
+
+Currently, only one name can be entered at a time, however, by extending the AO API call `passCard()` using the labels feature of the Material UI autocomplete, it should be possible to extend the component the allow multiple usernames to be entered.
+
+**Props:**
+
+- **taskId? (string):** An optional taskId of the card to use to filter the list of member names. If omitted, the full list of members will display in the autocomplete.
+- **onChange: ((memberId: string) => void):** A callback function for when a member is selected from the list.
+
+**Used By:** AoBird, AoGifts
+
+**Uses:** None
+
+### AoBird
+
+An icon of a bird in the top-left corner of every card. Tap the bird to pop up a box (AoBirdAutocomplete) where you can type a member's name and click Give to send them the card. The bird displays next to it the the number of pending passes that have not yet been accepted. Hovering on the bird shows a tooltip listing who has passed the card to whom. Anyone can see this list, and passes are removed from the list when the card is accepted or rejected by the recipient.
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card on which to put a bird.
+
+**Used By:** AoCardHud
+
+**Uses:** AoMemberIcon
+
+### AoCardHud
+
+The card's H.U.D. (Heads-Up Display) is a container component that displays an informational overlay for the card, made up of a number of other smaller components. The card's HUD is the part of the card that is an overlay about the current card, not its contents (main content and subcards).
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card for which to display an informational overlay.
+- **hudStyle (HudStyle):** A HudStyle describing which type of HUD to display. Some card styles, such as 'full' have their HUD split into a top and bottom section with HudStyles 'full before' and 'full after'. The AoCardHud should be included twice on these cards, before and after the content, with the appropriate HudStyle passed in.
+- **prioritiesShown? (boolean):** Whether to show the priorities on the `collapsed`-style card. Can be omitted for other styles of card.
+- **onTogglePriorities? ((any) => void):** Callback function that is triggered when the button to expand priorities is tapped on the `collapsed`-style card.
+- **noPopups? (boolean):** For deeply nested cards, send `true` to disable Tippy popups, which can otherwise nest recursively.
+
+**Used By:** AoContextCard
+
+**Uses:** AoPalette, AoBird, AoUnread, AoCoin, AoCheckbox, AoValue, AoCrowdfund, AoCountdown, AoTimeClock, AoCardMenu, AoPreview, AoMission, AoBark, AoTally, AoLilypad
+
+### AoCardMenu
+
+The card menu is three vertical dots that show up in the bottom-right corner of every card. Tapping the menu icon opens a menu with additional card operations that don't fit well on the face of the card.
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card's menu to display.
+- **hudStyle: HudStyle):** The style of card being displayed, which will modify the appearance and class of the menu button.
+- **noPopups? (boolean):** For deeply nested cards, send `true` to disable Tippy popups, which can otherwise nest recursively.
+
+**Used By:** AoCardHud
+
+**Uses:** AoCardHud, with hudStyle="menu", is used to display the contents of a card's menu. The menu components are simply expanded versions of the components displayed on the face of the card.
+
+### AoCheckbox
+
+The interactive checkbox that displays in the top-right corner of every card. The checkbox only displays if you are holding the card (by clicking the moon; see grabCard() in API). When checked, the checkbox sends an a `task-claimed` event to the server using the API function completeCard(). This checks off the card for the current member and claim any bounty on the card.
+
+On grid cards displayed in `mini` style, the intention is to merge the checkbox and the moon, so that a click on the moon will reveal the checkbox.
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card's menu to display.
+- **hudStyle: HudStyle):** The style of card being displayed, which will modify the appearance and class of the menu button.
+
+**Used By:** AoCardHud
+
+**Uses:** None
+
+### AoCheckmark
+
+A non-interactive checkmark that can be used throughout the AO to display checkmarks that members have made. The checkmark uses a hard-coded inline SVG so the color can be set at runtime (this was not working any other way). On hover a tooltip preview of the card in `compact` style is shown.
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card's menu to display. This affects the color and whether it is checked. If omitted, the default color is white.
+- **color?: (string):** The color to display the checkmark in. If set, takes precedence over the card's color.
+- **onGoIn?: ((event) => void):** A callback function that will be executed when the checkmark is double-clicked. If omitted, nothing will happen when the checkmark is double-clicked.
+
+**Used By:** AoContextCard, to display a whole card as in `checkmark`-style; AoScore, as a graphic to designate a member's score; AoTally, as a graphic to designate that a member completed the task
+
+**Uses:** AoContextCard is used to display the card preview on hover.
+
+### AoCoin
+
+The moon, or coin, that appears on every card in the bottom center, allows the card to be grabbed and dropped. Grabbing a card adds it to your collection so it can't be lost or deleted by other members. When you click the coin, the API method grabCard() triggers a `task-grabbed` event on the server, and the card is grabbed and the coin lights up. When clicked a second time, the API method dropCard triggers a `task-dropped` event, toggling the coin back off. Doing other actions to a card, such as placing it somewhere, will also grab the card automatically (since you can't move something without picking it up first).
+
+**Props:**
+
+- **taskId (string):** The `.taskId` of the card for which to display a coin.
+- **noPopups? (boolean):** For deeply nested cards, send `true` to disable Tippy popups, which can otherwise nest recursively.
+
+**Used By:** AoCardHud, AoContextCard
+
+**Uses:** AoStack, to display the list of members holding the card.
+
+### AoCompleted
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoCountdown
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoCrowdfund
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+## Panel components
+
+### AoBounties
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoCalendar
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoCardComposer
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoCard
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoChatroom
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoChatStack
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoConnect
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoContextCard
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoControls
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoDiscard
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoDock
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoDragZone
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoDropZone
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoFob
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoGem
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoGifts
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoGridResizer
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoGrid
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoHome
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoHub
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoHud
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoLazyTippy
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoLightning
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoLilypad
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoLogin
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoMemberIcon
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoMembers
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoMember
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoMissions
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoMission
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoOptions
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoPalette
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoPaper
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoPassword
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoPopupPanel
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoPreview
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoProposals
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoQuorum
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoReactivator
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoRent
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoReserve
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoResourcePanel
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoResources
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoReturnPile
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoScore
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoSearch
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoServerName
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoShitposts
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoStack
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoStatus
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoTally
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoTickerHud
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoTimeclock
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoTip
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoTour
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoUnread
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoUsername
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoValue
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+### AoVolume
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+## Components not currently in use
+
+### AoBark
+
+**Props:**
+
+**Used By:**
+
+**Uses:**
+
+# Misc Reference info
+
+export type HudStyle =
+| 'context'
+| 'full before'
+| 'full after'
+| 'face before'
+| 'face after'
+| 'collapsed'
+| 'collapsed-mission'
+| 'mini before'
+| 'mini after'
+| 'badge'
+| 'menu'

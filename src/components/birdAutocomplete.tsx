@@ -16,7 +16,10 @@ interface State {
 }
 
 @observer
-export default class AoBird extends React.PureComponent<Props, State> {
+export default class AoBirdAutocomplete extends React.PureComponent<
+  Props,
+  State
+> {
   constructor(props) {
     super(props)
     this.state = { query: '' }
