@@ -6,11 +6,9 @@ import Jitsi from 'react-jitsi'
 import config from '../../configuration'
 
 @observer
-export default class AoChatroom extends React.PureComponent {
+export default class AoChatroom extends React.Component {
   constructor(props) {
     super(props)
-    // this.state = { show: false }
-    // this.show = this.show.bind(this)
     this.hide = this.hide.bind(this)
   }
 
@@ -19,12 +17,6 @@ export default class AoChatroom extends React.PureComponent {
     api.visitCard(aoStore.currentChatroom, false)
   }
 
-  // show() {
-  //   console.log('showing chatroom')
-  //   this.setState({ show: true })
-  //   api.visitCard(aoStore.currentChatroom, true)
-  // }
-
   hide() {
     console.log('hiding chatroom')
     api.visitCard(aoStore.currentChatroom, false)
@@ -32,14 +24,6 @@ export default class AoChatroom extends React.PureComponent {
   }
 
   render() {
-    // if (!this.state.show) {
-    //   return (
-    //     <div id="chatroom" className="action closed" onClick={this.show}>
-    //       {aoStore.currentChatroom && 'Rejoin '}Chat
-    //     </div>
-    //   )
-    // }
-
     if (!aoStore.currentChatroom) {
       return null
     }
