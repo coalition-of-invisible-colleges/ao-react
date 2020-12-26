@@ -1292,11 +1292,16 @@ function tasksMuts(tasks, ev) {
       break
     case 'task-visited':
       tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
+        if (task.hasOwnProperty('avatars')) {
           task.avatars = _.filter(
             task.avatars,
             avatarLocation => avatarLocation.memberId !== ev.memberId
           )
+        }
+        if (task.taskId === ev.taskId) {
+          if (!task.hasOwnProperty('avatars')) {
+            task.avatars = []
+          }
           task.avatars.push({
             memberId: ev.memberId,
             timestamp: ev.timestamp,
