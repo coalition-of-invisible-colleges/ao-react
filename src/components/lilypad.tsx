@@ -27,6 +27,7 @@ export default class AoChatroom extends React.Component<Props, State> {
 
   hopHere() {
     api.visitCard(this.props.taskId, false)
+    aoStore.setCurrentChatroom(null)
   }
 
   joinChat() {
