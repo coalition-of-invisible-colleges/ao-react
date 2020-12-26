@@ -80,19 +80,29 @@ export default class AoChatroom extends React.Component<Props, State> {
       ? card.avatars.filter(avatarLocation => avatarLocation.area === 1).length
       : 0
 
+    const youAreHere = card.avatars
+      ? card.avatars.some(
+          avatarLocation => avatarLocation.memberId === aoStore.member.memberId
+        )
+      : false
+
     let button
     let altMessage
     if (!card.guild || card.guild.length <= 1) {
+      let message = youAreHere ? 'You Are Here' : 'Move Here'
       button = (
         <div className="lilypad action" onClick={this.hopHere}>
-          Move Here{cardPop >= 1 && ' (' + cardPop + ')'}
+          {message}
+          {cardPop >= 1 && ' (' + cardPop + ')'}
         </div>
       )
       altMessage = 'Move your avatar here'
     } else {
+      let message = youAreHere ? 'In Chat' : 'Join Chat'
       button = (
         <div className="lilypad action" onClick={this.joinChat}>
-          Join Chat{cardPop >= 1 && ' (' + chatroomPop + '/' + cardPop + ')'}
+          {message}
+          {cardPop >= 1 && ' (' + chatroomPop + '/' + cardPop + ')'}
         </div>
       )
       altMessage = 'Join mission video call'
