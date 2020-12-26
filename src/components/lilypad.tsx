@@ -89,14 +89,15 @@ export default class AoChatroom extends React.Component<Props, State> {
     let button
     let altMessage
     if (!card.guild || card.guild.length <= 1) {
-      let message = youAreHere ? 'You Are Here' : 'Move Here'
-      button = (
-        <div className="lilypad action" onClick={this.hopHere}>
-          {message}
-          {cardPop >= 1 && ' (' + cardPop + ')'}
-        </div>
-      )
-      altMessage = 'Move your avatar here'
+      return null
+      // let message = youAreHere ? 'You Are Here' : 'Move Here'
+      // button = (
+      //   <div className="lilypad action" onClick={this.hopHere}>
+      //     {message}
+      //     {cardPop >= 1 && ' (' + cardPop + ')'}
+      //   </div>
+      // )
+      // altMessage = 'Move your avatar here'
     } else {
       let message = youAreHere ? 'In Chat' : 'Join Chat'
       button = (
