@@ -36,11 +36,12 @@ export default class CardMenu extends React.Component<Props> {
     return (
       <LazyTippy
         zIndex={5}
-        content={<AoCardHud taskId={this.props.taskId} hudStyle={'menu'} />}
+        content={<AoCardHud taskId={this.props.taskId} hudStyle="menu" />}
         interactive={true}
-        trigger={'click'}
-        placement={'top-end'}
-        appendTo={document.getElementById('root')}>
+        trigger="click"
+        placement="top-end"
+        appendTo={document.getElementById('root')}
+        theme="cardMenu">
         {this.renderMenuButton}
       </LazyTippy>
     )

@@ -794,6 +794,7 @@ textarea {
     // main menu, inside a Tippy
     #mainMenu {
       padding: 0.25em 0em;
+
       .action {
         margin-bottom: 0.5em;
         margin-top: 0.5em;
@@ -867,7 +868,7 @@ textarea {
     #bounties,
     #shitposts {
       .results {
-        margin-right: 0.5em;
+        // margin-right: 0.5em;
       }
     }
 
@@ -911,6 +912,7 @@ textarea {
 
       .popupPanel {
         position: relative;
+        padding: 1em;
 
         & > .action {
           position: absolute;
@@ -959,8 +961,8 @@ textarea {
 
         & > div > .action {
           position: absolute;
-          right: 0;
-          bottom: 0;
+          right: 0.5em;
+          bottom: 0.5em;
         }
 
         form {
@@ -1057,6 +1059,10 @@ textarea {
 
     // proposals popup panel
     #proposals {
+      .popupPanel {
+        padding: 1em;
+      }
+
       .actionCircle {
         left: 0.5em;
         top: calc(45vh + 6.75em);
@@ -1497,7 +1503,7 @@ textarea {
 
     // panel opened by an .actionCircle button
     .popupPanel {
-      padding-left: 0.5em;
+      padding: 0.5em;
       overflow-y: auto;
 
       .left {
@@ -1692,7 +1698,29 @@ textarea {
 
     // the card menu
     .hud.menu {
-      padding-top: 0.25em;
+      background: white;
+      color: black;
+
+      .action {
+        color: black;
+        width: calc(100% - 1em);
+        border: none;
+        border-radius: 0;
+        text-shadow: none;
+        margin: 0;
+      }
+
+      .action,
+      .palette {
+        background: linear-gradient(
+          0deg,
+          rgba(102, 102, 102, 1) 0%,
+          rgba(238, 238, 238, 1) 20%,
+          rgba(255, 255, 255, 1) 37%,
+          rgba(255, 255, 255, 1) 80%,
+          rgba(102, 102, 102, 1) 100%
+        );
+      }
     }
 
     // server name display/editor, on options page
@@ -1964,6 +1992,7 @@ textarea {
       width: max-content;
 
       .swatch {
+        background: grey;
         display: inline-block;
         position: relative;
         margin: 0.75em 1em 2em 1em;
@@ -1980,12 +2009,13 @@ textarea {
           margin: -0.6em;
           &.selected,
           &:hover {
-            border-color: white;
+            border-color: black;
             border-radius: 1em;
           }
         }
 
         .label {
+          color: black;
           margin-top: 0.75em;
           position: absolute;
           left: 50%;
@@ -2235,6 +2265,37 @@ textarea {
       position: absolute;
       bottom: 0.5em;
       left: 0.5em;
+    }
+
+    // remove padding on Tippy box
+    .tippy-content {
+      padding: 0;
+    }
+
+    // callout arrow for the Tippy card menu
+    .tippy-box[data-theme~='cardMenu'][data-placement^='top']
+      > .tippy-arrow::before,
+    .tippy-box[data-theme~='cardMenu'][data-placement^='bottom']
+      > .tippy-arrow::before,
+    .tippy-box[data-theme~='cardMenu'][data-placement^='left']
+      > .tippy-arrow::before,
+    .tippy-box[data-theme~='cardMenu'][data-placement^='right']
+      > .tippy-arrow::before {
+      border-top-color: white;
+      color: white;
+    }
+
+    // clear aka refocusAll button on a card
+    .refocusAll {
+      position: relative;
+      width: 100%;
+      height: 0;
+
+      button {
+        position: absolute;
+        top: -3.15em;
+        right: 0;
+      }
     }
   }
 }

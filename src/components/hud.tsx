@@ -113,12 +113,12 @@ export default class AoHud extends React.Component<{}, undefined> {
             <AoMissions />
           </AoPopupPanel>
         </div>
-        <div id={'members'}>
+        <div id="members">
           <AoPopupPanel
             iconSrc={MemberIcon}
-            tooltipText={'Members'}
-            tooltipPlacement={'right'}
-            panelPlacement={'right'}
+            tooltipText="Members"
+            tooltipPlacement="right"
+            panelPlacement="right"
             id="tour-members">
             <AoMembers />
           </AoPopupPanel>

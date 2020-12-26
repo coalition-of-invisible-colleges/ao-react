@@ -65,6 +65,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.newPriority = this.newPriority.bind(this)
 		this.newSubTask = this.newSubTask.bind(this)
 		this.goInCard = this.goInCard.bind(this)
+		this.refocusAll = this.refocusAll.bind(this)
 		this.onHover = this.onHover.bind(this)
 		this.renderCardContent = this.renderCardContent.bind(this)
 		this.clearPendingPromise = this.clearPendingPromise.bind(this)
@@ -136,6 +137,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 		goInCard(card, this.props.cardStyle === 'context')
 		this.setState({ redirect: card.taskId })
+	}
+
+	refocusAll() {
+		api.refocusPile(this.props.task.taskId)
 	}
 
 	async onHover(event) {
@@ -436,9 +441,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onMouseOver={this.onHover}
 							onMouseOut={this.clearPendingPromise}>
 							<AoPaper taskId={taskId} />
-							<AoCardHud taskId={taskId} hudStyle={'full before'} />
+							<AoCardHud taskId={taskId} hudStyle="full before" />
 							<div className="content">
-								<AoMission taskId={taskId} hudStyle={'full before'} />
+								<AoMission taskId={taskId} hudStyle="full before" />
 								{member && <AoMemberIcon memberId={taskId} />}
 								<AoAttachment taskId={taskId} hudStyle="full before" />
 								{this.renderCardContent(content)}
@@ -454,6 +459,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								onDrop={prioritizeCard}
 								zone="priorities"
 							/>
+							{priorityCards && priorityCards.length > 6 && (
+								<div className="refocusAll">
+									<button className="action" onClick={this.refocusAll}>
+										refocus
+									</button>
+								</div>
+							)}
 							<AoGrid taskId={taskId} />
 							<AoChatStack
 								inId={taskId}

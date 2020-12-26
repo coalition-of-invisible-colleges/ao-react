@@ -82,10 +82,7 @@ class AoTimeClock extends React.PureComponent<TimeClockProps, TimeClockState> {
           className={this.state.timer ? 'started action' : 'stopped action'}>
           {this.state.timer ? 'stop timeclock' : 'start timeclock'}
         </div>
-        <div className={'history'}>
-          <p>Activity Log</p>
-          <AoTimeHistory taskId={this.props.taskId} />
-        </div>
+        <AoTimeHistory taskId={this.props.taskId} />
         {this.state.timer || this.state.seconds > 0 ? (
           <div>{this.toHHMMSS()}</div>
         ) : (
@@ -204,13 +201,18 @@ class AoTimeHistory extends React.Component<TimeHistoryProps> {
   }
 
   render() {
+    if (this.timeLog.length <= 0) {
+      return null
+    }
+
     return (
-      <React.Fragment>
+      <div className="history">
+        <p>Activity Log</p>
         <div className="cardTimeLog">
           <div>{this.timeLog}</div>
           <div>{this.dateLog}</div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }
