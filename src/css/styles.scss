@@ -797,18 +797,38 @@ textarea {
 
     // main menu, inside a Tippy
     #mainMenu {
-      padding: 0.25em 0em;
-
-      .action {
-        margin-bottom: 0.5em;
-        margin-top: 0.5em;
-        width: calc(100% - 1.25em);
-      }
-
       .password {
         input {
           display: block;
         }
+      }
+    }
+
+    // the card menu
+    .hud.menu,
+    #mainMenu {
+      background: white;
+      color: black;
+
+      .action {
+        color: black;
+        width: calc(100% - 1em);
+        border: none;
+        border-radius: 0;
+        text-shadow: none;
+        margin: 0;
+      }
+
+      .action,
+      .palette {
+        background: linear-gradient(
+          0deg,
+          rgba(102, 102, 102, 1) 0%,
+          rgba(238, 238, 238, 1) 20%,
+          rgba(242, 242, 242, 1) 37%,
+          rgba(242, 242, 242, 1) 80%,
+          rgba(102, 102, 102, 1) 100%
+        );
       }
     }
 
@@ -1700,33 +1720,6 @@ textarea {
       margin-bottom: 7em;
     }
 
-    // the card menu
-    .hud.menu {
-      background: white;
-      color: black;
-
-      .action {
-        color: black;
-        width: calc(100% - 1em);
-        border: none;
-        border-radius: 0;
-        text-shadow: none;
-        margin: 0;
-      }
-
-      .action,
-      .palette {
-        background: linear-gradient(
-          0deg,
-          rgba(102, 102, 102, 1) 0%,
-          rgba(238, 238, 238, 1) 20%,
-          rgba(242, 242, 242, 1) 37%,
-          rgba(242, 242, 242, 1) 80%,
-          rgba(102, 102, 102, 1) 100%
-        );
-      }
-    }
-
     // server name display/editor, on options page
     .serverName,
     .serverQuorum {
@@ -1835,6 +1828,16 @@ textarea {
 
       img {
         height: 1em;
+      }
+    }
+
+    // boat icon in top-right of card
+    .boat {
+      cursor: pointer;
+      opacity: 0.5;
+
+      img {
+        height: 1.1em;
       }
     }
 
@@ -2281,13 +2284,13 @@ textarea {
     }
 
     // callout arrow for the Tippy card menu
-    .tippy-box[data-theme~='cardMenu'][data-placement^='top']
+    .tippy-box[data-theme~='white'][data-placement^='top']
       > .tippy-arrow::before,
-    .tippy-box[data-theme~='cardMenu'][data-placement^='bottom']
+    .tippy-box[data-theme~='white'][data-placement^='bottom']
       > .tippy-arrow::before,
-    .tippy-box[data-theme~='cardMenu'][data-placement^='left']
+    .tippy-box[data-theme~='white'][data-placement^='left']
       > .tippy-arrow::before,
-    .tippy-box[data-theme~='cardMenu'][data-placement^='right']
+    .tippy-box[data-theme~='white'][data-placement^='right']
       > .tippy-arrow::before {
       border-top-color: white;
       color: white;

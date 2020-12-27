@@ -6,6 +6,7 @@ import AoPalette from './palette'
 import AoBird from './bird'
 import AoUnread from './unread'
 import AoCoin from './coin'
+import AoBoat from './boat'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
 import AoCrowdfund from './crowdfund'
@@ -37,6 +38,7 @@ interface CardHudProps {
 	prioritiesShown?: boolean
 	onTogglePriorities?: (any) => void
 	noPopups?: boolean
+	inId?: string
 }
 
 @observer
@@ -113,7 +115,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 					</div>
 				)
 			case 'full before':
-			case 'face before':
 				return (
 					<React.Fragment>
 						<AoBird taskId={taskId} />
@@ -124,6 +125,20 @@ export default class CardHud extends React.Component<CardHudProps> {
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+						</div>
+					</React.Fragment>
+				)
+			case 'face before':
+				return (
+					<React.Fragment>
+						<AoBird taskId={taskId} />
+						<AoUnread taskId={taskId} />
+						<div className={'hud ' + hudStyle}>
+							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+							<AoTally taskId={taskId} hudStyle={hudStyle} />
+							<AoValue taskId={taskId} hudStyle={hudStyle} />
+							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
+							<AoBoat taskId={taskId} inId={this.props.inId} />
 						</div>
 					</React.Fragment>
 				)

@@ -95,9 +95,10 @@ export default class AoHud extends React.Component<{}, undefined> {
         <Tippy
           content={<MainMenu />}
           interactive={true}
-          trigger={'click'}
-          placement={'top-end'}>
-          <div id={'mainMenuButton'}>&#x22EE;</div>
+          trigger="click"
+          placement="top-end"
+          theme="white">
+          <div id="mainMenuButton">&#x22EE;</div>
         </Tippy>
         <AoHub />
         <AoControls />
@@ -106,9 +107,9 @@ export default class AoHud extends React.Component<{}, undefined> {
         <div id="missions">
           <AoPopupPanel
             iconSrc={Badge}
-            tooltipText={'Missions Index'}
-            tooltipPlacement={'right'}
-            panelPlacement={'right'}
+            tooltipText="Missions Index"
+            tooltipPlacement="right"
+            panelPlacement="right"
             id="tour-missions">
             <AoMissions />
           </AoPopupPanel>
@@ -126,12 +127,12 @@ export default class AoHud extends React.Component<{}, undefined> {
         <AoCalendar />
         <AoProposals />
         <AoBounties />
-        <div id={'search'}>
+        <div id="search">
           <AoPopupPanel
             iconSrc={MagnifyingGlass}
-            tooltipText={'Search'}
-            tooltipPlacement={'top'}
-            panelPlacement={'top'}
+            tooltipText="Search"
+            tooltipPlacement="top"
+            panelPlacement="top"
             onShown={this.focusSearchbox}
             id="tour-search">
             <AoSearch ref={this.searchRef} />

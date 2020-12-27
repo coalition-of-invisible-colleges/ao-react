@@ -22,11 +22,7 @@ export default class AoDiscardZone extends React.PureComponent {
 		}
 
 		const card = aoStore.hashMap.get(move.from.taskId)
-		if (card) {
-			// This should only be done if a card is actually discarded. For example should not be done on priorities that are merely deprioritized. Also it should display the action that is to happen for the black discard background zone as text next to the cursor.
-			aoStore.addToDiscardHistory([card])
-			console.log('Pushed discarded card to history.')
-		} else {
+		if (!card) {
 			console.log('Invalid card to discard, trying anyway.')
 		}
 
@@ -57,6 +53,7 @@ export default class AoDiscardZone extends React.PureComponent {
 						if (card.claimed && card.claimed.length >= 1) {
 							api.refocusCard(move.from.taskId, move.from.inId)
 						} else {
+							aoStore.addToDiscardHistory([card])
 							api.discardCardFromCard(move.from.taskId, move.from.inId)
 						}
 					})
@@ -65,16 +62,20 @@ export default class AoDiscardZone extends React.PureComponent {
 				if (card.claimed && card.claimed.length >= 1) {
 					api.refocusCard(move.from.taskId, move.from.inId)
 				} else {
+					aoStore.addToDiscardHistory([card])
 					api.discardCardFromCard(move.from.taskId, move.from.inId)
 				}
 				break
 			case 'completed':
+				aoStore.addToDiscardHistory([card])
 				api.discardCardFromCard(move.from.taskId, move.from.inId)
 				break
 			case 'context':
+				aoStore.addToDiscardHistory([card])
 				aoStore.removeFromContext(move.from.taskId)
 				break
 			case 'gifts':
+				aoStore.addToDiscardHistory([card])
 				api.dropCard(move.from.taskId)
 				break
 		}

@@ -171,6 +171,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
                     }
                   : {}
               }
+              inId={this.props.inId}
             />,
             task.taskId
           )}
@@ -195,6 +196,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
                 cardStyle={this.props.cardStyle ? this.props.cardStyle : 'face'}
                 noPopups={this.props.noPopups}
                 noFindOnPage={this.props.noFindOnPage}
+                inId={this.props.inId}
               />,
               task.taskId
             )}

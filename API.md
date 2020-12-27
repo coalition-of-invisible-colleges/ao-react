@@ -920,7 +920,7 @@ An icon of a bird in the top-left corner of every card. Tap the bird to pop up a
 
 ### AoCardHud
 
-The card's H.U.D. (Heads-Up Display) is a container component that displays an informational overlay for the card, made up of a number of other smaller components. The card's HUD is the part of the card that is an overlay about the current card, not its contents (main content and subcards).
+The card's H.U.D. (Heads-Up Display) is a container component that displays an informational overlay for the card, made up of a number of other smaller components. The card's HUD is the part of the card that is an overlay about the current card, not its contents.
 
 **Props:**
 
@@ -929,6 +929,7 @@ The card's H.U.D. (Heads-Up Display) is a container component that displays an i
 - **prioritiesShown? (boolean):** Whether to show the priorities on the `collapsed`-style card. Can be omitted for other styles of card.
 - **onTogglePriorities? ((any) => void):** Callback function that is triggered when the button to expand priorities is tapped on the `collapsed`-style card.
 - **noPopups? (boolean):** For deeply nested cards, send `true` to disable Tippy popups, which can otherwise nest recursively.
+- **inId? (string):** For `face before` style cards, you must include this, the `.taskId` of the parent card, so that the boat can activate properly in-context.
 
 **Used By:** AoContextCard
 
@@ -950,7 +951,7 @@ The card menu is three vertical dots that show up in the bottom-right corner of 
 
 ### AoCheckbox
 
-The interactive checkbox that displays in the top-right corner of every card. The checkbox only displays if you are holding the card (by clicking the moon; see grabCard() in API). When checked, the checkbox sends an a `task-claimed` event to the server using the API function completeCard(). This checks off the card for the current member and claim any bounty on the card.
+The interactive checkbox that displays in the top-right corner of every card. The checkbox only displays if you are holding the card (by clicking the moon; see grabCard() in API). When checked, the checkbox sends an a `task-claimed` event to the server using the API method completeCard(). This checks off the card for the current member and claim any bounty on the card.
 
 On grid cards displayed in `mini` style, the intention is to merge the checkbox and the moon, so that a click on the moon will reveal the checkbox.
 

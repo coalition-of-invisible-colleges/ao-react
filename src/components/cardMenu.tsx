@@ -41,7 +41,7 @@ export default class CardMenu extends React.Component<Props> {
         trigger="click"
         placement="top-end"
         appendTo={document.getElementById('root')}
-        theme="cardMenu">
+        theme="white">
         {this.renderMenuButton}
       </LazyTippy>
     )
