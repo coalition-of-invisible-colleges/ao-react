@@ -62,7 +62,7 @@ export function prioritizeCard(move: CardPlay) {
 
 	switch (move.from.zone) {
 		case 'card':
-			// maybe this doesn't make sense, it's supposed to be for the whole card
+			api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
 			break
 		case 'priorities':
 			if (move.from.inId === move.to.inId) {
@@ -110,7 +110,7 @@ export function subTaskCard(move: CardPlay) {
 
 	switch (move.from.zone) {
 		case 'card':
-			// maybe this doesn't make sense, it's supposed to be for the whole card
+			api.findOrCreateCardInCard(nameFrom, move.to.inId)
 			break
 		case 'priorities':
 			if (move.from.inId) {

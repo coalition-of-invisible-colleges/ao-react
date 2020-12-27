@@ -62,7 +62,25 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
 
     switch (move.from.zone) {
       case 'card':
-        // maybe this doesn't make sense, it's supposed to be for the whole card
+        if (move.to.taskId) {
+          api
+            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+        } else {
+          api.pinCardToGrid(
+            move.to.coords.x,
+            move.to.coords.y,
+            nameFrom,
+            move.to.inId
+          )
+        }
         break
       case 'priorities':
         if (move.to.taskId && this.props.dropActsLikeFolder) {

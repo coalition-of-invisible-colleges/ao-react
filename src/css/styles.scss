@@ -2102,6 +2102,7 @@ textarea {
       img {
         max-width: 100%;
         max-height: 100%;
+        margin-top: 1em;
         margin-bottom: 1em;
       }
 
@@ -2115,6 +2116,11 @@ textarea {
         height: 100%;
         margin: 1em 0;
       }
+    }
+
+    // the name of the attached file, after the attachment
+    .attachment + a {
+      text-align: center;
     }
 
     // button to open the main card create box
