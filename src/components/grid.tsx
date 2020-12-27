@@ -358,8 +358,8 @@ export default class AoGrid extends React.PureComponent<GridProps, GridState> {
           className="grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(' + grid.width.toString() + ', 5em)',
-            gridTemplateRows: 'repeat(' + grid.height.toString() + ', 5em)'
+            gridTemplateColumns: 'repeat(' + grid.width.toString() + ', 6em)',
+            gridTemplateRows: 'repeat(' + grid.height.toString() + ', 6em)'
           }}>
           <GridView
             taskId={taskId}
