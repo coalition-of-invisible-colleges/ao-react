@@ -352,14 +352,18 @@ export default class AoGrid extends React.PureComponent<GridProps, GridState> {
       )
     }
 
+    const gridWidth = this.props.dropActsLikeFolder ? '5em' : '6em'
+
     return (
       <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>
         <div
           className="grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(' + grid.width.toString() + ', 6em)',
-            gridTemplateRows: 'repeat(' + grid.height.toString() + ', 6em)'
+            gridTemplateColumns:
+              'repeat(' + grid.width.toString() + ', ' + gridWidth + ')',
+            gridTemplateRows:
+              'repeat(' + grid.height.toString() + ', ' + gridWidth + ')'
           }}>
           <GridView
             taskId={taskId}
