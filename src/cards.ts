@@ -45,6 +45,15 @@ export function goInCard(card: Task, isContext = false) {
 	aoStore.removeFromContext(taskId)
 }
 
+export function goUp() {
+	if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
+		const go = aoStore.contextCards[0]
+		if (go) {
+			goInCard(go, true)
+		}
+	}
+}
+
 export function prioritizeCard(move: CardPlay) {
 	if (!move.from.taskId) {
 		return

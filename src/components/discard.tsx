@@ -4,7 +4,7 @@ import api from '../client/api'
 import aoStore from '../client/store'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay } from '../cards'
+import { CardPlay, goUp } from '../cards'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
 @observer
@@ -37,7 +37,7 @@ export default class AoDiscardZone extends React.PureComponent {
 
 		switch (move.from.zone) {
 			case 'card':
-				// maybe this doesn't make sense, it's supposed to be for the whole card
+				goUp()
 				break
 			case 'priorities':
 				api.refocusCard(move.from.taskId, move.from.inId)

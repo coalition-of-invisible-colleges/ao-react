@@ -7,6 +7,7 @@ import AoHud from './hud'
 import { Helmet } from 'react-helmet'
 import { ShepherdTour as Tour } from 'react-shepherd'
 import { steps, tourOptions } from './tour'
+import { goUp } from '../cards'
 
 interface CardProps {
   match
@@ -68,11 +69,24 @@ class RenderCard extends React.Component<RenderProps> {
 export default class AoCard extends React.Component<CardProps> {
   constructor(props) {
     super(props)
+    this.detectEscape = this.detectEscape.bind(this)
+
     const card = aoStore.hashMap.get(this.props.match.params.taskId)
     aoStore.setCurrentCard(this.props.match.params.taskId)
   }
 
+  detectEscape(event) {
+    console.log('detectEscape called!')
+    if (event.key === 'Escape') {
+      goUp()
+    }
+  }
+
   render() {
-    return <RenderCard taskId={aoStore.currentCard} />
+    return (
+      <div onKeyDown={this.detectEscape} tabIndex={0}>
+        <RenderCard taskId={aoStore.currentCard} />
+      </div>
+    )
   }
 }
