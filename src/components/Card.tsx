@@ -76,7 +76,6 @@ export default class AoCard extends React.Component<CardProps> {
   }
 
   detectEscape(event) {
-    console.log('detectEscape called!')
     if (event.key === 'Escape') {
       goUp()
     }
