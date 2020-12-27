@@ -1831,6 +1831,14 @@ textarea {
       }
     }
 
+    // bird on a prioritized card
+    .priority > .content > .bird {
+      position: relative;
+      display: inline-block;
+      top: 0.15em;
+      left: -0.5em;
+    }
+
     // boat icon in top-right of card
     .boat {
       cursor: pointer;
@@ -2281,6 +2289,10 @@ textarea {
     // remove padding on Tippy box
     .tippy-content {
       padding: 0;
+    }
+
+    .tippy-box[data-theme~='translucent'] .tippy-content {
+      padding: 0.5em;
     }
 
     // callout arrow for the Tippy card menu
