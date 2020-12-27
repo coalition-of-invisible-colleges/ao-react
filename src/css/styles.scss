@@ -726,7 +726,7 @@ textarea {
 
       .resizer {
         position: absolute;
-        margin-top: -4.75em;
+        margin-top: -5.25em; // -4.75
         right: 0;
         transform: translateX(100%);
 
@@ -775,7 +775,7 @@ textarea {
 
     // gridContainer inside the main card on the page
     .full .gridContainer {
-      margin-bottom: 2.5em;
+      margin-bottom: 2em;
       margin-top: 0.5em;
 
       &.noPad {
