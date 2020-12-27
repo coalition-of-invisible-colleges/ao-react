@@ -63,7 +63,19 @@ export function prioritizeCard(move: CardPlay) {
 			}
 			break
 		case 'grid':
-			api.prioritizeCard(move.from.taskId, move.to.inId)
+			if (move.from.inId === move.to.inId) {
+				api
+					.unpinCardFromGrid(
+						move.from.coords.x,
+						move.from.coords.y,
+						move.from.inId
+					)
+					.then(result => {
+						api.prioritizeCard(move.from.taskId, move.to.inId)
+					})
+			} else {
+				api.prioritizeCard(move.from.taskId, move.to.inId)
+			}
 			break
 		case 'completed':
 		case 'completed':

@@ -14,6 +14,7 @@ import AoCardHud from './cardHud'
 import AoMission from './mission'
 import AoAttachment from './attachment'
 import AoCoin from './coin'
+import AoBird from './bird'
 import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import AoMemberIcon from './memberIcon'
@@ -303,7 +304,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			subTaskCards = card.subTasks.map(tId => aoStore.hashMap.get(tId))
 		}
 
-		let cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
+		const cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
+
 		switch (cardStyle) {
 			case 'context':
 				return (
@@ -325,6 +327,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				)
 			case 'member':
 			case 'priority':
+				const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
 				return (
 					<div
 						id={'card-' + taskId}
@@ -340,12 +343,16 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						<AoPaper taskId={taskId} />
 						<AoCardHud
 							taskId={taskId}
-							hudStyle={'collapsed'}
+							hudStyle="collapsed"
 							prioritiesShown={this.state.showPriorities}
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className="content">
-							<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
+							{isGrabbed ? (
+								<AoBird taskId={taskId} />
+							) : (
+								<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
+							)}
 							{member && <AoMemberIcon memberId={taskId} />}
 							<AoAttachment taskId={taskId} />
 							{this.renderCardContent(content)}
@@ -514,13 +521,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
-						<AoCardHud taskId={taskId} hudStyle={'collapsed-mission'} />
-						<div className={'content'}>
+						<AoCardHud taskId={taskId} hudStyle="collapsed-mission" />
+						<div className="content">
 							<AoCoin taskId={taskId} />
-							<AoMission taskId={taskId} hudStyle={'collapsed'} />
+							<AoMission taskId={taskId} hudStyle="collapsed" />
 							<AoPreview
 								taskId={taskId}
-								hudStyle={'collapsed'}
+								hudStyle="collapsed"
 								prioritiesShown={this.state.showPriorities}
 								onTogglePriorities={this.togglePriorities}
 								projectsShown={this.state.showProjects}
@@ -532,16 +539,16 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							<AoStack
 								inId={taskId}
 								cards={projectCards}
-								cardStyle={'mission'}
-								zone={'panel'}
+								cardStyle="mission"
+								zone="panel"
 							/>
 						) : null}
 						{this.state.showPriorities ? (
 							<AoStack
 								inId={taskId}
 								cards={priorityCards}
-								cardStyle={'priority'}
-								zone={'panel'}
+								cardStyle="priority"
+								zone="panel"
 							/>
 						) : null}
 						<div style={{ clear: 'both', height: '1px' }} />
@@ -558,8 +565,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
 						<img className="background" src={BlankBadge} />
-						<AoMission taskId={taskId} hudStyle={'badge'} />
-						<AoCardHud taskId={taskId} hudStyle={'badge'} />
+						<AoMission taskId={taskId} hudStyle="badge" />
+						<AoCardHud taskId={taskId} hudStyle="badge" />
 					</div>
 				)
 				break
@@ -580,7 +587,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle="mini before" />
-						<div className={'content'}>
+						<div className="content">
 							{member && <AoMemberIcon memberId={taskId} />}
 							<AoAttachment taskId={taskId} />
 							{this.renderCardContent(content, true)}

@@ -59,6 +59,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 		const isMember = this.props.taskId === card.name
 
 		const hudStyle = this.props.hudStyle
+		const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
 
 		switch (hudStyle) {
 			case 'context':
@@ -117,7 +118,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'full before':
 				return (
 					<React.Fragment>
-						<AoBird taskId={taskId} />
+						{isGrabbed && <AoBird taskId={taskId} />}
 						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
@@ -131,7 +132,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'face before':
 				return (
 					<React.Fragment>
-						<AoBird taskId={taskId} />
+						{isGrabbed && <AoBird taskId={taskId} />}
 						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />

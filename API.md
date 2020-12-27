@@ -914,7 +914,7 @@ An icon of a bird in the top-left corner of every card. Tap the bird to pop up a
 
 - **taskId (string):** The `.taskId` of the card on which to put a bird.
 
-**Used By:** AoCardHud
+**Used By:** AoCardHud, AoContextCard (to show bird in place of coin when grabbed)
 
 **Uses:** AoMemberIcon
 

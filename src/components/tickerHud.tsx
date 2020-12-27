@@ -355,6 +355,7 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
         <Tippy
           zIndex={4}
           placement="left"
+          theme="translucent"
           maxWidth="30em"
           interactive={true}
           content={this.renderInfo}
