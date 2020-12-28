@@ -678,7 +678,8 @@ function taskVisited(taskId, memberId, area, callback) {
     type: 'task-visited',
     taskId,
     memberId,
-    area
+    area,
+    timestamp: Date.now()
   }
   dctrlDb.insertEvent(newEvent, callback)
 }

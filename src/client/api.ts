@@ -863,8 +863,7 @@ class AoApi {
       type: 'task-visited',
       taskId: taskId,
       memberId: aoStore.member.memberId,
-      area: inChat ? 1 : 0,
-      timestamp: Date.now()
+      area: inChat ? 1 : 0
     }
     return request
       .post('/events')
