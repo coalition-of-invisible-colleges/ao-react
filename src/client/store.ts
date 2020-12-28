@@ -125,7 +125,7 @@ export interface Signature {
 
 export interface AvatarLocation {
   memberId: string
-  timestamp: Date
+  timestamp: number
   area: number
 }
 

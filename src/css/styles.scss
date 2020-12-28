@@ -2121,6 +2121,7 @@ textarea {
     // the name of the attached file, after the attachment
     .attachment + a {
       text-align: center;
+      display: block;
     }
 
     // button to open the main card create box

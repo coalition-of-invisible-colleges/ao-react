@@ -21,6 +21,12 @@ export default class AoChatroom extends React.Component<Props, State> {
     this.hide = this.hide.bind(this)
   }
 
+  componentDidMount() {
+    setInterval(() => {
+      api.visitCard(this.props.taskId, true)
+    }, 15000)
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.taskId !== this.props.taskId) {
       this.setState({ flash: true })

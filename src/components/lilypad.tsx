@@ -14,15 +14,22 @@ interface Props {
 
 interface State {
   show?: boolean
+  now: number
 }
 
 @observer
 export default class AoChatroom extends React.Component<Props, State> {
   constructor(props) {
     super(props)
-    this.state = { show: false }
+    this.state = { show: false, now: Date.now() }
     this.hopHere = this.hopHere.bind(this)
     this.joinChat = this.joinChat.bind(this)
+  }
+
+  componentDidMount() {
+    setInterval(() => {
+      this.setState({ now: Date.now() })
+    }, 5000)
   }
 
   hopHere() {
@@ -47,10 +54,15 @@ export default class AoChatroom extends React.Component<Props, State> {
       const { memberId, timestamp, area } = avatarLocation
       const member = aoStore.memberById.get(memberId)
       const name = member ? member.name : 'deleted member'
+
+      const now = this.state.now
+      const msSince = now - avatarLocation.timestamp
+      const seconds = msSince / 1000
+
       return (
         <div key={memberId}>
           <AoMemberIcon memberId={memberId} /> {name}{' '}
-          {area === 1 && <small>in chat</small>}
+          {area === 1 && seconds <= 15 && <small>in chat</small>}
         </div>
       )
     })
@@ -76,14 +88,24 @@ export default class AoChatroom extends React.Component<Props, State> {
 
     const cardPop = card.avatars ? card.avatars.length : 0
 
+    const now = this.state.now
+
     const chatroomPop = card.avatars
-      ? card.avatars.filter(avatarLocation => avatarLocation.area === 1).length
+      ? card.avatars.filter(avatarLocation => {
+          const msSince = now - avatarLocation.timestamp
+          const seconds = msSince / 1000
+          return avatarLocation.area === 1 && seconds <= 15
+        }).length
       : 0
 
     const youAreHere = card.avatars
-      ? card.avatars.some(
-          avatarLocation => avatarLocation.memberId === aoStore.member.memberId
-        )
+      ? card.avatars.some(avatarLocation => {
+          const msSince = now - avatarLocation.timestamp
+          const seconds = msSince / 1000
+          return (
+            avatarLocation.memberId === aoStore.member.memberId && seconds <= 15
+          )
+        })
       : false
 
     let button
