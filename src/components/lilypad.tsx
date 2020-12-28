@@ -62,7 +62,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       return (
         <div key={memberId}>
           <AoMemberIcon memberId={memberId} /> {name}{' '}
-          {area === 1 && seconds <= 15 && <small>in chat</small>}
+          {area === 1 && seconds <= 70 && <small>in chat</small>}
         </div>
       )
     })
@@ -94,7 +94,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       ? card.avatars.filter(avatarLocation => {
           const msSince = now - avatarLocation.timestamp
           const seconds = msSince / 1000
-          return avatarLocation.area === 1 && seconds <= 15
+          return avatarLocation.area === 1 && seconds <= 70
         }).length
       : 0
 
@@ -103,7 +103,7 @@ export default class AoChatroom extends React.Component<Props, State> {
           const msSince = now - avatarLocation.timestamp
           const seconds = msSince / 1000
           return (
-            avatarLocation.memberId === aoStore.member.memberId && seconds <= 15
+            avatarLocation.memberId === aoStore.member.memberId && seconds <= 70
           )
         })
       : false
