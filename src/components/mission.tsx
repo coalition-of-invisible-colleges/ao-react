@@ -139,7 +139,7 @@ export default class AoMission extends React.PureComponent<
           <div className="mission menu">
             <div onClick={this.startEditing} className="action">
               <img className="badge" src={Badge} />
-              {card.guild ? card.guild : 'add mission title'}
+              {card.guild ? card.guild : 'upgrade to squad'}
             </div>
           </div>
         )

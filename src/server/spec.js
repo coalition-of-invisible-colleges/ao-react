@@ -537,12 +537,13 @@ router.post('/events', (req, res, next) => {
       break
     case 'task-created':
       if (
-        (validators.isNotes(req.body.name, errRes) &&
-          validators.isNotes(req.body.color, errRes) &&
-          validators.isNotes(req.body.deck, errRes) &&
-          req.body.inId === null) ||
-        (validators.isTaskId(req.body.inId, errRes) &&
-          validators.isBool(req.body.prioritized, errRes))
+        validators.isNotes(req.body.name, errRes) &&
+        !validators.isTaskName(req.body.name, errRes) &&
+        validators.isNotes(req.body.color, errRes) &&
+        validators.isNotes(req.body.deck, errRes) &&
+        (req.body.inId === null ||
+          validators.isTaskId(req.body.inId, errRes)) &&
+        validators.isBool(req.body.prioritized, errRes)
       ) {
         events.taskCreated(
           req.body.name,

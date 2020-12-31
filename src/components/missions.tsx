@@ -77,11 +77,11 @@ export default class AoMissions extends React.PureComponent<{}, State> {
     }
 
     return (
-      <div className={'results'}>
+      <div className="results">
         <AoStack
           cards={missions}
-          zone={'panel'}
-          cardStyle={'mission'}
+          zone="panel"
+          cardStyle="mission"
           cardsBeforeFold={5}
         />
       </div>
@@ -91,7 +91,7 @@ export default class AoMissions extends React.PureComponent<{}, State> {
   render() {
     return (
       <React.Fragment>
-        <h2>Missions Index</h2>
+        <h2>Squad Index</h2>
         <div className={'toolbar'}>
           {this.renderSortButton('alphabetical', 'A-Z')}
           {this.renderSortButton('hodls', 'Hodls')}

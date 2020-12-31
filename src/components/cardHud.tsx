@@ -118,7 +118,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'full before':
 				return (
 					<React.Fragment>
-						{isGrabbed && <AoBird taskId={taskId} />}
+						{isGrabbed && taskId !== card.name && <AoBird taskId={taskId} />}
 						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />

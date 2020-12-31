@@ -96,6 +96,22 @@ module.exports = {
     }
     return result
   },
+  isTaskName(val, errRes) {
+    let result = false
+    state.serverState.tasks.forEach(task => {
+      if (
+        task.name.trim().localeCompare(val.trim(), undefined, {
+          sensitivity: 'base'
+        })
+      ) {
+        result = true
+      }
+    })
+    if (!result) {
+      errRes.push('invalid task')
+    }
+    return result
+  },
   isSession(val, errRes) {
     let result = false
     state.serverState.sessions.forEach(s => {
