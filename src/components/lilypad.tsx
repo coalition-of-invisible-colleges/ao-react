@@ -132,7 +132,7 @@ export default class AoChatroom extends React.Component<Props, State> {
           {cardPop >= 1 && ' (' + chatroomPop + '/' + cardPop + ')'}
         </div>
       )
-      altMessage = 'Join mission video call'
+      altMessage = (chatroomPop >= 1 ? 'Join' : 'Start') + ' mission video call'
     }
 
     return (
