@@ -11,6 +11,7 @@ interface Props {
 
 interface State {
   flash?: boolean
+  timer?
 }
 
 @observer
@@ -19,30 +20,53 @@ export default class AoChatroom extends React.Component<Props, State> {
     super(props)
     this.state = {}
     this.hide = this.hide.bind(this)
+    this.startTimer = this.startTimer.bind(this)
   }
 
   componentDidMount() {
-    setInterval(() => {
-      api.visitCard(this.props.taskId, true)
-    }, 15000)
+    if (!this.props.taskId) {
+      return
+    }
+    this.startTimer()
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.taskId !== this.props.taskId) {
       this.setState({ flash: true })
       process.nextTick(() => this.setState({ flash: false }))
+      if (!prevProps.taskId && this.props.taskId) {
+        if (this.state.timer) {
+          clearTimeout(this.state.timer)
+        }
+        this.startTimer()
+      }
     }
   }
 
   componentWillUnmount() {
-    api.visitCard(this.props.taskId, false)
+    if (this.props.taskId) {
+      api.visitCard(this.props.taskId, false)
+    }
     aoStore.setCurrentChatroom(null)
   }
 
   hide() {
     console.log('hiding chatroom')
-    api.visitCard(this.props.taskId, false)
+    if (this.state.timer) {
+      clearTimeout(this.state.timer)
+    }
+    if (this.props.taskId) {
+      api.visitCard(this.props.taskId, false)
+    }
     aoStore.setCurrentChatroom(null)
+  }
+
+  startTimer() {
+    const timer = setInterval(() => {
+      api.visitCard(this.props.taskId, true)
+    }, 15000)
+
+    this.setState({ timer })
   }
 
   render() {
