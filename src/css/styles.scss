@@ -1985,7 +1985,7 @@ textarea {
 
     // Start Tour button at top left of screen before you've take the tour once
     #hud > .tour {
-      position: absolute;
+      position: fixed;
       bottom: 0.625em;
       left: 5em;
       animation: rainbow 4s linear 0s infinite;
