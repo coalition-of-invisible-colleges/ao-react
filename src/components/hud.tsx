@@ -58,17 +58,17 @@ class MainMenu extends React.PureComponent<{}, State> {
 
   render() {
     return (
-      <div id={'mainMenu'}>
+      <div id="mainMenu">
         <AoUsername />
         <AoPassword />
         <AoFob />
         <AoReactivator />
         <AoVolume />
-        <div onClick={this.changeTheme} id={'themer'} className={'action'}>
+        <div onClick={this.changeTheme} id="themer" className="action">
           Next Theme
         </div>
         <AoTour />
-        <div onClick={this.onLogout} id="logout" className={'action'}>
+        <div onClick={this.onLogout} id="logout" className="action">
           Log Out
         </div>
       </div>
@@ -101,13 +101,14 @@ export default class AoHud extends React.Component<{}, undefined> {
           <div id="mainMenuButton">&#x22EE;</div>
         </Tippy>
         <AoHub />
+        {!aoStore.member.tutorial && <AoTour />}
         <AoControls />
         <AoDock />
         <AoGifts />
         <div id="missions">
           <AoPopupPanel
             iconSrc={Badge}
-            tooltipText="Missions Index"
+            tooltipText="Squad Index"
             tooltipPlacement="right"
             panelPlacement="right"
             id="tour-missions">

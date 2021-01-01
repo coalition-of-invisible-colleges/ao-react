@@ -103,7 +103,9 @@ export default class AoChatroom extends React.Component<Props, State> {
           const msSince = now - avatarLocation.timestamp
           const seconds = msSince / 1000
           return (
-            avatarLocation.memberId === aoStore.member.memberId && seconds <= 70
+            avatarLocation.memberId === aoStore.member.memberId &&
+            avatarLocation.area === 1 &&
+            seconds <= 70
           )
         })
       : false
@@ -124,7 +126,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       let message = youAreHere
         ? 'In Chat'
         : chatroomPop >= 1
-        ? 'Join Chat'
+        ? 'Join Chat Here'
         : 'Start Chat'
       button = (
         <div className="lilypad action" onClick={this.joinChat}>

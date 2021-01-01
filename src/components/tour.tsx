@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import aoStore from '../client/store'
+import api from '../client/api'
 import { ShepherdTourContext } from 'react-shepherd'
 import { renderToStaticMarkup } from 'react-dom/server'
 
@@ -23,6 +25,12 @@ const placeLeft: PopperPlacement = 'left'
 const placeRight: PopperPlacement = 'right'
 
 function cancelAction() {
+  if (!aoStore.member.tutorial) {
+    window.alert(
+      'To take the tour again, tap the main menu (three dots) in the lower-right corner of the page, then tap Start Tour.'
+    )
+    api.updateMemberField('tutorial', true)
+  }
   return this.cancel()
 }
 
@@ -35,6 +43,7 @@ function nextAction() {
 }
 
 function completeAction() {
+  api.updateMemberField('tutorial', true)
   return this.next()
 }
 
@@ -112,7 +121,7 @@ export const steps = [
     attachTo: { element: '#tour-missions', on: placeRight },
     title: 'Squad Index',
     text:
-      "Put it on the Index! Missions, also known as groups, guilds, categories, or rooms, are a basic way to organize cards. Any card with a mission title shows up here. Click 'add mission title' in a card's menu to give it a title and upgrade it to a mission.",
+      "Put it on the Index! Squads, also known as groups, guilds, missions, categories, or rooms, are a basic way to organize cards. Any card with a mission title shows up here. Click 'add mission title' in a card's menu to give it a title and upgrade it to a mission.",
     buttons: standardButtons
   },
   {
@@ -184,7 +193,7 @@ export default function AoTour() {
   const tour = React.useContext(ShepherdTourContext)
 
   return (
-    <div onClick={tour.start} className={'tour menu action'} id="tourStart">
+    <div onClick={tour.start} className="tour menu action" id="tourStart">
       Start Tour
     </div>
   )

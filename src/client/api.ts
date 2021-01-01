@@ -782,7 +782,7 @@ class AoApi {
 
   async updateMemberField(
     field: string,
-    newValue: string
+    newValue: any
   ): Promise<request.Response> {
     if (field === 'secret') {
       newValue = cryptoUtils.createHash(newValue)

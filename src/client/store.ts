@@ -43,6 +43,7 @@ export interface Member {
   potentials: Signature[]
   banned: boolean
   draft: string
+  tutorial?: boolean
 }
 
 export interface Task {
