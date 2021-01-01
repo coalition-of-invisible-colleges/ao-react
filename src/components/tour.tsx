@@ -97,7 +97,7 @@ export const steps = [
     attachTo: { element: '#mainMenu', on: placeLeft },
     title: 'Main Menu',
     text:
-      'The main menu allows you to change your username and password. You should change your password now if you havent done so yet. You can also set your RFID fob number here.',
+      'The main menu (three dots in lower-right corner of page) allows you to change your username and password. You should change your password now if you havent done so yet. You can also set your RFID fob number here.',
     buttons: standardButtons
   },
   {
@@ -105,7 +105,7 @@ export const steps = [
     attachTo: { element: '#chatroom', on: placeLeft },
     title: 'Secure Video Chat',
     text:
-      "Jitsi is an open-source, end-to-end encrypted video chat that can be installed alongside the AO on a server. Click 'chat' to open up a live video chatroom! You can also do audio-only or use the text chat box within Jitsi. If you want more than one room, go to meet.yourdomain.com to manually create additional rooms (guildhalls coming soon).",
+      "Jitsi is an open-source, end-to-end encrypted video chat that can be installed alongside the AO on a server. Click 'Join Chat' in the lower left corner of a squad (group) card to open up a live video chatroom! You can also do audio-only or use the text chat box within Jitsi. If you want more than one room, go to meet.yourdomain.com to manually create additional rooms (guildhalls coming soon).",
     buttons: standardButtons
   },
   {
@@ -113,7 +113,7 @@ export const steps = [
     attachTo: { element: '#tour-hub', on: placeRight },
     title: 'The Hub',
     text:
-      'Ah, the Hub! The beating hearmt of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
+      'Ah, the Hub! The beating hear1t of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
     buttons: standardButtons
   },
   {
@@ -121,7 +121,7 @@ export const steps = [
     attachTo: { element: '#tour-missions', on: placeRight },
     title: 'Squad Index',
     text:
-      "Put it on the Index! Squads, also known as groups, guilds, missions, categories, or rooms, are a basic way to organize cards. Any card with a mission title shows up here. Click 'add mission title' in a card's menu to give it a title and upgrade it to a mission.",
+      "Put it on the Index! Squads, also known as groups, guilds, missions, categories, or rooms, are a basic way to organize cards. Any card with a squad title shows up here. Click 'add squad title' in a card's menu to give it a title and upgrade it to a squad.",
     buttons: standardButtons
   },
   {
