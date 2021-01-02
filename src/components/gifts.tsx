@@ -116,7 +116,7 @@ export default class AoGifts extends React.PureComponent<{}, State> {
         <table
           id="sent"
           style={{
-            marginBottom: list.length === 1 ? '3.5em' : '1em'
+            marginBottom: this.state.openSend ? '1em' : '3.5em'
           }}>
           {list}
         </table>
