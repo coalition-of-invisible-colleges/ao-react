@@ -8,6 +8,7 @@ import AoPopupPanel from './popupPanel'
 import AoTip from './tip'
 import AoBirdAutocomplete from './birdAutocomplete'
 import AoCardComposer from './cardComposer'
+import AoMemberIcon from './memberIcon'
 import Bird from '../assets/images/send.svg'
 import Gift from '../assets/images/gifts.svg'
 
@@ -78,7 +79,51 @@ export default class AoGifts extends React.PureComponent<{}, State> {
   }
 
   @computed get renderGiftsList() {
-    const listForTab = this.state.tab === 'inbox' ? this.myGifts : this.mySent
+    if (this.state.tab === 'sent') {
+      const sent = this.mySent
+
+      let memberCounts = {}
+
+      sent.forEach(sentCard => {
+        sentCard.passed.forEach(pass => {
+          if (pass[0] === aoStore.member.memberId) {
+            if (!memberCounts.hasOwnProperty(pass[1])) {
+              memberCounts[pass[1]] = 0
+            }
+            memberCounts[pass[1]]++
+          }
+        })
+      })
+
+      const sorted = Object.entries(memberCounts).sort(
+        ([memberIdA], [memberIdB]) => {
+          return memberCounts[memberIdB] - memberCounts[memberIdA]
+        }
+      )
+
+      const list = sorted.map(([memberId, count]) => {
+        const name = aoStore.memberById.get(memberId).name
+        return (
+          <tr key={memberId}>
+            <td>
+              <AoMemberIcon memberId={memberId} /> {name}
+            </td>
+            <td>{count}</td>
+          </tr>
+        )
+      })
+      return (
+        <table
+          id="sent"
+          style={{
+            marginBottom: list.length === 1 ? '3.5em' : '1em'
+          }}>
+          {list}
+        </table>
+      )
+    }
+
+    const listForTab = this.myGifts
 
     if (listForTab.length < 1) {
       return ''

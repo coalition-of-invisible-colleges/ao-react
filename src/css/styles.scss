@@ -2361,6 +2361,21 @@ textarea {
         left: 0;
       }
     }
+
+    // passed / sent cards outbox
+    #sent {
+      margin-top: 1em;
+      min-width: 24em;
+      width: 100%;
+
+      tr td:first-child {
+        text-align: left;
+      }
+
+      & > tr > td:nth-child(2) {
+        padding-right: 1.25em;
+      }
+    }
   }
 }
 
