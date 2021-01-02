@@ -108,10 +108,10 @@ module.exports = {
         result = true
       }
     })
-    if (!result) {
+    if (result) {
       errRes.push('invalid task')
     }
-    return result
+    return !result
   },
   isSession(val, errRes) {
     let result = false

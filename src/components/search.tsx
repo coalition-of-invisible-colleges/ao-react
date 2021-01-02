@@ -223,7 +223,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     return (
       <React.Fragment>
         {this.sortedResults.length >= 2 ? (
-          <div className={'toolbar'}>
+          <div className="toolbar">
             {this.renderSortButton('newest', 'Newest')}
             {this.renderSortButton('alphabetical', 'A-Z')}
             {this.renderSortButton('hodls', 'Hodls')}
@@ -262,10 +262,10 @@ export default class AoSearch extends React.PureComponent<{}, State> {
 
   renderSortButton(sort: SearchSort, label: string) {
     if (this.state.sort === sort) {
-      return <p className={'action selected'}>{label}</p>
+      return <p className="action selected">{label}</p>
     } else {
       return (
-        <p onClick={this.sortBy} data-sort={sort} className={'action'}>
+        <p onClick={this.sortBy} data-sort={sort} className="action">
           {label}
         </p>
       )

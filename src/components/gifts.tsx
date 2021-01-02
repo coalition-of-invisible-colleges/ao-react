@@ -11,10 +11,13 @@ import AoCardComposer from './cardComposer'
 import Bird from '../assets/images/send.svg'
 import Gift from '../assets/images/gifts.svg'
 
+type GiftBoxTab = 'inbox' | 'sent'
+
 interface State {
   memberId?: string
   name: string
   openSend?: boolean
+  tab: GiftBoxTab
 }
 
 @observer
@@ -23,12 +26,14 @@ export default class AoGifts extends React.PureComponent<{}, State> {
 
   constructor(props) {
     super(props)
-    this.state = { name: '' }
+    this.state = { name: '', tab: 'inbox' }
     this.toggleSend = this.toggleSend.bind(this)
     this.onChangeTo = this.onChangeTo.bind(this)
     this.onChangeName = this.onChangeName.bind(this)
     this.onClick = this.onClick.bind(this)
     this.newGift = this.newGift.bind(this)
+    this.goToTab = this.goToTab.bind(this)
+    this.renderSortButton = this.renderSortButton.bind(this)
   }
 
   toggleSend() {
@@ -66,6 +71,12 @@ export default class AoGifts extends React.PureComponent<{}, State> {
     })
   }
 
+  @computed get mySent() {
+    return aoStore.state.tasks.filter(task => {
+      return task.passed.some(pass => pass[0] === aoStore.member.memberId)
+    })
+  }
+
   @computed get renderGiftsList() {
     if (this.myGifts.length < 1) {
       return ''
@@ -82,6 +93,26 @@ export default class AoGifts extends React.PureComponent<{}, State> {
 
   @computed get isValid() {
     return this.state.memberId && this.state.name
+  }
+
+  goToTab(event) {
+    const tab = event.currentTarget.getAttribute('data-sort')
+    if (this.state.tab === tab) {
+      return
+    }
+    this.setState({ tab: tab })
+  }
+
+  renderSortButton(tab: GiftBoxTab, label: string) {
+    if (this.state.tab === tab) {
+      return <p className="action selected">{label}</p>
+    } else {
+      return (
+        <p onClick={this.goToTab} data-sort={tab} className="action">
+          {label}
+        </p>
+      )
+    }
   }
 
   render() {
@@ -112,6 +143,12 @@ export default class AoGifts extends React.PureComponent<{}, State> {
                 <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
               </small>
             </div>
+            {this.mySent.length >= 1 && (
+              <div className="toolbar">
+                {this.renderSortButton('inbox', 'Received')}
+                {this.renderSortButton('sent', 'Given')}
+              </div>
+            )}
             {this.renderGiftsList}
             {this.myGifts.length >= 1 && (
               <div className="action" onClick={this.toggleSend}>

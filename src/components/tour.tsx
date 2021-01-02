@@ -113,7 +113,7 @@ export const steps = [
     attachTo: { element: '#tour-hub', on: placeRight },
     title: 'The Hub',
     text:
-      'Ah, the Hub! The beating hear1t of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
+      'Ah, the Hub! The beating heart of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
     buttons: standardButtons
   },
   {
