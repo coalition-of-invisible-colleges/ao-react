@@ -102,7 +102,10 @@ export default class AoGifts extends React.PureComponent<{}, State> {
       )
 
       const list = sorted.map(([memberId, count]) => {
-        const name = aoStore.memberById.get(memberId).name
+        let name = aoStore.memberById.get(memberId).name
+        if (!name) {
+          let name = 'deleted member'
+        }
         return (
           <tr key={memberId}>
             <td>
