@@ -78,15 +78,17 @@ export default class AoGifts extends React.PureComponent<{}, State> {
   }
 
   @computed get renderGiftsList() {
-    if (this.myGifts.length < 1) {
+    const listForTab = this.state.tab === 'inbox' ? this.myGifts : this.mySent
+
+    if (listForTab.length < 1) {
       return ''
     }
 
     return (
       <div
         className="results"
-        style={{ marginBottom: this.myGifts.length === 1 ? '3em' : null }}>
-        <AoStack cards={this.myGifts} zone="gifts" cardStyle="face" />
+        style={{ marginBottom: listForTab.length === 1 ? '3em' : null }}>
+        <AoStack cards={listForTab} zone="gifts" cardStyle="face" />
       </div>
     )
   }
