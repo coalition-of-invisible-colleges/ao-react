@@ -135,7 +135,8 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
             hideOnClick={false}
             delay={[625, 200]}
             appendTo={() =>
-              document.getElementById('card-' + memberId).parentElement
+              // document.getElementById('card-' + memberId).parentElement
+              document.getElementById('root')
             }>
             {this.renderLoggedInStatusIcon}
           </LazyTippy>

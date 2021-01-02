@@ -126,7 +126,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       let message = youAreHere
         ? 'In Chat'
         : chatroomPop >= 1
-        ? 'Join Chat Here'
+        ? 'Join Chat'
         : 'Start Chat'
       button = (
         <div className="lilypad action" onClick={this.joinChat}>

@@ -201,7 +201,7 @@ class AoTimeHistory extends React.Component<TimeHistoryProps> {
   }
 
   render() {
-    if (this.timeLog.length <= 0) {
+    if (!this.timeLog || this.timeLog.length <= 0) {
       return null
     }
 
