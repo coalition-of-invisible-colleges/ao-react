@@ -79,7 +79,7 @@ export default class AoDrawPile extends React.PureComponent {
     }
 
     missions.sort((a, b) => {
-      return a.deck.length - b.deck.length
+      return b.deck.length - a.deck.length
     })
 
     return missions[0]
