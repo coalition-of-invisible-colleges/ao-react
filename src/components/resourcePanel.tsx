@@ -98,7 +98,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       return
     }
 
-    goInCard(card)
+    goInCard(card.taskId)
     this.setState({ redirect: this.props.resourceId })
   }
 

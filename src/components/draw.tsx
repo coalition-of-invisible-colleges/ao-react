@@ -9,12 +9,8 @@ import Badge from '../assets/images/badge.svg'
 import Unicorn from '../assets/images/uni.svg'
 import MoonBag from '../assets/images/archive.svg'
 
-interface State {
-  redirect?: string
-}
-
 @observer
-export default class AoDrawPile extends React.PureComponent<{}, State> {
+export default class AoDrawPile extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {}
@@ -26,19 +22,13 @@ export default class AoDrawPile extends React.PureComponent<{}, State> {
     this.redirect = this.redirect.bind(this)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.redirect !== undefined) {
-      this.setState({ redirect: undefined })
-    }
-  }
-
   redirect(card: Task) {
     if (!card) {
       console.log('missing card')
       return
     }
-    goInCard(card)
-    this.setState({ redirect: card.taskId })
+    goInCard(card.taskId)
+    aoStore.setGlobalRedirect(card.taskId)
   }
 
   meditate(event) {

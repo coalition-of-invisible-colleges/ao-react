@@ -227,6 +227,7 @@ class AoStore {
   @observable currentChatroom: string
   @observable draft: string = ''
   @observable dabbed: boolean = false
+  @observable globalRedirect?: string
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -593,6 +594,11 @@ class AoStore {
   }
 
   @action.bound
+  clearContext() {
+    this.context = []
+  }
+
+  @action.bound
   setCurrentCard(taskId: string) {
     this.currentCard = taskId
   }
@@ -611,6 +617,11 @@ class AoStore {
   @action.bound
   popDiscardHistory() {
     return this.discard.pop()
+  }
+
+  @action.bound
+  setGlobalRedirect(taskId: string) {
+    this.globalRedirect = taskId
   }
 
   @action.bound

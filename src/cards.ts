@@ -30,14 +30,13 @@ export interface CardPlay {
 	to: CardLocation
 }
 
-export function goInCard(card: Task, isContext = false) {
+export function goInCard(taskId: string, isContext = false) {
 	hideAllTippys()
 	aoStore.closeAllCloseables()
 
-	const taskId = card.taskId
 	console.log('goInCard taskId is ', taskId)
 	if (isContext) {
-		aoStore.clearContextTo(card.taskId)
+		aoStore.clearContextTo(taskId)
 	} else if (aoStore.currentCard) {
 		aoStore.addToContext([aoStore.currentCard])
 	}
@@ -49,7 +48,7 @@ export function goUp() {
 	if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
 		const go = aoStore.contextCards[0]
 		if (go) {
-			goInCard(go, true)
+			goInCard(go.taskId, true)
 		}
 	} else if (aoStore.contextCards.length < 1) {
 		hideAllTippys()

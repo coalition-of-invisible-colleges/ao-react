@@ -2,7 +2,6 @@ import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
-import { Redirect } from 'react-router-dom'
 import api from '../client/api'
 import { delay, cancelablePromise } from '../utils'
 import Markdown from 'markdown-to-jsx'
@@ -54,7 +53,6 @@ interface CardProps {
 interface State {
 	showPriorities?: boolean
 	showProjects?: boolean
-	redirect?: string
 }
 
 @observer
@@ -71,12 +69,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.onHover = this.onHover.bind(this)
 		this.renderCardContent = this.renderCardContent.bind(this)
 		this.clearPendingPromise = this.clearPendingPromise.bind(this)
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		if (this.state.redirect !== undefined) {
-			this.setState({ redirect: undefined })
-		}
 	}
 
 	componentWillUnmount() {
@@ -137,8 +129,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			return
 		}
 
-		goInCard(card, this.props.cardStyle === 'context')
-		this.setState({ redirect: card.taskId })
+		goInCard(card.taskId, this.props.cardStyle === 'context')
+		aoStore.setGlobalRedirect(card.taskId)
 	}
 
 	refocusAll() {
@@ -267,10 +259,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	render() {
-		if (this.state.redirect !== undefined) {
-			return <Redirect to={this.state.redirect} />
-		}
-
 		const card = this.props.task
 		if (!card) {
 			console.log('missing card')

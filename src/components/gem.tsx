@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { computed } from 'mobx'
 import { observer } from 'mobx-react'
+import { computed } from 'mobx'
+import { Redirect } from 'react-router-dom'
 import AoCardComposer from './cardComposer'
 import api from '../client/api'
+import { goInCard } from '../cards'
 import Tippy from '@tippyjs/react'
 import aoStore, { Task } from '../client/store'
 import 'tippy.js/dist/tippy.css'
@@ -10,10 +12,11 @@ import 'tippy.js/themes/translucent.css'
 
 interface State {
 	open?: boolean
+	redirect?: string
 }
 
 @observer
-export default class AoGem extends React.PureComponent<{}, State> {
+export default class AoGem extends React.Component<{}, State> {
 	private composeRef = React.createRef<AoCardComposer>()
 
 	constructor(props) {
@@ -23,6 +26,12 @@ export default class AoGem extends React.PureComponent<{}, State> {
 		this.close = this.close.bind(this)
 		this.detectEscape = this.detectEscape.bind(this)
 		this.newCard = this.newCard.bind(this)
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (this.state.redirect !== undefined) {
+			this.setState({ redirect: undefined })
+		}
 	}
 
 	toggle() {
@@ -63,11 +72,19 @@ export default class AoGem extends React.PureComponent<{}, State> {
 		if (card) {
 			api.findOrCreateCardInCard(name, card.taskId)
 		} else {
-			api.createCard(name)
+			api.createCard(name).then(res => {
+				const taskId = JSON.parse(res.text).event.taskId
+				goInCard(taskId)
+				this.setState({ redirect: taskId })
+			})
 		}
 	}
 
 	render() {
+		if (this.state.redirect) {
+			return <Redirect to={this.state.redirect} />
+		}
+
 		const theGem = (
 			<div
 				className={'action' + (this.state.open ? ' open' : '')}

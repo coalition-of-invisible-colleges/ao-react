@@ -222,7 +222,7 @@ textarea {
           .action {
             display: inline;
             margin-right: 0.5em;
-            padding-bottom: 0.25em;
+            padding-bottom: 0.2975em;
           }
         }
       }
@@ -1174,16 +1174,22 @@ textarea {
           // text-decoration: underline;
           visibility: visible;
         }
+
+        img.dabbed {
+          transform: scaleX(-1);
+        }
       }
 
       & > .drawSource:first-child {
+        width: min-content;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+
         & > img {
           width: 13em;
-
-          &.dabbed {
-            transform: scaleX(-1);
-          }
         }
+
         & > div {
           margin-top: 1em;
         }

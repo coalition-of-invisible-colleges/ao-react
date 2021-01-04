@@ -9,22 +9,24 @@
 
 import { hot } from 'react-hot-loader/root'
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useReducer } from 'react'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  Redirect
+  Redirect,
+  useHistory
 } from 'react-router-dom'
-import routes from './routes'
+import { observer } from 'mobx-react'
 import aoStore from './client/store'
 import api from './client/api'
-import { observer } from 'mobx-react'
+import { goUp } from './cards'
 import Login from './components/Login'
 import AoMember from './components/Member'
 import AoCard from './components/Card'
 import AoPopupPanel from './components/popupPanel'
+// import './css/themes/my_theme.scss' // import custom CSS themes here
 
 const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
   return (
@@ -58,6 +60,17 @@ if (typeof window !== 'undefined') {
 const App = observer(() => {
   const [render, setRender] = useState(false)
 
+  const detectGlobalHotkey = event => {
+    if (event.key === 'Escape') {
+      if (event.shiftKey) {
+        aoStore.clearContext()
+      }
+      goUp()
+      console.log('aoStore.currentCard is ', aoStore.currentCard)
+      aoStore.setGlobalRedirect(aoStore.currentCard || './')
+    }
+  }
+
   useEffect(() => {
     document.body.className = 'theme-1'
     api.fetchState().then(() => {
@@ -65,14 +78,19 @@ const App = observer(() => {
     })
   }, [])
 
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
+  useEffect(() => {
+    forceUpdate()
+  }, [aoStore.globalRedirect, aoStore.currentCard])
+
   return (
-    <React.Fragment>
+    <div onKeyDown={detectGlobalHotkey}>
       {render && (
         <Router>
           <Switch>
             <Route path="/login" component={Login} />
             <ProtectedRoute
-              path="/task/:taskId"
+              path="/task/:taskId?"
               component={AoCard}
               loggedIn={aoStore.state.loggedIn}
             />
@@ -90,7 +108,7 @@ const App = observer(() => {
           Receiving cards from server...
         </div>
       )}
-    </React.Fragment>
+    </div>
   )
 })
 export default hot(App)

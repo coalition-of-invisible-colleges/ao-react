@@ -15,9 +15,11 @@ export default function AoMember() {
 		) {
 			api.createCard('community hub').then(result => {
 				const newTaskId = JSON.parse(result.text).event.taskId
+				aoStore.setCurrentCard(newTaskId)
 				setHubId(newTaskId)
 			})
 		} else {
+			aoStore.setCurrentCard(communityCard.taskId)
 			setHubId(communityCard.taskId)
 		}
 	}, [])
