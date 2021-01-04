@@ -82,7 +82,6 @@ export default class AoCardComposer extends React.Component<Props, State> {
 	}
 
 	onChange(event) {
-		console.log('onChange value is ', event.target.value)
 		aoStore.saveDraft(event.target.value)
 		if (
 			aoStore.draft !== aoStore.member.draft &&

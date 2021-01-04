@@ -991,7 +991,6 @@ class AoApi {
           return res
         })
     } else {
-      console.log('creating new task')
       const act = {
         type: 'task-created',
         name: name,
@@ -1014,12 +1013,6 @@ class AoApi {
             y: y,
             memberId: aoStore.member.memberId
           }
-          console.log(
-            'task was created, id is ',
-            taskId,
-            ' and gridAct is ',
-            gridAct
-          )
           return request
             .post('/events')
             .set('Authorization', aoStore.state.token)

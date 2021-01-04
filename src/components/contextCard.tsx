@@ -286,12 +286,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		let content = card.name
 
 		if (taskId === content) {
-			let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
-			if (!memberOrResource) {
-				memberOrResource = aoStore.resourceById.get(taskId)
-			}
-			if (memberOrResource) {
-				content = memberOrResource.name
+			member = aoStore.memberById.get(taskId)
+			if (member) {
+				content = member.name
+			} else {
+				const resource = aoStore.resourceById.get(taskId)
+				if (resource) {
+					content = resource.name
+				}
 			}
 		}
 

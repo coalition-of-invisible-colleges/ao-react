@@ -2,6 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Member, Resource } from '../client/store'
 import AoContextCard from './contextCard'
+import AoDrawPile from './draw'
 import AoDiscardZone from './discard'
 import AoHud from './hud'
 import { Helmet } from 'react-helmet'
@@ -14,7 +15,7 @@ interface CardProps {
 }
 
 interface RenderProps {
-  taskId: string
+  taskId?: string
 }
 
 @observer
@@ -22,30 +23,38 @@ class RenderCard extends React.Component<RenderProps> {
   constructor(props) {
     super(props)
   }
+
   render() {
     const taskId = this.props.taskId
     console.log('taskId is ', taskId)
-    const card = aoStore.hashMap.get(taskId)
-    if (!card) {
-      return null
-    }
-    let cardText = ''
-    if (card.name === taskId) {
-      let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
-      if (!memberOrResource) {
-        memberOrResource = aoStore.resourceById.get(taskId)
-      }
-      if (memberOrResource) {
-        cardText = memberOrResource.name
-      }
-    } else if (card.guild) {
-      cardText = card.guild
-    } else {
-      cardText = card.name
-    }
 
-    if (cardText.length > 12) {
-      cardText = cardText.substring(0, 12) + '…'
+    let card
+    let cardText
+    if (taskId) {
+      card = aoStore.hashMap.get(taskId)
+
+      if (card) {
+        cardText = ''
+        if (card.name === taskId) {
+          let memberOrResource: Member | Resource = aoStore.memberById.get(
+            taskId
+          )
+          if (!memberOrResource) {
+            memberOrResource = aoStore.resourceById.get(taskId)
+          }
+          if (memberOrResource) {
+            cardText = memberOrResource.name
+          }
+        } else if (card.guild) {
+          cardText = card.guild
+        } else {
+          cardText = card.name
+        }
+
+        if (cardText.length > 12) {
+          cardText = cardText.substring(0, 12) + '…'
+        }
+      }
     }
 
     return (
@@ -53,11 +62,16 @@ class RenderCard extends React.Component<RenderProps> {
         <div id="tour-current-card">
           <Helmet>
             <title>
-              {cardText} - {aoStore.state.cash.alias}
+              {cardText ? cardText + ' - ' : ''}
+              {aoStore.state.cash.alias}
             </title>
           </Helmet>
           <AoDiscardZone />
-          <AoContextCard task={card} cardStyle="full" />
+          {card ? (
+            <AoContextCard task={card} cardStyle="full" />
+          ) : (
+            <AoDrawPile />
+          )}
           <AoHud />
         </div>
       </Tour>

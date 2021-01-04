@@ -226,6 +226,7 @@ class AoStore {
   @observable guiCloseables: ((event?) => void)[] = []
   @observable currentChatroom: string
   @observable draft: string = ''
+  @observable dabbed: boolean = false
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -250,6 +251,7 @@ class AoStore {
     )
     return memberCard
   }
+
   @computed get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
@@ -257,6 +259,7 @@ class AoStore {
     })
     return hashMap
   }
+
   @computed get memberById(): Map<string, Member> {
     let hashMap: Map<string, Member> = new Map()
     this.state.members.forEach(m => {
@@ -264,6 +267,7 @@ class AoStore {
     })
     return hashMap
   }
+
   @computed get resourceById(): Map<string, Resource> {
     let hashMap: Map<string, Resource> = new Map()
     this.state.resources.forEach(m => {
@@ -271,6 +275,7 @@ class AoStore {
     })
     return hashMap
   }
+
   // Returns a map of card names to cards.
   // Card names (keys) are in lowercase for case-insensitive comparison.
   // Guild (mission) names take precedence over card names for exact card lookup.
@@ -284,6 +289,7 @@ class AoStore {
     })
     return hashMap
   }
+
   @computed get memeById(): Map<string, Meme> {
     let hashMap: Map<string, Meme> = new Map()
     this.state.memes.forEach(m => {
@@ -291,6 +297,7 @@ class AoStore {
     })
     return hashMap
   }
+
   @computed get contextCards(): Task[] {
     let cards: Task[] = []
     this.context.forEach(tId => {
@@ -300,12 +307,14 @@ class AoStore {
 
     return cards
   }
+
   @computed
   get myCards() {
     return aoStore.state.tasks.filter(
       t => t.deck.indexOf(aoStore.member.memberId) !== -1
     )
   }
+
   @computed get allUnheldCards() {
     // Will not catch cards that are still held by deleted members (need to filter task.deck for existing members for that)
     return aoStore.state.tasks
@@ -314,16 +323,19 @@ class AoStore {
       })
       .reverse()
   }
+
   @computed get allGuilds(): Task[] {
     return aoStore.state.tasks.filter(task => {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
     })
   }
+
   @computed get allNonGuilds(): Task[] {
     return aoStore.state.tasks.filter(task => {
       return !(task.hasOwnProperty('guild') && task.guild.length >= 1)
     })
   }
+
   @computed get myGuilds(): Task[] {
     let my = this.state.tasks.filter(t => {
       if (!t.guild) return false
@@ -362,6 +374,7 @@ class AoStore {
     })
     return my
   }
+
   @computed get subGuildsByGuild(): Map<string, Task[]> {
     let subGuildsByGuild: Map<string, Task[]> = new Map()
 
@@ -393,6 +406,7 @@ class AoStore {
 
     return subGuildsByGuild
   }
+
   @computed get allEvents(): Task[] {
     return aoStore.state.tasks
       .filter(task => {
@@ -402,6 +416,50 @@ class AoStore {
         return b.book.startTs - a.book.startTs
       })
   }
+
+  @computed get myEvents(): Task[] {
+    let my = aoStore.state.tasks
+      .filter(t => {
+        if (!t.hasOwnProperty('taskId')) {
+          console.log(
+            'Invalid event card detected while retrieving member events list.'
+          )
+          return false
+        }
+
+        if (!t.book || !t.book.startTs || t.book.startTs <= 0) return false
+        if (t.deck.indexOf(aoStore.member.memberId) === -1) {
+          return false
+        }
+        return true
+      })
+      .sort((a, b) => {
+        return b.book.startTs - a.book.startTs
+      })
+
+    return my
+  }
+
+  @computed get topLevelMissions(): Task[] {
+    let missions = aoStore.state.tasks.filter(task => {
+      return task.hasOwnProperty('guild') && task.guild.length >= 1
+    })
+    if (missions.length < 1) {
+      return []
+    }
+
+    let projectCards = []
+    projectCards = projectCards.concat(
+      ...missions.map(task => aoStore.subGuildsByGuild.get(task.taskId))
+    )
+
+    missions = missions.filter(task => {
+      return !projectCards.includes(task)
+    })
+
+    return missions
+  }
+
   @computed get topMissions(): Task[] {
     let topMissions = aoStore.allGuilds.sort((a, b) => {
       if (b.deck.length === a.deck.length) {
@@ -416,6 +474,7 @@ class AoStore {
     topMissions.reverse()
     return topMissions
   }
+
   @computed get topCards(): Task[] {
     let topCards = aoStore.allNonGuilds
 
@@ -429,6 +488,7 @@ class AoStore {
     topCards.reverse()
     return topCards
   }
+
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -436,6 +496,7 @@ class AoStore {
     )
     this.state.loggedIn = true
   }
+
   @action.bound
   applyEvent(ev) {
     M.cashMuts(this.state.cash, ev)
@@ -446,10 +507,12 @@ class AoStore {
     M.tasksMuts(this.state.tasks, ev)
     M.aoMuts(this.state.ao, ev)
   }
+
   @action.bound
   resetState() {
     setCurrent(this.state, defaultState)
   }
+
   @action.bound
   updateSearchResults(query: string) {
     if (query.length < 1) {
@@ -498,25 +561,29 @@ class AoStore {
       console.log('regex search terminated in error: ', err)
     }
   }
+
   @action.bound
-  addToContext(taskIds: string[]) {
+  addToContext(taskIds: string[], alwaysAddMember = true) {
     if (taskIds.length < 1) return
     this.context = this.context.filter(tId => {
       return !taskIds.includes(tId)
     })
     this.context.push(...taskIds)
-    if (this.context[0] !== this.member.memberId) {
+    if (alwaysAddMember && this.context[0] !== this.member.memberId) {
       this.context = this.context.filter(tId => {
         return tId !== this.member.memberId
       })
       this.context.unshift(this.member.memberId)
     }
   }
+
+  @action.bound
   removeFromContext(taskId: string) {
     this.context = this.context.filter(tId => {
       return tId !== taskId
     })
   }
+
   @action.bound
   clearContextTo(taskId: string) {
     const index = this.context.findIndex(tId => {
@@ -524,44 +591,57 @@ class AoStore {
     })
     this.context = this.context.slice(0, index + 1)
   }
+
   @action.bound
   setCurrentCard(taskId: string) {
     this.currentCard = taskId
   }
+
   @action.bound
   setCurrentChatroom(taskId: string) {
     this.currentChatroom = taskId
   }
+
   @action.bound
   addToDiscardHistory(tasks: Task[]) {
     if (tasks.length < 1) return
     this.discard.push(...tasks)
   }
+
   @action.bound
   popDiscardHistory() {
     return this.discard.pop()
   }
+
   @action.bound
   saveDraft(newDraft: string) {
     this.draft = newDraft
   }
+
   @action.bound
   clearDraft() {
     this.draft = ''
   }
+
   @action.bound
   registerCloseable(onHide: (event) => void) {
     this.guiCloseables.push(onHide)
   }
+
   @action.bound
   unregisterCloseable(onHide: (event) => void) {
     this.guiCloseables = this.guiCloseables.filter(
       callback => callback !== onHide
     )
   }
+
   @action.bound
   closeAllCloseables() {
     this.guiCloseables.forEach(callback => callback())
+  }
+
+  @action.bound dab() {
+    this.dabbed = !this.dabbed
   }
 }
 const aoStore = new AoStore()

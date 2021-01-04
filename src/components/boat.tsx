@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import aoStore from '../client/store'
 import api from '../client/api'
 import Boat from '../assets/images/boat.svg'
 import Tippy from '@tippyjs/react'
@@ -19,6 +20,15 @@ export default class AoBoat extends React.PureComponent<Props> {
   }
 
   upboat(event) {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) {
+      return
+    }
+
+    if (!card.deck.find(tId => tId === this.props.taskId)) {
+      api.grabCard(this.props.taskId).then(res => {})
+    }
+
     api.prioritizeCard(this.props.taskId, this.props.inId)
   }
 

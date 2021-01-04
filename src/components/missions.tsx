@@ -47,21 +47,7 @@ export default class AoMissions extends React.PureComponent<{}, State> {
 
   @computed
   get renderMissionsList() {
-    let missions = aoStore.state.tasks.filter(task => {
-      return task.hasOwnProperty('guild') && task.guild.length >= 1
-    })
-    if (missions.length < 1) {
-      return ''
-    }
-
-    let projectCards = []
-    projectCards = projectCards.concat(
-      ...missions.map(task => aoStore.subGuildsByGuild.get(task.taskId))
-    )
-
-    missions = missions.filter(task => {
-      return !projectCards.includes(task)
-    })
+    const missions = aoStore.topLevelMissions
 
     if (this.state.sort === 'alphabetical') {
       missions.sort((a, b) => {

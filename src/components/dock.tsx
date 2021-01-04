@@ -6,7 +6,6 @@ import api from '../client/api'
 import AoHome from './home'
 import AoGem from './gem'
 import AoGrid from './grid'
-import AoReturnPile from './returnPile'
 import _ from 'lodash'
 
 interface State {
@@ -77,7 +76,6 @@ export default class AoDock extends React.Component<{}, State> {
         <AoHome />
         <AoGem />
         <AoGrid taskId={this.state.bookmarksTaskId} dropActsLikeFolder={true} />
-        <AoReturnPile />
       </div>
     )
   }

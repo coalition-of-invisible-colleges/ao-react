@@ -57,6 +57,9 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
   @computed get renderMemberInfo() {
     const memberId = this.props.memberId
     const member = aoStore.memberById.get(memberId)
+    if (!member) {
+      return null
+    }
     const card = aoStore.hashMap.get(memberId)
     if (!card) return null
 
@@ -121,7 +124,7 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
 
   render() {
     const memberId = this.props.memberId
-    const member = aoStore.memberById.get(memberId)
+    // const member = aoStore.memberById.get(memberId)
     const card = aoStore.hashMap.get(memberId)
     if (!card) return null
 

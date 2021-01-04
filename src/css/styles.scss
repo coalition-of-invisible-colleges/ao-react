@@ -869,7 +869,6 @@ textarea {
     #proposals,
     #bounties,
     #search,
-    #returnPile,
     #shitposts {
       z-index: 1;
 
@@ -1130,16 +1129,71 @@ textarea {
       }
     }
 
+    #drawPile {
+      position: fixed;
+      top: 33%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-50%);
+
+      .drawSources {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: top;
+        align-content: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 4em;
+        width: max-content;
+
+        & > .drawSource {
+          img {
+            height: 4.5em;
+          }
+        }
+      }
+
+      .drawSource {
+        margin: 0 2em;
+        cursor: pointer;
+
+        & > div {
+          margin-top: 1em;
+          visibility: hidden;
+        }
+
+        &:hover > div {
+          // text-decoration: underline;
+          visibility: visible;
+        }
+      }
+
+      & > .drawSource:first-child {
+        & > img {
+          width: 13em;
+
+          &.dabbed {
+            transform: scaleX(-1);
+          }
+        }
+        & > div {
+          margin-top: 1em;
+        }
+      }
+    }
+
+    // the rollsafe membrane, which returns lost cards you hodl
     #returnPile {
-      position: absolute;
-      left: 100%;
+      cursor: pointer;
+      // position: absolute;
+      // left: 100%;
 
       img.actionIcon {
-        position: absolute;
-        left: calc(100% + 3.25em);
-        top: unset;
-        bottom: 0.5em;
-        height: 4.5em;
+        // position: absolute;
+        // left: calc(100% + 3.25em);
+        // top: unset;
+        // bottom: 0.5em;
+        // height: 4.5em;
       }
     }
 

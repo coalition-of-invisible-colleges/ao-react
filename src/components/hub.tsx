@@ -64,7 +64,9 @@ export default class AoHub extends React.PureComponent<{}, State> {
       })
     } else {
       console.log('goInCard taskId is ', taskId)
-      aoStore.addToContext([aoStore.currentCard])
+      if (aoStore.currentCard) {
+        aoStore.addToContext([aoStore.currentCard])
+      }
       aoStore.setCurrentCard(taskId)
       aoStore.removeFromContext(taskId)
       this.setState({

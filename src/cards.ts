@@ -38,7 +38,7 @@ export function goInCard(card: Task, isContext = false) {
 	console.log('goInCard taskId is ', taskId)
 	if (isContext) {
 		aoStore.clearContextTo(card.taskId)
-	} else {
+	} else if (aoStore.currentCard) {
 		aoStore.addToContext([aoStore.currentCard])
 	}
 	aoStore.setCurrentCard(taskId)
@@ -51,6 +51,11 @@ export function goUp() {
 		if (go) {
 			goInCard(go, true)
 		}
+	} else if (aoStore.contextCards.length < 1) {
+		hideAllTippys()
+		aoStore.closeAllCloseables()
+
+		aoStore.setCurrentCard(null)
 	}
 }
 
@@ -145,39 +150,155 @@ export function subTaskCard(move: CardPlay) {
 	}
 }
 
-// this is actually about members, not cards, but not gonna split the file yet
-// export function isSenpai(memberId: string) {
-// return isSenpaiOf(aoStore.member.memberId, memberId)
-// const theirCard = aoStore.hashMap.get(memberId)
-// if (!theirCard) {
-// 	console.log('invalid member detected')
-// 	return 0
-// }
-// const theirVouchCards = theirCard.deck
-// 	.map(mId => aoStore.hashMap.get(mId))
-// 	.filter(memberCard => memberCard !== undefined)
+// Crawls through all cards, starting with the given task
+// Return all parents of the card that you are hodling
+export function allReachableHeldParents(origin: Task): Task[] {
+	if (!origin.hasOwnProperty('taskId')) {
+		return []
+	}
+	let queue: Task[] = [origin]
+	let reachableCards: Task[] = []
 
-// let theirVouches = theirVouchCards.length
+	let visited = {}
+	visited[origin.taskId] = true
+	let i = 0
+	while (queue.length >= 1) {
+		let task = queue.pop()
+		if (
+			task === undefined ||
+			task.subTasks === undefined ||
+			task.priorities === undefined ||
+			task.completed === undefined
+		) {
+			console.log('Invalid task found during returned cards search, skipping.')
+			continue
+		}
 
-// theirVouchCards.forEach(card => {
-// 	theirVouches = Math.max(theirVouches, countVouches(card.taskId))
-// })
+		if (
+			task.deck.indexOf(aoStore.memberCard.taskId) < 0 &&
+			task.taskId !== aoStore.member.memberId
+		) {
+			continue
+		}
 
-// const myVouches = aoStore.memberCard.deck
-// 	.map(mId => aoStore.hashMap.get(mId))
-// 	.filter(memberCard => memberCard !== undefined).length
+		reachableCards.push(task)
+		if (task.hasOwnProperty('parents') && task.parents.length >= 1) {
+			let parents = []
+			task.parents.forEach(tId => {
+				if (aoStore.hashMap.get(tId)) {
+					parents.push(aoStore.hashMap.get(tId))
+				}
+			})
+			parents.forEach(st => {
+				if (!st.hasOwnProperty('taskId')) {
+					console.log('Missing parent found during returned cards search.')
+					return
+				}
+				if (!visited.hasOwnProperty(st.taskId)) {
+					visited[st.taskId] = true
+					queue.push(st)
+				}
+			})
+		}
+	}
 
-// let theirRank = aoStore.state.members.findIndex(m => m.memberId === memberId)
-// let myRank = aoStore.state.members.findIndex(
-// 	m => m.memberId === aoStore.member.memberId
-// )
-// if (theirRank < myRank && theirVouches > myVouches) {
-// 	return 1
-// } else if (myRank < theirRank && myVouches > theirVouches) {
-// 	return -1
-// }
-// return 0
-// }
+	return reachableCards
+}
+
+// Returns the specified number of lost cards
+export function findOrphans(count: number) {
+	let found = 0
+	return aoStore.state.tasks.filter(t => {
+		if (found >= count) {
+			return false
+		}
+
+		if (!t.hasOwnProperty('taskId')) {
+			console.log('Broken card found while search for returned cards.')
+			return false
+		}
+
+		if (t.deck.indexOf(aoStore.member.memberId) < 0) {
+			return false
+		}
+
+		if (t.taskId === t.name) {
+			return false
+		}
+
+		if (t.guild && t.guild.length >= 1) {
+			return false
+		}
+
+		if (t.book && t.book.startTs) {
+			return false
+		}
+
+		if (t.name === 'community hub') {
+			return false
+		}
+
+		const dockCardName = aoStore.member.memberId + '-bookmarks'
+		if (t.name === dockCardName) {
+			return false
+		}
+
+		let parents = allReachableHeldParents(t)
+
+		let anchorCards: Task[] = [aoStore.memberCard].concat(
+			aoStore.myGuilds,
+			aoStore.myEvents
+		)
+
+		if (
+			parents.some(st => {
+				return anchorCards.some(at => at.taskId === st.taskId)
+			})
+		) {
+			return false
+		}
+		found++
+		return true
+	})
+}
+
+export function findFirstCardInCard(card: Task) {
+	if (card.priorities && card.priorities.length >= 1) {
+		const nextCard = aoStore.hashMap.get(
+			card.priorities[card.priorities.length - 1]
+		)
+		if (nextCard) {
+			return nextCard
+		}
+	}
+
+	let nextCard
+	if (card.grid && card.grid.rows) {
+		Object.entries(card.grid.rows).some(([y, row]) => {
+			Object.entries(row).some(([x, cell]) => {
+				if (cell) {
+					nextCard = aoStore.hashMap.get(cell)
+					return !!nextCard
+				}
+				return false
+			})
+		})
+	}
+	if (nextCard) {
+		return nextCard
+	}
+
+	if (card.subTasks && card.subTasks.length >= 1) {
+		const nextCard = aoStore.hashMap.get(
+			card.subTasks[card.subTasks.length - 1]
+		)
+		if (nextCard) {
+			return nextCard
+		}
+	}
+
+	return null
+}
 
 // A card's .signed is an append-only list of all signing events.
 // This function reduces it to just each member's current opinion

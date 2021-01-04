@@ -139,7 +139,11 @@ export default class CardHud extends React.Component<CardHudProps> {
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
-							<AoBoat taskId={taskId} inId={this.props.inId} />
+							{this.props.inId ? (
+								<AoBoat taskId={taskId} inId={this.props.inId} />
+							) : (
+								<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+							)}
 						</div>
 					</React.Fragment>
 				)

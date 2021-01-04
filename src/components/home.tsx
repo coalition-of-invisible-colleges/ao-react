@@ -50,7 +50,9 @@ export default class AoHome extends React.PureComponent<{}, State> {
     }
     const taskId = card.taskId
     console.log('goInCard taskId is ', taskId)
-    aoStore.addToContext([aoStore.currentCard])
+    if (aoStore.currentCard) {
+      aoStore.addToContext([aoStore.currentCard])
+    }
     aoStore.setCurrentCard(taskId)
     aoStore.removeFromContext(taskId)
     this.setState({
@@ -62,9 +64,8 @@ export default class AoHome extends React.PureComponent<{}, State> {
 
   render() {
     if (
-      (aoStore.currentCard === aoStore.memberCard.taskId &&
-        !this.state.dabbed) ||
-      (aoStore.currentCard === this.state.memory && this.state.dabbed)
+      aoStore.currentCard === aoStore.memberCard.taskId &&
+      !this.state.memory
     ) {
       return null
     }
