@@ -1131,16 +1131,23 @@ textarea {
 
     #drawPile {
       position: fixed;
-      top: 33%;
+      top: 42%;
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
+      background: rgb(0, 0, 0);
+      background: radial-gradient(
+        circle,
+        rgba(0, 0, 0, 0.75) 0%,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      padding: 20%;
 
       .drawSources {
         display: flex;
         justify-content: space-evenly;
-        align-items: top;
         align-content: center;
-        position: absolute;
+        position: relative;
         left: 50%;
         transform: translateX(-50%);
         margin-top: 4em;
