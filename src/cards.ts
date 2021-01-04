@@ -272,17 +272,35 @@ export function findFirstCardInCard(card: Task) {
 		}
 	}
 
+	const sortRows = (a, b) => {
+		const [indexA] = a
+		const [indexB] = b
+
+		return indexB - indexA
+	}
+
+	const sortColumns = (a, b) => {
+		const [indexA] = a
+		const [indexB] = b
+
+		return indexA - indexB
+	}
+
 	let nextCard
 	if (card.grid && card.grid.rows) {
-		Object.entries(card.grid.rows).some(([y, row]) => {
-			Object.entries(row).some(([x, cell]) => {
-				if (cell) {
-					nextCard = aoStore.hashMap.get(cell)
-					return !!nextCard
-				}
-				return false
+		Object.entries(card.grid.rows)
+			.sort(sortRows)
+			.some(([y, row]) => {
+				Object.entries(row)
+					.sort(sortColumns)
+					.some(([x, cell]) => {
+						if (cell) {
+							nextCard = aoStore.hashMap.get(cell)
+							return !!nextCard
+						}
+						return false
+					})
 			})
-		})
 	}
 	if (nextCard) {
 		return nextCard
