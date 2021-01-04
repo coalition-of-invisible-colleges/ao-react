@@ -6,7 +6,7 @@ import aoStore, { Task, Grid } from '../client/store'
 import api from '../client/api'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay, Coords } from '../cards'
+import { CardPlay, Coords, goUp } from '../cards'
 import AoGridResizer from './gridResizer'
 import AoContextCard from './contextCard'
 import AoCardComposer from './cardComposer'
@@ -62,7 +62,13 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
 
     switch (move.from.zone) {
       case 'card':
-        if (move.to.taskId) {
+        if (
+          move.to.taskId &&
+          this.props.dropActsLikeFolder &&
+          move.from.inId !== move.to.inId
+        ) {
+          api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(goUp)
+        } else if (move.to.taskId) {
           api
             .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
             .then(() =>

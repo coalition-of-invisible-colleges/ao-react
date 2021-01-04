@@ -42,13 +42,20 @@ export default class AoDrawPile extends React.PureComponent<{}, State> {
   }
 
   meditate(event) {
-    const piles = [this.nextSquad, this.nextCard, this.topReturnedCard].filter(
-      pile => !!pile
-    )
+    const piles = [
+      this.goTopPriority,
+      this.goNextSquad,
+      this.goNextCard,
+      this.goLostCard
+    ].filter(pile => !!pile)
+
+    if (piles.length <= 0) {
+      return
+    }
 
     const whichPile = Math.floor(Math.random() * piles.length)
 
-    this.redirect(piles[whichPile])
+    piles[whichPile](event)
   }
 
   goTopPriority(event) {
@@ -115,22 +122,21 @@ export default class AoDrawPile extends React.PureComponent<{}, State> {
   render() {
     return (
       <div id="drawPile">
-        {this.nextCard ? (
-          <div className="drawSource" onClick={this.goNextCard}>
-            <img src={Unicorn} className={aoStore.dabbed && 'dabbed'} />
-            <div>Next Card</div>
-          </div>
-        ) : (
-          <div className="drawSource" onClick={this.meditate}>
-            <img src={BuddhaDoge} />
-            <div>Abide</div>
-          </div>
-        )}
+        <div className="drawSource" onClick={this.meditate}>
+          <img src={BuddhaDoge} />
+          <div>Draw</div>
+        </div>
         <div className="drawSources" onClick={this.goTopPriority}>
           {this.topPriority && (
             <div className="drawSource">
               <img src={RedBoat} />
               <div>Top Priority</div>
+            </div>
+          )}
+          {this.nextCard && (
+            <div className="drawSource" onClick={this.goNextCard}>
+              <img src={Unicorn} className={aoStore.dabbed && 'dabbed'} />
+              <div>Next Card</div>
             </div>
           )}
           {this.nextSquad && (
