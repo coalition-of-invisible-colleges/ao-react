@@ -130,6 +130,7 @@ export default class AoMembers extends React.Component<{}, State> {
         <InfiniteScroll
           dataLength={this.state.items}
           next={this.scrollMore}
+          scrollableTarget="membersList"
           hasMore={this.state.hasMore}
           loader={<h4>Loading...</h4>}
           endMessage={

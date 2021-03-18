@@ -238,6 +238,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
             dataLength={this.state.items}
             next={this.scrollMore}
             scrollableTarget="searchResults"
+            height="55vh"
             hasMore={this.state.hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={
