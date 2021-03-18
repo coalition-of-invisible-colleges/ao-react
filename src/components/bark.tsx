@@ -112,51 +112,6 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     ).length
   }
 
-  @computed get deleteCount() {
-    const member = aoStore.memberById.get(this.props.memberId)
-    if (!member || !member.hasOwnProperty('potentials')) {
-      return 0
-    }
-    return member.potentials.filter(pot => pot.opinion === 'member-purged')
-      .length
-  }
-
-  @computed get doIBan() {
-    const member = aoStore.memberById.get(this.props.memberId)
-    if (!member || !member.hasOwnProperty('potentials')) {
-      return null
-    }
-    return member.potentials.some(
-      pot =>
-        pot.opinion === 'member-banned' &&
-        pot.memberId === aoStore.member.memberId
-    )
-  }
-
-  @computed get doIDelete() {
-    const member = aoStore.memberById.get(this.props.memberId)
-    if (!member || !member.hasOwnProperty('potentials')) {
-      return null
-    }
-    return member.potentials.some(
-      pot =>
-        pot.opinion === 'member-purged' &&
-        pot.memberId === aoStore.member.memberId
-    )
-  }
-
-  @computed get doIReset() {
-    const member = aoStore.memberById.get(this.props.memberId)
-    if (!member || !member.hasOwnProperty('potentials')) {
-      return null
-    }
-    return member.potentials.some(
-      pot =>
-        pot.opinion === 'member-secret-reset' &&
-        pot.memberId === aoStore.member.memberId
-    )
-  }
-
   // cached version of the function in members.js
   @computed get senpai() {
     const rank = this.isAheadOf
@@ -252,32 +207,33 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return <ul>{renderedBans}</ul>
   }
 
-  renderDeleteList() {
-    const member = aoStore.memberById.get(this.props.memberId)
-    if (!member) {
-      return null
-    }
+  // todo: move this to a more global location and make it a global admin feed
+  // renderDeleteList() {
+  //   const member = aoStore.memberById.get(this.props.memberId)
+  //   if (!member) {
+  //     return null
+  //   }
 
-    const renderedDeletes = member.potentials
-      .filter(pot => pot.opinion === 'member-purged')
-      .map(pot => {
-        const senpaiId = pot.memberId
-        const senpai = aoStore.memberById.get(pot.memberId)
-        const senpaiName = senpai ? senpai.name : 'deleted member'
-        const distanceToNow = formatDistanceToNow(pot.timestamp, {
-          addSuffix: true
-        })
+  //   const renderedDeletes = member.potentials
+  //     .filter(pot => pot.opinion === 'member-purged')
+  //     .map(pot => {
+  //       const senpaiId = pot.memberId
+  //       const senpai = aoStore.memberById.get(pot.memberId)
+  //       const senpaiName = senpai ? senpai.name : 'deleted member'
+  //       const distanceToNow = formatDistanceToNow(pot.timestamp, {
+  //         addSuffix: true
+  //       })
 
-        return (
-          <li key={senpaiId}>
-            <AoMemberIcon memberId={senpaiId} /> {senpaiName} voted to delete
-            account {distanceToNow}
-          </li>
-        )
-      })
+  //       return (
+  //         <li key={senpaiId}>
+  //           <AoMemberIcon memberId={senpaiId} /> {senpaiName} voted to delete
+  //           account {distanceToNow}
+  //         </li>
+  //       )
+  //     })
 
-    return <ul>{renderedDeletes}</ul>
-  }
+  //   return <ul>{renderedDeletes}</ul>
+  // }
 
   renderBarkMenu() {
     const member = aoStore.memberById.get(this.props.memberId)
@@ -318,60 +274,6 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
       )
     }
 
-    let banLabel = ''
-    if (this.doIBan) {
-      switch (this.banCount) {
-        case VOTES_TO_EXECUTE:
-          banLabel = 'Unban'
-          break
-        default:
-          banLabel = 'Remove Ban Vote'
-      }
-    } else {
-      // switch (this.banCount) {
-      //   case 0:
-      //     banLabel = 'Propose Ban'
-      //     break
-      //   case 1:
-      //     banLabel = 'Second Ban'
-      //     break
-      //   case 2:
-      //     banLabel = 'Execute Ban'
-      //     break
-      //   default:
-      //     banLabel = 'Increase Ban Vote'
-      // }
-      banLabel = 'Ban Member'
-    }
-
-    let resetLabel = 'Reset Password'
-    // switch (this.resetCount) {
-    //   case 1:
-    //     resetLabel = 'Second Password Reset'
-    //     break
-    //   case 2:
-    //     resetLabel = 'Execute Password Reset'
-    //     break
-    //   case 0:
-    //   default:
-    //     resetLabel = 'Propose Password Reset'
-    //     break
-    // }
-
-    let deleteLabel = 'Delete Account'
-    // switch (this.deleteCount) {
-    //   case 1:
-    //     deleteLabel = 'Second Delete Account'
-    //     break
-    //   case 2:
-    //     deleteLabel = 'Execute Delete Account'
-    //     break
-    //   case 0:
-    //   default:
-    //     deleteLabel = 'Propose Delete Account'
-    //     break
-    // }
-
     return (
       <div className="paddedPopup">
         <div>{this.message}</div>
@@ -383,15 +285,13 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
             </div>
             <div
               className="action"
-              onClick={this.doIBan ? this.unbanMember : this.banMember}>
+              onClick={member.banned ? this.unbanMember : this.banMember}>
               <img src={Banhammer} />
-              {banLabel}
+              Ban Member
             </div>
             {this.banCount >= 1 && this.renderBanList()}
-            <div
-              className={this.doIReset ? undefined : 'action'}
-              onClick={this.doIReset ? undefined : this.resetPassword}>
-              {this.doIReset ? 'Voted to Reset Password' : resetLabel}
+            <div className="action" onClick={this.resetPassword}>
+              Reset Password
             </div>
             {(member.p0wned || !member.hasOwnProperty('p0wned')) && (
               <p className="warning">
@@ -402,13 +302,10 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
                 </small>
               </p>
             )}
-            <div
-              className={this.doIDelete ? undefined : 'action'}
-              onClick={this.purgeMember}>
+            <div className="action" onClick={this.purgeMember}>
               <img src={Gun} className="icon" />
-              {this.doIDelete ? 'Voted to Delete Account' : deleteLabel}
+              Delete Account
             </div>
-            {this.deleteCount >= 1 && this.renderDeleteList()}
             {membershipActivator}
           </div>
         )}

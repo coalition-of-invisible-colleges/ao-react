@@ -25,21 +25,18 @@ interface State {
 export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
-    console.log(
-      'AoMembers constructor members.length is ',
-      aoStore.state.members.length
-    )
+
     const hasMore =
       aoStore.state.members.filter(
         member => !!aoStore.hashMap.get(member.memberId)
       ).length >=
       STARTING_ITEMS + 1
+
     this.state = {
       sort: 'recents',
       items: STARTING_ITEMS,
       hasMore: hasMore
     }
-    console.log('state is now ', this.state)
 
     this.sortBy = this.sortBy.bind(this)
     this.toggleNew = this.toggleNew.bind(this)
@@ -53,7 +50,6 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   sortBy(sort: MemberSort) {
-    console.log('members sortBy. state is ', this.state)
     if (this.state.sort === sort) {
       return
     }
@@ -76,8 +72,6 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   scrollMore() {
-    console.log('members scrollMore')
-
     const index = this.state.items
     const nextResults = this.sortedMemberCards.slice(index, index + 5)
     const hasMore = this.sortedMemberCards.length >= index + 1
@@ -157,8 +151,6 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   @computed get sortedMemberCards() {
-    console.log('sortedMemberCards state is ', this.state)
-
     const members = aoStore.state.members.slice()
     let memberCards: Task[] = []
 
@@ -180,7 +172,7 @@ export default class AoMembers extends React.Component<{}, State> {
     memberCards = memberCards.filter(card => !!card)
     const missingCards = count - memberCards.length
     if (missingCards > 0) {
-      console.log(`Missing member cards: $(missingCards)`)
+      console.log(`Missing member cards: ${missingCards}`)
     }
 
     if (this.state.sort === 'vouches') {
@@ -193,7 +185,6 @@ export default class AoMembers extends React.Component<{}, State> {
       memberCards.reverse()
       // Default sort is database order, i.e., member creation order
     }
-    console.log('sortedMemberCards is ', memberCards)
 
     return memberCards
   }
