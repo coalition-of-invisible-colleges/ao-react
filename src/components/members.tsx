@@ -19,6 +19,7 @@ interface State {
   openNew?: boolean
   items: number
   hasMore: boolean
+  refreshList?: boolean
 }
 
 @observer
@@ -49,6 +50,12 @@ export default class AoMembers extends React.Component<{}, State> {
     this.renderMembersList = this.renderMembersList.bind(this)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.refreshList !== undefined) {
+      this.setState({ refreshList: undefined })
+    }
+  }
+
   sortBy(sort: MemberSort) {
     if (this.state.sort === sort) {
       return
@@ -58,8 +65,11 @@ export default class AoMembers extends React.Component<{}, State> {
     if (membersListDiv) {
       membersListDiv.scrollTop = 0
     }
-    process.nextTick(() => {
-      this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
+    this.setState({
+      refreshList: true,
+      sort: sort,
+      items: STARTING_ITEMS,
+      hasMore
     })
   }
 
@@ -151,13 +161,15 @@ export default class AoMembers extends React.Component<{}, State> {
             {this.sortedMemberCards.length}{' '}
             {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
           </div>
-          <InfiniteScroll
-            loadMore={this.scrollMore}
-            hasMore={this.state.hasMore}
-            useWindow={false}
-            loader={<h4>Loading...</h4>}>
-            {this.renderedItems}
-          </InfiniteScroll>
+          {!this.state.refreshList && (
+            <InfiniteScroll
+              loadMore={this.scrollMore}
+              hasMore={this.state.hasMore}
+              useWindow={false}
+              loader={<h4>Loading...</h4>}>
+              {this.renderedItems}
+            </InfiniteScroll>
+          )}
         </div>
       </React.Fragment>
     )
