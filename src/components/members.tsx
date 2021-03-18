@@ -55,7 +55,7 @@ export default class AoMembers extends React.Component<{}, State> {
     if (this.state.sort === sort) {
       return
     }
-    const hasMore = this.sortedMemberCards.length >= this.state.items + 1
+    const hasMore = this.sortedMemberCards.length >= STARTING_ITEMS + 1
     this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
