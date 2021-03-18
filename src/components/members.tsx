@@ -65,11 +65,13 @@ export default class AoMembers extends React.Component<{}, State> {
     if (membersListDiv) {
       membersListDiv.scrollTop = 0
     }
-    this.setState({
-      refreshList: true,
-      sort: sort,
-      items: STARTING_ITEMS,
-      hasMore
+    process.nextTick(() => {
+      this.setState({
+        refreshList: true,
+        sort: sort,
+        items: STARTING_ITEMS,
+        hasMore
+      })
     })
   }
 
@@ -113,7 +115,6 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   @computed get renderedItems() {
-    console.log('renderedItems items is ', this.state.items)
     const items = this.sortedMemberCards.slice(0, this.state.items)
     let rendered = items.map((task, i) => {
       return (
