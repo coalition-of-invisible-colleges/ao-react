@@ -15,7 +15,6 @@ const STARTING_ITEMS = 10
 
 interface State {
   sort: MemberSort
-  page: number
   text?: string
   openNew?: boolean
   items?: number
@@ -33,7 +32,6 @@ export default class AoMembers extends React.Component<{}, State> {
     const hasMore = aoStore.state.members.length >= STARTING_ITEMS + 1
     this.state = {
       sort: 'recents',
-      page: 0,
       items: STARTING_ITEMS,
       hasMore: hasMore
     }
@@ -55,7 +53,7 @@ export default class AoMembers extends React.Component<{}, State> {
     if (this.state.sort === sort) {
       return
     }
-    const hasMore = this.sortedMemberCards.length >= STARTING_ITEMS + 1
+    const hasMore = aoStore.state.members.length >= STARTING_ITEMS + 1
     this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
