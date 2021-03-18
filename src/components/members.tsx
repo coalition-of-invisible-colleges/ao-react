@@ -135,6 +135,10 @@ export default class AoMembers extends React.Component<{}, State> {
       )
     }
 
+    const items = this.renderItems(
+      this.sortedMemberCards.slice(0, this.state.items)
+    )
+
     return (
       <React.Fragment>
         <div className="toolbar">
@@ -153,9 +157,7 @@ export default class AoMembers extends React.Component<{}, State> {
             hasMore={this.state.hasMore}
             useWindow={false}
             loader={<h4>Loading...</h4>}>
-            {this.renderItems(
-              this.sortedMemberCards.slice(0, this.state.items)
-            )}
+            {items}
           </InfiniteScroll>
         </div>
       </React.Fragment>
