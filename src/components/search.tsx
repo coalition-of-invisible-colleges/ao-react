@@ -5,7 +5,6 @@ import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import AoContextCard from './contextCard'
 import AoDragZone from './dragZone'
-import _ from 'lodash'
 
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
 
@@ -20,7 +19,6 @@ interface State {
 export const defaultState: State = {
   query: '',
   sort: 'newest',
-  items: undefined,
   hasMore: true
 }
 
@@ -200,7 +198,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
           y: i
         }}
         key={task.taskId}>
-        <AoContextCard task={task} cardStyle={'priority'} noFindOnPage={true} />
+        <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
       </AoDragZone>
     ))
   }
@@ -213,7 +211,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     if (this.sortedResults.length === 0) {
       if (this.state.query && this.state.query.length >= 1) {
         return (
-          <div id={'searchResults'} className={'results'}>
+          <div id="searchResults" className="results">
             0 results
           </div>
         )
@@ -232,7 +230,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
         ) : (
           ''
         )}
-        <div id={'searchResults'} className={'results'}>
+        <div id="searchResults" className="results">
           <div>
             {this.sortedResults.length}{' '}
             {this.sortedResults.length === 1
@@ -242,7 +240,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
           <InfiniteScroll
             dataLength={this.state.items}
             next={this.scrollMore}
-            scrollableTarget={'searchResults'}
+            scrollableTarget="searchResults"
             hasMore={this.state.hasMore}
             loader={<h4>Loading...</h4>}
             endMessage={
@@ -282,7 +280,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
           onKeyDown={this.onKeyDown}
           value={this.state.query}
           size={36}
-          placeholder={'search for a card'}
+          placeholder="search for a card"
           autoFocus
         />
         {this.renderSearchResults()}

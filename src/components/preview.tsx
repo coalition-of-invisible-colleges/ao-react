@@ -68,6 +68,35 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
     return priorityCards
   }
 
+  @computed get renderedPriorities() {
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+
+    return (
+      <React.Fragment>
+        {aoStore.currentCard === taskId ? (
+          <p>You Are Here</p>
+        ) : (
+          <React.Fragment>
+            {this.props.hudStyle === 'badge' &&
+            card.guild &&
+            card.guild.length >= 1 ? (
+              <h3>{card.guild}</h3>
+            ) : null}
+            <AoStack
+              inId={taskId}
+              cardStyle="priority"
+              cards={this.priorityCards}
+              zone="priorities"
+              onDrop={prioritizeCard}
+              cardsBeforeFold={3}
+            />
+          </React.Fragment>
+        )}
+      </React.Fragment>
+    )
+  }
+
   render() {
     if (this.subCardCount < 1) {
       return null
@@ -84,15 +113,12 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
     switch (this.props.hudStyle) {
       case 'collapsed':
         return (
-          <div className={'preview'}>
+          <div className="preview">
             {this.priorityCount >= 1 ? (
               <div
                 className="action togglePriorities"
                 onClick={this.props.onTogglePriorities}
-                onDoubleClick={event => {
-                  event.stopPropagation()
-                  event.nativeEvent.stopImmediatePropagation()
-                }}>
+                onDoubleClick={this.preventDoubleClick}>
                 {this.priorityCount}{' '}
                 {this.priorityCount > 1 ? 'priorities' : 'priority'}{' '}
                 {this.props.prioritiesShown ? (
@@ -143,42 +169,20 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           return (
             <Tippy
               interactive={true}
-              maxWidth={'none'}
-              placement={'bottom'}
-              animation={'scale-extreme'}
+              maxWidth="none"
+              placement="bottom"
+              animation="scale-extreme"
               delay={delay}
               appendTo={() =>
                 document.getElementById('card-' + taskId).parentElement
                   .parentElement.parentElement
               }
-              content={
-                <React.Fragment>
-                  {aoStore.currentCard === taskId ? (
-                    <p>You Are Here</p>
-                  ) : (
-                    <React.Fragment>
-                      {this.props.hudStyle === 'badge' &&
-                      card.guild &&
-                      card.guild.length >= 1 ? (
-                        <h3>{card.guild}</h3>
-                      ) : null}
-                      <AoStack
-                        inId={taskId}
-                        cardStyle={'priority'}
-                        cards={this.priorityCards}
-                        zone={'priorities'}
-                        onDrop={prioritizeCard}
-                        cardsBeforeFold={3}
-                      />
-                    </React.Fragment>
-                  )}
-                </React.Fragment>
-              }>
-              <div className={'preview nopad'}>{wrappedPriorityCount}</div>
+              content={this.renderedPriorities}>
+              <div className="preview nopad">{wrappedPriorityCount}</div>
             </Tippy>
           )
         }
-        return <div className={'preview'}>({this.subCardCount})</div>
+        return <div className="preview">({this.subCardCount})</div>
       default:
         return null
     }

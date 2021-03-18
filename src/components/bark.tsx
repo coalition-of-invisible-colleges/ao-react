@@ -15,6 +15,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import { formatDistanceToNow, format } from 'date-fns'
 import AoMemberIcon from './memberIcon'
+import { POTENTIALS_TO_EXECUTE as VOTES_TO_EXECUTE } from '../mutations'
 
 interface CardMenuProps {
   memberId: string
@@ -43,7 +44,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   resetPassword() {
-    if (this.resetCount === 2) {
+    if (this.resetCount === VOTES_TO_EXECUTE - 1) {
       if (
         !window.confirm(
           "Are you sure you want to reset this member's password?\n\nTheir password will be reset to the same as their current username. This means the account is p0wned and completely unsecured until someone logs in and changes the password to a new secure password. Please inform the member that their password has changed and remind them to set a new secure password."
@@ -67,26 +68,24 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   banMember() {
-    if (this.banCount < 3) {
-      let actionText = [
-        'propose a ban',
-        'second this ban',
-        'execute this ban right now'
-      ]
+    if (this.banCount < VOTES_TO_EXECUTE) {
+      // let actionText = [
+      //   'propose a ban',
+      //   'second this ban',
+      //   'execute this ban right now'
+      // ]
       let confirmMessage =
-        'Are you sure you want to ' +
-        actionText[this.banCount] +
-        "?\n\nIf banned, the member's account will deactivate, and the member will be unable to use their fob or activate resources such as the door or soda machine. They will be effectively locked-out until the ban is lifted (when ban votes go below 3 again)."
+        "Are you sure you want to ban this member?\n\nIf banned, the member's account will deactivate, and the member will be unable to use their fob or activate resources such as the door or soda machine. They will be effectively locked-out until the ban is lifted (when ban votes go below 3 again)."
 
       if (!window.confirm(confirmMessage)) {
         return
       }
+      api.banMember(this.props.memberId)
     }
-    api.banMember(this.props.memberId)
   }
 
   unbanMember() {
-    if (this.banCount === 3) {
+    if (this.banCount >= VOTES_TO_EXECUTE) {
       if (
         !window.confirm(
           'Are you sure you want to unban this member?\n\nPlease consider carefully before allowing a potentially dangerous or toxic person back into the community.'
@@ -99,15 +98,15 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   purgeMember() {
-    if (this.deleteCount < 3) {
+    if (this.deleteCount < VOTES_TO_EXECUTE) {
       let actionText = [
         'propose deleting this member',
         'second deleting this member',
-        "delete this member' and member card right now"
+        "delete this member's account and member card right now"
       ]
       let confirmMessage =
         'Are you sure you want to ' +
-        actionText[this.deleteCount] +
+        actionText[2] +
         '?\n\nThis will delete the member and their member card, and erase their hodls. This action cannot be undone.'
 
       if (!window.confirm(confirmMessage)) {
@@ -345,60 +344,61 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     let banLabel = ''
     if (this.doIBan) {
       switch (this.banCount) {
-        case 3:
+        case VOTES_TO_EXECUTE:
           banLabel = 'Unban'
           break
         default:
           banLabel = 'Remove Ban Vote'
       }
     } else {
-      switch (this.banCount) {
-        case 0:
-          banLabel = 'Propose Ban'
-          break
-        case 1:
-          banLabel = 'Second Ban'
-          break
-        case 2:
-          banLabel = 'Execute Ban'
-          break
-        default:
-          banLabel = 'Increase Ban Vote'
-      }
+      // switch (this.banCount) {
+      //   case 0:
+      //     banLabel = 'Propose Ban'
+      //     break
+      //   case 1:
+      //     banLabel = 'Second Ban'
+      //     break
+      //   case 2:
+      //     banLabel = 'Execute Ban'
+      //     break
+      //   default:
+      //     banLabel = 'Increase Ban Vote'
+      // }
+      banLabel = 'Ban Member'
     }
 
-    let resetLabel = ''
-    switch (this.resetCount) {
-      case 1:
-        resetLabel = 'Second Password Reset'
-        break
-      case 2:
-        resetLabel = 'Execute Password Reset'
-        break
-      case 0:
-      default:
-        resetLabel = 'Propose Password Reset'
-        break
-    }
+    let resetLabel = 'Reset Password'
+    // switch (this.resetCount) {
+    //   case 1:
+    //     resetLabel = 'Second Password Reset'
+    //     break
+    //   case 2:
+    //     resetLabel = 'Execute Password Reset'
+    //     break
+    //   case 0:
+    //   default:
+    //     resetLabel = 'Propose Password Reset'
+    //     break
+    // }
 
-    let deleteLabel = ''
-    switch (this.deleteCount) {
-      case 1:
-        deleteLabel = 'Second Delete Account'
-        break
-      case 2:
-        deleteLabel = 'Execute Delete Account'
-        break
-      case 0:
-      default:
-        deleteLabel = 'Propose Delete Account'
-        break
-    }
+    let deleteLabel = 'Delete Account'
+    // switch (this.deleteCount) {
+    //   case 1:
+    //     deleteLabel = 'Second Delete Account'
+    //     break
+    //   case 2:
+    //     deleteLabel = 'Execute Delete Account'
+    //     break
+    //   case 0:
+    //   default:
+    //     deleteLabel = 'Propose Delete Account'
+    //     break
+    // }
 
     return (
-      <React.Fragment>
+      <div className="paddedPopup">
         <div>{this.message}</div>
-        {!!this.senpai ? (
+        {!!this.senpai && (
           <div className="menu">
             <div className="action" onClick={this.promoteMember}>
               <img src={Ascend} className="ascend" />
@@ -408,37 +408,47 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
               className="action"
               onClick={this.doIBan ? this.unbanMember : this.banMember}>
               <img src={Banhammer} />
-              {banLabel} ({this.banCount}/3)
+              {banLabel}
             </div>
             {this.banCount >= 1 && this.renderBanList()}
             <div
               className={this.doIReset ? undefined : 'action'}
               onClick={this.doIReset ? undefined : this.resetPassword}>
-              {this.doIReset ? 'Voted to Reset Password' : resetLabel} (
-              {this.resetCount}/3)
+              {this.doIReset ? 'Voted to Reset Password' : resetLabel}
             </div>
+            {(member.p0wned || !member.hasOwnProperty('p0wned')) && (
+              <p className="warning">
+                <small>
+                  {member.p0wned
+                    ? "This member's password has not been changed from the default."
+                    : "This member's password is stale and should be changed."}
+                </small>
+              </p>
+            )}
             <div
               className={this.doIDelete ? undefined : 'action'}
               onClick={this.purgeMember}>
               <img src={Gun} className="icon" />
-              {this.doIDelete ? 'Voted to Delete Account' : deleteLabel} (
-              {this.deleteCount}/3)
+              {this.doIDelete ? 'Voted to Delete Account' : deleteLabel}
             </div>
             {this.deleteCount >= 1 && this.renderDeleteList()}
             {membershipActivator}
           </div>
-        ) : (
-          ''
         )}
-      </React.Fragment>
+      </div>
     )
   }
 
   renderMenuButton() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member) {
+      return null
+    }
+
     return (
       <Tippy
         zIndex={4}
-        theme={'translucent'}
+        theme="translucent"
         content={this.message}
         hideOnClick={false}>
         <img
@@ -446,6 +456,9 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
           className={
             'barkButton ' +
             this.senpai +
+            (member.p0wned || !member.hasOwnProperty('p0wned')
+              ? ' p0wned '
+              : '') +
             (this.props.noPopups ? ' noPopups' : '')
           }
           draggable={false}
@@ -462,7 +475,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
     return (
       <Tippy
         zIndex={4}
-        theme={'translucent'}
+        theme="translucent"
         content={this.message}
         hideOnClick={false}>
         <img
@@ -490,8 +503,9 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
           zIndex={5}
           content={this.renderBarkMenu()}
           interactive={true}
-          trigger={'click'}
-          placement={'top-end'}
+          theme="translucent"
+          trigger="click"
+          placement="top-end"
           appendTo={document.getElementById('root')}>
           {this.renderMenuButton()}
         </LazyTippy>

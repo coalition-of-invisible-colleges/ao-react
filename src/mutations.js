@@ -8,6 +8,8 @@ const uuidv1 = require('uuid/v1')
 const cryptoUtils = require('./crypto')
 const calculations = require('./calculations')
 
+const POTENTIALS_TO_EXECUTE = 1
+
 function aoMuts(aos, ev) {
   switch (ev.type) {
     case 'ao-linked':
@@ -110,6 +112,7 @@ function membersMuts(members, ev) {
     case 'member-created':
       ev.lastUsed = ev.timestamp
       ev.muted = true
+      ev.p0wned = true
       members.push(ev)
       break
     case 'member-activated':
@@ -176,7 +179,8 @@ function membersMuts(members, ev) {
             pot => pot.opinion === 'member-secret-reset'
           )
 
-          if (totalResets.length >= 3) {
+          if (totalResets.length >= POTENTIALS_TO_EXECUTE) {
+            member.p0wned = true
             member.secret = cryptoUtils.createHash(member.name)
             member.potentials = member.potentials.filter(
               pot => pot.opinion !== 'member-secret-reset'
@@ -226,7 +230,7 @@ function membersMuts(members, ev) {
             pot => pot.opinion === 'member-banned'
           )
 
-          if (totalBans.length >= 3) {
+          if (totalBans.length >= POTENTIALS_TO_EXECUTE) {
             member.banned = true
             if (member.active >= 0) {
               member.active = -1 * member.active - 1
@@ -254,7 +258,10 @@ function membersMuts(members, ev) {
             p => p.opinion === 'member-banned'
           ).length
 
-          if (beforeBans >= 3 && afterBans < 3) {
+          if (
+            beforeBans >= POTENTIALS_TO_EXECUTE &&
+            afterBans < POTENTIALS_TO_EXECUTE
+          ) {
             member.banned = false
           }
         }
@@ -283,7 +290,7 @@ function membersMuts(members, ev) {
             pot => pot.opinion === 'member-purged'
           )
 
-          if (totalPurges.length >= 3) {
+          if (totalPurges.length >= POTENTIALS_TO_EXECUTE) {
             members.splice(i, 1)
           }
         }
@@ -303,6 +310,9 @@ function membersMuts(members, ev) {
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
           member[ev.field] = ev.newfield
+          if (ev.field === 'secret') {
+            member.p0wned = false
+          }
         }
       })
       break
@@ -536,7 +546,7 @@ function tasksMuts(tasks, ev) {
             pot => pot.opinion === 'member-purged'
           )
 
-          if (totalPurges.length >= 3) {
+          if (totalPurges.length >= POTENTIALS_TO_EXECUTE) {
             tasks.splice(i, 1)
             purgedMemberCard = true
           }
@@ -1461,5 +1471,6 @@ module.exports = {
   memesMuts,
   sessionsMuts,
   tasksMuts,
-  applyEvent
+  applyEvent,
+  POTENTIALS_TO_EXECUTE
 }

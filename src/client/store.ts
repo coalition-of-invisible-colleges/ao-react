@@ -44,6 +44,7 @@ export interface Member {
   banned: boolean
   draft: string
   tutorial?: boolean
+  p0wned?: boolean
 }
 
 export interface Task {

@@ -1,9 +1,13 @@
 import * as React from 'react'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
 import AoTip from './tip'
+import AoContextCard from './contextCard'
+import AoDragZone from './dragZone'
 
 type MemberSort = 'alphabetical' | 'recents' | 'vouches' | 'age'
 
@@ -12,11 +16,15 @@ interface State {
   page: number
   text?: string
   openNew?: boolean
+  items?: number
+  hasMore: boolean
 }
 
 export const defaultState: State = {
   sort: 'recents',
-  page: 0
+  page: 0,
+  hasMore: true,
+  items: 5
 }
 
 @observer
@@ -28,14 +36,17 @@ export default class AoMembers extends React.PureComponent<{}, State> {
     this.toggleNew = this.toggleNew.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+    this.scrollMore = this.scrollMore.bind(this)
     this.addMember = this.addMember.bind(this)
+    this.renderSortButton = this.renderSortButton.bind(this)
+    this.renderMembersList = this.renderMembersList.bind(this)
   }
 
   sortBy(sort: MemberSort) {
     if (this.state.sort === sort) {
       return
     }
-    this.setState({ sort: sort })
+    this.setState({ sort: sort, items: 5 })
   }
 
   toggleNew() {
@@ -52,23 +63,88 @@ export default class AoMembers extends React.PureComponent<{}, State> {
     }
   }
 
+  scrollMore() {
+    const index = this.state.items
+    const nextResults = this.sortedMemberCards.slice(index, index + 5)
+    let hasMore = true
+    if (index + 5 > this.sortedMemberCards.length) {
+      hasMore = false
+    }
+    this.setState({
+      items: index + 5,
+      hasMore: hasMore
+    })
+  }
+
   addMember(event) {
     api.createMember(this.state.text)
   }
 
   renderSortButton(sort: MemberSort, label: string) {
     if (this.state.sort === sort) {
-      return <p className={'action selected'}>{label}</p>
+      return <p className="action selected">{label}</p>
     } else {
       return (
-        <p onClick={() => this.sortBy(sort)} className={'action'}>
+        <p onClick={() => this.sortBy(sort)} className="action">
           {label}
         </p>
       )
     }
   }
 
-  render() {
+  renderItems(items) {
+    return items.map((task, i) => (
+      <AoDragZone
+        taskId={task.taskId}
+        dragContext={{
+          zone: 'panel',
+          y: i
+        }}
+        key={task.taskId}>
+        <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
+      </AoDragZone>
+    ))
+  }
+
+  renderMembersList() {
+    if (this.state.items === undefined) {
+      return ''
+    }
+
+    if (this.sortedMemberCards.length === 0) {
+      return (
+        <div id="membersList" className="results">
+          No members
+        </div>
+      )
+    }
+
+    return (
+      <div id="membersList" className="results">
+        <div>
+          {this.sortedMemberCards.length}{' '}
+          {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+        </div>
+
+        <InfiniteScroll
+          dataLength={this.state.items}
+          next={this.scrollMore}
+          scrollableTarget="membersList"
+          hasMore={this.state.hasMore}
+          loader={<h4>Loading...</h4>}
+          endMessage={
+            <p style={{ textAlign: 'center' }}>
+              End of {this.sortedMemberCards.length}{' '}
+              {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+            </p>
+          }>
+          {this.renderItems(this.sortedMemberCards.slice(0, this.state.items))}
+        </InfiniteScroll>
+      </div>
+    )
+  }
+
+  @computed get sortedMemberCards() {
     const members = aoStore.state.members.slice()
     let memberCards: Task[] = []
 
@@ -95,23 +171,15 @@ export default class AoMembers extends React.PureComponent<{}, State> {
       // Default sort is database order, i.e., member creation order
     }
 
-    let list
-    if (memberCards && memberCards.length >= 1) {
-      list = (
-        <AoStack
-          cards={memberCards}
-          zone="panel"
-          cardStyle="priority"
-          cardsBeforeFold={10}
-        />
-      )
-    }
+    return memberCards
+  }
 
+  render() {
     return (
       <div
         style={{
           paddingBottom:
-            memberCards.length <= 10 && !this.state.openNew ? '2.7em' : null
+            this.state.items <= 10 && !this.state.openNew ? '2.7em' : null
         }}>
         <h2>Members</h2>
         <div className="toolbar">
@@ -120,7 +188,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
           {this.renderSortButton('vouches', 'Vouches')}
           {this.renderSortButton('age', 'Order')}
         </div>
-        {list}
+        {this.renderMembersList()}
         <div className="action" onClick={this.toggleNew}>
           {this.state.openNew ? (
             <React.Fragment>Invite &#8963;</React.Fragment>
@@ -129,7 +197,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
           )}
         </div>
         {this.state.openNew && (
-          <form>
+          <div>
             <div style={{ position: 'relative', top: '-1em' }}>
               <label style={{ position: 'relative', top: '0em' }}>
                 Username:
@@ -146,7 +214,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
             <button type="button" onClick={this.addMember} className="action">
               Add Member
             </button>
-          </form>
+          </div>
         )}
       </div>
     )

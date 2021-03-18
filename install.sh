@@ -70,6 +70,8 @@ if [ "$DISTRO" = "debian" ]; then
 		sudo apt install -y sqlite3
 	fi
 
+	# do we need make and gcc?
+
 # update system and install prereqs (Arch)
 else
 	# update, but do not automatically clean up for Arch users

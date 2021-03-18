@@ -1814,6 +1814,11 @@ textarea {
       &.noPopups {
         cursor: default;
       }
+
+      &.p0wned {
+        border-radius: 50%;
+        border: 2px solid red;
+      }
     }
 
     // member online/offline status icon
@@ -2443,6 +2448,12 @@ textarea {
       & > tr > td:nth-child(2) {
         padding-right: 1.25em;
       }
+    }
+
+    // Red warning text on the bark menu
+    .warning {
+      font-weight: bold;
+      color: red;
     }
   }
 }

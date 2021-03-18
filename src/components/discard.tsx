@@ -37,6 +37,7 @@ export default class AoDiscardZone extends React.PureComponent {
 
 		switch (move.from.zone) {
 			case 'card':
+				aoStore.addToDiscardHistory([card])
 				goUp()
 				break
 			case 'priorities':
