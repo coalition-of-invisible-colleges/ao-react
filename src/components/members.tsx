@@ -46,7 +46,6 @@ export default class AoMembers extends React.Component<{}, State> {
     this.scrollMore = this.scrollMore.bind(this)
     this.addMember = this.addMember.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
-    this.renderItems = this.renderItems.bind(this)
     this.renderMembersList = this.renderMembersList.bind(this)
   }
 
@@ -55,14 +54,11 @@ export default class AoMembers extends React.Component<{}, State> {
       return
     }
     const hasMore = this.sortedMemberCards.length >= STARTING_ITEMS + 1
-    const membersListDiv = document.getElementById('membersList')
-    if (membersListDiv) {
-      membersListDiv.scrollTop = 0
-    }
-    this.setState({ items: 0, hasMore: false })
-    process.nextTick(() =>
-      this.setState({ sort, items: STARTING_ITEMS, hasMore })
-    )
+    // const membersListDiv = document.getElementById('membersList')
+    // if (membersListDiv) {
+    // membersListDiv.scrollTop = 0
+    // }
+    this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
   toggleNew() {
@@ -104,7 +100,8 @@ export default class AoMembers extends React.Component<{}, State> {
     }
   }
 
-  renderItems(items) {
+  @computed get renderedItems() {
+    const items = this.sortedMemberCards.slice(0, this.state.items)
     let rendered = items.map((task, i) => {
       return (
         <AoDragZone
@@ -138,10 +135,6 @@ export default class AoMembers extends React.Component<{}, State> {
       )
     }
 
-    const items = this.renderItems(
-      this.sortedMemberCards.slice(0, this.state.items)
-    )
-
     return (
       <React.Fragment>
         <div className="toolbar">
@@ -160,7 +153,7 @@ export default class AoMembers extends React.Component<{}, State> {
             hasMore={this.state.hasMore}
             useWindow={false}
             loader={<h4>Loading...</h4>}>
-            {items}
+            {this.renderedItems}
           </InfiniteScroll>
         </div>
       </React.Fragment>
