@@ -339,7 +339,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onTogglePriorities={this.togglePriorities}
 						/>
 						<div className="content">
-							{isGrabbed ? (
+							{isGrabbed && card.taskId !== card.name ? (
 								<AoBird taskId={taskId} />
 							) : (
 								<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
