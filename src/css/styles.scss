@@ -1721,6 +1721,8 @@ textarea {
 
     #membersList {
       max-height: 55vh;
+      height: 100%;
+      overflow-y: scroll;
     }
 
     // card compose box
