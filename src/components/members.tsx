@@ -29,7 +29,11 @@ export default class AoMembers extends React.Component<{}, State> {
       'AoMembers constructor members.length is ',
       aoStore.state.members.length
     )
-    const hasMore = aoStore.state.members.length >= STARTING_ITEMS + 1
+    const hasMore =
+      aoStore.state.members.filter(
+        member => !!aoStore.hashMap.get(member.memberId)
+      ).length >=
+      STARTING_ITEMS + 1
     this.state = {
       sort: 'recents',
       items: STARTING_ITEMS,
@@ -53,7 +57,7 @@ export default class AoMembers extends React.Component<{}, State> {
     if (this.state.sort === sort) {
       return
     }
-    const hasMore = aoStore.state.members.length >= STARTING_ITEMS + 1
+    const hasMore = this.sortedMemberCards.length >= STARTING_ITEMS + 1
     this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
@@ -100,10 +104,7 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   renderItems(items) {
-    let renderedItems = items.map((task, i) => {
-      if (!task || !task.taskId) {
-        return null
-      }
+    return items.map((task, i) => {
       return (
         <AoDragZone
           taskId={task.taskId}
@@ -116,13 +117,6 @@ export default class AoMembers extends React.Component<{}, State> {
         </AoDragZone>
       )
     })
-    const count = renderedItems.length
-    renderedItems = renderedItems.filter(item => !!item)
-    const missingCards = count - renderedItems.length
-    if (missingCards > 0) {
-      console.log(`Missing member cards: $(missingCards)`)
-    }
-    return renderedItems
   }
 
   renderMembersList() {
@@ -181,6 +175,13 @@ export default class AoMembers extends React.Component<{}, State> {
     memberCards = members
       .map(member => aoStore.hashMap.get(member.memberId))
       .slice()
+
+    const count = memberCards.length
+    memberCards = memberCards.filter(card => !!card)
+    const missingCards = count - memberCards.length
+    if (missingCards > 0) {
+      console.log(`Missing member cards: $(missingCards)`)
+    }
 
     if (this.state.sort === 'vouches') {
       memberCards.sort((a, b) => {
