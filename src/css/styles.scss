@@ -980,9 +980,9 @@ textarea {
 
       .popupPanel {
         position: relative;
-        // padding-bottom: 2.5em;
+        padding-bottom: 3em;
 
-        & > div > .action {
+        & > .action {
           position: absolute;
           right: 0.5em;
           bottom: 0.5em;
@@ -1129,13 +1129,6 @@ textarea {
 
       input {
         margin: 0.5em;
-      }
-    }
-
-    // members popup
-    #members {
-      .popupPanel {
-        padding-bottom: 3em;
       }
     }
 
