@@ -111,12 +111,14 @@ export default class AoMembers extends React.Component<{}, State> {
         </AoDragZone>
       )
     })
-    rendered.push(
-      <p style={{ textAlign: 'center' }}>
-        End of {this.sortedMemberCards.length}{' '}
-        {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
-      </p>
-    )
+    if (items.length >= this.sortedMemberCards.length) {
+      rendered.push(
+        <p style={{ textAlign: 'center' }}>
+          End of {this.sortedMemberCards.length}{' '}
+          {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+        </p>
+      )
+    }
     return rendered
   }
 
@@ -143,6 +145,7 @@ export default class AoMembers extends React.Component<{}, State> {
             {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
           </div>
           <InfiniteScroll
+            startingPage={0}
             loadMore={this.scrollMore}
             hasMore={this.state.hasMore}
             useWindow={false}
