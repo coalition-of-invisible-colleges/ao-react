@@ -264,7 +264,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			console.log('missing card')
 			return (
 				<div className={'card ' + this.props.cardStyle}>
-					<div className={'content'}>missing card</div>
+					<div className="content">missing card</div>
 				</div>
 			)
 		}

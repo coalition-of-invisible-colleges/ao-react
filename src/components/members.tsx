@@ -100,17 +100,24 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   renderItems(items) {
-    return items.map((task, i) => (
-      <AoDragZone
-        taskId={task.taskId}
-        dragContext={{
-          zone: 'panel',
-          y: i
-        }}
-        key={task.taskId}>
-        <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
-      </AoDragZone>
-    ))
+    return items.map((task, i) => {
+      if (!task || !task.taskId) {
+        return (
+          <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
+        )
+      }
+      return (
+        <AoDragZone
+          taskId={task.taskId}
+          dragContext={{
+            zone: 'panel',
+            y: i
+          }}
+          key={task.taskId}>
+          <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
+        </AoDragZone>
+      )
+    })
   }
 
   renderMembersList() {
@@ -180,7 +187,7 @@ export default class AoMembers extends React.Component<{}, State> {
       memberCards.reverse()
       // Default sort is database order, i.e., member creation order
     }
-    console.log('sortedMemberCards. length is ', memberCards.length)
+    console.log('sortedMemberCards is ', memberCards)
 
     return memberCards
   }
