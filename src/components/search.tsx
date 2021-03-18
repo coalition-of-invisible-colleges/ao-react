@@ -36,6 +36,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     this.sortBy = this.sortBy.bind(this)
     this.renderItems = this.renderItems.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
+    this.renderSearchResults = this.renderSearchResults.bind(this)
   }
 
   private searchBox = React.createRef<HTMLInputElement>()
