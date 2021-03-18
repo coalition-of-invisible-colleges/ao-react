@@ -1710,7 +1710,8 @@ textarea {
     }
 
     // search results section. id is used by infinite scrolling library.
-    #searchResults {
+    #searchResults,
+    #membersList {
       overflow-y: auto;
       max-height: 70vh;
     }

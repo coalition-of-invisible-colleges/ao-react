@@ -11,6 +11,8 @@ import AoDragZone from './dragZone'
 
 type MemberSort = 'alphabetical' | 'recents' | 'vouches' | 'age'
 
+const STARTING_ITEMS = 10
+
 interface State {
   sort: MemberSort
   page: number
@@ -20,18 +22,23 @@ interface State {
   hasMore: boolean
 }
 
-export const defaultState: State = {
-  sort: 'recents',
-  page: 0,
-  hasMore: true,
-  items: 5
-}
-
 @observer
 export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
-    this.state = defaultState
+    console.log(
+      'AoMembers constructor members.length is ',
+      aoStore.state.members.length
+    )
+    const hasMore = aoStore.state.members.length >= STARTING_ITEMS + 1
+    this.state = {
+      sort: 'recents',
+      page: 0,
+      items: STARTING_ITEMS,
+      hasMore: hasMore
+    }
+    console.log('state is now ', this.state)
+
     this.sortBy = this.sortBy.bind(this)
     this.toggleNew = this.toggleNew.bind(this)
     this.onChange = this.onChange.bind(this)
@@ -39,14 +46,17 @@ export default class AoMembers extends React.Component<{}, State> {
     this.scrollMore = this.scrollMore.bind(this)
     this.addMember = this.addMember.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
+    this.renderItems = this.renderItems.bind(this)
     this.renderMembersList = this.renderMembersList.bind(this)
   }
 
   sortBy(sort: MemberSort) {
+    console.log('members sortBy. state is ', this.state)
     if (this.state.sort === sort) {
       return
     }
-    this.setState({ sort: sort, items: 5 })
+    const hasMore = this.sortedMemberCards.length >= this.state.items + 1
+    this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
   toggleNew() {
@@ -64,12 +74,11 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   scrollMore() {
+    console.log('members scrollMore')
+
     const index = this.state.items
     const nextResults = this.sortedMemberCards.slice(index, index + 5)
-    let hasMore = true
-    if (index + 5 > this.sortedMemberCards.length) {
-      hasMore = false
-    }
+    const hasMore = this.sortedMemberCards.length >= index + 1
     this.setState({
       items: index + 5,
       hasMore
@@ -125,7 +134,6 @@ export default class AoMembers extends React.Component<{}, State> {
           {this.sortedMemberCards.length}{' '}
           {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
         </div>
-
         <InfiniteScroll
           dataLength={this.state.items}
           next={this.scrollMore}
@@ -145,6 +153,8 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   @computed get sortedMemberCards() {
+    console.log('sortedMemberCards state is ', this.state)
+
     const members = aoStore.state.members.slice()
     let memberCards: Task[] = []
 
@@ -166,10 +176,13 @@ export default class AoMembers extends React.Component<{}, State> {
       memberCards.sort((a, b) => {
         return a.deck.length - b.deck.length
       })
-    } else if (this.state.sort === 'age') {
+    }
+
+    if (this.state.sort !== 'age') {
       memberCards.reverse()
       // Default sort is database order, i.e., member creation order
     }
+    console.log('sortedMemberCards. length is ', memberCards.length)
 
     return memberCards
   }

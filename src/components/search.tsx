@@ -170,11 +170,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
 
   scrollMore() {
     const index = this.state.items
-    const nextResults = this.sortedResults.all.slice(index, index + 5)
-    let hasMore = true
-    if (index + 5 > this.sortedResults.length) {
-      hasMore = false
-    }
+    const hasMore = this.sortedResults.length >= index + 1
     this.setState({
       items: index + 5,
       hasMore: hasMore

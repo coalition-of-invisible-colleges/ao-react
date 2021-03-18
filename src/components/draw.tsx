@@ -125,7 +125,7 @@ export default class AoDrawPile extends React.PureComponent {
           )}
           {this.nextCard && (
             <div className="drawSource" onClick={this.goNextCard}>
-              <img src={Unicorn} className={aoStore.dabbed && 'dabbed'} />
+              <img src={Unicorn} className={aoStore.dabbed ? 'dabbed' : null} />
               <div>Next Card</div>
             </div>
           )}
