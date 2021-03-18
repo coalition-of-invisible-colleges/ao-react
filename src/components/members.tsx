@@ -100,11 +100,9 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   renderItems(items) {
-    return items.map((task, i) => {
+    let renderedItems = items.map((task, i) => {
       if (!task || !task.taskId) {
-        return (
-          <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
-        )
+        return null
       }
       return (
         <AoDragZone
@@ -118,6 +116,13 @@ export default class AoMembers extends React.Component<{}, State> {
         </AoDragZone>
       )
     })
+    const count = renderedItems.length
+    renderedItems = renderedItems.filter(item => !!item)
+    const missingCards = count - renderedItems.length
+    if (missingCards > 0) {
+      console.log(`Missing member cards: $(missingCards)`)
+    }
+    return renderedItems
   }
 
   renderMembersList() {
@@ -196,7 +201,7 @@ export default class AoMembers extends React.Component<{}, State> {
     return (
       <div
         style={{
-          paddingBottom: '2.7em'
+          paddingBottom: '3em'
         }}>
         <h2>Members</h2>
         <div className="toolbar">
