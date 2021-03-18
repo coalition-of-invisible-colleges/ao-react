@@ -17,7 +17,7 @@ interface State {
   sort: MemberSort
   text?: string
   openNew?: boolean
-  items?: number
+  items: number
   hasMore: boolean
 }
 
@@ -114,10 +114,6 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   renderMembersList() {
-    if (this.state.items === undefined) {
-      return ''
-    }
-
     if (this.sortedMemberCards.length === 0) {
       return (
         <div id="membersList" className="results">
@@ -191,10 +187,7 @@ export default class AoMembers extends React.Component<{}, State> {
 
   render() {
     return (
-      <div
-        style={{
-          paddingBottom: '3em'
-        }}>
+      <React.Fragment>
         <h2>Members</h2>
         <div className="toolbar">
           {this.renderSortButton('alphabetical', 'A-Z')}
@@ -228,7 +221,7 @@ export default class AoMembers extends React.Component<{}, State> {
             </button>
           </div>
         )}
-      </div>
+      </React.Fragment>
     )
   }
 }

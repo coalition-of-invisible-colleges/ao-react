@@ -1132,6 +1132,13 @@ textarea {
       }
     }
 
+    // members popup
+    #members {
+      .popupPanel {
+        padding-bottom: 3em;
+      }
+    }
+
     #drawPile {
       position: fixed;
       top: 42%;
