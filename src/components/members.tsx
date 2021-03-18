@@ -59,7 +59,10 @@ export default class AoMembers extends React.Component<{}, State> {
     if (membersListDiv) {
       membersListDiv.scrollTop = 0
     }
-    this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
+    this.setState({ items: 0, hasMore: false })
+    process.nextTick(() =>
+      this.setState({ sort, items: STARTING_ITEMS, hasMore })
+    )
   }
 
   toggleNew() {
