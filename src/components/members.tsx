@@ -122,26 +122,37 @@ export default class AoMembers extends React.Component<{}, State> {
     }
 
     return (
-      <div id="membersList" className="results">
-        <div>
-          {this.sortedMemberCards.length}{' '}
-          {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+      <React.Fragment>
+        <div className="toolbar">
+          {this.renderSortButton('alphabetical', 'A-Z')}
+          {this.renderSortButton('recents', 'Recents')}
+          {this.renderSortButton('vouches', 'Vouches')}
+          {this.renderSortButton('age', 'Order')}
         </div>
-        <InfiniteScroll
-          dataLength={this.state.items}
-          next={this.scrollMore}
-          scrollableTarget="membersList"
-          hasMore={this.state.hasMore}
-          loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              End of {this.sortedMemberCards.length}{' '}
-              {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
-            </p>
-          }>
-          {this.renderItems(this.sortedMemberCards.slice(0, this.state.items))}
-        </InfiniteScroll>
-      </div>
+
+        <div id="membersList" className="results">
+          <div>
+            {this.sortedMemberCards.length}{' '}
+            {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+          </div>
+          <InfiniteScroll
+            dataLength={this.state.items}
+            next={this.scrollMore}
+            scrollableTarget="membersList"
+            hasMore={this.state.hasMore}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: 'center' }}>
+                End of {this.sortedMemberCards.length}{' '}
+                {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+              </p>
+            }>
+            {this.renderItems(
+              this.sortedMemberCards.slice(0, this.state.items)
+            )}
+          </InfiniteScroll>
+        </div>
+      </React.Fragment>
     )
   }
 
@@ -188,12 +199,6 @@ export default class AoMembers extends React.Component<{}, State> {
     return (
       <React.Fragment>
         <h2>Members</h2>
-        <div className="toolbar">
-          {this.renderSortButton('alphabetical', 'A-Z')}
-          {this.renderSortButton('recents', 'Recents')}
-          {this.renderSortButton('vouches', 'Vouches')}
-          {this.renderSortButton('age', 'Order')}
-        </div>
         {this.renderMembersList()}
         <div className="action" onClick={this.toggleNew}>
           {this.state.openNew ? (

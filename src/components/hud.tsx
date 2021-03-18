@@ -79,7 +79,6 @@ class MainMenu extends React.PureComponent<{}, State> {
 @observer
 export default class AoHud extends React.Component<{}, undefined> {
   private searchRef = React.createRef<AoSearch>()
-  private membersRef = React.createRef<AoMembers>()
 
   constructor(props) {
     super(props)
@@ -123,7 +122,7 @@ export default class AoHud extends React.Component<{}, undefined> {
             tooltipPlacement="right"
             panelPlacement="right"
             id="tour-members">
-            <AoMembers ref={this.membersRef} />
+            <AoMembers />
           </AoPopupPanel>
         </div>
         <AoCalendar />
