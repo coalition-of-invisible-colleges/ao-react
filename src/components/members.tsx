@@ -55,6 +55,10 @@ export default class AoMembers extends React.Component<{}, State> {
       return
     }
     const hasMore = this.sortedMemberCards.length >= STARTING_ITEMS + 1
+    const membersListDiv = document.getElementById('membersList')
+    if (membersListDiv) {
+      membersListDiv.scrollTop = 0
+    }
     this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
@@ -145,7 +149,6 @@ export default class AoMembers extends React.Component<{}, State> {
             {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
           </div>
           <InfiniteScroll
-            pageStart={0}
             loadMore={this.scrollMore}
             hasMore={this.state.hasMore}
             useWindow={false}
