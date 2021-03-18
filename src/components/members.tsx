@@ -216,10 +216,8 @@ export default class AoMembers extends React.Component<{}, State> {
         </div>
         {this.state.openNew && (
           <div>
-            <div style={{ position: 'relative', top: '-1em' }}>
-              <label style={{ position: 'relative', top: '0em' }}>
-                Username:
-              </label>
+            <div>
+              <label>Username:</label>
               <input
                 type="text"
                 value={this.state.text}
