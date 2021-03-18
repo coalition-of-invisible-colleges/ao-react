@@ -195,6 +195,36 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   render() {
-    return <React.Fragment>{this.renderMembersList()}</React.Fragment>
+    return (
+      <React.Fragment>
+        <h2>Members</h2>
+        {this.renderMembersList()}
+        <div className="action" onClick={this.toggleNew}>
+          {this.state.openNew ? (
+            <React.Fragment>Invite &#8963;</React.Fragment>
+          ) : (
+            <React.Fragment>Invite &#8964;</React.Fragment>
+          )}
+        </div>
+        {this.state.openNew && (
+          <div>
+            <div>
+              <label>Username:</label>
+              <input
+                type="text"
+                value={this.state.text}
+                onChange={this.onChange}
+                onKeyDown={this.onKeyDown}
+                size={16}
+              />
+            </div>
+            <AoTip text="Create a new member account on this AO server. The default password is the same as the username. Please log in and change your password promptly to maintain community security." />
+            <button type="button" onClick={this.addMember} className="action">
+              Add Member
+            </button>
+          </div>
+        )}
+      </React.Fragment>
+    )
   }
 }
