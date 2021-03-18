@@ -1101,7 +1101,8 @@ textarea {
     }
 
     // search popup panel
-    #search {
+    #search,
+    #members {
       .popupPanel {
         max-height: unset;
 
@@ -1118,7 +1119,9 @@ textarea {
           }
         }
       }
-
+    }
+    // search popup
+    #search {
       .actionCircle {
         top: unset;
         bottom: 0.5em;
@@ -1730,7 +1733,7 @@ textarea {
     #search .popupPanel .results,
     #calendar .popupPanel,
     #gifts .popupPanel,
-    #members .popupPanel,
+    #members .popupPanel .results,
     #missions .popupPanel,
     #proposals .popupPanel,
     .grid,
