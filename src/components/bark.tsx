@@ -44,76 +44,53 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   }
 
   resetPassword() {
-    if (this.resetCount === VOTES_TO_EXECUTE - 1) {
-      if (
-        !window.confirm(
-          "Are you sure you want to reset this member's password?\n\nTheir password will be reset to the same as their current username. This means the account is p0wned and completely unsecured until someone logs in and changes the password to a new secure password. Please inform the member that their password has changed and remind them to set a new secure password."
-        )
-      ) {
-        return
-      }
+    if (
+      window.confirm(
+        "Are you sure you want to reset this member's password?\n\nTheir password will be reset to the same as their current username. This means the account is p0wned and completely unsecured until someone logs in and changes the password to a new secure password. Please inform the member that their password has changed and remind them to set a new secure password."
+      )
+    ) {
+      api.resetPassword(this.props.memberId)
     }
-    api.resetPassword(this.props.memberId)
   }
 
   promoteMember() {
     if (
-      !window.confirm(
+      window.confirm(
         'Are you sure you want to promote this member ahead of you in the list of members?\n\nThis may give this user the ability to ban or delete your account. By default, the order of members is their creation order. If you promote this member, they will step ahead of you in line, becoming your superior. The current order may be viewed in the Members panel under "Order"'
       )
     ) {
-      return
+      api.promoteMember(this.props.memberId)
     }
-    api.promoteMember(this.props.memberId)
   }
 
   banMember() {
-    if (this.banCount < VOTES_TO_EXECUTE) {
-      // let actionText = [
-      //   'propose a ban',
-      //   'second this ban',
-      //   'execute this ban right now'
-      // ]
-      let confirmMessage =
+    if (
+      window.confirm(
         "Are you sure you want to ban this member?\n\nIf banned, the member's account will deactivate, and the member will be unable to use their fob or activate resources such as the door or soda machine. They will be effectively locked-out until the ban is lifted (when ban votes go below 3 again)."
-
-      if (!window.confirm(confirmMessage)) {
-        return
-      }
+      )
+    ) {
       api.banMember(this.props.memberId)
     }
   }
 
   unbanMember() {
-    if (this.banCount >= VOTES_TO_EXECUTE) {
-      if (
-        !window.confirm(
-          'Are you sure you want to unban this member?\n\nPlease consider carefully before allowing a potentially dangerous or toxic person back into the community.'
-        )
-      ) {
-        return
-      }
+    if (
+      window.confirm(
+        'Are you sure you want to unban this member?\n\nPlease consider carefully before allowing a potentially dangerous or toxic person back into the community.'
+      )
+    ) {
+      api.unbanMember(this.props.memberId)
     }
-    api.unbanMember(this.props.memberId)
   }
 
   purgeMember() {
-    if (this.deleteCount < VOTES_TO_EXECUTE) {
-      let actionText = [
-        'propose deleting this member',
-        'second deleting this member',
-        "delete this member's account and member card right now"
-      ]
-      let confirmMessage =
-        'Are you sure you want to ' +
-        actionText[2] +
-        '?\n\nThis will delete the member and their member card, and erase their hodls. This action cannot be undone.'
-
-      if (!window.confirm(confirmMessage)) {
-        return
-      }
+    if (
+      window.confirm(
+        "Are you sure you want to delete this member's account and member card right now?\n\nThis will delete the member and their member card, and erase their hodls. This action cannot be undone."
+      )
+    ) {
+      api.purgeMember(this.props.memberId)
     }
-    api.purgeMember(this.props.memberId)
   }
 
   @computed get banCount() {
