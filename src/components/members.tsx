@@ -54,10 +54,10 @@ export default class AoMembers extends React.Component<{}, State> {
       return
     }
     const hasMore = this.sortedMemberCards.length >= STARTING_ITEMS + 1
-    // const membersListDiv = document.getElementById('membersList')
-    // if (membersListDiv) {
-    // membersListDiv.scrollTop = 0
-    // }
+    const membersListDiv = document.getElementById('membersList')
+    if (membersListDiv) {
+      membersListDiv.scrollTop = 0
+    }
     this.setState({ sort: sort, items: STARTING_ITEMS, hasMore })
   }
 
@@ -101,6 +101,7 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   @computed get renderedItems() {
+    console.log('renderedItems items is ', this.state.items)
     const items = this.sortedMemberCards.slice(0, this.state.items)
     let rendered = items.map((task, i) => {
       return (
