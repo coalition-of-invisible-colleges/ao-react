@@ -72,11 +72,10 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   scrollMore() {
-    const index = this.state.items
-    const nextResults = this.sortedMemberCards.slice(index, index + 5)
-    const hasMore = this.sortedMemberCards.length >= index + 1
+    const newIndex = this.state.items + 5
+    const hasMore = this.sortedMemberCards.length > newIndex
     this.setState({
-      items: index + 5,
+      items: newIndex,
       hasMore
     })
   }
@@ -131,7 +130,6 @@ export default class AoMembers extends React.Component<{}, State> {
         <InfiniteScroll
           dataLength={this.state.items}
           next={this.scrollMore}
-          scrollableTarget="membersList"
           hasMore={this.state.hasMore}
           loader={<h4>Loading...</h4>}
           endMessage={
