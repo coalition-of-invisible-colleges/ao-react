@@ -28,7 +28,7 @@ export const defaultState: State = {
 }
 
 @observer
-export default class AoMembers extends React.PureComponent<{}, State> {
+export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = defaultState
@@ -72,7 +72,7 @@ export default class AoMembers extends React.PureComponent<{}, State> {
     }
     this.setState({
       items: index + 5,
-      hasMore: hasMore
+      hasMore
     })
   }
 
