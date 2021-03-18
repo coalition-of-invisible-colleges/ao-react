@@ -198,12 +198,14 @@ export default class AoSearch extends React.PureComponent<{}, State> {
         <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
       </AoDragZone>
     ))
-    rendered.push(
-      <p style={{ textAlign: 'center' }}>
-        End of {this.sortedResults.length}{' '}
-        {this.sortedResults.length === 1 ? 'result' : 'results'}
-      </p>
-    )
+    if (items.length >= this.sortedResults.length) {
+      rendered.push(
+        <p style={{ textAlign: 'center' }}>
+          End of {this.sortedResults.length}{' '}
+          {this.sortedResults.length === 1 ? 'result' : 'results'}
+        </p>
+      )
+    }
     return rendered
   }
 

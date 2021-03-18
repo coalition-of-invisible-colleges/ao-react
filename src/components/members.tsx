@@ -145,7 +145,7 @@ export default class AoMembers extends React.Component<{}, State> {
             {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
           </div>
           <InfiniteScroll
-            startingPage={0}
+            pageStart={0}
             loadMore={this.scrollMore}
             hasMore={this.state.hasMore}
             useWindow={false}
