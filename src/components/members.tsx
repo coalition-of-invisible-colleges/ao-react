@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import InfiniteScroll from 'react-infinite-scroller'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
@@ -29,7 +29,8 @@ export default class AoMembers extends React.Component<{}, State> {
     const hasMore =
       aoStore.state.members.filter(
         member => !!aoStore.hashMap.get(member.memberId)
-      ).length >=
+      ).length +
+        1 >=
       STARTING_ITEMS + 1
 
     this.state = {
@@ -71,8 +72,8 @@ export default class AoMembers extends React.Component<{}, State> {
     }
   }
 
-  scrollMore() {
-    const newIndex = this.state.items + 5
+  scrollMore(page: number) {
+    const newIndex = page * 5
     const hasMore = this.sortedMemberCards.length > newIndex
     this.setState({
       items: newIndex,
@@ -97,7 +98,7 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   renderItems(items) {
-    return items.map((task, i) => {
+    let rendered = items.map((task, i) => {
       return (
         <AoDragZone
           taskId={task.taskId}
@@ -110,6 +111,13 @@ export default class AoMembers extends React.Component<{}, State> {
         </AoDragZone>
       )
     })
+    rendered.push(
+      <p style={{ textAlign: 'center' }}>
+        End of {this.sortedMemberCards.length}{' '}
+        {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
+      </p>
+    )
+    return rendered
   }
 
   renderMembersList() {
@@ -135,17 +143,10 @@ export default class AoMembers extends React.Component<{}, State> {
             {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
           </div>
           <InfiniteScroll
-            dataLength={this.state.items}
-            next={this.scrollMore}
-            scrollableTarget="membersList"
+            loadMore={this.scrollMore}
             hasMore={this.state.hasMore}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: 'center' }}>
-                End of {this.sortedMemberCards.length}{' '}
-                {this.sortedMemberCards.length === 1 ? 'member' : 'members'}
-              </p>
-            }>
+            useWindow={false}
+            loader={<h4>Loading...</h4>}>
             {this.renderItems(
               this.sortedMemberCards.slice(0, this.state.items)
             )}

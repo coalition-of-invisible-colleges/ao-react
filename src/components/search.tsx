@@ -2,7 +2,7 @@ import * as React from 'react'
 import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task, emptySearchResults } from '../client/store'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import InfiniteScroll from 'react-infinite-scroller'
 import AoContextCard from './contextCard'
 import AoDragZone from './dragZone'
 
@@ -169,8 +169,8 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     return sortedResults
   }
 
-  scrollMore() {
-    const newIndex = this.state.items + 5
+  scrollMore(page: number) {
+    const newIndex = page * 5
     const hasMore = this.sortedResults.length > newIndex
     this.setState({
       items: newIndex,
@@ -187,7 +187,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
   }
 
   renderItems(items) {
-    return items.map((task, i) => (
+    let rendered = items.map((task, i) => (
       <AoDragZone
         taskId={task.taskId}
         dragContext={{
@@ -198,6 +198,13 @@ export default class AoSearch extends React.PureComponent<{}, State> {
         <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
       </AoDragZone>
     ))
+    rendered.push(
+      <p style={{ textAlign: 'center' }}>
+        End of {this.sortedResults.length}{' '}
+        {this.sortedResults.length === 1 ? 'result' : 'results'}
+      </p>
+    )
+    return rendered
   }
 
   renderSearchResults() {
@@ -235,17 +242,10 @@ export default class AoSearch extends React.PureComponent<{}, State> {
               : 'search results'}
           </div>
           <InfiniteScroll
-            dataLength={this.state.items}
-            next={this.scrollMore}
-            scrollableTarget="searchResults"
+            loadMore={this.scrollMore}
+            useWindow={false}
             hasMore={this.state.hasMore}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: 'center' }}>
-                End of {this.sortedResults.length}{' '}
-                {this.sortedResults.length === 1 ? 'result' : 'results'}
-              </p>
-            }>
+            loader={<h4>Loading...</h4>}>
             {this.renderItems(
               this.sortedResults.all.slice(0, this.state.items)
             )}
