@@ -196,8 +196,7 @@ export default class AoMembers extends React.Component<{}, State> {
     return (
       <div
         style={{
-          paddingBottom:
-            this.state.items <= 10 && !this.state.openNew ? '2.7em' : null
+          paddingBottom: '2.7em'
         }}>
         <h2>Members</h2>
         <div className="toolbar">
