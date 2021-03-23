@@ -1,6 +1,7 @@
 const { getResource } = require('./utils')
 const events = require('./events')
 const { serverState } = require('./state')
+const lightning = require('./lightning')
 
 function checkForChargedEvent(resourceId) {
   let charged
@@ -39,32 +40,37 @@ function reactions(ev) {
             return true
           }
         })
-        console.log('got resourceId', resourceId)
-        serverState.resources.some(r => {
-          if (r.resourceId === resourceId) {
-            defaultPrice = r.charge
-            return true
-          }
-        })
-        serverState.tasks.some(t => {
-          if (ev.taskId === t.taskId) {
-            let str = t.name
-            let cashTagLocation = str.search(/\$/)
-            let customPrice = parseFloat(
-              str.slice(cashTagLocation + 1, cashTagLocation + 5)
-            )
-            if (customPrice > 0) {
-              console.log('using custom price, ', customPrice)
-              defaultPrice = customPrice
+        if (resourceId) {
+          console.log('got resourceId, attempting trigger', resourceId)
+          serverState.resources.some(r => {
+            if (r.resourceId === resourceId) {
+              defaultPrice = r.charge
+              return true
             }
-            if (defaultPrice > 0 && amount > 0) {
-              amount = amount / defaultPrice
+          })
+          serverState.tasks.some(t => {
+            if (ev.taskId === t.taskId) {
+              let str = t.name
+              let cashTagLocation = str.search(/\$/)
+              let customPrice = parseFloat(
+                str.slice(cashTagLocation + 1, cashTagLocation + 5)
+              )
+              if (customPrice > 0) {
+                console.log('using custom price, ', customPrice)
+                defaultPrice = customPrice
+              }
+              let hopper = t.name.split(':')[0]
+              events.resourceUsed(
+                resourceId,
+                '',
+                defaultPrice,
+                hopper,
+                console.log
+              )
+              return true
             }
-            let hopper = t.name.slice(0, 1)
-            events.resourceUsed(resourceId, '', amount, 0, hopper, console.log)
-            return true
-          }
-        })
+          })
+        }
         break
       case 'member-field-updated':
         break

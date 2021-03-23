@@ -160,7 +160,6 @@ router.post('/events', (req, res, next) => {
         lightning
           .createInvoice(req.body.amount, '<3' + uuidV1(), '~', 3600)
           .then(result => {
-            let addr = result['p2sh-segwit']
             events.invoiceCreated(
               req.body.taskId,
               result.bolt11,
