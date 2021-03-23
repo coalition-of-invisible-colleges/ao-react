@@ -261,8 +261,8 @@ else
 fi
 
 # install c-lightning
-if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.9\.") -eq 1 ]; then
-	echo c-lightning v0.9.x already installed
+if [ $(lightning-cli --version 2>/dev/null | grep -c "v0\.10\.") -eq 1 ]; then
+	echo c-lightning v0.10.x already installed
 else
 	cd ~
 	git clone https://github.com/ElementsProject/lightning.git
