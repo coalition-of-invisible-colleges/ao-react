@@ -39,6 +39,7 @@
     "@types/superagent": "^4.1.7",
     "@welldone-software/why-did-you-render": "^4.3.0",
     "better-sqlite3": "^5.4.3",
+    "bitcoin-core": "^3.0.0",
     "body-parser": "^1.19.0",
     "coingecko-api": "^1.0.10",
     "core-js": "^3.2.1",
