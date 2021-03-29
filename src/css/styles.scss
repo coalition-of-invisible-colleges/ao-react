@@ -86,7 +86,6 @@ textarea {
 
       &.full {
         box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
-        margin-bottom: 8.5em;
 
         .priority {
           min-height: 2.325em;
@@ -2462,6 +2461,11 @@ textarea {
     .warning {
       font-weight: bold;
       color: red;
+    }
+
+    // A wrapper for the current card
+    #tour-current-card {
+      padding-bottom: 8.5em;
     }
   }
 }
