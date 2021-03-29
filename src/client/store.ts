@@ -135,8 +135,10 @@ interface Output {
   value: number
 }
 
+// same as LightningChannel?
 interface Channel {
   channel_sat: number
+  channel_total_sat: number
 }
 
 export interface Session {
@@ -324,7 +326,7 @@ class AoStore {
   }
 
   @computed get totalWallet() {
-    return parseInt(this.totalLocal) + parseInt(this.confirmedBalance)
+    return this.totalLocal + this.confirmedBalance
   }
 
   @computed get satPointSpot() {
