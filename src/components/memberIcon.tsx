@@ -93,7 +93,7 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
             {this.renderRecentStatusIcon}
           </span>
           {member.name} has {!this.isRecent && 'not'} recently accessed the
-          space.
+          space
         </p>
         <p>
           {member.name} is {this.isLoggedIn ? 'logged-in' : 'logged-out'}
