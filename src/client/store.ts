@@ -37,7 +37,7 @@ export interface Member {
   tickers: Ticker[]
   info: {}
   timestamp: number
-  lastUsed: Date
+  lastUsed: number
   muted: Boolean
   fob: string
   potentials: Signature[]
@@ -146,6 +146,25 @@ export interface Session {
   timestamp: Date
 }
 
+export interface LightningChannel {
+  peer_id?: any
+  funding_txid?: any
+  state?: any
+  connected?: boolean
+  channel_total_sat: number
+  channel_sat: number
+}
+
+export interface SatInfo {
+  channels?: LightningChannel[]
+  mempool?: { sampleTxns: any[]; size: any; bytes: any }
+  blockheight?: number
+  blockfo?: any
+  id?: any
+  outputs?: any[]
+  address?: { address: string }[]
+}
+
 export interface AoState {
   session: string
   token: string
@@ -169,7 +188,15 @@ export interface AoState {
     usedTxIds: number[]
     outputs: Output[]
     channels: Channel[]
-    info: {}
+    info: SatInfo
+  }
+  loader?: {
+    token: string
+    session: string
+    connected: string
+    connectionError: string
+    reqStatus: string
+    lastPing: number
   }
 }
 
@@ -268,6 +295,43 @@ class AoStore {
       hashMap.set(m.memberId, m)
     })
     return hashMap
+  }
+
+  @computed get confirmedBalance() {
+    let confirmedBalance = 0
+    this.state.cash.info.outputs.forEach(o => {
+      if (o.status === 'confirmed') {
+        confirmedBalance += o.value
+      }
+    })
+    return confirmedBalance
+  }
+
+  @computed get totalLocal() {
+    let totalLocal = 0
+    this.state.cash.channels.forEach(c => {
+      totalLocal += c.channel_sat
+    })
+    return totalLocal
+  }
+
+  @computed get totalRemote() {
+    let totalRemote = 0
+    this.state.cash.channels.forEach(c => {
+      totalRemote += c.channel_total_sat - c.channel_sat
+    })
+    return totalRemote
+  }
+
+  @computed get totalWallet() {
+    return parseInt(this.totalLocal) + parseInt(this.confirmedBalance)
+  }
+
+  @computed get satPointSpot() {
+    if (this.state.cash.spot > 0) {
+      return calculations.cadToSats(1, this.state.cash.spot)
+    }
+    return 10000
   }
 
   @computed get resourceById(): Map<string, Resource> {
