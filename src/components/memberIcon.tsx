@@ -38,16 +38,31 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
     return aoStore.state.sessions.some(s => s.ownerId === this.props.memberId)
   }
 
+  @computed get isRecent() {
+    const member = aoStore.memberById.get(this.props.memberId)
+    if (!member) return null
+    if (!member.lastUsed) {
+      return false
+    }
+    const fourHoursMs: number = 4 * 60 * 60 * 1000
+    console.log('typeof is ', typeof fourHoursMs)
+    console.log('member.lastUsed is ', member.lastUsed)
+    const timeSinceLastUse = Date.now() - member.lastUsed
+    const recentlyUsed = timeSinceLastUse < fourHoursMs
+
+    return recentlyUsed
+  }
+
   @computed get deckSize() {
     return aoStore.state.tasks.filter(t => {
       return t.deck.indexOf(this.props.memberId) >= 0
     }).length
   }
 
-  @computed get renderLoggedInStatusIcon() {
+  @computed get renderRecentStatusIcon() {
     return (
       <img
-        src={this.isLoggedIn ? LoggedIn : LoggedOut}
+        src={this.isRecent ? LoggedIn : LoggedOut}
         className="memberIcon"
         draggable={false}
       />
@@ -74,11 +89,14 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
     return (
       <div className="memberInfo">
         <p>
-          {member.name} is{' '}
           <span style={{ marginRight: '0.5em' }}>
-            {this.renderLoggedInStatusIcon}
+            {this.renderRecentStatusIcon}
           </span>
-          {this.isLoggedIn ? 'online' : 'offline'}
+          {member.name} has {!this.isRecent && 'not'} recently accessed the
+          space.
+        </p>
+        <p>
+          {member.name} is {this.isLoggedIn ? 'logged-in' : 'logged-out'}
         </p>
         <p>
           Membership: {renderActiveIcon}
@@ -141,10 +159,10 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
               // document.getElementById('card-' + memberId).parentElement
               document.getElementById('root')
             }>
-            {this.renderLoggedInStatusIcon}
+            {this.renderRecentStatusIcon}
           </LazyTippy>
         ) : (
-          this.renderLoggedInStatusIcon
+          this.renderRecentStatusIcon
         )}
       </React.Fragment>
     )
