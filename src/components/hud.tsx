@@ -21,7 +21,6 @@ import AoVolume from './volume'
 import AoReactivator from './reactivator'
 import AoTour from './tour'
 import AoPopupPanel from './popupPanel'
-import AoShitposts from './shitposts'
 import AoChatroom from './chatroom'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
@@ -140,7 +139,6 @@ export default class AoHud extends React.Component<{}, undefined> {
           </AoPopupPanel>
         </div>
         <AoTickerHud />
-        <AoShitposts />
         <AoChatroom taskId={aoStore.currentChatroom} />
         <AoScore prefix={<span>Points: </span>} />
       </div>
