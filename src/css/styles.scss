@@ -1751,7 +1751,8 @@ textarea {
     #proposals .popupPanel,
     .grid,
     .cardComposer .zone,
-    .chatStack {
+    .chatStack,
+    .chatbox {
       scrollbar-color: rgba(89, 89, 89, 0.4) rgba(22, 22, 22, 0.4);
       scrollbar-width: thin;
 
@@ -2171,9 +2172,10 @@ textarea {
 
     .chatbox {
       max-height: 15em;
-      overflow-y: auto;
+      overflow-y: overlay;
       display: flex;
       flex-direction: column-reverse;
+      padding-right: 0.75em;
 
       .stack {
         margin: 0 0.5em;
@@ -2199,6 +2201,11 @@ textarea {
     .chatbox .stack .card.priority {
       min-width: unset;
       max-width: 100%;
+    }
+
+    // Text entry for chatbox
+    .chatbox .cardComposer > textarea {
+      margin-bottom: 0;
     }
 
     // apparently inaccurate error messages above attachments
