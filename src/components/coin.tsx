@@ -19,7 +19,7 @@ interface CoinProps {
 }
 
 @observer
-export default class AoCoin extends React.PureComponent<CoinProps> {
+export default class AoCoin extends React.Component<CoinProps> {
   private imageRef = React.createRef<HTMLImageElement>()
 
   constructor(props) {

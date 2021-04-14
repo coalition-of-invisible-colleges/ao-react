@@ -2071,6 +2071,7 @@ textarea {
       transform: translateY(-50%);
       background-color: rgba(0, 0, 0, 0.6);
       border-radius: 1em;
+      max-width: calc((100vw - 39em) / 2);
 
       &.closed {
         top: 6.75em;
@@ -2192,6 +2193,12 @@ textarea {
         position: relative;
         top: -0.275em;
       }
+    }
+
+    // cards in the chatbox
+    .chatbox .stack .card.priority {
+      min-width: unset;
+      max-width: 100%;
     }
 
     // apparently inaccurate error messages above attachments
