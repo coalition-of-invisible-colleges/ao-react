@@ -15,6 +15,7 @@ const { socketAuth } = require('./auth')
 const { watchSpot } = require('./exchangeRate')
 const rent = require('./rent')
 const link = require('./link')
+const cleanup = require('./cleanup')
 const { scanMemes } = require('./files')
 const lightning = require('./lightning')
 

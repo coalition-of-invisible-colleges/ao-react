@@ -9,6 +9,7 @@ interface Props {
 	onChange?: (newName: string) => void
 	onBlur?: (event) => void
 	coords?: Coords
+	placeholderText?: string
 }
 
 interface State {
@@ -19,10 +20,12 @@ interface State {
 @observer
 export default class AoCardComposer extends React.Component<Props, State> {
 	private _ismounted
+	private composerBox = React.createRef<HTMLTextAreaElement>()
 
 	constructor(props) {
 		super(props)
 		this.state = {}
+		this.focus = this.focus.bind(this)
 		this.uploadDraft = this.uploadDraft.bind(this)
 		this.clear = this.clear.bind(this)
 		this.onBlur = this.onBlur.bind(this)
@@ -32,6 +35,10 @@ export default class AoCardComposer extends React.Component<Props, State> {
 		if (aoStore.member.draft) {
 			aoStore.saveDraft(aoStore.member.draft)
 		}
+	}
+
+	focus() {
+		this.composerBox.current.focus()
 	}
 
 	componentDidMount() {
@@ -109,7 +116,8 @@ export default class AoCardComposer extends React.Component<Props, State> {
 					onChange={this.onChange}
 					onKeyDown={this.onKeyDown}
 					value={aoStore.draft}
-					placeholder="idea"
+					placeholder={this.props.placeholderText || 'idea'}
+					ref={this.composerBox}
 				/>
 				{this.state.saved && (
 					<div

@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "outDir": "./dist",
-    "lib": ["ES6", "ES5", "DOM"]
+    "lib": ["ES6", "ES5", "DOM"],
+    "experimentalDecorators": true
   }
 }

@@ -2139,7 +2139,7 @@ textarea {
           margin: -0.6em;
           &.selected,
           &:hover {
-            border-color: black;
+            border-color: white;
             border-radius: 1em;
           }
         }
@@ -2154,8 +2154,19 @@ textarea {
       }
     }
 
+    .chatbox {
+      max-height: 15em;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column-reverse;
+
+      .dropZone.subTasks .dragZone {
+      }
+    }
+
     // palette in the shitposts box
-    #shitposts .palette {
+    #shitposts .palette,
+    .chatbox .palette {
       position: relative;
       left: 50%;
       transform: translateX(-50%);

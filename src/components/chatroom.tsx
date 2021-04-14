@@ -4,6 +4,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import Jitsi from 'react-jitsi'
 import config from '../../configuration'
+import Chatbox from './chatbox'
 
 interface Props {
   taskId: string
@@ -100,6 +101,7 @@ export default class AoChatroom extends React.Component<Props, State> {
             height: 'calc(((100vw - 39em)/2)*4/6)'
           }}
         />
+        <Chatbox taskId={this.props.taskId} />
         <div className="action" onClick={this.hide}>
           Leave {card.guild} Chatroom
         </div>

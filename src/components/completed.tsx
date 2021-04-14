@@ -19,9 +19,9 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 			return null
 		}
 
-		let completedCards: Task[] = card.completed.map(tId =>
-			aoStore.hashMap.get(tId)
-		)
+		let completedCards: Task[] = card.completed
+			.map(tId => aoStore.hashMap.get(tId))
+			.filter(t => t?.deck?.length >= 1)
 		completedCards.reverse()
 
 		return completedCards

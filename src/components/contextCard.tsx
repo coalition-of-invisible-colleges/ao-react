@@ -238,7 +238,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		allSubCards.forEach(tId => {
 			let subCard = aoStore.hashMap.get(tId)
 			if (subCard) {
-				if (subCard.guild && subCard.guild.length >= 1) {
+				if (
+					subCard.guild &&
+					subCard.guild.length >= 1 &&
+					subCard.deck.length >= 1
+				) {
 					projectCards.push(subCard)
 				}
 			}
@@ -248,7 +252,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 			Object.entries(card.grid.rows).forEach(([y, row]) => {
 				Object.entries(row).forEach(([x, cell]) => {
 					let gridCard = aoStore.hashMap.get(cell)
-					if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
+					if (
+						gridCard &&
+						gridCard.guild &&
+						gridCard.guild.length >= 1 &&
+						gridCard.deck.length >= 1
+					) {
 						projectCards.push(gridCard)
 					}
 				})
@@ -287,12 +296,16 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 		let priorityCards: Task[]
 		if (card.priorities && card.priorities.length >= 1) {
-			priorityCards = card.priorities.map(tId => aoStore.hashMap.get(tId))
+			priorityCards = card.priorities
+				.map(tId => aoStore.hashMap.get(tId))
+				.filter(t => t?.deck?.length >= 1)
 		}
 
 		let subTaskCards: Task[]
 		if (card.subTasks && card.subTasks.length >= 1) {
-			subTaskCards = card.subTasks.map(tId => aoStore.hashMap.get(tId))
+			subTaskCards = card.subTasks
+				.map(tId => aoStore.hashMap.get(tId))
+				.filter(t => t?.deck?.length >= 1)
 		}
 
 		const cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
