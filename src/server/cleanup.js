@@ -2,9 +2,10 @@ const cron = require('cron')
 const events = require('./events')
 const { serverState } = require('./state')
 
-// Five minutes - make sure cron job below matches
-const deleteAfterMs = 5 * 60 * 1000
+// Six minutes - one minute grace period, deleted every five minutes
+const deleteAfterMs = 6 * 60 * 1000
 
+// Make sure this makes sense with deleteAfterMs
 const cleanupJob = new cron.CronJob({
   cronTime: '5 * * * * *',
   onTick: cleanup,
@@ -18,7 +19,9 @@ function cleanup() {
     .filter(t => {
       const isUnheld = t.deck.length <= 0
       const isOld = Date.now() - t.created > deleteAfterMs
-      return isUnheld && isOld
+      const isMemberCard = t.taskId === t.name
+      const isReservedCard = ['community hub'].includes(t.name)
+      return isUnheld && isOld && !isMemberCard && !isReservedCard
     })
     .map(t => t.taskId)
 

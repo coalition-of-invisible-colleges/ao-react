@@ -565,6 +565,7 @@ textarea {
         margin-top: 1.5em;
         cursor: pointer;
         user-select: none;
+        width: fit-content;
 
         // the paw in the moon, shown when a card has signatures
         img.moonpaw {
@@ -589,6 +590,19 @@ textarea {
 
         img.spin {
           animation: spin 32s linear infinite;
+        }
+
+        .pendingDeletion {
+          position: absolute;
+          width: 100%;
+          height: calc(100% - 0.25em);
+          background: red;
+          mix-blend-mode: multiply;
+          top: 0;
+          left: 0;
+          border-radius: 50%;
+          pointer-events: none;
+          opacity: 0.65;
         }
 
         .hodls {
@@ -2160,7 +2174,8 @@ textarea {
       display: flex;
       flex-direction: column-reverse;
 
-      .dropZone.subTasks .dragZone {
+      .stack {
+        margin: 0 0.5em;
       }
     }
 

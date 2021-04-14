@@ -355,6 +355,13 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
         )}
       </React.Fragment>
     )
+
+    const pendingDeletion =
+      card.hasOwnProperty('deck') &&
+      card.deck.length <= 0 &&
+      card.taskId !== card.name &&
+      Date.now() - card.created > 5 * 60 * 1000
+
     return (
       <div className={this.isGrabbed ? 'coin' : 'coin ungrabbed'}>
         {!this.props.noPopups ? (
@@ -391,6 +398,7 @@ export default class AoCoin extends React.PureComponent<CoinProps> {
           />
         )}
         {this.renderHodlCount}
+        {pendingDeletion && <div className="pendingDeletion" />}
       </div>
     )
   }
