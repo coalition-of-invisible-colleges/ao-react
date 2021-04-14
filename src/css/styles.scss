@@ -2206,6 +2206,7 @@ textarea {
     // Text entry for chatbox
     .chatbox .cardComposer > textarea {
       margin-bottom: 0;
+      width: calc(100% - 2em);
     }
 
     // apparently inaccurate error messages above attachments
