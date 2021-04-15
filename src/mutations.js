@@ -148,6 +148,12 @@ function membersMuts(members, ev) {
         }
       })
       break
+    case 'task-visited':
+      members.forEach(member => {
+        if (member.memberId === ev.memberId) {
+          member.lastUsed = ev.timestamp
+        }
+      })
     case 'member-deactivated':
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
