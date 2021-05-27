@@ -12,7 +12,7 @@ interface DragZoneProps {
 }
 
 @observer
-export default class AoDragZone extends React.PureComponent<DragZoneProps> {
+export default class AoDragZone extends React.Component<DragZoneProps> {
 	constructor(props, context) {
 		super(props, context)
 		this.drag = this.drag.bind(this)

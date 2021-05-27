@@ -431,6 +431,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					</div>
 				)
 			case 'full':
+				const grid = card.grid
+
 				return (
 					<React.Fragment>
 						{this.props.noContextOnFull ? (
@@ -488,7 +490,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 										</button>
 									</div>
 								)}
-								<AoGrid taskId={taskId} />
+								<AoGrid grid={grid} taskId={taskId} />
 								<AoStack
 									inId={taskId}
 									cards={subTaskCards}

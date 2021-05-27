@@ -13,6 +13,7 @@ import AoCardComposer from './cardComposer'
 
 interface GridProps {
   taskId: string
+  grid: Grid
   dropActsLikeFolder?: boolean
 }
 
@@ -20,34 +21,96 @@ interface GridViewProps extends GridProps {
   grid: Grid
 }
 
-interface GridViewState {
+const AoGridRow: Function = (props: {
+  row: {}
+  y: number
+  inId: string
   selected?: Coords
+  width: number
+  dropActsLikeFolder: boolean
+  onBlur: () => void
+  onNewGridCard: (name: string, coords: Coords) => void
+  selectGridSquare: (selection: Coords) => void
+  dropToGridSquare: (move: CardPlay) => void
+}): JSX.Element => {
+  console.log('rerendering grid row')
+  let render: JSX.Element[] = []
+  for (let i = 0; i < props.width; i++) {
+    if (
+      props.selected &&
+      props.selected.x == i &&
+      props.selected.y == props.y
+    ) {
+      render.push(
+        <React.Fragment key={i + '-' + props.y}>
+          <AoCardComposer
+            onNewCard={props.onNewGridCard}
+            coords={{ x: i, y: props.y }}
+            onBlur={props.onBlur}
+          />
+        </React.Fragment>
+      )
+      continue
+    }
+    let tId: string
+    if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
+      tId = props.row[i]
+    }
+
+    const card = aoStore.hashMap.get(tId)
+    render.push(
+      <AoDropZone
+        taskId={tId}
+        inId={props.inId}
+        x={i}
+        y={props.y}
+        onSelect={props.selectGridSquare}
+        onDrop={props.dropToGridSquare}
+        zoneStyle={'grid'}
+        key={i + '-' + props.y}
+        dropActsLikeFolder={props.dropActsLikeFolder}>
+        {tId ? (
+          <AoDragZone
+            taskId={tId}
+            dragContext={{
+              zone: 'grid',
+              inId: props.inId,
+              x: i,
+              y: props.y
+            }}>
+            <AoContextCard
+              task={card}
+              cardStyle={
+                props.dropActsLikeFolder && card.guild && card.guild.length >= 1
+                  ? 'badge'
+                  : 'mini'
+              }
+            />
+          </AoDragZone>
+        ) : null}
+      </AoDropZone>
+    )
+  }
+
+  return <>{render}</>
 }
 
-@observer
-class GridView extends React.PureComponent<GridViewProps, GridViewState> {
-  constructor(props) {
-    super(props)
-    this.state = {}
-    this.selectGridSquare = this.selectGridSquare.bind(this)
-    this.onBlur = this.onBlur.bind(this)
-    this.newGridCard = this.newGridCard.bind(this)
-    this.dropToGridSquare = this.dropToGridSquare.bind(this)
+const GridView: Function = (props: GridViewProps): JSX.Element => {
+  const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
+
+  function selectGridSquare(selection: Coords) {
+    setSelected(selection)
   }
 
-  selectGridSquare(selection: Coords) {
-    this.setState({ selected: selection })
+  function onBlur() {
+    selectGridSquare(undefined)
   }
 
-  onBlur() {
-    this.selectGridSquare(undefined)
+  function newGridCard(name: string, coords: Coords) {
+    api.pinCardToGrid(coords.x, coords.y, name, props.taskId)
   }
 
-  newGridCard(name: string, coords: Coords) {
-    api.pinCardToGrid(coords.x, coords.y, name, this.props.taskId)
-  }
-
-  dropToGridSquare(move: CardPlay) {
+  function dropToGridSquare(move: CardPlay) {
     if (!move.from.taskId) {
       return
     }
@@ -233,152 +296,91 @@ class GridView extends React.PureComponent<GridViewProps, GridViewState> {
     }
   }
 
-  render() {
-    const render = []
-    const taskId = this.props.taskId
-    const grid = this.props.grid
-
-    for (let j = 0; j < grid.height; j++) {
-      for (let i = 0; i < grid.width; i++) {
-        if (
-          this.state.selected &&
-          this.state.selected.x == i &&
-          this.state.selected.y == j
-        ) {
-          render.push(
-            <React.Fragment key={i + '-' + j}>
-              <AoCardComposer
-                onNewCard={this.newGridCard}
-                coords={{ x: i, y: j }}
-                onBlur={this.onBlur}
-              />
-            </React.Fragment>
-          )
-          continue
-        }
-        let tId: string
-        if (
-          grid.rows[j] &&
-          grid.rows[j][i] &&
-          typeof (grid.rows[j][i] === 'string')
-        ) {
-          tId = grid.rows[j][i]
-        }
-
-        const card = aoStore.hashMap.get(tId)
-        render.push(
-          <AoDropZone
-            taskId={tId}
-            inId={taskId}
-            x={i}
-            y={j}
-            onSelect={this.selectGridSquare}
-            onDrop={this.dropToGridSquare}
-            zoneStyle={'grid'}
-            key={i + '-' + j}
-            dropActsLikeFolder={this.props.dropActsLikeFolder}>
-            {tId ? (
-              <AoDragZone
-                taskId={tId}
-                dragContext={{
-                  zone: 'grid',
-                  inId: taskId,
-                  x: i,
-                  y: j
-                }}>
-                <AoContextCard
-                  task={card}
-                  cardStyle={
-                    this.props.dropActsLikeFolder &&
-                    card.guild &&
-                    card.guild.length >= 1
-                      ? 'badge'
-                      : 'mini'
-                  }
-                />
-              </AoDragZone>
-            ) : null}
-          </AoDropZone>
-        )
-      }
-    }
-    return render
+  const render: JSX.Element[] = []
+  const taskId = props.taskId
+  const grid = props.grid
+  const rows = grid.rows
+  console.log('rerendering GRID')
+  for (let j = 0; j < grid.height; j++) {
+    const currentRow = rows[j]
+    render.push(
+      <React.Fragment>
+        <AoGridRow
+          row={currentRow}
+          y={j}
+          inId={props.taskId}
+          selected={selected}
+          width={grid.width}
+          dropActsLikeFolder={props.dropActsLikeFolder}
+          onBlur={onBlur}
+          onNewGridCard={newGridCard}
+          selectGridSquare={selectGridSquare}
+          dropToGridSquare={dropToGridSquare}
+          key={j}
+        />
+      </React.Fragment>
+    )
   }
+  return <>{render}</>
 }
 
-interface GridState {
-  redirect?: string
-}
+export default function AoGrid(props: GridProps) {
+  const [redirect, setRedirect] = React.useState<string>(undefined)
 
-export const defaultState: GridState = {
-  redirect: undefined
-}
-
-@observer
-export default class AoGrid extends React.PureComponent<GridProps, GridState> {
-  constructor(props) {
-    super(props)
-    this.state = defaultState
-    this.addGrid = this.addGrid.bind(this)
+  function addGrid() {
+    api.addGridToCard(props.taskId, 3, 3)
   }
 
-  addGrid() {
-    api.addGridToCard(this.props.taskId, 3, 3)
-  }
-
-  render() {
-    if (this.state.redirect !== undefined) {
+  React.useEffect(() => {
+    if (redirect !== undefined) {
       this.setState({ redirect: undefined })
-      return <Redirect to={this.state.redirect} />
     }
+  }, [redirect])
 
-    const taskId = this.props.taskId
-    const card = aoStore.hashMap.get(this.props.taskId)
+  if (redirect !== undefined) {
+    return <Redirect to={redirect} />
+  }
 
-    if (!card) {
-      return null
-    }
+  const taskId = props.taskId
+  const grid = props.grid
 
-    const grid = card.grid
-
-    if (
-      !grid ||
-      (grid.hasOwnProperty('height') && grid.height < 1) ||
-      (grid.hasOwnProperty('width') && grid.width < 1) ||
-      !grid.hasOwnProperty('height') ||
-      !grid.hasOwnProperty('width')
-    ) {
-      return null
-      return (
-        <div className="gridContainer noPad">
-          <p onClick={this.addGrid} className="action">
-            +grid
-          </p>
-        </div>
-      )
-    }
-
-    const gridWidth = this.props.dropActsLikeFolder ? '5em' : '6em'
-
+  if (
+    !grid ||
+    (grid.hasOwnProperty('height') && grid.height < 1) ||
+    (grid.hasOwnProperty('width') && grid.width < 1) ||
+    !grid.hasOwnProperty('height') ||
+    !grid.hasOwnProperty('width')
+  ) {
+    return null
     return (
-      <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>
-        <div
-          className="grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns:
-              'repeat(' + grid.width.toString() + ', ' + gridWidth + ')',
-            gridTemplateRows:
-              'repeat(' + grid.height.toString() + ', ' + gridWidth + ')'
-          }}>
-          <GridView
-            taskId={taskId}
-            grid={grid}
-            dropActsLikeFolder={this.props.dropActsLikeFolder}
-          />
-        </div>
-        <AoGridResizer taskId={taskId} />
+      <div className="gridContainer noPad">
+        <p onClick={this.addGrid} className="action">
+          +grid
+        </p>
       </div>
     )
   }
+
+  const gridWidth = props.dropActsLikeFolder ? '5em' : '6em'
+
+  return (
+    <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>
+      <div
+        className="grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns:
+            'repeat(' + grid.width.toString() + ', ' + gridWidth + ')',
+          gridTemplateRows:
+            'repeat(' + grid.height.toString() + ', ' + gridWidth + ')'
+        }}>
+        <GridView
+          taskId={taskId}
+          grid={grid}
+          dropActsLikeFolder={props.dropActsLikeFolder}
+        />
+      </div>
+      <AoGridResizer taskId={taskId} />
+    </div>
+  )
 }

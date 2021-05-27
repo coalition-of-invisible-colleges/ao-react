@@ -75,7 +75,11 @@ export default class AoDock extends React.Component<{}, State> {
       <div id="dock">
         <AoHome />
         <AoGem />
-        <AoGrid taskId={this.state.bookmarksTaskId} dropActsLikeFolder={true} />
+        <AoGrid
+          taskId={this.state.bookmarksTaskId}
+          grid={card.grid}
+          dropActsLikeFolder={true}
+        />
       </div>
     )
   }

@@ -30,10 +30,7 @@ export type CardSource =
 	| 'context'
 
 @observer
-export default class AoDropZone extends React.PureComponent<
-	DropZoneProps,
-	State
-> {
+export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	private nestedDragCounter: number = 0
 
 	constructor(props) {

@@ -5,7 +5,6 @@ import _ from 'lodash'
 import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
 import io from 'socket.io-client'
-import { composeP } from 'ramda'
 
 class AoApi {
   constructor(public socket) {}

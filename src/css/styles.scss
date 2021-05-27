@@ -739,7 +739,7 @@ textarea {
 
       .resizer {
         position: absolute;
-        margin-top: -5.25em; // -4.75
+        margin-top: -4.75em; // -4.75
         right: 0;
         transform: translateX(100%);
 
@@ -1454,6 +1454,25 @@ textarea {
       outline: none;
     }
 
+    // action link used in the chatroom title
+    .actionLink {
+      cursor: pointer;
+
+      &:hover {
+        font-weight: bold;
+        text-decoration: underline;
+      }
+
+      &.current {
+        cursor: default;
+        font-weight: bold;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
     // small image on an action button
     .action img,
     .summary img,
@@ -2076,6 +2095,31 @@ textarea {
 
       &.closed {
         top: 6.75em;
+      }
+
+      // X button to close the chatroom
+      & > div > .action {
+        position: absolute;
+        right: 0em;
+        font-size: 2em;
+        width: 1em;
+        line-height: 1em;
+        padding: 0;
+        background-color: rgba(200, 200, 200, 0.25);
+        border-radius: 50%;
+
+        &:hover {
+          font-weight: bold;
+          text-decoration: none;
+          background-color: rgba(255, 255, 255, 0.25);
+        }
+      }
+
+      .loading {
+        position: absolute;
+        top: 10em;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 

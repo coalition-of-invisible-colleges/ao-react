@@ -138,7 +138,7 @@ else
 fi
 
 # install npm
-if [ $(npm --v  2>/dev/null | grep -c "6\.") -eq 1 ]; then
+if [ $(npm --v  2>/dev/null | grep -c "7\.") -eq 1 ]; then
 	NPMVERSION=`npm -v`
 	echo npm v$NPMVERSION already installed
 else
@@ -500,7 +500,7 @@ else
 Description=ao-daemon
 
 [Service]
-ExecStart=$HOME/.nvm/versions/node/v15.2.1/bin/node $HOME/ao-react/src/server/app.js
+ExecStart=$HOME/.nvm/versions/node/v16.0.0/bin/node $HOME/ao-react/src/server/app.js
 User=$USER
 Type=simple
 Restart=always

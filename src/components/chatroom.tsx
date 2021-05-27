@@ -5,6 +5,10 @@ import api from '../client/api'
 import Jitsi from 'react-jitsi'
 import config from '../../configuration'
 import Chatbox from './chatbox'
+import { goInCard } from '../cards'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface Props {
   taskId: string
@@ -22,6 +26,7 @@ export default class AoChatroom extends React.Component<Props, State> {
     this.state = {}
     this.hide = this.hide.bind(this)
     this.startTimer = this.startTimer.bind(this)
+    this.goInCard = this.goInCard.bind(this)
   }
 
   componentDidMount() {
@@ -70,6 +75,24 @@ export default class AoChatroom extends React.Component<Props, State> {
     this.setState({ timer })
   }
 
+  goInCard(event) {
+    event.stopPropagation()
+
+    if (!this.props.taskId) {
+      return
+    }
+
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+    if (!card) {
+      console.log('missing card')
+      return
+    }
+
+    goInCard(card.taskId)
+    aoStore.setGlobalRedirect(card.taskId)
+  }
+
   render() {
     if (this.state.flash) {
       return <div>Reloading chatroom...</div>
@@ -87,24 +110,46 @@ export default class AoChatroom extends React.Component<Props, State> {
 
     return (
       <div id="chatroom">
+        <div>
+          {aoStore.currentCard === this.props.taskId ? (
+            <Tippy
+              zIndex={4}
+              theme={'translucent'}
+              content="You Are Here"
+              delay={[625, 200]}>
+              <span>
+                <span className="actionLink current">{card.guild}</span>{' '}
+                chatroom
+              </span>
+            </Tippy>
+          ) : (
+            <React.Fragment>
+              <span onClick={this.goInCard} className="actionLink">
+                {card.guild}
+              </span>{' '}
+              chatroom
+            </React.Fragment>
+          )}
+          <div
+            className="action"
+            onClick={this.hide}
+            style={{ display: 'inline-block' }}>
+            ×
+          </div>
+        </div>
         <Jitsi
-          domain={
-            config.hasOwnProperty('jitsi') &&
-            config.jitsi.hasOwnProperty('domain')
-              ? config.jitsi.domain
-              : 'meet.dctrl.ca'
-          }
+          domain={config?.jitsi?.domain || 'meet.dctrl.ca'}
           roomName={card.guild.substring(0, 60)}
           displayName={aoStore.member.name}
           containerStyle={{
             width: 'calc((100vw - 39em)/2)',
             height: 'calc(((100vw - 39em)/2)*4/6)'
           }}
+          loadingComponent={() => (
+            <div className="loading">Loading video room…</div>
+          )}
         />
         <Chatbox taskId={this.props.taskId} />
-        <div className="action" onClick={this.hide}>
-          Leave {card.guild} Chatroom
-        </div>
       </div>
     )
   }
