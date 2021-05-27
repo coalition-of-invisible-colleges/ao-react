@@ -72,8 +72,12 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
 
+    const stopIt = event => {
+      event.stopPropagation()
+    }
+
     return (
-      <React.Fragment>
+      <div onClick={stopIt}>
         {aoStore.currentCard === taskId ? (
           <p>You Are Here</p>
         ) : (
@@ -93,7 +97,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
             />
           </React.Fragment>
         )}
-      </React.Fragment>
+      </div>
     )
   }
 

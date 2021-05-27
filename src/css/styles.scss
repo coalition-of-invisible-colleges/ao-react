@@ -2485,6 +2485,18 @@ textarea {
       }
     }
 
+    // login success message
+    .errorMessage {
+      font-weight: bold;
+      color: green;
+    }
+
+    // login error message
+    .errorMessage {
+      font-weight: bold;
+      color: red;
+    }
+
     // area for avatars on the card
     .lilypad {
       position: absolute;

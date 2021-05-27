@@ -7,16 +7,23 @@ import config from '../../configuration'
 const Login: React.FunctionComponent<{}> = () => {
   const [user, setUser] = useState('')
   const [pass, setPass] = useState('')
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
   const onClick = e => {
     api
       .createSession(user, pass)
       .then(api.fetchState)
       .then(res => {
-        if (res) setLoggedIn(true)
-        else {
+        if (res) {
+          setError('Login successful')
+          setLoggedIn(true)
+        } else {
           setUser('')
         }
+      })
+      .catch(err => {
+        setError('Login failed.')
       })
   }
   const onKeyDown = e => {
@@ -50,6 +57,8 @@ const Login: React.FunctionComponent<{}> = () => {
           <button type="button" onClick={onClick}>
             Login
           </button>
+          <div className="successMessage">{success}</div>
+          <div className="errorMessage">{error}</div>
         </form>
       )}
       {loggedIn && <Redirect to="/" />}
