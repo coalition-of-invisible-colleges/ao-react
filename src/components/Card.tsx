@@ -85,5 +85,9 @@ export default function AoCard(props) {
     }
   }, [aoStore.globalRedirect])
 
-  return <div tabIndex={0}>{renderCard(aoStore.currentCard)}</div>
+  return (
+    <div tabIndex={0} style={{ outline: 'none' }}>
+      {renderCard(aoStore.currentCard)}
+    </div>
+  )
 }
