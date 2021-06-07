@@ -25,6 +25,7 @@ import AoChatroom from './chatroom'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
+import Scroll from '../assets/images/scroll.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 
@@ -75,20 +76,35 @@ class MainMenu extends React.PureComponent<{}, State> {
   }
 }
 
+interface HudState {
+  proposals?: number
+}
+
 @observer
-export default class AoHud extends React.Component<{}, undefined> {
+export default class AoHud extends React.Component<{}, HudState> {
   private searchRef = React.createRef<AoSearch>()
 
   constructor(props) {
     super(props)
+    this.state = {}
     this.focusSearchbox = this.focusSearchbox.bind(this)
+    this.updateProposalCount = this.updateProposalCount.bind(this)
   }
 
   focusSearchbox() {
     this.searchRef.current.focus()
   }
 
+  updateProposalCount(proposals: number) {
+    this.setState({ proposals })
+  }
+
   render() {
+    const renderedBadge =
+      this.state.proposals && this.state.proposals >= 1 ? (
+        <React.Fragment>{this.state.proposals}</React.Fragment>
+      ) : null
+
     return (
       <div id="hud">
         <Tippy
@@ -125,7 +141,18 @@ export default class AoHud extends React.Component<{}, undefined> {
           </AoPopupPanel>
         </div>
         <AoCalendar />
-        <AoProposals />
+        {/*        <div id="proposals">
+          <AoPopupPanel
+            iconSrc={Scroll}
+            tooltipText="Proposals"
+            badge={renderedBadge}
+            tooltipPlacement="right"
+            panelPlacement="right"
+            id="tour-proposals">
+            <AoProposals updateBadge={this.updateProposalCount} />
+          </AoPopupPanel>
+        </div>
+*/}
         <AoBounties />
         <div id="search">
           <AoPopupPanel

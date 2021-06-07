@@ -20,6 +20,7 @@ import AoMemberIcon from './memberIcon'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import { goInCard, prioritizeCard, subTaskCard, CardZone } from '../cards'
 import AoDragZone from './dragZone'
+import AoProposals from './proposals'
 
 export type CardStyle =
 	| 'priority'
@@ -472,6 +473,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 									<AoAttachment taskId={taskId} />
 									{this.renderCardContent(content)}
 								</div>
+								{card.guild && <AoProposals filterByGuildId={taskId} />}
 								<AoStack
 									inId={taskId}
 									cards={priorityCards}

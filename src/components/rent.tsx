@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoTip from './tip'
+import AoQuorum from './quorum'
 
 @observer
 export default class AoRent extends React.PureComponent<{}> {
@@ -76,6 +77,11 @@ export default class AoRent extends React.PureComponent<{}> {
           'No active members to charge a monthly membership fee.'
         )}
         {this.renderPendingDeactivation()}
+        <div>
+          Quorum{' '}
+          <AoTip text="Number of signatures required to pass a proposal. Passed proposals appear in the Passed Proposals section of each squad. Anyone can change this setting at any time to change how proposals are displayed in squads." />
+          : <AoQuorum />
+        </div>
       </React.Fragment>
     )
   }

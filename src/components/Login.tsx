@@ -79,9 +79,9 @@ const Login: React.FunctionComponent<{}> = () => {
             </ul>
           </div>
           <div>
-            <h2>Darknet Library</h2>
+            <h2>P2P Digital Library</h2>
             <ul>
-              <li>Upload memes to share with other members</li>
+              <li>Upload memes to share with friends and family</li>
               <li>AO nodes sync p2p over tor (anonymized onion routing)</li>
               <li>
                 Visit this AO at its tor address
