@@ -39,9 +39,14 @@ export default class AoProposals extends React.Component<Props> {
       source = []
       if (guildCard) {
         let gridTaskIds = []
-        Object.entries(guildCard?.grid?.rows).forEach(([y, row]) => {
-          gridTaskIds.push(...Object.values(row))
-        })
+        if (
+          guildCard.hasOwnProperty('grid') &&
+          guildCard.grid.hasOwnProperty('rows')
+        ) {
+          Object.entries(guildCard.grid.rows).forEach(([y, row]) => {
+            gridTaskIds.push(...Object.values(row))
+          })
+        }
         const allSubTaskIds = [
           ...guildCard.priorities,
           ...gridTaskIds,
