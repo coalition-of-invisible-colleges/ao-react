@@ -31,7 +31,6 @@ export default class AoProposals extends React.Component<Props> {
 
   @computed get everSigned() {
     let source = aoStore.state.tasks
-    console.log('filterByGuildId is', this.props.filterByGuildId)
     if (this.props.filterByGuildId) {
       const guildCard = aoStore.hashMap.get(this.props.filterByGuildId)
       if (!guildCard) {
@@ -40,9 +39,8 @@ export default class AoProposals extends React.Component<Props> {
       source = []
       if (guildCard) {
         let gridTaskIds = []
-        Object.entries(guildCard.grid.rows).forEach(([y, row]) => {
+        Object.entries(guildCard?.grid?.rows).forEach(([y, row]) => {
           gridTaskIds.push(...Object.values(row))
-          console.log('gridTaskIds is ', gridTaskIds)
         })
         const allSubTaskIds = [
           ...guildCard.priorities,
@@ -122,18 +120,6 @@ export default class AoProposals extends React.Component<Props> {
         .some(t => t.taskId === task.taskId)
     })
   }
-
-  // @computed get previouslySigned() {
-  //   console.log(
-  //     'previouslySigned. this.everSigned.length is ',
-  //     this.everSigned.length,
-  //     ' and this.proposals.length is ',
-  //     this.proposals.length
-  //   )
-  //   return this.everSigned.filter(task => {
-  //     return this.proposals.every(t => t.taskId !== task.taskId)
-  //   })
-  // }
 
   @computed get renderProposalsList() {
     return (
