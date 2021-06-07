@@ -44,12 +44,16 @@ export default class AoProposals extends React.Component<Props> {
           gridTaskIds.push(...Object.values(row))
           console.log('gridTaskIds is ', gridTaskIds)
         })
-        ;[
+        const allSubTaskIds = [
           ...guildCard.priorities,
           ...gridTaskIds,
           ...guildCard.subTasks,
           ...guildCard.completed
-        ].forEach(st => {
+        ]
+        const uniqueSubTaskIds = allSubTaskIds.filter(function(item, pos) {
+          return allSubTaskIds.indexOf(item) == pos
+        })
+        uniqueSubTaskIds.forEach(st => {
           const subCard = aoStore.hashMap.get(st)
           if (!subCard) {
             console.log('Missing subcard in proposals')
