@@ -15,6 +15,8 @@ interface GridProps {
   taskId: string
   grid: Grid
   dropActsLikeFolder?: boolean
+  height: number
+  width: number
 }
 
 interface GridViewProps extends GridProps {
@@ -33,7 +35,6 @@ const AoGridRow: Function = (props: {
   selectGridSquare: (selection: Coords) => void
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
-  console.log('rerendering grid row')
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {
     if (
@@ -127,7 +128,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
       case 'card':
         if (
           move.to.taskId &&
-          this.props.dropActsLikeFolder &&
+          props.dropActsLikeFolder &&
           move.from.inId !== move.to.inId
         ) {
           api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(goUp)
@@ -152,7 +153,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
         }
         break
       case 'priorities':
-        if (move.to.taskId && this.props.dropActsLikeFolder) {
+        if (move.to.taskId && props.dropActsLikeFolder) {
           api.refocusCard(move.from.taskId, move.from.inId).then(() => {
             api
               .discardCardFromCard(move.from.taskId, move.from.inId)
@@ -188,7 +189,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
       case 'grid':
         if (
           move.to.taskId &&
-          this.props.dropActsLikeFolder &&
+          props.dropActsLikeFolder &&
           move.from.inId !== move.to.inId
         ) {
           api
@@ -238,7 +239,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
         break
       case 'subTasks':
         api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
-          if (move.to.taskId && this.props.dropActsLikeFolder) {
+          if (move.to.taskId && props.dropActsLikeFolder) {
             api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
           } else if (move.to.taskId) {
             api
@@ -271,7 +272,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
       case 'context':
       case 'panel':
       default:
-        if (move.to.taskId && this.props.dropActsLikeFolder) {
+        if (move.to.taskId && props.dropActsLikeFolder) {
           api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
         } else if (move.to.taskId) {
           api
@@ -300,11 +301,10 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
   const taskId = props.taskId
   const grid = props.grid
   const rows = grid.rows
-  console.log('rerendering GRID')
   for (let j = 0; j < grid.height; j++) {
     const currentRow = rows[j]
     render.push(
-      <React.Fragment>
+      <React.Fragment key={j}>
         <AoGridRow
           row={currentRow}
           y={j}
@@ -333,7 +333,7 @@ export default function AoGrid(props: GridProps) {
 
   React.useEffect(() => {
     if (redirect !== undefined) {
-      this.setState({ redirect: undefined })
+      setRedirect(undefined)
     }
   }, [redirect])
 
@@ -354,7 +354,7 @@ export default function AoGrid(props: GridProps) {
     return null
     return (
       <div className="gridContainer noPad">
-        <p onClick={this.addGrid} className="action">
+        <p onClick={addGrid} className="action">
           +grid
         </p>
       </div>

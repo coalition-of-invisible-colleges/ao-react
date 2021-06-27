@@ -8,9 +8,7 @@ interface GridResizerProps {
 }
 
 @observer
-export default class AoGridResizer extends React.PureComponent<
-  GridResizerProps
-> {
+export default class AoGridResizer extends React.Component<GridResizerProps> {
   constructor(props) {
     super(props)
     this.increaseRows = this.increaseRows.bind(this)
