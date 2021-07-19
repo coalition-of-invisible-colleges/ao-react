@@ -84,7 +84,10 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 					badge={renderedBadge}
 					badgeColor="yellow">
 					<React.Fragment>
-						<h4>Saga of Accomplishments</h4>
+						<h4>
+							{this.completedCards.length} Accomplishment
+							{this.completedCards.length >= 2 ? 's' : ''}
+						</h4>
 						<AoStack
 							inId={taskId}
 							cards={this.completedCards}

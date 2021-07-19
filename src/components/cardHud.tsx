@@ -144,13 +144,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 							) : (
 								<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 							)}
-							{this.props.inId && (
-								<button
-									onClick={() => {
-										api.discardCardFromCard(taskId, this.props.inId)
-									}}
-								/>
-							)}
 						</div>
 					</React.Fragment>
 				)

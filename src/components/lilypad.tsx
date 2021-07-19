@@ -143,20 +143,20 @@ export default class AoChatroom extends React.Component<Props, State> {
       altMessage = youAreHere
         ? 'You are in this chatroom'
         : 'Click to enter chatroom'
-    }
 
-    return (
-      <Tippy
-        zIndex={4}
-        theme="translucent"
-        content={
-          <div className="infoTooltip">
-            {this.renderAvatarList}
-            <p>{altMessage}</p>
-          </div>
-        }>
-        {button}
-      </Tippy>
-    )
+      return (
+        <Tippy
+          zIndex={4}
+          theme="translucent"
+          content={
+            <div className="infoTooltip">
+              {this.renderAvatarList}
+              <p>{altMessage}</p>
+            </div>
+          }>
+          {button}
+        </Tippy>
+      )
+    }
   }
 }
