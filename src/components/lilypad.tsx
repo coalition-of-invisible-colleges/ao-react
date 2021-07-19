@@ -7,6 +7,7 @@ import AoMemberIcon from './memberIcon'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
+import Lilypad from '../assets/images/chatroom.svg'
 
 interface Props {
   taskId: string
@@ -23,7 +24,7 @@ export default class AoChatroom extends React.Component<Props, State> {
     super(props)
     this.state = { show: false, now: Date.now() }
     this.hopHere = this.hopHere.bind(this)
-    this.joinChat = this.joinChat.bind(this)
+    this.toggleChat = this.toggleChat.bind(this)
   }
 
   componentDidMount() {
@@ -37,10 +38,15 @@ export default class AoChatroom extends React.Component<Props, State> {
     aoStore.setCurrentChatroom(null)
   }
 
-  joinChat() {
+  toggleChat() {
     console.log('showing chatroom')
-    aoStore.setCurrentChatroom(this.props.taskId)
-    api.visitCard(this.props.taskId, true)
+    if (aoStore.currentChatroom === this.props.taskId) {
+      api.visitCard(this.props.taskId, false)
+      aoStore.setCurrentChatroom(null)
+    } else {
+      aoStore.setCurrentChatroom(this.props.taskId)
+      api.visitCard(this.props.taskId, true)
+    }
   }
 
   @computed get renderAvatarList() {
@@ -72,10 +78,10 @@ export default class AoChatroom extends React.Component<Props, State> {
     }
 
     return (
-      <div className="infoTooltip">
+      <React.Fragment>
         <h4>Who's Here</h4>
         {renderedAvatars}
-      </div>
+      </React.Fragment>
     )
   }
 
@@ -123,26 +129,32 @@ export default class AoChatroom extends React.Component<Props, State> {
       // )
       // altMessage = 'Move your avatar here'
     } else {
-      let message = youAreHere
-        ? 'In Chat'
-        : chatroomPop >= 1
-        ? 'Join Chat'
-        : 'Start Chat'
+      const renderedBadge = (
+        <div className="badge green">{chatroomPop + '/' + cardPop}</div>
+      )
       button = (
-        <div className="lilypad action" onClick={this.joinChat}>
-          {message}
-          {cardPop >= 1 && ' (' + chatroomPop + '/' + cardPop + ')'}
+        <div
+          className={'lilypad actionCircle' + (youAreHere ? ' open' : '')}
+          onClick={this.toggleChat}>
+          <img src={Lilypad} />
+          {(chatroomPop >= 1 || cardPop >= 1) && renderedBadge}
         </div>
       )
-      altMessage = (chatroomPop >= 1 ? 'Join' : 'Start') + ' mission video call'
+      altMessage = youAreHere
+        ? 'You are in this chatroom'
+        : 'Click to enter chatroom'
     }
 
     return (
       <Tippy
         zIndex={4}
         theme="translucent"
-        content={this.renderAvatarList || altMessage}
-        delay={[625, 200]}>
+        content={
+          <div className="infoTooltip">
+            {this.renderAvatarList}
+            <p>{altMessage}</p>
+          </div>
+        }>
         {button}
       </Tippy>
     )

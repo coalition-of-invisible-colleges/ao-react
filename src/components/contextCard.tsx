@@ -448,66 +448,66 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								/>
 							</div>
 						)}
-						<AoDragZone
-							taskId={taskId}
-							dragContext={{
-								zone: 'card',
-								inId: null,
-								y: 0
-							}}>
-							<div
-								id={'card-' + taskId}
-								className={'card full' + this.applyClassIfCurrentSearchResult}
-								onDrop={e => {
-									e.preventDefault()
-									e.stopPropagation()
-								}}
-								onMouseEnter={this.onHover}
-								onMouseOver={this.onHover}
-								onMouseOut={this.clearPendingPromise}>
+						<div
+							id={'card-' + taskId}
+							className={'card full' + this.applyClassIfCurrentSearchResult}
+							onDrop={e => {
+								e.preventDefault()
+								e.stopPropagation()
+							}}
+							onMouseEnter={this.onHover}
+							onMouseOver={this.onHover}
+							onMouseOut={this.clearPendingPromise}>
+							<AoDragZone
+								taskId={taskId}
+								dragContext={{
+									zone: 'card',
+									inId: null,
+									y: 0
+								}}>
 								<AoPaper taskId={taskId} />
-								<AoCardHud taskId={taskId} hudStyle="full before" />
-								<div className="content">
-									<AoMission taskId={taskId} hudStyle="full before" />
-									{member && <AoMemberIcon memberId={taskId} />}
-									<AoAttachment taskId={taskId} />
-									{this.renderCardContent(content)}
-								</div>
-								{card.guild && <AoProposals filterByGuildId={taskId} />}
-								<AoStack
-									inId={taskId}
-									cards={priorityCards}
-									showAdd={true}
-									hideAddWhenCards={true}
-									addButtonText="+priority"
-									cardStyle="priority"
-									onNewCard={this.newPriority}
-									onDrop={prioritizeCard}
-									zone="priorities"
-								/>
-								{priorityCards && priorityCards.length > 6 && (
-									<div className="refocusAll">
-										<button className="action" onClick={this.refocusAll}>
-											refocus
-										</button>
-									</div>
-								)}
-								<AoGrid grid={grid} taskId={taskId} />
-								<AoStack
-									inId={taskId}
-									cards={subTaskCards}
-									showAdd={priorityCards && priorityCards.length >= 1}
-									addButtonText="+card"
-									hideAddWhenCards={true}
-									cardStyle="face"
-									onNewCard={this.newSubTask}
-									onDrop={subTaskCard}
-									zone="subTasks"
-								/>
-								<AoCompleted taskId={taskId} />
-								<AoCardHud taskId={taskId} hudStyle="full after" />
+							</AoDragZone>
+							<AoCardHud taskId={taskId} hudStyle="full before" />
+							<div className="content">
+								<AoMission taskId={taskId} hudStyle="full before" />
+								{member && <AoMemberIcon memberId={taskId} />}
+								<AoAttachment taskId={taskId} />
+								{this.renderCardContent(content)}
 							</div>
-						</AoDragZone>
+							{card.guild && <AoProposals filterByGuildId={taskId} />}
+							<AoStack
+								inId={taskId}
+								cards={priorityCards}
+								showAdd={true}
+								hideAddWhenCards={true}
+								addButtonText="+priority"
+								cardStyle="priority"
+								onNewCard={this.newPriority}
+								onDrop={prioritizeCard}
+								zone="priorities"
+							/>
+							{priorityCards && priorityCards.length > 6 && (
+								<div className="refocusAll">
+									<button className="action" onClick={this.refocusAll}>
+										refocus
+									</button>
+								</div>
+							)}
+							<AoGrid grid={grid} taskId={taskId} />
+							<AoStack
+								inId={taskId}
+								cards={subTaskCards}
+								showAdd={priorityCards && priorityCards.length >= 1}
+								addButtonText="+card"
+								hideAddWhenCards={true}
+								cardStyle="face"
+								onNewCard={this.newSubTask}
+								onDrop={subTaskCard}
+								zone="subTasks"
+							/>
+							<AoCompleted taskId={taskId} />
+							<AoCardHud taskId={taskId} hudStyle="full after" />
+						</div>
 					</React.Fragment>
 				)
 			case 'checkmark':
@@ -519,6 +519,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
 						<AoCheckmark taskId={taskId} onGoIn={this.goInCard} />
+						<div className="content">{this.renderCardContent(content)}</div>
 					</div>
 				)
 			case 'mission':

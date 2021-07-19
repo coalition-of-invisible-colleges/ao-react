@@ -5,6 +5,8 @@ import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
 import { CardPlay } from '../cards'
+import AoPopupPanel from './popupPanel'
+import Star from '../assets/images/star.svg'
 
 interface CompletedProps {
 	taskId: string
@@ -70,19 +72,34 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 			return null
 		}
 
+		const renderedBadge = this.completedCards.length
+
 		return (
-			<AoStack
-				inId={taskId}
-				cards={this.completedCards}
-				cardStyle={'checkmark'}
-				onDrop={archiveCheckmark}
-				noFirstCard={true}
-				descriptor={{
-					singular: 'accomplishment',
-					plural: 'accomplishments'
-				}}
-				zone={'completed'}
-			/>
+			<div className="accomplishments">
+				<AoPopupPanel
+					iconSrc={Star}
+					tooltipText="Accomplishments"
+					panelPlacement="right-start"
+					id="tour-accomplishments"
+					badge={renderedBadge}
+					badgeColor="yellow">
+					<React.Fragment>
+						<h4>Saga of Accomplishments</h4>
+						<AoStack
+							inId={taskId}
+							cards={this.completedCards}
+							cardStyle="checkmark"
+							onDrop={archiveCheckmark}
+							alwaysShowAll={true}
+							descriptor={{
+								singular: 'accomplishment',
+								plural: 'accomplishments'
+							}}
+							zone="completed"
+						/>
+					</React.Fragment>
+				</AoPopupPanel>
+			</div>
 		)
 	}
 }

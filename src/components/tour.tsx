@@ -152,6 +152,14 @@ export const steps = [
     buttons: standardButtons
   },
   {
+    id: 'accomplishments',
+    attachTo: { element: '#tour-accomplishments', on: placeLeft },
+    title: 'Check Off Accomplisments',
+    text:
+      'Every card has a checkmark. When you discard a card that someone has checked off, it will be saved in the Accomplishments section of the card from which it was discarded.',
+    buttons: standardButtons
+  },
+  {
     id: 'members',
     attachTo: { element: '#tour-members', on: placeRight },
     title: 'Members',
