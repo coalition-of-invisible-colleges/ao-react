@@ -107,14 +107,17 @@ export default class AoHud extends React.Component<{}, HudState> {
 
     return (
       <div id="hud">
-        <Tippy
-          content={<MainMenu />}
-          interactive={true}
-          trigger="click"
-          placement="top-end"
-          theme="white">
-          <div id="mainMenuButton">&#x22EE;</div>
-        </Tippy>
+        <div id="mainMenu-tour">
+          <Tippy
+            content={<MainMenu />}
+            interactive={true}
+            trigger="click"
+            placement="top-end"
+            theme="white"
+            appendTo={() => document.body}>
+            <div id="mainMenuButton">&#x22EE;</div>
+          </Tippy>
+        </div>
         <AoHub />
         {!aoStore.member.tutorial && <AoTour />}
         <AoControls />
@@ -167,7 +170,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         </div>
         <AoTickerHud />
         <AoChatroom taskId={aoStore.currentChatroom} />
-        <AoScore prefix={<span>Points: </span>} />
+        {/*<AoScore prefix={<span>Points: </span>} />*/}
       </div>
     )
   }

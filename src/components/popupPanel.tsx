@@ -93,7 +93,7 @@ export default class AoPopupPanel extends React.PureComponent<
 						}>
 						<img src={this.props.iconSrc} />
 						{this.props.badge ? (
-							<div className={'badge'}>{this.props.badge}</div>
+							<div className="badge">{this.props.badge}</div>
 						) : (
 							''
 						)}

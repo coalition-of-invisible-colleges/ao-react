@@ -15,8 +15,6 @@ interface GridProps {
   taskId: string
   grid: Grid
   dropActsLikeFolder?: boolean
-  height: number
-  width: number
 }
 
 interface GridViewProps extends GridProps {

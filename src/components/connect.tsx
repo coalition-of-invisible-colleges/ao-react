@@ -63,7 +63,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
             ? 'Tor address: ' + config.tor.hostname
             : 'Tor not set up.'}
         </p>
-        {/*<p>Secret: {aoStore.state.loader.token}</p>*/}
+        {/*{<p>Secret: {aoStore.state.loader.token}</p>}*/}
         {list.length >= 1 ? (
           <React.Fragment>
             <ul>{list}</ul>

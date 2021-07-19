@@ -4,6 +4,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import { ShepherdTourContext } from 'react-shepherd'
 import { renderToStaticMarkup } from 'react-dom/server'
+import { hideAll as hideAllTippys } from 'tippy.js'
 
 type PopperPlacement =
   | 'auto'
@@ -23,6 +24,8 @@ type PopperPlacement =
   | 'left-end'
 const placeLeft: PopperPlacement = 'left'
 const placeRight: PopperPlacement = 'right'
+const placeTop: PopperPlacement = 'top'
+const placeLeftTop: PopperPlacement = 'left-start'
 
 function cancelAction() {
   if (!aoStore.member.tutorial) {
@@ -94,10 +97,34 @@ export const steps = [
   },
   {
     id: 'mainMenu',
-    attachTo: { element: '#mainMenu', on: placeLeft },
+    attachTo: { element: '#mainMenu-tour', on: placeLeftTop },
     title: 'Main Menu',
     text:
       'The main menu (three dots in lower-right corner of page) allows you to change your username and password. You should change your password now if you havent done so yet. You can also set your RFID fob number here.',
+    buttons: standardButtons
+  },
+  {
+    id: 'gem',
+    attachTo: { element: '#gem', on: placeTop },
+    title: 'Create New Cards',
+    text:
+      'The AO includes a universal activist trading card game. Click +card to create a new card. The card will appear in the current card you are looking at.',
+    buttons: standardButtons
+  },
+  {
+    id: 'deck',
+    attachTo: { element: '#tour-deck', on: placeLeft },
+    title: 'Collect Cards in Your Deck',
+    text:
+      'Anytime you click the moon on a card, that card will be added to your collection. You can view and search all your cards here.',
+    buttons: standardButtons
+  },
+  {
+    id: 'dock',
+    attachTo: { element: '#dock-tour', on: placeTop },
+    title: 'Bookmark Cards on the Dock',
+    text:
+      'Drag-and-drop cards to the dock for easy access. Squad cards will act like a folder when on the dock (non-squad cards dropped on it drop inside instead of swapping). Like any grid, the dock can be resized with the +/- buttons at its edge.',
     buttons: standardButtons
   },
   {
@@ -141,21 +168,29 @@ export const steps = [
     buttons: standardButtons
   },
   {
-    id: 'proposals',
-    attachTo: { element: '#tour-proposals', on: placeRight },
-    title: 'Proposals',
+    id: 'search',
+    attachTo: { element: '#tour-search', on: placeRight },
+    title: 'Search',
     text:
-      'Sign cards and they show up here: most signatures first. Work with your community to craft an evolving, distributed constitution, and form a voluntary self-govenment!',
+      'Search all cards on this server (except private cards). This search box uses regular expressions, a syntax for constructing search queries. Search online for a regular expression guide or cheatsheet to learn how to use regular expressions. For example, search for .* (period, asterisk) to search for any character (the dot) zero or more times (the asterisk)—this will find all cards on the server.',
     buttons: standardButtons
   },
-  {
-    id: 'bounties',
-    attachTo: { element: '#tour-bounties', on: placeRight },
-    title: 'Bounties',
-    text:
-      "Need some points? Open up Bounties and see what the community has put rewards on. When you check off a card, you will immediately get the points, so don't click the checkmark until the job is done!",
-    buttons: standardButtons
-  },
+  // {
+  //   id: 'proposals',
+  //   attachTo: { element: '#tour-proposals', on: placeRight },
+  //   title: 'Proposals',
+  //   text:
+  //     'Sign cards and they show up here: most signatures first. Work with your community to craft an evolving, distributed constitution, and form a voluntary self-govenment!',
+  //   buttons: standardButtons
+  // },
+  // {
+  //   id: 'bounties',
+  //   attachTo: { element: '#tour-bounties', on: placeRight },
+  //   title: 'Bounties',
+  //   text:
+  //     "Need some points? Open up Bounties and see what the community has put rewards on. When you check off a card, you will immediately get the points, so don't click the checkmark until the job is done!",
+  //   buttons: standardButtons
+  // },
   {
     id: 'controls',
     attachTo: { element: '#tour-controls', on: placeLeft },
@@ -192,8 +227,13 @@ export const tourOptions = {
 export default function AoTour() {
   const tour = React.useContext(ShepherdTourContext)
 
+  function startTour() {
+    hideAllTippys()
+    tour.start()
+  }
+
   return (
-    <div onClick={tour.start} className="tour menu action" id="tourStart">
+    <div onClick={startTour} className="tour menu action" id="tourStart">
       Start Tour
     </div>
   )

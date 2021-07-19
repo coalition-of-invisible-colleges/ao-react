@@ -39,6 +39,7 @@ function aoMuts(aos, ev) {
       }
       break
     case 'ao-outbound-connected':
+      console.log('outbound mutation')
       let outAddressConnect = aos.some(a => {
         if (a.address === ev.address) {
           a.outboundSecret = ev.secret
@@ -312,7 +313,6 @@ function membersMuts(members, ev) {
       break
 
     case 'member-field-updated':
-      console.log('member-field-updated mutation: ', ev)
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
           member[ev.field] = ev.newfield

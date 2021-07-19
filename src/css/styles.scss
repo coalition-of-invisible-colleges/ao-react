@@ -797,22 +797,26 @@ textarea {
     }
 
     // main menu in bottom right of screen
-    #mainMenuButton {
+    #mainMenu-tour {
       position: fixed;
       right: 0;
       bottom: 0;
-      font-size: 1.75em;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 0.5em;
-      user-select: none;
-    }
+      width: max-content;
 
-    // main menu, inside a Tippy
-    #mainMenu {
-      .password {
-        input {
-          display: block;
+      #mainMenuButton {
+        font-size: 1.75em;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 0.5em;
+        user-select: none;
+      }
+
+      // main menu, inside a Tippy
+      #mainMenu {
+        .password {
+          input {
+            display: block;
+          }
         }
       }
     }
@@ -882,12 +886,14 @@ textarea {
     #proposals,
     #bounties,
     #search,
-    #shitposts {
+    #shitposts,
+    #deck {
       z-index: 1;
 
       .actionCircle {
         position: fixed;
         left: 0.5em;
+        z-index: 1;
       }
 
       .popupPanel {
@@ -1115,7 +1121,8 @@ textarea {
 
     // search popup panel
     #search,
-    #members {
+    #members,
+    #deck {
       .popupPanel {
         max-height: unset;
 
@@ -1134,7 +1141,8 @@ textarea {
       }
     }
     // search popup
-    #search {
+    #search,
+    #deck {
       .actionCircle {
         top: unset;
         bottom: 0.5em;
@@ -1142,6 +1150,29 @@ textarea {
 
       input {
         margin: 0.5em;
+      }
+    }
+
+    // deck popup
+    #deck {
+      .actionCircle {
+        top: unset;
+        bottom: 1.25em;
+        left: calc(100% + 2.5em);
+        width: 3.5em;
+        height: 3.5em;
+      }
+
+      input {
+        margin: 0.5em;
+      }
+
+      .popupPanel {
+        max-height: 64vh;
+      }
+
+      #searchResults {
+        max-height: 44vh;
       }
     }
 
@@ -1183,13 +1214,13 @@ textarea {
 
         & > div {
           margin-top: 1em;
-          visibility: hidden;
+          // visibility: hidden;
         }
 
-        &:hover > div {
-          // text-decoration: underline;
-          visibility: visible;
-        }
+        // &:hover > div {
+        // text-decoration: underline;
+        // visibility: visible;
+        // }
 
         img.dabbed {
           transform: scaleX(-1);
@@ -1822,6 +1853,15 @@ textarea {
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
+
+      .resizer {
+        width: min-content;
+        margin-top: -5.75em;
+      }
+
+      .grid {
+        max-width: 65vw;
+      }
     }
 
     // the card that is the current page (Card.tsx)

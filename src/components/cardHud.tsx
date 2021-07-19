@@ -79,7 +79,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 				break
 			case 'collapsed':
 				return (
-					<div className={'hud'}>
+					<div className="hud">
 						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						{isMember ? <AoBark memberId={taskId} /> : ''}
@@ -99,7 +99,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 				)
 			case 'collapsed-mission':
 				return (
-					<div className={'hud'}>
+					<div className="hud">
 						<AoUnread taskId={taskId} />
 						<AoPreview
 							taskId={taskId}
@@ -143,6 +143,13 @@ export default class CardHud extends React.Component<CardHudProps> {
 								<AoBoat taskId={taskId} inId={this.props.inId} />
 							) : (
 								<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
+							)}
+							{this.props.inId && (
+								<button
+									onClick={() => {
+										api.discardCardFromCard(taskId, this.props.inId)
+									}}
+								/>
 							)}
 						</div>
 					</React.Fragment>

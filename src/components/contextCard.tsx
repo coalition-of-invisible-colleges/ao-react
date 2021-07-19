@@ -492,12 +492,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 										</button>
 									</div>
 								)}
-								<AoGrid
-									grid={grid}
-									taskId={taskId}
-									height={grid.height}
-									width={grid.width}
-								/>
+								<AoGrid grid={grid} taskId={taskId} />
 								<AoStack
 									inId={taskId}
 									cards={subTaskCards}
