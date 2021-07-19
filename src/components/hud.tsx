@@ -37,11 +37,14 @@ interface State {
 class MainMenu extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
-    this.state = { theme: 1 }
+    this.state = { theme: aoStore.state.cash.theme }
+    if (this.state.theme !== 1) {
+      document.body.className = 'theme-' + this.state.theme
+    }
   }
 
   changeTheme = () => {
-    if (this.state.theme == 3) {
+    if (this.state.theme == 4) {
       this.setState({ theme: 1 })
       document.body.className = 'theme-1'
     } else {

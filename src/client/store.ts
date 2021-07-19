@@ -191,6 +191,7 @@ export interface AoState {
     outputs: Output[]
     channels: Channel[]
     info: SatInfo
+    theme: number
   }
   loader?: {
     token: string
@@ -225,7 +226,8 @@ const defaultState: AoState = {
     usedTxIds: [],
     outputs: [],
     channels: [],
-    info: {}
+    info: {},
+    theme: 1
   }
 }
 
