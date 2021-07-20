@@ -79,16 +79,19 @@ function startDctrlAo() {
               secret: secret
             },
             subscriptionResponse => {
-              if (!subscriptionResponse.lastInsertRowid) {
+              if (!subscriptionResponse) {
+                //.lastInsertRowid) { // deprecated response property?
                 console.log('ao-connect response: ', subscriptionResponse)
                 process.exit(1)
               }
-              console.log('subscribe success, attempt ao connect')
-              // events.aoOutboundConnected(
-              //   req.body.address,
-              //   req.body.secret,
-              //   utils.buildResCallback(res)
-              // )
+              console.log(
+                'Subscription successful, saving connection to database'
+              )
+              events.aoOutboundConnected(
+                req.body.address,
+                req.body.secret,
+                utils.buildResCallback(res)
+              )
             }
           )
           // const event = {
