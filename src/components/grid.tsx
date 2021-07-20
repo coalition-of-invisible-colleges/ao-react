@@ -15,6 +15,8 @@ interface GridProps {
   taskId: string
   grid: Grid
   dropActsLikeFolder?: boolean
+  height: number // Height & width included to trigger refresh when grid is resized
+  width: number
 }
 
 interface GridViewProps extends GridProps {
@@ -33,6 +35,7 @@ const AoGridRow: Function = (props: {
   selectGridSquare: (selection: Coords) => void
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
+  console.log('AoGridRow render()')
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {
     if (
@@ -95,6 +98,8 @@ const AoGridRow: Function = (props: {
 }
 
 const GridView: Function = (props: GridViewProps): JSX.Element => {
+  console.log('AoGridView render()')
+
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
 
   function selectGridSquare(selection: Coords) {
@@ -323,6 +328,8 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 }
 
 export default function AoGrid(props: GridProps) {
+  console.log('AoGrid render()')
+
   const [redirect, setRedirect] = React.useState<string>(undefined)
 
   function addGrid() {
