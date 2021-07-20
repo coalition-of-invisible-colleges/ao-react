@@ -80,7 +80,7 @@ function startDctrlAo() {
             },
             subscriptionResponse => {
               if (!subscriptionResponse.lastInsertRowid) {
-                console.log('ao-connect failed')
+                console.log('ao-connect response: ', subscriptionResponse)
                 process.exit(1)
               }
               console.log('subscribe success, attempt ao connect')

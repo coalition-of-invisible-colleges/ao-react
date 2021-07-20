@@ -90,7 +90,7 @@ export default class AoDiscardZone extends React.PureComponent {
 	render() {
 		return (
 			<div onClick={this.closeAllCloseables}>
-				<AoDropZone onDrop={this.dropToDiscard} zoneStyle={'discard'}>
+				<AoDropZone onDrop={this.dropToDiscard} zoneStyle="discard">
 					{aoStore.discard.length >= 1 ? (
 						<AoDragZone
 							taskId={aoStore.discard[aoStore.discard.length - 1].taskId}

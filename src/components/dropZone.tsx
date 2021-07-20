@@ -252,8 +252,8 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					style={style}>
 					{this.props.children}
 					{this.state.draggedKind === 'card' ? (
-						<div className={'overlay'}>
-							<div className={'label'}>{message}</div>
+						<div className="overlay">
+							<div className="label">{message}</div>
 						</div>
 					) : (
 						''

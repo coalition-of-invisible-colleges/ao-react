@@ -1,7 +1,7 @@
 const { getResource } = require('./utils')
 const events = require('./events')
 const { serverState } = require('./state')
-const lightning = require('./lightning')
+// const lightning = require('./lightning')
 
 function checkForChargedEvent(resourceId) {
   let charged

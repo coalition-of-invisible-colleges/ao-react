@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoServerName from './serverName'
 import AoTip from './tip'
+import AoStack from './stack'
+import { CardPlay } from '../cards'
 import config from '../../configuration'
+import { formatDistanceToNow } from 'date-fns'
 
 interface State {
   open?: boolean
@@ -47,7 +50,36 @@ export default class AoConnect extends React.PureComponent<{}, State> {
   }
 
   render() {
-    const list = aoStore.state.ao.map(ao => <li>{ao}</li>)
+    const list = aoStore.state.ao.map(ao => {
+      let linkedCards: Task[] = ao.links?.map(tId => aoStore.hashMap.get(tId))
+
+      const linkCard = (move: CardPlay) => {
+        console.log('linkCard!')
+        api.linkCardOnAo(move.from.taskId, ao.address)
+      }
+
+      const formattedLastContact = formatDistanceToNow(ao.lastContact, {
+        addSuffix: true
+      })
+
+      return (
+        <li key={ao.address}>
+          Address: {ao.address}
+          <br />
+          Direction: {!ao.outboundSecret ? 'Inbound' : 'Outbound'}
+          <br />
+          Last seen {formattedLastContact}
+          <br />
+          Linked cards:{' '}
+          <AoStack
+            cards={linkedCards}
+            cardStyle="priority"
+            onDrop={ao.outboundSecret ? linkCard : null}
+            alwaysShowAll={true}
+          />
+        </li>
+      )
+    })
 
     return (
       <div id="connect">
@@ -71,13 +103,14 @@ export default class AoConnect extends React.PureComponent<{}, State> {
         ) : (
           <p>No AOs connected.</p>
         )}
-        <div className="action" onClick={this.toggleOpen}>
+        {/*        <div className="action" onClick={this.toggleOpen}>
           {this.state.open ? (
             <React.Fragment>Connect to AO &#8963;</React.Fragment>
           ) : (
             <React.Fragment>Connect to AO &#8964;</React.Fragment>
           )}
         </div>
+*/}
         {this.state.open && (
           <form>
             <div className="fieldset">

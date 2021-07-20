@@ -2487,6 +2487,21 @@ textarea {
           bottom: 1em;
         }
       }
+
+      .stack {
+        background-color: rgba(0, 0, 0, 0.2);
+        min-height: 3em;
+        min-width: 16em;
+        width: fit-content;
+        display: inline-block;
+        max-height: 20em;
+        overflow-y: auto;
+
+        .dropZone {
+          width: 100%;
+          height: max-content;
+        }
+      }
     }
 
     // about section on the login page

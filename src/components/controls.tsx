@@ -49,14 +49,14 @@ export default class AoControls extends React.PureComponent<{}, State> {
   renderPageButton(page: ServerPage, label: string, imgSrc?: string) {
     if (this.state.page === page) {
       return (
-        <p className={'action selected'}>
+        <p className="action selected">
           {imgSrc && <img src={imgSrc} />}
           {label}
         </p>
       )
     } else {
       return (
-        <p onClick={this.goToPage} data-page={page} className={'action'}>
+        <p onClick={this.goToPage} data-page={page} className="action">
           {imgSrc && <img src={imgSrc} />}
           {label}
         </p>
@@ -88,16 +88,16 @@ export default class AoControls extends React.PureComponent<{}, State> {
         renderedPage = <AoResources />
     }
     return (
-      <div id={'controls'}>
+      <div id="controls">
         <AoPopupPanel
           iconSrc={Bull}
-          tooltipText={'Server Controls'}
-          tooltipPlacement={'left'}
-          panelPlacement={'left-start'}
+          tooltipText="Server Controls"
+          tooltipPlacement="left"
+          panelPlacement="left-start"
           id="tour-controls"
           alsoHideHub={true}>
           <React.Fragment>
-            <div className={'toolbar'}>
+            <div className="toolbar">
               {this.renderPageButton('resources', 'Hardware', Dolphins)}
               {this.renderPageButton('connect', 'AO p2p', RedBoat)}
               {this.renderPageButton('lightning', 'Crypto', LightningBolt)}
@@ -105,7 +105,7 @@ export default class AoControls extends React.PureComponent<{}, State> {
               {/*this.renderPageButton('Reserve')*/}
               {/*this.renderPageButton('options', 'Options')*/}
             </div>
-            <div className={'controlPanel'}>{renderedPage}</div>
+            <div className="controlPanel">{renderedPage}</div>
           </React.Fragment>
         </AoPopupPanel>
       </div>

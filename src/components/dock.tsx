@@ -90,6 +90,8 @@ export default class AoDock extends React.Component<{}, State> {
             taskId={this.state.bookmarksTaskId}
             grid={card.grid}
             dropActsLikeFolder={true}
+            height={card.grid.height}
+            width={card.grid.width}
           />
         </div>
         <div id="deck">

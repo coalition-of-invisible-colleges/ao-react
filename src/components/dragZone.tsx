@@ -67,7 +67,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 		// since there is no drag image, setting other data fields
 		// fails too
 		let cardHTML = ReactDOMServer.renderToStaticMarkup(
-			<AoContextCard task={card} cardStyle={'compact'} noPopups={true} />
+			<AoContextCard task={card} cardStyle="compact" noPopups={true} />
 		)
 		let dragGhostElement: Element = document.createElement('div')
 		dragGhostElement.innerHTML = cardHTML
@@ -81,7 +81,7 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 
 	render() {
 		return (
-			<div className={'dragZone'} draggable="true" onDragStart={this.drag}>
+			<div className="dragZone" draggable="true" onDragStart={this.drag}>
 				{this.props.children}
 			</div>
 		)

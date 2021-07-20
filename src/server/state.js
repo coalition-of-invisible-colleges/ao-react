@@ -31,7 +31,8 @@ const serverState = {
     usedTxIds: [],
     outputs: [],
     channels: [],
-    info: {}
+    info: {},
+    theme: config.theme || 1
   }
 }
 
@@ -53,7 +54,8 @@ const pubState = {
     usedTxIds: [],
     outputs: [],
     channels: [],
-    info: {}
+    info: {},
+    theme: config.theme || 1
   }
 }
 

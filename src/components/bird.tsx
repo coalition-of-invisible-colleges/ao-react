@@ -11,22 +11,27 @@ import 'tippy.js/themes/translucent.css'
 import LazyTippy from './lazyTippy'
 import AoMemberIcon from './memberIcon'
 
+type BirdTab = 'send' | 'link'
+
 interface Props {
   taskId: string
 }
 
 interface State {
   memberId?: string
+  tab: BirdTab
 }
 
 @observer
 export default class AoBird extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = { tab: 'send' }
     this.onChange = this.onChange.bind(this)
     this.passCard = this.passCard.bind(this)
     this.focus = this.focus.bind(this)
+    this.goToTab = this.goToTab.bind(this)
+    this.renderTabButton = this.renderTabButton.bind(this)
   }
 
   private birdBox = React.createRef<HTMLInputElement>()
@@ -87,7 +92,28 @@ export default class AoBird extends React.PureComponent<Props, State> {
     )
   }
 
+  goToTab(event) {
+    const tab = event.currentTarget.getAttribute('data-page')
+    if (this.state.tab === tab) {
+      return
+    }
+    this.setState({ tab: tab })
+  }
+
+  renderTabButton(tab: BirdTab, label: string) {
+    if (this.state.tab === tab) {
+      return <p className="action selected">{label}</p>
+    } else {
+      return (
+        <p onClick={this.goToTab} data-page={tab} className="action">
+          {label}
+        </p>
+      )
+    }
+  }
+
   render() {
+    const currentTab = this.state.tab
     return (
       <LazyTippy
         zIndex={4}
@@ -96,13 +122,24 @@ export default class AoBird extends React.PureComponent<Props, State> {
         hideOnClick="toggle"
         content={
           <React.Fragment>
-            <AoBirdAutocomplete
-              taskId={this.props.taskId}
-              onChange={this.onChange}
-            />
-            <div className="action inline" onClick={this.passCard}>
-              give
+            {/*            <div className="toolbar">
+              {this.renderTabButton('send', 'Send')}
+              {this.renderTabButton('link', 'Link')}
             </div>
+*/}{' '}
+            {currentTab === 'send' ? (
+              <React.Fragment>
+                <AoBirdAutocomplete
+                  taskId={this.props.taskId}
+                  onChange={this.onChange}
+                />
+                <div className="action inline" onClick={this.passCard}>
+                  give
+                </div>
+              </React.Fragment>
+            ) : (
+              'Link'
+            )}
           </React.Fragment>
         }
         placement="right-start"
