@@ -14,7 +14,9 @@
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "onetest": "webpack --module-bind 'mocha-loader!./tests/aoStore.test.ts'",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
-    "verifydb": "node src/verifyDb.js"
+    "verifydb": "node src/verifyDb.js",
+    "createAccessKey": "node manage/createPrivateKey.js",
+    "connect": "node manage/connect.js "
   },
   "lint-staged": {
     "*.js": [
