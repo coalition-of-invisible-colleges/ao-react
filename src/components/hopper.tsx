@@ -2,6 +2,7 @@ import * as React from 'react'
 import aoStore from '../client/store'
 import { goInCard } from '../cards'
 import Boat from '../assets/images/boat.svg'
+import RedBoat from '../assets/images/boatbtnselected.svg'
 import _ from 'lodash'
 
 export default function AoHopper(props: {}): JSX.Element {
@@ -25,11 +26,20 @@ export default function AoHopper(props: {}): JSX.Element {
 	}
 
 	function saveMinutes(event) {
-		const newMinutes = parseFloat(text)
-		console.log('newMinutes is ', newMinutes)
 		stopEditing()
-		setMinutes(newMinutes)
-		hopNow()
+		if (text.length <= 0) {
+			setMinutes(null)
+			setHop(-1)
+			clearTimeout(nextHop)
+			setNextHop(null)
+		} else {
+			const newMinutes = parseFloat(text)
+			setMinutes(newMinutes)
+			if (hop < 0) {
+				setHop(0)
+			}
+			hopNow()
+		}
 	}
 
 	function onKeyDown(event) {
@@ -56,6 +66,7 @@ export default function AoHopper(props: {}): JSX.Element {
 
 		if (nextHop) {
 			clearTimeout(nextHop)
+			setNextHop(null)
 		}
 
 		const countdown = minutes * 1000 * 60
@@ -64,10 +75,20 @@ export default function AoHopper(props: {}): JSX.Element {
 		setNextHop(newHop)
 	}
 
+	const minutesRef = React.useRef(hop)
+	minutesRef.current = minutes
+
 	const hopRef = React.useRef(hop)
 	hopRef.current = hop
 
 	function hopNow() {
+		const currentMinutes = minutesRef.current
+		if (currentMinutes <= 0) {
+			clearTimeout(nextHop)
+			setNextHop(null)
+			return
+		}
+
 		const dockCardName = aoStore.member.memberId + '-bookmarks'
 		let myBookmarks = aoStore.cardByName.get(dockCardName)
 
@@ -77,7 +98,10 @@ export default function AoHopper(props: {}): JSX.Element {
 		}
 
 		const bookmarkCards = myBookmarks.grid.rows[0]
-		const cycleLength = bookmarkCards.length
+		const cycleLength =
+			Math.max(
+				...Object.keys(myBookmarks.grid.rows[0]).map(str => parseInt(str, 10))
+			) + 1
 		const currentHop = hopRef.current
 		const newHop =
 			currentHop === -1 ? 0 : currentHop + 1 >= cycleLength ? 0 : currentHop + 1
@@ -97,7 +121,11 @@ export default function AoHopper(props: {}): JSX.Element {
 	}
 
 	function renderBoat(onClick) {
-		return <img src={Boat} onClick={onClick} />
+		console.log({ nextHop, hop })
+		if (nextHop || hop >= 0) {
+			return <img src={RedBoat} onClick={onClick} />
+		}
+		return <img src={Boat} onClick={onClick} className="inPort" />
 	}
 
 	const calcLeft = !minutes || !(minutes > 0) ? '0' : 5 * hop + 2.5 + 'em'
