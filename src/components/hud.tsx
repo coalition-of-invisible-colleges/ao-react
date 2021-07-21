@@ -12,7 +12,7 @@ import AoCalendar from './calendar'
 import AoProposals from './proposals'
 import AoBounties from './bounties'
 import AoSearch from './search'
-import AoTickerHud from './tickerHud'
+import AoTickerHud, { AoTicker } from './tickerHud'
 import AoScore from './score'
 import AoUsername from './username'
 import AoPassword from './password'
@@ -70,6 +70,10 @@ class MainMenu extends React.PureComponent<{}, State> {
         <div onClick={this.changeTheme} id="themer" className="action">
           Next Theme
         </div>
+        <AoTicker
+          ticker={null}
+          index={aoStore.member.tickers ? aoStore.member.tickers.length : 0}
+        />
         <AoTour />
         <div onClick={this.onLogout} id="logout" className="action">
           Log Out

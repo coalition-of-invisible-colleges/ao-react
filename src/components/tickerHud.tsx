@@ -47,7 +47,7 @@ const defaultTickerState: TickerState = {
 }
 
 @observer
-class AoTicker extends React.Component<TickerProps, TickerState> {
+export class AoTicker extends React.Component<TickerProps, TickerState> {
   private infoRef
   private tippyRef
   private tickerRef
@@ -214,6 +214,7 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
   onKeyDown(event) {
     if (event.key === 'Escape') {
       this.stopEditing()
+      event.stopPropagation()
     }
 
     if (event.key === 'Enter') {
@@ -313,10 +314,8 @@ class AoTicker extends React.Component<TickerProps, TickerState> {
 
     if (!ticker) {
       return (
-        <div className="ticker">
-          <div className="actionCircle newEntry" onClick={this.startEditing}>
-            <p>+</p>
-          </div>
+        <div className="ticker menu action" onClick={this.startEditing}>
+          Add Crypto Ticker
         </div>
       )
     }
@@ -392,11 +391,6 @@ export default class AoTickerHud extends React.Component {
       })
     }
 
-    return (
-      <div id="tickers">
-        {tickers}
-        <AoTicker ticker={null} index={myTickers ? myTickers.length : 0} />
-      </div>
-    )
+    return <div id="tickers">{tickers}</div>
   }
 }

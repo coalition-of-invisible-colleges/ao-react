@@ -30,7 +30,7 @@ export interface CardPlay {
 	to: CardLocation
 }
 
-export function goInCard(taskId: string, isContext = false) {
+export function goInCard(taskId: string, isContext = false, doNotSave = false) {
 	hideAllTippys()
 	aoStore.closeAllCloseables()
 
@@ -38,7 +38,9 @@ export function goInCard(taskId: string, isContext = false) {
 	if (isContext) {
 		aoStore.clearContextTo(taskId)
 	} else if (aoStore.currentCard) {
-		aoStore.addToContext([aoStore.currentCard])
+		if (!doNotSave) {
+			aoStore.addToContext([aoStore.currentCard])
+		}
 	}
 	aoStore.setCurrentCard(taskId)
 	aoStore.removeFromContext(taskId)

@@ -321,21 +321,24 @@ export default class AoCoin extends React.Component<CoinProps> {
           />
         ) : null}
         <div>
+          {card.guild && <p>Sign to join this squad</p>}
           {mySignature && mySignature.opinion >= 1 ? (
             <span>
               <strong>signed</strong>
             </span>
           ) : (
             <span onClick={this.sign} className="action inline decorator">
-              sign
+              sign{card.guild && ' & join'}
             </span>
           )}
-          {!mySignature || (mySignature && mySignature.opinion) >= 1 ? (
+          {!mySignature || (mySignature && mySignature.opinion >= 1) ? (
             <span
               onClick={this.unsign}
               className="action inline decorator"
               style={{ marginLeft: '1em' }}>
               {!mySignature || mySignature.opinion ? 'un' : "don't "}sign
+              {card.guild &&
+                (mySignature && mySignature.opinion ? ' & quit' : ' & join')}
             </span>
           ) : (
             <span style={{ marginLeft: '1em' }}>

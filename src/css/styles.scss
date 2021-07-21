@@ -1260,8 +1260,8 @@ textarea {
     // tickers hud region containing multiple ticker spots
     #tickers {
       position: fixed;
-      top: 45vh;
-      right: 1.5em;
+      top: 50vh;
+      right: 1em;
       transform: translateY(-50%);
 
       .ticker {
@@ -1275,16 +1275,6 @@ textarea {
 
           p {
             font-size: 0.7em;
-          }
-
-          // a + button that adds a new item to whatever the context is (e.g., a new crypto ticker)
-          &.newEntry {
-            p {
-              font-size: 2em;
-              font-weight: bold;
-              position: relative;
-              top: -0.8em;
-            }
           }
         }
 
@@ -2651,6 +2641,30 @@ textarea {
           max-height: 44vh;
           overflow-y: auto;
         }
+      }
+    }
+
+    // The text box to create a new crypto ticker in the main menu
+    #mainMenu .ticker textarea {
+      max-width: 10em;
+      height: 1.5em;
+    }
+
+    // The hopper icon that hops above each square on the dock grid
+    #hopper {
+      position: absolute;
+      height: 1.5em;
+      top: 0.5em;
+      transform: translateX(-50%);
+      cursor: pointer;
+      // width: min-content;
+      transition-property: left;
+      transition-duration: 1s;
+      // transition-delay: 0.25s;
+
+      img {
+        max-height: 100%;
+        fill: blue;
       }
     }
   }

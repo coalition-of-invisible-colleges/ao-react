@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoHome from './home'
+import AoHopper from './hopper'
 import AoGem from './gem'
 import AoGrid from './grid'
 import AoPopupPanel from './popupPanel'
@@ -84,6 +85,7 @@ export default class AoDock extends React.Component<{}, State> {
     return (
       <div id="dock">
         <AoHome />
+        <AoHopper />
         <AoGem />
         <div id="dock-tour">
           <AoGrid
