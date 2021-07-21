@@ -4,6 +4,9 @@ import { goInCard } from '../cards'
 import Boat from '../assets/images/boat.svg'
 import RedBoat from '../assets/images/boatbtnselected.svg'
 import _ from 'lodash'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 export default function AoHopper(props: {}): JSX.Element {
 	const [hop, setHop] = React.useState<number>(-1)
@@ -151,7 +154,9 @@ export default function AoHopper(props: {}): JSX.Element {
 
 	return (
 		<div id="hopper" style={{ left: calcLeft }}>
-			{renderBoat(startEditing)}
+			<Tippy zIndex={4} theme="translucent" content="Hopper" placement="top">
+				{renderBoat(startEditing)}
+			</Tippy>
 		</div>
 	)
 }
