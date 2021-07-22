@@ -8,7 +8,7 @@ import { CardPlay, goUp } from '../cards'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
 @observer
-export default class AoDiscardZone extends React.PureComponent {
+export default class AoDiscardZone extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {}

@@ -1,10 +1,10 @@
-const _ = require('lodash')
-const dctrlDb = require('./dctrlDb')
-const M = require('../mutations')
-const modules = require('../modules')
-const config = require('../../configuration')
-const { formatDistanceToNow } = require('date-fns')
-const cron = require('cron')
+import _ from 'lodash'
+import dctrlDb from './dctrlDb.js'
+import M from '../mutations.js'
+import * as modules from '../modules'
+import config from '../../configuration.js'
+import { formatDistanceToNow } from 'date-fns'
+import cron from 'cron'
 
 const backupJob = new cron.CronJob({
   cronTime: '0 0 0 1 * *',
@@ -154,7 +154,7 @@ function removeSensitive(ev) {
   return _.omit(ev, secretStuff)
 }
 
-module.exports = {
+const state = {
   serverState,
   pubState,
   initialize,
@@ -162,3 +162,5 @@ module.exports = {
   removeSensitive,
   setCurrent
 }
+
+export default state

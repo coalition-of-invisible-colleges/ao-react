@@ -1,12 +1,12 @@
 // https://apiv2.bitcoinaverage.com/#requests
-const crypto = require('crypto-es')
-const request = require('superagent')
-const config = require('../../configuration')
-const events = require('./events')
-const state = require('./state')
-const validators = require('./validators')
+import crypto from 'crypto'
+import request from 'superagent'
+import config from '../../configuration'
+import events from './events'
+import state from './state'
+import validators from './validators'
 
-function watchSpot() {
+export function watchSpot() {
   getRecordSpot()
   setInterval(getRecordSpot, 500000)
 }
@@ -38,7 +38,7 @@ function createBitcoinAverageSignature() {
   return step1 + step2
 }
 
-function getPrice(callback) {
+export function getPrice(callback) {
   request
     .get(
       'https://apiv2.bitcoinaverage.com/indices/global/ticker/BTC' +
@@ -54,11 +54,6 @@ function getPrice(callback) {
         callback('invalid res?')
       }
     })
-}
-
-module.exports = {
-  getPrice,
-  watchSpot
 }
 
 // success: {

@@ -1,6 +1,6 @@
 import request from 'superagent'
 import uuidV1 from 'uuid/v1'
-import cryptoUtils from '../crypto'
+import { createHash, hmacHex } from '../crypto'
 import _ from 'lodash'
 import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
@@ -11,10 +11,10 @@ class AoApi {
 
   async createSession(user: string, pass: string): Promise<boolean> {
     const session = uuidV1()
-    let sessionKey = cryptoUtils.createHash(
-      session + cryptoUtils.createHash(pass)
+    let sessionKey = createHash(
+      session + createHash(pass)
     )
-    const token = cryptoUtils.hmacHex(session, sessionKey)
+    const token = hmacHex(session, sessionKey)
     return request
       .post('/session')
       .set('authorization', token)
@@ -651,7 +651,7 @@ class AoApi {
     name: string,
     fob: string = ''
   ): Promise<request.Response> {
-    const secret = cryptoUtils.createHash(name)
+    const secret = createHash(name)
     const act = {
       type: 'member-created',
       name,
@@ -784,7 +784,7 @@ class AoApi {
     newValue: any
   ): Promise<request.Response> {
     if (field === 'secret') {
-      newValue = cryptoUtils.createHash(newValue)
+      newValue = createHash(newValue)
     }
     const act = {
       type: 'member-field-updated',

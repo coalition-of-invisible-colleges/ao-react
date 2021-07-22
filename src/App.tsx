@@ -80,7 +80,8 @@ const App = observer(() => {
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
   useEffect(() => {
-    forceUpdate()
+      aoStore.setGlobalRedirect(null)
+      forceUpdate()
   }, [aoStore.globalRedirect, aoStore.currentCard])
 
   return (

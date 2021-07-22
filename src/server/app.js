@@ -2,22 +2,22 @@
 
 let PORT = process.env.PORT || 8003
 
-const Kefir = require('kefir')
-const express = require('express')
-const socketIo = require('socket.io')
-const socketProtector = require('socketio-auth')
-const config = require('../../configuration')
-const dctrlDb = require('./dctrlDb')
-const state = require('./state')
-const reactions = require('./reactions')
-const applyRouter = require('./router')
-const { socketAuth } = require('./auth')
-const { watchSpot } = require('./exchangeRate')
-const rent = require('./rent')
-const link = require('./link')
-const cleanup = require('./cleanup')
-const { scanMemes } = require('./files')
-const lightning = require('./lightning')
+import Kefir from 'kefir'
+import express from 'express'
+import { Server } from 'socket.io'
+import socketProtector from 'socketio-auth'
+import config from '../../configuration.js'
+import dctrlDb from './dctrlDb.js'
+import state from './state.js'
+import reactions from './reactions.js'
+import applyRouter from './router.js'
+import { socketAuth } from './auth.js'
+import { watchSpot } from './exchangeRate.js'
+import rent from './rent.js'
+import link from './link.js'
+import cleanup from './cleanup.js'
+import { scanMemes } from './files.js'
+import lightning from './lightning.js'
 
 const app = express()
 applyRouter(app)
@@ -52,9 +52,9 @@ function startDctrlAo() {
       const server = app.listen(PORT, err => {
         console.log('Listening on port', PORT)
 
-        const io = socketIo(server)
+        const ioServer = new Server(server, { cors: { origin: "http://localhost:3000" } } )
 
-        socketProtector(io, {
+        socketProtector(ioServer, {
           authenticate: socketAuth,
           timeout: 2000
         })
@@ -65,7 +65,7 @@ function startDctrlAo() {
 
         fullEvStream.onValue(ev => {
           state.applyEvent(state.pubState, ev)
-          io.emit('eventstream', ev)
+          ioServer.emit('eventstream', ev)
           console.log('emitting:', ev)
         })
       })

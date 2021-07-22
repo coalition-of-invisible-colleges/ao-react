@@ -15,7 +15,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import { formatDistanceToNow, format } from 'date-fns'
 import AoMemberIcon from './memberIcon'
-import { POTENTIALS_TO_EXECUTE as VOTES_TO_EXECUTE } from '../mutations'
+//import { POTENTIALS_TO_EXECUTE as VOTES_TO_EXECUTE } from '../mutations'
 
 interface CardMenuProps {
   memberId: string

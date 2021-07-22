@@ -1,13 +1,12 @@
-const express = require('express')
-const uuidV1 = require('uuid/v1')
-const state = require('./state')
-const utils = require('./utils')
-const validators = require('./validators')
-const members = require('../members')
-const calculations = require('../calculations')
-const events = require('./events')
-const connector = require('./connector')
-const lightning = require('./lightning')
+import express from 'express'
+import v1 from 'uuid'
+import state from './state'
+import { buildResCallback } from './utils'
+import validators from './validators'
+import { blankCard } from '../calculations'
+import events from './events'
+import { postEvent } from './connector'
+import lightning from './lightning'
 
 const router = express.Router()
 
@@ -31,7 +30,7 @@ router.post('/events', (req, res, next) => {
         events.aoLinked(
           req.body.address,
           req.body.taskId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -47,7 +46,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           req.body.valence,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -55,35 +54,35 @@ router.post('/events', (req, res, next) => {
       break
     case 'ao-disconnected':
       if (validators.isAddress(req.body.address, errRes)) {
-        events.aoDisconnected(req.body.address, utils.buildResCallback(res))
+        events.aoDisconnected(req.body.address, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
     case 'ao-named':
       if (validators.isNotes(req.body.alias, errRes)) {
-        events.aoNamed(req.body.alias, utils.buildResCallback(res))
+        events.aoNamed(req.body.alias, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
     case 'rent-set':
       if (validators.isAmount(req.body.amount, errRes)) {
-        events.rentSet(req.body.amount, utils.buildResCallback(res))
+        events.rentSet(req.body.amount, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
     case 'cap-set':
       if (validators.isAmount(req.body.amount, errRes)) {
-        events.capSet(req.body.amount, utils.buildResCallback(res))
+        events.capSet(req.body.amount, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
     case 'quorum-set':
       if (validators.isAmount(req.body.quorum, errRes)) {
-        events.quorumSet(req.body.quorum, utils.buildResCallback(res))
+        events.quorumSet(req.body.quorum, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
@@ -93,7 +92,7 @@ router.post('/events', (req, res, next) => {
         validators.isNotes(req.body.address, errRes) &&
         validators.isNotes(req.body.secret, errRes)
       ) {
-        connector.postEvent(
+        postEvent(
           req.body.address,
           req.body.secret,
           {
@@ -109,7 +108,7 @@ router.post('/events', (req, res, next) => {
             events.aoOutboundConnected(
               req.body.address,
               req.body.secret,
-              utils.buildResCallback(res)
+              buildResCallback(res)
             )
           }
         )
@@ -125,7 +124,7 @@ router.post('/events', (req, res, next) => {
         events.aoInboundConnected(
           req.body.address,
           req.body.secret,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -139,7 +138,7 @@ router.post('/events', (req, res, next) => {
         }
       })
       if (secret) {
-        connector.postEvent(
+        postEvent(
           req.body.address,
           secret,
           req.body.ev,
@@ -158,13 +157,13 @@ router.post('/events', (req, res, next) => {
         validators.isAmount(req.body.amount, errRes)
       ) {
         lightning
-          .createInvoice(req.body.amount, '<3' + uuidV1(), '~', 3600)
+          .createInvoice(req.body.amount, '<3' + v1(), '~', 3600)
           .then(result => {
             events.invoiceCreated(
               req.body.taskId,
               result.bolt11,
               result.payment_hash,
-              utils.buildResCallback(res)
+              buildResCallback(res)
             )
           })
           .catch(err => {
@@ -186,7 +185,7 @@ router.post('/events', (req, res, next) => {
           req.body.name,
           req.body.fob,
           req.body.secret,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -194,14 +193,14 @@ router.post('/events', (req, res, next) => {
       break
     case 'member-activated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberActivated(req.body.memberId, utils.buildResCallback(res))
+        events.memberActivated(req.body.memberId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
     case 'member-deactivated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberDeactivated(req.body.memberId, utils.buildResCallback(res))
+        events.memberDeactivated(req.body.memberId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
@@ -215,7 +214,7 @@ router.post('/events', (req, res, next) => {
         events.memberSecretReset(
           req.body.kohaiId,
           req.body.senpaiId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -230,7 +229,7 @@ router.post('/events', (req, res, next) => {
         events.memberPromoted(
           req.body.kohaiId,
           req.body.senpaiId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -245,7 +244,7 @@ router.post('/events', (req, res, next) => {
         events.memberBanned(
           req.body.kohaiId,
           req.body.senpaiId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -260,7 +259,7 @@ router.post('/events', (req, res, next) => {
         events.memberUnbanned(
           req.body.kohaiId,
           req.body.senpaiId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -271,7 +270,7 @@ router.post('/events', (req, res, next) => {
         events.memberPurged(
           req.body.memberId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -287,7 +286,7 @@ router.post('/events', (req, res, next) => {
           req.body.memberId,
           req.body.field,
           req.body.newfield,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -305,7 +304,7 @@ router.post('/events', (req, res, next) => {
           req.body.toCoin,
           req.body.index,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -313,14 +312,14 @@ router.post('/events', (req, res, next) => {
       break
     case 'doge-barked':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeBarked(req.body.memberId, utils.buildResCallback(res))
+        events.dogeBarked(req.body.memberId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
     case 'doge-muted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeMuted(req.body.memberId, utils.buildResCallback(res))
+        events.dogeMuted(req.body.memberId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
@@ -328,7 +327,7 @@ router.post('/events', (req, res, next) => {
     case 'doge-unmuted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events
-          .dogeUnmuted(req.body.memberId, utils.buildResCallback(res))
+          .dogeUnmuted(req.body.memberId, buildResCallback(res))
           .catch(err => {
             console.log({ err })
             res.status(200).send('attempt failed')
@@ -357,7 +356,7 @@ router.post('/events', (req, res, next) => {
           let name = m.name
         }
       })
-      let envelope = calculations.blankCard(uuidV1(), name, 'blue')
+      let envelope = blankCard(v1(), name, 'blue')
       envelope.name = memberCard.name
       envelope.subTasks = [...new Set(taskIds)]
       envelope.passed = [[req.body.address, req.body.toMemberId]]
@@ -384,7 +383,7 @@ router.post('/events', (req, res, next) => {
           tasks: next100
         }
         setTimeout(() => {
-          connector.postEvent(
+          postEvent(
             serverAddress,
             serverSecret,
             newEvent,
@@ -413,7 +412,7 @@ router.post('/events', (req, res, next) => {
           req.body.charged,
           req.body.secret,
           req.body.trackStock,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(200).send(errRes)
@@ -433,7 +432,7 @@ router.post('/events', (req, res, next) => {
           req.body.amount,
           req.body.charged,
           req.body.notes,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(200).send(errRes)
@@ -453,7 +452,7 @@ router.post('/events', (req, res, next) => {
           req.body.amount,
           req.body.paid,
           req.body.notes,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(200).send(errRes)
@@ -477,7 +476,7 @@ router.post('/events', (req, res, next) => {
           req.body.eventType,
           req.body.charge,
           req.body.notes,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(200).send(errRes)
@@ -488,7 +487,7 @@ router.post('/events', (req, res, next) => {
         events.resourcePurged(
           req.body.resourceId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -502,7 +501,7 @@ router.post('/events', (req, res, next) => {
         events.memeAdded(
           req.body.filename,
           req.body.hash,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -510,7 +509,7 @@ router.post('/events', (req, res, next) => {
 
     case 'session-killed':
       if (validators.isSession(req.body.session, errRes)) {
-        events.sessionKilled(req.body.session, utils.buildResCallback(res))
+        events.sessionKilled(req.body.session, buildResCallback(res))
       } else {
         res.status(200).send(errRes)
       }
@@ -524,7 +523,7 @@ router.post('/events', (req, res, next) => {
             events.addressUpdated(
               req.body.taskId,
               addr,
-              utils.buildResCallback(res)
+              buildResCallback(res)
             )
           })
           .catch(err => {
@@ -550,7 +549,7 @@ router.post('/events', (req, res, next) => {
           req.body.deck,
           req.body.inId,
           req.body.prioritized,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -564,7 +563,7 @@ router.post('/events', (req, res, next) => {
         events.taskGuilded(
           req.body.taskId,
           req.body.guild,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -578,7 +577,7 @@ router.post('/events', (req, res, next) => {
         events.taskSeen(
           req.body.taskId,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -594,7 +593,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.subTask,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -609,7 +608,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.subTask,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -620,7 +619,7 @@ router.post('/events', (req, res, next) => {
         events.taskEmptied(
           req.body.taskId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -638,7 +637,7 @@ router.post('/events', (req, res, next) => {
           req.body.property,
           req.body.value,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -656,7 +655,7 @@ router.post('/events', (req, res, next) => {
           req.body.inId,
           req.body.color,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -671,7 +670,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -687,7 +686,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -702,7 +701,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.inId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -713,7 +712,7 @@ router.post('/events', (req, res, next) => {
         events.pileRefocused(
           req.body.inId,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -724,7 +723,7 @@ router.post('/events', (req, res, next) => {
         events.tasksRemoved(
           req.body.taskIds,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -740,7 +739,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.fromMemberId,
           req.body.toMemberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -755,7 +754,7 @@ router.post('/events', (req, res, next) => {
         events.taskGrabbed(
           req.body.taskId,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -770,7 +769,7 @@ router.post('/events', (req, res, next) => {
         events.pileGrabbed(
           req.body.taskId,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -784,7 +783,7 @@ router.post('/events', (req, res, next) => {
         events.taskDropped(
           req.body.taskId,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -798,7 +797,7 @@ router.post('/events', (req, res, next) => {
         events.pileDropped(
           req.body.taskId,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -816,7 +815,7 @@ router.post('/events', (req, res, next) => {
           req.body.swapId1,
           req.body.swapId2,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -833,7 +832,7 @@ router.post('/events', (req, res, next) => {
           req.body.bumpId,
           req.body.direction,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -850,7 +849,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.inId,
           req.body.position,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -866,7 +865,7 @@ router.post('/events', (req, res, next) => {
           req.body.memberId,
           req.body.seconds,
           req.body.date,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -883,7 +882,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           req.body.opinion,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -891,7 +890,7 @@ router.post('/events', (req, res, next) => {
       break
     case 'pile-prioritized':
       if (validators.isTaskId(req.body.inId, errRes)) {
-        events.pilePrioritized(req.body.inId, utils.buildResCallback(res))
+        events.pilePrioritized(req.body.inId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
@@ -901,7 +900,7 @@ router.post('/events', (req, res, next) => {
         events.tasksReceived(
           req.body.tasks,
           req.body.blame,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -917,7 +916,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.memberId,
           req.body.area,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -937,7 +936,7 @@ router.post('/events', (req, res, next) => {
           req.body.width,
           req.body.color,
           req.body.deck,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -954,7 +953,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.height,
           req.body.width,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -963,7 +962,7 @@ router.post('/events', (req, res, next) => {
 
     case 'grid-removed':
       if (validators.isTaskId(req.body.taskId)) {
-        events.gridRemoved(req.body.taskId, utils.buildResCallback(res))
+        events.gridRemoved(req.body.taskId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
@@ -981,7 +980,7 @@ router.post('/events', (req, res, next) => {
           req.body.taskId,
           req.body.height,
           req.body.width,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -1004,7 +1003,7 @@ router.post('/events', (req, res, next) => {
           req.body.x,
           req.body.y,
           req.body.memberId,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -1024,7 +1023,7 @@ router.post('/events', (req, res, next) => {
           req.body.inId,
           req.body.x,
           req.body.y,
-          utils.buildResCallback(res)
+          buildResCallback(res)
         )
       } else {
         res.status(400).send(errRes)
@@ -1036,4 +1035,4 @@ router.post('/events', (req, res, next) => {
   }
 })
 
-module.exports = router
+export default router

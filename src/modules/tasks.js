@@ -1,5 +1,5 @@
-const M = require('../mutations')
-const _ = require('lodash')
+import M from '../mutations.js'
+import _ from 'lodash'
 
 const state = []
 
@@ -19,7 +19,7 @@ const mutations = {
 
 const actions = {}
 
-module.exports = {
+export default {
   state,
   mutations,
   actions

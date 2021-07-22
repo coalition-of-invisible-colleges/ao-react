@@ -1,6 +1,6 @@
-const state = require('./state')
+import state from './state'
 
-function buildResCallback(res) {
+export function buildResCallback(res) {
   return (err, dbResponse) => {
     if (err) {
       res.status(500).send('db err')
@@ -10,7 +10,7 @@ function buildResCallback(res) {
   }
 }
 
-function memberFromFob(fob) {
+export function memberFromFob(fob) {
   let m
   state.serverState.members
     .filter(m => m.active > 0)
@@ -22,7 +22,7 @@ function memberFromFob(fob) {
   return m
 }
 
-function getResource(resourceId) {
+export function getResource(resourceId) {
   let resource
   state.serverState.resources.forEach(r => {
     if (r.resourceId == resourceId) {
@@ -30,10 +30,4 @@ function getResource(resourceId) {
     }
   })
   return resource
-}
-
-module.exports = {
-  buildResCallback,
-  memberFromFob,
-  getResource
 }

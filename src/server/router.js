@@ -1,19 +1,22 @@
-const express = require('express')
-const config = require('../../configuration')
-const path = require('path')
-const bodyParser = require('body-parser')
-const state = require('./state')
-const spec = require('./spec')
-const fobtap = require('./fobtap')
-const calculations = require('../calculations')
-const { serverAuth } = require('./auth')
-const { lightningRouter } = require('./lightning')
-const fs = require('fs')
-const multer = require('multer')
-const { addMeme } = require('./files')
-const events = require('./events')
+import express from 'express'
+import config from '../../configuration'
+import path from 'path'
+import bodyParser from 'body-parser'
+import state from './state'
+import spec from './spec'
+import fobtap from './fobtap'
+import { serverAuth } from './auth'
+import { lightningRouter } from './lightning'
+import fs from 'fs'
+import multer from 'multer'
+import { addMeme } from './files'
+import events from './events'
 
-module.exports = function applyRouter(app) {
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default function applyRouter(app) {
   // var myLogger = function(req, res, next) {
   //   console.log('REQUEST: ', req)
   //   next()

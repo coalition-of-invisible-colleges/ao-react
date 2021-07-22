@@ -1,6 +1,7 @@
-const cron = require('cron')
-const events = require('./events')
-const { serverState } = require('./state')
+import cron from 'cron'
+import events from './events'
+import state from './state'
+const serverState = state.serverState
 
 const rentJob = new cron.CronJob({
   cronTime: '0 0 0 1 * *',
@@ -39,7 +40,7 @@ function deactivate() {
   })
 }
 
-module.exports = function() {
+export default function() {
   rentJob.start()
   deactivateJob.start()
 }

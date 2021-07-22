@@ -2,7 +2,7 @@ import { observable, computed, observe, action } from 'mobx'
 import _ from 'lodash'
 import M from '../mutations'
 import modules from '../modules'
-import calculations from '../calculations'
+import { blankCard, cadToSats } from '../calculations'
 import AoStack from '../components/stack'
 
 function setCurrent(state: AoState, b: AoState) {
@@ -279,7 +279,7 @@ class AoStore {
 
   @computed get memberCard(): Task {
     let memberCard = _.merge(
-      calculations.blankCard('', '', ''),
+      blankCard('', '', ''),
       this.hashMap.get(this.member.memberId)
     )
     return memberCard
@@ -333,7 +333,7 @@ class AoStore {
 
   @computed get satPointSpot() {
     if (this.state.cash.spot > 0) {
-      return calculations.cadToSats(1, this.state.cash.spot)
+      return cadToSats(1, this.state.cash.spot)
     }
     return 10000
   }

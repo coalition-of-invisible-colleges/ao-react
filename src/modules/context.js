@@ -1,5 +1,4 @@
-const Vue = require('vue')
-const _ = require('lodash')
+import _ from 'lodash'
 const payments = ['bitcoin', 'lightning']
 
 const state = {

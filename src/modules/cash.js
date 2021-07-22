@@ -1,4 +1,4 @@
-const M = require('../mutations')
+import M from '../mutations.js'
 
 const state = {
   alias: '',
@@ -34,7 +34,7 @@ const mutations = {
 const actions = {}
 const getters = {}
 
-module.exports = {
+export default {
   state,
   mutations,
   actions,

@@ -1,8 +1,8 @@
-const _ = require('lodash')
-const state = require('./state')
-const members = require('../members')
+import _ from 'lodash'
+import state from './state'
+import { isAheadOf, isDecidedlyMorePopularThan, isSenpaiOf } from '../members'
 
-module.exports = {
+export default {
   isAmount(val, errRes) {
     let parsed = parseFloat(val)
     if (parsed !== 0 && !parsed) {
@@ -179,10 +179,10 @@ module.exports = {
     return colors.indexOf(val) >= 0
   },
   isAheadOf(senpaiId, kohaiId, errRes) {
-    return members.isAheadOf(senpaiId, kohaiId, state.serverState, errRes)
+    return isAheadOf(senpaiId, kohaiId, state.serverState, errRes)
   },
   isDecidedlyMorePopularThan(senpaiId, kohaiId, errRes) {
-    return members.isDecidedlyMorePopularThan(
+    return isDecidedlyMorePopularThan(
       senpaiId,
       kohaiId,
       state.serverState,
@@ -190,7 +190,7 @@ module.exports = {
     )
   },
   isSenpaiOf(senpaiId, kohaiId, errRes) {
-    return members.isSenpaiOf(senpaiId, kohaiId, state.serverState, errRes)
+    return isSenpaiOf(senpaiId, kohaiId, state.serverState, errRes)
   },
   hasBanOn(senpaiId, kohaiId, errRes) {
     const kohai = state.serverState.members.find(t => t.memberId === kohaiId)

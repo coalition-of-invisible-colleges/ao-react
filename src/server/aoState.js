@@ -1,7 +1,7 @@
-const _ = require('lodash')
-const M = require('../mutations')
-const modules = require('../modules')
-const config = require('../../configuration')
+import _ from 'lodash'
+import M from '../mutations'
+import modules from '../modules'
+import config from '../../configuration'
 
 function setCurrent(state, b) {
   modules.cash.mutations.setCurrent(state.cash, b)

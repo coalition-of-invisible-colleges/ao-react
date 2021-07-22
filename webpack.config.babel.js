@@ -1,22 +1,27 @@
-var webpack = require('webpack')
-var path = require('path')
+import webpack from 'webpack'
+import path from 'path'
 
 // variables
-var isProduction =
-  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
-var sourcePath = path.join(__dirname, './src')
-var outPath = path.join(__dirname, './dist')
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
-// plugins
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-// var MiniCssExtractPlugin = require('mini-css-extract-plugin')
-var { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
-//const ESLintPlugin = require('eslint-webpack-plugin')
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = {
-  mode: "production",
+const isProduction =
+  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
+const sourcePath = path.join(__dirname, './src')
+const outPath = path.join(__dirname, './dist')
+import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
+// plugins
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+// var MiniCssExtractPlugin from mini-css-extract-plugin'
+import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
+//const ESLintPlugin from eslint-webpack-plugin'
+
+
+export default {
+  mode: isProduction ? "production" : "development",
   context: __dirname,
   entry: {
     app: './src/index.tsx'
@@ -60,8 +65,8 @@ module.exports = {
             plugins: [
               // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
               ['@babel/plugin-proposal-decorators', { legacy: true }],
-              ['@babel/plugin-proposal-class-properties', { loose: true }],
-              'react-hot-loader/babel'
+              ['@babel/plugin-proposal-class-properties', { loose: false }],
+              ['react-hot-loader/babel', {safetyNet: false}]
             ]
           }
         }
@@ -180,7 +185,7 @@ module.exports = {
     contentBase: sourcePath,
     hot: true,
     inline: true,
-    host: '0.0.0.0',
+    host: '127.0.0.1',
     historyApiFallback: {
       disableDotRule: true
     },
@@ -194,7 +199,7 @@ module.exports = {
           '/upload',
           '/download'
         ],
-        target: 'http://0.0.0.0:8003',
+        target: 'http://127.0.0.1:8003',
         changeOrigin: true
       }
     ],
@@ -209,5 +214,5 @@ module.exports = {
     // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
     //fs: 'empty',
     //net: 'empty'
-  }
+  },
 }

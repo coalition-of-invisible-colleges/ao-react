@@ -1,8 +1,8 @@
-const Kefir = require('kefir')
-const _ = require('lodash')
-const uuidV1 = require('uuid/v1')
-const dbengine = require('better-sqlite3')
-const cryptoUtils = require('../crypto')
+import Kefir from 'kefir'
+import _ from 'lodash'
+import v1 from 'uuid'
+import dbengine from 'better-sqlite3'
+import { createHash } from '../crypto.js'
 
 const preparedStmts = {}
 
@@ -44,8 +44,8 @@ function initializeSqlite(cb) {
       type: 'member-created',
       name: 'dctrl',
       fob: '0000000000',
-      secret: cryptoUtils.createHash('dctrl'), // init user-password is dctrl
-      memberId: uuidV1(),
+      secret: createHash('dctrl'), // init user-password is dctrl
+      memberId: v1(),
       address: '2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu',
       active: 1,
       balance: 0,
@@ -173,7 +173,7 @@ function verifyAndLoadDb(path) {
   return true
 }
 
-module.exports = {
+export default {
   conn: conn,
   startDb,
   verifyAndLoadDb,

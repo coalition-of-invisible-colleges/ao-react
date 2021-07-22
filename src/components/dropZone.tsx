@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import { CardPlay, CardLocation, CardZone, Coords } from '../cards'
 import api from '../client/api'
-import crypto from '../crypto'
+import { createHash } from '../crypto'
 
 interface DropZoneProps {
 	taskId?: string
@@ -122,7 +122,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 				lastUploadedName = file.name
 				console.log('... file[' + i + '].name = ' + file.name)
 			})
-			const hash = crypto.createHash(data)
+			const hash = createHash(data)
 
 			// todo: api.createCard() first but you have to include the hash so it links retroactively
 

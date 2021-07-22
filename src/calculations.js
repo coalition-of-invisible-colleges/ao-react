@@ -1,12 +1,12 @@
 const satsPerBtc = 100000000 // one hundred million per btc
-const _ = require('lodash')
-const cryptoUtils = require('./crypto')
+import _ from 'lodash'
+import { createHash } from './crypto.js'
 
-function crawlerHash(tasks, taskId) {
-  return cryptoUtils.createHash(Buffer.from(crawler(tasks, taskId)))
+export function crawlerHash(tasks, taskId) {
+  return createHash(Buffer.from(crawler(tasks, taskId)))
 }
 
-function crawler(tasks, taskId) {
+export function crawler(tasks, taskId) {
   let history = []
   tasks.forEach(task => {
     if (task.taskId === taskId) {
@@ -31,7 +31,7 @@ function crawler(tasks, taskId) {
   return history
 }
 
-function shortName(name) {
+export function shortName(name) {
   let limit = 280
   let shortened = name.substring(0, limit)
   if (name.length > limit) {
@@ -40,7 +40,7 @@ function shortName(name) {
   return shortened
 }
 
-function cardColorCSS(color) {
+export function cardColorCSS(color) {
   return {
     redwx: color == 'red',
     bluewx: color == 'blue',
@@ -51,7 +51,7 @@ function cardColorCSS(color) {
   }
 }
 
-function blankCard(
+export function blankCard(
   taskId,
   name,
   color,
@@ -89,7 +89,7 @@ function blankCard(
   return newCard
 }
 
-function blankGrid(height = 3, width = 3) {
+export function blankGrid(height = 3, width = 3) {
   let newGrid = {
     height: height,
     width: width,
@@ -98,11 +98,11 @@ function blankGrid(height = 3, width = 3) {
   return newGrid
 }
 
-function isString(x) {
+export function isString(x) {
   return Object.prototype.toString.call(x) === '[object String]'
 }
 
-function safeMerge(cardA, cardZ) {
+export function safeMerge(cardA, cardZ) {
   // grids are not merged yet
   if (!cardA || !cardZ) {
     console.log('attempt to merge nonexistent card')
@@ -149,23 +149,23 @@ function safeMerge(cardA, cardZ) {
   // XXX book should be a list?
 }
 
-function cadToSats(cadAmt, spot) {
+export function cadToSats(cadAmt, spot) {
   let sats = (parseFloat(cadAmt) / parseFloat(spot)) * satsPerBtc
   return parseInt(sats)
 }
 
-function satsToCad(sats, spot) {
+export function satsToCad(sats, spot) {
   let cad = sats * (spot / satsPerBtc)
   return cad.toFixed(2)
 }
 
-function calculateMsThisMonth() {
+export function calculateMsThisMonth() {
   let today = new Date()
   let daysThisMonth = new Date(today.getYear(), today.getMonth(), 0).getDate()
   return daysThisMonth * 24 * 60 * 60 * 1000
 }
 
-function getMeridienTime(ts) {
+export function getMeridienTime(ts) {
   let d = new Date(parseInt(ts))
   let hour24 = d.getHours()
 
@@ -192,18 +192,4 @@ function getMeridienTime(ts) {
   let weekday = d.toString().slice(0, 3)
 
   return { weekday, year, month, date, hour, minute, meridien }
-}
-
-module.exports = {
-  cadToSats,
-  satsToCad,
-  getMeridienTime,
-  shortName,
-  cardColorCSS,
-  blankCard,
-  blankGrid,
-  // safeClone,
-  safeMerge,
-  crawler,
-  crawlerHash
 }

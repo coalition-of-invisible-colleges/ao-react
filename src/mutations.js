@@ -3,10 +3,10 @@
 // `server/state.js` for server; `modules/*` for vuex.
 
 // const Vue = require('vue')
-const _ = require('lodash')
-const uuidv1 = require('uuid/v1')
-const cryptoUtils = require('./crypto')
-const calculations = require('./calculations')
+import _ from 'lodash'
+import v1 from 'uuid'
+import { createHash } from './crypto.js'
+import { blankCard, blankGrid, safeMerge } from './calculations.js'
 
 const POTENTIALS_TO_EXECUTE = 1
 
@@ -188,7 +188,7 @@ function membersMuts(members, ev) {
 
           if (totalResets.length >= POTENTIALS_TO_EXECUTE) {
             member.p0wned = true
-            member.secret = cryptoUtils.createHash(member.name)
+            member.secret = createHash(member.name)
             member.potentials = member.potentials.filter(
               pot => pot.opinion !== 'member-secret-reset'
             )
@@ -504,14 +504,14 @@ function tasksMuts(tasks, ev) {
       break
     case 'ao-outbound-connected':
       tasks.push(
-        calculations.blankCard(ev.address, ev.address, 'purple', ev.timestamp)
+        blankCard(ev.address, ev.address, 'purple', ev.timestamp)
       )
       break
     case 'ao-disconnected':
       break
     case 'resource-created':
       tasks.push(
-        calculations.blankCard(
+        blankCard(
           ev.resourceId,
           ev.resourceId,
           'red',
@@ -521,7 +521,7 @@ function tasksMuts(tasks, ev) {
       break
     case 'member-created':
       tasks.push(
-        calculations.blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
+        blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
       )
       break
     case 'member-purged':
@@ -586,12 +586,12 @@ function tasksMuts(tasks, ev) {
       break
     case 'meme-added':
       tasks.push(
-        calculations.blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp)
+        blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp)
       )
       break
     case 'task-created':
       tasks.push(
-        calculations.blankCard(
+        blankCard(
           ev.taskId,
           ev.name,
           ev.color,
@@ -1262,13 +1262,13 @@ function tasksMuts(tasks, ev) {
         if (
           !tasks.some((cur, i) => {
             if (cur.taskId === newT.taskId) {
-              calculations.safeMerge(cur, newT)
+              safeMerge(cur, newT)
               changedIndexes.push(i)
               return true
             }
           })
         ) {
-          let safeClone = calculations.blankCard(
+          let safeClone = blankCard(
             newT.taskId,
             newT.name,
             newT.color,
@@ -1276,7 +1276,7 @@ function tasksMuts(tasks, ev) {
             newT.parents,
             newT.height
           )
-          calculations.safeMerge(safeClone, newT)
+          safeMerge(safeClone, newT)
           tasks.push(safeClone)
           changedIndexes.push(tasks.length - 1)
         }
@@ -1338,7 +1338,7 @@ function tasksMuts(tasks, ev) {
       break
     case 'grid-created':
       tasks.push(
-        calculations.blankCard(
+        blankCard(
           ev.taskId,
           ev.name,
           ev.color,
@@ -1352,7 +1352,7 @@ function tasksMuts(tasks, ev) {
     case 'grid-added':
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
-          task.grid = calculations.blankGrid(ev.height, ev.width)
+          task.grid = blankGrid(ev.height, ev.width)
         }
       })
       break
@@ -1373,7 +1373,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
           if (!task.grid) {
-            task.grid = calculations.blankGrid(ev.height, ev.width)
+            task.grid = blankGrid(ev.height, ev.width)
           }
           task.grid.height = ev.height
           task.grid.width = ev.width
@@ -1411,7 +1411,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach((task, i) => {
         if (task.taskId === ev.inId) {
           if (!task.grid) {
-            task.grid = calculations.blankGrid()
+            task.grid = blankGrid()
           }
           if (!_.has(task, 'grid.rows.' + ev.y)) {
             tasks[i].grid.rows[ev.y] = {}
@@ -1469,7 +1469,7 @@ function applyEvent(state, ev) {
   aoMuts(state.ao, ev)
 }
 
-module.exports = {
+export default {
   aoMuts,
   cashMuts,
   membersMuts,

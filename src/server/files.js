@@ -1,12 +1,13 @@
-const config = require('../../configuration')
-const path = require('path')
-const fs = require('fs')
-const FileType = require('file-type')
-const events = require('./events')
-const crypto = require('../crypto')
-const { serverState } = require('./state')
+import config from '../../configuration'
+import path from 'path'
+import fs from 'fs'
+import FileType from 'file-type'
+import events from './events'
+import { createHash } from '../crypto'
+import state from './state'
+const serverState = state.serverState
 
-function scanMemes() {
+export function scanMemes() {
 	const homeDir =
 		process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
 	const memeFolder = config.memes.dir
@@ -31,7 +32,7 @@ function scanMemes() {
 	})
 }
 
-function addMeme(name, path, data = null) {
+export function addMeme(name, path, data = null) {
 	if (!data) {
 		fs.readFile(path, (err, data) => {
 			if (err) {
@@ -46,7 +47,7 @@ function addMeme(name, path, data = null) {
 		return
 	}
 
-	const hash = crypto.createHash(data)
+	const hash = createHash(data)
 	const lastIndex = name.lastIndexOf('.')
 	const filetype = lastIndex < 0 ? '' : name.substr(lastIndex + 1)
 
@@ -75,5 +76,3 @@ function addMeme(name, path, data = null) {
 	}
 	return
 }
-
-module.exports = { scanMemes, addMeme }

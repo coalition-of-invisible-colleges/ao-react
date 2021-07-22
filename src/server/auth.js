@@ -1,7 +1,7 @@
-const utils = require('./utils')
-const events = require('./events')
-const cryptoUtils = require('../crypto')
-const state = require('./state')
+import { buildResCallback } from './utils'
+import events from './events'
+import { createHash, hmacHex } from '../crypto'
+import state from './state'
 
 const getIdSecret = function(identifier) {
   var ownerId, secret
@@ -31,7 +31,7 @@ const getIdSecret = function(identifier) {
   return { ownerId, secret }
 }
 // Used in socketio-auth creation, checks token (https://www.npmjs.com/package/socketio-auth)
-function socketAuth(socket, data, callback) {
+export function socketAuth(socket, data, callback) {
   let authorized
   state.serverState.sessions.forEach(session => {
     if (session.token === data.token) {
@@ -42,19 +42,19 @@ function socketAuth(socket, data, callback) {
   callback(null, authorized)
 }
 
-function serverAuth(req, res, next) {
+export function serverAuth(req, res, next) {
   const { ownerId, secret } = getIdSecret(req.headers.name)
 
   if (secret && req.headers.authorization && req.headers.session) {
-    let sessionKey = cryptoUtils.createHash(req.headers.session + secret)
-    let token = cryptoUtils.hmacHex(req.headers.session, sessionKey)
+    let sessionKey = createHash(req.headers.session + secret)
+    let token = hmacHex(req.headers.session, sessionKey)
     if (token === req.headers.authorization) {
       // client able to create the token, must have secret
       events.sessionCreated(
         ownerId,
         req.headers.session,
         token,
-        utils.buildResCallback(res)
+        buildResCallback(res)
       )
     } else {
       res.status(401).end('unauthorized')
@@ -74,9 +74,4 @@ function serverAuth(req, res, next) {
       res.status(401).end('unauthorized')
     }
   }
-}
-
-module.exports = {
-  socketAuth,
-  serverAuth
 }

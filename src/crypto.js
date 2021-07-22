@@ -1,18 +1,11 @@
-const crypto = require('crypto-es')
+import CryptoES from 'crypto-es'
 
-function createHash(payload) {
-  let sha256 = crypto.createHash('sha256')
-  sha256.update(payload)
-  return sha256.digest('hex')
+export function createHash(payload) {
+  let sha256 = CryptoES.SHA256(payload)
+  return sha256.toString(CryptoES.enc.Hex)
 }
 
-function hmacHex(data, signingKey) {
-  let hmac = crypto.createHmac('sha256', signingKey)
-  hmac.update(data)
-  return hmac.digest('hex')
-}
-
-module.exports = {
-  createHash,
-  hmacHex
+export function hmacHex(data, signingKey) {
+  let hmac = CryptoES.HmacSHA256(data, signingKey)
+  return hmac.toString(CryptoES.enc.Hex)
 }

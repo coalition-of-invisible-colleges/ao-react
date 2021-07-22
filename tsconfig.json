@@ -10,10 +10,10 @@
     "strictFunctionTypes": false,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": true,
     "allowJs": true,
     "outDir": "./dist",
     "lib": ["ES6", "ES5", "DOM"],
-    "experimentalDecorators": true,
     "skipLibCheck": true
   },
 }

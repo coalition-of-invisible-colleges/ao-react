@@ -1,8 +1,9 @@
-const cron = require('cron')
-const events = require('./events')
-const { serverState } = require('./state')
-const connector = require('./connector')
-const calculations = require('../calculations')
+import cron from 'cron'
+import events from './events'
+import state from './state'
+const serverState = state.serverState
+import { checkHash, postEvent } from './connector'
+import { crawler, crawlerHash } from '../calculations'
 
 const syncLink = new cron.CronJob({
   cronTime: '0 */1 * * * *',
@@ -15,12 +16,12 @@ function sync() {
   console.log('sync trig')
   serverState.ao.forEach(a => {
     a.links.forEach(l => {
-      let crawlered = calculations.crawler(serverState.tasks, l)
-      let expectedHash = calculations.crawlerHash(serverState.tasks, l)
-      connector.checkHash(a.address, a.outboundSecret, l, hashRes => {
+      let crawlered = crawler(serverState.tasks, l)
+      let expectedHash = crawlerHash(serverState.tasks, l)
+      checkHash(a.address, a.outboundSecret, l, hashRes => {
         console.log({ expectedHash, hashRes })
         if (expectedHash !== hashRes) {
-          connector.postEvent(
+          postEvent(
             a.address,
             a.outboundSecret,
             {
@@ -41,6 +42,6 @@ function getList(taskIds) {
   return serverState.tasks.filter(t => taskIds.indexOf(t.taskId) > -1)
 }
 
-module.exports = function() {
+export default function() {
   syncLink.start()
 }

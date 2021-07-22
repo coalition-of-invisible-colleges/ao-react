@@ -1,6 +1,5 @@
-const request = require('superagent')
-const uuidV1 = require('uuid/v1')
-const io = require('socket.io-client')
+import request from 'superagent'
+import io from 'socket.io-client'
 const socket = io()
 
 var attached = false

@@ -1,7 +1,8 @@
-const { getResource } = require('./utils')
-const events = require('./events')
-const { serverState } = require('./state')
-// const lightning = require('./lightning')
+import { getResource } from './utils'
+import events from './events'
+import state from './state'
+const serverState = state.serverState
+// const lightning from ./lightning')
 
 function checkForChargedEvent(resourceId) {
   let charged
@@ -91,4 +92,4 @@ function reactions(ev) {
   })
 }
 
-module.exports = reactions
+export default reactions

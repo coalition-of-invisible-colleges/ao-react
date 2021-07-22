@@ -1,10 +1,8 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const tr = require('tor-request')
-const crypto = require('../crypto')
-const calculations = require('../calculations')
+import tr from 'tor-request'
 
-function postEvent(address, secret, body, callback) {
+export function postEvent(address, secret, body, callback) {
   tr.request(
     {
       url: 'http://' + address + '/events',
@@ -23,7 +21,7 @@ function postEvent(address, secret, body, callback) {
   )
 }
 
-function checkHash(address, secret, taskId, callback) {
+export function checkHash(address, secret, taskId, callback) {
   tr.request(
     {
       url: 'http://' + address + '/taskhash/' + taskId,
@@ -41,7 +39,7 @@ function checkHash(address, secret, taskId, callback) {
   )
 }
 
-function getState(address, secret, callback) {
+export function getState(address, secret, callback) {
   tr.request(
     {
       url: 'http://' + address + '/state',
@@ -58,10 +56,4 @@ function getState(address, secret, callback) {
       callback(null, resBody)
     }
   )
-}
-
-module.exports = {
-  postEvent,
-  getState,
-  checkHash
 }

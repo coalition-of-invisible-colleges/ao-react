@@ -1,8 +1,8 @@
-const Kefir = require('kefir')
-const _ = require('lodash')
-const uuidV1 = require('uuid/v1')
-const dbengine = require('better-sqlite3')
-const cryptoUtils = require('../crypto')
+import Kefir from 'kefir'
+import _ from 'lodash'
+import uuidV1 from 'uuid/v1'
+import dbengine from 'better-sqlite3'
+import cryptoUtils from '../crypto'
 
 class AoDb {
   constructor(path, createIfNotExist = true) {
