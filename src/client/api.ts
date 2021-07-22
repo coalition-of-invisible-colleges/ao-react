@@ -4,7 +4,7 @@ import cryptoUtils from '../crypto'
 import _ from 'lodash'
 import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
-import io from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 class AoApi {
   constructor(public socket) {}
@@ -1099,7 +1099,7 @@ class AoApi {
     })
   }
 }
-const socket = io.connect(config.socketUrl ? config.socketUrl : '/', {
+const socket = io(config.socketUrl ? config.socketUrl : '/', {
   autoConnect: false
 })
 const api = new AoApi(socket)

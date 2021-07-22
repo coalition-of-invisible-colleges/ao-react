@@ -13,6 +13,7 @@
     "allowJs": true,
     "outDir": "./dist",
     "lib": ["ES6", "ES5", "DOM"],
-    "experimentalDecorators": true
-  }
+    "experimentalDecorators": true,
+    "skipLibCheck": true
+  },
 }

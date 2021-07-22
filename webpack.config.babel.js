@@ -6,24 +6,27 @@ var isProduction =
   process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
 var sourcePath = path.join(__dirname, './src')
 var outPath = path.join(__dirname, './dist')
-const ManifestPlugin = require('webpack-manifest-plugin')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 // plugins
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 // var MiniCssExtractPlugin = require('mini-css-extract-plugin')
-var WebpackCleanupPlugin = require('webpack-cleanup-plugin')
+var { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
+//const ESLintPlugin = require('eslint-webpack-plugin')
 
 module.exports = {
+  mode: "production",
   context: __dirname,
   entry: {
     app: './src/index.tsx'
   },
   output: {
     path: outPath,
-    filename: isProduction ? '[contenthash].js' : '[hash].js',
+    filename: isProduction ? '[id].[contenthash].js' : '[id].[hash].js',
     chunkFilename: isProduction
-      ? '[name].[contenthash].js'
-      : '[name].[hash].js',
+      ? '[id].[name].[contenthash].js'
+      : '[id].[name].[hash].js',
     publicPath: '/'
   },
   target: 'web',
@@ -114,7 +117,7 @@ module.exports = {
       //   ]
       // },
       // static assets
-      { test: /\.html$/, use: 'html-loader' },
+      { test: /\.html$/i, loader: 'html-loader', options: { esModule: false } },
       { test: /\.(a?png|jpe?g)$/, use: 'url-loader?limit=10000000' },
       {
         test: /\.svg/,
@@ -133,7 +136,7 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      name: true,
+      name: false,
       cacheGroups: {
         commons: {
           chunks: 'initial',
@@ -149,26 +152,29 @@ module.exports = {
         }
       }
     },
-    runtimeChunk: true
+    runtimeChunk: true,
+    moduleIds: 'named'
   },
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
       DEBUG: false
     }),
-    new WebpackCleanupPlugin(),
+    new CleanWebpackPlugin(),
     // new MiniCssExtractPlugin({
     //   filename: isProduction ? '[contenthash].css' : '[hash].css',
     //   disable: !isProduction
     // }),
     new ForkTsCheckerWebpackPlugin(),
-    new webpack.NamedModulesPlugin(),
+    //new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/assets/index.html'
     }),
-    new ManifestPlugin({
+    new WebpackManifestPlugin({
       fileName: '%PUBLIC_URL%/manifest.json'
-    })
+    }),
+    new NodePolyfillPlugin(),
+    //new ESLintPlugin()
   ],
   devServer: {
     contentBase: sourcePath,
@@ -201,7 +207,7 @@ module.exports = {
   node: {
     // workaround for webpack-dev-server issue
     // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
-    fs: 'empty',
-    net: 'empty'
+    //fs: 'empty',
+    //net: 'empty'
   }
 }

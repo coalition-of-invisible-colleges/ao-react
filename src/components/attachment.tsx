@@ -7,9 +7,9 @@ import FileViewer from 'react-file-viewer'
 import path from 'path'
 import api from '../client/api'
 import render from 'render-media'
-import From from 'from2'
+// import From from 'from2'
 import dataUriToBuffer from 'data-uri-to-buffer'
-import mime from 'mime-types'
+//import mime from 'mime-types'
 
 interface Props {
   taskId: string
@@ -36,15 +36,15 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     const meme = aoStore.memeById.get(props.taskId)
     if (meme) {
-      let mimeType = mime.lookup(meme.filetype)
+      //let mimeType = mime.lookup(meme.filetype)
 
-      console.log(
-        'looked up filetype ',
-        meme.filetype,
-        ' and got MIME type: ',
-        mimeType
-      )
-      this.state = { mimeType }
+      //console.log(
+       // 'looked up filetype ',
+      //  meme.filetype,
+      //  ' and got MIME type: ',
+      //  mimeType
+     // )
+      this.state = { }
     }
   }
 
@@ -56,15 +56,15 @@ export default class AoAttachment extends React.Component<Props, State> {
     if (this.props.taskId !== prevProps.taskId) {
       const meme = aoStore.memeById.get(this.props.taskId)
       if (meme) {
-        let mimeType = mime.lookup(meme.filetype)
+       // let mimeType = mime.lookup(meme.filetype)
 
-        console.log(
-          'looked up filetype ',
-          meme.filetype,
-          ' and got MIME type: ',
-          mimeType
-        )
-        this.setState({ mimeType })
+        //console.log(
+          //'looked up filetype ',
+        //  meme.filetype,
+        //  ' and got MIME type: ',
+        //  mimeType
+       // )
+       // this.setState({ mimeType })
       }
     }
     if (this.audioRef.current) {
@@ -222,7 +222,7 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     let preview
 
-    switch (this.state.mimeType) {
+    /*switch (this.state.mimeType) {
       case 'audio/m4a':
       case 'audio/aac':
       case 'audio/aiff':
@@ -252,7 +252,7 @@ export default class AoAttachment extends React.Component<Props, State> {
             alt="attachment"
           />
         )
-    }
+    }*/
 
     return <div className="attachment">{preview}</div>
   }

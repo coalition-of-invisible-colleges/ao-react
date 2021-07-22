@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+const crypto = require('crypto-es')
 
 function createHash(payload) {
   let sha256 = crypto.createHash('sha256')
