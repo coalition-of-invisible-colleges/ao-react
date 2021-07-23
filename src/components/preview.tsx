@@ -1,5 +1,5 @@
 import React from 'react'
-import { observable, computed } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
