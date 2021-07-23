@@ -323,6 +323,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}
 						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
+						contextCard.tsx__context
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle="context" />
 						<div className="content">
@@ -346,6 +347,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
+						contextCard.tsx__member_priority
 						<AoPaper taskId={taskId} />
 						<AoCardHud
 							taskId={taskId}
@@ -387,6 +389,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
+						contextCard.tsx__face__compact
 						<AoPaper taskId={taskId} />
 						<AoCardHud
 							taskId={taskId}
@@ -441,6 +444,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							''
 						) : (
 							<div id="context">
+								contextCard.tsx__full__noContextOnFull_false
 								<AoStack
 									cards={aoStore.contextCards}
 									cardStyle="context"
@@ -459,6 +463,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							onMouseEnter={this.onHover}
 							onMouseOver={this.onHover}
 							onMouseOut={this.clearPendingPromise}>
+							contextCard.tsx__full
 							<AoDragZone
 								taskId={taskId}
 								dragContext={{
@@ -524,6 +529,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
+						contextCard.tsx__checkmark
 						<AoCheckmark taskId={taskId} onGoIn={this.goInCard} />
 						<div className="content">{this.renderCardContent(content)}</div>
 					</div>
@@ -543,6 +549,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
+						contextCard.tsx__mission
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle="collapsed-mission" />
 						<div className="content">
@@ -586,6 +593,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
+						contextCard.tsx__badge
 						<AoPaper taskId={taskId} />
 						<img className="background" src={BlankBadge} />
 						<AoMission taskId={taskId} hudStyle="badge" />
@@ -608,6 +616,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
+						contextCard.tsx__mini__default
 						<AoPaper taskId={taskId} />
 						<AoCardHud taskId={taskId} hudStyle="mini before" />
 						<div className="content">

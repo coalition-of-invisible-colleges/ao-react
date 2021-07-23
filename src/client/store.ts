@@ -257,10 +257,8 @@ export const emptySearchResults = {
 }
 
 class AoStore {
-  @observable
-  state: AoState = defaultState
-  @observable
-  searchResults?: SearchResults
+  @observable state: AoState = defaultState
+  @observable searchResults?: SearchResults
   @observable context: string[] = []
   @observable currentCard: string
   @observable discard: Task[] = []

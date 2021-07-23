@@ -58,6 +58,7 @@ function renderCard(taskId?: string) {
             {aoStore.state.cash.alias}
           </title>
         </Helmet>
+        Card.tsx
         <AoDiscardZone />
         {card ? <AoContextCard task={card} cardStyle="full" /> : <AoDrawPile />}
         <AoHud />

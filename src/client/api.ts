@@ -1089,7 +1089,8 @@ class AoApi {
     this.socket.on('authenticated', () => {
       console.log('authenticated')
       this.socket.on('eventstream', ev => {
-        console.log('event', ev)
+        console.log('AO: client/api.ts: socketListener: event:', ev);
+
         aoStore.applyEvent(ev)
       })
     })
