@@ -2,6 +2,8 @@
 
 let PORT = process.env.PORT || 8003
 
+console.log("AO: Listening on PORT: ", PORT);
+
 import Kefir from 'kefir'
 import express from 'express'
 import { Server } from 'socket.io'
@@ -31,6 +33,7 @@ function startDctrlAo() {
   }
 
   startDb(dbPath, (err, conn) => {
+
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
@@ -52,20 +55,23 @@ function startDctrlAo() {
       const server = app.listen(PORT, err => {
         console.log('Listening on port', PORT)
 
+
         // const ioServer = new Server(server)
-        const ioServer = new Server(server, {
-          cors: {
-            origin: [
-              'http://127.0.0.1:3000',
-              'http://localhost:3000',
-              'http://localhost:8003',
-              'http://0.0.0.0:3000',
-            ],
-            methods: ['GET', 'POST'],
-          },
-        })
+        // const ioServer = new Server(server, {
+        //   cors: {
+        //     origin: [
+        //       'http://127.0.0.1:3000',
+        //       'http://localhost:3000',
+        //       'http://localhost:8003',
+        //       'http://0.0.0.0:3000',
+        //     ],
+        //     methods: ['GET', 'POST'],
+        //   },
+        // })
 
         // ioServer.listen(PORT)
+        const ioServer = new Server(server );//, { cors: { origin: "http://localhost:3000" } } )
+
 
         socketProtector(ioServer, {
           authenticate: socketAuth,

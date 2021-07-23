@@ -6,6 +6,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "dev": "webpack serve --mode development --hot --progress --port 3000 --open",
+    "devMoreRam": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --port 8003 --open",
     "webpack": "NODE_OPTIONS=--max-old-space-size=8192 webpack --progress --color",
     "start": "run-p dev server",
     "server": "node --experimental-specifier-resolution=node src/server/app.js",
@@ -142,7 +143,7 @@
     "svg-url-loader": "^7.1.1",
     "typescript": "^4.3.5",
     "url-loader": "^4.1.1",
-    "webpack": "^5.0.0",
+    "webpack": "^5.46.0",
     "webpack-bundle-size-analyzer": "^3.1.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
