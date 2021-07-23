@@ -1,7 +1,16 @@
 import _ from 'lodash'
 import M from '../mutations'
-import modules from '../modules'
 import config from '../../configuration'
+
+import cash from '../modules/cash.js'
+import members from '../modules/members.js'
+import tasks from '../modules/tasks.js'
+import resources from '../modules/resources.js'
+import memes from '../modules/memes.js'
+import sessions from '../modules/sessions.js'
+import ao from '../modules/ao.js'
+
+const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 function setCurrent(state, b) {
   modules.cash.mutations.setCurrent(state.cash, b)
@@ -30,7 +39,7 @@ function removeSensitive(ev) {
     'payment_hash',
     'inboundSecret',
     'outboundSecret',
-    'draft'
+    'draft',
   ]
   if (ev.type === 'member-field-updated') {
     ;['fob', 'secret', 'email'].forEach(str => {
@@ -61,8 +70,8 @@ class AoState {
         usedTxIds: [],
         outputs: [],
         channels: [],
-        info: {}
-      }
+        info: {},
+      },
     }
 
     this.pubState = {
@@ -82,8 +91,8 @@ class AoState {
         usedTxIds: [],
         outputs: [],
         channels: [],
-        info: {}
-      }
+        info: {},
+      },
     }
 
     let backup = database.recover()
@@ -124,5 +133,5 @@ module.exports = {
   AoState,
   setCurrent,
   applyEvent,
-  removeSensitive
+  removeSensitive,
 }

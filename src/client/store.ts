@@ -1,9 +1,18 @@
 import { observable, computed, observe, action } from 'mobx'
 import _ from 'lodash'
 import M from '../mutations'
-import modules from '../modules'
+// import modules from '../modules/index.js'
 import { blankCard, cadToSats } from '../calculations'
 import AoStack from '../components/stack'
+import cash from '../modules/cash.js'
+import members from '../modules/members.js'
+import tasks from '../modules/tasks.js'
+import resources from '../modules/resources.js'
+import memes from '../modules/memes.js'
+import sessions from '../modules/sessions.js'
+import ao from '../modules/ao.js'
+
+const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 function setCurrent(state: AoState, b: AoState) {
   modules.cash.mutations.setCurrent(state.cash, b)
@@ -227,8 +236,8 @@ const defaultState: AoState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: 1
-  }
+    theme: 1,
+  },
 }
 
 export interface SearchResults {
@@ -244,7 +253,7 @@ export const emptySearchResults = {
   members: [],
   tasks: [],
   all: [],
-  length: 0
+  length: 0,
 }
 
 class AoStore {
@@ -625,7 +634,7 @@ class AoStore {
         members: foundMembers,
         tasks: foundCards,
         all: foundGuilds.concat(foundMembers, foundCards),
-        length: foundGuilds.length + foundMembers.length + foundCards.length
+        length: foundGuilds.length + foundMembers.length + foundCards.length,
       })
     } catch (err) {
       console.log('regex search terminated in error: ', err)

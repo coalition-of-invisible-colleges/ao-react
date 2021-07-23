@@ -1,16 +1,25 @@
 import _ from 'lodash'
 import dctrlDb from './dctrlDb.js'
 import M from '../mutations.js'
-import * as modules from '../modules'
 import config from '../../configuration.js'
 import { formatDistanceToNow } from 'date-fns'
 import cron from 'cron'
+
+import cash from '../modules/cash.js'
+import members from '../modules/members.js'
+import tasks from '../modules/tasks.js'
+import resources from '../modules/resources.js'
+import memes from '../modules/memes.js'
+import sessions from '../modules/sessions.js'
+import ao from '../modules/ao.js'
+
+const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 const backupJob = new cron.CronJob({
   cronTime: '0 0 0 1 * *',
   onTick: backupState,
   start: true,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'America/Los_Angeles',
 })
 
 const serverState = {
@@ -32,8 +41,8 @@ const serverState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: config.theme || 1
-  }
+    theme: config.theme || 1,
+  },
 }
 
 const pubState = {
@@ -55,8 +64,8 @@ const pubState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: config.theme || 1
-  }
+    theme: config.theme || 1,
+  },
 }
 
 function setCurrent(state, b) {
@@ -104,7 +113,7 @@ function initialize(callback) {
           (backup.length > 1 ? ' the most recent' : '') +
           ' backup from',
         formatDistanceToNow(ts, {
-          addSuffix: true
+          addSuffix: true,
         }),
         '...\n'
       )
@@ -142,7 +151,7 @@ function removeSensitive(ev) {
     'payment_hash',
     'inboundSecret',
     'outboundSecret',
-    'draft'
+    'draft',
   ]
   if (ev.type === 'member-field-updated') {
     ;['fob', 'secret', 'email'].forEach(str => {
@@ -160,7 +169,7 @@ const state = {
   initialize,
   applyEvent,
   removeSensitive,
-  setCurrent
+  setCurrent,
 }
 
 export default state

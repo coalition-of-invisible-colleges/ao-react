@@ -12,7 +12,7 @@ export function crawler(tasks, taskId) {
     if (task.taskId === taskId) {
       let crawler = [taskId]
       do {
-        newCards = []
+        let newCards = []
         crawler.forEach(t => {
           if (history.indexOf(t) >= 0) return
           history.push(t)
@@ -47,7 +47,7 @@ export function cardColorCSS(color) {
     greenwx: color == 'green',
     yellowwx: color == 'yellow',
     purplewx: color == 'purple',
-    blackwx: color == 'black'
+    blackwx: color == 'black',
   }
 }
 
@@ -84,7 +84,7 @@ export function blankCard(
     highlights: [],
     seen: [],
     time: [],
-    grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false
+    grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
   }
   return newCard
 }
@@ -93,7 +93,7 @@ export function blankGrid(height = 3, width = 3) {
   let newGrid = {
     height: height,
     width: width,
-    rows: {}
+    rows: {},
   }
   return newGrid
 }
@@ -135,13 +135,13 @@ export function safeMerge(cardA, cardZ) {
   cardA.address = cardZ.guild
   cardA.bolt11 = cardZ.guild
   cardA.priorities = [
-    ...new Set(cardA.priorities.concat(filterNull(cardZ.priorities)))
+    ...new Set(cardA.priorities.concat(filterNull(cardZ.priorities))),
   ]
   cardA.subTasks = [
-    ...new Set(cardA.subTasks.concat(filterNull(cardZ.subTasks)))
+    ...new Set(cardA.subTasks.concat(filterNull(cardZ.subTasks))),
   ]
   cardA.completed = [
-    ...new Set(cardA.completed.concat(filterNull(cardZ.completed)))
+    ...new Set(cardA.completed.concat(filterNull(cardZ.completed))),
   ]
   cardA.passed = [...new Set(cardA.passed.concat(filterNull(cardZ.passed)))]
   // XXX only add in merge for now
