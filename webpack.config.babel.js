@@ -2,9 +2,9 @@ import webpack from 'webpack'
 import path from 'path'
 
 // variables
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const isProduction =
   process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
@@ -19,12 +19,11 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
 //const ESLintPlugin from eslint-webpack-plugin'
 
-
 export default {
-  mode: isProduction ? "production" : "development",
+  mode: isProduction ? 'production' : 'development',
   context: __dirname,
   entry: {
-    app: './src/index.tsx'
+    app: './src/index.tsx',
   },
   output: {
     path: outPath,
@@ -32,7 +31,7 @@ export default {
     chunkFilename: isProduction
       ? '[id].[name].[contenthash].js'
       : '[id].[name].[hash].js',
-    publicPath: '/'
+    publicPath: '/',
   },
   target: 'web',
   resolve: {
@@ -41,8 +40,8 @@ export default {
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
     mainFields: ['module', 'browser', 'main'],
     alias: {
-      'react-dom': '@hot-loader/react-dom'
-    }
+      'react-dom': '@hot-loader/react-dom',
+    },
   },
   module: {
     rules: [
@@ -57,23 +56,23 @@ export default {
             presets: [
               [
                 '@babel/preset-env',
-                { targets: { browsers: 'last 2 versions' } } // or whatever your project requires
+                { targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
               ],
               '@babel/preset-typescript',
-              '@babel/preset-react'
+              '@babel/preset-react',
             ],
             plugins: [
               // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
               ['@babel/plugin-proposal-decorators', { legacy: true }],
               ['@babel/plugin-proposal-class-properties', { loose: false }],
-              ['react-hot-loader/babel', {safetyNet: false}]
-            ]
-          }
-        }
+              ['react-hot-loader/babel', { safetyNet: false }],
+            ],
+          },
+        },
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.s[ac]ss$/i,
@@ -83,8 +82,8 @@ export default {
           // Translates CSS into CommonJS
           'css-loader',
           // Compiles Sass to CSS
-          'sass-loader'
-        ]
+          'sass-loader',
+        ],
       },
       // {
       //   test: /\.css$/,
@@ -129,15 +128,15 @@ export default {
         use: [
           {
             loader: 'svg-url-loader',
-            options: {}
-          }
-        ]
+            options: {},
+          },
+        ],
       },
       {
         test: /\.(gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
-        use: 'file-loader'
-      }
-    ]
+        use: 'file-loader',
+      },
+    ],
   },
   optimization: {
     splitChunks: {
@@ -145,7 +144,7 @@ export default {
       cacheGroups: {
         commons: {
           chunks: 'initial',
-          minChunks: 2
+          minChunks: 2,
         },
         vendors: {
           test: /[\\/]node_modules[\\/]/,
@@ -153,17 +152,17 @@ export default {
           priority: -10,
           filename: isProduction
             ? 'vendor.[contenthash].js'
-            : 'vendor.[hash].js'
-        }
-      }
+            : 'vendor.[hash].js',
+        },
+      },
     },
     runtimeChunk: true,
-    moduleIds: 'named'
+    moduleIds: 'named',
   },
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
-      DEBUG: false
+      DEBUG: false,
     }),
     new CleanWebpackPlugin(),
     // new MiniCssExtractPlugin({
@@ -173,10 +172,10 @@ export default {
     new ForkTsCheckerWebpackPlugin(),
     //new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/assets/index.html'
+      template: 'src/assets/index.html',
     }),
     new WebpackManifestPlugin({
-      fileName: '%PUBLIC_URL%/manifest.json'
+      fileName: '%PUBLIC_URL%/manifest.json',
     }),
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
@@ -187,7 +186,7 @@ export default {
     inline: true,
     host: '127.0.0.1',
     historyApiFallback: {
-      disableDotRule: true
+      disableDotRule: true,
     },
     proxy: [
       {
@@ -197,14 +196,14 @@ export default {
           '/session',
           '/meme',
           '/upload',
-          '/download'
+          '/download',
         ],
         target: 'http://127.0.0.1:8003',
-        changeOrigin: true
-      }
+        changeOrigin: true,
+      },
     ],
     stats: 'minimal',
-    clientLogLevel: 'debug'
+    clientLogLevel: 'debug',
   },
   // https://webpack.js.org/configuration/devtool/
   devtool: 'eval-source-map',
