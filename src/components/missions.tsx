@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
@@ -20,6 +20,7 @@ export const defaultState: State = {
 export default class AoMissions extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = defaultState
     this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)

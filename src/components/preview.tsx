@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
@@ -23,6 +23,11 @@ interface PreviewProps {
 
 @observer
 export default class AoPreview extends React.PureComponent<PreviewProps> {
+  constructor(props: PreviewProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   preventDoubleClick(event) {
     event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()

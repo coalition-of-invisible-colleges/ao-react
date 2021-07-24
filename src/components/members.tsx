@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import InfiniteScroll from 'react-infinite-scroller'
 import aoStore, { Task } from '../client/store'
@@ -26,6 +26,8 @@ interface State {
 export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
+
+    makeObservable(this);
 
     const hasMore =
       aoStore.state.members.filter(

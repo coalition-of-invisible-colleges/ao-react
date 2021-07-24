@@ -1,4 +1,4 @@
-import { observable, computed, observe, action } from 'mobx'
+import { observable, computed, observe, action, makeObservable } from 'mobx';
 import _ from 'lodash'
 import M from '../mutations'
 // import modules from '../modules/index.js'
@@ -269,6 +269,10 @@ class AoStore {
   @observable draft: string = ''
   @observable dabbed: boolean = false
   @observable globalRedirect?: string
+
+  constructor() {
+    makeObservable(this);
+  }
 
   @computed get member(): Member {
     let loggedInMember: Member

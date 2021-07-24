@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -14,6 +14,11 @@ interface CheckboxProps {
 
 @observer
 export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
+  constructor(props: CheckboxProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed get isCompleted() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return undefined

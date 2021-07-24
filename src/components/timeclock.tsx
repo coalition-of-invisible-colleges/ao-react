@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -108,6 +108,7 @@ interface TimeHistoryProps {
 class AoTimeHistory extends React.Component<TimeHistoryProps> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = {}
   }
 

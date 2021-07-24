@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import aoStore, { Task } from '../client/store'
 import { goInCard, findOrphans, findFirstCardInCard } from '../cards'
 import BuddhaDoge from '../assets/images/buddadoge.svg'
@@ -13,6 +13,7 @@ import MoonBag from '../assets/images/archive.svg'
 export default class AoDrawPile extends React.PureComponent {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = {}
     this.meditate = this.meditate.bind(this)
     this.goTopPriority = this.goTopPriority.bind(this)

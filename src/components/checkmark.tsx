@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoContextCard from './contextCard'
@@ -16,6 +16,7 @@ interface CheckmarkProps {
 export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
   constructor(props) {
     super(props)
+    makeObservable(this);
   }
 
   @computed get cardColor() {

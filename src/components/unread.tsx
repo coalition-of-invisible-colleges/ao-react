@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 
@@ -9,6 +9,11 @@ interface UnreadProps {
 
 @observer
 export default class AoUnread extends React.PureComponent<UnreadProps> {
+  constructor(props: UnreadProps) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed
   get seen() {
     const card = aoStore.hashMap.get(this.props.taskId)

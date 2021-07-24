@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
 import api from '../client/api'
@@ -59,18 +59,19 @@ interface State {
 @observer
 export default class AoContextCard extends React.Component<CardProps, State> {
 	constructor(props) {
-		super(props)
-		this.state = {}
-		this.togglePriorities = this.togglePriorities.bind(this)
-		this.toggleProjects = this.toggleProjects.bind(this)
-		this.newPriority = this.newPriority.bind(this)
-		this.newSubTask = this.newSubTask.bind(this)
-		this.goInCard = this.goInCard.bind(this)
-		this.refocusAll = this.refocusAll.bind(this)
-		this.onHover = this.onHover.bind(this)
-		this.renderCardContent = this.renderCardContent.bind(this)
-		this.clearPendingPromise = this.clearPendingPromise.bind(this)
-	}
+        super(props)
+        makeObservable(this);
+        this.state = {}
+        this.togglePriorities = this.togglePriorities.bind(this)
+        this.toggleProjects = this.toggleProjects.bind(this)
+        this.newPriority = this.newPriority.bind(this)
+        this.newSubTask = this.newSubTask.bind(this)
+        this.goInCard = this.goInCard.bind(this)
+        this.refocusAll = this.refocusAll.bind(this)
+        this.onHover = this.onHover.bind(this)
+        this.renderCardContent = this.renderCardContent.bind(this)
+        this.clearPendingPromise = this.clearPendingPromise.bind(this)
+    }
 
 	componentWillUnmount() {
 		this.clearPendingPromise()

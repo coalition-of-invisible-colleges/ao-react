@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -24,6 +24,7 @@ export default class AoCoin extends React.Component<CoinProps> {
 
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.sign = this.sign.bind(this)
     this.unsign = this.unsign.bind(this)
     this.signatureDecorators = this.signatureDecorators.bind(this)

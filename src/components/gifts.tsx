@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -27,6 +27,7 @@ export default class AoGifts extends React.PureComponent<{}, State> {
 
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = { name: '', tab: 'inbox' }
     this.toggleSend = this.toggleSend.bind(this)
     this.onChangeTo = this.onChangeTo.bind(this)

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -26,6 +26,7 @@ export const defaultState: State = {
 export default class AoSearch extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = defaultState
     this.componentDidMount = this.componentDidMount.bind(this)
     this.focus = this.focus.bind(this)

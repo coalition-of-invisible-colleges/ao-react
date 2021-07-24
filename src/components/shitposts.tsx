@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -26,6 +26,7 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
 
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = defaultState
     this.focusShitpostBox = this.focusShitpostBox.bind(this)
     this.shitpost = this.shitpost.bind(this)

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
@@ -11,6 +11,7 @@ import Chest from '../assets/images/chest.svg'
 export default class AoBounties extends React.Component {
   constructor(props) {
     super(props)
+    makeObservable(this);
   }
 
   @computed get bounties() {

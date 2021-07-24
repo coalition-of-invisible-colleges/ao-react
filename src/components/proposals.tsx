@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore, { Task, Signature } from '../client/store'
 import AoStack from './stack'
@@ -15,6 +15,7 @@ interface Props {
 export default class AoProposals extends React.Component<Props> {
   constructor(props) {
     super(props)
+    makeObservable(this);
   }
 
   componentDidMount() {

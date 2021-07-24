@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
@@ -14,7 +14,12 @@ interface CompletedProps {
 
 @observer
 export default class AoCompleted extends React.PureComponent<CompletedProps> {
-	@computed get completedCards() {
+    constructor(props: CompletedProps) {
+        super(props);
+        makeObservable(this);
+    }
+
+    @computed get completedCards() {
 		const card = aoStore.hashMap.get(this.props.taskId)
 
 		if (!card.completed || card.completed.length < 1) {
@@ -29,7 +34,7 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 		return completedCards
 	}
 
-	render() {
+    render() {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
 

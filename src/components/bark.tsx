@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -26,6 +26,7 @@ interface CardMenuProps {
 export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.activateMember = this.activateMember.bind(this)
     this.deactivateMember = this.deactivateMember.bind(this)
     this.resetPassword = this.resetPassword.bind(this)

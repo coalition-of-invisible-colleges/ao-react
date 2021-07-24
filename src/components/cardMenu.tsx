@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoCardHud, { HudStyle } from './cardHud'
@@ -14,6 +14,11 @@ interface Props {
 
 @observer
 export default class CardMenu extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+    makeObservable(this);
+  }
+
   @computed
   get renderMenuButton() {
     return (

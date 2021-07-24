@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { Redirect } from 'react-router-dom'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -19,6 +19,7 @@ interface State {
 export default class AoResourcePanel extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = {}
     this.useResource = this.useResource.bind(this)
     this.purgeResource = this.purgeResource.bind(this)

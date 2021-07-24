@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import ReactDOM from 'react-dom'
 import aoStore, { Ticker } from '../client/store'
 import api from '../client/api'
@@ -54,6 +54,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
 
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = defaultTickerState
     this.isValidCoin = this.isValidCoin.bind(this)
     this.startEditing = this.startEditing.bind(this)

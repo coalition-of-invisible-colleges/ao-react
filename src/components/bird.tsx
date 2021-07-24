@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -26,6 +26,7 @@ interface State {
 export default class AoBird extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = { tab: 'send' }
     this.onChange = this.onChange.bind(this)
     this.passCard = this.passCard.bind(this)

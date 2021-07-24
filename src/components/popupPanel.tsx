@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
 import LazyTippy from './lazyTippy'
@@ -29,11 +29,12 @@ export default class AoPopupPanel extends React.PureComponent<
 	State
 > {
 	constructor(props) {
-		super(props)
-		this.state = {}
-		this.onPanelOpen = this.onPanelOpen.bind(this)
-		this.onPanelClose = this.onPanelClose.bind(this)
-	}
+        super(props)
+        makeObservable(this);
+        this.state = {}
+        this.onPanelOpen = this.onPanelOpen.bind(this)
+        this.onPanelClose = this.onPanelClose.bind(this)
+    }
 
 	onPanelOpen() {
 		if (this.props.alsoHideHub) {

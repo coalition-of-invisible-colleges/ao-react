@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoMemberIcon from './memberIcon'
@@ -22,6 +22,7 @@ interface State {
 export default class AoChatroom extends React.Component<Props, State> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.state = { show: false, now: Date.now() }
     this.hopHere = this.hopHere.bind(this)
     this.toggleChat = this.toggleChat.bind(this)
