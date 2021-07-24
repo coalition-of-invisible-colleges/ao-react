@@ -1,4 +1,4 @@
-import { observable, computed, observe, action, makeObservable } from 'mobx';
+import { observable, computed, observe, action, makeObservable, reaction, extendObservable, makeAutoObservable, runInAction } from 'mobx';
 import _ from 'lodash'
 import M from '../mutations'
 // import modules from '../modules/index.js'
@@ -11,6 +11,8 @@ import resources from '../modules/resources.js'
 import memes from '../modules/memes.js'
 import sessions from '../modules/sessions.js'
 import ao from '../modules/ao.js'
+
+import request from 'superagent'
 
 const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
@@ -301,6 +303,55 @@ class AoStore {
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
+
+    let stateClosure = this.state;
+
+    // if ( __CLIENT__ )
+    { let original_get = hashMap.get;
+      hashMap.get = function get(taskID: string) : Task 
+          {
+            let existingTask;
+            let taskToGet = original_get.call(hashMap, taskID);
+
+            if (! taskToGet)
+            {
+              // we want to return a blank card, and then load the data from the server into that object
+              //   and hope that the mobx / react stuff will update the contents!!!
+              existingTask = blankCard(taskID, '', '', '');
+              hashMap.set(taskID, existingTask);
+           
+
+              request
+                  .post('/fetchTaskByID')
+                  .set('Authorization', stateClosure.token)
+                  .send( {taskID} )
+                  .then
+                      ( (result) => 
+                        {
+                          console.log("AO: client/store.ts: hashMap: merging fetched task", {taskID, "result": result.body});
+                          runInAction
+                              ( () =>
+                                { 
+
+                                  stateClosure.tasks.push(existingTask);
+                                  extendObservable(existingTask, result.body);
+
+                                  console.log("AO: client/store.ts: hashMap: merged fetched task", {taskID, "result": result.body});
+                                }
+                              );
+
+                        }
+                      );
+            }
+            else
+            {
+              console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
+              existingTask = taskToGet;
+            }
+
+            return existingTask
+          }
+    }
     return hashMap
   }
 

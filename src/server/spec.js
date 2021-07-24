@@ -19,6 +19,8 @@ router.post('/events', (req, res, next) => {
   next()
 })
 
+
+
 router.post('/events', (req, res, next) => {
   let errRes = []
   switch (req.body.type) {

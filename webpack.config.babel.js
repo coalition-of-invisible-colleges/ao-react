@@ -191,23 +191,24 @@ export default {
     historyApiFallback: {
       disableDotRule: true,
     },
-    // proxy: [
-    //   {
-    //     context: [
-    //       '/state',
-    //       '/events',
-    //       '/session',
-    //       '/meme',
-    //       '/upload',
-    //       '/download',
-    //     ],
-    //     target: 'http://127.0.0.1:8003',
-    //     changeOrigin: true,
-    //   },
-    //   { context: [ "/socket.io"],
-    //     ws: true,
-    //   }
-    // ],
+    proxy: [
+      {
+        context: [
+          '/state',
+          '/events',
+          '/session',
+          '/meme',
+          '/upload',
+          '/download',
+          "fetchTaskByID",
+        ],
+        target: 'http://127.0.0.1:8003',
+        // changeOrigin: true,
+      },
+      // { context: [ "/socket.io"],
+      //   ws: true,
+      // }
+    ],
 
     stats: 'minimal',
     clientLogLevel: 'debug',

@@ -9,9 +9,14 @@ import { serverAuth } from './auth.js'
 import { lightningRouter } from './lightning.js'
 import fs from 'fs'
 import multer from 'multer'
+
+
 import { addMeme } from './files.js'
 import events from './events.js'
+
 import { crawlerHash } from '../calculations.js'
+import validators from './validators'
+
 
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
@@ -25,11 +30,11 @@ export default function applyRouter(app) {
   // app.use(myLogger)
   app.use(express.static(path.join(__dirname, '../../dist')))
   app.use(express.static(path.join(__dirname, '../../public')))
-  app.get('/%PUBLIC_URL%/manifest.json', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/manifest.json'))
+  app.get('/public/manifest.json', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../dist/public/manifest.json'))
   })
-  app.get('/%PUBLIC_URL%/favicon.ico', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../dist/%PUBLIC_URL%/favicon.ico'))
+  app.get('/public/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../dist/public/favicon.ico'))
   })
   // app.get('/*', (req, res) => {
   //   console.log('any route detected')
@@ -42,16 +47,85 @@ export default function applyRouter(app) {
       limit: '10mb',
     })
   )
+
   app.use('/memes', express.static(config.memes.dir))
+  
   app.use(serverAuth) // below here requires auth token
+
   app.use(spec) // handles event creation
   app.use(fobtap) // handles rfid scan devices
   app.use(lightningRouter)
 
   app.post('/state', (req, res) => {
-    res.json(state.pubState)
+    
+    console.log(req);
+
+    debugger;
+
+    let pubState = {"tasks":[]};
+    for (let [key, value] of Object.entries(state.pubState))
+    {
+      console.log({[key]: value} )
+      if (key !== "tasks")
+      { pubState[key] = state.pubState[key];
+      }
+      else
+      {
+        // for (let taskItem of value)
+        // {
+        //   if (taskItem.)
+        // }
+      }
+    }
+
+    res.json(pubState)
   })
 
+  app.post( "/fetchTaskByID", 
+      // bodyParser.json(),
+      (req, res) => 
+      {
+        let errRes = [];
+        let foundThisTask;
+
+        console.log("server/api.ts: fetchTaskByID: ");
+
+        if  ( validators.isTaskId(req.body.taskID, errRes)
+            )
+        {
+          state.pubState.tasks.forEach
+              ( (taskItem) =>
+                {
+                  if (taskItem.taskID === req.body.taskId)
+                  {
+                    foundThisTask = taskItem;
+                    return;
+                  }
+                }
+              );
+
+          
+          if (foundThisTask)
+          {
+            console.log({"taskID": req.body.taskID, "result": foundThisTask});
+            res.json(foundThisTask);
+          } 
+          else
+          { 
+            errRes.push("AO: server/spec.js: fetchTaskByID: task not found "+ taskID);
+            res.status(200).send(errRes);
+          }
+        }
+        else
+        {
+          res.status(400).send(errRes);
+        }
+
+      }
+    );
+
+
+  
   const handleError = (err, res) => {
     res.status(500).contentType('text/plain').end('Oops! Something went wrong!')
   }
