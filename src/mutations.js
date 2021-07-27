@@ -1292,25 +1292,18 @@ function tasksMuts(tasks, ev) {
         )
         if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
           t.grid.rows = Object.entries(t.grid.rows).map(([x, row]) => {
-            console.log('key/value is ', { x, row })
             const filteredRow = {}
-            console.log("checkpoint1")
             Object.entries(row).forEach(([y, stId]) => {
-                            console.log("checkpoint2")
-
               if (tasks.some(sst => sst.taskId === stId)) {
                 filteredRow[y] = stId
               }
             })
-                        console.log("checkpoint3")
 
             if (Object.keys(filteredRow).length <= 0) {
               return {}
             } else {
               return filteredRow
             }
-                        console.log("checkpoint4")
-
           })
         }
       })

@@ -115,10 +115,6 @@ export function isString(x) {
 }
 
 export function safeMerge(cardA, cardZ) {
-                              if(cardZ.grid) {
-              console.log("newT grid is", cardZ.grid)
-          }
-
   if (!cardA || !cardZ) {
     console.log('attempt to merge nonexistent card')
     return
@@ -158,38 +154,33 @@ export function safeMerge(cardA, cardZ) {
   cardA.completed = [
     ...new Set(cardA.completed.concat(filterNull(cardZ.completed))),
   ]
-  if(cardZ.grid && cardZ.grid.height >= 1 && cardZ.grid.width >= 1) {
-      console.log("cardZ has a grid!")
-    if(!cardA.grid) {
-        cardA.grid = { rows: {}, height: 1, width: 1 }
+  if (cardZ.grid && cardZ.grid.height >= 1 && cardZ.grid.width >= 1) {
+    if (!cardA.grid) {
+      cardA.grid = { rows: {}, height: 1, width: 1 }
     }
 
     cardA.grid.height = Math.max(cardA.grid.height, cardZ.grid.height)
     cardA.grid.width = Math.max(cardA.grid.width, cardZ.grid.width)
     if (_.has(cardZ, 'grid.rows')) {
-    console.log("cardZ has rows!")
-        Object.entries(cardZ.grid.rows).forEach(([x, row]) => {
+      Object.entries(cardZ.grid.rows).forEach(([x, row]) => {
+        const filteredRow = {}
 
-            const filteredRow = {}
-
-            Object.entries(row).forEach(([y, stId]) => {
-
-                if(stId !== null && stId !== undefined) {
-                    filteredRow[y] = stId
-                }
-           })
-
-           if(Object.keys(filteredRow).length >= 1) {
-                if(!cardA.grid.rows) {
-            cardA.grid.rows = {}
-        }
-                cardA.grid.rows[x] = filteredRow
-            }
-
+        Object.entries(row).forEach(([y, stId]) => {
+          if (stId !== null && stId !== undefined) {
+            filteredRow[y] = stId
+          }
         })
-        if(Object.keys(cardA.grid.rows).length < 1) {
-            cardA.grid = false
+
+        if (Object.keys(filteredRow).length >= 1) {
+          if (!cardA.grid.rows) {
+            cardA.grid.rows = {}
+          }
+          cardA.grid.rows[x] = filteredRow
         }
+      })
+      if (Object.keys(cardA.grid.rows).length < 1) {
+        cardA.grid = false
+      }
     }
   }
   cardA.passed = [...new Set(cardA.passed.concat(filterNull(cardZ.passed)))]
