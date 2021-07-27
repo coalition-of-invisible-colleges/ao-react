@@ -13,7 +13,7 @@ function attachSocket(commit, dispatch) {
       commit('setConnected', 'connecting')
       socket.emit('authentication', {
         session: state.session,
-        token: state.token
+        token: state.token,
       })
     })
 
@@ -76,7 +76,7 @@ const actions = {
           console.log('got ', res.body.length, 'tasks from tasks endpoint')
           commit('applyEvent', {
             type: 'tasks-received',
-            tasks: res.body
+            tasks: res.body,
           })
         }
       })
@@ -113,7 +113,7 @@ const actions = {
           commit('setReqStatus', 'ready')
         }
       })
-  }
+  },
 }
 
 const state = {
@@ -122,7 +122,7 @@ const state = {
   connected: 'disconnected',
   connectionError: '',
   reqStatus: 'ready',
-  lastPing: 1
+  lastPing: 1,
 }
 
 const mutations = {
@@ -145,11 +145,11 @@ const mutations = {
       return
     }
     loader.connectionError = error
-  }
+  },
 }
 
-module.exports = {
+export default {
   state,
   mutations,
-  actions
+  actions,
 }

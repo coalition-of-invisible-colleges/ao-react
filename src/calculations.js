@@ -26,8 +26,6 @@ export function crawler(tasks, taskId) {
               const rowsArray = Object.values(subTask.grid.rows).map(row =>
                 Object.values(row)
               )
-              console.log('\n\n\nrowsArray is', rowsArray)
-              console.log(typeof rowsArray)
               gridCells = [...rowsArray]
             }
             newCards = newCards

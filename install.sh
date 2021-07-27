@@ -413,7 +413,7 @@ fi
 if [ -f "$HOME/ao-react/configuration.js" ]; then
 	echo configuration.js already exists
 else
-	CONFIG="module.exports = {
+	CONFIG="export default {
     bitcoind: {
         network: 'mainnet'
     },

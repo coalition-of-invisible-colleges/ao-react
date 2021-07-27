@@ -7,7 +7,7 @@ const state = {
   top: 0,
   completed: false,
   action: false,
-  loading: false
+  loading: false,
 }
 
 const mutations = {
@@ -41,7 +41,7 @@ const mutations = {
   },
   stopLoading(state) {
     state.loading = false
-  }
+  },
 }
 
 const actions = {
@@ -79,14 +79,14 @@ const actions = {
     commit('goToParent', pContext.target)
     commit('setPanel', pContext.panel)
     commit('setTop', pContext.top)
-  }
+  },
 }
 
 const getters = {}
 
-module.exports = {
+export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 }

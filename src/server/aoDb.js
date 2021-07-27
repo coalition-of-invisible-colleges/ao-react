@@ -94,7 +94,7 @@ class AoDb {
       active: 1,
       balance: 0,
       badges: [],
-      info: {}
+      info: {},
     })
     this.startFeed()
   }
@@ -175,4 +175,4 @@ class AoDb {
   }
 }
 
-module.exports = { AoDb }
+export default { AoDb }

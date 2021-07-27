@@ -129,7 +129,7 @@ class AoState {
   }
 }
 
-module.exports = {
+export default {
   AoState,
   setCurrent,
   applyEvent,
