@@ -1289,13 +1289,7 @@ function tasksMuts(tasks, ev) {
         t.deck = t.deck.filter(stId =>
           tasks.some(sst => sst.taskId === stId && sst.taskId === sst.name)
         )
-        if (task.taskId == tId) {
-          if (!_.has(task, 'grid.rows.' + ev.y)) {
-            return false
-          }
-          let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
-          delete tasks[i].grid.rows[ev.y][ev.x]
-        }
+        console.log("\n\nABOUT TO FILTER GRID\n\n")
 
         if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
           t.grid.rows = Object.entries(t.grid.rows).map(entry => {
