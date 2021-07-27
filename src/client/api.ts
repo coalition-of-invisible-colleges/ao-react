@@ -43,8 +43,9 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
-          console.log('initial state: ', res.body)
+          console.log('AO: client/api.ts: fetchState: initial state: ', res.body)
           aoStore.initializeState(res.body)
+          
           return true
         })
         .catch(() => false)

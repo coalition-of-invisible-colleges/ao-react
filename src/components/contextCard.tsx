@@ -86,7 +86,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.pendingPromise = undefined
 	}
 
-	@computed
 	togglePriorities(event) {
 		event.stopPropagation()
 		event.nativeEvent.stopImmediatePropagation()
@@ -97,7 +96,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		}
 	}
 
-	@computed
 	toggleProjects(event) {
 		event.stopPropagation()
 		event.nativeEvent.stopImmediatePropagation()
@@ -194,7 +192,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		return ''
 	}
 
-	@computed
+	
 	renderCardContent(content: string, hideIframes = false) {
 		// hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
 		const meme = aoStore.memeById.get(this.props.task.taskId)
@@ -231,7 +229,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		)
 	}
 
-	@computed
+	
 	projectCards() {
 		if (this.props.cardStyle !== 'mission') {
 			return undefined

@@ -56,35 +56,44 @@ export default function applyRouter(app) {
   app.use(fobtap) // handles rfid scan devices
   app.use(lightningRouter)
 
-  app.post
-      ( '/state', 
-        (req, res) => 
-        {
+  app.post('/state', (req, res) => {
     
-          console.log(req);
+    // console.log(req);
+    console.log("AO: server/router.js: app post /state")
 
-          debugger;
+    debugger;
 
-          let reducedState = {"tasks":[]};
-          for (let [key, value] of Object.entries(state.pubState))
-          {
-            console.log({[key]: value} )
-            if (key !== "tasks")
-            { reducedState[key] = state.pubState[key];
-            }
-            else
-            {
-              // for (let taskItem of value)
-              // {
-              //   if (taskItem.)
-              // }
-            }
-          }
+    let useReducedState = false;
+    let stateToSend;
 
-          // res.json(state.pubState)
-          res.json(reducedState);
+    if (useReducedState === true)
+    {
+      stateToSend = {"tasks":[]};
+      for (let [key, value] of Object.entries(state.pubState))
+      {
+        console.log({[key]: value} )
+        if (key !== "tasks")
+        { stateToSend[key] = state.pubState[key];
         }
-      );
+        else
+        {
+          
+          // for (let taskItem of value)
+          // {
+          //   if (taskItem.)
+          // }
+        }
+      }
+    }
+    else
+    {
+      stateToSend = state.pubState;
+    }
+
+    
+
+    res.json(stateToSend)
+  })
 
   app.post( "/fetchTaskByID", 
       // bodyParser.json(),

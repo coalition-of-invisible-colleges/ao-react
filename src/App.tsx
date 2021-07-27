@@ -57,6 +57,11 @@ if (typeof window !== 'undefined') {
   console.log('We are not in a browser window :(')
 }
 
+
+// this is a component that will route to the community hub card
+// const communityHubCardRedirectView = observer(( { communityHubTaskID } => <Redirect to={"/task/"+))
+
+
 // this is the root component of the React UI
 const App = observer(() => {
   

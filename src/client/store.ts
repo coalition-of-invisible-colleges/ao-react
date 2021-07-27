@@ -424,6 +424,11 @@ class AoStore {
     return hashMap
   }
 
+  @computed get communityHubTaskItem(): Task {
+    return this.cardByName.get("community hub");
+  }
+
+
   @computed get memeById(): Map<string, Meme> {
     let hashMap: Map<string, Meme> = new Map()
     this.state.memes.forEach(m => {

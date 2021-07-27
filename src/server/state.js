@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { recover, getAll, insertBackup } from './dctrlDb.js'
+import { recover, getAll, insertBackup, insertEvent } from './dctrlDb.js'
 import M from '../mutations.js'
 import config from '../../configuration.js'
 import { formatDistanceToNow } from 'date-fns'
@@ -121,7 +121,9 @@ function initialize(callback) {
     }
     getAll(ts, (err, all) => {
       if (err) return callback(err)
+
       all.forEach((ev, i) => {
+
         applyEvent(serverState, Object.assign({}, ev))
         applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
         if (i > 0 && i % 10000 === 0) {
@@ -129,6 +131,55 @@ function initialize(callback) {
         }
       })
       console.log('applied ', all.length, ' events from the database')
+
+      
+      // ensure there is a community hub card in the state
+      console.log("AO: server/state.js: initialize: checking for community hub card");
+      let communityHubCardFound = false;
+      pubState.tasks.forEach
+          ( (taskItem, index) =>            
+            {
+              if (taskItem.name.toLowerCase() === "community hub")
+              {
+                communityHubCardFound = true;
+                console.log("AO: server/state.js: initialize: community hub card found");
+                return;
+              }
+            }
+          );
+      if (communityHubCardFound === false)
+      {
+        let newCommunityHubCardEvent = 
+            {
+              type        : "task-create",
+              name        : "community hub",
+              color       : "blue",
+              deck        : [],
+              inId        : null,
+              prioritized : false,
+            }
+        setImmediate
+            ( () =>
+              { insertEvent
+                ( newCommunityHubCardEvent, 
+                  (error, {event, result}) => 
+                  {
+                    
+                    if (error) 
+                    {
+                      // this should never happen... umm... not sure what to do here
+                      console.log("AO: server/state.js: initialize: error running insertEvent for communityHubCard", {error, event, result});
+                    }
+                    else
+                    {
+                      // we should be good to go to send data to any clients.
+                    }
+                  }
+                )
+              }
+            );
+      }
+
       callback(null)
     })
   })
