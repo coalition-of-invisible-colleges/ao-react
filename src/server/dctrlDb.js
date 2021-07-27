@@ -112,7 +112,7 @@ function startFeed() {
 }
 
 export function insertEvent(ev, callback) {
-  console.log('insertEvent ev is ', ev)
+  //console.log('insertEvent ev is ', ev)
   if (!conn) return callback('No db connection')
   if (!ev.timestamp) {
     ev.timestamp = Date.now()

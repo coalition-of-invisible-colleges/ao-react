@@ -79,7 +79,7 @@ function startDctrlAo() {
         fullEvStream.onValue(ev => {
           state.applyEvent(state.pubState, ev)
           ioServer.emit('eventstream', ev)
-          console.log('emitting:', ev)
+          //console.log('emitting:', ev)
         })
       })
     })

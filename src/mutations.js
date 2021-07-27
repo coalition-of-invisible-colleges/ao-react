@@ -1261,7 +1261,8 @@ function tasksMuts(tasks, ev) {
             newT.color,
             newT.timestamp,
             newT.parents,
-            newT.height
+            newT.height,
+            newT.width
           )
           safeMerge(safeClone, newT)
           tasks.push(safeClone)
@@ -1289,24 +1290,27 @@ function tasksMuts(tasks, ev) {
         t.deck = t.deck.filter(stId =>
           tasks.some(sst => sst.taskId === stId && sst.taskId === sst.name)
         )
-        console.log("\n\nABOUT TO FILTER GRID\n\n")
-
         if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
-          t.grid.rows = Object.entries(t.grid.rows).map(entry => {
-            const [xIndex, rowObject] = entry
-            console.log('key/value is ', { xIndex, rowObject })
+          t.grid.rows = Object.entries(t.grid.rows).map(([x, row]) => {
+            console.log('key/value is ', { x, row })
             const filteredRow = {}
-            Object.entries(row).forEach(entry2 => {
-              const [yIndex, stId] = entry2
+            console.log("checkpoint1")
+            Object.entries(row).forEach(([y, stId]) => {
+                            console.log("checkpoint2")
+
               if (tasks.some(sst => sst.taskId === stId)) {
-                filteredRow[yIndex] = stId
+                filteredRow[y] = stId
               }
             })
+                        console.log("checkpoint3")
+
             if (Object.keys(filteredRow).length <= 0) {
-              return null
+              return {}
             } else {
               return filteredRow
             }
+                        console.log("checkpoint4")
+
           })
         }
       })
