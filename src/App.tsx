@@ -57,20 +57,32 @@ if (typeof window !== 'undefined') {
   console.log('We are not in a browser window :(')
 }
 
+// this is the root component of the React UI
 const App = observer(() => {
+  
+  // this state variable is used to render the page once the server side database state has been
+  //   fetched.
   const [render, setRender] = useState(false)
 
+  // this is a UI function for trapping user interaction at the root of the HTML DOM
   const detectGlobalHotkey = event => {
     if (event.key === 'Escape') {
       if (event.shiftKey) {
+        // empty the context stack
         aoStore.clearContext()
       }
+      // shift one card up (fewer) in the context stack
       goUp()
-      console.log('aoStore.currentCard is ', aoStore.currentCard)
-      aoStore.setGlobalRedirect(aoStore.currentCard || './')
+
+      // this currentCard / current "contextCard" paradigm means that there is one central card in the UI
+      //   at a time
+      // this card should be the same as the card represented in the address bar, hence the redirect concept
+      console.log('aoStore.currentCard is ', aoStore.currentCard);
+      aoStore.setGlobalRedirect(aoStore.currentCard || './');
     }
   }
 
+  // load the initial state from the server, and then render the UI
   useEffect(() => {
     document.body.className = 'theme-1'
     api.fetchState().then(() => {
@@ -78,23 +90,55 @@ const App = observer(() => {
     })
   }, [])
 
+  // this reducer seems to count how many times there has been a context change. 
+  //   it is not clear to me why this is important. Perhpas its is a debugging stat?
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
-  useEffect(() => {
-      aoStore.setGlobalRedirect(null)
-      forceUpdate()
-  }, [aoStore.globalRedirect, aoStore.currentCard])
+  useEffect
+      ( () => 
+        {
+          aoStore.setGlobalRedirect(null)
+          forceUpdate()
+        }, 
+        [ aoStore.globalRedirect, 
+          aoStore.currentCard
+        ]
+      );
+
+
 
   return (
     <div onKeyDown={detectGlobalHotkey}>
-      {render && (
+      {
+        // value render is false on initial page load.
+        !render && 
+        (
+          <div style={{ marginTop: '21%', fontSize: '1.25em' }}>
+            Receiving cards from server...
+          </div>
+        )
+      }
+
+      {
+        // value render is set to true when the initial state has been loaded from the server
+        render && (
         <Router>
           <Switch>
+            
+            { // the login page
+            }
             <Route path="/login" component={Login} />
+            
+            { // this is the primary application route
+            }
             <ProtectedRoute
               path="/task/:taskId?"
               component={AoCard}
               loggedIn={aoStore.state.loggedIn}
             />
+            
+            { // the AoMember "component" simply renders the AoCard component [primary root above]
+              // , after ensuring that there is a "Community Hub" card.
+            }
             <ProtectedRoute
               path="/"
               component={AoMember}
@@ -104,11 +148,7 @@ const App = observer(() => {
           </Switch>
         </Router>
       )}
-      {!render && (
-        <div style={{ marginTop: '21%', fontSize: '1.25em' }}>
-          Receiving cards from server...
-        </div>
-      )}
+
     </div>
   )
 })

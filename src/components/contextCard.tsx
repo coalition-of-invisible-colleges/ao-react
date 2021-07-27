@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
-import { observer } from 'mobx-react'
+import { computed, makeObservable, observable } from 'mobx';
+import { observer, Observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
 import api from '../client/api'
 import { delay, cancelablePromise } from '../utils'
@@ -86,6 +86,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		this.pendingPromise = undefined
 	}
 
+	@computed
 	togglePriorities(event) {
 		event.stopPropagation()
 		event.nativeEvent.stopImmediatePropagation()
@@ -96,6 +97,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		}
 	}
 
+	@computed
 	toggleProjects(event) {
 		event.stopPropagation()
 		event.nativeEvent.stopImmediatePropagation()
@@ -192,6 +194,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		return ''
 	}
 
+	@computed
 	renderCardContent(content: string, hideIframes = false) {
 		// hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
 		const meme = aoStore.memeById.get(this.props.task.taskId)
@@ -228,6 +231,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		)
 	}
 
+	@computed
 	projectCards() {
 		if (this.props.cardStyle !== 'mission') {
 			return undefined
@@ -268,6 +272,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 		return projectCards
 	}
+
 
 	render() {
 		const card = this.props.task
@@ -315,22 +320,23 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		switch (cardStyle) {
 			case 'context':
 				return (
-					<div
-						className={'card context' + this.applyClassIfCurrentSearchResult}
-						id={'card-' + taskId}
-						onClick={this.goInCard}
-						onMouseEnter={this.onHover}
-						onMouseOver={this.onHover}
-						onMouseOut={this.clearPendingPromise}
-						style={this.props.inlineStyle ? this.props.inlineStyle : null}>
-						contextCard.tsx__context
-						<AoPaper taskId={taskId} />
-						<AoCardHud taskId={taskId} hudStyle="context" />
-						<div className="content">
-							{member && <AoMemberIcon memberId={taskId} />}
-							{this.renderCardContent(content)}
-						</div>
-					</div>
+							<div
+								className={'card context' + this.applyClassIfCurrentSearchResult}
+								id={'card-' + taskId}
+								onClick={this.goInCard}
+								onMouseEnter={this.onHover}
+								onMouseOver={this.onHover}
+								onMouseOut={this.clearPendingPromise}
+								style={this.props.inlineStyle ? this.props.inlineStyle : null}>
+								contextCard.tsx__context
+								<AoPaper taskId={taskId} />
+								<AoCardHud taskId={taskId} hudStyle="context" />
+								<div className="content">
+									{member && <AoMemberIcon memberId={taskId} />}
+									{this.renderCardContent(content)}
+								</div>
+							</div>
+
 				)
 			case 'member':
 			case 'priority':
@@ -439,87 +445,88 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 				const grid = card.grid
 
 				return (
-					<React.Fragment>
-						{this.props.noContextOnFull ? (
-							''
-						) : (
-							<div id="context">
-								contextCard.tsx__full__noContextOnFull_false
-								<AoStack
-									cards={aoStore.contextCards}
-									cardStyle="context"
-									alwaysShowAll={true}
-									zone="context"
-								/>
-							</div>
-						)}
-						<div
-							id={'card-' + taskId}
-							className={'card full' + this.applyClassIfCurrentSearchResult}
-							onDrop={e => {
-								e.preventDefault()
-								e.stopPropagation()
-							}}
-							onMouseEnter={this.onHover}
-							onMouseOver={this.onHover}
-							onMouseOut={this.clearPendingPromise}>
-							contextCard.tsx__full
-							<AoDragZone
-								taskId={taskId}
-								dragContext={{
-									zone: 'card',
-									inId: null,
-									y: 0
-								}}>
-								<AoPaper taskId={taskId} />
-							</AoDragZone>
-							<AoCardHud taskId={taskId} hudStyle="full before" />
-							<div className="content">
-								<AoMission taskId={taskId} hudStyle="full before" />
-								{member && <AoMemberIcon memberId={taskId} />}
-								<AoAttachment taskId={taskId} />
-								{this.renderCardContent(content)}
-							</div>
-							{card.guild && <AoProposals filterByGuildId={taskId} />}
-							<AoStack
-								inId={taskId}
-								cards={priorityCards}
-								showAdd={true}
-								hideAddWhenCards={true}
-								addButtonText="+priority"
-								cardStyle="priority"
-								onNewCard={this.newPriority}
-								onDrop={prioritizeCard}
-								zone="priorities"
-							/>
-							{priorityCards && priorityCards.length > 6 && (
-								<div className="refocusAll">
-									<button className="action" onClick={this.refocusAll}>
-										refocus
-									</button>
+						<React.Fragment>
+							{this.props.noContextOnFull ? (
+								''
+							) : (
+								<div id="context">
+									contextCard.tsx__full__noContextOnFull_false
+									<AoStack
+										cards={aoStore.contextCards}
+										cardStyle="context"
+										alwaysShowAll={true}
+										zone="context"
+									/>
 								</div>
 							)}
-							<AoGrid
-								grid={grid}
-								taskId={taskId}
-								height={grid?.height}
-								width={grid?.width}
-							/>
-							<AoStack
-								inId={taskId}
-								cards={subTaskCards}
-								showAdd={priorityCards && priorityCards.length >= 1}
-								addButtonText="+card"
-								hideAddWhenCards={true}
-								cardStyle="face"
-								onNewCard={this.newSubTask}
-								onDrop={subTaskCard}
-								zone="subTasks"
-							/>
-							<AoCompleted taskId={taskId} />
-							<AoCardHud taskId={taskId} hudStyle="full after" />
-						</div>
-					</React.Fragment>
+							<div
+								id={'card-' + taskId}
+								className={'card full' + this.applyClassIfCurrentSearchResult}
+								onDrop={e => {
+									e.preventDefault()
+									e.stopPropagation()
+								}}
+								onMouseEnter={this.onHover}
+								onMouseOver={this.onHover}
+								onMouseOut={this.clearPendingPromise}>
+								contextCard.tsx__full
+								<AoDragZone
+									taskId={taskId}
+									dragContext={{
+										zone: 'card',
+										inId: null,
+										y: 0
+									}}>
+									<AoPaper taskId={taskId} />
+								</AoDragZone>
+								<AoCardHud taskId={taskId} hudStyle="full before" />
+								<div className="content">
+									<AoMission taskId={taskId} hudStyle="full before" />
+									{member && <AoMemberIcon memberId={taskId} />}
+									<AoAttachment taskId={taskId} />
+									{this.renderCardContent(content)}
+								</div>
+								{card.guild && <AoProposals filterByGuildId={taskId} />}
+								<AoStack
+									inId={taskId}
+									cards={priorityCards}
+									showAdd={true}
+									hideAddWhenCards={true}
+									addButtonText="+priority"
+									cardStyle="priority"
+									onNewCard={this.newPriority}
+									onDrop={prioritizeCard}
+									zone="priorities"
+								/>
+								{priorityCards && priorityCards.length > 6 && (
+									<div className="refocusAll">
+										<button className="action" onClick={this.refocusAll}>
+											refocus
+										</button>
+									</div>
+								)}
+								<AoGrid
+									grid={grid}
+									taskId={taskId}
+									height={grid?.height}
+									width={grid?.width}
+								/>
+								<AoStack
+									inId={taskId}
+									cards={subTaskCards}
+									showAdd={priorityCards && priorityCards.length >= 1}
+									addButtonText="+card"
+									hideAddWhenCards={true}
+									cardStyle="face"
+									onNewCard={this.newSubTask}
+									onDrop={subTaskCard}
+									zone="subTasks"
+								/>
+								<AoCompleted taskId={taskId} />
+								<AoCardHud taskId={taskId} hudStyle="full after" />
+							</div>
+						</React.Fragment>
+						
 				)
 			case 'checkmark':
 				return (

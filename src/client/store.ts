@@ -312,6 +312,8 @@ class AoStore {
           {
             let existingTask;
             let taskToGet = original_get.call(hashMap, taskID);
+            console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
+            // return taskToGet;
 
             if (! taskToGet)
             {
