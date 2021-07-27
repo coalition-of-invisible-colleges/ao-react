@@ -115,7 +115,6 @@ export function isString(x) {
 }
 
 export function safeMerge(cardA, cardZ) {
-  // grids are not merged yet
   if (!cardA || !cardZ) {
     console.log('attempt to merge nonexistent card')
     return
@@ -143,9 +142,9 @@ export function safeMerge(cardA, cardZ) {
     return tasks.filter(task => task !== null && task !== undefined)
   }
 
-  cardA.book = cardZ.guild
-  cardA.address = cardZ.guild
-  cardA.bolt11 = cardZ.guild
+  cardA.book = cardZ.book
+  cardA.address = cardZ.address
+  cardA.bolt11 = cardZ.bolt11
   cardA.priorities = [
     ...new Set(cardA.priorities.concat(filterNull(cardZ.priorities))),
   ]
@@ -155,6 +154,47 @@ export function safeMerge(cardA, cardZ) {
   cardA.completed = [
     ...new Set(cardA.completed.concat(filterNull(cardZ.completed))),
   ]
+  if(cardZ.grid && cardZ.height >= 1 && cardZ.width >= 1) {
+      console.log("check1")
+    if(!cardA.grid) {
+        cardA.grid = { rows: {}, height: 1, width: 1 }
+    }
+          console.log("check2")
+
+    cardA.grid.height = Math.max(cardA.grid.height, cardZ.grid.height)
+    cardA.grid.width = Math.max(cardA.grid.width, cardZ.grid.width)
+          console.log("check3")
+    if (_.has(cardZ, 'grid.rows')) {
+        Object.entries(cardZ.grid.rows).forEach(([x, row]) => {
+                console.log("check4")
+
+            const filteredRow = {}
+                console.log("check5")
+
+            Object.entries(row).forEach(([y, stId]) => {
+                    console.log("check6")
+
+                if(stId !== null && stId !== undefined) {
+                    filteredRow[y] = stId
+                }
+            })
+                console.log("check7")
+
+            if(Object.keys(filteredRow).length >= 1) {
+                if(!cardA.grid.rows) {
+            cardA.grid.rows = {}
+        }
+                cardA.grid.rows[x] = filteredRow
+            }
+                console.log("check8")
+
+        })
+        console.log("cardA grid is now", JSON.stringify(cardA.grid))
+        if(Objecct.entries(cardA.grid.rows).length < 1) {
+            cardA.grid = false
+        }
+    }
+  }
   cardA.passed = [...new Set(cardA.passed.concat(filterNull(cardZ.passed)))]
   // XXX only add in merge for now
   // XXX bolt11 / address need to clearly indicate origin ao
