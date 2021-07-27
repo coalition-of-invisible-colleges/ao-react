@@ -35,10 +35,11 @@ export default function applyRouter(app) {
   //   console.log('any route detected')
   //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
   // })
-  app.use(bodyParser.json())
+  app.use(bodyParser.json({ limit: '10mb' }))
   app.use(
     bodyParser.urlencoded({
       extended: true,
+      limit: '10mb',
     })
   )
   app.use('/memes', express.static(config.memes.dir))
