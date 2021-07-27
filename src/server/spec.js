@@ -1,12 +1,12 @@
 import express from 'express'
 import v1 from 'uuid'
-import state from './state'
-import { buildResCallback } from './utils'
-import validators from './validators'
-import { blankCard } from '../calculations'
-import events from './events'
-import { postEvent } from './connector'
-import lightning from './lightning'
+import state from './state.js'
+import { buildResCallback } from './utils.js'
+import validators from './validators.js'
+import { blankCard } from '../calculations.js'
+import events from './events.js'
+import { postEvent } from './connector.js'
+import lightning from './lightning.js'
 
 const router = express.Router()
 
@@ -98,7 +98,7 @@ router.post('/events', (req, res, next) => {
           {
             type: 'ao-inbound-connected',
             address: state.serverState.cash.address,
-            secret: req.body.secret //
+            secret: req.body.secret, //
           },
           subscriptionResponse => {
             if (!subscriptionResponse.lastInsertRowid) {
@@ -138,14 +138,9 @@ router.post('/events', (req, res, next) => {
         }
       })
       if (secret) {
-        postEvent(
-          req.body.address,
-          secret,
-          req.body.ev,
-          connectorRes => {
-            console.log('ao relay response', { connectorRes })
-          }
-        )
+        postEvent(req.body.address, secret, req.body.ev, connectorRes => {
+          console.log('ao relay response', { connectorRes })
+        })
       } else {
         console.log('no connection for ', req.body.address)
         next()
@@ -380,19 +375,14 @@ router.post('/events', (req, res, next) => {
       while (next100.length > 0) {
         let newEvent = {
           type: 'tasks-received',
-          tasks: next100
+          tasks: next100,
         }
         setTimeout(() => {
-          postEvent(
-            serverAddress,
-            serverSecret,
-            newEvent,
-            connectorRes => {
-              console.log('migrate connection response', {
-                connectorRes
-              })
-            }
-          )
+          postEvent(serverAddress, serverSecret, newEvent, connectorRes => {
+            console.log('migrate connection response', {
+              connectorRes,
+            })
+          })
         }, delay)
         next100 = tasks.splice(0, 50)
         delay += 500
@@ -520,11 +510,7 @@ router.post('/events', (req, res, next) => {
           .newAddress()
           .then(result => {
             let addr = result['p2sh-segwit']
-            events.addressUpdated(
-              req.body.taskId,
-              addr,
-              buildResCallback(res)
-            )
+            events.addressUpdated(req.body.taskId, addr, buildResCallback(res))
           })
           .catch(err => {
             res.status(200).send('attempt failed')

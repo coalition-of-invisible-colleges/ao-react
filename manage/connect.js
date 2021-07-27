@@ -5,17 +5,18 @@
 
 let PORT = process.env.PORT || 8003
 
-const Kefir = require('kefir')
-const express = require('express')
-const socketIo = require('socket.io')
-const socketProtector = require('socketio-auth')
-const config = require('../configuration')
-const dctrlDb = require('../src/server/dctrlDb')
-const state = require('../src/server/state')
-const reactions = require('../src/server/reactions')
-const applyRouter = require('../src/server/router')
-const { socketAuth } = require('../src/server/auth')
-const connector = require('../src/server/connector')
+import Kefir from 'kefir'
+import express from 'express'
+import { Server } from 'socket.io'
+import socketProtector from 'socketio-auth'
+import config from '../configuration.js'
+import dctrlDb from '../src/server/dctrlDb.js'
+import state from '../src/server/state.js'
+import reactions from '../src/server/reactions.js'
+import applyRouter from '../src/server/router.js'
+import { socketAuth } from '../src/server/auth.js'
+import { postEvent } from '../src/server/connector.js'
+import { buildResCallback } from '../src/server/utils.js'
 // const link = require('./link')
 // const cleanup = require('../src/server/cleanup')
 
@@ -46,22 +47,33 @@ function startDctrlAo() {
       const server = app.listen(PORT, err => {
         console.log('Listening on port', PORT)
 
-        const io = socketIo(server)
+        // const ioServer = new Server(server)
+        // const ioServer = new Server(server, {
+        //   cors: {
+        //     origin: [
+        //       'http://127.0.0.1:3000',
+        //       'http://localhost:3000',
+        //       'http://localhost:8003',
+        //       'http://0.0.0.0:3000',
+        //     ],
+        //     methods: ['GET', 'POST'],
+        //   },
+        // })
 
-        socketProtector(io, {
-          authenticate: socketAuth,
-          timeout: 2000
-        })
+        // socketProtector(ioServer, {
+        //   authenticate: socketAuth,
+        //   timeout: 2000,
+        // })
 
-        const filteredStream = dctrlDb.changeFeed.map(state.removeSensitive)
+        // const filteredStream = dctrlDb.changeFeed.map(state.removeSensitive)
 
-        const fullEvStream = Kefir.merge([filteredStream, dctrlDb.shadowFeed])
+        // const fullEvStream = Kefir.merge([filteredStream, dctrlDb.shadowFeed])
 
-        fullEvStream.onValue(ev => {
-          state.applyEvent(state.pubState, ev)
-          io.emit('eventstream', ev)
-          console.log('emitting:', ev)
-        })
+        // fullEvStream.onValue(ev => {
+        //   state.applyEvent(state.pubState, ev)
+        //   io.emit('eventstream', ev)
+        //   console.log('emitting:', ev)
+        // })
 
         // Test connection
         console.log('\nAbout to attempt connecting to AO...')
@@ -70,13 +82,13 @@ function startDctrlAo() {
         console.log('AO tor hostname (1st cmd arg):', address)
         console.log('AO access key (2nd cmd arg):', secret)
         if (address && secret) {
-          connector.postEvent(
+          postEvent(
             address,
             secret,
             {
               type: 'ao-inbound-connected',
               address: config.tor.hostname,
-              secret: secret
+              secret: secret,
             },
             subscriptionResponse => {
               if (!subscriptionResponse) {
@@ -87,11 +99,18 @@ function startDctrlAo() {
               console.log(
                 'Subscription successful, saving connection to database'
               )
-              events.aoOutboundConnected(
-                req.body.address,
-                req.body.secret,
-                utils.buildResCallback(res)
-              )
+              let newEvent = {
+                type: 'ao-outbound-connected',
+                address,
+                secret,
+              }
+              dctrlDb.insertEvent(newEvent, (event, result) => {
+                console.log(
+                  'Saved new connection to database. Result is',
+                  result
+                )
+                process.exit(0)
+              })
             }
           )
           // const event = {

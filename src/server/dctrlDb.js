@@ -50,7 +50,7 @@ function initializeSqlite(cb) {
       active: 1,
       balance: 0,
       badges: [],
-      info: {}
+      info: {},
     })
     startFeed()
     cb(null, conn)
@@ -173,7 +173,7 @@ function verifyAndLoadDb(path) {
   return true
 }
 
-export default {
+const dctrlDb = {
   conn: conn,
   startDb,
   verifyAndLoadDb,
@@ -183,5 +183,7 @@ export default {
   triggerShadow,
   insertEvent,
   insertBackup,
-  recover
+  recover,
 }
+
+export default dctrlDb

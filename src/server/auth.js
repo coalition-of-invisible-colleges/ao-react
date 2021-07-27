@@ -1,9 +1,9 @@
-import { buildResCallback } from './utils'
-import events from './events'
-import { createHash, hmacHex } from '../crypto'
-import state from './state'
+import { buildResCallback } from './utils.js'
+import events from './events.js'
+import { createHash, hmacHex } from '../crypto.js'
+import state from './state.js'
 
-const getIdSecret = function(identifier) {
+const getIdSecret = function (identifier) {
   var ownerId, secret
 
   try {

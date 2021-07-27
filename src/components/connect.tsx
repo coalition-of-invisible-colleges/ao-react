@@ -51,6 +51,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
 
   render() {
     const list = aoStore.state.ao.map(ao => {
+      console.log('AO to render is: ', ao)
       let linkedCards: Task[] = ao.links?.map(tId => aoStore.hashMap.get(tId))
 
       const linkCard = (move: CardPlay) => {
@@ -59,14 +60,14 @@ export default class AoConnect extends React.PureComponent<{}, State> {
       }
 
       const formattedLastContact = formatDistanceToNow(ao.lastContact, {
-        addSuffix: true
+        addSuffix: true,
       })
 
       return (
         <li key={ao.address}>
           Address: {ao.address}
           <br />
-          Direction: {!ao.outboundSecret ? 'Inbound' : 'Outbound'}
+          Direction: Unknown {/* !ao.outboundSecret ? 'Inbound' : 'Outbound' */}
           <br />
           Last seen {formattedLastContact}
           <br />
@@ -74,7 +75,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
           <AoStack
             cards={linkedCards}
             cardStyle="priority"
-            onDrop={ao.outboundSecret ? linkCard : null}
+            onDrop={linkCard}
             alwaysShowAll={true}
           />
         </li>

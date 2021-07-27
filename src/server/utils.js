@@ -1,4 +1,4 @@
-import state from './state'
+import state from './state.js'
 
 export function buildResCallback(res) {
   return (err, dbResponse) => {

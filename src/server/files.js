@@ -1,10 +1,10 @@
-import config from '../../configuration'
+import config from '../../configuration.js'
 import path from 'path'
 import fs from 'fs'
 import FileType from 'file-type'
-import events from './events'
-import { createHash } from '../crypto'
-import state from './state'
+import events from './events.js'
+import { createHash } from '../crypto.js'
+import state from './state.js'
 const serverState = state.serverState
 
 export function scanMemes() {
@@ -13,7 +13,7 @@ export function scanMemes() {
 	const memeFolder = config.memes.dir
 	console.log('\nmemeFolder is ', memeFolder)
 
-	fs.readdir(memeFolder, function(err, files) {
+	fs.readdir(memeFolder, function (err, files) {
 		if (err) {
 			return console.log('Failed to scan memes: ' + err)
 		}

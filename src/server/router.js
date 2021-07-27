@@ -1,20 +1,20 @@
 import express from 'express'
-import config from '../../configuration'
+import config from '../../configuration.js'
 import path from 'path'
 import bodyParser from 'body-parser'
-import state from './state'
-import spec from './spec'
-import fobtap from './fobtap'
-import { serverAuth } from './auth'
-import { lightningRouter } from './lightning'
+import state from './state.js'
+import spec from './spec.js'
+import fobtap from './fobtap.js'
+import { serverAuth } from './auth.js'
+import { lightningRouter } from './lightning.js'
 import fs from 'fs'
 import multer from 'multer'
-import { addMeme } from './files'
-import events from './events'
+import { addMeme } from './files.js'
+import events from './events.js'
 
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export default function applyRouter(app) {
   // var myLogger = function(req, res, next) {
@@ -37,7 +37,7 @@ export default function applyRouter(app) {
   app.use(bodyParser.json())
   app.use(
     bodyParser.urlencoded({
-      extended: true
+      extended: true,
     })
   )
   app.use('/memes', express.static(config.memes.dir))
@@ -51,14 +51,11 @@ export default function applyRouter(app) {
   })
 
   const handleError = (err, res) => {
-    res
-      .status(500)
-      .contentType('text/plain')
-      .end('Oops! Something went wrong!')
+    res.status(500).contentType('text/plain').end('Oops! Something went wrong!')
   }
 
   const upload = multer({
-    dest: path.join(config.memes.dir, '/.temp')
+    dest: path.join(config.memes.dir, '/.temp'),
     // you might also want to set some limits: https://github.com/expressjs/multer#limits
   })
 
@@ -74,10 +71,7 @@ export default function applyRouter(app) {
     fs.rename(tempPath, targetPath, err => {
       if (err) return handleError(err, res)
       addMeme(req.file.originalname, targetPath)
-      res
-        .status(200)
-        .contentType('text/plain')
-        .end('File uploaded!')
+      res.status(200).contentType('text/plain').end('File uploaded!')
     })
   })
 

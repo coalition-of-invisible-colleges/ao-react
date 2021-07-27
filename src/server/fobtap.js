@@ -1,9 +1,9 @@
 import express from 'express'
 const router = express.Router()
 
-import state from './state'
-import { memberFromFob, getResource, buildResCallback } from './utils'
-import events from './events'
+import state from './state.js'
+import { memberFromFob, getResource, buildResCallback } from './utils.js'
+import events from './events.js'
 
 function access(member, resource) {
   if (member.active < 0) {

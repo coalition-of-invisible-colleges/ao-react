@@ -1,6 +1,10 @@
 import _ from 'lodash'
-import state from './state'
-import { isAheadOf, isDecidedlyMorePopularThan, isSenpaiOf } from '../members'
+import state from './state.js'
+import {
+  isAheadOf,
+  isDecidedlyMorePopularThan,
+  isSenpaiOf,
+} from '../members.js'
 
 export default {
   isAmount(val, errRes) {
@@ -102,7 +106,7 @@ export default {
     state.serverState.tasks.forEach(task => {
       if (
         task.name.trim().localeCompare(val.trim(), undefined, {
-          sensitivity: 'base'
+          sensitivity: 'base',
         })
       ) {
         result = true
@@ -210,5 +214,5 @@ export default {
     return kohai.potentials.some(
       pot => pot.memberId === senpaiId && pot.opinion === 'member-banned'
     )
-  }
+  },
 }

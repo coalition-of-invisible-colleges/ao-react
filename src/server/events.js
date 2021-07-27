@@ -1,16 +1,16 @@
-import uuidV1 from 'uuid/v1'
+import v1 from 'uuid'
 import _ from 'lodash'
 import crypto from 'crypto'
-import state from './state'
+import state from './state.js'
 const serverState = state.serverState
-import dctrlDb from './dctrlDb'
+import dctrlDb from './dctrlDb.js'
 
 function highlighted(taskId, memberId, valence, callback) {
   let newEvent = {
     type: 'highlighted',
     taskId,
     memberId,
-    valence
+    valence,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -19,7 +19,7 @@ function aoInboundConnected(address, secret, callback) {
   let newEvent = {
     type: 'ao-inbound-connected',
     address,
-    secret
+    secret,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -28,7 +28,7 @@ function aoLinked(address, taskId, callback) {
   let newEvent = {
     type: 'ao-linked',
     address,
-    taskId
+    taskId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -37,7 +37,7 @@ function aoOutboundConnected(address, secret, callback) {
   let newEvent = {
     type: 'ao-outbound-connected',
     address,
-    secret
+    secret,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -45,7 +45,7 @@ function aoOutboundConnected(address, secret, callback) {
 function aoDisconnected(address, callback) {
   let newEvent = {
     type: 'ao-disconnected',
-    address
+    address,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -53,7 +53,7 @@ function aoDisconnected(address, callback) {
 function aoNamed(alias, callback) {
   let newEvent = {
     type: 'ao-named',
-    alias
+    alias,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -61,7 +61,7 @@ function aoNamed(alias, callback) {
 function getNodeInfo(info, callback) {
   let newEvent = {
     type: 'get-node-info',
-    info
+    info,
   }
   dctrlDb.triggerShadow(newEvent)
 }
@@ -69,7 +69,7 @@ function getNodeInfo(info, callback) {
 function rentSet(amount, callback) {
   let newEvent = {
     type: 'rent-set',
-    amount
+    amount,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -77,7 +77,7 @@ function rentSet(amount, callback) {
 function capSet(amount, callback) {
   let newEvent = {
     type: 'cap-set',
-    amount
+    amount,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -85,7 +85,7 @@ function capSet(amount, callback) {
 function spotUpdated(spot, callback) {
   let newEvent = {
     type: 'spot-updated',
-    spot
+    spot,
   }
   dctrlDb.triggerShadow(newEvent)
 }
@@ -93,7 +93,7 @@ function spotUpdated(spot, callback) {
 function currencySwitched(currency, callback) {
   let newEvent = {
     type: 'currency-switched',
-    currency
+    currency,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -102,7 +102,7 @@ function fundsSet(outputs, channels, callback) {
   let newEvent = {
     type: 'funds-set',
     outputs,
-    channels
+    channels,
   }
   dctrlDb.triggerShadow(newEvent)
 }
@@ -110,13 +110,13 @@ function fundsSet(outputs, channels, callback) {
 function quorumSet(quorum, callback) {
   let newEvent = {
     type: 'quorum-set',
-    quorum: quorum
+    quorum: quorum,
   }
   dctrlDb.insertEvent(newEvent)
 }
 
 function memberCreated(name, fob, secret, callback) {
-  let memberId = uuidV1()
+  let memberId = v1()
   let newEvent = {
     type: 'member-created',
     memberId,
@@ -127,7 +127,7 @@ function memberCreated(name, fob, secret, callback) {
     balance: 0,
     badges: [],
     info: {},
-    lastActivated: 7
+    lastActivated: 7,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -135,7 +135,7 @@ function memberCreated(name, fob, secret, callback) {
 function memberDeactivated(memberId, callback) {
   let newEvent = {
     type: 'member-deactivated',
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -144,7 +144,7 @@ function memberSecretReset(kohaiId, senpaiId, callback) {
   let newEvent = {
     type: 'member-secret-reset',
     kohaiId,
-    senpaiId
+    senpaiId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -153,7 +153,7 @@ function memberPromoted(kohaiId, senpaiId, callback) {
   let newEvent = {
     type: 'member-promoted',
     kohaiId,
-    senpaiId
+    senpaiId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -162,7 +162,7 @@ function memberBanned(kohaiId, senpaiId, callback) {
   let newEvent = {
     type: 'member-banned',
     kohaiId,
-    senpaiId
+    senpaiId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -171,7 +171,7 @@ function memberUnbanned(kohaiId, senpaiId, callback) {
   let newEvent = {
     type: 'member-unbanned',
     kohaiId,
-    senpaiId
+    senpaiId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -180,7 +180,7 @@ function memberPurged(memberId, blame, callback) {
   let newEvent = {
     type: 'member-purged',
     memberId,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -188,7 +188,7 @@ function memberPurged(memberId, blame, callback) {
 function memberActivated(memberId, callback) {
   let newEvent = {
     type: 'member-activated',
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -198,7 +198,7 @@ function memberFieldUpdated(memberId, field, newfield, callback) {
     type: 'member-field-updated',
     memberId,
     field,
-    newfield
+    newfield,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -209,7 +209,7 @@ function memberTickerSet(fromCoin, toCoin, index, memberId, callback) {
     fromCoin,
     toCoin,
     index,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -217,7 +217,7 @@ function memberTickerSet(fromCoin, toCoin, index, memberId, callback) {
 function dogeBarked(memberId, callback) {
   let newEvent = {
     type: 'doge-barked',
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -225,7 +225,7 @@ function dogeBarked(memberId, callback) {
 function dogeMuted(memberId, callback) {
   let newEvent = {
     type: 'doge-muted',
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -233,7 +233,7 @@ function dogeMuted(memberId, callback) {
 function dogeUnmuted(memberId, callback) {
   let newEvent = {
     type: 'doge-unmuted',
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -252,7 +252,7 @@ function resourceCreated(
     name,
     charged,
     secret,
-    info: {}
+    info: {},
   }
   if (trackStock) {
     newEvent.stock = 0
@@ -267,7 +267,7 @@ function resourceStocked(resourceId, memberId, amount, paid, notes, callback) {
     memberId,
     amount,
     paid,
-    notes
+    notes,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -279,7 +279,7 @@ function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
     memberId,
     amount,
     charged,
-    notes
+    notes,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -302,7 +302,7 @@ function resourceBooked(
     endTs,
     eventType,
     charge,
-    notes
+    notes,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -311,7 +311,7 @@ function bookCancelled(resourceId, bookTime, callback) {
   let newEvent = {
     type: 'book-cancelled',
     resourceId,
-    bookTime
+    bookTime,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -320,7 +320,7 @@ function resourcePurged(resourceId, blame, callback) {
   let newEvent = {
     type: 'resource-purged',
     resourceId,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -328,10 +328,10 @@ function resourcePurged(resourceId, blame, callback) {
 function memeAdded(filename, hash, filetype, callback) {
   let newEvent = {
     type: 'meme-added',
-    taskId: uuidV1(),
+    taskId: v1(),
     filename: filename,
     hash: hash,
-    filetype: filetype
+    filetype: filetype,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -341,7 +341,7 @@ function sessionCreated(ownerId, session, token, callback) {
     type: 'session-created',
     session,
     token,
-    ownerId
+    ownerId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -349,7 +349,7 @@ function sessionCreated(ownerId, session, token, callback) {
 function sessionKilled(session, callback) {
   let newEvent = {
     type: 'session-killed',
-    session
+    session,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -369,14 +369,14 @@ function taskCreated(name, color, deck, inId, prioritized, callback) {
   if (!isExist) {
     let newEvent = {
       type: 'task-created',
-      taskId: uuidV1(),
+      taskId: v1(),
       lastClaimed: Date.now(),
       name,
       color,
       deck,
       hash,
       inId,
-      prioritized
+      prioritized,
     }
     dctrlDb.insertEvent(newEvent, callback)
   }
@@ -387,7 +387,7 @@ function addressUpdated(taskId, address, callback) {
     {
       type: 'address-updated',
       taskId,
-      address
+      address,
     },
     callback
   )
@@ -397,7 +397,7 @@ function taskGuilded(taskId, guild, callback) {
   let newEvent = {
     type: 'task-guilded',
     taskId,
-    guild
+    guild,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -406,7 +406,7 @@ function taskGrabbed(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-grabbed',
     taskId,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -415,7 +415,7 @@ function pileGrabbed(taskId, memberId, callback) {
   let newEvent = {
     type: 'pile-grabbed',
     taskId,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -424,7 +424,7 @@ function pileDropped(taskId, memberId, callback) {
   let newEvent = {
     type: 'pile-dropped',
     taskId,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -434,7 +434,7 @@ function taskSubTasked(taskId, subTask, memberId, callback) {
     type: 'task-sub-tasked',
     taskId,
     subTask,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -444,7 +444,7 @@ function taskDeSubTasked(taskId, subTask, memberId, callback) {
     type: 'task-de-sub-tasked',
     taskId,
     subTask,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -453,7 +453,7 @@ function taskEmptied(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-emptied',
     taskId,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -463,7 +463,7 @@ function taskPrioritized(taskId, inId, position, callback) {
     type: 'task-prioritized',
     taskId,
     inId,
-    position
+    position,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -471,7 +471,7 @@ function taskPrioritized(taskId, inId, position, callback) {
 function pilePrioritized(inId, callback) {
   let newEvent = {
     type: 'pile-prioritized',
-    inId
+    inId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -481,7 +481,7 @@ function taskRefocused(taskId, inId, blame, callback) {
     type: 'task-refocused',
     taskId,
     inId,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -490,7 +490,7 @@ function pileRefocused(inId, blame, callback) {
   let newEvent = {
     type: 'pile-refocused',
     inId,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -499,7 +499,7 @@ function taskDropped(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-dropped',
     taskId,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -509,7 +509,7 @@ function taskPassed(taskId, fromMemberId, toMemberId, callback) {
     type: 'task-passed',
     taskId,
     fromMemberId,
-    toMemberId
+    toMemberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -520,7 +520,7 @@ function taskPropertySet(taskId, property, value, blame, callback) {
     taskId,
     property,
     value,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -531,7 +531,7 @@ function taskColored(taskId, inId, color, blame, callback) {
     taskId,
     inId,
     color,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -541,7 +541,7 @@ function taskClaimed(taskId, memberId, blame, callback) {
     type: 'task-claimed',
     taskId,
     memberId,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -551,7 +551,7 @@ function taskUnclaimed(taskId, memberId, blame, callback) {
     type: 'task-unclaimed',
     taskId,
     memberId,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -561,7 +561,7 @@ function taskBoosted(taskId, amount, txid, callback) {
     type: 'task-boosted',
     taskId,
     amount,
-    txid
+    txid,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -578,7 +578,7 @@ function taskBoostedLightning(
     taskId,
     amount,
     payment_hash,
-    pay_index
+    pay_index,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -587,7 +587,7 @@ function tasksRemoved(taskIds, blame, callback) {
   let newEvent = {
     type: 'tasks-removed',
     taskIds,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -598,7 +598,7 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
     taskId,
     swapId1,
     swapId2,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -609,7 +609,7 @@ function taskBumped(taskId, bumpId, direction, blame, callback) {
     taskId,
     bumpId,
     direction,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -618,7 +618,7 @@ function tasksReceived(tasks, blame, callback) {
   let newEvent = {
     type: 'tasks-received',
     tasks,
-    blame
+    blame,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -628,7 +628,7 @@ function invoiceCreated(taskId, bolt11, payment_hash, callback) {
     type: 'invoice-created',
     taskId,
     bolt11,
-    payment_hash
+    payment_hash,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -638,7 +638,7 @@ function memberCharged(memberId, charged, notes, callback) {
     type: 'member-charged',
     memberId,
     charged,
-    notes
+    notes,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -649,7 +649,7 @@ function taskTimeClocked(taskId, memberId, seconds, date, callback) {
     taskId,
     memberId,
     seconds,
-    date
+    date,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -659,7 +659,7 @@ function taskSigned(taskId, memberId, opinion, callback) {
     type: 'task-signed',
     taskId,
     memberId,
-    opinion
+    opinion,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -668,7 +668,7 @@ function taskSeen(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-seen',
     taskId,
-    memberId
+    memberId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -679,13 +679,13 @@ function taskVisited(taskId, memberId, area, callback) {
     taskId,
     memberId,
     area,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
 
 function gridCreated(name, height, width, color, deck, callback) {
-  let taskId = uuidV1()
+  let taskId = v1()
   let newEvent = {
     type: 'grid-created',
     taskId,
@@ -693,7 +693,7 @@ function gridCreated(name, height, width, color, deck, callback) {
     height,
     width,
     color,
-    deck
+    deck,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -703,7 +703,7 @@ function gridAdded(taskId, height, width, callback) {
     type: 'grid-added',
     taskId,
     height,
-    width
+    width,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -711,7 +711,7 @@ function gridAdded(taskId, height, width, callback) {
 function gridRemoved(taskId, callback) {
   let newEvent = {
     type: 'grid-removed',
-    taskId
+    taskId,
   }
   dctrlDb.insertEvent(newEvent, callback)
 }
@@ -802,5 +802,5 @@ export default {
   gridUnpin,
   taskSeen,
   taskTimeClocked,
-  taskSigned
+  taskSigned,
 }

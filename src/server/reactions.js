@@ -1,6 +1,6 @@
-import { getResource } from './utils'
-import events from './events'
-import state from './state'
+import { getResource } from './utils.js'
+import events from './events.js'
+import state from './state.js'
 const serverState = state.serverState
 // const lightning from ./lightning')
 

@@ -33,7 +33,7 @@ function aoMuts(aos, ev) {
           outboundSecret: false,
           inboundSecret: ev.secret,
           lastContact: Date.now(),
-          links: []
+          links: [],
         }
         aos.push(newEv)
       }
@@ -53,7 +53,7 @@ function aoMuts(aos, ev) {
           outboundSecret: ev.secret,
           inboundSecret: false,
           lastContact: Date.now(),
-          links: []
+          links: [],
         }
         aos.push(newEv)
       }
@@ -177,7 +177,7 @@ function membersMuts(members, ev) {
           let newSig = {
             memberId: ev.senpaiId,
             timestamp: ev.timestamp,
-            opinion: ev.type
+            opinion: ev.type,
           }
 
           member.potentials.push(newSig)
@@ -228,7 +228,7 @@ function membersMuts(members, ev) {
           let newSig = {
             memberId: ev.senpaiId,
             timestamp: ev.timestamp,
-            opinion: ev.type
+            opinion: ev.type,
           }
 
           member.potentials.push(newSig)
@@ -288,7 +288,7 @@ function membersMuts(members, ev) {
           let newSig = {
             memberId: ev.blame,
             timestamp: ev.timestamp,
-            opinion: ev.type
+            opinion: ev.type,
           }
 
           member.potentials.push(newSig)
@@ -339,7 +339,7 @@ function membersMuts(members, ev) {
           } else {
             member.tickers[ev.index] = {
               from: ev.fromCoin.trim().toLowerCase(),
-              to: ev.toCoin.trim().toLowerCase()
+              to: ev.toCoin.trim().toLowerCase(),
             }
           }
         }
@@ -430,7 +430,7 @@ function memesMuts(memes, ev) {
           memeId: ev.taskId,
           filename: ev.filename,
           hash: ev.hash,
-          filetype: ev.filetype
+          filetype: ev.filetype,
         })
         console.log('added meme file: ', ev.filename)
       } else {
@@ -471,7 +471,7 @@ function sessionsMuts(sessions, ev) {
       sessions.push({
         ownerId: ev.address,
         token: ev.secret,
-        session: ev.address
+        session: ev.address,
       })
       break
   }
@@ -496,33 +496,22 @@ function tasksMuts(tasks, ev) {
           if (!didUpdateInline) {
             task.highlights.push({
               memberId: ev.memberId,
-              valence: ev.valence
+              valence: ev.valence,
             })
           }
         }
       })
       break
     case 'ao-outbound-connected':
-      tasks.push(
-        blankCard(ev.address, ev.address, 'purple', ev.timestamp)
-      )
+      tasks.push(blankCard(ev.address, ev.address, 'purple', ev.timestamp))
       break
     case 'ao-disconnected':
       break
     case 'resource-created':
-      tasks.push(
-        blankCard(
-          ev.resourceId,
-          ev.resourceId,
-          'red',
-          ev.timestamp
-        )
-      )
+      tasks.push(blankCard(ev.resourceId, ev.resourceId, 'red', ev.timestamp))
       break
     case 'member-created':
-      tasks.push(
-        blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
-      )
+      tasks.push(blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp))
       break
     case 'member-purged':
       // This is terribly reduntant since the same potential builds up on the member.
@@ -543,7 +532,7 @@ function tasksMuts(tasks, ev) {
           let newSig = {
             memberId: ev.blame,
             timestamp: ev.timestamp,
-            opinion: ev.type
+            opinion: ev.type,
           }
 
           task.potentials.push(newSig)
@@ -585,9 +574,7 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'meme-added':
-      tasks.push(
-        blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp)
-      )
+      tasks.push(blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp))
       break
     case 'task-created':
       tasks.push(
@@ -683,7 +670,7 @@ function tasksMuts(tasks, ev) {
             task.time.push({
               memberId: ev.memberId,
               timelog: [ev.seconds],
-              date: [ev.date]
+              date: [ev.date],
             })
           } else {
             if (!found.timelog) {
@@ -715,7 +702,7 @@ function tasksMuts(tasks, ev) {
           let newSig = {
             memberId: ev.memberId,
             timestamp: ev.timestamp,
-            opinion: ev.opinion
+            opinion: ev.opinion,
           }
           if (!task.signed) {
             task.signed = []
@@ -1302,8 +1289,32 @@ function tasksMuts(tasks, ev) {
         t.deck = t.deck.filter(stId =>
           tasks.some(sst => sst.taskId === stId && sst.taskId === sst.name)
         )
-        // Grids are not received yet (because they did not exist when p2p AO was previously implemented)
-        // so they do not need to be checked for valid references to other cards (yet)
+        if (task.taskId == tId) {
+          if (!_.has(task, 'grid.rows.' + ev.y)) {
+            return false
+          }
+          let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
+          delete tasks[i].grid.rows[ev.y][ev.x]
+        }
+
+        if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
+          t.grid.rows = Object.entries(t.grid.rows).map(entry => {
+            const [xIndex, rowObject] = entry
+            console.log('key/value is ', { xIndex, rowObject })
+            const filteredRow = {}
+            Object.entries(row).forEach(entry2 => {
+              const [yIndex, stId] = entry2
+              if (tasks.some(sst => sst.taskId === stId)) {
+                filteredRow[yIndex] = stId
+              }
+            })
+            if (Object.keys(filteredRow).length <= 0) {
+              return null
+            } else {
+              return filteredRow
+            }
+          })
+        }
       })
       break
     case 'task-visited':
@@ -1321,7 +1332,7 @@ function tasksMuts(tasks, ev) {
           task.avatars.push({
             memberId: ev.memberId,
             timestamp: ev.timestamp,
-            area: ev.area
+            area: ev.area,
           })
         }
       })
@@ -1445,7 +1456,7 @@ function tasksMuts(tasks, ev) {
           }
           let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
           delete tasks[i].grid.rows[ev.y][ev.x]
-          if (task.grid.rows[ev.y].length == 0) {
+          if (Object.keys(task.grid.rows[ev.y]).length == 0) {
             delete tasks[i].grid.rows[ev.y]
           }
           if (tasks.some(t => t.taskId === gridTaskId)) {
@@ -1478,5 +1489,5 @@ export default {
   sessionsMuts,
   tasksMuts,
   applyEvent,
-  POTENTIALS_TO_EXECUTE
+  POTENTIALS_TO_EXECUTE,
 }

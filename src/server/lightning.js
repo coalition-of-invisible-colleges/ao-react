@@ -1,9 +1,9 @@
 import config from '../../configuration.js'
 import express from 'express'
 export const lightningRouter = express.Router()
-import allEvents from './events'
-import LightningClient from './lightning-client'
-import state from './state'
+import allEvents from './events.js'
+import LightningClient from './lightning-client.js'
+import state from './state.js'
 const serverState = state.serverState
 const client = new LightningClient(config.clightning.dir, true)
 import Client from 'bitcoin-core'
@@ -221,7 +221,7 @@ const lightning = {
   newAddress,
   recordEveryInvoice,
   watchOnChain,
-  lightningRouter
+  lightningRouter,
 }
 
 export default lightning
