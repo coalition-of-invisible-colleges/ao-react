@@ -9,7 +9,7 @@ const syncLink = new cron.CronJob({
   cronTime: '0 */1 * * * *',
   onTick: sync,
   start: false,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'America/Los_Angeles',
 })
 
 function sync() {
@@ -21,12 +21,13 @@ function sync() {
       checkHash(a.address, a.outboundSecret, l, hashRes => {
         console.log({ expectedHash, hashRes })
         if (expectedHash !== hashRes) {
+          const tasksToSend = getList(crawlered)
           postEvent(
             a.address,
             a.outboundSecret,
             {
               type: 'tasks-received',
-              tasks: getList(crawlered)
+              tasks: tasksToSend,
             },
             connectorRes => {
               console.log('ao relay response', { connectorRes })
@@ -42,6 +43,6 @@ function getList(taskIds) {
   return serverState.tasks.filter(t => taskIds.indexOf(t.taskId) > -1)
 }
 
-export default function() {
+export default function () {
   syncLink.start()
 }

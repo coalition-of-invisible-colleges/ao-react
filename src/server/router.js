@@ -11,6 +11,7 @@ import fs from 'fs'
 import multer from 'multer'
 import { addMeme } from './files.js'
 import events from './events.js'
+import { crawlerHash } from '../calculations.js'
 
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
@@ -84,5 +85,9 @@ export default function applyRouter(app) {
     console.log('meme path is ', memePath)
     // res.contentType(memePath)
     res.download(memePath)
+  })
+
+  app.post('/taskhash/:taskId', (req, res) => {
+    res.end(crawlerHash(state.serverState.tasks, req.params.taskId))
   })
 }
