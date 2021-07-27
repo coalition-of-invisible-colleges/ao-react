@@ -9,20 +9,20 @@ export default function AoMember() {
 	// the server should ensure that the community card exists, and is sent with the initial state
 	React.useEffect(() => {
 		let communityCard = aoStore.communityHubTaskItem;
-		// if (
-		// 	!communityCard ||
-		// 	!communityCard.hasOwnProperty('taskId') ||
-		// 	!communityCard.taskId
-		// ) {
-		// 	api.createCard('community hub').then(result => {
-		// 		const newTaskId = JSON.parse(result.text).event.taskId
-		// 		aoStore.setCurrentCard(newTaskId)
-		// 		setHubId(newTaskId)
-		// 	})
-		// } else {
+		if (
+			!communityCard ||
+			!communityCard.hasOwnProperty('taskId') ||
+			!communityCard.taskId
+		) {
+			api.createCard('community hub').then(result => {
+				const newTaskId = JSON.parse(result.text).event.taskId
+				aoStore.setCurrentCard(newTaskId)
+				setHubId(newTaskId)
+			})
+		} else {
 			aoStore.setCurrentCard(communityCard.taskId)
 			setHubId(communityCard.taskId)
-		// }
+		}
 	}, [aoStore.communityHubTaskItem])
 	if (hubId) {
 		const redirect = <Redirect to={'/task/' + hubId} />

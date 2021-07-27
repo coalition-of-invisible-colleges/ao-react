@@ -9,7 +9,7 @@ import express from 'express'
 import { Server } from 'socket.io'
 import socketProtector from 'socketio-auth'
 import config from '../../configuration.js'
-import { startDb, changeFeed, shadowFeed } from './dctrlDb.js'
+import { startDb, changeFeed, shadowFeed, insertEvent } from './dctrlDb.js'
 import state from './state.js'
 import reactions from './reactions.js'
 import applyRouter from './router.js'
@@ -87,6 +87,56 @@ function startDctrlAo() {
           ioServer.emit('eventstream', ev)
           console.log('emitting:', ev)
         })
+
+        // ensure there is a community hub card in the state
+        // console.log("AO: server/state.js: initialize: checking for community hub card", { "tasks": state.pubState.tasks } );
+        // let communityHubCardFound = false;
+        // state.pubState.tasks.forEach
+        //     ( (taskItem, index) =>            
+        //       {
+        //         if (taskItem.name.toLowerCase() === "community hub")
+        //         {
+        //           communityHubCardFound = true;
+        //           console.log("AO: server/state.js: initialize: community hub card found");
+        //           return;
+        //         }
+        //       }
+        //     );
+        // if (communityHubCardFound === false)
+        // {
+        //   let newCommunityHubCardEvent = 
+        //       {
+        //         type        : "task-create",
+        //         name        : "community hub",
+        //         color       : "blue",
+        //         deck        : [],
+        //         inId        : null,
+        //         prioritized : false,
+        //       }
+        //   // setImmediate
+        //   //     ( 
+        //         // () =>
+        //         // {
+        //           insertEvent
+        //           ( newCommunityHubCardEvent, 
+        //             (error, {event, result}) => 
+        //             {
+                      
+        //               if (error) 
+        //               {
+        //                 // this should never happen... umm... not sure what to do here
+        //                 console.log("AO: server/state.js: initialize: error running insertEvent for communityHubCard", {error, event, result});
+
+        //               }
+        //               else
+        //               {
+        //                 // we should be good to go to send data to any clients.
+        //               }
+        //             }
+        //           )
+        //         // }
+        //       // );
+        // }
       })
     })
   })
