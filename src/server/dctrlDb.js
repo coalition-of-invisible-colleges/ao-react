@@ -6,17 +6,19 @@ import { createHash } from '../crypto.js'
 
 const preparedStmts = {}
 
-var conn, eventEmitter, shadowEmitter
+export var conn
 
-const changeFeed = Kefir.stream(e => {
+var eventEmitter, shadowEmitter
+
+export const changeFeed = Kefir.stream(e => {
   eventEmitter = e
 })
 
-const shadowFeed = Kefir.stream(e => {
+export const shadowFeed = Kefir.stream(e => {
   shadowEmitter = e
 })
 
-function triggerShadow(x) {
+export function triggerShadow(x) {
   shadowEmitter.emit(x)
 }
 
@@ -71,7 +73,7 @@ function createStatements() {
   )
 }
 
-function recover(callback) {
+export function recover(callback) {
   try {
     let all = []
 
@@ -85,7 +87,7 @@ function recover(callback) {
   }
 }
 
-function getAll(timestamp, callback) {
+export function getAll(timestamp, callback) {
   try {
     let all = []
 
@@ -109,7 +111,7 @@ function startFeed() {
     .run()
 }
 
-function insertEvent(ev, callback) {
+export function insertEvent(ev, callback) {
   console.log('insertEvent ev is ', ev)
   if (!conn) return callback('No db connection')
   if (!ev.timestamp) {
@@ -127,7 +129,7 @@ function insertEvent(ev, callback) {
   }
 }
 
-function insertBackup(state, callback) {
+export function insertBackup(state, callback) {
   if (!conn) return callback('No db connection')
 
   state.timestamp = Date.now()
@@ -145,7 +147,7 @@ function insertBackup(state, callback) {
   if (callback) return callback(err, result)
 }
 
-function startDb(path, callback) {
+export function startDb(path, callback) {
   conn = dbengine(path, {})
   var checkTable = conn.prepare(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
@@ -159,7 +161,7 @@ function startDb(path, callback) {
   }
 }
 
-function verifyAndLoadDb(path) {
+export function verifyAndLoadDb(path) {
   conn = dbengine(path, {})
   var checkTable = conn.prepare(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
@@ -172,18 +174,3 @@ function verifyAndLoadDb(path) {
   }
   return true
 }
-
-const dctrlDb = {
-  conn: conn,
-  startDb,
-  verifyAndLoadDb,
-  getAll,
-  changeFeed,
-  shadowFeed,
-  triggerShadow,
-  insertEvent,
-  insertBackup,
-  recover,
-}
-
-export default dctrlDb

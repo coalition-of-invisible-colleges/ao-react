@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import dctrlDb from './dctrlDb.js'
+import { recover, getAll, insertBackup } from './dctrlDb.js'
 import M from '../mutations.js'
 import config from '../../configuration.js'
 import { formatDistanceToNow } from 'date-fns'
@@ -100,7 +100,7 @@ function applyEvent(state, ev) {
 }
 
 function initialize(callback) {
-  dctrlDb.recover((err, backup) => {
+  recover((err, backup) => {
     let ts = 0
     if (backup.length > 0) {
       ts = backup[0].timestamp
@@ -119,7 +119,7 @@ function initialize(callback) {
       )
       applyBackup(backup[0])
     }
-    dctrlDb.getAll(ts, (err, all) => {
+    getAll(ts, (err, all) => {
       if (err) return callback(err)
       all.forEach((ev, i) => {
         applyEvent(serverState, Object.assign({}, ev))
@@ -138,7 +138,7 @@ function backupState() {
   console.log(
     "\nTaking a monthly snapshot of the AO's current loaded state to improve performance..."
   )
-  dctrlDb.insertBackup(serverState)
+  insertBackup(serverState)
   console.log('Snapshot saved.')
 }
 

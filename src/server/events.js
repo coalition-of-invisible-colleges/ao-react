@@ -3,7 +3,7 @@ import _ from 'lodash'
 import crypto from 'crypto'
 import state from './state.js'
 const serverState = state.serverState
-import dctrlDb from './dctrlDb.js'
+import { insertEvent, triggerShadow } from './dctrlDb.js'
 
 function highlighted(taskId, memberId, valence, callback) {
   let newEvent = {
@@ -12,7 +12,7 @@ function highlighted(taskId, memberId, valence, callback) {
     memberId,
     valence,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function aoInboundConnected(address, secret, callback) {
@@ -21,7 +21,7 @@ function aoInboundConnected(address, secret, callback) {
     address,
     secret,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function aoLinked(address, taskId, callback) {
@@ -30,7 +30,7 @@ function aoLinked(address, taskId, callback) {
     address,
     taskId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function aoOutboundConnected(address, secret, callback) {
@@ -39,7 +39,7 @@ function aoOutboundConnected(address, secret, callback) {
     address,
     secret,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function aoDisconnected(address, callback) {
@@ -47,7 +47,7 @@ function aoDisconnected(address, callback) {
     type: 'ao-disconnected',
     address,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function aoNamed(alias, callback) {
@@ -55,7 +55,7 @@ function aoNamed(alias, callback) {
     type: 'ao-named',
     alias,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function getNodeInfo(info, callback) {
@@ -63,7 +63,7 @@ function getNodeInfo(info, callback) {
     type: 'get-node-info',
     info,
   }
-  dctrlDb.triggerShadow(newEvent)
+  triggerShadow(newEvent)
 }
 
 function rentSet(amount, callback) {
@@ -71,7 +71,7 @@ function rentSet(amount, callback) {
     type: 'rent-set',
     amount,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function capSet(amount, callback) {
@@ -79,7 +79,7 @@ function capSet(amount, callback) {
     type: 'cap-set',
     amount,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function spotUpdated(spot, callback) {
@@ -87,7 +87,7 @@ function spotUpdated(spot, callback) {
     type: 'spot-updated',
     spot,
   }
-  dctrlDb.triggerShadow(newEvent)
+  triggerShadow(newEvent)
 }
 
 function currencySwitched(currency, callback) {
@@ -95,7 +95,7 @@ function currencySwitched(currency, callback) {
     type: 'currency-switched',
     currency,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function fundsSet(outputs, channels, callback) {
@@ -104,7 +104,7 @@ function fundsSet(outputs, channels, callback) {
     outputs,
     channels,
   }
-  dctrlDb.triggerShadow(newEvent)
+  triggerShadow(newEvent)
 }
 
 function quorumSet(quorum, callback) {
@@ -112,7 +112,7 @@ function quorumSet(quorum, callback) {
     type: 'quorum-set',
     quorum: quorum,
   }
-  dctrlDb.insertEvent(newEvent)
+  insertEvent(newEvent)
 }
 
 function memberCreated(name, fob, secret, callback) {
@@ -129,7 +129,7 @@ function memberCreated(name, fob, secret, callback) {
     info: {},
     lastActivated: 7,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberDeactivated(memberId, callback) {
@@ -137,7 +137,7 @@ function memberDeactivated(memberId, callback) {
     type: 'member-deactivated',
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberSecretReset(kohaiId, senpaiId, callback) {
@@ -146,7 +146,7 @@ function memberSecretReset(kohaiId, senpaiId, callback) {
     kohaiId,
     senpaiId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberPromoted(kohaiId, senpaiId, callback) {
@@ -155,7 +155,7 @@ function memberPromoted(kohaiId, senpaiId, callback) {
     kohaiId,
     senpaiId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberBanned(kohaiId, senpaiId, callback) {
@@ -164,7 +164,7 @@ function memberBanned(kohaiId, senpaiId, callback) {
     kohaiId,
     senpaiId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberUnbanned(kohaiId, senpaiId, callback) {
@@ -173,7 +173,7 @@ function memberUnbanned(kohaiId, senpaiId, callback) {
     kohaiId,
     senpaiId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberPurged(memberId, blame, callback) {
@@ -182,7 +182,7 @@ function memberPurged(memberId, blame, callback) {
     memberId,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberActivated(memberId, callback) {
@@ -190,7 +190,7 @@ function memberActivated(memberId, callback) {
     type: 'member-activated',
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberFieldUpdated(memberId, field, newfield, callback) {
@@ -200,7 +200,7 @@ function memberFieldUpdated(memberId, field, newfield, callback) {
     field,
     newfield,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberTickerSet(fromCoin, toCoin, index, memberId, callback) {
@@ -211,7 +211,7 @@ function memberTickerSet(fromCoin, toCoin, index, memberId, callback) {
     index,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function dogeBarked(memberId, callback) {
@@ -219,7 +219,7 @@ function dogeBarked(memberId, callback) {
     type: 'doge-barked',
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function dogeMuted(memberId, callback) {
@@ -227,7 +227,7 @@ function dogeMuted(memberId, callback) {
     type: 'doge-muted',
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function dogeUnmuted(memberId, callback) {
@@ -235,7 +235,7 @@ function dogeUnmuted(memberId, callback) {
     type: 'doge-unmuted',
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function resourceCreated(
@@ -257,7 +257,7 @@ function resourceCreated(
   if (trackStock) {
     newEvent.stock = 0
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function resourceStocked(resourceId, memberId, amount, paid, notes, callback) {
@@ -269,7 +269,7 @@ function resourceStocked(resourceId, memberId, amount, paid, notes, callback) {
     paid,
     notes,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
@@ -281,7 +281,7 @@ function resourceUsed(resourceId, memberId, amount, charged, notes, callback) {
     charged,
     notes,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function resourceBooked(
@@ -304,7 +304,7 @@ function resourceBooked(
     charge,
     notes,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function bookCancelled(resourceId, bookTime, callback) {
@@ -313,7 +313,7 @@ function bookCancelled(resourceId, bookTime, callback) {
     resourceId,
     bookTime,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function resourcePurged(resourceId, blame, callback) {
@@ -322,7 +322,7 @@ function resourcePurged(resourceId, blame, callback) {
     resourceId,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memeAdded(filename, hash, filetype, callback) {
@@ -333,7 +333,7 @@ function memeAdded(filename, hash, filetype, callback) {
     hash: hash,
     filetype: filetype,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function sessionCreated(ownerId, session, token, callback) {
@@ -343,7 +343,7 @@ function sessionCreated(ownerId, session, token, callback) {
     token,
     ownerId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function sessionKilled(session, callback) {
@@ -351,7 +351,7 @@ function sessionKilled(session, callback) {
     type: 'session-killed',
     session,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskCreated(name, color, deck, inId, prioritized, callback) {
@@ -378,12 +378,12 @@ function taskCreated(name, color, deck, inId, prioritized, callback) {
       inId,
       prioritized,
     }
-    dctrlDb.insertEvent(newEvent, callback)
+    insertEvent(newEvent, callback)
   }
 }
 
 function addressUpdated(taskId, address, callback) {
-  dctrlDb.insertEvent(
+  insertEvent(
     {
       type: 'address-updated',
       taskId,
@@ -399,7 +399,7 @@ function taskGuilded(taskId, guild, callback) {
     taskId,
     guild,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskGrabbed(taskId, memberId, callback) {
@@ -408,7 +408,7 @@ function taskGrabbed(taskId, memberId, callback) {
     taskId,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function pileGrabbed(taskId, memberId, callback) {
@@ -417,7 +417,7 @@ function pileGrabbed(taskId, memberId, callback) {
     taskId,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function pileDropped(taskId, memberId, callback) {
@@ -426,7 +426,7 @@ function pileDropped(taskId, memberId, callback) {
     taskId,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskSubTasked(taskId, subTask, memberId, callback) {
@@ -436,7 +436,7 @@ function taskSubTasked(taskId, subTask, memberId, callback) {
     subTask,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskDeSubTasked(taskId, subTask, memberId, callback) {
@@ -446,7 +446,7 @@ function taskDeSubTasked(taskId, subTask, memberId, callback) {
     subTask,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskEmptied(taskId, memberId, callback) {
@@ -455,7 +455,7 @@ function taskEmptied(taskId, memberId, callback) {
     taskId,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskPrioritized(taskId, inId, position, callback) {
@@ -465,7 +465,7 @@ function taskPrioritized(taskId, inId, position, callback) {
     inId,
     position,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function pilePrioritized(inId, callback) {
@@ -473,7 +473,7 @@ function pilePrioritized(inId, callback) {
     type: 'pile-prioritized',
     inId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskRefocused(taskId, inId, blame, callback) {
@@ -483,7 +483,7 @@ function taskRefocused(taskId, inId, blame, callback) {
     inId,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function pileRefocused(inId, blame, callback) {
@@ -492,7 +492,7 @@ function pileRefocused(inId, blame, callback) {
     inId,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskDropped(taskId, memberId, callback) {
@@ -501,7 +501,7 @@ function taskDropped(taskId, memberId, callback) {
     taskId,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskPassed(taskId, fromMemberId, toMemberId, callback) {
@@ -511,7 +511,7 @@ function taskPassed(taskId, fromMemberId, toMemberId, callback) {
     fromMemberId,
     toMemberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskPropertySet(taskId, property, value, blame, callback) {
@@ -522,7 +522,7 @@ function taskPropertySet(taskId, property, value, blame, callback) {
     value,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskColored(taskId, inId, color, blame, callback) {
@@ -533,7 +533,7 @@ function taskColored(taskId, inId, color, blame, callback) {
     color,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskClaimed(taskId, memberId, blame, callback) {
@@ -543,7 +543,7 @@ function taskClaimed(taskId, memberId, blame, callback) {
     memberId,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskUnclaimed(taskId, memberId, blame, callback) {
@@ -553,7 +553,7 @@ function taskUnclaimed(taskId, memberId, blame, callback) {
     memberId,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskBoosted(taskId, amount, txid, callback) {
@@ -563,7 +563,7 @@ function taskBoosted(taskId, amount, txid, callback) {
     amount,
     txid,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskBoostedLightning(
@@ -580,7 +580,7 @@ function taskBoostedLightning(
     payment_hash,
     pay_index,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function tasksRemoved(taskIds, blame, callback) {
@@ -589,7 +589,7 @@ function tasksRemoved(taskIds, blame, callback) {
     taskIds,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
@@ -600,7 +600,7 @@ function taskSwapped(taskId, swapId1, swapId2, blame, callback) {
     swapId2,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskBumped(taskId, bumpId, direction, blame, callback) {
@@ -611,7 +611,7 @@ function taskBumped(taskId, bumpId, direction, blame, callback) {
     direction,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function tasksReceived(tasks, blame, callback) {
@@ -620,7 +620,7 @@ function tasksReceived(tasks, blame, callback) {
     tasks,
     blame,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function invoiceCreated(taskId, bolt11, payment_hash, callback) {
@@ -630,7 +630,7 @@ function invoiceCreated(taskId, bolt11, payment_hash, callback) {
     bolt11,
     payment_hash,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function memberCharged(memberId, charged, notes, callback) {
@@ -640,7 +640,7 @@ function memberCharged(memberId, charged, notes, callback) {
     charged,
     notes,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskTimeClocked(taskId, memberId, seconds, date, callback) {
@@ -651,7 +651,7 @@ function taskTimeClocked(taskId, memberId, seconds, date, callback) {
     seconds,
     date,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskSigned(taskId, memberId, opinion, callback) {
@@ -661,7 +661,7 @@ function taskSigned(taskId, memberId, opinion, callback) {
     memberId,
     opinion,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskSeen(taskId, memberId, callback) {
@@ -670,7 +670,7 @@ function taskSeen(taskId, memberId, callback) {
     taskId,
     memberId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function taskVisited(taskId, memberId, area, callback) {
@@ -681,7 +681,7 @@ function taskVisited(taskId, memberId, area, callback) {
     area,
     timestamp: Date.now(),
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function gridCreated(name, height, width, color, deck, callback) {
@@ -695,7 +695,7 @@ function gridCreated(name, height, width, color, deck, callback) {
     color,
     deck,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function gridAdded(taskId, height, width, callback) {
@@ -705,7 +705,7 @@ function gridAdded(taskId, height, width, callback) {
     height,
     width,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function gridRemoved(taskId, callback) {
@@ -713,22 +713,22 @@ function gridRemoved(taskId, callback) {
     type: 'grid-removed',
     taskId,
   }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function gridResized(taskId, height, width, callback) {
   let newEvent = { type: 'grid-resized', taskId, height, width }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function gridPin(inId, taskId, x, y, memberId, callback) {
   let newEvent = { type: 'grid-pin', inId, taskId, x, y, memberId }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 function gridUnpin(inId, x, y, callback) {
   let newEvent = { type: 'grid-unpin', inId, x, y }
-  dctrlDb.insertEvent(newEvent, callback)
+  insertEvent(newEvent, callback)
 }
 
 export default {

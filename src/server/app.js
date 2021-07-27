@@ -7,7 +7,7 @@ import express from 'express'
 import { Server } from 'socket.io'
 import socketProtector from 'socketio-auth'
 import config from '../../configuration.js'
-import dctrlDb from './dctrlDb.js'
+import { startDb, changeFeed, shadowFeed } from './dctrlDb.js'
 import state from './state.js'
 import reactions from './reactions.js'
 import applyRouter from './router.js'
@@ -30,7 +30,7 @@ function startDctrlAo() {
     dbPath = dbPath.replace('database', PORT)
   }
 
-  dctrlDb.startDb(dbPath, (err, conn) => {
+  startDb(dbPath, (err, conn) => {
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
@@ -43,7 +43,7 @@ function startDctrlAo() {
         lightning.recordEveryInvoice(state.serverState.cash.pay_index)
         lightning.watchOnChain()
       }
-      const serverReactions = dctrlDb.changeFeed
+      const serverReactions = changeFeed
         .onValue(ev => {
           state.applyEvent(state.serverState, ev)
         })
@@ -72,9 +72,9 @@ function startDctrlAo() {
           timeout: 2000,
         })
 
-        const filteredStream = dctrlDb.changeFeed.map(state.removeSensitive)
+        const filteredStream = changeFeed.map(state.removeSensitive)
 
-        const fullEvStream = Kefir.merge([filteredStream, dctrlDb.shadowFeed])
+        const fullEvStream = Kefir.merge([filteredStream, shadowFeed])
 
         fullEvStream.onValue(ev => {
           state.applyEvent(state.pubState, ev)
