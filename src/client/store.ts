@@ -14,6 +14,8 @@ import ao from '../modules/ao.js'
 
 import request from 'superagent'
 
+import ContextCard from '../components/Card'
+
 const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 function setCurrent(state: AoState, b: AoState) {
@@ -88,6 +90,8 @@ export interface Task {
   created: number
   grid?: Grid
   avatars?: AvatarLocation[]
+
+  loadedFromServer?: boolean
 }
 
 export interface Meme {
@@ -307,55 +311,94 @@ class AoStore {
     let stateClosure = this.state;
 
     // if ( __CLIENT__ )
-    { let original_get = hashMap.get;
-      hashMap.get = function get(taskID: string) : Task 
-          {
-            let existingTask;
-            let taskToGet = original_get.call(hashMap, taskID);
-            console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
-            // return taskToGet;
+    // { let original_get = hashMap.get;
+    //   hashMap.get = function get(taskID: string) : Task 
+    //       {
+    //         let existingTask;
+    //         let taskToGet = original_get.call(hashMap, taskID);
+    //         console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
+    //         // return taskToGet;
 
-            if (! taskToGet)
-            {
-              // we want to return a blank card, and then load the data from the server into that object
-              //   and hope that the mobx / react stuff will update the contents!!!
-              existingTask = blankCard(taskID, '', '', '');
-              hashMap.set(taskID, existingTask);
-           
+    //         if (! taskToGet)
+    //         {
+    //           // we want to return a blank card, and then load the data from the server into that object
+    //           //   and hope that the mobx / react stuff will update the contents!!!
+    //           existingTask = blankCard(taskID, '', '', '');
+    //           existingTask.loadedFromServer = false;
+    //           // hashMap.set(taskID, existingTask);
+    //           stateClosure.tasks.push(existingTask);
 
-              request
-                  .post('/fetchTaskByID')
-                  .set('Authorization', stateClosure.token)
-                  .send( {taskID} )
-                  .then
-                      ( (result) => 
-                        {
-                          console.log("AO: client/store.ts: hashMap: merging fetched task", {taskID, "result": result.body});
-                          runInAction
-                              ( () =>
-                                { 
+    //           request
+    //               .post('/fetchTaskByID')
+    //               .set('Authorization', stateClosure.token)
+    //               .send( {taskID} )
+    //               .then
+    //                   ( (result) => 
+    //                     {
+    //                       console.log("AO: client/store.ts: hashMap: merging fetched task", {taskID, "result": result.body});
+    //                       runInAction
+    //                           ( () =>
+    //                             { 
 
-                                  stateClosure.tasks.push(existingTask);
-                                  extendObservable(existingTask, result.body);
+    //                               existingTask.loadedFromServer = true;
+                                  
+    //                               extendObservable(existingTask, result.body);
 
-                                  console.log("AO: client/store.ts: hashMap: merged fetched task", {taskID, "result": result.body});
-                                }
-                              );
+    //                               existingTask.name = result.body.name;
 
-                        }
-                      );
-            }
-            else
-            {
-              console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
-              existingTask = taskToGet;
-            }
+    //                               console.log("AO: client/store.ts: hashMap: merged fetched task", {taskID, "result": result.body});
+    //                             }
+    //                           );
 
-            return existingTask
-          }
-    }
+    //                     }
+    //                   );
+    //         }
+    //         else
+    //         {
+    //           console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
+    //           existingTask = taskToGet;
+    //         }
+
+    //         return existingTask
+    //       }
+    // }
+    
     return hashMap
   }
+
+  getTaskById_async(taskId, callback)
+  {
+    let taskToGet = this.hashMap.get(taskId);
+    if (taskToGet)
+    { console.log("AO: client/store.ts: hashMap: task found", {taskId, taskToGet});
+      callback(taskToGet)
+    }
+
+    let stateClosure = this.state;
+
+    request
+        .post('/fetchTaskByID')
+        .set('Authorization', stateClosure.token)
+        .send( {taskId} )
+        .then
+            ( (result) => 
+              {
+                console.log("AO: client/store.ts: hashMap: merging fetched task", {taskId, "result": result.body});
+
+                // let newTaskFromServer = result.body;
+                // if (result.body.grid) 
+                // {
+                  
+                // }
+
+                stateClosure.tasks.push(result.body);
+                callback(this.hashMap.get(taskId));
+                // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+              }
+            );
+    }
+  
+
 
   @computed get memberById(): Map<string, Member> {
     let hashMap: Map<string, Member> = new Map()

@@ -63,7 +63,7 @@ export default function applyRouter(app) {
 
     debugger;
 
-    let useReducedState = false;
+    let useReducedState = true;
     let stateToSend;
 
     if (useReducedState === true)
@@ -104,13 +104,13 @@ export default function applyRouter(app) {
 
         console.log("server/api.ts: fetchTaskByID: ");
 
-        if  ( validators.isTaskId(req.body.taskID, errRes)
+        if  ( validators.isTaskId(req.body.taskId, errRes)
             )
         {
           state.pubState.tasks.forEach
               ( (taskItem) =>
                 {
-                  if (taskItem.taskID === req.body.taskId)
+                  if (taskItem.taskId === req.body.taskId)
                   {
                     foundThisTask = taskItem;
                     return;
@@ -121,17 +121,18 @@ export default function applyRouter(app) {
           
           if (foundThisTask)
           {
-            console.log({"taskID": req.body.taskID, "result": foundThisTask});
+            console.log({"taskId": req.body.taskId, "result": foundThisTask});
             res.json(foundThisTask);
           } 
           else
           { 
-            errRes.push("AO: server/spec.js: fetchTaskByID: task not found "+ taskID);
+            errRes.push("AO: server/spec.js: fetchTaskByID: task not found "+ taskId);
             res.status(200).send(errRes);
           }
         }
         else
         {
+          console.log("server/api.ts: fetchTaskByID: invalid taskId: "+req.body.taskId);
           res.status(400).send(errRes);
         }
 

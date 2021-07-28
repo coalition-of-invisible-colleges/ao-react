@@ -1,4 +1,7 @@
 import * as React from 'react'
+
+import { Helmet } from 'react-helmet'
+
 import { computed, makeObservable, observable } from 'mobx';
 import { observer, Observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
@@ -42,6 +45,7 @@ export interface DragContext {
 }
 
 interface CardProps {
+	// task: string
 	task: Task
 	cardStyle?: CardStyle
 	inlineStyle?: React.CSSProperties
@@ -54,14 +58,29 @@ interface CardProps {
 interface State {
 	showPriorities?: boolean
 	showProjects?: boolean
+	// loadedFromServer: boolean
 }
+
+// const AoContextCard = 
+//     (props) =>
+//     {
+//       console.log("AO: components/AoContextCard: ", {props});
+
+//       let card = aoStore.hashMap.get(props.taskId);
+
+
+
+//       return <Helmet><title>{card.loadedFromServer?card.name:"loading..."}</title></Helmet>
+//     };
+
+// export default observable(AoContextCard);
 
 @observer
 export default class AoContextCard extends React.Component<CardProps, State> {
 	constructor(props) {
         super(props)
         makeObservable(this);
-        this.state = {}
+        this.state = { }
         this.togglePriorities = this.togglePriorities.bind(this)
         this.toggleProjects = this.toggleProjects.bind(this)
         this.newPriority = this.newPriority.bind(this)
@@ -71,6 +90,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         this.onHover = this.onHover.bind(this)
         this.renderCardContent = this.renderCardContent.bind(this)
         this.clearPendingPromise = this.clearPendingPromise.bind(this)
+
+
     }
 
 	componentWillUnmount() {
@@ -272,7 +293,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 
-	render() {
+	render = () => {
 		const card = this.props.task
 		if (!card) {
 			console.log('missing card')
@@ -449,12 +470,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							) : (
 								<div id="context">
 									contextCard.tsx__full__noContextOnFull_false
-									<AoStack
-										cards={aoStore.contextCards}
-										cardStyle="context"
-										alwaysShowAll={true}
-										zone="context"
-									/>
+									<Observer>
+                    { () =>
+                      { return <AoStack
+              										cards={aoStore.contextCards}
+              										cardStyle="context"
+              										alwaysShowAll={true}
+              										zone="context"
+              									/>
+                      }
+                    }
+                  </Observer>
 								</div>
 							)}
 							<div
@@ -468,60 +494,115 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								onMouseOver={this.onHover}
 								onMouseOut={this.clearPendingPromise}>
 								contextCard.tsx__full
-								<AoDragZone
-									taskId={taskId}
-									dragContext={{
-										zone: 'card',
-										inId: null,
-										y: 0
-									}}>
-									<AoPaper taskId={taskId} />
-								</AoDragZone>
-								<AoCardHud taskId={taskId} hudStyle="full before" />
-								<div className="content">
-									<AoMission taskId={taskId} hudStyle="full before" />
-									{member && <AoMemberIcon memberId={taskId} />}
-									<AoAttachment taskId={taskId} />
-									{this.renderCardContent(content)}
-								</div>
-								{card.guild && <AoProposals filterByGuildId={taskId} />}
-								<AoStack
-									inId={taskId}
-									cards={priorityCards}
-									showAdd={true}
-									hideAddWhenCards={true}
-									addButtonText="+priority"
-									cardStyle="priority"
-									onNewCard={this.newPriority}
-									onDrop={prioritizeCard}
-									zone="priorities"
-								/>
-								{priorityCards && priorityCards.length > 6 && (
-									<div className="refocusAll">
-										<button className="action" onClick={this.refocusAll}>
-											refocus
-										</button>
-									</div>
-								)}
-								<AoGrid
-									grid={grid}
-									taskId={taskId}
-									height={grid?.height}
-									width={grid?.width}
-								/>
-								<AoStack
-									inId={taskId}
-									cards={subTaskCards}
-									showAdd={priorityCards && priorityCards.length >= 1}
-									addButtonText="+card"
-									hideAddWhenCards={true}
-									cardStyle="face"
-									onNewCard={this.newSubTask}
-									onDrop={subTaskCard}
-									zone="subTasks"
-								/>
-								<AoCompleted taskId={taskId} />
-								<AoCardHud taskId={taskId} hudStyle="full after" />
+								<Observer>
+                  { () => { return<AoDragZone
+      									taskId={taskId}
+      									dragContext={{
+      										zone: 'card',
+      										inId: null,
+      										y: 0
+      									}}>
+      									<AoPaper taskId={taskId} />
+      								</AoDragZone>
+                    }
+                  }
+                </Observer>
+								<Observer>
+                  { () => <AoCardHud taskId={taskId} hudStyle="full before" /> 
+                  }
+                </Observer>
+								<Observer>
+                  { () => 
+                    { return <div className="content">
+          									<AoMission taskId={taskId} hudStyle="full before" />
+          									{member && <AoMemberIcon memberId={taskId} />}
+          									<AoAttachment taskId={taskId} />
+          									{this.renderCardContent(content)}
+          								</div>
+                    }
+                  }
+                </Observer>
+								<Observer> 
+                  { () =>
+                    { if (card.guild)
+                      { return <AoProposals filterByGuildId={taskId} />
+                      }
+                      else
+                      { return <div />
+                      }
+                    }
+                  }
+                </Observer>
+								<Observer>
+                  { () => 
+                    { return <AoStack
+          									inId={taskId}
+          									cards={priorityCards}
+          									showAdd={true}
+          									hideAddWhenCards={true}
+          									addButtonText="+priority"
+          									cardStyle="priority"
+          									onNewCard={this.newPriority}
+          									onDrop={prioritizeCard}
+          									zone="priorities"
+								          />
+                    }
+                  }
+                </Observer>
+								<Observer>
+                  { () => { if (priorityCards && priorityCards.length > 6)
+                            { 
+            									return <div className="refocusAll">
+              										<button className="action" onClick={this.refocusAll}>
+              											refocus
+              										</button>
+              									</div>
+                              
+                            }
+                            else
+                            {
+                              return <div />
+                            }
+          								}
+                  }
+                </Observer>
+								<Observer>
+                  { () => <AoGrid
+          									grid={card.grid}
+          									taskId={taskId}
+          									height={grid?.height}
+          									width={grid?.width}
+          								/>
+                  }
+                </Observer>
+								<Observer>
+                  { () => 
+                    { return <AoStack
+              									inId={taskId}
+              									cards={subTaskCards}
+              									showAdd={priorityCards && priorityCards.length >= 1}
+              									addButtonText="+card"
+              									hideAddWhenCards={true}
+              									cardStyle="face"
+              									onNewCard={this.newSubTask}
+              									onDrop={subTaskCard}
+              									zone="subTasks"
+              								/>
+                      }
+                    }
+                </Observer>
+								<Observer>
+                { () =>
+                  { return <AoCompleted taskId={taskId} />
+                  }
+                }
+                </Observer>
+								<Observer>
+                { () =>
+                  { return <AoCardHud taskId={taskId} hudStyle="full after" />
+                  }
+                }
+                </Observer>
 							</div>
 						</React.Fragment>
 						

@@ -105,7 +105,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     )
   }
 
-  render() {
+  render = () => {
+    console.log("AO: components/stack.tsx: AoStack: render() =>", { props: this.props})
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
         ? this.props.cards

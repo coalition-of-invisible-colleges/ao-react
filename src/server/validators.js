@@ -92,6 +92,7 @@ export default {
   isTaskId(val, errRes) {
     let result = false
     state.serverState.tasks.forEach(task => {
+      console.log("AO: server/validators.js: isTaskId: ", {val, task})
       if (task.taskId == val) {
         result = true
       }
