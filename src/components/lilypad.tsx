@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoMemberIcon from './memberIcon'
@@ -22,7 +22,7 @@ interface State {
 export default class AoChatroom extends React.Component<Props, State> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.state = { show: false, now: Date.now() }
     this.hopHere = this.hopHere.bind(this)
     this.toggleChat = this.toggleChat.bind(this)
@@ -40,7 +40,6 @@ export default class AoChatroom extends React.Component<Props, State> {
   }
 
   toggleChat() {
-    console.log('showing chatroom')
     if (aoStore.currentChatroom === this.props.taskId) {
       api.visitCard(this.props.taskId, false)
       aoStore.setCurrentChatroom(null)
@@ -69,7 +68,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       return (
         <div key={memberId}>
           <AoMemberIcon memberId={memberId} /> {name}{' '}
-          {area === 1 && seconds <= 70 && <small>in chat</small>}
+          {area === 1 && seconds <= 100 && <small>in chat</small>}
         </div>
       )
     })

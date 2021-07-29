@@ -104,11 +104,17 @@ function startDctrlAo() {
                 address,
                 secret,
               }
-              dctrlDb.insertEvent(newEvent, (event, result) => {
-                console.log(
-                  'Saved new connection to database. Result is',
-                  result
-                )
+              dctrlDb.insertEvent(newEvent, (err, result) => {
+                if (!err) {
+                  console.log(
+                    'Saved new connection to database. Result is',
+                    result
+                  )
+                } else {
+                  console.log(
+                    'Error saving new connection to database. Exiting.'
+                  )
+                }
                 process.exit(0)
               })
             }

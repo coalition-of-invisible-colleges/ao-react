@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
 import LazyTippy from './lazyTippy'
@@ -15,7 +15,7 @@ interface PopupPanelProps {
 	onShown?: (instance) => void
 	id?: string
 	badge?: any
-	badgeColor?: 'green' | 'yellow'
+	badgeColor?: 'green' | 'yellow' | 'red'
 	alsoHideHub?: boolean
 }
 
@@ -29,12 +29,12 @@ export default class AoPopupPanel extends React.PureComponent<
 	State
 > {
 	constructor(props) {
-        super(props)
-        makeObservable(this);
-        this.state = {}
-        this.onPanelOpen = this.onPanelOpen.bind(this)
-        this.onPanelClose = this.onPanelClose.bind(this)
-    }
+		super(props)
+		makeObservable(this)
+		this.state = {}
+		this.onPanelOpen = this.onPanelOpen.bind(this)
+		this.onPanelClose = this.onPanelClose.bind(this)
+	}
 
 	onPanelOpen() {
 		if (this.props.alsoHideHub) {
@@ -42,7 +42,7 @@ export default class AoPopupPanel extends React.PureComponent<
 		} else {
 			hideAllTippys({
 				// This is messy but hopefully works consistently.
-				exclude: document.querySelectorAll('#hub')[1]
+				exclude: document.querySelectorAll('#hub')[1],
 			})
 		}
 		this.setState({ isPanelOpen: true })

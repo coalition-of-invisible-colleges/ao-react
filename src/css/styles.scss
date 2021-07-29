@@ -1646,6 +1646,10 @@ textarea {
         background-color: rgba(175, 175, 10, 0.85);
       }
 
+      &.red {
+        background-color: rgba(255, 10, 10, 0.85);
+      }
+
       // on bird
       &.subscript {
         background-color: transparent;
