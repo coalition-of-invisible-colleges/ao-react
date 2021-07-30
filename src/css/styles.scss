@@ -2661,7 +2661,6 @@ textarea {
       height: 1.5em;
       top: 0.5em;
       transform: translateX(-50%);
-      cursor: pointer;
       // width: min-content;
       transition-property: left;
       transition-duration: 1s;
@@ -2670,11 +2669,59 @@ textarea {
       img {
         max-height: 100%;
         fill: blue;
+        cursor: pointer;
       }
 
       .inPort {
         opacity: 0.75;
       }
+    }
+
+    // popupPanel for the Hopper
+    .popupPanel.hopperPanel {
+      width: max-content;
+      max-width: 33vw;
+
+      input[type='text'] {
+        text-align: center;
+      }
+
+      .option {
+        cursor: pointer;
+        display: block;
+        margin-top: 0.75em;
+
+        &.first {
+          margin-top: 1em;
+        }
+
+        input[type='checkbox'] {
+          margin-right: 0.5em;
+        }
+      }
+
+      .action.inline.playPause {
+        margin-top: 0.25em;
+        font-size: 1.75em;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    // The checkbox on a badge (guild mini) card
+    .badge .checkbox {
+      position: absolute;
+      top: -0.15em;
+      right: 0;
+      padding: 0.1em;
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.7);
+      width: 1.35em;
+    }
+
+    // Textbox with an error (used in Hopper)
+    input[type='text'].error {
+      border: 2px solid red;
     }
   }
 }

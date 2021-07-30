@@ -178,7 +178,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
-
 			case 'mini after':
 				return (
 					<div className={'hud ' + hudStyle}>
@@ -191,6 +190,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>

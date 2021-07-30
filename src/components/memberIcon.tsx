@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -24,7 +24,7 @@ interface MemberIconProps {
 export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
   }
 
   @computed get isActive() {
@@ -46,8 +46,6 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
       return false
     }
     const fourHoursMs: number = 4 * 60 * 60 * 1000
-    console.log('typeof is ', typeof fourHoursMs)
-    console.log('member.lastUsed is ', member.lastUsed)
     const timeSinceLastUse = Date.now() - member.lastUsed
     const recentlyUsed = timeSinceLastUse < fourHoursMs
 

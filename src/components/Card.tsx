@@ -81,7 +81,7 @@ export default function AoCard(props) {
   useEffect(() => {
     if (aoStore.globalRedirect) {
       history.push(aoStore.globalRedirect)
-      aoStore.setGlobalRedirect(null)
+      // aoStore.setGlobalRedirect(null)
     }
   }, [aoStore.globalRedirect])
 

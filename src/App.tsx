@@ -16,7 +16,7 @@ import {
   Route,
   Link,
   Redirect,
-  useHistory
+  useHistory,
 } from 'react-router-dom'
 import { observer } from 'mobx-react'
 import aoStore from './client/store'
@@ -43,7 +43,7 @@ const ProtectedRoute = ({ component: Comp, loggedIn, path, ...rest }) => {
 
 const ProtectedFragment: React.FunctionComponent<{ loggedIn: boolean }> = ({
   children,
-  loggedIn
+  loggedIn,
 }) => {
   return loggedIn ? <React.Fragment>{children}</React.Fragment> : null
 }
@@ -80,8 +80,8 @@ const App = observer(() => {
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0)
   useEffect(() => {
-      aoStore.setGlobalRedirect(null)
-      forceUpdate()
+    aoStore.setGlobalRedirect(null)
+    forceUpdate()
   }, [aoStore.globalRedirect, aoStore.currentCard])
 
   return (

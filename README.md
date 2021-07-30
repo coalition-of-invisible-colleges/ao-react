@@ -1,8 +1,6 @@
 # ao-react
 
-ao-react is a reimplementation of the AO frontend using TypeScript and React.
-
-Benefits compared to the [AO on Vue](https://github.com/AutonomousOrganization/ao/):
+ao-react is a reimplementation of the [AO on Vue](https://github.com/AutonomousOrganization/ao-3/) frontend using TypeScript and React.
 
 ## Install
 

@@ -35,7 +35,6 @@ const AoGridRow: Function = (props: {
   selectGridSquare: (selection: Coords) => void
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
-  console.log('AoGridRow render()')
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {
     if (
@@ -78,7 +77,7 @@ const AoGridRow: Function = (props: {
               zone: 'grid',
               inId: props.inId,
               x: i,
-              y: props.y
+              y: props.y,
             }}>
             <AoContextCard
               task={card}
@@ -98,8 +97,6 @@ const AoGridRow: Function = (props: {
 }
 
 const GridView: Function = (props: GridViewProps): JSX.Element => {
-  console.log('AoGridView render()')
-
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
 
   function selectGridSquare(selection: Coords) {
@@ -328,8 +325,6 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 }
 
 export default function AoGrid(props: GridProps) {
-  console.log('AoGrid render()')
-
   const [redirect, setRedirect] = React.useState<string>(undefined)
 
   function addGrid() {
@@ -377,7 +372,7 @@ export default function AoGrid(props: GridProps) {
           gridTemplateColumns:
             'repeat(' + grid.width.toString() + ', ' + gridWidth + ')',
           gridTemplateRows:
-            'repeat(' + grid.height.toString() + ', ' + gridWidth + ')'
+            'repeat(' + grid.height.toString() + ', ' + gridWidth + ')',
         }}>
         <GridView
           taskId={taskId}

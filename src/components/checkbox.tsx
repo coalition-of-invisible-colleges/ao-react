@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -15,8 +15,8 @@ interface CheckboxProps {
 @observer
 export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
   constructor(props: CheckboxProps) {
-    super(props);
-    makeObservable(this);
+    super(props)
+    makeObservable(this)
   }
 
   @computed get isCompleted() {
@@ -66,7 +66,11 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
         return null
       case 'mini before':
         if (this.isCompleted) {
-          return <img src={Completed} className={'checkbox mini'} />
+          return <img src={Completed} className="checkbox mini" />
+        }
+      case 'badge':
+        if (this.isCompleted) {
+          return <img src={Completed} className="checkbox badge" />
         }
         return null
       default:
