@@ -61,16 +61,18 @@ const Login: React.FunctionComponent<{}> = () => {
               onKeyDown={onKeyDown}
             />
           </div>
-          <button type="button" onClick={onClick}>
+          {!socketState && <button type="button" onClick={onClick}>
             Login
           </button>
+          }
           <div className="successMessage">{success}</div>
           <div className="errorMessage">{error}</div>
         </form>
       )}
       {loggedIn && <Redirect to="/" />}
       {socketState && <Redirect to={aoStore.state.protectedRouteRedirectPath?aoStore.state.protectedRouteRedirectPath:"/"} />}
-      {!socketState && <div>{aoStore.state.socketState+"-"+aoStore.state.protectedRouteRedirectPath}</div>}
+      { //!socketState && <div>{aoStore.state.socketState+"-"+aoStore.state.protectedRouteRedirectPath}</div>
+      }
       <div className="about">
         <h1>What is the AO?</h1>
         <p>

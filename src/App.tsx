@@ -32,11 +32,12 @@ const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
   
   let loggedIn = aoStore.state.loggedIn
 
-  if (!loggedIn && path !== "/login")
-  { 
-    aoStore.state.protectedRouteRedirectPath = path;
-    window.localStorage.setItem("AO: ProtectedRouteRedirectPath", path)
-  }
+  // if (!loggedIn && path !== "/login")
+  // { 
+  //   aoStore.state.protectedRouteRedirectPath = path;
+  //   // window.localStorage.setItem("AO: ProtectedRouteRedirectPath", path)
+  //   console.log("AO: components/App.tsx: ProtectedRoute: ", { path })
+  // }
 
 
   return (
@@ -45,6 +46,9 @@ const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
       {...rest}
       render={props => {
         
+        aoStore.state.protectedRouteRedirectPath = props.location.pathname;
+        console.log("AO: components/App.tsx: ProtectedRoute: ", { props, "protectedRouteRedirectPath": props.location.pathname })
+
         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
       }}
     />

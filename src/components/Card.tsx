@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from "react-dom"
 import { useState, useEffect } from 'react'
-import { makeAutoObservable, makeObservable, observable, action, runInAction,reaction } from 'mobx'
+import { makeAutoObservable, makeObservable, observable, action, runInAction, reaction } from 'mobx'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import aoStore, { Member, Resource } from '../client/store'
@@ -202,6 +202,10 @@ export default function AoCard(props) {
   if (props.match.path === "/")
   {
     getCommunityCard()
+  }
+  else if (props.match.params.taskId !== aoStore.currentCard)
+  {
+    aoStore.setCurrentCard(props.match.params.taskId);
   }
 
   return (
