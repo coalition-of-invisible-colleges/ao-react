@@ -335,35 +335,6 @@ textarea {
             float: right;
           }
 
-          & > .checkbox {
-            float: right;
-            height: 0.75em;
-            width: 0.75em;
-            opacity: 0.75;
-            display: inline;
-            pointer-events: none;
-            padding-top: 0.175em;
-            padding-right: 0.15em;
-          }
-        }
-
-        &.mini.before {
-          position: absolute;
-          right: 0;
-          bottom: 0;
-          pointer-events: auto;
-
-          .countdown {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.2);
-            font-size: 0.6em;
-            padding: 0.25em;
-            margin: 0 1em 0 0;
-            width: max-content;
-          }
-
           & > .preview {
             position: absolute;
             right: 1.2em;
@@ -379,6 +350,39 @@ textarea {
               padding-left: 0;
               padding-right: 0;
             }
+          }
+
+          & > .checkbox {
+            float: right;
+            height: 0.75em;
+            width: 0.75em;
+            opacity: 0.75;
+            display: inline;
+            pointer-events: none;
+            padding-top: 0.175em;
+            padding-right: 0.15em;
+          }
+
+          & > .tally {
+            margin-left: 0.15em;
+          }
+        }
+
+        &.mini.after {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          pointer-events: auto;
+
+          .countdown {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.6em;
+            padding: 0.25em;
+            margin: 0 1em 0 0;
+            width: max-content;
           }
 
           & > .cardMenuButton {
