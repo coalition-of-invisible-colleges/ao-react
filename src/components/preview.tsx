@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
@@ -24,8 +24,8 @@ interface PreviewProps {
 @observer
 export default class AoPreview extends React.PureComponent<PreviewProps> {
   constructor(props: PreviewProps) {
-    super(props);
-    makeObservable(this);
+    super(props)
+    makeObservable(this)
   }
 
   preventDoubleClick(event) {
@@ -157,7 +157,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         )
       case 'collapsed-mission':
       case 'face after':
-        return <div className={'preview'}>({this.subCardCount})</div>
+        return <div className="preview">({this.subCardCount})</div>
       case 'badge':
         delay = [0, 0]
         if (this.priorityCount >= 1) {
@@ -167,7 +167,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         } else {
           return null
         }
-      case 'mini after':
+      case 'mini before':
         if (delay === undefined) {
           delay = [625, 200]
         }

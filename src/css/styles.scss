@@ -63,605 +63,638 @@ textarea {
       padding: 0.5em 1.5em;
       background-color: black;
       margin-bottom: 1em;
+    }
 
-      &.full,
-      &.face {
-        min-height: 6em;
-        max-width: 98vw;
+    // full- and face-style card
+    .card.full,
+    .card.face {
+      min-height: 6em;
+      max-width: 98vw;
 
-        @media only screen and (min-width: 600px) {
-          min-width: 30em;
-        }
-
-        .unread {
-          position: absolute;
-          top: 0.25em;
-          left: 0.25em;
-        }
-
-        & > .hud > .coin > .hodls {
-          top: 0.65em;
-        }
+      @media only screen and (min-width: 600px) {
+        min-width: 30em;
       }
 
-      &.full {
-        box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
-
-        .priority {
-          min-height: 2.325em;
-
-          .coin {
-            margin-top: 0;
-            .hodls {
-              top: 0.375em;
-            }
-          }
-        }
+      .unread {
+        position: absolute;
+        top: 0.25em;
+        left: 0.25em;
       }
 
-      &.compact {
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 8em;
-        height: 8em;
-        overflow: hidden;
-        transform: unset;
-
-        .coin {
-          position: absolute;
-        }
+      & > .hud > .coin > .hodls {
+        top: 0.65em;
       }
+    }
 
-      &.priority,
-      &.context,
-      &.mission {
-        position: relative;
-        margin-top: 0.25em;
-        text-align: left;
-        min-height: 0;
-        width: 100%;
-        min-width: unset;
+    // full-style card used for full-page card
+    .card.full {
+      box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
 
-        .content,
-        .content > p {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
-
-        .stack {
-          margin-right: 1em;
-          margin-left: 1em;
-        }
-      }
-
-      &.priority,
-      &.mission {
-        padding: 0;
-        margin-bottom: 0.5em;
-
-        &.padbottom {
-          padding-bottom: 0.25em;
-        }
-
-        .content {
-          padding: 0.55em 1em 0.55em 1em;
-        }
-
-        .coin {
-          transform: unset;
-          margin: 0;
-          left: -0.5em;
-          bottom: 0;
-          top: -0.35em;
-          display: inline-block;
-          float: left;
-
-          img {
-            width: 2em;
-            // height: 2em;
-          }
-        }
-
-        & > .hud {
-          z-index: 1;
-          position: relative;
-          float: right;
-          margin-left: 0.5em;
-
-          .mission,
-          .preview,
-          .countdown,
-          .value,
-          .goal,
-          .checkbox,
-          .cardMenuButton {
-            display: inline-block;
-          }
-
-          .mission,
-          .preview,
-          .countdown,
-          .value,
-          .goal {
-            font-size: 0.8em;
-          }
-
-          .mission,
-          .preview,
-          .countdown,
-          .barkButton {
-            margin-right: 0.75em;
-          }
-
-          .mission {
-            .badge {
-              height: 1.5em;
-              margin-right: 0.25em;
-              position: relative;
-              top: 0.31em;
-            }
-          }
-
-          .value,
-          .goal {
-            margin-right: 2.5em;
-          }
-
-          .checkbox {
-            position: relative;
-            top: 0.4em;
-          }
-
-          .cardMenuButton {
-            font-size: 1.15em;
-            padding: 0.35em 0.25em;
-          }
-
-          .action {
-            display: inline;
-            margin-right: 0.5em;
-            padding-bottom: 0.2975em;
-          }
-        }
-      }
-
-      &.priority {
+      .priority {
         min-height: 2.325em;
 
-        .unread {
-          position: absolute;
-          top: 47%;
-          left: -0.9em;
-        }
-      }
-
-      &.mission {
         .coin {
+          margin-top: 0;
           .hodls {
-            top: 0.25em;
+            top: 0.375em;
           }
         }
       }
+    }
 
-      .context {
-        max-height: 3.5em;
-        overflow-y: hidden;
-      }
+    // compact-style card is square and used for drag-and-drop
+    .card.compact {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 8em;
+      height: 8em;
+      overflow: hidden;
+      transform: unset;
 
-      &.mini {
+      .coin {
         position: absolute;
-        top: 0;
-        background-color: black;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
+      }
+    }
 
-        &:hover {
-        }
+    // priority-, context-, and mission-style cards (all are "collapsed" style)
+    .card.priority,
+    .card.context,
+    .card.mission {
+      position: relative;
+      margin-top: 0.25em;
+      text-align: left;
+      min-height: 0;
+      width: 100%;
+      min-width: unset;
 
-        & > .content {
-          position: relative;
-          font-size: 0.8em;
-          margin: 0;
-          height: 100%;
-          cursor: default;
-
-          h1 {
-            font-size: 1.1em;
-          }
-
-          h2,
-          h3,
-          h4,
-          h5,
-          h6 {
-            font-size: 1.05em;
-          }
-
-          ol {
-            list-style-position: inside;
-            padding-inline-start: 0;
-          }
-        }
-
-        & > .hud {
-          position: relative;
-          pointer-events: none;
-
-          &.mini.before {
-            .unread {
-              position: absolute;
-              top: 0.25em;
-              left: 0.25em;
-            }
-
-            & > .mission,
-            & > .countdown,
-            & > .value,
-            & > .goal {
-              background-color: rgba(0, 0, 0, 0.2);
-              font-size: 0.75em;
-              padding: 0.25em;
-              margin: 0;
-            }
-
-            & > .countdown,
-            & > .mission {
-              float: left;
-              pointer-events: none;
-            }
-
-            & > .mission {
-              text-align: left;
-              .badge {
-                height: 1.1em;
-                margin-right: 0.25em;
-                position: relative;
-                top: 0.2em;
-                left: 0.05em;
-              }
-            }
-
-            & > .value,
-            & > .goal {
-              font-size: 0.6em;
-              float: right;
-            }
-
-            & > .checkbox {
-              float: right;
-              height: 0.75em;
-              width: 0.75em;
-              opacity: 0.75;
-              display: inline;
-              pointer-events: none;
-              padding-top: 0.175em;
-              padding-right: 0.15em;
-            }
-          }
-
-          &.mini.after {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            pointer-events: auto;
-
-            .countdown {
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              background-color: rgba(0, 0, 0, 0.2);
-              font-size: 0.6em;
-              padding: 0.25em;
-              margin: 0 1em 0 0;
-              width: max-content;
-            }
-
-            & > .preview {
-              position: absolute;
-              right: 1.2em;
-              bottom: 0;
-              font-size: 0.75em;
-              padding: 0.25em;
-              // pointer-events: none;
-              margin: 0;
-              background-color: rgba(0, 0, 0, 0.2);
-              cursor: default;
-
-              & .nopad {
-                padding-left: 0;
-                padding-right: 0;
-              }
-            }
-
-            & > .cardMenuButton {
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              font-size: 0.9em;
-              padding: 0.1em 0.25em 0.185em 0.5em;
-            }
-          }
-        }
+      .content,
+      .content > p {
+        margin-top: 0;
+        margin-bottom: 0;
       }
 
-      &.badge {
-        transform: unset;
-        left: unset;
-        position: unset;
+      .stack {
+        margin-right: 1em;
+        margin-left: 1em;
+      }
+    }
 
-        .background {
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 100%;
-        }
+    // priority- and mission-style are like real cards and not just tabs
+    .card.priority,
+    .card.mission {
+      padding: 0;
+      margin-bottom: 0.5em;
 
-        & > .mission.badge {
-          position: absolute;
-          top: 44%;
-          left: 50%;
-          transform: translateX(-50%) translateY(-50%);
-          font-size: 0.75em;
-          padding: 0;
-          word-break: break-all;
-          width: calc(100% - 1.25em);
-        }
-
-        & > .hud.badge {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          left: 0;
-          top: 0;
-          cursor: pointer;
-
-          & > .preview.nopad {
-            width: 100%;
-            height: 100%;
-            cursor: default;
-            padding: 0;
-            font-size: 0.8em;
-            right: unset;
-            position: absolute;
-            cursor: pointer;
-
-            .label {
-              position: absolute;
-              top: 4em;
-              left: 50%;
-              transform: translateX(-50%);
-            }
-          }
-
-          .cardMenuButton {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            padding-bottom: 0.05em;
-            padding-right: 0.1em;
-          }
-        }
+      &.padbottom {
+        padding-bottom: 0.25em;
       }
 
-      .stack > .dropZone > .action,
-      .grid .menu .action {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-      }
-
-      .stack > .dropZone {
-        position: relative;
-      }
-
-      .hud {
-        .cardMenuButton {
-          padding: 0.5em 0.5em 0.5em 0.75em;
-          font-size: 1.15em;
-          font-size: 1.25em;
-          font-weight: bold;
-          cursor: pointer;
-          user-select: none;
-          color: rgba(255, 255, 255, 0.8);
-
-          &:hover {
-            color: white;
-          }
-        }
-
-        &.full.before,
-        &.face.before {
-          position: absolute;
-          right: 0.5em;
-          top: 0.5em;
-
-          .countdown,
-          .value,
-          .goal .checkbox {
-            font-size: 0.9em;
-            display: inline-block;
-          }
-
-          .countdown,
-          .value,
-          .goal {
-            position: relative;
-            top: -0.4em;
-            margin-right: 0.5em;
-            float: left;
-          }
-        }
-
-        &.face.before {
-          .value,
-          .goal {
-            margin-left: 0.5em;
-          }
-        }
-
-        &.full.after,
-        &.face.after {
-          & > .preview {
-            position: absolute;
-            right: 2em;
-            bottom: 0.75em;
-          }
-
-          .cardMenuButton {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-          }
-        }
-      }
-
-      .value,
-      .value.full,
-      .goal,
-      .goal.full {
-        font-size: 0.9em;
-
-        &.menu {
-          float: none;
-          font-size: 1em;
-        }
-
-        &.collapsed {
-          font-size: 0.8em;
-          .action {
-            cursor: default;
-            text-decoration: none;
-            padding: 0.25em;
-          }
-        }
-      }
-
-      .checkbox {
-        height: 1.5em;
-        width: 1.5em;
-        cursor: pointer;
-        opacity: 0.5;
-        user-select: none;
-      }
-
-      @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
+      .content {
+        padding: 0.55em 1em 0.55em 1em;
       }
 
       .coin {
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 0.75em;
-        margin-top: 1.5em;
-        cursor: pointer;
-        user-select: none;
-        width: fit-content;
-
-        // the paw in the moon, shown when a card has signatures
-        img.moonpaw {
-          height: 1.45em;
-          width: 1.6em;
-          position: absolute;
-          top: 0.5em;
-          left: calc(50% - 0.7em);
-          opacity: 0.4;
-          pointer-events: none;
-        }
+        transform: unset;
+        margin: 0;
+        left: -0.5em;
+        bottom: 0;
+        top: -0.35em;
+        display: inline-block;
+        float: left;
 
         img {
-          width: 2.5em;
-          // height: 2.5em;
-        }
-
-        &.ungrabbed > img,
-        &.ungrabbed > .hodls {
-          opacity: 0.3;
-        }
-
-        img.spin {
-          animation: spin 32s linear infinite;
-        }
-
-        .pendingDeletion {
-          position: absolute;
-          width: 100%;
-          height: calc(100% - 0.25em);
-          background: red;
-          mix-blend-mode: multiply;
-          top: 0;
-          left: 0;
-          border-radius: 50%;
-          pointer-events: none;
-          opacity: 0.65;
-        }
-
-        .hodls {
-          position: absolute;
-          left: 50%;
-          top: 0.25em;
-          transform: translateX(-50%);
-          text-align: center;
-          width: 2.75em;
-          bottom: 0.25em;
-          padding-bottom: 0.4em;
-          margin-bottom: 0;
-          font-weight: bold;
-          color: rgba(255, 255, 255, 1);
-          pointer-events: none;
-          text-shadow: -0.1em 0.1em 0.2em #000;
+          width: 2em;
+          // height: 2em;
         }
       }
 
-      .hourglass {
-        img {
-          width: 2em;
+      & > .hud {
+        z-index: 1;
+        position: relative;
+        float: right;
+        margin-left: 0.5em;
+
+        .mission,
+        .preview,
+        .countdown,
+        .value,
+        .goal,
+        .checkbox,
+        .cardMenuButton {
+          display: inline-block;
         }
 
-        .history {
-          display: none;
-          position: absolute;
-          left: 100%;
-          top: 0;
-          width: 24em;
-          background-color: rgba(22, 22, 22, 0.4);
+        .mission,
+        .preview,
+        .countdown,
+        .value,
+        .goal {
+          font-size: 0.8em;
         }
 
-        .action:hover + .history {
-          display: block;
+        .mission,
+        .preview,
+        .countdown,
+        .barkButton {
+          margin-right: 0.75em;
         }
 
-        .stopped {
-        }
-
-        .started {
-        }
-
-        .cardTimeLog {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          margin-left: auto;
-          margin-right: auto;
-          .cardTimeLogDate {
-            align-self: left;
-            margin-left: 10px;
+        .mission {
+          .badge {
+            height: 1.5em;
+            margin-right: 0.25em;
+            position: relative;
+            top: 0.31em;
           }
-          .cardTimeLogDateNull {
-            align-self: left;
+        }
 
-            &.orangeLog {
-              color: orange;
+        .value,
+        .goal {
+          margin-right: 2.5em;
+        }
+
+        .checkbox {
+          position: relative;
+          top: 0.4em;
+        }
+
+        .cardMenuButton {
+          font-size: 1.15em;
+          padding: 0.35em 0.25em;
+        }
+
+        .action {
+          display: inline;
+          margin-right: 0.5em;
+          padding-bottom: 0.2975em;
+        }
+      }
+    }
+
+    // priority-style card
+    .card.priority {
+      min-height: 2.325em;
+
+      .unread {
+        position: absolute;
+        top: 47%;
+        left: -0.9em;
+      }
+    }
+
+    // mission-style card shows in the Squads Index
+    .card.mission {
+      .coin {
+        .hodls {
+          top: 0.25em;
+        }
+      }
+    }
+
+    // mini-style card that displays in grid squares
+    .card.mini {
+      position: absolute;
+      top: 0;
+      background-color: black;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+
+      &:hover {
+      }
+
+      & > .content {
+        position: relative;
+        font-size: 0.8em;
+        margin: 0;
+        height: 100%;
+        cursor: default;
+
+        h1 {
+          font-size: 1.1em;
+        }
+
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          font-size: 1.05em;
+        }
+
+        ol {
+          list-style-position: inside;
+          padding-inline-start: 0;
+        }
+      }
+
+      & > .hud {
+        position: relative;
+        pointer-events: none;
+
+        &.mini.before {
+          .unread {
+            position: absolute;
+            top: 0.25em;
+            left: 0.25em;
+          }
+
+          & > .mission,
+          & > .countdown,
+          & > .value,
+          & > .goal {
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.75em;
+            padding: 0.25em;
+            margin: 0;
+          }
+
+          & > .countdown,
+          & > .mission {
+            float: left;
+            pointer-events: none;
+          }
+
+          & > .mission {
+            text-align: left;
+            .badge {
+              height: 1.1em;
+              margin-right: 0.25em;
+              position: relative;
+              top: 0.2em;
+              left: 0.05em;
             }
+          }
+
+          & > .value,
+          & > .goal {
+            font-size: 0.6em;
+            float: right;
+          }
+
+          & > .checkbox {
+            float: right;
+            height: 0.75em;
+            width: 0.75em;
+            opacity: 0.75;
+            display: inline;
+            pointer-events: none;
+            padding-top: 0.175em;
+            padding-right: 0.15em;
+          }
+        }
+
+        &.mini.after {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          pointer-events: auto;
+
+          .countdown {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.6em;
+            padding: 0.25em;
+            margin: 0 1em 0 0;
+            width: max-content;
+          }
+
+          & > .preview {
+            position: absolute;
+            right: 1.2em;
+            bottom: 0;
+            font-size: 0.75em;
+            padding: 0.25em;
+            // pointer-events: none;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: default;
+
+            & .nopad {
+              padding-left: 0;
+              padding-right: 0;
+            }
+          }
+
+          & > .cardMenuButton {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            font-size: 0.9em;
+            padding: 0.1em 0.25em 0.185em 0.5em;
+          }
+        }
+      }
+    }
+
+    // badge-style card that replaces mini card for squads
+    .card.badge {
+      transform: unset;
+      left: unset;
+      position: unset;
+
+      .background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      & > .mission.badge {
+        position: absolute;
+        top: 44%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        font-size: 0.75em;
+        padding: 0;
+        word-break: break-all;
+        width: calc(100% - 1.25em);
+        pointer-events: none;
+      }
+
+      & > .hud.badge {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+
+        & > .preview.nopad {
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          font-size: 0.8em;
+          right: unset;
+          position: absolute;
+          pointer-events: none;
+
+          .label {
+            position: absolute;
+            top: 4em;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+        }
+
+        .cardMenuButton {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          padding-bottom: 0.05em;
+          padding-right: 0.1em;
+          padding-left: 0.4em;
+        }
+
+        .checkbox.badge,
+        .cardMenuButton {
+          pointer-events: auto;
+        }
+
+        .checkbox.unchecked {
+          opacity: 0;
+        }
+      }
+    }
+
+    .card.badge:hover {
+      & > .hud {
+        .checkbox.unchecked {
+          opacity: 1;
+          transition-property: opacity;
+          transition-delay: 0.35s;
+          transition-duration: 0.25s;
+        }
+      }
+    }
+
+    // action button in a card or in a menu
+    .card .stack > .dropZone > .action,
+    .card .grid .menu .action {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+
+    // fix position on dropZone in a card
+    .card .stack > .dropZone {
+      position: relative;
+    }
+
+    // card hud (cardHud.tsx)
+    .card .hud {
+      .cardMenuButton {
+        padding: 0.5em 0.5em 0.5em 0.75em;
+        font-size: 1.15em;
+        font-size: 1.25em;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        color: rgba(255, 255, 255, 0.8);
+
+        &:hover {
+          color: white;
+        }
+      }
+
+      &.full.before,
+      &.face.before {
+        position: absolute;
+        right: 0.5em;
+        top: 0.5em;
+
+        .countdown,
+        .value,
+        .goal .checkbox {
+          font-size: 0.9em;
+          display: inline-block;
+        }
+
+        .countdown,
+        .value,
+        .goal {
+          position: relative;
+          top: -0.4em;
+          margin-right: 0.5em;
+          float: left;
+        }
+      }
+
+      &.face.before {
+        .value,
+        .goal {
+          margin-left: 0.5em;
+        }
+      }
+
+      &.full.after,
+      &.face.after {
+        & > .preview {
+          position: absolute;
+          right: 2em;
+          bottom: 0.75em;
+        }
+
+        .cardMenuButton {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+    }
+
+    // card value (crowdFund) and goal components on cardHud
+    .card .value,
+    .card .value.full,
+    .card .goal,
+    .card .goal.full {
+      font-size: 0.9em;
+
+      &.menu {
+        float: none;
+        font-size: 1em;
+      }
+
+      &.collapsed {
+        font-size: 0.8em;
+        .action {
+          cursor: default;
+          text-decoration: none;
+          padding: 0.25em;
+        }
+      }
+    }
+
+    // checkbox on a card
+    .card .checkbox {
+      height: 1.5em;
+      width: 1.5em;
+      cursor: pointer;
+      opacity: 0.5;
+      user-select: none;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    // coin on a card
+    .card .coin {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0.75em;
+      margin-top: 1.5em;
+      cursor: pointer;
+      user-select: none;
+      width: fit-content;
+
+      // the paw in the moon, shown when a card has signatures
+      img.moonpaw {
+        height: 1.45em;
+        width: 1.6em;
+        position: absolute;
+        top: 0.5em;
+        left: calc(50% - 0.7em);
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      img {
+        width: 2.5em;
+        // height: 2.5em;
+      }
+
+      &.ungrabbed > img,
+      &.ungrabbed > .hodls {
+        opacity: 0.3;
+      }
+
+      img.spin {
+        animation: spin 32s linear infinite;
+      }
+
+      .pendingDeletion {
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 0.25em);
+        background: red;
+        mix-blend-mode: multiply;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.65;
+      }
+
+      .hodls {
+        position: absolute;
+        left: 50%;
+        top: 0.25em;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 2.75em;
+        bottom: 0.25em;
+        padding-bottom: 0.4em;
+        margin-bottom: 0;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 1);
+        pointer-events: none;
+        text-shadow: -0.1em 0.1em 0.2em #000;
+      }
+    }
+
+    // hourglass (timeclock) on a card
+    .card .hourglass {
+      img {
+        width: 2em;
+      }
+
+      .history {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        width: 24em;
+        background-color: rgba(22, 22, 22, 0.4);
+      }
+
+      .action:hover + .history {
+        display: block;
+      }
+
+      .stopped {
+      }
+
+      .started {
+      }
+
+      .cardTimeLog {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        .cardTimeLogDate {
+          align-self: left;
+          margin-left: 10px;
+        }
+        .cardTimeLogDateNull {
+          align-self: left;
+
+          &.orangeLog {
+            color: orange;
           }
         }
       }
@@ -739,7 +772,7 @@ textarea {
 
       .resizer {
         position: absolute;
-        margin-top: -4.75em; // -4.75
+        margin-top: -5.2em;
         right: 0;
         transform: translateX(100%);
 
@@ -824,28 +857,33 @@ textarea {
     // the card menu
     .hud.menu,
     #mainMenu {
-      background: white;
-      color: black;
+      // background: rgba(0, 0, 0, 0.2);
+      color: white;
+      padding: 0.5em 0 0 0;
 
       .action {
-        color: black;
+        // color: black;
         width: calc(100% - 1em);
         border: none;
         border-radius: 0;
         text-shadow: none;
         margin: 0;
+
+        &.inline {
+          width: min-content;
+        }
       }
 
       .action,
       .palette {
-        background: linear-gradient(
-          0deg,
-          rgba(102, 102, 102, 1) 0%,
-          rgba(238, 238, 238, 1) 20%,
-          rgba(242, 242, 242, 1) 37%,
-          rgba(242, 242, 242, 1) 80%,
-          rgba(102, 102, 102, 1) 100%
-        );
+        // background: linear-gradient(
+        //   0deg,
+        //   rgba(102, 102, 102, 1) 0%,
+        //   rgba(238, 238, 238, 1) 20%,
+        //   rgba(242, 242, 242, 1) 37%,
+        //   rgba(242, 242, 242, 1) 80%,
+        //   rgba(102, 102, 102, 1) 100%
+        // );
       }
     }
 
@@ -2256,7 +2294,7 @@ textarea {
         }
 
         .label {
-          color: black;
+          color: white;
           margin-top: 0.75em;
           position: absolute;
           left: 50%;
@@ -2719,15 +2757,37 @@ textarea {
       width: 1.35em;
     }
 
+    // The card menu button on a badge
+    .badge .cardMenuButton {
+      padding-left: 0;
+    }
+
     // Textbox with an error (used in Hopper)
     input[type='text'].error {
       border: 2px solid red;
     }
 
     // Claim reset icon in the top right corner of a card, next to the checkbox
-    .claimInterval {
+    .claimInterval.full {
       display: inline-block;
       cursor: default;
+      padding-right: 0.5em;
+
+      img {
+        height: 1.5em;
+      }
+    }
+
+    // Claim interval option in card menu
+    .claimInterval.menu {
+      img {
+        height: 1em;
+        margin-right: 0.25em;
+      }
+
+      input[type='text'] {
+        text-align: center;
+      }
     }
   }
 }

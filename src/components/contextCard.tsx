@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
 import api from '../client/api'
@@ -59,19 +59,19 @@ interface State {
 @observer
 export default class AoContextCard extends React.Component<CardProps, State> {
 	constructor(props) {
-        super(props)
-        makeObservable(this);
-        this.state = {}
-        this.togglePriorities = this.togglePriorities.bind(this)
-        this.toggleProjects = this.toggleProjects.bind(this)
-        this.newPriority = this.newPriority.bind(this)
-        this.newSubTask = this.newSubTask.bind(this)
-        this.goInCard = this.goInCard.bind(this)
-        this.refocusAll = this.refocusAll.bind(this)
-        this.onHover = this.onHover.bind(this)
-        this.renderCardContent = this.renderCardContent.bind(this)
-        this.clearPendingPromise = this.clearPendingPromise.bind(this)
-    }
+		super(props)
+		makeObservable(this)
+		this.state = {}
+		this.togglePriorities = this.togglePriorities.bind(this)
+		this.toggleProjects = this.toggleProjects.bind(this)
+		this.newPriority = this.newPriority.bind(this)
+		this.newSubTask = this.newSubTask.bind(this)
+		this.goInCard = this.goInCard.bind(this)
+		this.refocusAll = this.refocusAll.bind(this)
+		this.onHover = this.onHover.bind(this)
+		this.renderCardContent = this.renderCardContent.bind(this)
+		this.clearPendingPromise = this.clearPendingPromise.bind(this)
+	}
 
 	componentWillUnmount() {
 		this.clearPendingPromise()
@@ -213,15 +213,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					overrides: {
 						a: {
 							props: {
-								target: '_blank'
-							}
+								target: '_blank',
+							},
 						},
 						iframe: {
 							props: {
-								display: hideIframes ? 'inherit' : 'none'
-							}
-						}
-					}
+								display: hideIframes ? 'inherit' : 'none',
+							},
+						},
+					},
 				}}>
 				{memeContent ? memeContent : content}
 			</Markdown>
@@ -464,7 +464,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 								dragContext={{
 									zone: 'card',
 									inId: null,
-									y: 0
+									y: 0,
 								}}>
 								<AoPaper taskId={taskId} />
 							</AoDragZone>
@@ -582,12 +582,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 					<div
 						id={'card-' + taskId}
 						className={'card badge' + this.applyClassIfCurrentSearchResult}
-						onClick={this.goInCard}
 						onMouseEnter={this.onHover}
 						onMouseOver={this.onHover}
 						onMouseOut={this.clearPendingPromise}>
 						<AoPaper taskId={taskId} />
-						<img className="background" src={BlankBadge} />
+						<img
+							className="background"
+							src={BlankBadge}
+							onClick={this.goInCard}
+						/>
 						<AoMission taskId={taskId} hudStyle="badge" />
 						<AoCardHud taskId={taskId} hudStyle="badge" />
 					</div>

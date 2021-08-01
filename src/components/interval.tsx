@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
+import CheckmarkRecurring from '../assets/images/checkmarkRecurring.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -85,7 +86,11 @@ export default class AoInterval extends React.Component<Props, State> {
           !this.state.error &&
           parseFloat(this.state.text) !== card.claimInterval
         return (
-          <div className="username">
+          <div className="claimInterval menu">
+            <img
+              src={CheckmarkRecurring}
+              alt="a checkmark with two circular arrows around it"
+            />
             uncheck every{' '}
             <input
               type="text"
@@ -110,7 +115,7 @@ export default class AoInterval extends React.Component<Props, State> {
           return null
         }
         return (
-          <div className="claimInterval">
+          <div className="claimInterval full">
             <Tippy
               placement="top"
               delay={[475, 200]}
@@ -119,7 +124,10 @@ export default class AoInterval extends React.Component<Props, State> {
                 'checkmarks will clear every ' + card.claimInterval + ' hours'
               }
               appendTo={document.getElementById('root')}>
-              <div className="interval">reset</div>
+              <img
+                src={CheckmarkRecurring}
+                alt="a checkmark with two circular arrows around it"
+              />
             </Tippy>
           </div>
         )

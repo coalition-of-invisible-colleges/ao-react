@@ -50,10 +50,15 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'full before':
       case 'face before':
       case 'collapsed':
+      case 'badge':
         if (this.isCompleted || this.isGrabbed) {
           return (
             <img
-              className="checkbox"
+              className={
+                'checkbox ' +
+                this.props.hudStyle +
+                (this.isCompleted ? ' checked' : ' unchecked')
+              }
               src={this.isCompleted ? Completed : Uncompleted}
               onClick={onClick}
               onDoubleClick={event => {
@@ -68,11 +73,6 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
         if (this.isCompleted) {
           return <img src={Completed} className="checkbox mini" />
         }
-      case 'badge':
-        if (this.isCompleted) {
-          return <img src={Completed} className="checkbox badge" />
-        }
-        return null
       default:
         return null
     }

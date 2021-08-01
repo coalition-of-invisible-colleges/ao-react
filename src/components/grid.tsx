@@ -67,7 +67,7 @@ const AoGridRow: Function = (props: {
         y={props.y}
         onSelect={props.selectGridSquare}
         onDrop={props.dropToGridSquare}
-        zoneStyle={'grid'}
+        zoneStyle="grid"
         key={i + '-' + props.y}
         dropActsLikeFolder={props.dropActsLikeFolder}>
         {tId ? (

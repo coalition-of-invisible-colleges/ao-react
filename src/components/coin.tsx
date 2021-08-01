@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -24,7 +24,7 @@ export default class AoCoin extends React.Component<CoinProps> {
 
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.sign = this.sign.bind(this)
     this.unsign = this.unsign.bind(this)
     this.signatureDecorators = this.signatureDecorators.bind(this)
@@ -281,29 +281,27 @@ export default class AoCoin extends React.Component<CoinProps> {
           <React.Fragment>
             <Tippy
               zIndex={4}
-              theme={'translucent'}
-              content={'Your Attack is the same as your vouches'}
+              theme="translucent"
+              content="Your Attack is the same as your vouches"
               delay={[625, 200]}>
               <span
                 style={{
                   cursor: 'default',
                   marginRight: '1em',
-                  display: 'inline-block'
+                  display: 'inline-block',
                 }}>
                 Attack: {memberCards.length}
               </span>
             </Tippy>
             <Tippy
               zIndex={4}
-              theme={'translucent'}
-              content={
-                'Your Defense is the highest Attack score amongst you and everyone who vouches for you. To ban or delete your account, another member must have a higher Attack than your Defense AND be listed before you in the ordered list of members (sort members by "Order")'
-              }
+              theme="translucent"
+              content='Your Defense is the highest Attack score amongst you and everyone who vouches for you. To ban or delete your account, another member must have a higher Attack than your Defense AND be listed before you in the ordered list of members (sort members by "Order")'
               delay={[625, 200]}>
               <span
                 style={{
                   cursor: 'default',
-                  display: 'inline-block'
+                  display: 'inline-block',
                 }}>
                 Defense: {this.defenseScore}
               </span>
@@ -313,8 +311,8 @@ export default class AoCoin extends React.Component<CoinProps> {
         {memberCards.length >= 1 ? (
           <AoStack
             cards={memberCards}
-            zone={'panel'}
-            cardStyle={'member'}
+            zone="panel"
+            cardStyle="member"
             cardsBeforeFold={3}
             noPopups={true}
             decorators={this.signatureDecorators(memberCards)}

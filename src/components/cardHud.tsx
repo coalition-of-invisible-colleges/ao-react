@@ -175,6 +175,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
@@ -184,7 +185,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
@@ -192,8 +192,8 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
