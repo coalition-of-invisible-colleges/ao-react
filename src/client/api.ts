@@ -164,11 +164,14 @@ class AoApi {
     name: string,
     anonymous?: boolean
   ): Promise<request.Response> {
+
+
+
     const act = {
       type: 'task-created',
       name: name,
       color: 'blue',
-      deck: anonymous ? [] : [aoStore.member.memberId],
+      deck: anonymous ? [] : (aoStore.member && aoStore.member.memberId?[aoStore.member.memberId]:[]),
       inId: anonymous ? null : (aoStore.memberCard.taskId || null),
       prioritized: false
     }

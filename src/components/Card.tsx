@@ -15,6 +15,7 @@ import AoHud from './hud'
 import { Helmet } from 'react-helmet'
 import { ShepherdTour as Tour } from 'react-shepherd'
 import { steps, tourOptions } from './tour'
+import api from '../client/api'
 
 interface CardProps {
   match
@@ -23,6 +24,40 @@ interface CardProps {
 interface RenderProps {
   taskId?: string
 }
+
+let getCommunityCard = 
+    () =>
+    { 
+      aoStore.getTaskByName_async
+      ( "community hub",
+        (communityCard) =>
+        {
+          if (
+              !communityCard ||
+              !communityCard.hasOwnProperty('taskId') ||
+              !communityCard.taskId
+          ) {
+              console.log("AO: components/App.tsx: initialising page, creating community hub card on server")
+              
+              api.createCard('community hub', true).then(result => {
+                  const newTaskId = JSON.parse(result.text).event.taskId
+                  
+                  console.log("AO: components/App.tsx: initialising page, community hub card created: ", { newTaskId });
+
+                  aoStore.setCurrentCard(newTaskId)
+                  // setHubId(newTaskId)
+                  // initialStateComplete();
+              })
+          } else {
+              console.log("AO: components/App.tsx: initialising page, community hub card found in client state: ", { "taskId": communityCard.taskId });
+
+              aoStore.setCurrentCard(communityCard.taskId)
+              // setHubId(communityCard.taskId)
+              // initialStateComplete();
+          }
+        }
+      )
+    }
 
 
 export class ContextPile {
@@ -84,37 +119,90 @@ const ContextCardView = observer( ({currentContextCard}) => <AoContextCard task=
 // ReactDOM.render(<PageTitleView currentContextCard={currentContextCard} />, document.getElementById("root"));
 
 
-function renderCard(taskId?: string, props?: any) {
-  console.log('AO: components/Card.tsx: renderCard: taskId is ', {taskId, props})
+// function renderCard(taskId?: string, props?: any) {
+//   console.log('AO: components/Card.tsx: renderCard: taskId is ', {taskId, props})
 
-  // let card
-  // let cardText
-  // if (taskId) {
-  //   card = aoStore.hashMap.get(taskId)
+//   // let card
+//   // let cardText
+//   // if (taskId) {
+//   //   card = aoStore.hashMap.get(taskId)
 
-  //   if (card) {
-  //     cardText = ''
-  //     if (card.name === taskId) {
-  //       let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
-  //       if (!memberOrResource) {
-  //         memberOrResource = aoStore.resourceById.get(taskId)
-  //       }
-  //       if (memberOrResource) {
-  //         cardText = memberOrResource.name
-  //       }
-  //     } else if (card.guild) {
-  //       cardText = card.guild
-  //     } else {
-  //       cardText = card.name
-  //     }
+//   //   if (card) {
+//   //     cardText = ''
+//   //     if (card.name === taskId) {
+//   //       let memberOrResource: Member | Resource = aoStore.memberById.get(taskId)
+//   //       if (!memberOrResource) {
+//   //         memberOrResource = aoStore.resourceById.get(taskId)
+//   //       }
+//   //       if (memberOrResource) {
+//   //         cardText = memberOrResource.name
+//   //       }
+//   //     } else if (card.guild) {
+//   //       cardText = card.guild
+//   //     } else {
+//   //       cardText = card.name
+//   //     }
 
-  //     if (cardText.length > 12) {
-  //       cardText = cardText.substring(0, 12) + '…'
-  //     }
-  //   }
-  // }
+//   //     if (cardText.length > 12) {
+//   //       cardText = cardText.substring(0, 12) + '…'
+//   //     }
+//   //   }
+//   // }
 
-  // currentContextCard.setCardItem(taskId);
+//   // currentContextCard.setCardItem(taskId);
+
+//   return (
+//     <Tour steps={steps} tourOptions={tourOptions}>
+//       <div id="tour-current-card">
+//         {
+//           // <Helmet>
+//           //   <title>
+//           //     {//cardText ? cardText + ' - ' : ''
+//           //     }
+//           //     {aoStore.state.cash.alias}
+//           //   </title>
+//           // </Helmet>
+//         }
+//         Card.tsx
+//         { <AoDiscardZone /> 
+//         }
+//         { 
+//           //card ? <AoContextCard taskId={taskId} task={card} cardStyle="full" /> : <AoDrawPile />
+//           // <AoContextCard taskId={taskId} task={card} cardStyle="full" />
+//           //taskId?<AoContextCard taskId={taskId} cardStyle="full" />:<div>'AO: components/Card.tsx: taskId not set'</div>
+//           // <div id="currentContextCard">currentContextCard div: {taskId}
+//           <div>
+//             <PageTitleView      currentContextCard={currentContextCard} />
+//             {
+//               //<ContextPileView    contextPile={contextPile} />
+//             }
+//             <ContextCardView    currentContextCard={currentContextCard} />
+//           </div>
+//           // <CardHeadingView    currentContextCard={currentContextCard} />
+//           // </div>
+
+//         }
+//         { 
+//           <AoHud />
+//         }
+//       </div>
+//     </Tour>
+//   )
+// }
+
+interface CardState {
+  nextRender?: boolean
+}
+
+export default function AoCard(props) {
+  let history = useHistory()
+  currentContextCard.history = history;
+
+  console.log("AO: components/Card.tsx: AoCard function: ", {props})
+  if (props.match.path === "/")
+  {
+    getCommunityCard()
+  }
 
   return (
     <Tour steps={steps} tourOptions={tourOptions}>
@@ -153,42 +241,34 @@ function renderCard(taskId?: string, props?: any) {
       </div>
     </Tour>
   )
-}
 
-interface CardState {
-  nextRender?: boolean
-}
+  // let taskId =
+  //   props.match.params.hasOwnProperty('taskId') && props.match.params.taskId
 
-export default function AoCard(props) {
-  let history = useHistory()
-  currentContextCard.history = history;
+  // console.log("AO: components/Card.tsx: AoCard:", { props })
 
-  let taskId =
-    props.match.params.hasOwnProperty('taskId') && props.match.params.taskId
+  // useEffect(() => {
+  //   aoStore.setCurrentCard(taskId);
+  //   currentContextCard.setCardItem(taskId);
 
-  console.log("AO: components/Card.tsx: AoCard:", { props })
+  //   // setTimeout(() => currentContextCard.cardItem.name = "Woosh", 2000);
+  // },
+  // [taskId]
+  // )
 
-  useEffect(() => {
-    aoStore.setCurrentCard(taskId);
-    currentContextCard.setCardItem(taskId);
+  // useEffect(() => {
+  //   if (aoStore.globalRedirect) {
+  //     history.push(aoStore.globalRedirect)
+  //     aoStore.setGlobalRedirect(null)
+  //   }
+  // }, [aoStore.globalRedirect])
 
-    // setTimeout(() => currentContextCard.cardItem.name = "Woosh", 2000);
-  },
-  [taskId]
-  )
+  // return (
+  //   // aoStore.currentCard?<div tabIndex={0} style={{ outline: 'none' }}>
+  //   //   { renderCard(aoStore.currentCard, props) 
+  //   //   }
+  //   // </div>:"No taskId"
 
-  useEffect(() => {
-    if (aoStore.globalRedirect) {
-      history.push(aoStore.globalRedirect)
-      aoStore.setGlobalRedirect(null)
-    }
-  }, [aoStore.globalRedirect])
-
-  return (
-    aoStore.currentCard?<div tabIndex={0} style={{ outline: 'none' }}>
-      { renderCard(aoStore.currentCard, props) 
-      }
-    </div>:"No taskId"
-  )
+  // )
   // ReactDOM.render(renderCard(aoStore.currentCard), document.getElementById("root"));
 }
