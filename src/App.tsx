@@ -91,6 +91,30 @@ const App = observer(() => {
   useEffect(() => {
     document.body.className = 'theme-1'
     api.fetchState().then(() => {
+      
+
+      let communityCard = 
+          aoStore.getTaskByName_async
+          ( "community hub",
+            (communityCard) =>
+            {
+              if (
+                  !communityCard ||
+                  !communityCard.hasOwnProperty('taskId') ||
+                  !communityCard.taskId
+              ) {
+                  api.createCard('community hub').then(result => {
+                      const newTaskId = JSON.parse(result.text).event.taskId
+                      aoStore.setCurrentCard(newTaskId)
+                      // setHubId(newTaskId)
+                  })
+              } else {
+                  aoStore.setCurrentCard(communityCard.taskId)
+                  // setHubId(communityCard.taskId)
+              }
+            }
+          )
+
       setRender(true)
       console.log("AO: components/App.tsx: useEffect: setRender(true) ")
     })
@@ -133,7 +157,9 @@ const App = observer(() => {
             { // the login page
             }
             <Route path="/login" component={Login} />
-            
+            <Route exact path="/" >
+              <Redirect to={"/task/"+aoStore.cardByName.get("community hub")} /> 
+            </Route>
             { // this is the primary application route
             }
             <ProtectedRoute
@@ -145,12 +171,14 @@ const App = observer(() => {
             { // the AoMember "component" simply renders the AoCard component [primary root above]
               // , after ensuring that there is a "Community Hub" card.
             }
-            <ProtectedRoute
-              path="/"
-              component={AoMember}
-              loggedIn={aoStore.state.loggedIn}
-              exact={true}
-            />
+            {
+              // <ProtectedRoute
+              //   path="/"
+              //   component={AoMember}
+              //   loggedIn={aoStore.state.loggedIn}
+              //   exact={true}
+              // />
+            }
           </Switch>
         </Router>
       )}

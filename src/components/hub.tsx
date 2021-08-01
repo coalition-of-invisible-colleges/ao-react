@@ -54,7 +54,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
             const taskId = card.taskId
 
             let redirectCard;
-            
+
             if (aoStore.currentCard === taskId) {
               // let redirectCard
               if (aoStore.context.length <= 0) {
@@ -62,22 +62,16 @@ export default class AoHub extends React.PureComponent<{}, State> {
               } else {
                 redirectCard = aoStore.context[aoStore.context.length - 1]
               }
-              aoStore.setCurrentCard(redirectCard)
-              aoStore.removeFromContext(redirectCard)
-              // this.setState({
-              //   redirect: redirectCard
-              // })
             } else {
               console.log('goInCard taskId is ', taskId)
               if (aoStore.currentCard) {
                 aoStore.addToContext([aoStore.currentCard])
               }
-              aoStore.setCurrentCard(taskId)
-              aoStore.removeFromContext(taskId)
-              // this.setState({
-              //   redirect: taskId
-              // })
+              redirectCard = taskId;
             }
+
+            aoStore.setCurrentCard(redirectCard)
+            aoStore.removeFromContext(redirectCard)
           }
         )
     

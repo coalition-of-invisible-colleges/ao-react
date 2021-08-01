@@ -51,6 +51,7 @@ const ContextPileView   = observer( ({contextPile}) => <div id="context">
 export class CurrentContextCard {
   cardItem = null;
   loadingCardItemFromServer = null;
+  history = null;
 
   constructor() { 
     makeObservable(this, {cardItem: observable}) 
@@ -58,6 +59,7 @@ export class CurrentContextCard {
 
   setCardItem(taskId) {
     aoStore.getTaskById_async(taskId, (taskItem) => { runInAction(() => { this.cardItem = taskItem; contextPile.contextPileList.push(taskItem)} ) });
+    this.history.push("/task/"+taskId);
   }
 }
 const currentContextCard = new CurrentContextCard();
@@ -159,6 +161,7 @@ interface CardState {
 
 export default function AoCard(props) {
   let history = useHistory()
+  currentContextCard.history = history;
 
   let taskId =
     props.match.params.hasOwnProperty('taskId') && props.match.params.taskId
