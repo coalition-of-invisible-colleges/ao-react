@@ -32,12 +32,19 @@ const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
   
   let loggedIn = aoStore.state.loggedIn
 
+  if (!loggedIn && path !== "/login")
+  { 
+    aoStore.state.protectedRouteRedirectPath = path;
+    window.localStorage.setItem("AO: ProtectedRouteRedirectPath", path)
+  }
+
+
   return (
     <Route
       path={path}
       {...rest}
       render={props => {
-        console.log
+        
         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
       }}
     />

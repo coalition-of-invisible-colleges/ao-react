@@ -193,6 +193,8 @@ export interface AoState {
   tasks: Task[]
   resources: Resource[]
   memes: Meme[]
+  socketState?: string
+  protectedRouteRedirectPath?: string
   cash: {
     address: string
     alias: string
@@ -898,6 +900,11 @@ class AoStore {
 
   @action.bound dab() {
     this.dabbed = !this.dabbed
+  }
+
+  @action.bound setSocketState(newState)
+  {
+    this.state.socketState = newState;
   }
 }
 const aoStore = new AoStore()

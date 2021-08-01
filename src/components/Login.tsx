@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
+import { runInAction, reaction } from 'mobx'
 import api from '../client/api'
 import config from '../../configuration'
+import aoStore from '../client/store'
 
 const Login: React.FunctionComponent<{}> = () => {
   const [user, setUser] = useState('')
@@ -10,6 +12,11 @@ const Login: React.FunctionComponent<{}> = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
+  const [socketState, setSocketState] = useState(false)
+
+  console.log("AO: components/Login.tsx: socketState: inFunctionComponent "+aoStore.state.socketState)
+  reaction( () => { return aoStore.state.socketState }, (socketState) => { setSocketState(socketState==="authenticationSuccess"); console.log("AO: components/Login.tsx: socketState: inReaction"+socketState) } )
+
   const onClick = e => {
     api
       .createSession(user, pass)
@@ -62,6 +69,8 @@ const Login: React.FunctionComponent<{}> = () => {
         </form>
       )}
       {loggedIn && <Redirect to="/" />}
+      {socketState && <Redirect to={aoStore.state.protectedRouteRedirectPath?aoStore.state.protectedRouteRedirectPath:"/"} />}
+      {!socketState && <div>{aoStore.state.socketState+"-"+aoStore.state.protectedRouteRedirectPath}</div>}
       <div className="about">
         <h1>What is the AO?</h1>
         <p>

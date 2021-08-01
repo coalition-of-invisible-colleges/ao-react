@@ -6,6 +6,8 @@ import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
 import { io } from 'socket.io-client'
 
+import { runInAction, reaction } from 'mobx'
+
 class AoApi {
   constructor(public socket) {}
 
@@ -1085,7 +1087,16 @@ class AoApi {
   startSocketListeners() {
     this.socket.connect()
     this.socket.on('connect', () => {
-      console.log('connected')
+      console.log('connected', { "aoStore.state": aoStore.state })
+      
+      if (aoStore.state.socketState === undefined)
+      {
+        aoStore.state.session = window.localStorage.getItem('session')
+        aoStore.state.token = window.localStorage.getItem('token')
+      }
+
+      runInAction( () => { aoStore.state.socketState = "attemptingAuthentication"; } );
+
       this.socket.emit('authentication', {
         session: aoStore.state.session,
         token: aoStore.state.token
@@ -1093,6 +1104,21 @@ class AoApi {
     })
     this.socket.on('authenticated', () => {
       console.log('authenticated')
+
+      this.fetchState().then
+          ( () =>
+            {
+              runInAction
+              ( () => 
+                { 
+                  aoStore.state.socketState = "authenticationSuccess"; 
+                } 
+              );
+            }
+          )
+
+      
+
       this.socket.on('eventstream', ev => {
         console.log('AO: client/api.ts: socketListener: event:', ev);
 
@@ -1101,10 +1127,18 @@ class AoApi {
     })
     this.socket.on('disconnect', reason => {
       console.log('disconnected')
+      
+      runInAction( () => { aoStore.state.socketState = "authenticationFailed"; } );
+
+      aoStore.state.session = ""
+      aoStore.state.token = ""
+
       this.socket.connect()
     })
   }
 }
+
+reaction ( ()=> { return aoStore.state.socketState }, (socketState) => console.log("AO: client/api.ts: socketState: "+socketState));
 const socket = io(config.socketUrl ? config.socketUrl : '/', {
   autoConnect: false
 })
