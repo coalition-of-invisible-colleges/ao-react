@@ -1200,7 +1200,7 @@ textarea {
     // deck popup
     #deck {
       .actionCircle {
-        top: 2.5em;
+        bottom: 0.85em;
         left: calc(100% + 2.5em);
         width: 3.5em;
         height: 3.5em;
@@ -2703,7 +2703,7 @@ textarea {
     #hopper {
       position: absolute;
       height: 1.5em;
-      top: 0.5em;
+      bottom: 6em;
       transform: translateX(-50%);
       // width: min-content;
       transition-property: left;
