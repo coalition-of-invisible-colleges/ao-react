@@ -169,9 +169,10 @@ class AoApi {
       name: name,
       color: 'blue',
       deck: anonymous ? [] : [aoStore.member.memberId],
-      inId: anonymous ? null : aoStore.memberCard.taskId,
+      inId: anonymous ? null : (aoStore.memberCard.taskId || null),
       prioritized: false
     }
+    console.log("AO: client/api.ts: createCard: ", {act, "aoStore.memberCard": aoStore.memberCard})
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)

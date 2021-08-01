@@ -32,48 +32,55 @@ export default class AoDock extends React.Component<{}, State> {
 
   componentWillMount() {
     const dockCardName = aoStore.member.memberId + '-bookmarks'
-    let myBookmarks = aoStore.cardByName.get(dockCardName)
+    // let myBookmarks = 
+    aoStore.getTaskByName_async
+        ( dockCardName,
+          (myBookmarks) =>
+          {
+            if (!myBookmarks) {
+              api
+                .createCard(dockCardName)
+                .then(res => {
+                  const taskId = JSON.parse(res.text).event.taskId
+                  return api.addGridToCard(taskId, 1, 6)
+                })
+                .then(res => {
+                  const taskId = JSON.parse(res.text).event.taskId
+                  return api.pinCardToGrid(0, 0, 'drop bookmarks here', taskId)
+                })
+                .then(res => {
+                  const taskId = JSON.parse(res.text).event.taskId
+                  this.setState({ bookmarksTaskId: taskId })
+                })
+            } else if (!myBookmarks.hasOwnProperty('grid')) {
+              api
+                .addGridToCard(myBookmarks.taskId, 1, 6)
+                .then(() => {
+                  return api.pinCardToGrid(
+                    0,
+                    0,
+                    'drop bookmarks here',
+                    myBookmarks.taskId
+                  )
+                })
+                .then(res => {
+                  const taskId = JSON.parse(res.text).event.taskId
+                  this.setState({ bookmarksTaskId: taskId })
+                })
+            } else if (!_.has(myBookmarks, 'grid.rows.0')) {
+              api
+                .pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
+                .then(res => {
+                  const taskId = JSON.parse(res.text).event.taskId
+                  this.setState({ bookmarksTaskId: taskId })
+                })
+            } else {
+              this.setState({ bookmarksTaskId: myBookmarks.taskId })
+            }
+          }
+        );
 
-    if (!myBookmarks) {
-      api
-        .createCard(dockCardName)
-        .then(res => {
-          const taskId = JSON.parse(res.text).event.taskId
-          return api.addGridToCard(taskId, 1, 6)
-        })
-        .then(res => {
-          const taskId = JSON.parse(res.text).event.taskId
-          return api.pinCardToGrid(0, 0, 'drop bookmarks here', taskId)
-        })
-        .then(res => {
-          const taskId = JSON.parse(res.text).event.taskId
-          this.setState({ bookmarksTaskId: taskId })
-        })
-    } else if (!myBookmarks.hasOwnProperty('grid')) {
-      api
-        .addGridToCard(myBookmarks.taskId, 1, 6)
-        .then(() => {
-          return api.pinCardToGrid(
-            0,
-            0,
-            'drop bookmarks here',
-            myBookmarks.taskId
-          )
-        })
-        .then(res => {
-          const taskId = JSON.parse(res.text).event.taskId
-          this.setState({ bookmarksTaskId: taskId })
-        })
-    } else if (!_.has(myBookmarks, 'grid.rows.0')) {
-      api
-        .pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
-        .then(res => {
-          const taskId = JSON.parse(res.text).event.taskId
-          this.setState({ bookmarksTaskId: taskId })
-        })
-    } else {
-      this.setState({ bookmarksTaskId: myBookmarks.taskId })
-    }
+    
   }
 
   render() {

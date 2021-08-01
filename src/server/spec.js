@@ -11,6 +11,7 @@ import lightning from './lightning.js'
 const router = express.Router()
 
 router.post('/events', (req, res, next) => {
+  console.log("AO: server/spec.js: router.post(/events):", {} );
   state.serverState.sessions.forEach(s => {
     if (s.token === req.headers.authorization) {
       req.body.blame = s.ownerId
@@ -22,6 +23,7 @@ router.post('/events', (req, res, next) => {
 
 
 router.post('/events', (req, res, next) => {
+  console.log("AO: server/spec.js: router.post(/events):", {"req.body": req.body} );
   let errRes = []
   switch (req.body.type) {
     case 'ao-linked':
@@ -524,7 +526,7 @@ router.post('/events', (req, res, next) => {
     case 'task-created':
       if (
         validators.isNotes(req.body.name, errRes) &&
-        !validators.isTaskName(req.body.name, errRes) &&
+        !validators.taskNameExists(req.body.name, errRes) &&
         validators.isNotes(req.body.color, errRes) &&
         validators.isNotes(req.body.deck, errRes) &&
         (req.body.inId === null ||

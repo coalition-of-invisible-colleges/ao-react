@@ -570,8 +570,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   { () => <AoGrid
           									grid={card.grid}
           									taskId={taskId}
-          									height={grid?.height}
-          									width={grid?.width}
+          									height={card.grid?.height}
+          									width={card.grid?.width}
           								/>
                   }
                 </Observer>

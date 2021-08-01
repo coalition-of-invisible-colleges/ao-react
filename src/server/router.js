@@ -102,18 +102,18 @@ export default function applyRouter(app) {
         let errRes = [];
         let foundThisTask;
 
-        console.log("server/api.ts: fetchTaskByID: ");
+        console.log("AO: server/router.js: fetchTaskByID: ");
 
-        if  ( validators.isTaskId(req.body.taskId, errRes)
+        if  ( validators.isTaskId_sane(req.body.taskId, errRes)
             )
         {
-          state.pubState.tasks.forEach
+          state.pubState.tasks.some
               ( (taskItem) =>
                 {
                   if (taskItem.taskId === req.body.taskId)
                   {
                     foundThisTask = taskItem;
-                    return;
+                    return true
                   }
                 }
               );
@@ -121,18 +121,65 @@ export default function applyRouter(app) {
           
           if (foundThisTask)
           {
-            console.log({"taskId": req.body.taskId, "result": foundThisTask});
+            console.log("AO: server/router.js: fetchTaskByID: ", {"taskId": req.body.taskId, "result": foundThisTask});
             res.json(foundThisTask);
           } 
           else
           { 
-            errRes.push("AO: server/spec.js: fetchTaskByID: task not found "+ taskId);
-            res.status(200).send(errRes);
+            errRes.push("AO: server/router.js: fetchTaskByID: task not found ", { "req.body": req.body, foundThisTask});
+            res.status(400).send({ "success": false, "errorList": errRes });
           }
         }
         else
         {
-          console.log("server/api.ts: fetchTaskByID: invalid taskId: "+req.body.taskId);
+          console.log("AO: server/router.js: fetchTaskByID: invalid taskId: "+req.body.taskId);
+          res.status(400).send(errRes);
+        }
+
+      }
+    );
+
+  app.post( "/fetchTaskByName", 
+      // bodyParser.json(),
+      (req, res) => 
+      {
+        let errRes = [];
+        let foundThisTask;
+
+        console.log("AO: server/router.js: fetchTaskByName: start: ", { "pubState.tasks": state.pubState.tasks });
+
+        if  ( validators.isTaskName_sane(req.body.taskName, errRes)
+            )
+        {
+          let taskName = req.body.taskName
+          state.pubState.tasks.some
+              ( (taskItem) =>
+                {
+                  // console.log("AO: server/router.js: fetchTaskByName: iterative search: ", { "taskName": req.body.taskName, taskItem });
+                  if (taskItem.name === req.body.taskName)
+                  {
+                    foundThisTask = taskItem
+                    return true;
+                  }
+                }
+              );
+
+          
+          if (foundThisTask)
+          {
+            console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
+            res.status(200).send(foundThisTask);
+          } 
+          else
+          { 
+            console.log("AO: server/router.js: fetchTaskByName: task not found ", { "req.body": req.body, foundThisTask} )
+            errRes.push("task name not found")
+            res.status(400).send({ "success": false, "errorList": errRes });
+          }
+        }
+        else
+        {
+          console.log("AO: server/router.js: fetchTaskByName: invalid taskName: ", { "req.body": req.body, foundThisTask } )
           res.status(400).send(errRes);
         }
 

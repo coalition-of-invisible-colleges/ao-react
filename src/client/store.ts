@@ -368,34 +368,47 @@ class AoStore {
 
   getTaskById_async(taskId, callback)
   {
+    taskId = taskId.toLowerCase();
     let taskToGet = this.hashMap.get(taskId);
-    if (taskToGet)
-    { console.log("AO: client/store.ts: hashMap: task found", {taskId, taskToGet});
+    if (taskToGet !== undefined)
+    { console.log("AO: client/store.ts: getTaskById_async: returning task from client store: ", { taskId, taskToGet });
       callback(taskToGet)
     }
+    else
+    {
+      console.log("AO: client/store.ts: getTaskById_async: fetching task from server", { taskId });
 
-    let stateClosure = this.state;
 
-    request
-        .post('/fetchTaskByID')
-        .set('Authorization', stateClosure.token)
-        .send( {taskId} )
-        .then
-            ( (result) => 
-              {
-                console.log("AO: client/store.ts: hashMap: merging fetched task", {taskId, "result": result.body});
+      let stateClosure = this.state;
+      request
+          .post('/fetchTaskByID')
+          .set('Authorization', stateClosure.token)
+          .send( {taskId} )
+          .then
+              ( (result) => 
+                {
+                  console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
 
-                // let newTaskFromServer = result.body;
-                // if (result.body.grid) 
-                // {
-                  
-                // }
+                  runInAction
+                      ( () => 
+                        { stateClosure.tasks.push(result.body) 
+                          setImmediate(() => callback(this.hashMap.get(taskId)));
+                        }
+                      );
+                  // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+                }
+              )
+          .catch 
+              ( ( error ) =>
+                {
+                  console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
 
-                stateClosure.tasks.push(result.body);
-                callback(this.hashMap.get(taskId));
-                // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
-              }
-            );
+                  callback(false);
+                }
+              )
+      }
+
+    
     }
   
 
@@ -466,6 +479,53 @@ class AoStore {
     })
     return hashMap
   }
+
+  getTaskByName_async(taskName, callback)
+      { 
+        taskName = taskName.toLowerCase();
+        let taskToGet = this.cardByName.get(taskName);
+
+        if (taskToGet !== undefined)
+        { console.log("AO: client/store.ts: getTaskByName_async: checking client hashmap: ", { taskName, taskToGet });
+          callback(taskToGet)
+        }
+        else
+        {
+          console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
+
+
+          let stateClosure = this.state;
+          request
+              .post('/fetchTaskByName')
+              .set('Authorization', stateClosure.token)
+              .send( {taskName} )
+              .then
+                  ( (result) => 
+                    {
+                      console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
+
+                      runInAction
+                          ( () =>
+                            { 
+                              let taskItem = result.body
+                              stateClosure.tasks.push(taskItem);
+                              taskItem = this.hashMap.get(taskItem.taskId);
+                              setImmediate( () => callback(taskItem) );
+                              // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+                            }
+                          )
+                    }
+                  )
+              .catch 
+                  ( ( error ) =>
+                    {
+                      console.log("AO: client/store.ts: getTaskByName_async: error fetching task", {taskName, error});
+
+                      callback(false);
+                    }
+                  )
+        }
+      }
 
   @computed get communityHubTaskItem(): Task {
     return this.cardByName.get("community hub");

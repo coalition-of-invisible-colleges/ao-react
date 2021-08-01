@@ -92,6 +92,7 @@ const App = observer(() => {
     document.body.className = 'theme-1'
     api.fetchState().then(() => {
       setRender(true)
+      console.log("AO: components/App.tsx: useEffect: setRender(true) ")
     })
   }, [])
 

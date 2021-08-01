@@ -62,7 +62,7 @@ export class CurrentContextCard {
 }
 const currentContextCard = new CurrentContextCard();
 
-const PageTitleView = observer( ({currentContextCard}) => <Helmet><title>{currentContextCard.cardItem?currentContextCard.cardItem.name:"Loading..."}</title></Helmet> );
+const PageTitleView   = observer( ({currentContextCard}) => <Helmet><title>{currentContextCard.cardItem?currentContextCard.cardItem.name:"Loading..."}</title></Helmet> );
 
 const ContextCardView = observer( ({currentContextCard}) => <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />)
 
@@ -73,7 +73,7 @@ const ContextCardView = observer( ({currentContextCard}) => <AoContextCard task=
 
 
 function renderCard(taskId?: string, props?: any) {
-  console.log('AO: components/Card.tsc: renderCard: taskId is ', {taskId, props})
+  console.log('AO: components/Card.tsx: renderCard: taskId is ', {taskId, props})
 
   // let card
   // let cardText
@@ -135,7 +135,8 @@ function renderCard(taskId?: string, props?: any) {
           // </div>
 
         }
-        { //<AoHud />
+        { 
+          // <AoHud />
         }
       </div>
     </Tour>
@@ -152,7 +153,7 @@ export default function AoCard(props) {
   let taskId =
     props.match.params.hasOwnProperty('taskId') && props.match.params.taskId
 
-  console.log("AO: client/Card.tsx: AoCard:", { props })
+  console.log("AO: components/Card.tsx: AoCard:", { props })
 
   useEffect(() => {
     aoStore.setCurrentCard(taskId);
