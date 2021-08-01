@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from "react-dom"
 import { useState, useEffect } from 'react'
-import { makeAutoObservable, makeObservable, observable, action, runInAction } from 'mobx'
+import { makeAutoObservable, makeObservable, observable, action, runInAction,reaction } from 'mobx'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import aoStore, { Member, Resource } from '../client/store'
@@ -61,6 +61,16 @@ export class CurrentContextCard {
   }
 }
 const currentContextCard = new CurrentContextCard();
+const currentCardReaction =
+    reaction
+    ( () => 
+      { console.log("AO: client/Card.tsx: currentCardReaction: aoStore.currentCard"+ aoStore.currentCard)
+        return aoStore.currentCard 
+      },
+      (currentCard) => 
+      { currentContextCard.setCardItem(currentCard) 
+      }
+    );
 
 const PageTitleView   = observer( ({currentContextCard}) => <Helmet><title>{currentContextCard.cardItem?currentContextCard.cardItem.name:"Loading..."}</title></Helmet> );
 
@@ -136,7 +146,7 @@ function renderCard(taskId?: string, props?: any) {
 
         }
         { 
-          // <AoHud />
+          <AoHud />
         }
       </div>
     </Tour>

@@ -295,12 +295,16 @@ class AoStore {
   }
 
   @computed get memberCard(): Task {
-    let memberCard = _.merge(
-      blankCard('', '', ''),
-      this.hashMap.get(this.member.memberId)
-    )
-    return memberCard
+    // let memberCard = _.merge(
+    //   blankCard('', '', ''),
+      return this.hashMap.get(this.member.memberId)
+    // )
+    // return memberCard
   }
+
+  // getMemberCard_async(callback) {
+
+  // }
 
   @computed get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
@@ -371,7 +375,7 @@ class AoStore {
     taskId = taskId.toLowerCase();
     let taskToGet = this.hashMap.get(taskId);
     if (taskToGet !== undefined)
-    { console.log("AO: client/store.ts: getTaskById_async: returning task from client store: ", { taskId, taskToGet });
+    { console.log("AO: client/store.ts: getTaskById_async: task found in client store: ", { taskId, taskToGet });
       callback(taskToGet)
     }
     else
@@ -486,7 +490,7 @@ class AoStore {
         let taskToGet = this.cardByName.get(taskName);
 
         if (taskToGet !== undefined)
-        { console.log("AO: client/store.ts: getTaskByName_async: checking client hashmap: ", { taskName, taskToGet });
+        { console.log("AO: client/store.ts: getTaskByName_async: task found in client store: ", { taskName, taskToGet });
           callback(taskToGet)
         }
         else

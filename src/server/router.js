@@ -77,11 +77,16 @@ export default function applyRouter(app) {
         }
         else
         {
-          
-          // for (let taskItem of value)
-          // {
-          //   if (taskItem.)
-          // }
+          for (let taskItem of value)
+          {
+            if  (     taskItem.name === taskItem.taskId
+                  ||  taskItem.name === "community hub"
+
+                )
+            {
+              stateToSend.tasks.push(taskItem);
+            }
+          }
         }
       }
     }

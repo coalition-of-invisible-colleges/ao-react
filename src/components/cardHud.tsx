@@ -61,6 +61,8 @@ export default class CardHud extends React.Component<CardHudProps> {
 		const hudStyle = this.props.hudStyle
 		const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
 
+		// let cardHudIdentifierFunction = 
+
 		switch (hudStyle) {
 			case 'context':
 				return (
@@ -216,7 +218,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 
 				return (
 					<div className="hud menu">
-						cardHud.tsx__menu
+						cardHud.tsx__menu\
 						{noGrid && (
 							<div className="gridMenu action" onClick={this.addGrid}>
 								+grid

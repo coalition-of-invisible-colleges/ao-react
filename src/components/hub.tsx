@@ -41,38 +41,46 @@ export default class AoHub extends React.PureComponent<{}, State> {
     hideAllTippys()
     aoStore.closeAllCloseables()
 
-    let card = aoStore.cardByName.get('community hub')
-    if (!card) {
-      api.createCard('community hub').then(() => {
-        this.goHub()
-      })
-      return
-    }
-    const taskId = card.taskId
+    aoStore.getTaskByName_async
+        ( 'community hub',
+          (card) =>
+          {
+            if (!card) {
+              api.createCard('community hub').then(() => {
+                this.goHub()
+              })
+              return
+            }
+            const taskId = card.taskId
 
-    if (aoStore.currentCard === taskId) {
-      let redirectCard
-      if (aoStore.context.length <= 0) {
-        redirectCard = aoStore.memberCard.taskId
-      } else {
-        redirectCard = aoStore.context[aoStore.context.length - 1]
-      }
-      aoStore.setCurrentCard(redirectCard)
-      aoStore.removeFromContext(redirectCard)
-      this.setState({
-        redirect: redirectCard
-      })
-    } else {
-      console.log('goInCard taskId is ', taskId)
-      if (aoStore.currentCard) {
-        aoStore.addToContext([aoStore.currentCard])
-      }
-      aoStore.setCurrentCard(taskId)
-      aoStore.removeFromContext(taskId)
-      this.setState({
-        redirect: taskId
-      })
-    }
+            let redirectCard;
+            
+            if (aoStore.currentCard === taskId) {
+              // let redirectCard
+              if (aoStore.context.length <= 0) {
+                redirectCard = aoStore.memberCard.taskId
+              } else {
+                redirectCard = aoStore.context[aoStore.context.length - 1]
+              }
+              aoStore.setCurrentCard(redirectCard)
+              aoStore.removeFromContext(redirectCard)
+              // this.setState({
+              //   redirect: redirectCard
+              // })
+            } else {
+              console.log('goInCard taskId is ', taskId)
+              if (aoStore.currentCard) {
+                aoStore.addToContext([aoStore.currentCard])
+              }
+              aoStore.setCurrentCard(taskId)
+              aoStore.removeFromContext(taskId)
+              // this.setState({
+              //   redirect: taskId
+              // })
+            }
+          }
+        )
+    
   }
 
   render() {
