@@ -2723,6 +2723,12 @@ textarea {
     input[type='text'].error {
       border: 2px solid red;
     }
+
+    // Claim reset icon in the top right corner of a card, next to the checkbox
+    .claimInterval {
+      display: inline-block;
+      cursor: default;
+    }
   }
 }
 

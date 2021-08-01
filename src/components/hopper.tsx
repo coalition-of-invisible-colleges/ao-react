@@ -448,6 +448,9 @@ export default function AoHopper(props: {}): JSX.Element {
 
 	const renderedSettings = renderSettings()
 
+	// Note: appending the Tippy to the root element makes it display
+	// correctly on top of other hud elements, but then it doesn't move
+	// smoothly with the #hopper element anymore
 	return (
 		<div id="hopper" style={{ left: calcLeft }}>
 			<Tippy

@@ -1130,6 +1130,21 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-interval-set':
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          task.claimInterval = ev.claimInterval
+        }
+      })
+      break
+    case 'task-reset':
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          task.claimed = []
+          task.lastkClaimed = ev.timestamp
+        }
+      })
+      break
     case 'task-boosted':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {

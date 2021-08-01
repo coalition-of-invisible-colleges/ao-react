@@ -556,6 +556,24 @@ function taskUnclaimed(taskId, memberId, blame, callback) {
   insertEvent(newEvent, callback)
 }
 
+function taskIntervalSet(taskId, claimInterval, blame, callback) {
+  let newEvent = {
+    type: 'task-interval-set',
+    taskId,
+    claimInterval,
+    blame,
+  }
+  insertEvent(newEvent, callback)
+}
+
+function taskReset(taskId, callback) {
+  let newEvent = {
+    type: 'task-reset',
+    taskId,
+  }
+  insertEvent(newEvent, callback)
+}
+
 function taskBoosted(taskId, amount, txid, callback) {
   let newEvent = {
     type: 'task-boosted',
@@ -771,6 +789,8 @@ export default {
   taskBoosted,
   taskClaimed,
   taskUnclaimed,
+  taskIntervalSet,
+  taskReset,
   taskRefocused,
   pileRefocused,
   tasksRemoved,

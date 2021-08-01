@@ -1,4 +1,4 @@
-import { observable, computed, observe, action, makeObservable } from 'mobx';
+import { observable, computed, observe, action, makeObservable } from 'mobx'
 import _ from 'lodash'
 import M from '../mutations'
 // import modules from '../modules/index.js'
@@ -74,6 +74,7 @@ export interface Task {
   completed: string[]
   parents: string[]
   claimed: string[]
+  claimInterval?: number
   signed: Signature[]
   passed: number[]
   guild: string
@@ -271,7 +272,7 @@ class AoStore {
   @observable globalRedirect?: string
 
   constructor() {
-    makeObservable(this);
+    makeObservable(this)
   }
 
   @computed get member(): Member {

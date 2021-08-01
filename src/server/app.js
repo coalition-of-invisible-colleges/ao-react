@@ -16,6 +16,7 @@ import { watchSpot } from './exchangeRate.js'
 import rent from './rent.js'
 import link from './link.js'
 import cleanup from './cleanup.js'
+import todo from './todo.js'
 import { scanMemes } from './files.js'
 import lightning from './lightning.js'
 
@@ -39,6 +40,7 @@ function startDctrlAo() {
       rent()
       link()
       scanMemes()
+      todo()
       if (config.clightning.enable) {
         lightning.recordEveryInvoice(state.serverState.cash.pay_index)
         lightning.watchOnChain()

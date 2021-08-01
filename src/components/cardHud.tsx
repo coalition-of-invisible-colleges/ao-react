@@ -10,6 +10,7 @@ import AoBoat from './boat'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
 import AoCrowdfund from './crowdfund'
+import AoInterval from './interval'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
 import AoCardMenu from './cardMenu'
@@ -125,6 +126,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
+							<AoInterval taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
 					</React.Fragment>
@@ -213,6 +215,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 						)}
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoInterval taskId={taskId} hudStyle={hudStyle} />
 						{card.guild && card.guild.length >= 1 && (
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						)}

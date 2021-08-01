@@ -678,6 +678,22 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'task-interval-set':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isAmount(req.body.claimInterval, errRes) &&
+        validators.isMemberId(req.body.blame, errRes)
+      ) {
+        events.taskIntervalSet(
+          req.body.taskId,
+          req.body.claimInterval,
+          req.body.blame,
+          buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'task-refocused':
       if (
         validators.isTaskId(req.body.inId, errRes) &&
