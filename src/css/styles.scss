@@ -434,13 +434,14 @@ textarea {
           font-size: 0.8em;
           right: unset;
           position: absolute;
-          pointer-events: none;
+          pointer-events: auto;
+          cursor: pointer;
 
           .label {
             position: absolute;
-            top: 4em;
-            left: 50%;
+            left: calc(50% + 0.16em);
             transform: translateX(-50%);
+            top: 4em;
           }
         }
 
@@ -451,6 +452,7 @@ textarea {
           padding-bottom: 0.05em;
           padding-right: 0.1em;
           padding-left: 0.4em;
+          pointer-events: auto;
         }
 
         .checkbox.badge,
@@ -859,7 +861,7 @@ textarea {
     #mainMenu {
       // background: rgba(0, 0, 0, 0.2);
       color: white;
-      padding: 0.5em 0 0 0;
+      padding: 0.25em 0 0 0;
 
       .action {
         // color: black;
@@ -2780,6 +2782,8 @@ textarea {
 
     // Claim interval option in card menu
     .claimInterval.menu {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
       img {
         height: 1em;
         margin-right: 0.25em;

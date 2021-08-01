@@ -590,6 +590,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 							className="background"
 							src={BlankBadge}
 							onClick={this.goInCard}
+							id={'card-clickable-' + taskId}
 						/>
 						<AoMission taskId={taskId} hudStyle="badge" />
 						<AoCardHud taskId={taskId} hudStyle="badge" />

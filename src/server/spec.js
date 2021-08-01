@@ -681,7 +681,8 @@ router.post('/events', (req, res, next) => {
     case 'task-interval-set':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
-        validators.isAmount(req.body.claimInterval, errRes) &&
+        (req.body.claimInterval === null ||
+          validators.isAmount(req.body.claimInterval, errRes)) &&
         validators.isMemberId(req.body.blame, errRes)
       ) {
         events.taskIntervalSet(

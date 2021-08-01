@@ -38,10 +38,10 @@ export default class AoInterval extends React.Component<Props, State> {
 
   saveValue() {
     event.stopPropagation()
-    if (this.state.text.length < 1) {
-      return
-    }
     const taskId = this.props.taskId
+    if (this.state.text.length < 1) {
+      api.setClaimInterval(taskId, null)
+    }
     const card = aoStore.hashMap.get(taskId)
     if (!card) {
       return

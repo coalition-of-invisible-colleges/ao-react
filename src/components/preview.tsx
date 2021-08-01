@@ -176,19 +176,27 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         }
         if (this.priorityCount >= 1) {
           return (
-            <Tippy
-              interactive={true}
-              maxWidth="none"
-              placement="bottom"
-              animation="scale-extreme"
-              delay={delay}
-              appendTo={() =>
-                document.getElementById('card-' + taskId).parentElement
-                  .parentElement.parentElement
-              }
-              content={this.renderedPriorities}>
-              <div className="preview nopad">{wrappedPriorityCount}</div>
-            </Tippy>
+            <div
+              className="preview nopad"
+              onClickCapture={event => {
+                console.log('propagating to', event.currentTarget.parentElement)
+                document.getElementById('card-clickable-' + taskId).click()
+              }}>
+              <Tippy
+                interactive={true}
+                maxWidth="none"
+                placement={this.props.hudStyle === 'badge' ? 'top' : 'bottom'}
+                animation="scale-extreme"
+                delay={delay}
+                theme="translucent"
+                appendTo={() =>
+                  document.getElementById('card-' + taskId).parentElement
+                    .parentElement.parentElement
+                }
+                content={this.renderedPriorities}>
+                <span>{wrappedPriorityCount}</span>
+              </Tippy>
+            </div>
           )
         }
         return <div className="preview">({this.subCardCount})</div>
