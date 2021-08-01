@@ -214,11 +214,17 @@ export default class CardHud extends React.Component<CardHudProps> {
 							</div>
 						)}
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoInterval taskId={taskId} hudStyle={hudStyle} />
+						{card.guild && card.guild.length >= 1 && (
+							<AoLilypad taskId={taskId} hudStyle={hudStyle} />
+						)}
+						{((card.guild && card.guild.length >= 1) ||
+							card.claimInterval > 0) && (
+							<AoInterval taskId={taskId} hudStyle={hudStyle} />
+						)}
 						{card.guild && card.guild.length >= 1 && (
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						)}
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 						<AoPalette taskId={taskId} />
 					</div>

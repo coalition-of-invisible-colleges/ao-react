@@ -76,7 +76,8 @@ export default class AoPopupPanel extends React.PureComponent<
 					this.props.onShown ? this.props.onShown(instance) : undefined
 				}}
 				onHide={this.onPanelClose}
-				hideOnClick="toggle">
+				hideOnClick="toggle"
+				theme="translucent">
 				<Tippy
 					zIndex={4}
 					theme="translucent"

@@ -708,6 +708,21 @@ function tasksMuts(tasks, ev) {
             task.signed = []
           }
           task.signed.push(newSig)
+          if (task.guild && task.guild.length >= 1) {
+            if (
+              ev.opinion === 1 &&
+              (!task.hasOwnProperty('memberships') ||
+                (_.has(task, 'memberships.length') &&
+                  task.memberships.length < 1))
+            ) {
+              if (!task.memberships) {
+                task.memberships = []
+              }
+              task.memberships.push({ memberId: ev.memberId, level: 2 })
+            } else if (ev.opinion === 0 && _.has(task, 'memberships.length')) {
+              task.memberships.filter(memb => memb.memberId !== ev.memberId)
+            }
+          }
         }
       })
       break

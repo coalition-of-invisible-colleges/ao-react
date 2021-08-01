@@ -114,15 +114,15 @@ export default class AoInterval extends React.Component<Props, State> {
         if (!card.claimInterval || card.claimInterval <= 0) {
           return null
         }
+        const tooltip =
+          'checkmark will clear every ' + card.claimInterval + ' hours'
         return (
           <div className="claimInterval full">
             <Tippy
               placement="top"
               delay={[475, 200]}
               theme="translucent"
-              content={
-                'checkmarks will clear every ' + card.claimInterval + ' hours'
-              }
+              content={tooltip}
               appendTo={document.getElementById('root')}>
               <img
                 src={CheckmarkRecurring}

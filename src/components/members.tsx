@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import InfiniteScroll from 'react-infinite-scroller'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
-import AoStack from './stack'
 import AoTip from './tip'
 import AoContextCard from './contextCard'
 import AoDragZone from './dragZone'
@@ -27,7 +26,7 @@ export default class AoMembers extends React.Component<{}, State> {
   constructor(props) {
     super(props)
 
-    makeObservable(this);
+    makeObservable(this)
 
     const hasMore =
       aoStore.state.members.filter(
@@ -39,7 +38,7 @@ export default class AoMembers extends React.Component<{}, State> {
     this.state = {
       sort: 'recents',
       items: STARTING_ITEMS,
-      hasMore: hasMore
+      hasMore: hasMore,
     }
 
     this.sortBy = this.sortBy.bind(this)
@@ -72,7 +71,7 @@ export default class AoMembers extends React.Component<{}, State> {
         refreshList: true,
         sort: sort,
         items: STARTING_ITEMS,
-        hasMore
+        hasMore,
       })
     })
   }
@@ -96,7 +95,7 @@ export default class AoMembers extends React.Component<{}, State> {
     const hasMore = this.sortedMemberCards.length > newIndex
     this.setState({
       items: newIndex,
-      hasMore
+      hasMore,
     })
   }
 
@@ -124,7 +123,7 @@ export default class AoMembers extends React.Component<{}, State> {
           taskId={task.taskId}
           dragContext={{
             zone: 'panel',
-            y: i
+            y: i,
           }}
           key={task.taskId}>
           <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />

@@ -2065,6 +2065,15 @@ textarea {
       h4 {
         margin: 0.5em 0;
       }
+
+      p {
+        margin-top: 0.5em;
+        margin-bottom: 1em;
+      }
+
+      p:last-child {
+        margin-bottom: 0.55em;
+      }
     }
 
     .signatureDecorated {
@@ -2608,8 +2617,8 @@ textarea {
       color: red;
     }
 
-    // area for avatars on the card
-    .lilypad {
+    // button that opens the chatroom, area for avatars on the card
+    .lilypad.actionCircle {
       position: absolute;
       top: 3em;
       right: 0.5em;

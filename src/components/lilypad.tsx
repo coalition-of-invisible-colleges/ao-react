@@ -4,6 +4,7 @@ import { computed, makeObservable } from 'mobx'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoMemberIcon from './memberIcon'
+import { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -11,6 +12,7 @@ import Lilypad from '../assets/images/chatroom.svg'
 
 interface Props {
   taskId: string
+  hudStyle?: HudStyle
 }
 
 interface State {
@@ -128,7 +130,33 @@ export default class AoChatroom extends React.Component<Props, State> {
       //   </div>
       // )
       // altMessage = 'Move your avatar here'
-    } else {
+    } else if (this.props.hudStyle === 'menu') {
+      if (!card.showChatroom) {
+        const addChatroom = () => {
+          api.setCardProperty(this.props.taskId, 'showChatroom', true)
+        }
+        return (
+          <div className="lilypad menu">
+            <div onClick={addChatroom} className="action">
+              <img src={Lilypad} />
+              add chatroom
+            </div>
+          </div>
+        )
+      } else {
+        const removeChatroom = () => {
+          api.setCardProperty(this.props.taskId, 'showChatroom', false)
+        }
+        return (
+          <div className="lilypad menu">
+            <div onClick={removeChatroom} className="action">
+              <img src={Lilypad} />
+              remove chatroom
+            </div>
+          </div>
+        )
+      }
+    } else if (card.showChatroom) {
       const renderedBadge = (
         <div className="badge green">{chatroomPop + '/' + cardPop}</div>
       )
@@ -158,5 +186,6 @@ export default class AoChatroom extends React.Component<Props, State> {
         </Tippy>
       )
     }
+    return null
   }
 }

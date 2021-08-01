@@ -12,6 +12,7 @@ export type CardZone =
 	| 'discard'
 	| 'panel'
 	| 'gifts'
+	| 'stash'
 
 export interface Coords {
 	x?: number

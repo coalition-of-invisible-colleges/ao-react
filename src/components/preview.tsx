@@ -172,9 +172,12 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           delay = [625, 200]
         }
         if (wrappedPriorityCount == undefined) {
-          wrappedPriorityCount = this.priorityCount + '!'
+          wrappedPriorityCount = (
+            <div className="label">this.priorityCount + '!'</div>
+          )
         }
         if (this.priorityCount >= 1) {
+          const placement = this.props.hudStyle === 'badge' ? 'top' : 'bottom'
           return (
             <div
               className="preview nopad"
@@ -185,7 +188,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
               <Tippy
                 interactive={true}
                 maxWidth="none"
-                placement={this.props.hudStyle === 'badge' ? 'top' : 'bottom'}
+                placement={placement}
                 animation="scale-extreme"
                 delay={delay}
                 theme="translucent"
@@ -194,7 +197,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                     .parentElement.parentElement
                 }
                 content={this.renderedPriorities}>
-                <span>{wrappedPriorityCount}</span>
+                {wrappedPriorityCount}
               </Tippy>
             </div>
           )

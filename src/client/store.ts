@@ -56,6 +56,11 @@ export interface Member {
   p0wned?: boolean
 }
 
+interface Membership {
+  memberId: string
+  level: number
+}
+
 export interface Task {
   taskId: string
   color: string
@@ -87,6 +92,8 @@ export interface Task {
   created: number
   grid?: Grid
   avatars?: AvatarLocation[]
+  showChatroom?: boolean
+  memberships: Membership[]
 }
 
 export interface Meme {
