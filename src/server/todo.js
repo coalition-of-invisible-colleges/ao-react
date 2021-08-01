@@ -4,7 +4,7 @@ import state from './state'
 const serverState = state.serverState
 
 const todo = new cron.CronJob({
-  cronTime: '0 */1 * * * *',
+  cronTime: '0 */5 * * * *',
   onTick: autoUncheck,
   start: false,
   timeZone: 'America/Los_Angeles',
