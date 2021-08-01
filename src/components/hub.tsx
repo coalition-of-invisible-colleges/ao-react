@@ -84,9 +84,9 @@ export default class AoHub extends React.PureComponent<{}, State> {
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />
-    }
+    // if (this.state.redirect) {
+    //   return <Redirect to={this.state.redirect} />
+    // }
 
     let communityCard = aoStore.cardByName.get('community hub')
     let youAreHere =
