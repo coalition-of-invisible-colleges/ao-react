@@ -31,10 +31,10 @@ export interface CardPlay {
 }
 
 export function goInCard(taskId: string, isContext = false, doNotSave = false) {
-	hideAllTippys()
-	aoStore.closeAllCloseables()
+	// hideAllTippys()
+	// aoStore.closeAllCloseables()
 
-	console.log('goInCard taskId is ', taskId)
+	console.log('AO: cards.ts: goInCard: ', { taskId, isContext, doNotSave })
 	if (isContext) {
 		aoStore.clearContextTo(taskId)
 	} else if (aoStore.currentCard) {
@@ -42,22 +42,34 @@ export function goInCard(taskId: string, isContext = false, doNotSave = false) {
 			aoStore.addToContext([aoStore.currentCard])
 		}
 	}
-	aoStore.setCurrentCard(taskId)
 	aoStore.removeFromContext(taskId)
+	aoStore.setCurrentCard(taskId)
+	
 }
 
 export function goUp() {
-	if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
-		const go = aoStore.contextCards[0]
-		if (go) {
-			goInCard(go.taskId, true)
-		}
-	} else if (aoStore.contextCards.length < 1) {
-		hideAllTippys()
-		aoStore.closeAllCloseables()
+	console.log('AO: cards.ts: goUp', {"context": aoStore.context})
 
-		aoStore.setCurrentCard(null)
+	if (aoStore.context.length > 0)
+	{
+		goInCard(aoStore.context.slice()[0])
 	}
+	else
+	{
+		aoStore.setCurrentCard(null);
+	}
+
+	// if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
+	// 	const go = aoStore.contextCards[0]
+	// 	if (go) {
+	// 		goInCard(go.taskId, true)
+	// 	}
+	// } else if (aoStore.contextCards.length < 1) {
+	//  hideAllTippys()
+	//	aoStore.closeAllCloseables()
+
+	// 	aoStore.setCurrentCard(null)
+	// }
 }
 
 export function prioritizeCard(move: CardPlay) {

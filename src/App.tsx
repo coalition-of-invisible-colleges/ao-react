@@ -110,7 +110,7 @@ if (! document.body.classList.contains("initialiseBodyClasses"))
 
 
 // this is the root component of the React UI
-const App = observer(() => {
+const App = (() => {
   
   // this state variable is used to render the page once the server side database state has been
   //   fetched.

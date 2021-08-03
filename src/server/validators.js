@@ -138,7 +138,7 @@ export default {
       if (result === false) {
         errRes.push('AO: server/validators.js: taskIdExists: task not found: '+val)
       }
-      console.log("AO: server/validators.js: taskIdExists: ", {result, val, errRes});
+      console.log('AO: server/validators.js: taskIdExists: ', {result, val, errRes});
       return result
     }
   },

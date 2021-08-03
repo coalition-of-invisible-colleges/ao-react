@@ -75,7 +75,7 @@ interface State {
 
 // export default observable(AoContextCard);
 
-@observer
+
 export default class AoContextCard extends React.Component<CardProps, State> {
 	constructor(props) {
         super(props)
@@ -108,7 +108,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	togglePriorities(event) {
-		event.stopPropagation(); console.log(event.type);
+		
 		event.nativeEvent.stopImmediatePropagation()
 		if (!this.state.showPriorities) {
 			this.setState({ showPriorities: true, showProjects: false })
@@ -118,7 +118,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	toggleProjects(event) {
-		event.stopPropagation(); console.log(event.type);
+		
 		event.nativeEvent.stopImmediatePropagation()
 		if (!this.state.showProjects) {
 			this.setState({ showProjects: true, showPriorities: false })
@@ -144,7 +144,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	goInCard(event) {
-		event.stopPropagation(); console.log(event.type);
+		
 
 		const card = this.props.task
 		if (!card) {
@@ -162,7 +162,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	async onHover(event) {
 		event.preventDefault()
-		event.stopPropagation(); console.log(event.type);
+		
 		const card = this.props.task
 		if (
 			card.seen &&
@@ -294,6 +294,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 
 	render = () => {
+
 		const card = this.props.task
 		if (!card) {
 			console.log('missing card')
@@ -335,6 +336,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		}
 
 		const cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
+		console.log("AO: components/contextCard.tsx: render: ", { taskId, cardStyle } )
 
 		switch (cardStyle) {
 			case 'context':

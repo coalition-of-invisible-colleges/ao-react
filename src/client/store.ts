@@ -15,6 +15,7 @@ import ao from '../modules/ao.js'
 import request from 'superagent'
 
 import ContextCard from '../components/Card'
+import api from './api'
 
 const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
@@ -533,11 +534,45 @@ class AoStore {
         }
       }
 
-  @computed get communityHubTaskItem(): Task {
-    return this.cardByName.get("community hub");
-  }
+  getCommunityHubCardId(callback): void {
+        console.log("AO: client/store.ts: getCommunityHubCardId")
 
+        this.getTaskByName_async
+        ( "community hub",
+          (communityHubCard) =>
+          {
+            if ( !communityHubCard)
+            {
+                console.log("AO: client/store.ts: creating community hub card on server")
+                
+                api.createCard('community hub', true).then(result => {
+                    const newTaskId = JSON.parse(result.text).event.taskId
+                    
+                    console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
 
+                    // aoStore.setCurrentCard(newTaskId)
+                    callback(newTaskId)
+                    // setHubId(newTaskId)
+                    // initialStateComplete();
+                })
+            } else {
+                console.log("AO: client/store.ts: community hub card found in client state: ", { "taskId": communityHubCard.taskId });
+
+                callback(communityHubCard.taskId)
+
+                // aoStore.setCurrentCard(communityCard.taskId)
+                // setHubId(communityCard.taskId)
+                // initialStateComplete();
+            }
+          }
+        )
+      }
+
+  // @computed get communityHubTaskItem(): Task {
+  //   return this.cardByName.get("community hub");
+  // }
+
+  
   @computed get memeById(): Map<string, Meme> {
     let hashMap: Map<string, Meme> = new Map()
     this.state.memes.forEach(m => {
@@ -552,6 +587,8 @@ class AoStore {
       cards.push(this.hashMap.get(tId))
     })
     cards.reverse()
+
+    // throw new Error("Insane bullshit error");
 
     return cards
   }
@@ -827,9 +864,11 @@ class AoStore {
 
   @action.bound
   removeFromContext(taskId: string) {
-    this.context = this.context.filter(tId => {
+    console.log("AO: client/store.ts: removeFromContext: ", {taskId})
+    this.context = this.context.slice().filter(tId => {
       return tId !== taskId
     })
+    console.log("AO: client/store.ts: removeFromContext: result", {"context": this.context})
   }
 
   @action.bound
