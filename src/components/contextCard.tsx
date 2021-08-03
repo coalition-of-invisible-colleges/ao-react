@@ -108,7 +108,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	togglePriorities(event) {
-		event.stopPropagation()
+		event.stopPropagation(); console.log(event.type);
 		event.nativeEvent.stopImmediatePropagation()
 		if (!this.state.showPriorities) {
 			this.setState({ showPriorities: true, showProjects: false })
@@ -118,7 +118,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	toggleProjects(event) {
-		event.stopPropagation()
+		event.stopPropagation(); console.log(event.type);
 		event.nativeEvent.stopImmediatePropagation()
 		if (!this.state.showProjects) {
 			this.setState({ showProjects: true, showPriorities: false })
@@ -144,7 +144,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 	}
 
 	goInCard(event) {
-		event.stopPropagation()
+		event.stopPropagation(); console.log(event.type);
 
 		const card = this.props.task
 		if (!card) {
@@ -162,7 +162,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 	async onHover(event) {
 		event.preventDefault()
-		event.stopPropagation()
+		event.stopPropagation(); console.log(event.type);
 		const card = this.props.task
 		if (
 			card.seen &&

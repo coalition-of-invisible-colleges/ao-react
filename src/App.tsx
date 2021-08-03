@@ -74,6 +74,30 @@ if (typeof window !== 'undefined') {
 
 // this is a component that will route to the community hub card
 // const communityHubCardRedirectView = observer(( { communityHubTaskID } => <Redirect to={"/task/"+))
+const detectGlobalHotkey = 
+    (event) => 
+    {
+      console.log("AO: components/App.tsx: detectGlobalHotkey: ", {"event": event.toString()} )
+      if (event.key === 'Escape') 
+      {
+        if (event.shiftKey) 
+        {
+          // empty the context stack
+          aoStore.clearContext()
+        }
+        // shift one card up (fewer) in the context stack
+        goUp()
+
+        // this currentCard / current "contextCard" paradigm means that there is one central card in the UI
+        //   at a time
+        // this card should be the same as the card represented in the address bar, hence the redirect concept
+        console.log('aoStore.currentCard is ', aoStore.currentCard);
+        // aoStore.setGlobalRedirect(aoStore.currentCard || './');
+        event.stopPropagation()
+      }
+    }
+
+  document.body.addEventListener("keyup", detectGlobalHotkey)
 
 
 // this is the root component of the React UI
@@ -84,22 +108,8 @@ const App = observer(() => {
   // const [render, setRender] = useState(false)
 
   // this is a UI function for trapping user interaction at the root of the HTML DOM
-  const detectGlobalHotkey = event => {
-    if (event.key === 'Escape') {
-      if (event.shiftKey) {
-        // empty the context stack
-        aoStore.clearContext()
-      }
-      // shift one card up (fewer) in the context stack
-      goUp()
 
-      // this currentCard / current "contextCard" paradigm means that there is one central card in the UI
-      //   at a time
-      // this card should be the same as the card represented in the address bar, hence the redirect concept
-      console.log('aoStore.currentCard is ', aoStore.currentCard);
-      // aoStore.setGlobalRedirect(aoStore.currentCard || './');
-    }
-  }
+  
 
   // load the initial state from the server, and then render the UI
   // useEffect(() => {
@@ -161,12 +171,17 @@ const App = observer(() => {
   //       ]
   //     );
 
+  // const showMouseMove = (event) => console.log("mousemove", event);22
 
 
   return (
-    <div onKeyDown={detectGlobalHotkey}>
+    <div id="Apptsx_root_div" onKeyDown={detectGlobalHotkey}>
       {
         document.body.className = 'theme-1'
+      }
+      {
+        // document.getElementById("Apptsx_root_div").addEventListener("keydown", detectGlobalHotkey)
+        
         // value render is false on initial page load.
         // !render && 
         // (

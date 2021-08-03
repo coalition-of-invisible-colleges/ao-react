@@ -93,25 +93,46 @@ export class CurrentContextCard {
   }
 
   setCardItem(taskId) {
-    aoStore.getTaskById_async(taskId, (taskItem) => { runInAction(() => { this.cardItem = taskItem; contextPile.contextPileList.push(taskItem)} ) });
-    this.history.push("/task/"+taskId);
+    let taskIdUrlString = "/task/"
+
+    if (taskId !== null && taskId !== undefined)
+    {
+      aoStore.getTaskById_async(taskId, (taskItem) => { runInAction(() => { this.cardItem = taskItem; contextPile.contextPileList.push(taskItem)} ) });
+      taskIdUrlString += taskId
+    }
+    else
+    {
+      runInAction( () => { this.cardItem = null } )
+    }
+    
+    this.history.push(taskIdUrlString)
   }
 }
 const currentContextCard = new CurrentContextCard();
 const currentCardReaction =
     reaction
     ( () => 
-      { console.log("AO: client/Card.tsx: currentCardReaction: aoStore.currentCard"+ aoStore.currentCard)
+      { 
+        console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
         return aoStore.currentCard 
       },
       (currentCard) => 
-      { currentContextCard.setCardItem(currentCard) 
+      { 
+        console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
+        currentContextCard.setCardItem(currentCard) 
       }
     );
 
 const PageTitleView   = observer( ({currentContextCard}) => <Helmet><title>{currentContextCard.cardItem?currentContextCard.cardItem.name:"Loading..."}</title></Helmet> );
 
-const ContextCardView = observer( ({currentContextCard}) => <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />)
+const ContextCardView = observer( 
+      ({currentContextCard}) => 
+      { 
+        console.log("AO: client/Card.tsx: currentCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem)
+        if (currentContextCard.cardItem === null) return <AoDrawPile /> 
+        else return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
+      }
+    );
 
 
 
@@ -198,7 +219,7 @@ export default function AoCard(props) {
   let history = useHistory()
   currentContextCard.history = history;
 
-  console.log("AO: components/Card.tsx: AoCard function: ", {props})
+  // console.log("AO: components/Card.tsx: AoCard function: ", {props})
   if (props.match.path === "/")
   {
     getCommunityCard()
@@ -221,7 +242,8 @@ export default function AoCard(props) {
           // </Helmet>
         }
         Card.tsx
-        { <AoDiscardZone /> 
+        { 
+          <AoDiscardZone /> 
         }
         { 
           //card ? <AoContextCard taskId={taskId} task={card} cardStyle="full" /> : <AoDrawPile />
