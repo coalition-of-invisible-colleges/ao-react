@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
-import api from '../client/api'
+import api from '../client/api.js'
 import AoTip from './tip'
 import AoQuorum from './quorum'
 
@@ -10,7 +10,7 @@ import AoQuorum from './quorum'
 export default class AoRent extends React.PureComponent<{}> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.state = {}
     this.renderPendingDeactivation = this.renderPendingDeactivation.bind(this)
   }
