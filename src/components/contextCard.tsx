@@ -199,8 +199,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		if (meme) {
 			memeContent =
 				'<a href="' +
-				'/memes/' +
-				meme.filename +
+				'/download/' +
+				meme.hash +
 				'" download >' +
 				content +
 				'</a>'
