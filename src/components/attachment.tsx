@@ -209,7 +209,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     // element only attaches when meme downloads
     // return <div ref={this.attachmentRef} />
 
-    if (!this.props.taskId || !this.state.mimeType) {
+    if (!this.props.taskId) {
       return null
     }
 
