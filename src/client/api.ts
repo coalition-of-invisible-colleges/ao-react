@@ -979,7 +979,11 @@ class AoApi {
     name: string,
     inId: string
   ): Promise<request.Response> {
+
+
     const task: Task = aoStore.cardByName.get(name.toLowerCase())
+    console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
+
     if (_.isObject(task)) {
       const act = {
         type: 'grid-pin',
@@ -1116,8 +1120,6 @@ class AoApi {
               );
             }
           )
-
-      
 
       this.socket.on('eventstream', ev => {
         console.log('AO: client/api.ts: socketListener: event:', ev);

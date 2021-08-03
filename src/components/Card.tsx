@@ -264,13 +264,13 @@ export default function AoCard(props) {
   {
     aoStore.getCommunityHubCardId((communityHubCardTaskId) => aoStore.setCurrentCard(communityHubCardTaskId))
   }
-  else if (props.match.params && props.match.params.taskId !== aoStore.currentCard)
+  else if (props.match.params && props.match.params.taskId)
   {
-    if (props.match.params.taskId === undefined && aoStore.currentCard === null)
-    {
-      // do nothing
-    }
-    else
+    // if (props.match.params.taskId === undefined && aoStore.currentCard === null)
+    // {
+    //   // do nothing
+    // }
+    // else
     {
       aoStore.setCurrentCard(props.match.params.taskId);
     }
