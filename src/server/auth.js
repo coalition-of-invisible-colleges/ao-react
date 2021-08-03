@@ -61,7 +61,10 @@ export function serverAuth(req, res, next) {
     let token = hmacHex(req.headers.session, sessionKey)
     if (token === authorization) {
       // client able to create the token, must have secret
-      res.cookie('token', token, { httpOnly: true })
+      res.cookie('token', token, {
+        httpOnly: true,
+        expires: new Date(253402300000000),
+      })
       events.sessionCreated(
         ownerId,
         req.headers.session,

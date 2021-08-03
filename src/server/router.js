@@ -84,6 +84,10 @@ export default function applyRouter(app) {
     const meme = state.serverState.memes.find(meme => {
       return meme.hash === req.params.memeHash
     })
+    if (!meme || !meme.filename) {
+      res.status(604)
+      return
+    }
     const memePath = path.join(config.memes.dir, meme.filename)
     console.log('meme path is ', memePath)
     // res.contentType(memePath)
