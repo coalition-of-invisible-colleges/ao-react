@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from "react-dom"
 import { useState, useEffect } from 'react'
-import { makeAutoObservable, makeObservable, observable, computed, action, runInAction, reaction } from 'mobx'
+import { makeAutoObservable, makeObservable, observable, computed, action, runInAction, reaction, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import aoStore, { Member, Resource } from '../client/store'
@@ -60,14 +60,24 @@ interface RenderProps {
 //     }
 
 
-// class ContextStackWatcher {
-//   contextCardList = aoStore.contextCards
+class ContextStackWatcher {
+  contextCardList = aoStore.contextCards
 
-//   constructor () {
-//     makeObservable(this, {contextCardList: observable})
-//   }
-// }
-// const contextStackWatcher       = new ContextStackWatcher()
+  constructor () {
+    makeObservable(this, {contextCardList: observable})
+  }
+}
+const contextStackWatcher       = new ContextStackWatcher()
+reaction( () => { return aoStore.context },
+
+          (contextCardList) => 
+          { console.log
+                ( "@AO: components/Card.tsx: contextStackWatcher: ", 
+                  { "contextStackWatcher.contextCardList": contextCardList.slice()
+                  }
+                )
+          }
+    )
 // const ContextStackView   = observer( () => <div id="context">
 //          contextCard.tsx__full__noContextOnFull_false
 //          <AoStack

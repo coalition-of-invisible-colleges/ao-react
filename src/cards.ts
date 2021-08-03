@@ -52,7 +52,7 @@ export function goUp() {
 
 	if (aoStore.context.length > 0)
 	{
-		goInCard(aoStore.context.slice()[0])
+		goInCard(aoStore.context.slice()[0], false, true)
 	}
 	else
 	{

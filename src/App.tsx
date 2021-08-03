@@ -91,7 +91,7 @@ const detectGlobalHotkey =
         // this currentCard / current "contextCard" paradigm means that there is one central card in the UI
         //   at a time
         // this card should be the same as the card represented in the address bar, hence the redirect concept
-        console.log('AO: App.tsx: aoStore.currentCard is ', aoStore.currentCard);
+        console.log('AO: App.tsx: detectGlobalHotKey: aoStore.currentCard is ', aoStore.currentCard);
         // aoStore.setGlobalRedirect(aoStore.currentCard || './');
         event.stopPropagation()
       }
