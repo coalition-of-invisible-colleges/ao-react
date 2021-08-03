@@ -373,8 +373,15 @@ class AoStore {
     return hashMap
   }
 
-  getTaskById_async(taskId, callback)
+
+  getTaskById_async(taskId, callbackOriginal)
   {
+    let callback = 
+        (parentTaskItem) => 
+        { this.getAllLinkedCardsForThisTaskId_async(parentTaskItem.taskId, () => {})
+          callbackOriginal(parentTaskItem);
+        }
+
     taskId = taskId.toLowerCase();
     let taskToGet = this.hashMap.get(taskId);
     if (taskToGet !== undefined)
@@ -417,6 +424,187 @@ class AoStore {
 
     
     }
+
+
+  getAllLinkedCardsForThisTaskId_async(parentTaskId, callback)
+  {
+    let parentTaskItem = this.hashMap.get(parentTaskId)
+
+    console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ", {parentTaskId, parentTaskItem})
+
+    if (! parentTaskItem)
+    {
+      console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: parentTask not loaded, ignoring")
+
+      setImmediate(() => callback(false))
+      return false
+    }
+    else
+    {
+      console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ")
+
+
+
+      let allChildTaskIds = [];
+
+      let allSubCardsSet = new Set(parentTaskItem.priorities.concat(parentTaskItem.subTasks, parentTaskItem.completed))
+      if (parentTaskItem.grid && parentTaskItem.grid.rows) 
+      {
+        Object.entries(parentTaskItem.grid.rows).forEach
+            ( ([y, row]) => 
+              { Object.entries(row).forEach
+                    ( ([x, cell]) => 
+                      {
+                        allSubCardsSet.add(cell)
+                      }
+                    )
+              }
+            )
+      }
+
+      let allTaskItemsLoadedInClient = true;
+      let taskItemsOnClient = []
+      let taskIdsToLoadFromServer = []
+      allSubCardsSet.forEach
+          ( (taskId) =>
+            {
+              let taskItem = this.hashMap.get(taskId)
+              
+              if  (! taskItem)
+              { allTaskItemsLoadedInClient = false
+                taskIdsToLoadFromServer.push(taskId)
+              }
+              {
+                taskItemsOnClient.push(taskItem)
+              }
+            }
+          )
+
+      if (allTaskItemsLoadedInClient === true)
+      {
+        setImmediate(() => callback(false))
+        return taskItemsOnClient
+      }
+      else
+      {
+        setImmediate
+            ( () =>
+              {
+                // let counter = taskIdsToLoadFromServer.length
+                // let decrementCounter = 
+                //     () => 
+                //     { counter--;
+                //       if (counter === 0)
+                //       {
+                //         callback(true)
+                //       }
+                //     }
+                // taskIdsToLoadFromServer.forEach
+                //     ( (taskId) =>
+                //       {
+                //         this.getTaskById_async(taskId, decrementCounter) 
+                //       }
+                //     )
+
+
+                let stateClosure = this.state;
+                request
+                    .post('/fetchTaskByID')
+                    .set('Authorization', stateClosure.token)
+                    .send( {taskId: taskIdsToLoadFromServer} )
+                    .then
+                        ( (result) => 
+                          {
+                            console.log("AO: client/store.ts: getTaskById_async: merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
+
+                            runInAction
+                                ( () => 
+                                  { stateClosure.tasks.push(...result.body.foundThisTaskList) 
+                                    // setImmediate(() => callback(this.hashMap.get(taskId)));
+                                    callback(true)
+                                  }
+                                );
+                            // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+                          }
+                        )
+                    .catch 
+                        ( ( error ) =>
+                          {
+                            console.log("AO: client/store.ts: getTaskById_async: error fetching task list", {taskIdsToLoadFromServer, error});
+
+                            callback(false);
+                          }
+                        )
+              }
+            )
+        return false
+      }
+
+
+      // allSubCards.forEach(tId => {
+      //     let subCard = aoStore.hashMap.get(tId)
+      //     if (subCard) {
+      //         if (
+      //             subCard.guild &&
+      //             subCard.guild.length >= 1 &&
+      //             subCard.deck.length >= 1
+      //         ) {
+      //             projectCards.push(subCard)
+      //         }
+      //     }
+      // })
+
+      // if (card.grid && card.grid.rows) {
+      //     Object.entries(card.grid.rows).forEach(([y, row]) => {
+      //         Object.entries(row).forEach(([x, cell]) => {
+      //             let gridCard = aoStore.hashMap.get(cell)
+      //             if (
+      //                 gridCard &&
+      //                 gridCard.guild &&
+      //                 gridCard.guild.length >= 1 &&
+      //                 gridCard.deck.length >= 1
+      //             ) {
+      //                 projectCards.push(gridCard)
+      //             }
+      //         })
+      //     })
+      // }
+
+      // return projectCards
+
+    }
+
+
+
+            // let stateClosure = this.state;
+            // request
+            //     .post('/fetchTaskByID')
+            //     .set('Authorization', stateClosure.token)
+            //     .send( {taskId} )
+            //     .then
+            //         ( (result) => 
+            //           {
+            //             console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
+
+            //             runInAction
+            //                 ( () => 
+            //                   { stateClosure.tasks.push(result.body) 
+            //                     setImmediate(() => callback(this.hashMap.get(taskId)));
+            //                   }
+            //                 );
+            //             // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+            //           }
+            //         )
+            //     .catch 
+            //         ( ( error ) =>
+            //           {
+            //             console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
+
+            //             callback(false);
+            //           }
+            //         )
+
+  }
   
 
 

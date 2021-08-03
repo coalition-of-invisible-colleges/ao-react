@@ -109,35 +109,72 @@ export default function applyRouter(app) {
 
         console.log("AO: server/router.js: fetchTaskByID: ");
 
-        if  ( validators.isTaskId_sane(req.body.taskId, errRes)
+        let taskIdList = req.body.taskId
+        let taskIdListParameterWasSingleValue = false
+        if (!Array.isArray(taskIdList))
+        { taskIdList = [taskIdList]
+          taskIdListParameterWasSingleValue = true
+        }
+
+        let allTaskIdsAreSane = true
+        taskIdList.some
+            ( (taskId) => 
+              { if (! validators.isTaskId_sane(taskId, errRes) )
+                { allTaskIdsAreSane = false;
+                  return true
+                }
+              }
+            )
+
+        let foundThisTaskList = []
+        let foundAllTaskItems = false;
+        if  ( allTaskIdsAreSane === true
             )
         {
           state.pubState.tasks.some
               ( (taskItem) =>
                 {
-                  if (taskItem.taskId === req.body.taskId)
+                  if (taskIdList.includes(taskItem.taskId))
                   {
-                    foundThisTask = taskItem;
-                    return true
+                    foundThisTaskList.push(taskItem)
+                    taskIdList.splice(taskIdList.indexOf(taskItem.taskId), 1)
+                    if (taskIdList.length === 0)
+                    {
+                      foundAllTaskItems = true
+                      return true
+                    }
                   }
                 }
               );
 
-          
-          if (foundThisTask)
+          console.log("AO: server/router.js: fetchTaskByID: ", {"taskId": req.body.taskId, "result": foundThisTask});
+          let objectToSend;
+          if (taskIdListParameterWasSingleValue === true)
           {
-            console.log("AO: server/router.js: fetchTaskByID: ", {"taskId": req.body.taskId, "result": foundThisTask});
-            res.json(foundThisTask);
-          } 
-          else
-          { 
-            errRes.push("AO: server/router.js: fetchTaskByID: task not found ", { "req.body": req.body, foundThisTask});
-            res.status(400).send({ "success": false, "errorList": errRes });
+            if (foundThisTaskList.length === 0)
+            {
+              res.status(400).send({ "success": false, "errorList": errRes });
+            }
+            else
+            {
+              res.status(200).json(foundThisTaskList[0]);
+            }
           }
+          else
+          {
+            res.status(200).json({foundThisTaskList, foundAllTaskItems});
+          }
+          
+          // } 
+          // else
+          // { 
+          //   errRes.push("AO: server/router.js: fetchTaskByID: task not found ", { "req.body": req.body, foundThisTask});
+          //   res.status(400).send({ "success": false, "errorList": errRes });
+          // }
         }
         else
         {
-          console.log("AO: server/router.js: fetchTaskByID: invalid taskId: "+req.body.taskId);
+          console.log("AO: server/router.js: fetchTaskByID: invalid taskId found in list: ", taskIdList);
           res.status(400).send(errRes);
         }
 
@@ -173,7 +210,7 @@ export default function applyRouter(app) {
           if (foundThisTask)
           {
             console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
-            res.status(200).send(foundThisTask);
+            res.status(200).send([foundThisTask]);
           } 
           else
           { 

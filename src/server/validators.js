@@ -177,7 +177,7 @@ export default {
   },
   taskNameExists(val, errRes) {
     let result = false
-    if (!this.isTaskName_sane(val))
+    if (!this.isTaskName_sane(val, errRes))
     {
       errRes.push("invalid task");
     }
