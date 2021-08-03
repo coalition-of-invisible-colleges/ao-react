@@ -23,13 +23,15 @@ export default class AoDrawPile extends React.PureComponent {
     this.redirect = this.redirect.bind(this)
   }
 
-  redirect(card: Task) {
-    if (!card) {
-      console.log('missing card')
+  redirect(taskId) {
+    console.log("AO: components/draw.tsx: redirect: ", {taskId})
+    if (!taskId) {
+      console.log("AO: components/draw.tsx: redirect: no taskId")
       return
     }
-    goInCard(card.taskId)
-    aoStore.setGlobalRedirect(card.taskId)
+    goInCard(taskId)
+    // aoStore.setGlobalRedirect(card.taskId)
+    aoStore.setCurrentCard(taskId)
   }
 
   meditate(event) {
@@ -88,13 +90,16 @@ export default class AoDrawPile extends React.PureComponent {
 
   goNextCard(event) {
     event.stopPropagation()
-    aoStore.dab()
+    // aoStore.dab()
     aoStore.addToContext([aoStore.memberCard.taskId])
     this.redirect(this.nextCard)
   }
 
   @computed get nextCard() {
-    return findFirstCardInCard(aoStore.memberCard)
+    let toReturn = findFirstCardInCard(aoStore.memberCard)
+    if (!toReturn) toReturn = aoStore.memberCard.taskId
+
+    return toReturn
   }
 
   goLostCard(event) {
