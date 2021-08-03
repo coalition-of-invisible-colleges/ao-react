@@ -42,7 +42,7 @@ export default function applyRouter(app) {
       limit: '10mb',
     })
   )
-  app.use('/memes', express.static(config.memes.dir))
+  // app.use('/memes', express.static(config.memes.dir))
   app.use(serverAuth) // below here requires auth token
   app.use(spec) // handles event creation
   app.use(fobtap) // handles rfid scan devices
@@ -75,6 +75,17 @@ export default function applyRouter(app) {
       addMeme(req.file.originalname, targetPath)
       res.status(200).contentType('text/plain').end('File uploaded!')
     })
+  })
+
+  app.get('/memes/:memeHash', (req, res) => {
+    console.log('download route detected, hash is ', req.params.memeHash)
+    const meme = state.serverState.memes.find(meme => {
+      return meme.hash === req.params.memeHash
+    })
+    const memePath = path.join(config.memes.dir, meme.filename)
+    console.log('meme path is ', memePath)
+    // res.contentType(memePath)
+    res.sendFile(memePath)
   })
 
   app.get('/download/:memeHash', (req, res) => {

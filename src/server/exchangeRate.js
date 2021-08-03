@@ -1,10 +1,10 @@
 // https://apiv2.bitcoinaverage.com/#requests
 import crypto from 'crypto'
 import request from 'superagent'
-import config from '../../configuration'
-import events from './events'
-import state from './state'
-import validators from './validators'
+import config from '../../configuration.js'
+import events from './events.js'
+import state from './state.js'
+import validators from './validators.js'
 
 export function watchSpot() {
   getRecordSpot()
