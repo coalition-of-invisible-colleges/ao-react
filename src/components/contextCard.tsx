@@ -197,9 +197,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 		const meme = aoStore.memeById.get(this.props.task.taskId)
 		let memeContent
 		if (meme) {
-			memeContent = (
-				<div onClick={() => api.downloadMeme(meme.hash)}>{content}</div>
-			)
+			memeContent =
+				'<a href="' +
+				'/download/' +
+				meme.hash +
+				'" download >' +
+				content +
+				'</a>'
 		}
 
 		return (
