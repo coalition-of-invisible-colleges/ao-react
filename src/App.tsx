@@ -47,7 +47,7 @@ const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
       render={props => {
         
         aoStore.state.protectedRouteRedirectPath = props.location.pathname;
-        console.log("AO: components/App.tsx: ProtectedRoute: ", { props, "protectedRouteRedirectPath": props.location.pathname })
+        console.log("AO: App.tsx: ProtectedRoute: ", { props, "protectedRouteRedirectPath": props.location.pathname })
 
         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
       }}
@@ -77,7 +77,7 @@ if (typeof window !== 'undefined') {
 const detectGlobalHotkey = 
     (event) => 
     {
-      console.log("AO: components/App.tsx: detectGlobalHotkey: ", {"event": event.toString()} )
+      console.log("AO: App.tsx: detectGlobalHotkey: ", {"event": event.toString()} )
       if (event.key === 'Escape') 
       {
         if (event.shiftKey) 
@@ -91,13 +91,22 @@ const detectGlobalHotkey =
         // this currentCard / current "contextCard" paradigm means that there is one central card in the UI
         //   at a time
         // this card should be the same as the card represented in the address bar, hence the redirect concept
-        console.log('aoStore.currentCard is ', aoStore.currentCard);
+        console.log('AO: App.tsx: aoStore.currentCard is ', aoStore.currentCard);
         // aoStore.setGlobalRedirect(aoStore.currentCard || './');
         event.stopPropagation()
       }
     }
 
+console.log("AO: App.tsx: body.classList", { "classList": document.body.classList })
+
+if (! document.body.classList.contains("initialiseBodyClasses"))
+{ 
+  document.body.className = 'theme-1'
   document.body.addEventListener("keyup", detectGlobalHotkey)
+
+  document.body.classList.add("initialiseBodyClasses")
+}
+
 
 
 // this is the root component of the React UI
@@ -177,7 +186,7 @@ const App = observer(() => {
   return (
     <div id="Apptsx_root_div" onKeyDown={detectGlobalHotkey}>
       {
-        document.body.className = 'theme-1'
+        
       }
       {
         // document.getElementById("Apptsx_root_div").addEventListener("keydown", detectGlobalHotkey)

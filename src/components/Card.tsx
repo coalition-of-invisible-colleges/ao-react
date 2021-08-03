@@ -97,15 +97,36 @@ export class CurrentContextCard {
 
     if (taskId !== null && taskId !== undefined)
     {
-      aoStore.getTaskById_async(taskId, (taskItem) => { runInAction(() => { this.cardItem = taskItem; contextPile.contextPileList.push(taskItem)} ) });
-      taskIdUrlString += taskId
+      //TODO: some kind of loader spinner?
+      document.title = "loading...."
+
+      // get the card from the client store or from the server
+      aoStore.getTaskById_async
+          ( taskId, 
+            (taskItem) => 
+            { runInAction
+                  ( () => 
+                    { this.cardItem = taskItem
+                      contextPile.contextPileList.push(taskItem)
+                      taskIdUrlString += taskId
+                      this.history.push(taskIdUrlString)
+                    } 
+                  )
+            }
+          );
     }
     else
     {
-      runInAction( () => { this.cardItem = null } )
+      runInAction
+          ( () => 
+            { 
+              this.cardItem = null 
+              this.history.push(taskIdUrlString)
+            } 
+          )
     }
     
-    this.history.push(taskIdUrlString)
+    
   }
 }
 const currentContextCard = new CurrentContextCard();
