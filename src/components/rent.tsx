@@ -2,7 +2,7 @@ import * as React from 'react'
 import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
-import api from '../client/api.js'
+import api from '../client/api'
 import AoTip from './tip'
 import AoQuorum from './quorum'
 
