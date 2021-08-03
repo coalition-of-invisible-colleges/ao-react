@@ -38,12 +38,12 @@ export default class AoAttachment extends React.Component<Props, State> {
       //let mimeType = mime.lookup(meme.filetype)
 
       //console.log(
-       // 'looked up filetype ',
+      // 'looked up filetype ',
       //  meme.filetype,
       //  ' and got MIME type: ',
       //  mimeType
-     // )
-      this.state = { }
+      // )
+      this.state = {}
     }
   }
 
@@ -55,19 +55,18 @@ export default class AoAttachment extends React.Component<Props, State> {
     if (this.props.taskId !== prevProps.taskId) {
       const meme = aoStore.memeById.get(this.props.taskId)
       if (meme) {
-       // let mimeType = mime.lookup(meme.filetype)
-
+        // let mimeType = mime.lookup(meme.filetype)
         //console.log(
-          //'looked up filetype ',
+        //'looked up filetype ',
         //  meme.filetype,
         //  ' and got MIME type: ',
         //  mimeType
-       // )
-       // this.setState({ mimeType })
+        // )
+        // this.setState({ mimeType })
       }
     }
     if (this.audioRef.current) {
-      this.audioRef.current.addEventListener('ended', function() {
+      this.audioRef.current.addEventListener('ended', function () {
         console.log('track finished playing')
       })
     }
@@ -221,7 +220,7 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     let preview
 
-    /*switch (this.state.mimeType) {
+    switch (this.state.mimeType) {
       case 'audio/m4a':
       case 'audio/aac':
       case 'audio/aiff':
@@ -251,7 +250,7 @@ export default class AoAttachment extends React.Component<Props, State> {
             alt="attachment"
           />
         )
-    }*/
+    }
 
     return <div className="attachment">{preview}</div>
   }
