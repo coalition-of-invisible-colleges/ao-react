@@ -44,12 +44,24 @@ export function socketAuth(socket, data, callback) {
 
 export function serverAuth(req, res, next) {
   const { ownerId, secret } = getIdSecret(req.headers.name)
-
-  if (secret && req.headers.authorization && req.headers.session) {
+  console.log(
+    'serverAuth req.headers is',
+    req.headers,
+    'and cookie is',
+    req.cookies
+  )
+  let authorization
+  if (req.cookies.token) {
+    authorization = req.cookies.token
+  } else {
+    authorization = req.headers.authorization
+  }
+  if (secret && authorization && req.headers.session) {
     let sessionKey = createHash(req.headers.session + secret)
     let token = hmacHex(req.headers.session, sessionKey)
-    if (token === req.headers.authorization) {
+    if (token === authorization) {
       // client able to create the token, must have secret
+      res.cookie('token', token, { httpOnly: true })
       events.sessionCreated(
         ownerId,
         req.headers.session,
@@ -60,10 +72,10 @@ export function serverAuth(req, res, next) {
       res.status(401).end('unauthorized')
     }
   } else {
-    // otherwise we validate there authorization token in the header
+    // otherwise we validate their authorization token in the header
     let authorized = false
     state.serverState.sessions.forEach(session => {
-      if (session.token === req.headers.authorization) {
+      if (session.token === authorization) {
         authorized = true
         req.reqOwner = session.ownerId
       }

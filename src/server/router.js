@@ -2,6 +2,7 @@ import express from 'express'
 import config from '../../configuration.js'
 import path from 'path'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import state from './state.js'
 import spec from './spec.js'
 import fobtap from './fobtap.js'
@@ -36,6 +37,7 @@ export default function applyRouter(app) {
   //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
   // })
   app.use(bodyParser.json({ limit: '10mb' }))
+  app.use(cookieParser())
   app.use(
     bodyParser.urlencoded({
       extended: true,
