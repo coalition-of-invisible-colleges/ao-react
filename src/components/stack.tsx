@@ -45,7 +45,7 @@ export const defaultState: StackState = {
   showCompose: false
 }
 
-@observer
+
 export default class AoStack extends React.Component<StackProps, StackState> {
   constructor(props) {
     super(props)

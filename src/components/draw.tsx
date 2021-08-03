@@ -9,7 +9,7 @@ import Badge from '../assets/images/badge.svg'
 import Unicorn from '../assets/images/uni.svg'
 import MoonBag from '../assets/images/archive.svg'
 
-@observer
+
 export default class AoDrawPile extends React.PureComponent {
   constructor(props) {
     super(props)

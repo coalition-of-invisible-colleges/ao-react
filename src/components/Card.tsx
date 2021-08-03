@@ -160,16 +160,15 @@ const PageTitleView   = observer( () => <Helmet><title>{currentContextCard.cardI
 const ContextCardView = ( 
       () => 
       { 
-        if (currentContextCard.cardItem === null) return <AoDrawPile /> 
+        if (currentContextCard.cardItem === null) 
+        { 
+          console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
+          return <AoDrawPile /> 
+        }
         else 
         { 
-          console.log("AO: client/Card.tsx: currentCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
-          return <div>
-              {
-                // <ContextStackView />
-              }
-              <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
-            </div>
+          console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
+          return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
         }
       }
     );
@@ -265,9 +264,16 @@ export default function AoCard(props) {
   {
     aoStore.getCommunityHubCardId((communityHubCardTaskId) => aoStore.setCurrentCard(communityHubCardTaskId))
   }
-  else if (props.match.params.taskId !== aoStore.currentCard)
+  else if (props.match.params && props.match.params.taskId !== aoStore.currentCard)
   {
-    aoStore.setCurrentCard(props.match.params.taskId);
+    if (props.match.params.taskId === undefined && aoStore.currentCard === null)
+    {
+      // do nothing
+    }
+    else
+    {
+      aoStore.setCurrentCard(props.match.params.taskId);
+    }
   }
   
 
