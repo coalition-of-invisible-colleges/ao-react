@@ -218,40 +218,48 @@ export default class AoAttachment extends React.Component<Props, State> {
       return null
     }
 
-    let preview
+    // let preview
 
-    switch (this.state.mimeType) {
-      case 'audio/m4a':
-      case 'audio/aac':
-      case 'audio/aiff':
-      case 'audio/mpeg':
-      case 'audio/mp3':
-      case 'audio/mp4':
-      case 'audio/m4a':
-      case 'audio/wav':
-      case 'audio/wave':
-      case 'audio/x-ms-wma':
-        preview = (
-          <audio src={'/memes/' + meme.filename} ref={this.audioRef} controls />
-        )
-      case 'video/mp4':
-      case 'video/ogg':
-      case 'video/webm':
-        preview = <video src={'/memes/' + meme.filename} controls />
-      case 'image/jpeg':
-      case 'image/jpg':
-      case 'image/png':
-      case 'image/gif':
-      default:
-        preview = (
-          <img
-            src={'/memes/' + meme.filename}
-            // ref={this.attachmentRef}
-            alt="attachment"
-          />
-        )
-    }
+    // switch (this.state.mimeType) {
+    //   case 'audio/m4a':
+    //   case 'audio/aac':
+    //   case 'audio/aiff':
+    //   case 'audio/mpeg':
+    //   case 'audio/mp3':
+    //   case 'audio/mp4':
+    //   case 'audio/m4a':
+    //   case 'audio/wav':
+    //   case 'audio/wave':
+    //   case 'audio/x-ms-wma':
+    //     preview = (
+    //       <audio src={'/memes/' + meme.filename} ref={this.audioRef} controls />
+    //     )
+    //   case 'video/mp4':
+    //   case 'video/ogg':
+    //   case 'video/webm':
+    //     preview = <video src={'/memes/' + meme.filename} controls />
+    //   case 'image/jpeg':
+    //   case 'image/jpg':
+    //   case 'image/png':
+    //   case 'image/gif':
+    //   default:
+    //     preview = (
+    //       <img
+    //         src={'/memes/' + meme.filename}
+    //         // ref={this.attachmentRef}
+    //         alt="attachment"
+    //       />
+    //     )
+    // }
 
-    return <div className="attachment">{preview}</div>
+    return (
+      <div className="attachment">
+        <img
+          src={'/memes/' + meme.hash}
+          // ref={this.attachmentRef}
+          alt="attachment"
+        />
+      </div>
+    )
   }
 }
