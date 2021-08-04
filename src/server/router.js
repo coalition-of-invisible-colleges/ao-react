@@ -65,7 +65,7 @@ export default function applyRouter(app) {
 
     debugger;
 
-    let useReducedState = false
+    let useReducedState = true
     let dataPackageToSendToClient = {}
     let stateToSend
 
