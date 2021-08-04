@@ -107,6 +107,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
 
   render = () => {
     console.log("AO: components/stack.tsx: AoStack: render() =>", { props: this.props})
+    
+    // either make a reversed list of cards, or the empty list
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
         ? this.props.cards
@@ -128,6 +130,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             .reverse()
         : []
 
+    // generate jsx for an addButton
     let addButton
     if (this.state.showCompose) {
       addButton = (
@@ -140,6 +143,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       this.props.showAdd &&
       !(this.props.hideAddWhenCards && cardsToRender.length >= 1)
     ) {
+
       addButton = (
         <p className={'action'} onClick={this.toggleCompose}>
           {this.props.addButtonText ? this.props.addButtonText : '+card'}
@@ -260,7 +264,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           y={0}
           onDrop={this.props.onDrop}
           zoneStyle={this.props.zone}>
-          {"body"}
           {addButton}
           {this.props.noFirstCard ? (
             <>
