@@ -43,15 +43,15 @@ export default class AoHub extends React.PureComponent<{}, State> {
 
     aoStore.getTaskByName_async
         ( 'community hub',
-          (card) =>
+          (communityHubCard) =>
           {
-            if (!card) {
+            if (!communityHubCard) {
               api.createCard('community hub').then(() => {
                 this.goHub()
               })
               return
             }
-            const taskId = card.taskId
+            const taskId = communityHubCard.taskId
 
             let redirectCard;
 

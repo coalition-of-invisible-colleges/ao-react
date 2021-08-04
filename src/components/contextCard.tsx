@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import { computed, makeObservable, observable } from 'mobx';
+import { computed, makeObservable, observable, reaction } from 'mobx';
 import { observer, Observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
 import api from '../client/api'
@@ -60,6 +60,7 @@ interface State {
     showProjects?: boolean
     // loadedFromServer: boolean
     confirmedLoadedAllChildren: boolean
+    renderMeNowPlease?: boolean
 }
 
 // const AoContextCard = 
@@ -99,36 +100,106 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         this.clearPendingPromise = this.clearPendingPromise.bind(this)
     }
 
-    componentDidMount() {
-        console.log("AO: components/contextCard.tsx: componentDidMount", {"props": this.props, "state": this.state})
+    taskName;
 
-        // if (this.state.loadedTask === false)
-        // {
-        //  // aoStore.getTaskById_async(this.props.task)
-        // }
+    executeOnUnmount_list = []
 
-        if (! this.props.task) return
-        
-        if (this.state.confirmedLoadedAllChildren === false)
-        {
-          let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
-          ( this.props.task.taskId,
-            (stateRequiresUpdate) =>
-            {
-              if (stateRequiresUpdate === true)
-              { this.setState({confirmedLoadedAllChildren: true})
+    loadChildTasksAndReRender(forceReload)
+    {
+      console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: ", {"props": this.props, "state": this.state})
+
+      // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
+
+      // this code will try to load all the subcards of this card using local client and server async
+      //   if all the cards are already on the client, it will finish synchronously, discarding the
+      //   response of the async callback
+      if (! this.props.task) return       
+      if (forceReload  || this.state.confirmedLoadedAllChildren === false)
+      {
+        let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
+            ( this.props.task.taskId,
+              (stateRequiresUpdate) =>
+              {
+                console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards", {stateRequiresUpdate})
+                if (stateRequiresUpdate === true)
+                { this.setState({confirmedLoadedAllChildren: true})
+                }
               }
-            }
-          )
-          if (currentLoadedState !== false)
-          {
-            this.setState({confirmedLoadedAllChildren: true})
-          }
+            )
+        if (currentLoadedState !== false)
+        {
+          this.setState({confirmedLoadedAllChildren: true})
         }
+      }
+    }
+
+    componentDidMount() {
+        console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
+
+        // this code will try to load all the subcards of this card using local client and server async
+        //   if all the cards are already on the client, it will finish synchronously, discarding the
+        //   response of the async callback
+        if (! this.props.task) return     
+
+
+        // if (this.state.confirmedLoadedAllChildren === false)
+        // {
+        //   let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
+        //       ( this.props.task.taskId,
+        //         (stateRequiresUpdate) =>
+        //         {
+        //           console.log("AO: components/contextCard.tsx: componentDidMount: running callback after loading all child cards", {stateRequiresUpdate})
+        //           if (stateRequiresUpdate === true)
+        //           { this.setState({confirmedLoadedAllChildren: true})
+        //           }
+        //         }
+        //       )
+        //   if (currentLoadedState !== false)
+        //   {
+        //     this.setState({confirmedLoadedAllChildren: true})
+        //   }
+        // }
+        this.loadChildTasksAndReRender(true)
+
+
+
+        // here we want to track the subCards and rerender when they change
+        let unMountReactionFunction = 
+            reaction 
+            ( () => 
+              { console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase")
+                return this.projectCards
+              },
+              (projectCards) => 
+              { 
+                console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase")
+                this.setState({renderMeNowPlease: true})
+              }
+            )
+        this.executeOnUnmount_list.push(unMountReactionFunction)
+    }
+
+    componentDidUpdate(prevProps) {
+      console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
+
+      if (this.props.task && prevProps.task && this.props.task.taskId === prevProps.task.taskId)
+      {
+        // do nothing
+      }
+      else
+      {
+        // re-render card
+        this.loadChildTasksAndReRender(true)
+
+      }
     }
 
     componentWillUnmount() {
+        console.log("AO: components/contextCard.tsx: componentWillUnmount", {"props": this.props, "state": this.state})
+
         this.clearPendingPromise()
+
+        this.executeOnUnmount_list.forEach ( fn => fn() );
     }
 
     pendingPromise = undefined
@@ -186,7 +257,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         }
 
         goInCard(card.taskId, this.props.cardStyle === 'context')
-        aoStore.setGlobalRedirect(card.taskId)
+        // aoStore.setGlobalRedirect(card.taskId)
     }
 
     refocusAll() {
@@ -284,11 +355,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     
-    projectCards() {
+    @computed get projectCards() {
         if (this.props.cardStyle !== 'mission') {
             return undefined
         }
-        const card = this.props.task
+        const card = observable(this.props.task)
 
         let projectCards: Task[] = []
         let allSubCards = card.priorities.concat(card.subTasks, card.completed)
@@ -657,7 +728,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                 )
             case 'mission':
                 // A format that emphasizes the mission and projects (sub-missions), for the Missions Index
-                const projectCards = this.projectCards()
+                const projectCards = this.projectCards
                 return (
                     <div
                         className={

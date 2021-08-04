@@ -221,7 +221,7 @@ export interface AoState {
   }
 }
 
-const defaultState: AoState = {
+const defaultState: AoState = observable({
   session: '',
   token: '',
   user: '',
@@ -247,7 +247,7 @@ const defaultState: AoState = {
     info: {},
     theme: 1,
   },
-}
+})
 
 export interface SearchResults {
   missions: Task[]
@@ -314,62 +314,7 @@ class AoStore {
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
-
-    let stateClosure = this.state;
-
-    // if ( __CLIENT__ )
-    // { let original_get = hashMap.get;
-    //   hashMap.get = function get(taskID: string) : Task 
-    //       {
-    //         let existingTask;
-    //         let taskToGet = original_get.call(hashMap, taskID);
-    //         console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
-    //         // return taskToGet;
-
-    //         if (! taskToGet)
-    //         {
-    //           // we want to return a blank card, and then load the data from the server into that object
-    //           //   and hope that the mobx / react stuff will update the contents!!!
-    //           existingTask = blankCard(taskID, '', '', '');
-    //           existingTask.loadedFromServer = false;
-    //           // hashMap.set(taskID, existingTask);
-    //           stateClosure.tasks.push(existingTask);
-
-    //           request
-    //               .post('/fetchTaskByID')
-    //               .set('Authorization', stateClosure.token)
-    //               .send( {taskID} )
-    //               .then
-    //                   ( (result) => 
-    //                     {
-    //                       console.log("AO: client/store.ts: hashMap: merging fetched task", {taskID, "result": result.body});
-    //                       runInAction
-    //                           ( () =>
-    //                             { 
-
-    //                               existingTask.loadedFromServer = true;
-                                  
-    //                               extendObservable(existingTask, result.body);
-
-    //                               existingTask.name = result.body.name;
-
-    //                               console.log("AO: client/store.ts: hashMap: merged fetched task", {taskID, "result": result.body});
-    //                             }
-    //                           );
-
-    //                     }
-    //                   );
-    //         }
-    //         else
-    //         {
-    //           console.log("AO: client/store.ts: hashMap: task found", {taskID, taskToGet});
-    //           existingTask = taskToGet;
-    //         }
-
-    //         return existingTask
-    //       }
-    // }
-    
+7    
     return hashMap
   }
 
@@ -515,7 +460,7 @@ class AoStore {
                     .then
                         ( (result) => 
                           {
-                            console.log("AO: client/store.ts: getTaskById_async: merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
+                            console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
 
                             runInAction
                                 ( () => 
@@ -530,7 +475,7 @@ class AoStore {
                     .catch 
                         ( ( error ) =>
                           {
-                            console.log("AO: client/store.ts: getTaskById_async: error fetching task list", {taskIdsToLoadFromServer, error});
+                            console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  error fetching task list", {taskIdsToLoadFromServer, error});
 
                             callback(false);
                           }
@@ -738,7 +683,7 @@ class AoStore {
                     
                     console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
 
-                    // aoStore.setCurrentCard(newTaskId)
+                    // aoStore.setCurrentCardf(newTaskId)
                     callback(newTaskId)
                     // setHubId(newTaskId)
                     // initialStateComplete();
