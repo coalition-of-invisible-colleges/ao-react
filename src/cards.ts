@@ -56,7 +56,7 @@ export function goUp() {
 
 	if (aoStore.context.length > 0)
 	{
-		goInCard(aoStore.context.slice(-1)[0], false, true)
+		goInCard(aoStore.context.slice(-1)[0], false, false)
 	}
 	else
 	{
