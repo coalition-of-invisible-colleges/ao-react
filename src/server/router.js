@@ -106,7 +106,7 @@ export default function applyRouter(app) {
     dataPackageToSendToClient.stateToSend = stateToSend
 
 
-    let bookmarksCardId;
+    let bookmarksTaskId;
     state.pubState.tasks.forEach
         ( (taskItem) =>
           {
@@ -114,20 +114,20 @@ export default function applyRouter(app) {
 
             if (taskItem.name === reqOwner+"-bookmarks")
             {
-              bookmarksCardId = taskItem.taskId
+              bookmarksTaskId = taskItem.taskId
               stateToSend.tasks.push(taskItem)
             }
           }
         )
 
-    let bookmarkCards = [];
+    let bookmarkTaskItems = [];
     state.pubState.tasks.forEach
         ( (taskItem) =>
           {
-            if (taskItem.parents && taskItem.parents.indexOf(bookmarksCardId) !== -1)
+            if (taskItem.parents && taskItem.parents.indexOf(bookmarksTaskId) !== -1)
             {
               stateToSend.tasks.push(taskItem) 
-              bookmarkCards.push(taskItem)          
+              bookmarkTaskItems.push(taskItem)          
             }
           }
         )
@@ -135,7 +135,7 @@ export default function applyRouter(app) {
 
 
     
-    dataPackageToSendToClient.metaData = {memberDeckSize, bookmarksCardId, bookmarkCards}
+    dataPackageToSendToClient.metaData = {memberDeckSize, bookmarksTaskId}
 
     console.log(util.inspect(req))
 

@@ -53,6 +53,7 @@ class AoApi {
 
           let metaData = dataPackageToSendToClient.metaData
           aoStore.memberDeckSize = metaData.memberDeckSize
+          aoStore.bookmarksTaskId = metaData.bookmarksTaskId
           
           return true
         })

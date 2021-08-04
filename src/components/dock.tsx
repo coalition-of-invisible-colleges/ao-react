@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { computed } from 'mobx'
-import { observer } from 'mobx-react'
+import { computed, comparer, reaction} from 'mobx'
+import { observer, Observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoHome from './home'
@@ -14,6 +14,7 @@ import _ from 'lodash'
 
 interface State {
   bookmarksTaskId?: string
+  renderMeNowPlease?: boolean
 }
 
 @observer
@@ -30,6 +31,7 @@ export default class AoDock extends React.Component<{}, State> {
     this.deckSearchRef.current.focus()
   }
 
+  executeOnUnmount_list = []
   componentDidMount() {
     const dockCardName = aoStore.member.memberId + '-bookmarks'
     // let myBookmarks = 
@@ -80,7 +82,40 @@ export default class AoDock extends React.Component<{}, State> {
           }
         );
 
+    // here we want to track the subCards and rerender when they change
+    // let unMountReactionFunction = 
+    //     reaction 
+    //     ( () => 
+    //       {
+    //         console.log("AO: client/store.ts: bookmarksCard computing")
+    //         let bookmarksTaskId = aoStore.bookmarksTaskId
+    //         let card = aoStore.hashMap.get(bookmarksTaskId)
+    //         let bookmarkedCardsData = []
+    //         card.grid.forEach
+    //             ( (rows, y) =>
+    //               {
+    //                 rows.forEach
+    //                     ( (cell, x) =>
+    //                       { bookmarkedCardsData.push({y, x, cell})
+    //                       }
+    //                     ) 
+    //               }
+    //             )
+    //         return bookmarkedCardsData 
+    //       },
+    //       (bookmarkedCardsData) => 
+    //       { 
+    //         console.log("AO: components/dock.tsx: gridChangedReaction: actionPhase")
+    //         this.setState({renderMeNowPlease: true})
+    //       },
+    //       { "equals": comparer.structural }
+    //     )
+    // this.executeOnUnmount_list.push(unMountReactionFunction)
     
+  }
+
+  componentWillUnmount () {
+    // this.executeOnUnmount_list.forEach ( fn => fn() );
   }
 
   render() {
@@ -97,13 +132,18 @@ export default class AoDock extends React.Component<{}, State> {
         <AoHopper />
         <AoGem />
         <div id="dock-tour">
-          <AoGrid
-            taskId={this.state.bookmarksTaskId}
-            grid={card.grid}
-            dropActsLikeFolder={true}
-            height={card.grid.height}
-            width={card.grid.width}
-          />
+          <Observer>
+            { () =>
+              { return <AoGrid
+                  taskId={this.state.bookmarksTaskId}
+                  grid={card.grid}
+                  dropActsLikeFolder={true}
+                  height={card.grid.height}
+                  width={card.grid.width}
+                />
+              }
+            }
+          </Observer>
         </div>
         <div id="deck">
           <AoPopupPanel

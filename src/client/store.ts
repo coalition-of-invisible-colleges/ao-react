@@ -278,6 +278,7 @@ class AoStore {
   @observable globalRedirect?: string
 
   @observable memberDeckSize?: number
+  bookmarksTaskId?: string
 
   constructor() {
     makeObservable(this);
@@ -316,10 +317,27 @@ class AoStore {
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
-7    
+ 
     return hashMap
   }
 
+  // @computed get bookmarksTaskCard() {
+  //   console.log("AO: client/store.ts: bookmarksCard computing")
+  //   let bookmarksTaskId = aoStore.bookmarksTaskId
+  //   let card = this.hashMap.get(bookmarksTaskId)
+  //   let bookmarkedCardsData = []
+  //   card.grid.rows.forEach
+  //       ( (row, y) =>
+  //         {
+  //           row.forEach
+  //               ( (cell, x) =>
+  //                 { bookmarkedCardsData.push({y, x, cell})
+  //                 }
+  //               ) 
+  //         }
+  //       )
+  //   return bookmarkedCardsData 
+  // }
 
   getTaskById_async(taskId, callbackOriginal)
   {
