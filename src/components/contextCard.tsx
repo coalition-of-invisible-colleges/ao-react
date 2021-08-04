@@ -772,7 +772,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     { return <AoStack
                                                 inId={taskId}
                                                 cards={subTaskCards}
-                                                showAdd={priorityCards && priorityCards.length >= 1}
+                                                showAdd={true}
                                                 addButtonText="+card"
                                                 hideAddWhenCards={true}
                                                 cardStyle="face"

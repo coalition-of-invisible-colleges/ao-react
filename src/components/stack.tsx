@@ -45,7 +45,7 @@ export const defaultState: StackState = {
   showCompose: false
 }
 
-
+// @observer
 export default class AoStack extends React.Component<StackProps, StackState> {
   constructor(props) {
     super(props)
@@ -225,7 +225,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
 
     let showButton = (
       <>
-        {(!this.props.alwaysShowAll && numCards >= 1) ||
+        { 
+          (!this.props.alwaysShowAll && numCards >= 1) ||
         (this.props.noFirstCard && numCards >= 1) ? (
           !this.state.showAll ? (
             <div onClick={this.show} className={'action'}>
@@ -253,14 +254,17 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           (this.props.className ? ' ' + this.props.className : '') +
           (this.state.showAll ? ' open' : '')
         }>
+        {this.props.className} : {this.props.zone} : {this.props.noFirstCard}
         <AoDropZone
           inId={this.props.inId}
           y={0}
           onDrop={this.props.onDrop}
           zoneStyle={this.props.zone}>
+          {"body"}
           {addButton}
           {this.props.noFirstCard ? (
             <>
+              
               {showButton}
               {list}
             </>
