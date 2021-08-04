@@ -30,7 +30,7 @@ export default class AoDock extends React.Component<{}, State> {
     this.deckSearchRef.current.focus()
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const dockCardName = aoStore.member.memberId + '-bookmarks'
     // let myBookmarks = 
     aoStore.getTaskByName_async
