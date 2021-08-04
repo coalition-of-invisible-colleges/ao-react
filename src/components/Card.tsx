@@ -145,12 +145,12 @@ const currentCardReaction =
     reaction
     ( () => 
       { 
-        console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
+        // console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
         return aoStore.currentCard 
       },
       (currentCard) => 
       { 
-        console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
+        // console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
         currentContextCard.setCardItem(currentCard) 
       }
     );
@@ -162,12 +162,12 @@ const ContextCardView = (
       { 
         if (currentContextCard.cardItem === null) 
         { 
-          console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
+          // console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
           return <AoDrawPile /> 
         }
         else 
         { 
-          console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
+          // console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
           return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
         }
       }

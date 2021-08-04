@@ -330,12 +330,13 @@ class AoStore {
     taskId = taskId.toLowerCase();
     let taskToGet = this.hashMap.get(taskId);
     if (taskToGet !== undefined)
-    { console.log("AO: client/store.ts: getTaskById_async: task found in client store: ", { taskId, taskToGet });
+    { 
+      // console.log("AO: client/store.ts: getTaskById_async: task found in client store: ", { taskId, taskToGet });
       callback(taskToGet)
     }
     else
     {
-      console.log("AO: client/store.ts: getTaskById_async: fetching task from server", { taskId });
+      // console.log("AO: client/store.ts: getTaskById_async: fetching task from server", { taskId });
 
 
       let stateClosure = this.state;
@@ -346,7 +347,7 @@ class AoStore {
           .then
               ( (result) => 
                 {
-                  console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
+                  // console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
 
                   runInAction
                       ( () => 
@@ -360,7 +361,7 @@ class AoStore {
           .catch 
               ( ( error ) =>
                 {
-                  console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
+                  // console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
 
                   callback(false);
                 }
@@ -375,18 +376,18 @@ class AoStore {
   {
     let parentTaskItem = this.hashMap.get(parentTaskId)
 
-    console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ", {parentTaskId, parentTaskItem})
+    // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ", {parentTaskId, parentTaskItem})
 
     if (! parentTaskItem)
     {
-      console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: parentTask not loaded, ignoring")
+      // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: parentTask not loaded, ignoring")
 
       setImmediate(() => callback(false))
       return false
     }
     else
     {
-      console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ")
+      // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ")
 
 
 
@@ -460,7 +461,7 @@ class AoStore {
                     .then
                         ( (result) => 
                           {
-                            console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
+                            // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
 
                             runInAction
                                 ( () => 
@@ -475,7 +476,7 @@ class AoStore {
                     .catch 
                         ( ( error ) =>
                           {
-                            console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  error fetching task list", {taskIdsToLoadFromServer, error});
+                            // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  error fetching task list", {taskIdsToLoadFromServer, error});
 
                             callback(false);
                           }
@@ -626,12 +627,13 @@ class AoStore {
         let taskToGet = this.cardByName.get(taskName);
 
         if (taskToGet !== undefined)
-        { console.log("AO: client/store.ts: getTaskByName_async: task found in client store: ", { taskName, taskToGet });
+        { 
+          // console.log("AO: client/store.ts: getTaskByName_async: task found in client store: ", { taskName, taskToGet });
           callback(taskToGet)
         }
         else
         {
-          console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
+          // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
 
 
           let stateClosure = this.state;
@@ -642,7 +644,7 @@ class AoStore {
               .then
                   ( (result) => 
                     {
-                      console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
+                      // console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
 
                       runInAction
                           ( () =>
@@ -659,7 +661,7 @@ class AoStore {
               .catch 
                   ( ( error ) =>
                     {
-                      console.log("AO: client/store.ts: getTaskByName_async: error fetching task", {taskName, error});
+                      // console.log("AO: client/store.ts: getTaskByName_async: error fetching task", {taskName, error});
 
                       callback(false);
                     }
@@ -668,7 +670,7 @@ class AoStore {
       }
 
   getCommunityHubCardId(callback): void {
-        console.log("AO: client/store.ts: getCommunityHubCardId")
+        // console.log("AO: client/store.ts: getCommunityHubCardId")
 
         this.getTaskByName_async
         ( "community hub",
@@ -676,12 +678,12 @@ class AoStore {
           {
             if ( !communityHubCard)
             {
-                console.log("AO: client/store.ts: creating community hub card on server")
+                // console.log("AO: client/store.ts: creating community hub card on server")
                 
                 api.createCard('community hub', true).then(result => {
                     const newTaskId = JSON.parse(result.text).event.taskId
                     
-                    console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
+                    // console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
 
                     // aoStore.setCurrentCardf(newTaskId)
                     callback(newTaskId)
@@ -689,7 +691,7 @@ class AoStore {
                     // initialStateComplete();
                 })
             } else {
-                console.log("AO: client/store.ts: community hub card found in client state: ", { "taskId": communityHubCard.taskId });
+                // console.log("AO: client/store.ts: community hub card found in client state: ", { "taskId": communityHubCard.taskId });
 
                 callback(communityHubCard.taskId)
 

@@ -140,7 +140,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     // }
 
     componentDidMount() {
-        console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
+        //console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
 
         // this code will try to load all the subcards of this card using local client and server async
         //   if all the cards are already on the client, it will finish synchronously, discarding the
@@ -196,13 +196,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
                   toReturn = this.allSubCardItems
                 }
-                console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase", {"taskName": this.taskName, "task": this.props.task, toReturn})
+                //console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase", {"taskName": this.taskName, "task": this.props.task, toReturn})
 
                 return toReturn
               },
               (projectCards) => 
               { 
-                console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
+                //console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
                 this.setState({renderMeNowPlease: true})
               }
             )
@@ -214,7 +214,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
       // this.childComponentsLastUpdated = Date.now()
 
-      console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
+      //console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
 
       // if (this.props.task && prevProps.task && this.props.task.taskId === prevProps.task.taskId)
       // {
@@ -229,7 +229,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     componentWillUnmount() {
-        console.log("AO: components/contextCard.tsx: componentWillUnmount", {"props": this.props, "state": this.state})
+        //console.log("AO: components/contextCard.tsx: componentWillUnmount", {"props": this.props, "state": this.state})
 
         this.clearPendingPromise()
 
@@ -278,7 +278,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           })
       }
 
-      console.log("AO: components/contextCard.tsx: allSubCardItems complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
+      //console.log("AO: components/contextCard.tsx: allSubCardItems complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
 
       return toReturn
     }
@@ -329,7 +329,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             })
         }
 
-        console.log("AO: components/contextCard.tsx: projectCards complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, projectCards, debuggingOutput})
+        //console.log("AO: components/contextCard.tsx: projectCards complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, projectCards, debuggingOutput})
 
         return projectCards
     }

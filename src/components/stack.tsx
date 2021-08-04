@@ -221,6 +221,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       renderedDescriptor = renderedDescriptor + ' '
     }
 
+    console.log("AO: components/stack.tsx: render: ", {"props": this.props, "state": this.state})
+
     let showButton = (
       <>
         {(!this.props.alwaysShowAll && numCards >= 1) ||

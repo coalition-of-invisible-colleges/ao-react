@@ -982,7 +982,7 @@ class AoApi {
 
 
     const task: Task = aoStore.cardByName.get(name.toLowerCase())
-    console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
+    // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
 
     if (_.isObject(task)) {
       const act = {
