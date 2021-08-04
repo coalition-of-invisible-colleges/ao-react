@@ -105,39 +105,39 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
     executeOnUnmount_list = []
 
-    loadChildTasksAndReRender(forceReload)
-    {
-      console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: ", {"props": this.props, "state": this.state})
+    // loadChildTasksAndReRender(forceReload)
+    // {
+    //   console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: ", {"props": this.props, "state": this.state})
 
-      // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
+    //   // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
 
-      // this code will try to load all the subcards of this card using local client and server async
-      //   if all the cards are already on the client, it will finish synchronously, discarding the
-      //   response of the async callback
-      if (! this.props.task) return  
-      if (this.props.cardStyle !== "full") return;
+    //   // this code will try to load all the subcards of this card using local client and server async
+    //   //   if all the cards are already on the client, it will finish synchronously, discarding the
+    //   //   response of the async callback
+    //   if (! this.props.task) return  
+    //   if (this.props.cardStyle !== "full") return;
 
-      if (forceReload  || this.state.confirmedLoadedAllChildren === false)
-      {
-        let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
-            ( this.props.task.taskId,
-              (stateRequiresUpdate) =>
-              {
-                console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards", {stateRequiresUpdate})
+    //   if (forceReload  || this.state.confirmedLoadedAllChildren === false)
+    //   {
+    //     let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
+    //         ( this.props.task.taskId,
+    //           (stateRequiresUpdate) =>
+    //           {
+    //             console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards", {stateRequiresUpdate})
                 
-                if (stateRequiresUpdate === true)
-                { 
-                  this.childComponentsLastUpdated = Date.now()
-                  this.setState({confirmedLoadedAllChildren: true})
-                }
-              }
-            )
-        if (currentLoadedState !== false)
-        {
-          this.setState({confirmedLoadedAllChildren: true})
-        }
-      }
-    }
+    //             if (stateRequiresUpdate === true)
+    //             { 
+    //               this.childComponentsLastUpdated = Date.now()
+    //               this.setState({confirmedLoadedAllChildren: true})
+    //             }
+    //           }
+    //         )
+    //     if (currentLoadedState !== false)
+    //     {
+    //       this.setState({confirmedLoadedAllChildren: true})
+    //     }
+    //   }
+    // }
 
     componentDidMount() {
         console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
@@ -212,18 +212,20 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     componentDidUpdate(prevProps) {
       this.taskName = this.props.task?this.props.task.name:"No Task"
 
+      this.childComponentsLastUpdated = Date.now()
+
       console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
 
-      if (this.props.task && prevProps.task && this.props.task.taskId === prevProps.task.taskId)
-      {
-        // do nothing
-      }
-      else
-      {
-        // re-render card
-        // this.loadChildTasksAndReRender(true)
+      // if (this.props.task && prevProps.task && this.props.task.taskId === prevProps.task.taskId)
+      // {
+      //   // do nothing
+      // }
+      // else
+      // {
+      //   // re-render card
+      //   // this.loadChildTasksAndReRender(true)
 
-      }
+      // }
     }
 
     componentWillUnmount() {
@@ -276,7 +278,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           })
       }
 
-      console.log("AO: components/contextCard.tsx: projectCards complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
+      console.log("AO: components/contextCard.tsx: allSubCardItems complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
 
       return toReturn
     }
