@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import { computed, makeObservable, observable, reaction } from 'mobx';
+import { computed, makeObservable, observable, reaction, comparer} from 'mobx';
 import { observer, Observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
 import api from '../client/api'
@@ -81,7 +81,7 @@ interface State {
 export default class AoContextCard extends React.Component<CardProps, State> {
     constructor(props) {
         super(props)
-        makeObservable(this);
+        // makeObservable(this);
         
         this.state = { "confirmedLoadedAllChildren": false }//task:this.props.task};
 
@@ -214,17 +214,19 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   this.props.task && this.props.task.completed
                   this.props.task && this.props.task.grid && this.props.task.grid.rows
 
-                  toReturn = this.allSubCardItems
+                  this.allSubCardItems.forEach((cardItem) => toReturn.push(cardItem.taskId))
+
                 }
-                //console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase", {"taskName": this.taskName, "task": this.props.task, toReturn})
+                console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase", {"taskName": this.taskName, "task": this.props.task, toReturn})
 
                 return toReturn
               },
               (projectCards) => 
               { 
-                //console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
+                console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
                 this.setState({renderMeNowPlease: true})
-              }
+              },
+              { "equals": comparer.structural }
             )
         this.executeOnUnmount_list.push(unMountReactionFunction)
     }
@@ -270,7 +272,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     {
       let debuggingOutput = [];
 
-      const card = observable(this.props.task)
+      const card = this.props.task
       if (!card) return [];
 
       let toReturn: Task[] = []
