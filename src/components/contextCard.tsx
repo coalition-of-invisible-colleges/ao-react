@@ -113,7 +113,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       // this code will try to load all the subcards of this card using local client and server async
       //   if all the cards are already on the client, it will finish synchronously, discarding the
       //   response of the async callback
-      if (! this.props.task) return       
+      if (! this.props.task) return  
+      if (this.props.cardStyle !== "full") return;
+
       if (forceReload  || this.state.confirmedLoadedAllChildren === false)
       {
         let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
