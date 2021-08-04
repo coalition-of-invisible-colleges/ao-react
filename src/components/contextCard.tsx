@@ -139,8 +139,26 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     //   }
     // }
 
+    onPropsTaskChangeFunction() {
+      this.taskName = this.props.task?this.props.task.name:"No Task"
+
+        if (      this.props.cardStyle === "full"
+           ) 
+        { if (aoStore.context.length === 0 && this.props.task && this.props.task.taskId !== aoStore.member.memberId)
+          { aoStore.context.push(aoStore.member.memberId)
+          }
+
+          if (this.props.task && this.props.task.taskId)
+          {
+            aoStore.removeFromContext(this.props.task.taskId)
+          }
+        }
+    }
+
     componentDidMount() {
         //console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
+
+        this.onPropsTaskChangeFunction()
 
         // this code will try to load all the subcards of this card using local client and server async
         //   if all the cards are already on the client, it will finish synchronously, discarding the
@@ -166,7 +184,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         //   }
         // }
 
-        this.taskName = this.props.task?this.props.task.name:"No Task"
+        
+
+        
 
         // this.loadChildTasksAndReRender(true)
 
@@ -210,7 +230,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     componentDidUpdate(prevProps) {
-      this.taskName = this.props.task?this.props.task.name:"No Task"
+      this.onPropsTaskChangeFunction()
 
       // this.childComponentsLastUpdated = Date.now()
 
@@ -380,8 +400,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             console.log('missing card')
             return
         }
-
-        goInCard(card.taskId, this.props.cardStyle === 'context')
+        // if (this.props.cardStyle !== "context") aoStore.addToContext([aoStore.currentCard])
+        let thisCardIsRenderedInTheContextStack = this.props.cardStyle === "context"
+        goInCard(card.taskId, thisCardIsRenderedInTheContextStack, !thisCardIsRenderedInTheContextStack)
         // aoStore.setGlobalRedirect(card.taskId)
     }
 
@@ -669,6 +690,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                                                     cardStyle="context"
                                                     alwaysShowAll={true}
                                                     zone="context"
+
+                                                    doNotReverseList={true}
                                                 />
                       }
                     }

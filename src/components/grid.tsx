@@ -23,6 +23,8 @@ interface GridViewProps extends GridProps {
   grid: Grid
 }
 
+
+
 const AoGridRow: Function = (props: {
   row: {}
   y: number
@@ -98,7 +100,7 @@ const AoGridRow: Function = (props: {
 }
 
 const GridView: Function = (props: GridViewProps): JSX.Element => {
-  console.log('AoGridView render()')
+  console.log('AO: components/grid.tsx: GridView component function')
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
 

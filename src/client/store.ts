@@ -721,7 +721,7 @@ class AoStore {
     this.context.forEach(tId => {
       cards.push(this.hashMap.get(tId))
     })
-    cards.reverse()
+    // cards.reverse()
 
     // throw new Error("Insane bullshit error");
 
@@ -985,16 +985,17 @@ class AoStore {
   @action.bound
   addToContext(taskIds: string[], alwaysAddMember = true) {
     if (taskIds.length < 1) return
+
     this.context = this.context.filter(tId => {
       return !taskIds.includes(tId)
     })
     this.context.push(...taskIds)
-    if (alwaysAddMember && this.context[0] !== this.member.memberId) {
+    if (this.context[0] !== this.member.memberId) {
       this.context = this.context.filter(tId => {
         return tId !== this.member.memberId
       })
       this.context.unshift(this.member.memberId)
-    }
+    }2
   }
 
   @action.bound
@@ -1021,6 +1022,7 @@ class AoStore {
 
   @action.bound
   setCurrentCard(taskId: string) {
+    this.removeFromContext(taskId)
     this.currentCard = taskId
   }
 

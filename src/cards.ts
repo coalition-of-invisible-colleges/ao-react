@@ -30,19 +30,23 @@ export interface CardPlay {
 	to: CardLocation
 }
 
-export function goInCard(taskId: string, isContext = false, doNotSave = false) {
+export function goInCard(taskId: string, removeContextLowerThanTaskId = false, addCurrentCardToContext = true) {
 	// hideAllTippys()
 	// aoStore.closeAllCloseables()
 
-	console.log('AO: cards.ts: goInCard: ', { taskId, isContext, doNotSave })
-	if (isContext) {
-		aoStore.clearContextTo(taskId)
-	} else if (aoStore.currentCard) {
-		if (!doNotSave) {
-			aoStore.addToContext([aoStore.currentCard])
-		}
-	}
-	aoStore.removeFromContext(taskId)
+	// console.log('AO: cards.ts: goInCard: ', { taskId, isContext, doNotSave })
+	// if (isContext) {
+	// 	aoStore.clearContextTo(taskId)
+	// } else if (aoStore.currentCard) {
+	// 	if (!doNotSave) {
+	// 		aoStore.addToContext([aoStore.currentCard])
+	// 	}
+	// }
+	// aoStore.removeFromContext(taskId)
+	// aoStore.setCurrentCard(taskId)
+	if (removeContextLowerThanTaskId === true) aoStore.clearContextTo(taskId)
+	if (addCurrentCardToContext === true) aoStore.addToContext([aoStore.currentCard])
+
 	aoStore.setCurrentCard(taskId)
 	
 }
@@ -52,7 +56,7 @@ export function goUp() {
 
 	if (aoStore.context.length > 0)
 	{
-		goInCard(aoStore.context.slice()[0], false, true)
+		goInCard(aoStore.context.slice(-1)[0], false, true)
 	}
 	else
 	{

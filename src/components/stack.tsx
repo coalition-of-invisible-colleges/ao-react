@@ -26,6 +26,7 @@ interface StackProps {
   cardsBeforeFold?: number
   decorators?: {}
   className?: string
+  doNotReverseList?: boolean
 }
 
 interface StackState {
@@ -127,8 +128,10 @@ export default class AoStack extends React.Component<StackProps, StackState> {
               }
               return true
             })
-            .reverse()
+            // .reverse()
         : []
+
+    if (this.props.doNotReverseList !== true) cardsToRender.reverse()
 
     // generate jsx for an addButton
     let addButton
