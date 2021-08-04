@@ -101,6 +101,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     taskName;
+    childComponentsLastUpdated;
 
     executeOnUnmount_list = []
 
@@ -123,8 +124,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               (stateRequiresUpdate) =>
               {
                 console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards", {stateRequiresUpdate})
+                
                 if (stateRequiresUpdate === true)
-                { this.setState({confirmedLoadedAllChildren: true})
+                { 
+                  this.childComponentsLastUpdated = Date.now()
+                  this.setState({confirmedLoadedAllChildren: true})
                 }
               }
             )
@@ -141,7 +145,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         // this code will try to load all the subcards of this card using local client and server async
         //   if all the cards are already on the client, it will finish synchronously, discarding the
         //   response of the async callback
-        if (! this.props.task) return     
+        // if (! this.props.task) return     
 
 
         // if (this.state.confirmedLoadedAllChildren === false)
@@ -161,7 +165,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         //     this.setState({confirmedLoadedAllChildren: true})
         //   }
         // }
-        this.loadChildTasksAndReRender(true)
+
+        this.taskName = this.props.task?this.props.task.name:"No Task"
+
+        // this.loadChildTasksAndReRender(true)
 
 
 
@@ -169,12 +176,33 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         let unMountReactionFunction = 
             reaction 
             ( () => 
-              { console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase")
-                return this.projectCards
+              {
+                let toReturn = []
+
+                this.childComponentsLastUpdated
+
+                if  (    ! this.props.task
+                      || this.props.cardStyle !== "full"
+                    )
+                {
+                  // do nothing
+                }
+                else
+                {
+                  this.props.task && this.props.task.priorities
+                  this.props.task && this.props.task.subTasks
+                  this.props.task && this.props.task.completed
+                  this.props.task && this.props.task.grid && this.props.task.grid.rows
+
+                  toReturn = this.allSubCardItems
+                }
+                console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase", {"taskName": this.taskName, "task": this.props.task, toReturn})
+
+                return toReturn
               },
               (projectCards) => 
               { 
-                console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase")
+                console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
                 this.setState({renderMeNowPlease: true})
               }
             )
@@ -182,6 +210,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     componentDidUpdate(prevProps) {
+      this.taskName = this.props.task?this.props.task.name:"No Task"
+
       console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
 
       if (this.props.task && prevProps.task && this.props.task.taskId === prevProps.task.taskId)
@@ -191,7 +221,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       else
       {
         // re-render card
-        this.loadChildTasksAndReRender(true)
+        // this.loadChildTasksAndReRender(true)
 
       }
     }
@@ -212,6 +242,97 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         }
         this.pendingPromise = undefined
     }
+
+
+    @computed get allSubCardItems() 
+    {
+      let debuggingOutput = [];
+
+      const card = observable(this.props.task)
+      if (!card) return [];
+
+      let toReturn: Task[] = []
+      let allSubCards = [].concat(card.priorities, card.subTasks, card.completed)
+
+      
+      allSubCards.forEach(tId => {
+          let subCard = aoStore.hashMap.get(tId)
+          debuggingOutput.push({tId, subCard})
+          if (subCard) {
+             toReturn.push(subCard)
+          }
+      })
+     
+
+      if (card.grid && card.grid.rows) {
+          Object.entries(card.grid.rows).forEach(([y, row]) => {
+              Object.entries(row).forEach(([x, cell]) => {
+                  let gridCard = aoStore.hashMap.get(cell)
+                  debuggingOutput.push({y, x, cell, gridCard})
+                  if (gridCard) {
+                    toReturn.push(gridCard)
+                  }
+              })
+          })
+      }
+
+      console.log("AO: components/contextCard.tsx: projectCards complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
+
+      return toReturn
+    }
+
+
+    get projectCards() {
+        if (this.props.cardStyle !== 'mission') {
+            return undefined
+        }
+        let debuggingOutput = [];
+
+        const card = this.props.task
+        if (!card) return [];
+
+        let projectCards: Task[] = []
+        let allSubCards = [].concat(card.priorities, card.subTasks, card.completed)
+
+        
+        allSubCards.forEach(tId => {
+            let subCard = aoStore.hashMap.get(tId)
+            debuggingOutput.push({tId, subCard})
+            if (subCard) {
+                if (
+                    subCard.guild &&
+                    subCard.guild.length >= 1 &&
+                    subCard.deck.length >= 1
+                ) {
+                    projectCards.push(subCard)
+                }
+            }
+        })
+       
+
+        if (card.grid && card.grid.rows) {
+            Object.entries(card.grid.rows).forEach(([y, row]) => {
+                Object.entries(row).forEach(([x, cell]) => {
+                    let gridCard = aoStore.hashMap.get(cell)
+                    debuggingOutput.push({y, x, cell, gridCard})
+                    if (
+                        gridCard &&
+                        gridCard.guild &&
+                        gridCard.guild.length >= 1 &&
+                        gridCard.deck.length >= 1
+                    ) {
+                        projectCards.push(gridCard)
+                    }
+                })
+            })
+        }
+
+        console.log("AO: components/contextCard.tsx: projectCards complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, projectCards, debuggingOutput})
+
+        return projectCards
+    }
+
+
 
     togglePriorities(event) {
         
@@ -357,46 +478,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     
-    @computed get projectCards() {
-        if (this.props.cardStyle !== 'mission') {
-            return undefined
-        }
-        const card = observable(this.props.task)
 
-        let projectCards: Task[] = []
-        let allSubCards = card.priorities.concat(card.subTasks, card.completed)
-
-        allSubCards.forEach(tId => {
-            let subCard = aoStore.hashMap.get(tId)
-            if (subCard) {
-                if (
-                    subCard.guild &&
-                    subCard.guild.length >= 1 &&
-                    subCard.deck.length >= 1
-                ) {
-                    projectCards.push(subCard)
-                }
-            }
-        })
-
-        if (card.grid && card.grid.rows) {
-            Object.entries(card.grid.rows).forEach(([y, row]) => {
-                Object.entries(row).forEach(([x, cell]) => {
-                    let gridCard = aoStore.hashMap.get(cell)
-                    if (
-                        gridCard &&
-                        gridCard.guild &&
-                        gridCard.guild.length >= 1 &&
-                        gridCard.deck.length >= 1
-                    ) {
-                        projectCards.push(gridCard)
-                    }
-                })
-            })
-        }
-
-        return projectCards
-    }
 
 
     render = () => {
