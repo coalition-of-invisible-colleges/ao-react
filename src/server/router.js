@@ -65,12 +65,13 @@ export default function applyRouter(app) {
 
     debugger;
 
-    let useReducedState = false;
+    let useReducedState = false
     let dataPackageToSendToClient = {}
     let stateToSend
 
     let reqOwner = req.reqOwner
     let memberDeckSize = 0
+
 
     if (useReducedState === true)
     {
@@ -104,15 +105,37 @@ export default function applyRouter(app) {
     }
     dataPackageToSendToClient.stateToSend = stateToSend
 
-    stateToSend.tasks.forEach
+
+    let bookmarksCardId;
+    state.pubState.tasks.forEach
         ( (taskItem) =>
           {
             if (taskItem.deck && taskItem.deck.indexOf(reqOwner) !== -1) memberDeckSize++ 
+
+            if (taskItem.name === reqOwner+"-bookmarks")
+            {
+              bookmarksCardId = taskItem.taskId
+              stateToSend.tasks.push(taskItem)
+            }
           }
         )
 
+    let bookmarkCards = [];
+    state.pubState.tasks.forEach
+        ( (taskItem) =>
+          {
+            if (taskItem.parents && taskItem.parents.indexOf(bookmarksCardId) !== -1)
+            {
+              stateToSend.tasks.push(taskItem) 
+              bookmarkCards.push(taskItem)          
+            }
+          }
+        )
+
+
+
     
-    dataPackageToSendToClient.metaData = {memberDeckSize}
+    dataPackageToSendToClient.metaData = {memberDeckSize, bookmarksCardId, bookmarkCards}
 
     console.log(util.inspect(req))
 
