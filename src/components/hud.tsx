@@ -128,61 +128,19 @@ export default class AoHud extends React.Component<{}, HudState> {
         </div>
         <AoHub />
         {!aoStore.member.tutorial && <AoTour />}
-        {
-          // <AoControls />
-          // <AoDock />
-          // <AoGifts />
-          // <div id="missions">
-          //   <AoPopupPanel
-          //     iconSrc={Badge}
-          //     tooltipText="Squad Index"
-          //     tooltipPlacement="right"
-          //     panelPlacement="right"
-          //     id="tour-missions">
-          //     <AoMissions />
-          //   </AoPopupPanel>
-          // </div>
-          // <div id="members">
-          //   <AoPopupPanel
-          //     iconSrc={MemberIcon}
-          //     tooltipText="Members"
-          //     tooltipPlacement="right"
-          //     panelPlacement="right"
-          //     id="tour-members">
-          //     <AoMembers />
-          //   </AoPopupPanel>
-          // </div>
-          // <AoCalendar />
-          // {/*        <div id="proposals">
-          //   <AoPopupPanel
-          //     iconSrc={Scroll}
-          //     tooltipText="Proposals"
-          //     badge={renderedBadge}
-          //     tooltipPlacement="right"
-          //     panelPlacement="right"
-          //     id="tour-proposals">
-          //     <AoProposals updateBadge={this.updateProposalCount} />
-          //   </AoPopupPanel>
-          // </div>
-          // */}
-          // <AoBounties />
-          // <div id="search">
-          //   <AoPopupPanel
-          //     iconSrc={MagnifyingGlass}
-          //     tooltipText="Search"
-          //     tooltipPlacement="top"
-          //     panelPlacement="top"
-          //     onShown={this.focusSearchbox}
-          //     id="tour-search">
-          //     <AoSearch ref={this.searchRef} />
-          //   </AoPopupPanel>
-          // </div>
-          // <AoTickerHud />
-          // <AoChatroom taskId={aoStore.currentChatroom} />
-          // {//<AoScore prefix={<span>Points: </span>} />}
-          // return "";
+        
+        <AoControls />
+
+        { 
+          // alert("aodock")
         }
+        <AoDock />
+                  
+        
       </div>
     )
   }
 }
+
+
+          

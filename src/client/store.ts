@@ -277,6 +277,8 @@ class AoStore {
   @observable dabbed: boolean = false
   @observable globalRedirect?: string
 
+  @observable memberDeckSize?: number
+
   constructor() {
     makeObservable(this);
   }

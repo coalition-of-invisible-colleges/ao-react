@@ -19,6 +19,8 @@ import validators from './validators'
 
 
 import { fileURLToPath } from 'url'
+import util from 'util'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -63,8 +65,12 @@ export default function applyRouter(app) {
 
     debugger;
 
-    let useReducedState = true;
-    let stateToSend;
+    let useReducedState = false;
+    let dataPackageToSendToClient = {}
+    let stateToSend
+
+    let reqOwner = req.reqOwner
+    let memberDeckSize = 0
 
     if (useReducedState === true)
     {
@@ -72,6 +78,7 @@ export default function applyRouter(app) {
       for (let [key, value] of Object.entries(state.pubState))
       {
         console.log({[key]: value} )
+
         if (key !== "tasks")
         { stateToSend[key] = state.pubState[key];
         }
@@ -86,6 +93,7 @@ export default function applyRouter(app) {
             {
               stateToSend.tasks.push(taskItem);
             }
+
           }
         }
       }
@@ -94,10 +102,27 @@ export default function applyRouter(app) {
     {
       stateToSend = state.pubState;
     }
+    dataPackageToSendToClient.stateToSend = stateToSend
+
+    stateToSend.tasks.forEach
+        ( (taskItem) =>
+          {
+            if (taskItem.deck && taskItem.deck.indexOf(reqOwner) !== -1) memberDeckSize++ 
+          }
+        )
+
+    
+    dataPackageToSendToClient.metaData = {memberDeckSize}
+
+    console.log(util.inspect(req))
+
+    // let reqOwner = req.reqOwner;
+    // let deckSize = 0
+
 
     
 
-    res.json(stateToSend)
+    res.json(dataPackageToSendToClient)
   })
 
   app.post( "/fetchTaskByID", 

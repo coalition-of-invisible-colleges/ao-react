@@ -46,7 +46,13 @@ class AoApi {
           aoStore.state.token = token
           aoStore.state.user = user
           console.log('AO: client/api.ts: fetchState: initial state: ', res.body)
-          aoStore.initializeState(res.body)
+          
+          let dataPackageToSendToClient = res.body
+
+          aoStore.initializeState(dataPackageToSendToClient.stateToSend)
+
+          let metaData = dataPackageToSendToClient.metaData
+          aoStore.memberDeckSize = metaData.memberDeckSize
           
           return true
         })

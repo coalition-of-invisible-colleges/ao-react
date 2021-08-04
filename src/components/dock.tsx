@@ -84,6 +84,8 @@ export default class AoDock extends React.Component<{}, State> {
   }
 
   render() {
+    console.log("AO: components/dock.tsx: AoDock: render", {"props": this.props, "state": this.state})
+
     const card = aoStore.hashMap.get(this.state.bookmarksTaskId)
 
     if (!card || !_.has(card, 'grid.rows.0')) {
