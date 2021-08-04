@@ -212,7 +212,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     componentDidUpdate(prevProps) {
       this.taskName = this.props.task?this.props.task.name:"No Task"
 
-      this.childComponentsLastUpdated = Date.now()
+      // this.childComponentsLastUpdated = Date.now()
 
       console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
 
