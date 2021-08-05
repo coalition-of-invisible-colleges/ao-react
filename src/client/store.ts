@@ -1046,6 +1046,11 @@ class AoStore {
     this.currentCard = taskId
   }
 
+  @computed
+  get isDabbed():boolean {
+    return (this.currentCard === this.member.memberId)
+  }
+
   @action.bound
   setCurrentChatroom(taskId: string) {
     this.currentChatroom = taskId
