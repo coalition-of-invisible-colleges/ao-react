@@ -217,18 +217,28 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   this.props.task && this.props.task.subTasks
                   this.props.task && this.props.task.completed
                   this.props.task && this.props.task.grid && this.props.task.grid.rows
+                  this.props.task && this.props.task.aoGridToolDoNotUpdateUI
 
-                  this.allSubCardItems.forEach((cardItem) => toReturn.push(cardItem.taskId))
+                  toReturn = this.allSubCardItems
+                  toReturn.push(this.props.task && this.props.task.aoGridToolDoNotUpdateUI)
 
                 }
-                console.log("AO: components/contextCard.tsx: projectCardsReaction: testPhase", {"taskName": this.taskName, "task": this.props.task, toReturn})
+                console.log
+                    ( "AO: components/contextCard.tsx: projectCardsReaction: testPhase", 
+                      { "taskName": this.taskName, 
+                        "task": this.props.task, 
+                        "taskHasLoadedAllChildren": this.taskHasLoadedAllChildren,
+                        "aoGridToolDoNotUpdateUI": this.props.task && this.props.task.aoGridToolDoNotUpdateUI,
+                        toReturn
+                      }
+                    )
 
                 return toReturn
               },
               (projectCards) => 
               { 
                 console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
-                if (this.taskHasLoadedAllChildren === true)
+                if (this.taskHasLoadedAllChildren === true && this.props.task.aoGridToolDoNotUpdateUI !== true)
                 { this.setState({renderMeNowPlease: true})
                 }
               },
@@ -281,27 +291,38 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       const card = this.props.task
       if (!card) return [];
 
-      let toReturn: Task[] = []
-      let allSubCards = [].concat(card.priorities, card.subTasks, card.completed)
+      let toReturn = []
+      let allSubCards = []
 
+      let subCardArrayList = [card.priorities, card.subTasks, card.completed]
+
+      subCardArrayList.forEach
+          ( (subCardArray, index) =>
+            {
+              subCardArray.forEach
+                  ( (cardItem) =>
+                    {
+                      allSubCards.push(index+":"+cardItem)
+                    }
+                  ) 
+            }
+          )
       
-      allSubCards.forEach(tId => {
-          let subCard = aoStore.hashMap.get(tId)
-          debuggingOutput.push({tId, subCard})
-          if (subCard) {
-             toReturn.push(subCard)
-          }
-      })
+      // allSubCards.forEach(tId => {
+      //     let subCard = aoStore.hashMap.get(tId)
+      //     debuggingOutput.push({tId, subCard})
+      //     if (subCard) {
+      //        toReturn.push(subCard.taskId)
+      //     }
+      // })
      
 
       if (card.grid && card.grid.rows) {
           Object.entries(card.grid.rows).forEach(([y, row]) => {
               Object.entries(row).forEach(([x, cell]) => {
-                  let gridCard = aoStore.hashMap.get(cell)
-                  debuggingOutput.push({y, x, cell, gridCard})
-                  if (gridCard) {
-                    toReturn.push(gridCard)
-                  }
+                  // let gridCard = aoStore.hashMap.get(cell)
+                  debuggingOutput.push({y, x, cell})
+                  toReturn.push(y+":"+x+":"+cell)
               })
           })
       }

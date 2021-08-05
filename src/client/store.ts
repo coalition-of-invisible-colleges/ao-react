@@ -93,6 +93,7 @@ export interface Task {
   avatars?: AvatarLocation[]
 
   loadedFromServer?: boolean
+  aoGridToolDoNotUpdateUI?: boolean
 }
 
 export interface Meme {

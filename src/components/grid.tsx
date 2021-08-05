@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { computed } from 'mobx'
-import { observer } from 'mobx-react'
+import { computed, runInAction, observable } from 'mobx'
+import { observer, Observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 import aoStore, { Task, Grid } from '../client/store'
 import api from '../client/api'
@@ -38,6 +38,7 @@ const AoGridRow: Function = (props: {
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
   console.log('AoGridRow render()')
+
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {
     if (
@@ -128,6 +129,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 
     const cardTo = aoStore.hashMap.get(move.to.taskId)
     const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+
 
     switch (move.from.zone) {
       case 'card':
@@ -226,6 +228,8 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
               )
             )
         } else {
+          let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(move.from.inId);
+          runInAction(() => movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI = true)
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -233,12 +237,19 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
               move.from.inId
             )
             .then(() =>
-              api.pinCardToGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                nameFrom,
-                move.to.inId
-              )
+              { 
+                api.pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                ).then(() =>
+                    { runInAction(() => movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI = false)
+                    }
+                  )
+                
+              }
+
             )
         }
         break
@@ -310,19 +321,29 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
     const currentRow = rows[j]
     render.push(
       <React.Fragment key={j}>
-        <AoGridRow
-          row={currentRow}
-          y={j}
-          inId={props.taskId}
-          selected={selected}
-          width={grid.width}
-          dropActsLikeFolder={props.dropActsLikeFolder}
-          onBlur={onBlur}
-          onNewGridCard={newGridCard}
-          selectGridSquare={selectGridSquare}
-          dropToGridSquare={dropToGridSquare}
-          key={j}
-        />
+         <Observer>
+         { () =>
+            { 
+              observable(rows[j])
+              return <AoGridRow
+                  row={currentRow}
+                  y={j}
+                  inId={props.taskId}
+                  selected={selected}
+                  width={grid.width}
+                  dropActsLikeFolder={props.dropActsLikeFolder}
+                  onBlur={onBlur}
+                  onNewGridCard={newGridCard}
+                  selectGridSquare={selectGridSquare}
+                  dropToGridSquare={dropToGridSquare}
+                  key={j}
+                />
+            }
+          }
+          </Observer>
+            
+          
+        
       </React.Fragment>
     )
   }
