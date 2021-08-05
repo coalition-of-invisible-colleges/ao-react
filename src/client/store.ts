@@ -705,7 +705,7 @@ class AoStore {
                     
                     // console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
 
-                    // aoStore.setCurrentCardf(newTaskId)
+                    // aoStore.setCurrentCard(newTaskId)
                     callback(newTaskId)
                     // setHubId(newTaskId)
                     // initialStateComplete();

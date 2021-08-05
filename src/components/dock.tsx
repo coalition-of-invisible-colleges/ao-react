@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, comparer, reaction} from 'mobx'
+import { computed, comparer, reaction, observable} from 'mobx'
 import { observer, Observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
@@ -83,34 +83,34 @@ export default class AoDock extends React.Component<{}, State> {
         );
 
     // here we want to track the subCards and rerender when they change
-    // let unMountReactionFunction = 
-    //     reaction 
-    //     ( () => 
-    //       {
-    //         console.log("AO: client/store.ts: bookmarksCard computing")
-    //         let bookmarksTaskId = aoStore.bookmarksTaskId
-    //         let card = aoStore.hashMap.get(bookmarksTaskId)
-    //         let bookmarkedCardsData = []
-    //         card.grid.forEach
-    //             ( (rows, y) =>
-    //               {
-    //                 rows.forEach
-    //                     ( (cell, x) =>
-    //                       { bookmarkedCardsData.push({y, x, cell})
-    //                       }
-    //                     ) 
-    //               }
-    //             )
-    //         return bookmarkedCardsData 
-    //       },
-    //       (bookmarkedCardsData) => 
-    //       { 
-    //         console.log("AO: components/dock.tsx: gridChangedReaction: actionPhase")
-    //         this.setState({renderMeNowPlease: true})
-    //       },
-    //       { "equals": comparer.structural }
-    //     )
-    // this.executeOnUnmount_list.push(unMountReactionFunction)
+    let unMountReactionFunction = 
+        reaction 
+        ( () => 
+          {
+            console.log("AO: client/store.ts: bookmarksCard computing")
+            let bookmarksTaskId = aoStore.bookmarksTaskId
+            let card = aoStore.hashMap.get(bookmarksTaskId)
+            let bookmarkedCardsData = []
+            // card.grid.rows.forEach
+            //     ( (row, y) =>
+            //       {
+            //         row.forEach
+            //             ( (cell, x) =>
+            //               { bookmarkedCardsData.push({y, x, cell})
+            //               }
+            //             ) 
+            //       }
+            //     )
+            return bookmarkedCardsData 
+          },
+          (bookmarkedCardsData) => 
+          { 
+            console.log("AO: components/dock.tsx: gridChangedReaction: actionPhase")
+            this.setState({renderMeNowPlease: true})
+          },
+          { "equals": comparer.structural }
+        )
+    this.executeOnUnmount_list.push(unMountReactionFunction)
     
   }
 
