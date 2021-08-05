@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { observer } from 'mobx-react'
+import { observer, Observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoHub from './hub'
@@ -131,7 +131,12 @@ export default class AoHud extends React.Component<{}, HudState> {
         
         <AoControls />
 
-        <AoDock />
+        <Observer>
+        { () =>
+          { return <AoDock />
+          }
+        }
+        </Observer>
 
         <AoGifts />
 
