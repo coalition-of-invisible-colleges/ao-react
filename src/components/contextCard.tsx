@@ -98,48 +98,54 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         this.onHover = this.onHover.bind(this)
         this.renderCardContent = this.renderCardContent.bind(this)
         this.clearPendingPromise = this.clearPendingPromise.bind(this)
+
+        this.taskHasLoadedAllChildren = false;
     }
 
-    taskName;
-    childComponentsLastUpdated;
+    taskName
+    taskHasLoadedAllChildren
 
     executeOnUnmount_list = []
 
-    // loadChildTasksAndReRender(forceReload)
-    // {
-    //   console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: ", {"props": this.props, "state": this.state})
+    loadChildTasksAndPossiblyReRender()
+    {
+      console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: ", {"props": this.props, "state": this.state})
 
-    //   // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
+      // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
 
-    //   // this code will try to load all the subcards of this card using local client and server async
-    //   //   if all the cards are already on the client, it will finish synchronously, discarding the
-    //   //   response of the async callback
-    //   if (! this.props.task) return  
-    //   if (this.props.cardStyle !== "full") return;
+      // this code will try to load all the subcards of this card using local client and server async
+      //   if all the cards are already on the client, it will finish synchronously, discarding the
+      //   response of the async callback
+      if (! this.props.task) return  
+      if (this.props.cardStyle !== "full") return;
 
-    //   if (forceReload  || this.state.confirmedLoadedAllChildren === false)
-    //   {
-    //     let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
-    //         ( this.props.task.taskId,
-    //           (stateRequiresUpdate) =>
-    //           {
-    //             console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards", {stateRequiresUpdate})
-                
-    //             if (stateRequiresUpdate === true)
-    //             { 
-    //               this.childComponentsLastUpdated = Date.now()
-    //               this.setState({confirmedLoadedAllChildren: true})
-    //             }
-    //           }
-    //         )
-    //     if (currentLoadedState !== false)
-    //     {
-    //       this.setState({confirmedLoadedAllChildren: true})
-    //     }
-    //   }
-    // }
+      this.taskHasLoadedAllChildren = false;
+
+      let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
+          ( this.props.task.taskId,
+            (stateRequiresUpdate) =>
+            {
+              console.log("AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards", {stateRequiresUpdate})
+              
+              if (stateRequiresUpdate === true)
+              { 
+                // this.childComponentsLastUpdated = Date.now()
+                this.taskHasLoadedAllChildren = true;
+                this.setState({renderMeNowPlease: true})
+              }
+            }
+          )
+      if (currentLoadedState !== false)
+      {
+        // this.setState({confirmedLoadedAllChildren: true})
+        this.taskHasLoadedAllChildren = true
+      }
+
+    }
 
     onPropsTaskChangeFunction() {
+      
+      this.loadChildTasksAndPossiblyReRender()
       this.taskName = this.props.task?this.props.task.name:"No Task"
 
         if (      this.props.cardStyle === "full"
@@ -199,8 +205,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               {
                 let toReturn = []
 
-                this.childComponentsLastUpdated
-
                 if  (    ! this.props.task
                       || this.props.cardStyle !== "full"
                     )
@@ -224,7 +228,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               (projectCards) => 
               { 
                 console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
-                this.setState({renderMeNowPlease: true})
+                if (this.taskHasLoadedAllChildren === true)
+                { this.setState({renderMeNowPlease: true})
+                }
               },
               { "equals": comparer.structural }
             )
