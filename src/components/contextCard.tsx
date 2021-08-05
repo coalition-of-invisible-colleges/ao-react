@@ -161,10 +161,62 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         }
     }
 
+    subCardsReaction
+    registerSubCardsReaction() {
+
+      if (this.subCardsReaction) this.subCardsReaction()
+      this.subCardsReaction = reaction 
+          ( () => 
+            {
+              let toReturn = []
+
+              if  (    ! this.props.task
+                    || this.props.cardStyle !== "full"
+                  )
+              {
+                // do nothing
+              }
+              else
+              {
+                this.props.task && this.props.task.priorities && this.props.task.priorities.length
+                this.props.task && this.props.task.subTasks && this.props.task.subTasks.length
+                this.props.task && this.props.task.completed && this.props.task.completed.length
+                this.props.task && this.props.task.grid && this.props.task.grid.rows
+                this.props.task && this.props.task.aoGridToolDoNotUpdateUI
+
+                toReturn = this.allSubCardItems
+                toReturn.push(this.props.task && this.props.task.aoGridToolDoNotUpdateUI)
+
+              // }
+              console.log
+                  ( "AO: components/contextCard.tsx: projectCardsReaction: testPhase", 
+                    { "taskName": this.taskName, 
+                      "task": this.props.task, 
+                      "taskHasLoadedAllChildren": this.taskHasLoadedAllChildren,
+                      "aoGridToolDoNotUpdateUI": this.props.task && this.props.task.aoGridToolDoNotUpdateUI,
+                      toReturn
+                    }
+                  )
+              }
+              return toReturn
+            },
+            (projectCards) => 
+            { 
+              console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
+              if (this.taskHasLoadedAllChildren === true && this.props.task.aoGridToolDoNotUpdateUI !== true)
+              { this.setState({renderMeNowPlease: true})
+              }
+            },
+            { "equals": comparer.structural }
+          )
+
+    }
+
     componentDidMount() {
         //console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
 
         this.onPropsTaskChangeFunction()
+        this.registerSubCardsReaction()
 
         // this code will try to load all the subcards of this card using local client and server async
         //   if all the cards are already on the client, it will finish synchronously, discarding the
@@ -199,60 +251,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
 
         // here we want to track the subCards and rerender when they change
-        if (this.props.cardStyle === "full")
-        {
-          let unMountReactionFunction = 
-          reaction 
-          ( () => 
-            {
-              let toReturn = []
-
-              if  (    ! this.props.task
-                    || this.props.cardStyle !== "full"
-                  )
-              {
-                // do nothing
-              }
-              else
-              {
-                this.props.task && this.props.task.priorities && this.props.task.priorities.length
-                this.props.task && this.props.task.subTasks && this.props.task.subTasks.length
-                this.props.task && this.props.task.completed && this.props.task.completed.length
-                this.props.task && this.props.task.grid && this.props.task.grid.rows
-                this.props.task && this.props.task.aoGridToolDoNotUpdateUI
-
-                toReturn = this.allSubCardItems
-                toReturn.push(this.props.task && this.props.task.aoGridToolDoNotUpdateUI)
-
-              }
-              console.log
-                  ( "AO: components/contextCard.tsx: projectCardsReaction: testPhase", 
-                    { "taskName": this.taskName, 
-                      "task": this.props.task, 
-                      "taskHasLoadedAllChildren": this.taskHasLoadedAllChildren,
-                      "aoGridToolDoNotUpdateUI": this.props.task && this.props.task.aoGridToolDoNotUpdateUI,
-                      toReturn
-                    }
-                  )
-
-              return toReturn
-            },
-            (projectCards) => 
-            { 
-              console.log("AO: components/contextCard.tsx: projectCardsReaction: actionPhase", {"taskName": this.taskName})
-              if (this.taskHasLoadedAllChildren === true && this.props.task.aoGridToolDoNotUpdateUI !== true)
-              { this.setState({renderMeNowPlease: true})
-              }
-            },
-            { "equals": comparer.structural }
-          )
-          this.executeOnUnmount_list.push(unMountReactionFunction)
-        }
+        // if (this.props.cardStyle === "full")
+        // {
+          // let unMountReactionFunction = 
+          
+          // this.executeOnUnmount_list.push(unMountReactionFunction)
+        // }
     }
 
     componentDidUpdate(prevProps) {
       this.onPropsTaskChangeFunction()
-
+      this.registerSubCardsReaction()
 
       // this.childComponentsLastUpdated = Date.now()
 
@@ -274,8 +283,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         //console.log("AO: components/contextCard.tsx: componentWillUnmount", {"props": this.props, "state": this.state})
 
         this.clearPendingPromise()
+        if (this.subCardsReaction) this.subCardsReaction()
 
-        this.executeOnUnmount_list.forEach ( fn => fn() );
+        // this.executeOnUnmount_list.forEach ( fn => fn() );
     }
 
     pendingPromise = undefined
@@ -321,15 +331,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       // })
      
 
-      // if (card.grid && card.grid.rows) {
-      //     Object.entries(card.grid.rows).forEach(([y, row]) => {
-      //         Object.entries(row).forEach(([x, cell]) => {
-      //             // let gridCard = aoStore.hashMap.get(cell)
-      //             debuggingOutput.push({y, x, cell})
-      //             toReturn.push(y+":"+x+":"+cell)
-      //         })
-      //     })
-      // }
+      if (card.grid && card.grid.rows) {
+          Object.entries(card.grid.rows).forEach(([y, row]) => {
+              Object.entries(row).forEach(([x, cell]) => {
+                  // let gridCard = aoStore.hashMap.get(cell)
+                  debuggingOutput.push({y, x, cell})
+                  toReturn.push(y+":"+x+":"+cell)
+              })
+          })
+      }
 
       //console.log("AO: components/contextCard.tsx: allSubCardItems complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
 
@@ -414,7 +424,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if (!card) {
             console.log('missing card')
         }
-        api.findOrCreateCardInCard(name, card.taskId, true)
+        api.findOrCreateCardInCard(name, card.taskId, true).then(() => this.setState({"renderMeNowPlease":true}))
     }
 
     newSubTask(name: string) {
@@ -422,7 +432,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if (!card) {
             console.log('missing card')
         }
-        api.findOrCreateCardInCard(name, card.taskId)
+        api.findOrCreateCardInCard(name, card.taskId).then(() => this.setState({"renderMeNowPlease":true}))
     }
 
     goInCard(event) {

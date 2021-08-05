@@ -107,8 +107,6 @@ class CurrentContextCard {
     if (taskId !== null && taskId !== undefined)
     {
       //TODO: some kind of loader spinner?
-      document.title = "loading...."
-
       // get the card from the client store or from the server
       aoStore.getTaskById_async
           ( taskId, 
@@ -120,6 +118,7 @@ class CurrentContextCard {
                       // setImmediate(() => aoStore.context.push(taskItem.taskId))
                       taskIdUrlString += taskId
                       this.history.push(taskIdUrlString)
+                      document.title = "loading...."
                       // window.history.pushState({}, '', taskIdUrlString)
                     } 
                   )
