@@ -113,11 +113,26 @@ class CurrentContextCard {
             (taskItem) => 
             { runInAction
                   ( () => 
-                    { this.cardItem = taskItem
+                    { 
+                      this.cardItem = taskItem
+
+                      taskIdUrlString += taskId
+
+                   
+                      if (window.location.pathname !== taskIdUrlString)
+                      { this.history.push(taskIdUrlString)
+                      }
+                      
+                      
+
+                      // console.log("AO: components/Card.tsx: CurrentContextCard: setCardItem: ", {taskId, taskItem, "history.action": this.history.action, stateToPush})
+
+
+                      
                       // contextStackWatcher.contextCardList.push(taskItem.taskId)
                       // setImmediate(() => aoStore.context.push(taskItem.taskId))
-                      taskIdUrlString += taskId
-                      this.history.push(taskIdUrlString)
+                      
+
                       document.title = "loading...."
                       // window.history.pushState({}, '', taskIdUrlString)
                     } 
@@ -154,7 +169,28 @@ const currentCardReaction =
       }
     );
 
-const PageTitleView   = observer( () => <Helmet><title>{currentContextCard.cardItem?currentContextCard.cardItem.name:"Loading..."}</title></Helmet> );
+const PageTitleView   = observer
+    ( () => 
+      { 
+        let pageTitle = "Loading..."
+
+
+        if (currentContextCard.cardItem)
+        {
+          if (currentContextCard.cardItem.name === currentContextCard.cardItem.taskId)
+          {
+            pageTitle = aoStore.memberById.get(currentContextCard.cardItem.taskId).name  
+          }
+          else
+          {
+            pageTitle = currentContextCard.cardItem.name
+          }
+          
+        }
+
+        return <Helmet><title>{pageTitle}</title></Helmet> 
+      }
+    );
 
 const ContextCardView = ( 
       () => 
@@ -255,7 +291,9 @@ interface CardState {
 
 export default function AoCard(props) {
   let history = useHistory()
-  currentContextCard.history = history;
+  currentContextCard.history = history
+
+  console.log(history.action)
 
   // console.log("AO: components/Card.tsx: AoCard function: ", {props})
   let targetTaskId;

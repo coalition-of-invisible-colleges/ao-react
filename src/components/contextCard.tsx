@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Helmet } from 'react-helmet'
 
-import { computed, makeObservable, observable, reaction, comparer} from 'mobx';
+import { computed, makeObservable, observable, reaction, comparer, runInAction} from 'mobx';
 import { observer, Observer } from 'mobx-react'
 import aoStore, { Task, Member, Resource } from '../client/store'
 import api from '../client/api'
@@ -151,7 +151,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if (      this.props.cardStyle === "full"
            ) 
         { if (aoStore.context.length === 0 && this.props.task && this.props.task.taskId !== aoStore.member.memberId)
-          { aoStore.context.push(aoStore.member.memberId)
+          { runInAction( () => aoStore.context.push(aoStore.member.memberId))
           }
 
           if (this.props.task && this.props.task.taskId)
