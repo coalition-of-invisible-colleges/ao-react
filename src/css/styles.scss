@@ -243,7 +243,7 @@ textarea {
       }
     }
 
-    // mission-style card shows in the Squads Index
+    // mission-style card shows in the Guilds Index
     .card.mission {
       .coin {
         .hodls {
@@ -396,7 +396,7 @@ textarea {
       }
     }
 
-    // badge-style card that replaces mini card for squads
+    // badge-style card that replaces mini card for guilds
     .card.badge {
       transform: unset;
       left: unset;
@@ -2674,18 +2674,18 @@ textarea {
       }
     }
 
-    // Red warning text on the bark menu
+    // red warning text on the bark menu
     .warning {
       font-weight: bold;
       color: red;
     }
 
-    // A wrapper for the current card
+    // a wrapper for the current card
     #tour-current-card {
       padding-bottom: 8.5em;
     }
 
-    // Star / medals / badges / accomplishments button on a card
+    // star / medals / badges / accomplishments button on a card
     .accomplishments {
       position: absolute;
       left: 0.5em;
@@ -2702,13 +2702,30 @@ textarea {
       }
     }
 
-    // The text box to create a new crypto ticker in the main menu
+    // stash/dropbox on a card
+    .stash {
+      position: absolute;
+      left: 0.5em;
+      top: 2em;
+
+      .popupPanel {
+        max-width: 42vw;
+        width: max-content;
+
+        .stack {
+          max-height: 44vh;
+          overflow-y: auto;
+        }
+      }
+    }
+
+    // the text box to create a new crypto ticker in the main menu
     #mainMenu .ticker textarea {
       max-width: 10em;
       height: 1.5em;
     }
 
-    // The hopper icon that hops above each square on the dock grid
+    // the hopper icon that hops above each square on the dock grid
     #hopper {
       position: absolute;
       height: 1.5em;
@@ -2761,7 +2778,7 @@ textarea {
       }
     }
 
-    // The checkbox on a badge (guild mini) card
+    // the checkbox on a badge (guild mini) card
     .badge .checkbox {
       position: absolute;
       top: -0.15em;
@@ -2772,17 +2789,17 @@ textarea {
       width: 1.35em;
     }
 
-    // The card menu button on a badge
+    // the card menu button on a badge
     .badge .cardMenuButton {
       padding-left: 0;
     }
 
-    // Textbox with an error (used in Hopper)
+    // textbox with an error (used in Hopper)
     input[type='text'].error {
       border: 2px solid red;
     }
 
-    // Claim reset icon in the top right corner of a card, next to the checkbox
+    // claim reset icon in the top right corner of a card, next to the checkbox
     .claimInterval.full {
       display: inline-block;
       cursor: default;
@@ -2793,7 +2810,7 @@ textarea {
       }
     }
 
-    // Claim interval option in card menu
+    // claim interval option in card menu
     .claimInterval.menu {
       margin-top: 0.25em;
       margin-bottom: 0.25em;
@@ -2804,6 +2821,16 @@ textarea {
 
       input[type='text'] {
         text-align: center;
+      }
+    }
+
+    // glossary section on the Membership tab of the Bull controls
+    #glossary {
+      position: relative;
+      table {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
   }

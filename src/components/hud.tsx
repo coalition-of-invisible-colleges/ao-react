@@ -28,6 +28,7 @@ import MagnifyingGlass from '../assets/images/search.svg'
 import Scroll from '../assets/images/scroll.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
+import { gloss } from '../semantics'
 
 interface State {
   theme: number
@@ -133,7 +134,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         <div id="missions">
           <AoPopupPanel
             iconSrc={Badge}
-            tooltipText="Squad Index"
+            tooltipText={gloss('Guild') + ' Index'}
             tooltipPlacement="right"
             panelPlacement="right"
             id="tour-missions">

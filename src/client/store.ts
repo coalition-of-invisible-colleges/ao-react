@@ -94,6 +94,7 @@ export interface Task {
   avatars?: AvatarLocation[]
   showChatroom?: boolean
   memberships: Membership[]
+  stash: { number: Task[] }
 }
 
 export interface Meme {
@@ -140,6 +141,7 @@ export interface Signature {
   memberId: string
   timestamp: Date
   opinion: number | string
+  endorsements: Signature[]
 }
 
 export interface AvatarLocation {
@@ -438,7 +440,7 @@ class AoStore {
     my = my.filter(st => {
       if (!st.hasOwnProperty('taskId')) {
         console.log(
-          'Invalid mission card detected while retrieving member missions list.'
+          'Invalid guild card detected while retrieving member guilds list.'
         )
         return false
       }

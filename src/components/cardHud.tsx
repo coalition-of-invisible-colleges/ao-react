@@ -19,6 +19,7 @@ import AoMission from './mission'
 import AoBark from './bark'
 import AoTally from './tally'
 import AoLilypad from './lilypad'
+import AoStash from './stash'
 
 export type HudStyle =
 	| 'context'
@@ -121,6 +122,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 					<React.Fragment>
 						{isGrabbed && taskId !== card.name && <AoBird taskId={taskId} />}
 						<AoUnread taskId={taskId} />
+						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />

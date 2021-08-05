@@ -10,7 +10,7 @@ import express from 'express'
 import { Server } from 'socket.io'
 import socketProtector from 'socketio-auth'
 import config from '../configuration.js'
-import dctrlDb from '../src/server/dctrlDb.js'
+import { startDb, changeFeed, insertEvent } from '../src/server/dctrlDb.js'
 import state from '../src/server/state.js'
 import reactions from '../src/server/reactions.js'
 import applyRouter from '../src/server/router.js'
@@ -31,14 +31,14 @@ function startDctrlAo() {
     dbPath = dbPath.replace('database', PORT)
   }
 
-  dctrlDb.startDb(dbPath, (err, conn) => {
+  startDb(dbPath, (err, conn) => {
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
 
       // link()
 
-      const serverReactions = dctrlDb.changeFeed
+      const serverReactions = changeFeed
         .onValue(ev => {
           state.applyEvent(state.serverState, ev)
         })
@@ -104,7 +104,7 @@ function startDctrlAo() {
                 address,
                 secret,
               }
-              dctrlDb.insertEvent(newEvent, (err, result) => {
+              insertEvent(newEvent, (err, result) => {
                 if (!err) {
                   console.log(
                     'Saved new connection to database. Result is',

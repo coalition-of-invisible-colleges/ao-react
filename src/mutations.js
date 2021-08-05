@@ -712,7 +712,7 @@ function tasksMuts(tasks, ev) {
             if (
               ev.opinion === 1 &&
               (!task.hasOwnProperty('memberships') ||
-                (_.has(task, 'memberships.length') &&
+                (_.has(task, 'membershipstask.length') &&
                   task.memberships.length < 1))
             ) {
               if (!task.memberships) {
@@ -721,6 +721,77 @@ function tasksMuts(tasks, ev) {
               task.memberships.push({ memberId: ev.memberId, level: 2 })
             } else if (ev.opinion === 0 && _.has(task, 'memberships.length')) {
               task.memberships.filter(memb => memb.memberId !== ev.memberId)
+            }
+          }
+        }
+      })
+      break
+    case 'task-membership':
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          if (task.guild && task.guild.length >= 1) {
+            // The member must have signed the task affirmatively
+            if (!task.signed || !task.signed.length || task.signed.length < 1) {
+              return
+            }
+
+            let mostRecentOpinion
+            for (let i = task.signed.length - 1; i--; i >= 0) {
+              const signature = task.signed[i]
+              if (signature.memberId === ev.memberId) {
+                mostRecentOpinion = signature.opinion
+                break
+              }
+            }
+
+            if (mostRecentOpinion < 1) {
+              return
+            }
+
+            if (
+              !task.memberships ||
+              !task.memberships.length ||
+              task.memberships.length < 1
+            ) {
+              return
+            }
+
+            const promoterLevel = task.memberships.find(
+              membership => membership.memberId === ev.blame
+            )?.level
+
+            if (!promoterLevel || promoterLevel < 1) {
+              return
+            }
+
+            const promotedLevel =
+              task.memberships.find(
+                membership => membership.memberId === ev.memberId
+              )?.level || 0
+
+            let maxLevel = 0
+            task.memberships.forEach(membership => {
+              maxLevel = Math.max(maxLevel, membership.level)
+            })
+
+            // The promoter must be a member at least one level higher
+            // Or, the highest-level member of a group can promote themselves
+            const canPromote =
+              (promoterLevel > promotedLevel &&
+                promoterLevel >= ev.level + 1) ||
+              (ev.memberId === ev.blame &&
+                promoterLevel === maxLevel &&
+                maxLevel >= 1)
+
+            if (!canPromote) {
+              return
+            }
+
+            task.memberships = task.memberships.filter(
+              memb => memb.memberId !== ev.memberId
+            )
+            if (ev.level !== 0) {
+              task.memberships.push({ memberId: ev.memberId, level: ev.level })
             }
           }
         }

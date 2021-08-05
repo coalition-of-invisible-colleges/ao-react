@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
+import { gloss } from '../semantics'
 
 type MissionSort = 'alphabetical' | 'hodls' | 'age'
 
@@ -13,14 +14,14 @@ interface State {
 
 export const defaultState: State = {
   page: 0,
-  sort: 'hodls'
+  sort: 'hodls',
 }
 
 @observer
 export default class AoMissions extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.state = defaultState
     this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
@@ -78,7 +79,7 @@ export default class AoMissions extends React.PureComponent<{}, State> {
   render() {
     return (
       <React.Fragment>
-        <h2>Squad Index</h2>
+        <h2>{gloss('guild')} Index</h2>
         <div className={'toolbar'}>
           {this.renderSortButton('alphabetical', 'A-Z')}
           {this.renderSortButton('hodls', 'Hodls')}

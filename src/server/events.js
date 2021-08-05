@@ -682,6 +682,17 @@ function taskSigned(taskId, memberId, opinion, callback) {
   insertEvent(newEvent, callback)
 }
 
+function taskMembership(taskId, memberId, level, blame, callback) {
+  let newEvent = {
+    type: 'task-membership',
+    taskId,
+    memberId,
+    level,
+    blame,
+  }
+  insertEvent(newEvent, callback)
+}
+
 function taskSeen(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-seen',
@@ -823,4 +834,5 @@ export default {
   taskSeen,
   taskTimeClocked,
   taskSigned,
+  taskMembership,
 }

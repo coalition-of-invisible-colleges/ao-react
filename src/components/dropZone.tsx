@@ -21,13 +21,13 @@ export interface State {
 	draggedKind?: string
 }
 
-export type CardSource =
-	| 'card'
-	| 'list'
-	| 'stack'
-	| 'grid'
-	| 'discard'
-	| 'context'
+// export type CardSource =
+// 	| 'card'
+// 	| 'list'
+// 	| 'stack'
+// 	| 'grid'
+// 	| 'discard'
+// 	| 'context'
 
 @observer
 export default class AoDropZone extends React.Component<DropZoneProps, State> {
@@ -47,7 +47,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 	onClick() {
 		this.props.onSelect({
 			y: this.props.y,
-			x: this.props.x
+			x: this.props.x,
 		})
 	}
 
@@ -147,13 +147,13 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
 		let fromCoords: Coords = {
 			x: parseInt(event.dataTransfer.getData('text/fromX'), 10),
-			y: parseInt(event.dataTransfer.getData('text/fromY'), 10)
+			y: parseInt(event.dataTransfer.getData('text/fromY'), 10),
 		}
 		let fromLocation: CardLocation = {
 			taskId: fromId,
 			inId: fromInId,
 			zone: fromZone,
-			coords: fromCoords
+			coords: fromCoords,
 		}
 
 		let toCoords: Coords = { x: this.props.x, y: this.props.y }
@@ -162,7 +162,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			taskId: taskId,
 			inId: this.props.inId,
 			zone: this.props.zoneStyle,
-			coords: toCoords
+			coords: toCoords,
 		}
 
 		if (toLocation === fromLocation) {
@@ -188,7 +188,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		) {
 			message = 'drop to place'
 		} else if (this.state.draggedKind === 'file') {
-			'drop file to upload'
+			;('drop file to upload')
 		}
 		return (
 			<div
@@ -237,7 +237,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			if (this.props.zoneStyle === 'grid') {
 				style = {
 					gridRow: (this.props.y + 1).toString(),
-					gridColumn: (this.props.x + 1).toString()
+					gridColumn: (this.props.x + 1).toString(),
 				}
 			}
 

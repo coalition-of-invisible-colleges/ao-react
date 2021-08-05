@@ -12,6 +12,7 @@ import LazyTippy from './lazyTippy'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
+import { gloss } from '../semantics'
 
 interface CoinProps {
   taskId: string
@@ -320,7 +321,7 @@ export default class AoCoin extends React.Component<CoinProps> {
           />
         ) : null}
         <div>
-          {card.guild && <p>Sign to join this squad</p>}
+          {card.guild && <p>Sign to join this {gloss('guild')}</p>}
           {mySignature && mySignature.opinion >= 1 ? (
             <span>
               <strong>signed</strong>

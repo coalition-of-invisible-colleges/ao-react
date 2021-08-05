@@ -4,6 +4,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
 import Badge from '../assets/images/badge.svg'
+import { gloss } from '../semantics'
 
 interface MissionProps {
   taskId: string
@@ -17,7 +18,7 @@ interface State {
 
 export const defaultState: State = {
   editing: false,
-  text: ''
+  text: '',
 }
 
 @observer
@@ -50,7 +51,7 @@ export default class AoMission extends React.PureComponent<
 
     if (card.guild) {
       this.setState({
-        text: card.guild
+        text: card.guild,
       })
     }
     this.setState({ editing: true })
@@ -139,7 +140,7 @@ export default class AoMission extends React.PureComponent<
           <div className="mission menu">
             <div onClick={this.startEditing} className="action">
               <img className="badge" src={Badge} />
-              {card.guild ? card.guild : 'upgrade to squad'}
+              {card.guild ? card.guild : 'upgrade to ' + gloss('guild')}
             </div>
           </div>
         )

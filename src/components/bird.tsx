@@ -10,6 +10,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import LazyTippy from './lazyTippy'
 import AoMemberIcon from './memberIcon'
+import { gloss, glossLevel } from '../semantics'
 
 type BirdTab = 'send' | 'link' | 'sign'
 
@@ -23,7 +24,7 @@ interface State {
 }
 
 @observer
-export default class AoBird extends React.PureComponent<Props, State> {
+export default class AoBird extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     makeObservable(this)
@@ -148,11 +149,154 @@ export default class AoBird extends React.PureComponent<Props, State> {
           (!card.memberships ||
             (card.memberships &&
               card.memberships.length &&
-              !card.memberships.some(memb => memb.memberId === memberId)))
+              !card.memberships.some(
+                memb => memb.memberId === memberId && memb.level !== 0
+              )))
       )
       .map(([memberId, opinion]) => memberId)
 
     return memberIdsRequestingEntry
+  }
+
+  @computed get renderedApplicantsList() {
+    const taskId = this.props.taskId
+    return (
+      <ul>
+        {this.memberRequests?.map(mId => {
+          const name = aoStore.memberById.get(mId)?.name
+          const approveApplicant = () => {
+            api.assignMembership(taskId, mId, 1)
+          }
+          const rejectApplicant = () => {
+            api.assignMembership(taskId, mId, 0)
+          }
+          return (
+            <li key={mId}>
+              <AoMemberIcon memberId={mId} />
+              {name}{' '}
+              {this.guildMemberLevel >= 2 && (
+                <React.Fragment>
+                  <div className="action inline" onClick={approveApplicant}>
+                    welcome
+                  </div>
+                  <div className="action inline" onClick={rejectApplicant}>
+                    reject
+                  </div>
+                </React.Fragment>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
+
+  @computed get memberships() {
+    const myLevel = this.guildMemberLevel
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card || !card.memberships || !card.memberships.length) return null
+    return card?.memberships
+      ?.filter(membership => membership.level >= 1)
+      .sort((a, b) => b.level - a.level)
+  }
+
+  @computed get renderedMembers() {
+    if (
+      !this.memberships ||
+      !this.memberships.length ||
+      this.memberships.length < 1
+    ) {
+      return null
+    }
+
+    const taskId = this.props.taskId
+
+    const myLevel = this.guildMemberLevel
+    let maxLevel = 0
+    this.memberships.forEach(membership => {
+      maxLevel = Math.max(maxLevel, membership.level)
+    })
+
+    const renderedRows = this.memberships.map(membership => {
+      const { memberId, level } = membership
+      const name = aoStore.memberById.get(memberId)?.name
+      const validSelfPromotion =
+        memberId === aoStore.member.memberId &&
+        myLevel === maxLevel &&
+        maxLevel >= 1
+      const canPromote =
+        (myLevel > level && myLevel >= level + 2) || validSelfPromotion
+      const canDemote =
+        (myLevel > level && myLevel >= level + 1) || validSelfPromotion
+
+      const promoteMember = () => {
+        api.assignMembership(taskId, memberId, level + 1)
+      }
+      const demoteOrKick = () => {
+        if (level > 1) {
+          let demoteMsg
+          if (memberId === aoStore.member.memberId) {
+            demoteMsg = `Are you sure you want to demote yourself? Without one person with the highest level, anyone will be able to promote themselves and take over the ${gloss(
+              'guild'
+            )}!`
+          } else {
+            demoteMsg = `Are you sure you want to demote this ${glossLevel(
+              level
+            )}? This might hurt their feelings.`
+          }
+          if (window.confirm(demoteMsg)) {
+            api.assignMembership(taskId, memberId, level - 1)
+          }
+        } else {
+          let kickMsg
+          if (memberId === aoStore.member.memberId) {
+            kickMsg = `Are you sure you want to kick yourself out? You will not unsign the ${gloss(
+              'card'
+            )}.`
+          } else {
+            kickMsg = `Are you sure you want to kick this member out of the ${gloss(
+              'guild'
+            )}? They will not be able to rejoin the ${gloss(
+              'guild'
+            )} unless you delete their kick (no way to do this yet). This might hurt their feelings.`
+          }
+
+          if (window.confirm(kickMsg)) {
+            api.assignMembership(taskId, memberId, -1)
+          }
+        }
+      }
+      return (
+        <tr key={memberId}>
+          <td>
+            <AoMemberIcon memberId={memberId} />
+            {name}
+            {canPromote && (
+              <div className="action inline" onClick={promoteMember}>
+                promote
+              </div>
+            )}
+            {canDemote && (
+              <div className="action inline" onClick={demoteOrKick}>
+                {level > 1 ? 'demote' : 'kick'}
+              </div>
+            )}
+          </td>
+          <td>{level}</td>
+          <td>{glossLevel(level)}</td>
+        </tr>
+      )
+    })
+    return (
+      <table>
+        <tr>
+          <th>username</th>
+          <th>level</th>
+          <th>role</th>
+        </tr>
+        {renderedRows}
+      </table>
+    )
   }
 
   signCard() {
@@ -187,20 +331,6 @@ export default class AoBird extends React.PureComponent<Props, State> {
     const isMember = signed && this.guildMemberLevel > 0
     const level = signed ? this.guildMemberLevel : null
 
-    const renderedApplicantsList = (
-      <ul>
-        {this.memberRequests?.map(mId => {
-          const name = aoStore.memberById.get(mId)?.name
-          return (
-            <li key={mId}>
-              <AoMemberIcon memberId={mId} />
-              {name}
-            </li>
-          )
-        })}
-      </ul>
-    )
-
     return (
       <LazyTippy
         zIndex={4}
@@ -208,6 +338,7 @@ export default class AoBird extends React.PureComponent<Props, State> {
         onShown={this.focus}
         hideOnClick="toggle"
         theme="translucent"
+        maxWidth="none"
         content={
           <React.Fragment>
             <div className="toolbar">
@@ -229,11 +360,15 @@ export default class AoBird extends React.PureComponent<Props, State> {
             )}
             {currentTab === 'sign' && (
               <React.Fragment>
-                {level > 0 && <p>Level {level} Student</p>}
+                {level > 0 && (
+                  <p>
+                    Level {level} {glossLevel(level)}
+                  </p>
+                )}
                 {!signed && (
                   <React.Fragment>
                     {isGuild
-                      ? 'Click to request group membership.'
+                      ? `Click to request ${gloss('guild')} membership.`
                       : 'Click to publicly endorse this card.'}
                     <div className="action" onClick={this.signCard}>
                       sign card
@@ -247,9 +382,9 @@ export default class AoBird extends React.PureComponent<Props, State> {
                   <React.Fragment>
                     {!isMember
                       ? 'Click to cancel your membership request.'
-                      : 'Click to leave this squad.'}
+                      : `Click to leave this ${gloss('guild')}.`}
                     <div className="action" onClick={this.unsignCard}>
-                      unsign card
+                      unsign {gloss('card')}
                       {!isMember && (
                         <React.Fragment> &amp; cancel join</React.Fragment>
                       )}
@@ -258,9 +393,9 @@ export default class AoBird extends React.PureComponent<Props, State> {
                 )}
                 {!isGuild && !signed && (
                   <React.Fragment>
-                    Click to sign this card.
+                    Click to sign this {gloss('card')}.
                     <div className="action" onClick={this.signCard}>
-                      sign card
+                      sign {gloss('card')}
                       {isGuild && (
                         <React.Fragment> &amp; apply to join</React.Fragment>
                       )}
@@ -270,17 +405,23 @@ export default class AoBird extends React.PureComponent<Props, State> {
                 {(isMember || (signed && !isGuild)) && (
                   <React.Fragment>
                     {isGuild
-                      ? 'Click to leave this squad.'
-                      : 'Click to unsign this card.'}
+                      ? `Click to leave this ${gloss('guild')}.`
+                      : `Click to unsign this ${gloss('card')}.`}
                     <div className="action" onClick={this.unsignCard}>
-                      unsign card &amp; leave squad
+                      unsign {gloss('card')} &amp; leave {gloss('guild')}
                     </div>
                   </React.Fragment>
                 )}
                 {isGuild && isMember && this.memberRequests?.length >= 1 && (
                   <React.Fragment>
                     <h4>Applicants</h4>
-                    {renderedApplicantsList}
+                    {this.renderedApplicantsList}
+                  </React.Fragment>
+                )}
+                {isGuild && isMember && this.memberships?.length >= 1 && (
+                  <React.Fragment>
+                    <h4>Members</h4>
+                    {this.renderedMembers}
                   </React.Fragment>
                 )}
               </React.Fragment>

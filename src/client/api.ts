@@ -874,6 +874,27 @@ class AoApi {
       })
   }
 
+  async assignMembership(
+    taskId: string,
+    memberId: string,
+    level: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-membership',
+      taskId: taskId,
+      memberId: memberId,
+      level: level,
+      blame: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async visitCard(taskId: string, inChat = false): Promise<request.Response> {
     const act = {
       type: 'task-visited',

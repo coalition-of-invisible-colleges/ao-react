@@ -44,12 +44,6 @@ export function socketAuth(socket, data, callback) {
 
 export function serverAuth(req, res, next) {
   const { ownerId, secret } = getIdSecret(req.headers.name)
-  console.log(
-    'serverAuth req.headers is',
-    req.headers,
-    'and cookie is',
-    req.cookies
-  )
   let authorization
   if (req.cookies.token) {
     authorization = req.cookies.token
