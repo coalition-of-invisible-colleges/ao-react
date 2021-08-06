@@ -94,7 +94,7 @@ export interface Task {
   avatars?: AvatarLocation[]
   showChatroom?: boolean
   memberships: Membership[]
-  stash: { number: Task[] }
+  stash: {}
 }
 
 export interface Meme {

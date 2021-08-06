@@ -693,6 +693,17 @@ function taskMembership(taskId, memberId, level, blame, callback) {
   insertEvent(newEvent, callback)
 }
 
+function taskStashed(taskId, inId, level, blame, callback) {
+  let newEvent = {
+    type: 'task-stashed',
+    taskId,
+    inId,
+    level,
+    blame,
+  }
+  insertEvent(newEvent, callback)
+}
+
 function taskSeen(taskId, memberId, callback) {
   let newEvent = {
     type: 'task-seen',
@@ -835,4 +846,5 @@ export default {
   taskTimeClocked,
   taskSigned,
   taskMembership,
+  taskStashed,
 }

@@ -2709,12 +2709,17 @@ textarea {
       top: 2em;
 
       .popupPanel {
-        max-width: 42vw;
+        // max-width: 42vw;
         width: max-content;
+        max-height: 96vh;
+        min-width: 25em;
+        height: max-content;
+        min-height: 16em;
 
         .stack {
-          max-height: 44vh;
-          overflow-y: auto;
+          // max-height: 44vh;
+          // overflow-y: auto;
+          min-width: 24em;
         }
       }
     }

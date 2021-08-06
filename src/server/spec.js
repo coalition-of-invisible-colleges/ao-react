@@ -910,6 +910,31 @@ router.post('/events', (req, res, next) => {
         res.status(400).send(errRes)
       }
       break
+    case 'task-stashed':
+      const val1 = validators.isTaskId(req.body.taskId, errRes)
+      const val2 = validators.isTaskId(req.body.inId, errRes)
+      const val3 = Number.isInteger(req.body.level)
+      console.log('typeof level is', typeof req.body.level)
+      const val4 = validators.isMemberId(req.body.blame, errRes)
+      console.log('stashed vals ar e', { val1, val2, val3, val4 })
+
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isTaskId(req.body.inId, errRes) &&
+        Number.isInteger(req.body.level) &&
+        validators.isMemberId(req.body.blame, errRes)
+      ) {
+        events.taskStashed(
+          req.body.taskId,
+          req.body.inId,
+          req.body.level,
+          req.body.blame,
+          buildResCallback(res)
+        )
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
     case 'pile-prioritized':
       if (validators.isTaskId(req.body.inId, errRes)) {
         events.pilePrioritized(req.body.inId, buildResCallback(res))

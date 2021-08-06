@@ -181,14 +181,16 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	emptySquare() {
 		let message = ''
-		if (['card', 'grid'].includes(this.state.draggedKind)) {
+		if (this.props.zoneStyle === 'stash') {
+			message = 'drop to stash'
+		} else if (['card', 'grid'].includes(this.state.draggedKind)) {
 			message = 'drop to place'
 		} else if (
 			['priorities', 'subTasks', 'completed'].includes(this.state.draggedKind)
 		) {
 			message = 'drop to place'
 		} else if (this.state.draggedKind === 'file') {
-			;('drop file to upload')
+			message = 'drop file to upload'
 		}
 		return (
 			<div

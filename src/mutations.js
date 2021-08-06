@@ -797,6 +797,56 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-stashed':
+      // I think the spec is only run on event creation, not load from database,
+      // so make sure the task exists before linking to it from another card
+      let taskExistsStash = false
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          taskExistsStash = true
+          task.passed = _.filter(task.passed, d => d[1] !== ev.blame)
+          if (ev.blame && task.deck.indexOf(ev.blame) === -1) {
+            if (ev.taskId !== ev.blame) {
+              task.deck.push(ev.blame)
+            }
+          }
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
+            console.log(
+              'Task with missing parents found in task-sub-tasked. This should never happen.'
+            )
+            task.parents = []
+          }
+
+          if (!task.parents.some(pId => pId === ev.taskId)) {
+            task.parents.push(ev.taskId)
+          }
+        }
+      })
+      if (taskExistsStash) {
+        tasks.forEach(task => {
+          if (task.taskId === ev.inId) {
+            if (
+              !_.has(task, 'stash') ||
+              !(
+                typeof task.stash === 'object' &&
+                task.stash !== null &&
+                !Array.isArray(task.stash)
+              )
+            ) {
+              task.stash = {}
+            }
+            if (!_.has(task.stash, ev.level)) {
+              task.stash[ev.level] = []
+            }
+            task.stash[ev.level] = _.filter(
+              task.stash[ev.level],
+              tId => tId !== ev.taskId
+            )
+            task.stash[ev.level].push(ev.taskId)
+          }
+        })
+      }
+      break
     case 'pile-grabbed':
       if (!ev.memberId) {
         break

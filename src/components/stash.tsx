@@ -6,6 +6,7 @@ import api from '../client/api'
 import AoStack from './stack'
 import { CardPlay } from '../cards'
 import AoPopupPanel from './popupPanel'
+import AoDropZone from './dropZone'
 import { HudStyle } from './cardHud'
 import Stash from '../assets/images/stash.svg'
 import { gloss, glossLevel } from '../semantics'
@@ -29,6 +30,7 @@ export default class AoStash extends React.Component<Props, State> {
 		makeObservable(this)
 		this.state = { tab: 1 }
 		this.goToTab = this.goToTab.bind(this)
+		this.dropToStash = this.dropToStash.bind(this)
 	}
 
 	goToTab(event) {
@@ -37,6 +39,50 @@ export default class AoStash extends React.Component<Props, State> {
 			return
 		}
 		this.setState({ tab })
+	}
+
+	@computed get guildMemberLevel() {
+		const card = aoStore.hashMap.get(this.props.taskId)
+		if (!card || !card.memberships || !card.memberships.length) return null
+
+		let found = card.memberships.find(
+			membership => membership.memberId === aoStore.member.memberId
+		)
+
+		return found ? found.level : 0
+	}
+
+	dropToStash(move: CardPlay, level: number = null) {
+		if (!move.from.taskId) {
+			return
+		}
+		const cardFrom = aoStore.hashMap.get(move.from.taskId)
+		if (!cardFrom) {
+			return
+		}
+		const nameFrom = cardFrom.name
+
+		const cardTo = aoStore.hashMap.get(move.to.taskId)
+		const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+
+		const myLevel = this.guildMemberLevel
+		let numLevel: number = level || Math.min(myLevel + 1, this.maxLevel)
+		if (typeof numLevel === 'string') {
+			numLevel = parseInt(numLevel, 10)
+		}
+		switch (move.from.zone) {
+			case 'discard':
+				aoStore.popDiscardHistory()
+			case 'card':
+			case 'priorities':
+			case 'grid':
+			case 'subTasks':
+			case 'completed':
+			case 'context':
+			case 'panel':
+			default:
+				api.stashCard(move.from.taskId, move.from.inId, numLevel)
+		}
 	}
 
 	@computed get maxLevel() {
@@ -56,45 +102,28 @@ export default class AoStash extends React.Component<Props, State> {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
 
-		const stashCard = (move: CardPlay) => {
-			if (!move.from.taskId) {
-				return
-			}
-			const nameFrom = aoStore.hashMap.get(move.from.taskId).name
-
-			switch (move.from.zone) {
-				case 'card':
-					// maybe this doesn't make sense, it's supposed to be for the whole card
-					break
-				case 'priorities':
-					api.refocusCard(move.from.taskId, move.from.inId)
-					break
-				case 'grid':
-					api.unpinCardFromGrid(
-						move.from.coords.x,
-						move.from.coords.y,
-						move.from.inId
-					)
-					break
-				case 'subTasks':
-				case 'completed':
-				case 'context':
-				case 'discard':
-					// api.refocusCard(move.from.taskId, move.to.inId)
-					break
-				default:
-					break
-			}
-		}
-
 		if (!card) {
 			console.log('missing card in stash')
 		}
 
-		const stashedCards =
+		const stashedTaskIds =
 			card.stash && card.stash.hasOwnProperty(this.state.tab)
 				? card.stash[this.state.tab]
 				: []
+
+		const stashedCards = stashedTaskIds.map(tId => aoStore.hashMap.get(tId))
+		const myLevel = this.guildMemberLevel
+
+		let totalStashedCards = 0
+		if (card.stash) {
+			Object.entries<[number, string[]]>(card.stash).forEach(
+				([level, tIds]) => {
+					if (myLevel >= parseInt(level, 10)) {
+						totalStashedCards += tIds.length
+					}
+				}
+			)
+		}
 
 		const renderTabButton = (tab: number, label: string, enabled: boolean) => {
 			if (this.state.tab == tab) {
@@ -130,32 +159,16 @@ export default class AoStash extends React.Component<Props, State> {
 			}
 		}
 
-		const myLevel =
-			card.memberships.find(
-				membership => membership.memberId === aoStore.member.memberId
-			).level || 0
-		const renderedBadge = stashedCards.length
+		const renderedBadge = totalStashedCards
 		let renderedTabs = []
 		for (let i = 1; i <= this.maxLevel; i++) {
 			renderedTabs.push(renderTabButton(i, glossLevel(i), myLevel >= i))
 		}
+		const onDropFactory = (move: CardPlay) => {
+			this.dropToStash(move, this.state.tab as number)
+		}
 		return (
-			<div className="stash">
-				<Tippy
-					theme="translucent"
-					content={`You don't have access to this dropbox level, but you can drop ${gloss(
-						'cards'
-					)} in here.`}
-					placement="bottom">
-					<button
-						onClick={this.goToTab}
-						data-page={1}
-						className="action inline"
-						disabled={true}>
-						TestTab
-					</button>
-				</Tippy>
-
+			<AoDropZone onDrop={this.dropToStash} zoneStyle="stash">
 				<AoPopupPanel
 					iconSrc={Stash}
 					tooltipText={`${gloss(
@@ -174,8 +187,8 @@ export default class AoStash extends React.Component<Props, State> {
 						<AoStack
 							inId={taskId}
 							cards={stashedCards}
-							cardStyle="checkmark"
-							onDrop={stashCard}
+							cardStyle="priority"
+							onDrop={onDropFactory}
 							alwaysShowAll={true}
 							descriptor={{
 								singular: 'stashed card',
@@ -185,7 +198,7 @@ export default class AoStash extends React.Component<Props, State> {
 						/>
 					</React.Fragment>
 				</AoPopupPanel>
-			</div>
+			</AoDropZone>
 		)
 	}
 }
