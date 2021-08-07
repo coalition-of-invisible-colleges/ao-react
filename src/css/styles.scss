@@ -2919,6 +2919,13 @@ textarea {
     .card.badge.loading {
       background-color: rgba(0, 0, 0, 0.5);
     }
+
+    // loading screen
+    #loading {
+      padding-top: 43vh;
+      font-size: 1.3em;
+      color: #666;
+    }
   }
 }
 

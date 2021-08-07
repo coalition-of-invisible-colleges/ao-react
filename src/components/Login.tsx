@@ -14,15 +14,21 @@ const Login: React.FunctionComponent<{}> = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [socketState, setSocketState] = useState(false)
 
-  console.log("AO: components/Login.tsx: socketState: inFunctionComponent "+aoStore.state.socketState)
-  reaction
-      ( () => 
-        { return aoStore.state.socketState },
-        (socketState) => 
-        { setSocketState(socketState==="authenticationSuccess"); 
-          console.log("AO: components/Login.tsx: socketState: inReaction"+socketState) 
-        } 
+  console.log(
+    'AO: components/Login.tsx: socketState: inFunctionComponent ' +
+      aoStore.state.socketState
+  )
+  reaction(
+    () => {
+      return aoStore.state.socketState
+    },
+    socketState => {
+      setSocketState(socketState === 'authenticationSuccess')
+      console.log(
+        'AO: components/Login.tsx: socketState: inReaction' + socketState
       )
+    }
+  )
 
   const onClick = e => {
     api
@@ -46,6 +52,10 @@ const Login: React.FunctionComponent<{}> = () => {
       onClick(e)
     }
   }
+
+  if (aoStore.state.socketState === undefined) {
+    return <div id="loading">Loading...</div>
+  }
   return (
     <div id="login">
       {!loggedIn && (
@@ -68,17 +78,27 @@ const Login: React.FunctionComponent<{}> = () => {
               onKeyDown={onKeyDown}
             />
           </div>
-          {!socketState && <button type="button" onClick={onClick}>
-            Login
-          </button>
-          }
+          {!socketState && (
+            <button type="button" onClick={onClick}>
+              Login
+            </button>
+          )}
           <div className="successMessage">{success}</div>
           <div className="errorMessage">{error}</div>
         </form>
       )}
       {loggedIn && <Redirect to="/" />}
-      {socketState && <Redirect to={aoStore.state.protectedRouteRedirectPath?aoStore.state.protectedRouteRedirectPath:"/"} />}
-      { //!socketState && <div>{aoStore.state.socketState+"-"+aoStore.state.protectedRouteRedirectPath}</div>
+      {socketState && (
+        <Redirect
+          to={
+            aoStore.state.protectedRouteRedirectPath
+              ? aoStore.state.protectedRouteRedirectPath
+              : '/'
+          }
+        />
+      )}
+      {
+        //!socketState && <div>{aoStore.state.socketState+"-"+aoStore.state.protectedRouteRedirectPath}</div>
       }
       <div className="about">
         <h1>What is the AO?</h1>
