@@ -53,9 +53,9 @@ const Login: React.FunctionComponent<{}> = () => {
     }
   }
 
-  if (aoStore.state.socketState === undefined) {
-    return <div id="loading">Loading...</div>
-  }
+  // if (aoStore.state.socketState === undefined) {
+  //   return <div id="loading">Loading...</div>
+  // }
   return (
     <div id="login">
       {!loggedIn && (
