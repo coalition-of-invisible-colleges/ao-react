@@ -31,34 +31,50 @@ export interface CardPlay {
 	to: CardLocation
 }
 
-export function goInCard(taskId: string, isContext = false, doNotSave = false) {
-	hideAllTippys()
-	aoStore.closeAllCloseables()
+export function goInCard(taskId: string, removeContextLowerThanTaskId = false, addCurrentCardToContext = true) {
+	// hideAllTippys()
+	// aoStore.closeAllCloseables()
 
-	console.log('goInCard taskId is ', taskId)
-	if (isContext) {
-		aoStore.clearContextTo(taskId)
-	} else if (aoStore.currentCard) {
-		if (!doNotSave) {
-			aoStore.addToContext([aoStore.currentCard])
-		}
-	}
+	// console.log('AO: cards.ts: goInCard: ', { taskId, isContext, doNotSave })
+	// if (isContext) {
+	// 	aoStore.clearContextTo(taskId)
+	// } else if (aoStore.currentCard) {
+	// 	if (!doNotSave) {
+	// 		aoStore.addToContext([aoStore.currentCard])
+	// 	}
+	// }
+	// aoStore.removeFromContext(taskId)
+	// aoStore.setCurrentCard(taskId)
+	if (removeContextLowerThanTaskId === true) aoStore.clearContextTo(taskId)
+	if (addCurrentCardToContext === true) aoStore.addToContext([aoStore.currentCard])
+
 	aoStore.setCurrentCard(taskId)
-	aoStore.removeFromContext(taskId)
+	
 }
 
 export function goUp() {
-	if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
-		const go = aoStore.contextCards[0]
-		if (go) {
-			goInCard(go.taskId, true)
-		}
-	} else if (aoStore.contextCards.length < 1) {
-		hideAllTippys()
-		aoStore.closeAllCloseables()
+	console.log('AO: cards.ts: goUp', {"context": aoStore.context})
 
-		aoStore.setCurrentCard(null)
+	if (aoStore.context.length > 0)
+	{
+		goInCard(aoStore.context.slice(-1)[0], false, false)
 	}
+	else
+	{
+		aoStore.setCurrentCard(null);
+	}
+
+	// if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
+	// 	const go = aoStore.contextCards[0]
+	// 	if (go) {
+	// 		goInCard(go.taskId, true)
+	// 	}
+	// } else if (aoStore.contextCards.length < 1) {
+	//  hideAllTippys()
+	//	aoStore.closeAllCloseables()
+
+	// 	aoStore.setCurrentCard(null)
+	// }
 }
 
 export function prioritizeCard(move: CardPlay) {

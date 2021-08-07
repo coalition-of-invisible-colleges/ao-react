@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { computed } from 'mobx'
-import { observer } from 'mobx-react'
+import { computed, runInAction, observable } from 'mobx'
+import { observer, Observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 import aoStore, { Task, Grid } from '../client/store'
 import api from '../client/api'
@@ -23,6 +23,82 @@ interface GridViewProps extends GridProps {
   grid: Grid
 }
 
+
+const AoGridRowObserver = observer( (props : {
+  row: {}
+  y: number
+  inId: string
+  selected?: Coords
+  width: number
+  dropActsLikeFolder: boolean
+  onBlur: () => void
+  onNewGridCard: (name: string, coords: Coords) => void
+  selectGridSquare: (selection: Coords) => void
+  dropToGridSquare: (move: CardPlay) => void
+}) =>
+    {
+      let render: JSX.Element[] = []
+  for (let i = 0; i < props.width; i++) {
+    if (
+      props.selected &&
+      props.selected.x == i &&
+      props.selected.y == props.y
+    ) {
+      render.push(
+        <React.Fragment key={i + '-' + props.y}>
+          <AoCardComposer
+            onNewCard={props.onNewGridCard}
+            coords={{ x: i, y: props.y }}
+            onBlur={props.onBlur}
+          />
+        </React.Fragment>
+      )
+      continue
+    }
+    let tId: string
+    if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
+      tId = props.row[i]
+    }
+
+    const card = aoStore.hashMap.get(tId)
+    render.push(
+      <AoDropZone
+        taskId={tId}
+        inId={props.inId}
+        x={i}
+        y={props.y}
+        onSelect={props.selectGridSquare}
+        onDrop={props.dropToGridSquare}
+        zoneStyle={'grid'}
+        key={i + '-' + props.y}
+        dropActsLikeFolder={props.dropActsLikeFolder}>
+        {tId ? (
+          <AoDragZone
+            taskId={tId}
+            dragContext={{
+              zone: 'grid',
+              inId: props.inId,
+              x: i,
+              y: props.y
+            }}>
+            <AoContextCard
+              task={card}
+              cardStyle={
+                props.dropActsLikeFolder && card.guild && card.guild.length >= 1
+                  ? 'badge'
+                  : 'mini'
+              }
+            />
+          </AoDragZone>
+        ) : null}
+      </AoDropZone>
+    )
+  }
+
+  return <>{render}</>
+    }
+  )
+
 const AoGridRow: Function = (props: {
   row: {}
   y: number
@@ -35,6 +111,8 @@ const AoGridRow: Function = (props: {
   selectGridSquare: (selection: Coords) => void
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
+  console.log('AoGridRow render()')
+
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {
     if (
@@ -97,6 +175,8 @@ const AoGridRow: Function = (props: {
 }
 
 const GridView: Function = (props: GridViewProps): JSX.Element => {
+  console.log('AO: components/grid.tsx: GridView component function')
+
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
 
   function selectGridSquare(selection: Coords) {
@@ -123,6 +203,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 
     const cardTo = aoStore.hashMap.get(move.to.taskId)
     const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+
 
     switch (move.from.zone) {
       case 'card':
@@ -221,6 +302,8 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
               )
             )
         } else {
+          let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(move.from.inId);
+          runInAction(() => movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI = true)
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -228,12 +311,19 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
               move.from.inId
             )
             .then(() =>
-              api.pinCardToGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                nameFrom,
-                move.to.inId
-              )
+              { 
+                api.pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                ).then(() =>
+                    { runInAction(() => movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI = false)
+                    }
+                  )
+                
+              }
+
             )
         }
         break
@@ -305,19 +395,23 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
     const currentRow = rows[j]
     render.push(
       <React.Fragment key={j}>
-        <AoGridRow
-          row={currentRow}
-          y={j}
-          inId={props.taskId}
-          selected={selected}
-          width={grid.width}
-          dropActsLikeFolder={props.dropActsLikeFolder}
-          onBlur={onBlur}
-          onNewGridCard={newGridCard}
-          selectGridSquare={selectGridSquare}
-          dropToGridSquare={dropToGridSquare}
-          key={j}
-        />
+         <AoGridRowObserver
+                  row={currentRow}
+                  y={j}
+                  inId={props.taskId}
+                  selected={selected}
+                  width={grid.width}
+                  dropActsLikeFolder={props.dropActsLikeFolder}
+                  onBlur={onBlur}
+                  onNewGridCard={newGridCard}
+                  selectGridSquare={selectGridSquare}
+                  dropToGridSquare={dropToGridSquare}
+                  key={j}
+                />
+
+            
+          
+        
       </React.Fragment>
     )
   }

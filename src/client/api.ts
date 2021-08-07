@@ -6,6 +6,8 @@ import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
 import { io } from 'socket.io-client'
 
+import { runInAction, reaction } from 'mobx'
+
 class AoApi {
   constructor(public socket) {}
 
@@ -41,8 +43,16 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
-          console.log('initial state: ', res.body)
-          aoStore.initializeState(res.body)
+          console.log('AO: client/api.ts: fetchState: initial state: ', res.body)
+          
+          let dataPackageToSendToClient = res.body
+
+          aoStore.initializeState(dataPackageToSendToClient.stateToSend)
+
+          let metaData = dataPackageToSendToClient.metaData
+          aoStore.memberDeckSize = metaData.memberDeckSize
+          aoStore.bookmarksTaskId = metaData.bookmarksTaskId
+          
           return true
         })
         .catch(() => false)
@@ -161,14 +171,18 @@ class AoApi {
     name: string,
     anonymous?: boolean
   ): Promise<request.Response> {
+
+
+
     const act = {
       type: 'task-created',
       name: name,
       color: 'blue',
-      deck: anonymous ? [] : [aoStore.member.memberId],
-      inId: anonymous ? null : aoStore.memberCard.taskId,
-      prioritized: false,
+      deck: anonymous ? [] : (aoStore.member && aoStore.member.memberId?[aoStore.member.memberId]:[]),
+      inId: anonymous ? null : (aoStore.memberCard.taskId || null),
+      prioritized: false
     }
+    console.log("AO: client/api.ts: createCard: ", {act, "aoStore.memberCard": aoStore.memberCard})
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -1032,7 +1046,11 @@ class AoApi {
     name: string,
     inId: string
   ): Promise<request.Response> {
+
+
     const task: Task = aoStore.cardByName.get(name.toLowerCase())
+    // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
+
     if (_.isObject(task)) {
       const act = {
         type: 'grid-pin',
@@ -1140,7 +1158,16 @@ class AoApi {
   startSocketListeners() {
     this.socket.connect()
     this.socket.on('connect', () => {
-      console.log('connected')
+      console.log('connected', { "aoStore.state": aoStore.state })
+      
+      if (aoStore.state.socketState === undefined)
+      {
+        aoStore.state.session = window.localStorage.getItem('session')
+        aoStore.state.token = window.localStorage.getItem('token')
+      }
+
+      runInAction( () => { aoStore.state.socketState = "attemptingAuthentication"; } );
+
       this.socket.emit('authentication', {
         session: aoStore.state.session,
         token: aoStore.state.token,
@@ -1148,17 +1175,39 @@ class AoApi {
     })
     this.socket.on('authenticated', () => {
       console.log('authenticated')
+
+      this.fetchState().then
+          ( () =>
+            {
+              runInAction
+              ( () => 
+                { 
+                  aoStore.state.socketState = "authenticationSuccess"; 
+                } 
+              );
+            }
+          )
+
       this.socket.on('eventstream', ev => {
-        console.log('event', ev)
+        console.log('AO: client/api.ts: socketListener: event:', ev);
+
         aoStore.applyEvent(ev)
       })
     })
     this.socket.on('disconnect', reason => {
       console.log('disconnected')
+      
+      runInAction( () => { aoStore.state.socketState = "authenticationFailed"; } );
+
+      aoStore.state.session = ""
+      aoStore.state.token = ""
+
       this.socket.connect()
     })
   }
 }
+
+reaction ( ()=> { return aoStore.state.socketState }, (socketState) => console.log("AO: client/api.ts: socketState: "+socketState));
 const socket = io(config.socketUrl ? config.socketUrl : '/', {
   autoConnect: false,
 })

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { recover, getAll, insertBackup } from './dctrlDb.js'
+import { recover, getAll, insertBackup, insertEvent } from './dctrlDb.js'
 import M from '../mutations.js'
 import config from '../../configuration.js'
 import { formatDistanceToNow } from 'date-fns'
@@ -121,7 +121,9 @@ function initialize(callback) {
     }
     getAll(ts, (err, all) => {
       if (err) return callback(err)
+
       all.forEach((ev, i) => {
+
         applyEvent(serverState, Object.assign({}, ev))
         applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
         if (i > 0 && i % 10000 === 0) {
@@ -129,7 +131,9 @@ function initialize(callback) {
         }
       })
       console.log('applied ', all.length, ' events from the database')
-      callback(null)
+
+      
+      callback(null);
     })
   })
 }
