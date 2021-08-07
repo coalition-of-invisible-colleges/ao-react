@@ -22,6 +22,7 @@ import AoReactivator from './reactivator'
 import AoTour from './tour'
 import AoPopupPanel from './popupPanel'
 import AoChatroom from './chatroom'
+import AoStatus from './status'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import Badge from '../assets/images/badge.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
@@ -115,7 +116,6 @@ export default class AoHud extends React.Component<{}, HudState> {
 
     return (
       <div id="hud">
-        components/hud.tsx
         <div id="mainMenu-tour">
           <Tippy
             content={<MainMenu />}
@@ -129,20 +129,18 @@ export default class AoHud extends React.Component<{}, HudState> {
         </div>
         <AoHub />
         {!aoStore.member.tutorial && <AoTour />}
-        
+
         <AoControls />
 
         <Observer>
-        { () =>
-          { return <AoDock />
-          }
-        }
+          {() => {
+            return <AoDock />
+          }}
         </Observer>
 
         <AoGifts />
 
         <div id="missions">
-
           <AoPopupPanel
             iconSrc={Badge}
             tooltipText={gloss('Guild') + ' Index'}
@@ -153,35 +151,35 @@ export default class AoHud extends React.Component<{}, HudState> {
           </AoPopupPanel>
         </div>
         <div id="members">
-            <AoPopupPanel
-              iconSrc={MemberIcon}
-              tooltipText="Members"
-              tooltipPlacement="right"
-              panelPlacement="right"
-              id="tour-members">
-              <AoMembers />
-            </AoPopupPanel>
-          </div>
-          
-          <AoCalendar />
+          <AoPopupPanel
+            iconSrc={MemberIcon}
+            tooltipText="Members"
+            tooltipPlacement="right"
+            panelPlacement="right"
+            id="tour-members">
+            <AoMembers />
+          </AoPopupPanel>
+        </div>
 
-          <AoBounties />
+        <AoCalendar />
 
-          <div id="search">
-            <AoPopupPanel
-              iconSrc={MagnifyingGlass}
-              tooltipText="Search"
-              tooltipPlacement="top"
-              panelPlacement="top"
-              onShown={this.focusSearchbox}
-              id="tour-search">
-              <AoSearch ref={this.searchRef} />
-            </AoPopupPanel>
-          </div>
+        <AoBounties />
 
-          <AoTickerHud />
+        <div id="search">
+          <AoPopupPanel
+            iconSrc={MagnifyingGlass}
+            tooltipText="Search"
+            tooltipPlacement="top"
+            panelPlacement="top"
+            onShown={this.focusSearchbox}
+            id="tour-search">
+            <AoSearch ref={this.searchRef} />
+          </AoPopupPanel>
+        </div>
 
-          {/*        <div id="proposals">
+        <AoTickerHud />
+
+        {/*        <div id="proposals">
             <AoPopupPanel
               iconSrc={Scroll}
               tooltipText="Proposals"
@@ -193,20 +191,13 @@ export default class AoHud extends React.Component<{}, HudState> {
             </AoPopupPanel>
           </div>
           */}
-          
-          
-          
-          <AoChatroom taskId={aoStore.currentChatroom} />
-          {//<AoScore prefix={<span>Points: </span>} />
-          }
 
-
-                  
-        
+        <AoChatroom taskId={aoStore.currentChatroom} />
+        {
+          //<AoScore prefix={<span>Points: </span>} />
+        }
+        {/*<AoStatus />*/}
       </div>
     )
   }
 }
-
-
-          

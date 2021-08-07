@@ -175,19 +175,19 @@ export default {
       template: 'src/assets/index.html',
     }),
     new WebpackManifestPlugin({
-      fileName: '/public/manifest.json'
+      fileName: 'public/manifest.json',
     }),
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, "dist"),
-	  disableHostCheck: true,
+    contentBase: path.resolve(__dirname, 'dist'),
+    disableHostCheck: true,
     hot: true,
     inline: true,
-    // host: 'localhost',
-    public: "https://ao-react.christopherreay.com",
-    // allowedHosts: [ "ao-react.christopherreay.com", "127.0.0.1"],
+    host: '127.0.0.1',
+    // public: '127.0.0.1:3000',
+    allowedHosts: ['127.0.0.1'],
     historyApiFallback: {
       disableDotRule: true,
     },
@@ -200,8 +200,8 @@ export default {
           '/meme',
           '/upload',
           '/download',
-          "/fetchTaskByID",
-          "/fetchTaskByName",
+          '/fetchTaskByID',
+          '/fetchTaskByName',
         ],
         target: 'http://127.0.0.1:8003',
         // changeOrigin: true,

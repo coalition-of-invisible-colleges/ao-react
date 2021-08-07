@@ -2,7 +2,7 @@
 
 let PORT = process.env.PORT || 8003
 
-console.log("AO: Listening on PORT: ", PORT);
+console.log('AO: Listening on PORT: ', PORT)
 
 import Kefir from 'kefir'
 import express from 'express'
@@ -34,7 +34,6 @@ function startDctrlAo() {
   }
 
   startDb(dbPath, (err, conn) => {
-
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
@@ -57,7 +56,6 @@ function startDctrlAo() {
       const server = app.listen(PORT, err => {
         console.log('Listening on port', PORT)
 
-
         // TODO continue merge argument about this functionality
         //   likely best option is to use an ENV variable to determine
         //   if we are behind a proxy or not. This is likely useful / necessary
@@ -70,8 +68,9 @@ function startDctrlAo() {
         // })
 
         // ioServer.listen(PORT)
-        const ioServer = new Server(server );//, { cors: { origin: "http://localhost:3000" } } )
-
+        const ioServer = new Server(server, {
+          cors: { origin: 'http://127.0.0.1:3000' },
+        })
 
         socketProtector(ioServer, {
           authenticate: socketAuth,
@@ -92,7 +91,7 @@ function startDctrlAo() {
         // console.log("AO: server/state.js: initialize: checking for community hub card", { "tasks": state.pubState.tasks } );
         // let communityHubCardFound = false;
         // state.pubState.tasks.forEach
-        //     ( (taskItem, index) =>            
+        //     ( (taskItem, index) =>
         //       {
         //         if (taskItem.name.toLowerCase() === "community hub")
         //         {
@@ -104,7 +103,7 @@ function startDctrlAo() {
         //     );
         // if (communityHubCardFound === false)
         // {
-        //   let newCommunityHubCardEvent = 
+        //   let newCommunityHubCardEvent =
         //       {
         //         type        : "task-create",
         //         name        : "community hub",
@@ -114,15 +113,15 @@ function startDctrlAo() {
         //         prioritized : false,
         //       }
         //   // setImmediate
-        //   //     ( 
+        //   //     (
         //         // () =>
         //         // {
         //           insertEvent
-        //           ( newCommunityHubCardEvent, 
-        //             (error, {event, result}) => 
+        //           ( newCommunityHubCardEvent,
+        //             (error, {event, result}) =>
         //             {
-                      
-        //               if (error) 
+
+        //               if (error)
         //               {
         //                 // this should never happen... umm... not sure what to do here
         //                 console.log("AO: server/state.js: initialize: error running insertEvent for communityHubCard", {error, event, result});

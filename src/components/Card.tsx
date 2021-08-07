@@ -1,7 +1,16 @@
 import React from 'react'
-import ReactDOM from "react-dom"
+import ReactDOM from 'react-dom'
 import { useState, useEffect } from 'react'
-import { makeAutoObservable, makeObservable, observable, computed, action, runInAction, reaction, autorun } from 'mobx'
+import {
+  makeAutoObservable,
+  makeObservable,
+  observable,
+  computed,
+  action,
+  runInAction,
+  reaction,
+  autorun,
+} from 'mobx'
 import { observer } from 'mobx-react'
 import { useHistory } from 'react-router-dom'
 import aoStore, { Member, Resource } from '../client/store'
@@ -25,9 +34,9 @@ interface RenderProps {
   taskId?: string
 }
 
-// let getCommunityCard = 
+// let getCommunityCard =
 //     () =>
-//     { 
+//     {
 //       aoStore.getTaskByName_async
 //       ( "community hub",
 //         (communityCard) =>
@@ -38,10 +47,10 @@ interface RenderProps {
 //               !communityCard.taskId
 //           ) {
 //               console.log("AO: components/App.tsx: initialising page, creating community hub card on server")
-              
+
 //               api.createCard('community hub', true).then(result => {
 //                   const newTaskId = JSON.parse(result.text).event.taskId
-                  
+
 //                   console.log("AO: components/App.tsx: initialising page, community hub card created: ", { newTaskId });
 
 //                   aoStore.setCurrentCard(newTaskId)
@@ -59,25 +68,25 @@ interface RenderProps {
 //       )
 //     }
 
-
 class ContextStackWatcher {
   contextCardList = aoStore.contextCards
 
-  constructor () {
-    makeObservable(this, {contextCardList: observable})
+  constructor() {
+    makeObservable(this, { contextCardList: observable })
   }
 }
-const contextStackWatcher       = new ContextStackWatcher()
-reaction( () => { return aoStore.context },
+const contextStackWatcher = new ContextStackWatcher()
+reaction(
+  () => {
+    return aoStore.context
+  },
 
-          (contextCardList) => 
-          { console.log
-                ( "@AO: components/Card.tsx: contextStackWatcher: ", 
-                  { "contextStackWatcher.contextCardList": contextCardList.slice()
-                  }
-                )
-          }
-    )
+  contextCardList => {
+    console.log('@AO: components/Card.tsx: contextStackWatcher: ', {
+      'contextStackWatcher.contextCardList': contextCardList.slice(),
+    })
+  }
+)
 // const ContextStackView   = observer( () => <div id="context">
 //          contextCard.tsx__full__noContextOnFull_false
 //          <AoStack
@@ -87,132 +96,97 @@ reaction( () => { return aoStore.context },
 //            zone="context"
 //          />
 //        </div>
-  
+
 // );
 
-
-
 class CurrentContextCard {
-  cardItem = null;
-  loadingCardItemFromServer = null;
-  history = null;
+  cardItem = null
+  loadingCardItemFromServer = null
+  history = null
 
-  constructor() { 
-    makeObservable(this, {cardItem: observable}) 
+  constructor() {
+    makeObservable(this, { cardItem: observable })
   }
 
   setCardItem(taskId) {
-    let taskIdUrlString = "/task/"
+    let taskIdUrlString = '/task/'
 
-    if (taskId !== null && taskId !== undefined)
-    {
+    if (taskId !== null && taskId !== undefined) {
       //TODO: some kind of loader spinner?
       // get the card from the client store or from the server
-      aoStore.getTaskById_async
-          ( taskId, 
-            (taskItem) => 
-            { runInAction
-                  ( () => 
-                    { 
-                      this.cardItem = taskItem
+      aoStore.getTaskById_async(taskId, taskItem => {
+        runInAction(() => {
+          this.cardItem = taskItem
 
-                      taskIdUrlString += taskId
+          taskIdUrlString += taskId
 
-                   
-                      if (window.location.pathname !== taskIdUrlString)
-                      { this.history.push(taskIdUrlString)
-                      }
-                      
-                      
+          if (window.location.pathname !== taskIdUrlString) {
+            this.history.push(taskIdUrlString)
+          }
 
-                      // console.log("AO: components/Card.tsx: CurrentContextCard: setCardItem: ", {taskId, taskItem, "history.action": this.history.action, stateToPush})
+          // console.log("AO: components/Card.tsx: CurrentContextCard: setCardItem: ", {taskId, taskItem, "history.action": this.history.action, stateToPush})
 
+          // contextStackWatcher.contextCardList.push(taskItem.taskId)
+          // setImmediate(() => aoStore.context.push(taskItem.taskId))
 
-                      
-                      // contextStackWatcher.contextCardList.push(taskItem.taskId)
-                      // setImmediate(() => aoStore.context.push(taskItem.taskId))
-                      
-
-                      document.title = "loading...."
-                      // window.history.pushState({}, '', taskIdUrlString)
-                    } 
-                  )
-            }
-          );
+          document.title = 'loading....'
+          // window.history.pushState({}, '', taskIdUrlString)
+        })
+      })
+    } else {
+      runInAction(() => {
+        this.cardItem = null
+        this.history.push(taskIdUrlString)
+      })
     }
-    else
-    {
-      runInAction
-          ( () => 
-            { 
-              this.cardItem = null 
-              this.history.push(taskIdUrlString)
-            } 
-          )
-    }
-    
-    
   }
 }
-const currentContextCard = new CurrentContextCard();
-const currentCardReaction =
-    reaction
-    ( () => 
-      { 
-        // console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
-        return aoStore.currentCard 
-      },
-      (currentCard) => 
-      { 
-        // console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
-        currentContextCard.setCardItem(currentCard) 
-      }
-    );
+const currentContextCard = new CurrentContextCard()
+const currentCardReaction = reaction(
+  () => {
+    // console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
+    return aoStore.currentCard
+  },
+  currentCard => {
+    // console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
+    currentContextCard.setCardItem(currentCard)
+  }
+)
 
-const PageTitleView   = observer
-    ( () => 
-      { 
-        let pageTitle = "Loading..."
+const PageTitleView = observer(() => {
+  let pageTitle = 'Loading...'
 
+  if (currentContextCard.cardItem) {
+    if (
+      currentContextCard.cardItem.name === currentContextCard.cardItem.taskId
+    ) {
+      pageTitle = aoStore.memberById.get(
+        currentContextCard.cardItem.taskId
+      ).name
+    } else {
+      pageTitle = currentContextCard.cardItem.name
+    }
+  }
 
-        if (currentContextCard.cardItem)
-        {
-          if (currentContextCard.cardItem.name === currentContextCard.cardItem.taskId)
-          {
-            pageTitle = aoStore.memberById.get(currentContextCard.cardItem.taskId).name  
-          }
-          else
-          {
-            pageTitle = currentContextCard.cardItem.name
-          }
-          
-        }
+  return (
+    <Helmet>
+      <title>{pageTitle}</title>
+    </Helmet>
+  )
+})
 
-        return <Helmet><title>{pageTitle}</title></Helmet> 
-      }
-    );
-
-const ContextCardView = ( 
-      () => 
-      { 
-        if (currentContextCard.cardItem === null) 
-        { 
-          // console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
-          return <AoDrawPile /> 
-        }
-        else 
-        { 
-          // console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
-          return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
-        }
-      }
-    );
-
-
+const ContextCardView = () => {
+  if (currentContextCard.cardItem === null) {
+    // console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
+    return <AoDrawPile />
+  } else {
+    // console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
+    return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
+  }
+}
 
 // const CardTitleView = observer( ({currentContextCard}) => <Helmet><title>{currentContextCard.cardItem.name}</title></Helmet> );
 // ReactDOM.render(<PageTitleView currentContextCard={currentContextCard} />, document.getElementById("root"));
-
 
 // function renderCard(taskId?: string, props?: any) {
 //   console.log('AO: components/Card.tsx: renderCard: taskId is ', {taskId, props})
@@ -259,9 +233,9 @@ const ContextCardView = (
 //           // </Helmet>
 //         }
 //         Card.tsx
-//         { <AoDiscardZone /> 
+//         { <AoDiscardZone />
 //         }
-//         { 
+//         {
 //           //card ? <AoContextCard taskId={taskId} task={card} cardStyle="full" /> : <AoDrawPile />
 //           // <AoContextCard taskId={taskId} task={card} cardStyle="full" />
 //           //taskId?<AoContextCard taskId={taskId} cardStyle="full" />:<div>'AO: components/Card.tsx: taskId not set'</div>
@@ -277,7 +251,7 @@ const ContextCardView = (
 //           // </div>
 
 //         }
-//         { 
+//         {
 //           <AoHud />
 //         }
 //       </div>
@@ -296,23 +270,21 @@ export default function AoCard(props) {
   console.log(history.action)
 
   // console.log("AO: components/Card.tsx: AoCard function: ", {props})
-  let targetTaskId;
-  if (props.match.path === "/")
-  {
-    aoStore.getCommunityHubCardId((communityHubCardTaskId) => aoStore.setCurrentCard(communityHubCardTaskId))
-  }
-  else if (props.match.params && props.match.params.taskId)
-  {
+  let targetTaskId
+  if (props.match.path === '/') {
+    aoStore.getCommunityHubCardId(communityHubCardTaskId =>
+      aoStore.setCurrentCard(communityHubCardTaskId)
+    )
+  } else if (props.match.params && props.match.params.taskId) {
     // if (props.match.params.taskId === undefined && aoStore.currentCard === null)
     // {
     //   // do nothing
     // }
     // else
     {
-      aoStore.setCurrentCard(props.match.params.taskId);
+      aoStore.setCurrentCard(props.match.params.taskId)
     }
   }
-  
 
   return (
     <Tour steps={steps} tourOptions={tourOptions}>
@@ -326,29 +298,23 @@ export default function AoCard(props) {
           //   </title>
           // </Helmet>
         }
-        Card.tsx
-        { 
-          <AoDiscardZone /> 
-        }
-        { 
+        {<AoDiscardZone />}
+        {
           //card ? <AoContextCard taskId={taskId} task={card} cardStyle="full" /> : <AoDrawPile />
           // <AoContextCard taskId={taskId} task={card} cardStyle="full" />
           //taskId?<AoContextCard taskId={taskId} cardStyle="full" />:<div>'AO: components/Card.tsx: taskId not set'</div>
           // <div id="currentContextCard">currentContextCard div: {taskId}
           <div>
-            <PageTitleView       />
+            <PageTitleView />
             {
               //<ContextPileView    contextPile={contextPile} />
             }
-            <ContextCardView     />
+            <ContextCardView />
           </div>
           // <CardHeadingView    currentContextCard={currentContextCard} />
           // </div>
-
         }
-        { 
-          <AoHud />
-        }
+        {<AoHud />}
       </div>
     </Tour>
   )
@@ -376,7 +342,7 @@ export default function AoCard(props) {
 
   // return (
   //   // aoStore.currentCard?<div tabIndex={0} style={{ outline: 'none' }}>
-  //   //   { renderCard(aoStore.currentCard, props) 
+  //   //   { renderCard(aoStore.currentCard, props)
   //   //   }
   //   // </div>:"No taskId"
 

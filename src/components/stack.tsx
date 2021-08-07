@@ -43,7 +43,7 @@ interface CounterWord {
 export const defaultState: StackState = {
   selected: undefined,
   showAll: false,
-  showCompose: false
+  showCompose: false,
 }
 
 // @observer
@@ -107,29 +107,29 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   render = () => {
-    console.log("AO: components/stack.tsx: AoStack: render() =>", { props: this.props})
-    
+    console.log('AO: components/stack.tsx: AoStack: render() =>', {
+      props: this.props,
+    })
+
     // either make a reversed list of cards, or the empty list
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
-        ? this.props.cards
-            .slice()
-            .filter(t => {
-              if (!t) {
-                console.log(
-                  'Missing card detected. card is ',
-                  t,
-                  ' and this.props.cards is ',
-                  this.props.cards,
-                  ' and cardStyle is ',
-                  this.props.cardStyle
-                )
-                return false
-              }
-              return true
-            })
-            // .reverse()
-        : []
+        ? this.props.cards.slice().filter(t => {
+            if (!t) {
+              console.log(
+                'Missing card detected. card is ',
+                t,
+                ' and this.props.cards is ',
+                this.props.cards,
+                ' and cardStyle is ',
+                this.props.cardStyle
+              )
+              return false
+            }
+            return true
+          })
+        : // .reverse()
+          []
 
     if (this.props.doNotReverseList !== true) cardsToRender.reverse()
 
@@ -146,7 +146,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       this.props.showAdd &&
       !(this.props.hideAddWhenCards && cardsToRender.length >= 1)
     ) {
-
       addButton = (
         <p className={'action'} onClick={this.toggleCompose}>
           {this.props.addButtonText ? this.props.addButtonText : '+card'}
@@ -162,7 +161,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           dragContext={{
             zone: this.props.zone ? this.props.zone : 'panel',
             inId: this.props.inId,
-            y: i
+            y: i,
           }}
           key={task.taskId + this.props.inId + this.props.cardStyle}>
           {this.decorate(
@@ -175,7 +174,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
                 this.props.cardStyle === 'context'
                   ? {
                       maxWidth:
-                        (30 - (cardsToRender.length - i)).toString() + 'em'
+                        (30 - (cardsToRender.length - i)).toString() + 'em',
                     }
                   : {}
               }
@@ -195,7 +194,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             dragContext={{
               zone: this.props.zone ? this.props.zone : 'panel',
               inId: this.props.inId,
-              y: 0
+              y: 0,
             }}
             key={task.taskId + this.props.inId + this.props.cardStyle}>
             {this.decorate(
@@ -228,12 +227,14 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       renderedDescriptor = renderedDescriptor + ' '
     }
 
-    console.log("AO: components/stack.tsx: render: ", {"props": this.props, "state": this.state})
+    console.log('AO: components/stack.tsx: render: ', {
+      props: this.props,
+      state: this.state,
+    })
 
     let showButton = (
       <>
-        { 
-          (!this.props.alwaysShowAll && numCards >= 1) ||
+        {(!this.props.alwaysShowAll && numCards >= 1) ||
         (this.props.noFirstCard && numCards >= 1) ? (
           !this.state.showAll ? (
             <div onClick={this.show} className={'action'}>
@@ -261,7 +262,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           (this.props.className ? ' ' + this.props.className : '') +
           (this.state.showAll ? ' open' : '')
         }>
-        {this.props.className} : {this.props.zone} : {this.props.noFirstCard}
         <AoDropZone
           inId={this.props.inId}
           y={0}
@@ -270,7 +270,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           {addButton}
           {this.props.noFirstCard ? (
             <>
-              
               {showButton}
               {list}
             </>
