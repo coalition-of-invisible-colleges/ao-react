@@ -26,7 +26,8 @@ export default {
       val === 'secret' ||
       val === 'fob' ||
       val === 'draft' ||
-      val === 'tutorial'
+      val === 'tutorial' ||
+      val === 'phone'
     if (!isField) {
       errRes.push('invalid field')
       return false
@@ -100,45 +101,41 @@ export default {
     if (!result) {
       errRes.push('invalid task')
     }
-    console.log("AO: server/validators.js: isTaskId: ", {result, val, errRes});
+    // console.log("AO: server/validators.js: isTaskId: ", {result, val, errRes});
     return result
   },
   isTaskId_sane(val, errRes) {
     let result = false
-    try
-    { let taskName = val.trim().toLowerCase();
+    try {
+      let taskName = val.trim().toLowerCase()
       if (taskName === val) result = true
-    }
-    catch (erorr)
-    {
+    } catch (erorr) {
       // do nothing
     }
     if (result === false) {
       errRes.push('invalid task id, must be a lower case, trimmed string')
     }
-    console.log("AO: server/validators.js: isTaskId_sane: ", {result, val, errRes})
+    // console.log("AO: server/validators.js: isTaskId_sane: ", {result, val, errRes})
     return result
   },
   taskIdExists(val, errRes) {
     let result = false
-    if (!this.isTaskId_sane(val))
-    {
-      errRes.push("invalid task id");
-    }
-    else
-    {
-      let taskId = val;
+    if (!this.isTaskId_sane(val)) {
+      errRes.push('invalid task id')
+    } else {
+      let taskId = val
       state.serverState.tasks.some(task => {
-        if (task.taskId.trim().toLowerCase() === val)
-        {
+        if (task.taskId.trim().toLowerCase() === val) {
           result = true
-          return true;
+          return true
         }
       })
       if (result === false) {
-        errRes.push('AO: server/validators.js: taskIdExists: task not found: '+val)
+        errRes.push(
+          'AO: server/validators.js: taskIdExists: task not found: ' + val
+        )
       }
-      console.log('AO: server/validators.js: taskIdExists: ', {result, val, errRes});
+      // console.log('AO: server/validators.js: taskIdExists: ', {result, val, errRes});
       return result
     }
   },
@@ -156,48 +153,43 @@ export default {
     if (result) {
       errRes.push('invalid task')
     }
-    console.log("AO: server/validators.js: isTaskName: ", {result, val, errRes});
+    // console.log("AO: server/validators.js: isTaskName: ", {result, val, errRes});
     return !result
   },
   isTaskName_sane(val, errRes) {
     let result = false
-    try
-    { let taskName = val.trim().toLowerCase();
+    try {
+      let taskName = val.trim().toLowerCase()
       if (taskName === val) result = true
-    }
-    catch (erorr)
-    {
+    } catch (erorr) {
       // do nothing
     }
     if (result === false) {
       errRes.push('invalid task name, must be a lower case, trimmed string')
     }
-    console.log("AO: server/validators.js: isTaskName_sane: ", {result, val, errRes})
+    // console.log("AO: server/validators.js: isTaskName_sane: ", {result, val, errRes})
     return result
   },
   taskNameExists(val, errRes) {
     let result = false
-    if (!this.isTaskName_sane(val, errRes))
-    {
-      errRes.push("invalid task");
-    }
-    else
-    {
-      let taskName = val;
+    if (!this.isTaskName_sane(val, errRes)) {
+      errRes.push('invalid task')
+    } else {
+      let taskName = val
       state.serverState.tasks.some(task => {
-        if (task.name.trim().toLowerCase() === val)
-        {
+        if (task.name.trim().toLowerCase() === val) {
           result = true
-          return true;
+          return true
         }
       })
       if (result === false) {
-        errRes.push('AO: server/validators.js: taskNameExists: task not found: '+val)
+        errRes.push(
+          'AO: server/validators.js: taskNameExists: task not found: ' + val
+        )
       }
-      console.log("AO: server/validators.js: taskNameExists: ", {result, val, errRes});
+      // console.log("AO: server/validators.js: taskNameExists: ", {result, val, errRes});
       return result
     }
-    
   },
   isSession(val, errRes) {
     let result = false

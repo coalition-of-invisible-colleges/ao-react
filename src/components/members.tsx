@@ -86,6 +86,7 @@ export default class AoMembers extends React.Component<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.addMember(event)
     }
   }

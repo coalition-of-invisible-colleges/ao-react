@@ -41,6 +41,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.newConnection(event)
     }
   }

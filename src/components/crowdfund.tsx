@@ -17,7 +17,7 @@ interface State {
 
 export const defaultState: State = {
   editing: false,
-  text: ''
+  text: '',
 }
 
 @observer
@@ -48,7 +48,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
 
     if (card.goal) {
       this.setState({
-        text: card.goal.toString()
+        text: card.goal.toString(),
       })
     }
     this.setState({ editing: true })
@@ -79,8 +79,10 @@ export default class AoCrowdfund extends React.Component<Props, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.saveGoal(event)
     } else if (event.key === 'Escape') {
+      event.stopPropagation()
       this.setState({ editing: false, text: '' })
     }
   }

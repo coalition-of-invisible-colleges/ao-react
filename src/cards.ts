@@ -31,7 +31,16 @@ export interface CardPlay {
 	to: CardLocation
 }
 
-export function goInCard(taskId: string, removeContextLowerThanTaskId = false, addCurrentCardToContext = true) {
+export function goInCard(
+	taskId: string,
+	removeContextLowerThanTaskId = false,
+	addCurrentCardToContext = true
+) {
+	if (taskId === aoStore.currentCard) {
+		console.log(
+			'Attempted to go in the same card! Maybe catch this earlier in the GUI.'
+		)
+	}
 	// hideAllTippys()
 	// aoStore.closeAllCloseables()
 
@@ -46,22 +55,19 @@ export function goInCard(taskId: string, removeContextLowerThanTaskId = false, a
 	// aoStore.removeFromContext(taskId)
 	// aoStore.setCurrentCard(taskId)
 	if (removeContextLowerThanTaskId === true) aoStore.clearContextTo(taskId)
-	if (addCurrentCardToContext === true) aoStore.addToContext([aoStore.currentCard])
+	if (aoStore.currentCard && addCurrentCardToContext === true)
+		aoStore.addToContext([aoStore.currentCard])
 
 	aoStore.setCurrentCard(taskId)
-	
 }
 
 export function goUp() {
-	console.log('AO: cards.ts: goUp', {"context": aoStore.context})
+	console.log('AO: cards.ts: goUp', { context: aoStore.context })
 
-	if (aoStore.context.length > 0)
-	{
+	if (aoStore.context.length > 0) {
 		goInCard(aoStore.context.slice(-1)[0], false, false)
-	}
-	else
-	{
-		aoStore.setCurrentCard(null);
+	} else {
+		aoStore.setCurrentCard(null)
 	}
 
 	// if (aoStore.contextCards && aoStore.contextCards.length >= 1) {

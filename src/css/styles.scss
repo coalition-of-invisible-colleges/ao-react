@@ -2769,13 +2769,23 @@ textarea {
       max-width: 33vw;
 
       input[type='text'] {
-        text-align: center;
+        // text-align: center;
+      }
+
+      .options {
+        width: -moz-fit-content;
+        width: fit-content;
+        text-align: left;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       .option {
         cursor: pointer;
         display: block;
         margin-top: 0.75em;
+        // width: fit-content;
 
         &.first {
           margin-top: 1em;

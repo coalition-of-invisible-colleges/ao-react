@@ -78,6 +78,7 @@ export default class AoMission extends React.PureComponent<
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.saveMission(event)
     } else if (event.key === 'Escape') {
       this.stopEditing()

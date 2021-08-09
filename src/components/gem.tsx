@@ -44,6 +44,7 @@ export default class AoGem extends React.Component<{}, State> {
 
 	detectEscape(event) {
 		if (event.key === 'Escape') {
+			event.stopPropagation()
 			this.close()
 		}
 	}

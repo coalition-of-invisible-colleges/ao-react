@@ -112,10 +112,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   executeOnUnmount_list = []
 
   loadChildTasksAndPossiblyReRender() {
-    console.log('AO: components/contextCard.tsx: loadChildTasksAndReRender: ', {
-      props: this.props,
-      state: this.state,
-    })
+    // console.log('AO: components/contextCard.tsx: loadChildTasksAndReRender: ', {
+    //   props: this.props,
+    //   state: this.state,
+    // })
 
     // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
 
@@ -130,10 +130,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async(
       this.props.task.taskId,
       stateRequiresUpdate => {
-        console.log(
-          'AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards',
-          { stateRequiresUpdate }
-        )
+        // console.log(
+        //   'AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards',
+        //   { stateRequiresUpdate }
+        // )
 
         if (stateRequiresUpdate === true) {
           // this.childComponentsLastUpdated = Date.now()
@@ -195,25 +195,25 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           )
 
           // }
-          console.log(
-            'AO: components/contextCard.tsx: projectCardsReaction: testPhase',
-            {
-              taskName: this.taskName,
-              task: this.props.task,
-              taskHasLoadedAllChildren: this.taskHasLoadedAllChildren,
-              aoGridToolDoNotUpdateUI:
-                this.props.task && this.props.task.aoGridToolDoNotUpdateUI,
-              toReturn,
-            }
-          )
+          // console.log(
+          //   'AO: components/contextCard.tsx: projectCardsReaction: testPhase',
+          //   {
+          //     taskName: this.taskName,
+          //     task: this.props.task,
+          //     taskHasLoadedAllChildren: this.taskHasLoadedAllChildren,
+          //     aoGridToolDoNotUpdateUI:
+          //       this.props.task && this.props.task.aoGridToolDoNotUpdateUI,
+          //     toReturn,
+          //   }
+          // )
         }
         return toReturn
       },
       projectCards => {
-        console.log(
-          'AO: components/contextCard.tsx: projectCardsReaction: actionPhase',
-          { taskName: this.taskName }
-        )
+        // console.log(
+        //   'AO: components/contextCard.tsx: projectCardsReaction: actionPhase',
+        //   { taskName: this.taskName }
+        // )
         if (
           this.taskHasLoadedAllChildren === true &&
           this.props.task.aoGridToolDoNotUpdateUI !== true
@@ -581,10 +581,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     const cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
-    console.log('AO: components/contextCard.tsx: render: ', {
-      taskId,
-      cardStyle,
-    })
+    // console.log('AO: components/contextCard.tsx: render: ', {
+    //   taskId,
+    //   cardStyle,
+    // })
 
     switch (cardStyle) {
       case 'context':

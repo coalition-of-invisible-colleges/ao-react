@@ -1,5 +1,7 @@
 import webpack from 'webpack'
 import path from 'path'
+// import dotenv from 'dotenv'
+// dotenv.config()
 
 // variables
 import { fileURLToPath } from 'url'
@@ -161,7 +163,7 @@ export default {
   },
   plugins: [
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
+      NODE_ENV: 'production', // use 'development' unless process.env.NODE_ENV is defined
       DEBUG: false,
     }),
     new CleanWebpackPlugin(),

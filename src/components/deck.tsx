@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroller'
@@ -20,7 +20,7 @@ export const defaultState: State = {
   query: '',
   sort: 'newest',
   items: 10,
-  hasMore: true
+  hasMore: true,
 }
 
 const minQueryLength = 2
@@ -29,7 +29,7 @@ const minQueryLength = 2
 export default class AoDeck extends React.Component<{}, State> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.state = defaultState
     this.componentDidMount = this.componentDidMount.bind(this)
     this.focus = this.focus.bind(this)
@@ -63,12 +63,13 @@ export default class AoDeck extends React.Component<{}, State> {
 
     this.setState({
       query: event.target.value,
-      debounce: setTimeout(this.onSearch, 500)
+      debounce: setTimeout(this.onSearch, 500),
     })
   }
 
   onKeyDown(event) {
     if (event.key === 'Escape') {
+      event.stopPropagation()
       // this should also close the entire search box tippy
       this.setState({ query: '' })
     }
@@ -157,19 +158,19 @@ export default class AoDeck extends React.Component<{}, State> {
           .slice()
           .sort((a, b) => {
             return a.name.localeCompare(b.name, undefined, {
-              sensitivity: 'base'
+              sensitivity: 'base',
             })
           })
         sortedResults.members = this.onlyMyResults.members
           .slice()
           .sort((a, b) => {
             return a.name.localeCompare(b.name, undefined, {
-              sensitivity: 'base'
+              sensitivity: 'base',
             })
           })
         sortedResults.tasks = this.onlyMyResults.tasks.slice().sort((a, b) => {
           return a.name.localeCompare(b.name, undefined, {
-            sensitivity: 'base'
+            sensitivity: 'base',
           })
         })
 
@@ -219,7 +220,7 @@ export default class AoDeck extends React.Component<{}, State> {
       case 'alphabetical':
         sortedMyCards = aoStore.myCards.slice().sort((a, b) => {
           return a.name.localeCompare(b.name, undefined, {
-            sensitivity: 'base'
+            sensitivity: 'base',
           })
         })
         break
@@ -247,7 +248,7 @@ export default class AoDeck extends React.Component<{}, State> {
         : aoStore.myCards.length > newIndex
     this.setState({
       items: newIndex,
-      hasMore: hasMore
+      hasMore: hasMore,
     })
   }
 
@@ -265,7 +266,7 @@ export default class AoDeck extends React.Component<{}, State> {
         taskId={task.taskId}
         dragContext={{
           zone: 'panel',
-          y: i
+          y: i,
         }}
         key={task.taskId}>
         <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />

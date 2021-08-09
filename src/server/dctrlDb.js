@@ -60,7 +60,7 @@ function initializeSqlite(cb) {
 }
 
 function createStatements() {
-  console.log("AO: server/dctrlDb.js: createStatements");
+  // console.log("AO: server/dctrlDb.js: createStatements");
   conn.function('eventFeed', doc => {
     eventEmitter.emit(JSON.parse(doc))
   })
@@ -102,20 +102,18 @@ export function getAll(timestamp, callback) {
 }
 
 function startFeed() {
-  console.log("AO: server/dctrlDb.js: startFeed");
+  console.log('AO: server/dctrlDb.js: startFeed')
   conn.function('eventFeed', doc => {
     eventEmitter.emit(JSON.parse(doc))
   })
-  try
-  { conn
+  try {
+    conn
       .prepare(
         'CREATE TRIGGER updateHook AFTER INSERT ON events BEGIN SELECT eventFeed(NEW.document); END'
       )
       .run()
-  }
-  catch (error)
-  {
-    console.log("AO: server/dctrlDb.js: startFeed: error running conn prepare");
+  } catch (error) {
+    console.log('AO: server/dctrlDb.js: startFeed: error running conn prepare')
   }
 }
 

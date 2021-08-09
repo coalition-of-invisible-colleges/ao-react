@@ -432,9 +432,9 @@ function memesMuts(memes, ev) {
           hash: ev.hash,
           filetype: ev.filetype,
         })
-        console.log('added meme file: ', ev.filename)
+        // console.log('added meme file: ', ev.filename)
       } else {
-        console.log('meme file already in state: ', ev.filename)
+        // console.log('meme file already in state: ', ev.filename)
       }
       break
   }

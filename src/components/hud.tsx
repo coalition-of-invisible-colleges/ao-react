@@ -16,6 +16,7 @@ import AoTickerHud, { AoTicker } from './tickerHud'
 import AoScore from './score'
 import AoUsername from './username'
 import AoPassword from './password'
+import AoPhone from './phone'
 import AoFob from './fob'
 import AoVolume from './volume'
 import AoReactivator from './reactivator'
@@ -66,6 +67,7 @@ class MainMenu extends React.PureComponent<{}, State> {
       <div id="mainMenu">
         <AoUsername />
         <AoPassword />
+        <AoPhone />
         <AoFob />
         <AoReactivator />
         <AoVolume />
@@ -196,7 +198,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         {
           //<AoScore prefix={<span>Points: </span>} />
         }
-        {/*<AoStatus />*/}
+        {<AoStatus />}
       </div>
     )
   }

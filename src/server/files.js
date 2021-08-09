@@ -19,7 +19,7 @@ export function scanMemes() {
 		}
 		console.log('\nfolder contains ', files.length, ' memes')
 		files.forEach(filename => {
-			console.log(filename)
+			// console.log(filename)
 			const filepath = path.join(memeFolder, filename)
 			fs.readFile(filepath, (err, data) => {
 				if (err) {
@@ -51,14 +51,7 @@ export function addMeme(name, path, data = null) {
 	const lastIndex = name.lastIndexOf('.')
 	const filetype = lastIndex < 0 ? '' : name.substr(lastIndex + 1)
 
-	console.log(
-		'file data loaded. path: ',
-		path,
-		' and data: ',
-		data,
-		' and hash: ',
-		hash
-	)
+	console.log(`${hash} ${name}`)
 	const foundMeme = serverState.memes.find(m => {
 		return m.hash === hash
 	})

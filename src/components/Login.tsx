@@ -49,6 +49,7 @@ const Login: React.FunctionComponent<{}> = () => {
   const onKeyDown = e => {
     if (e.key === 'Enter') {
       e.preventDefault()
+      event.stopPropagation()
       onClick(e)
     }
   }

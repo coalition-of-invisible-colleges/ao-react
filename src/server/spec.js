@@ -7,11 +7,12 @@ import { blankCard } from '../calculations.js'
 import events from './events.js'
 import { postEvent } from './connector.js'
 import lightning from './lightning.js'
+import { sendNotification } from './signal.js'
 
 const router = express.Router()
 
 router.post('/events', (req, res, next) => {
-  console.log("AO: server/spec.js: router.post(/events):", {} );
+  // console.log('AO: server/spec.js: router.post(/events):', {})
   state.serverState.sessions.forEach(s => {
     if (s.token === req.headers.authorization) {
       req.body.blame = s.ownerId
@@ -20,10 +21,10 @@ router.post('/events', (req, res, next) => {
   next()
 })
 
-
-
 router.post('/events', (req, res, next) => {
-  console.log("AO: server/spec.js: router.post(/events):", {"req.body": req.body} );
+  // console.log('AO: server/spec.js: router.post(/events):', {
+  // 'req.body': req.body,
+  // })
   let errRes = []
   switch (req.body.type) {
     case 'ao-linked':
@@ -311,11 +312,64 @@ router.post('/events', (req, res, next) => {
       break
     case 'doge-barked':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeBarked(req.body.memberId, buildResCallback(res))
+        console.log('memberId is', req.body.memberId)
+        sendNotification(req.body.memberId, 'HellAO WAOrld!')
+        // events.dogeBarked(req.body.memberId, buildResCallback(res))
       } else {
         res.status(400).send(errRes)
       }
       break
+    case 'doge-hopped':
+      if (
+        validators.isMemberId(req.body.memberId, errRes) &&
+        validators.isTaskId(req.body.taskId, errRes)
+      ) {
+        console.log('memberId is', req.body.memberId)
+        state.serverState.tasks.forEach(task => {
+          if (task.taskId === req.body.taskId) {
+            let firstPriorityId
+            if (task.priorities && task.priorities.length >= 1) {
+              firstPriorityId = task.priorities[task.priorities.length - 1]
+            }
+
+            if (!firstPriorityId && task.grid && task.grid.rows) {
+              const rows = Object.values(task.grid.rows)
+              if (rows && rows.length && rows.length >= 1) {
+                const cells = Object.values(rows[0])
+                if (cells && cells.length && cells.length >= 1) {
+                  firstPriorityId = cells[0]
+                }
+              }
+            }
+
+            if (
+              !firstPriorityId &&
+              task.subTasks &&
+              task.subTasks.length >= 1
+            ) {
+              firstPriorityId = task.subTasks[task.subTasks.length - 1]
+            }
+
+            const cardContent = task.guild || task.name
+            let firstPriorityContent
+            if (firstPriorityId) {
+              const firstPriorityCard = state.serverState.tasks.find(
+                st => st.taskId === firstPriorityId
+              )
+              firstPriorityContent =
+                firstPriorityCard.guild || firstPriorityCard.name
+            }
+
+            const notificationMessage = `${cardContent} - ${firstPriorityContent}`
+
+            sendNotification(req.body.memberId, notificationMessage)
+          }
+        })
+      } else {
+        res.status(400).send(errRes)
+      }
+      break
+
     case 'doge-muted':
       if (validators.isMemberId(req.body.memberId, errRes)) {
         events.dogeMuted(req.body.memberId, buildResCallback(res))

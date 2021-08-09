@@ -107,9 +107,9 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   render = () => {
-    console.log('AO: components/stack.tsx: AoStack: render() =>', {
-      props: this.props,
-    })
+    // console.log('AO: components/stack.tsx: AoStack: render() =>', {
+    //   props: this.props,
+    // })
 
     // either make a reversed list of cards, or the empty list
     const cardsToRender =
@@ -128,8 +128,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             }
             return true
           })
-        : // .reverse()
-          []
+        : []
+    // .reverse()
 
     if (this.props.doNotReverseList !== true) cardsToRender.reverse()
 
@@ -227,10 +227,10 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       renderedDescriptor = renderedDescriptor + ' '
     }
 
-    console.log('AO: components/stack.tsx: render: ', {
-      props: this.props,
-      state: this.state,
-    })
+    // console.log('AO: components/stack.tsx: render: ', {
+    //   props: this.props,
+    //   state: this.state,
+    // })
 
     let showButton = (
       <>

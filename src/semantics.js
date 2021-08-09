@@ -7,6 +7,7 @@ const defaultSemantics = {
 		user: 'member',
 		username: 'hackername',
 		proposal: 'proposition',
+		avatar: 'avatar',
 	},
 	levels: {
 		0: 'guest',

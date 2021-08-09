@@ -1,5 +1,6 @@
 import * as React from 'react'
 import aoStore from '../client/store'
+import api from '../client/api'
 import { goInCard } from '../cards'
 import Boat from '../assets/images/boat.svg'
 import RedBoat from '../assets/images/boatbtnselected.svg'
@@ -8,6 +9,7 @@ import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import AoTip from './tip'
+import { gloss } from '../semantics'
 
 export default function AoHopper(props: {}): JSX.Element {
 	const [hop, setHop] = React.useState<number>(-1)
@@ -19,6 +21,10 @@ export default function AoHopper(props: {}): JSX.Element {
 	const [skipChecked, setSkipChecked] = React.useState(false)
 	const [randomize, setRandomize] = React.useState(false)
 	const [history, setHistory] = React.useState([])
+
+	const [visitCard, setVisitCard] = React.useState(false)
+	const [joinChatroom, setJoinChatroom] = React.useState(false)
+	const [sendNotification, setSendNotification] = React.useState(false)
 
 	const isHopping = !!nextHop
 
@@ -181,22 +187,62 @@ export default function AoHopper(props: {}): JSX.Element {
 	}
 
 	function hopTo(index, previousHop = null, forceHop = false) {
-		setHop(index)
-		const isHoppingCurrent = !!nextRef.current
+		const safeIndex = index < 0 ? 0 : index
+		setHop(safeIndex)
+		const currentIsHopping = !!nextRef.current
 		const currentMoveBoat = moveBoatRef.current
 		const currentRandomize = randomizeRef.current
 		const bookmarkTaskIds = getBookmarkTaskIds()
-		let currentHop = previousHop ? previousHop : hop
+		console.log('hop var is', hop)
+		const currentHop = previousHop ? previousHop : hop >= 0 ? hop : 0
 		const currentHistory = historyRef.current
 		if (currentRandomize && bookmarkTaskIds[currentHop]) {
 			setHistory(currentHistory.concat(bookmarkTaskIds[currentHop]))
 		}
 
-		if (forceHop || (isHoppingCurrent && currentMoveBoat)) {
-			const doNotSaveAsContext =
-				aoStore.currentCard === bookmarkTaskIds[currentHop]
-			goInCard(bookmarkTaskIds[index], false, doNotSaveAsContext)
-			aoStore.setGlobalRedirect(bookmarkTaskIds[index])
+		const destinationTaskId = bookmarkTaskIds[safeIndex]
+		if (forceHop || (currentIsHopping && currentMoveBoat)) {
+			console.log('hoppingvars are', {
+				index: index,
+				safeIndex: safeIndex,
+				hop: hop,
+				currentHop: currentHop,
+				currentCard: aoStore.currentCard,
+				currentTaskId: bookmarkTaskIds[currentHop],
+				destinationTaskId: destinationTaskId,
+			})
+			if (aoStore.currentCard !== destinationTaskId) {
+				const saveAsContext = !(
+					aoStore.currentCard === bookmarkTaskIds[currentHop]
+				)
+
+				goInCard(destinationTaskId, false, saveAsContext)
+				// aoStore.setGlobalRedirect(destinationTaskId)
+			}
+		}
+
+		if (visitCard) {
+			const destinationCard = aoStore.hashMap.get(destinationTaskId)
+			if (
+				(destinationCard.showChatroom &&
+					!destinationCard.avatars.some(
+						avatar => avatar.memberId === aoStore.member.memberId
+					)) ||
+				(joinChatroom && aoStore.currentChatroom !== destinationTaskId)
+			) {
+				api.visitCard(this.props.taskId, joinChatroom)
+			}
+
+			if (
+				destinationCard.showChatroom &&
+				aoStore.currentChatroom !== destinationTaskId
+			) {
+				aoStore.setCurrentChatroom(this.props.taskId)
+			}
+		}
+
+		if (sendNotification && aoStore.member.phone) {
+			api.hopped(bookmarkTaskIds[index])
 		}
 	}
 
@@ -233,7 +279,9 @@ export default function AoHopper(props: {}): JSX.Element {
 	}
 
 	function plusHop() {
+		console.log('plusHop. hop is ', hop)
 		let newHop = hop + 1
+		console.log('newHop is ', newHop)
 		if (randomize) {
 			newHop = getNextRandomBookmark()
 		} else if (skipChecked) {
@@ -262,9 +310,9 @@ export default function AoHopper(props: {}): JSX.Element {
 	}
 
 	function startHopping() {
-		let newHop: number
+		let newHop: number = hop + 1
 
-		if (hop === -1) {
+		if (newHop <= -1 || newHop >= getBookmarkTaskIds().length) {
 			newHop = 0
 		}
 
@@ -352,6 +400,18 @@ export default function AoHopper(props: {}): JSX.Element {
 		setRandomize(event.target.checked)
 	}
 
+	function onVisitCardChange(event) {
+		setVisitCard(event.target.checked)
+	}
+
+	function onJoinChatroomChange(event) {
+		setJoinChatroom(event.target.checked)
+	}
+
+	function onSendNotificationChange(event) {
+		setSendNotification(event.target.checked)
+	}
+
 	function renderBoat() {
 		if (isHopping) {
 			return <img src={RedBoat} onClick={pauseHopping} />
@@ -374,7 +434,7 @@ export default function AoHopper(props: {}): JSX.Element {
 					overview of your cards."
 					/>
 				</p>
-				<div>
+				<div style={{ position: 'relative' }}>
 					<div>
 						Hop every{' '}
 						<input
@@ -389,30 +449,81 @@ export default function AoHopper(props: {}): JSX.Element {
 						/>{' '}
 						mins
 					</div>
-					<label className="option first">
-						<input
-							type="checkbox"
-							checked={moveBoat}
-							onChange={onMoveBoatChange}
-						/>
-						Navigate on hop
-					</label>
-					<label className="option">
-						<input
-							type="checkbox"
-							checked={skipChecked}
-							onChange={onSkipCheckedChange}
-						/>
-						Skip checked
-					</label>
-					<label className="option">
-						<input
-							type="checkbox"
-							checked={randomize}
-							onChange={onRandomizeChange}
-						/>
-						Randomize order
-					</label>
+					<div className="options">
+						<label className="option first">
+							<input
+								type="checkbox"
+								checked={moveBoat}
+								onChange={onMoveBoatChange}
+							/>
+							Navigate on hop
+						</label>
+						<label className="option">
+							<input
+								type="checkbox"
+								checked={skipChecked}
+								onChange={onSkipCheckedChange}
+							/>
+							Skip checked
+						</label>
+						<label className="option">
+							<input
+								type="checkbox"
+								checked={randomize}
+								onChange={onRandomizeChange}
+							/>
+							Randomize order
+						</label>
+						<div>
+							<label className="option">
+								<input
+									type="checkbox"
+									checked={visitCard}
+									onChange={onVisitCardChange}
+								/>
+								Move avatar{' '}
+								<AoTip
+									text={`When you hop, you will publicly visit the ${gloss(
+										'card'
+									)}, moving your ${gloss(
+										'avatar'
+									)} there. The number of people visiting a card displays on the chatroom icon. Right now only ${gloss(
+										'guild'
+									)} cards have a place to move your avatar.`}
+								/>
+							</label>
+							<label className="option" style={{ marginLeft: '1.5em' }}>
+								<input
+									type="checkbox"
+									checked={joinChatroom}
+									onChange={onJoinChatroomChange}
+									disabled={!visitCard}
+								/>
+								Join {gloss('guild')} chatroom{' '}
+								<AoTip
+									text={`When you hop to a ${gloss(
+										'guild'
+									)}, you will join its chatroom, if it has one.`}
+								/>
+							</label>
+							<label className="option">
+								<input
+									type="checkbox"
+									checked={sendNotification}
+									onChange={onSendNotificationChange}
+									disabled={!aoStore.member.phone}
+								/>
+								Signal alert{' '}
+								<AoTip
+									text={`When you hop, you will receive a signal notification containing the ${gloss(
+										'guild'
+									)} name or ${gloss(
+										'card'
+									)} text, and the text of its top priority.`}
+								/>
+							</label>
+						</div>
+					</div>
 					<div>
 						<button
 							type="button"

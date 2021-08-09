@@ -43,8 +43,11 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
-          console.log('AO: client/api.ts: fetchState: initial state: ', res.body)
-          
+          console.log(
+            'AO: client/api.ts: fetchState: initial state: ',
+            res.body
+          )
+
           let dataPackageToSendToClient = res.body
 
           aoStore.initializeState(dataPackageToSendToClient.stateToSend)
@@ -52,7 +55,7 @@ class AoApi {
           let metaData = dataPackageToSendToClient.metaData
           aoStore.memberDeckSize = metaData.memberDeckSize
           aoStore.bookmarksTaskId = metaData.bookmarksTaskId
-          
+
           return true
         })
         .catch(() => false)
@@ -139,6 +142,21 @@ class AoApi {
       })
   }
 
+  async hopped(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'doge-hopped',
+      memberId: aoStore.member.memberId,
+      taskId: taskId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async mute(): Promise<request.Response> {
     const act = {
       type: 'doge-muted',
@@ -171,18 +189,22 @@ class AoApi {
     name: string,
     anonymous?: boolean
   ): Promise<request.Response> {
-
-
-
     const act = {
       type: 'task-created',
       name: name,
       color: 'blue',
-      deck: anonymous ? [] : (aoStore.member && aoStore.member.memberId?[aoStore.member.memberId]:[]),
-      inId: anonymous ? null : (aoStore.memberCard.taskId || null),
-      prioritized: false
+      deck: anonymous
+        ? []
+        : aoStore.member && aoStore.member.memberId
+        ? [aoStore.member.memberId]
+        : [],
+      inId: anonymous ? null : aoStore.memberCard.taskId || null,
+      prioritized: false,
     }
-    console.log("AO: client/api.ts: createCard: ", {act, "aoStore.memberCard": aoStore.memberCard})
+    console.log('AO: client/api.ts: createCard: ', {
+      act,
+      'aoStore.memberCard': aoStore.memberCard,
+    })
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -1046,8 +1068,6 @@ class AoApi {
     name: string,
     inId: string
   ): Promise<request.Response> {
-
-
     const task: Task = aoStore.cardByName.get(name.toLowerCase())
     // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
 
@@ -1158,15 +1178,16 @@ class AoApi {
   startSocketListeners() {
     this.socket.connect()
     this.socket.on('connect', () => {
-      console.log('connected', { "aoStore.state": aoStore.state })
-      
-      if (aoStore.state.socketState === undefined)
-      {
+      console.log('connected', { 'aoStore.state': aoStore.state })
+
+      if (aoStore.state.socketState === undefined) {
         aoStore.state.session = window.localStorage.getItem('session')
         aoStore.state.token = window.localStorage.getItem('token')
       }
 
-      runInAction( () => { aoStore.state.socketState = "attemptingAuthentication"; } );
+      runInAction(() => {
+        aoStore.state.socketState = 'attemptingAuthentication'
+      })
 
       this.socket.emit('authentication', {
         session: aoStore.state.session,
@@ -1176,38 +1197,39 @@ class AoApi {
     this.socket.on('authenticated', () => {
       console.log('authenticated')
 
-      this.fetchState().then
-          ( () =>
-            {
-              runInAction
-              ( () => 
-                { 
-                  aoStore.state.socketState = "authenticationSuccess"; 
-                } 
-              );
-            }
-          )
+      this.fetchState().then(() => {
+        runInAction(() => {
+          aoStore.state.socketState = 'authenticationSuccess'
+        })
+      })
 
       this.socket.on('eventstream', ev => {
-        console.log('AO: client/api.ts: socketListener: event:', ev);
+        console.log('AO: client/api.ts: socketListener: event:', ev)
 
         aoStore.applyEvent(ev)
       })
     })
     this.socket.on('disconnect', reason => {
       console.log('disconnected')
-      
-      runInAction( () => { aoStore.state.socketState = "authenticationFailed"; } );
 
-      aoStore.state.session = ""
-      aoStore.state.token = ""
+      runInAction(() => {
+        aoStore.state.socketState = 'authenticationFailed'
+      })
+
+      aoStore.state.session = ''
+      aoStore.state.token = ''
 
       this.socket.connect()
     })
   }
 }
 
-reaction ( ()=> { return aoStore.state.socketState }, (socketState) => console.log("AO: client/api.ts: socketState: "+socketState));
+reaction(
+  () => {
+    return aoStore.state.socketState
+  },
+  socketState => console.log('AO: client/api.ts: socketState: ' + socketState)
+)
 const socket = io(config.socketUrl ? config.socketUrl : '/', {
   autoConnect: false,
 })
