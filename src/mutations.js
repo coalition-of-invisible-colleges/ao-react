@@ -39,7 +39,6 @@ function aoMuts(aos, ev) {
       }
       break
     case 'ao-outbound-connected':
-      console.log('outbound mutation')
       let outAddressConnect = aos.some(a => {
         if (a.address === ev.address) {
           a.outboundSecret = ev.secret

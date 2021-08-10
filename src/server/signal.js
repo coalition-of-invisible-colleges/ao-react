@@ -1,5 +1,4 @@
 import Signal from '@throneless/libsignal-service'
-import Storage from './LocalSignalProtocolStore.js'
 import events from './events.js'
 import state from './state.js'
 const serverState = state.serverState

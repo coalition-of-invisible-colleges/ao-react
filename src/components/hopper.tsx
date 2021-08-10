@@ -13,38 +13,56 @@ import { gloss } from '../semantics'
 
 export default function AoHopper(props: {}): JSX.Element {
 	const [hop, setHop] = React.useState<number>(-1)
-	const [minutes, setMinutes] = React.useState(50)
-	const [minutesError, setMinutesError] = React.useState(false)
-	const [text, setText] = React.useState('50')
-	const [nextHop, setNextHop] = React.useState<NodeJS.Timeout>()
-	const [moveBoat, setMoveBoat] = React.useState(true)
-	const [skipChecked, setSkipChecked] = React.useState(false)
-	const [randomize, setRandomize] = React.useState(false)
-	const [history, setHistory] = React.useState([])
-
-	const [visitCard, setVisitCard] = React.useState(false)
-	const [joinChatroom, setJoinChatroom] = React.useState(false)
-	const [sendNotification, setSendNotification] = React.useState(false)
-
-	const isHopping = !!nextHop
-
 	const hopRef = React.useRef(hop)
 	hopRef.current = hop
 
+	const [text, setText] = React.useState('50')
+	const [minutes, setMinutes] = React.useState(50)
+	const minRef = React.useRef(minutes)
+	minRef.current = minutes
+
+	const [minutesError, setMinutesError] = React.useState(false)
+
+	const [rangeText, setRangeText] = React.useState('')
+	const [rangeMinutes, setRangeMinutes] = React.useState<number>()
+	const rangeRef = React.useRef(rangeMinutes)
+	rangeRef.current = rangeMinutes
+
+	const [rangeMinutesError, setRangeMinutesError] = React.useState(false)
+
+	const [nextHop, setNextHop] = React.useState<NodeJS.Timeout>()
 	const nextRef = React.useRef(nextHop)
 	nextRef.current = nextHop
 
+	const [moveBoat, setMoveBoat] = React.useState(true)
 	const moveBoatRef = React.useRef(moveBoat)
 	moveBoatRef.current = moveBoat
 
+	const [skipChecked, setSkipChecked] = React.useState(false)
 	const skipCheckedRef = React.useRef(skipChecked)
 	skipCheckedRef.current = skipChecked
 
+	const [randomize, setRandomize] = React.useState(false)
 	const randomizeRef = React.useRef(randomize)
 	randomizeRef.current = randomize
 
+	const [history, setHistory] = React.useState([])
 	const historyRef = React.useRef(history)
 	historyRef.current = history
+
+	const [visitCard, setVisitCard] = React.useState(false)
+	const visitRef = React.useRef(visitCard)
+	visitRef.current = visitCard
+
+	const [joinChatroom, setJoinChatroom] = React.useState(false)
+	const joinRef = React.useRef(joinChatroom)
+	joinRef.current = joinChatroom
+
+	const [sendNotification, setSendNotification] = React.useState(false)
+	const notifyRef = React.useRef(sendNotification)
+	notifyRef.current = sendNotification
+
+	const isHopping = !!nextHop
 
 	React.useEffect(() => {
 		return () => {
@@ -186,12 +204,39 @@ export default function AoHopper(props: {}): JSX.Element {
 		console.log('checkpoint3')
 	}
 
+	function saveRangeMinutes(fromText = null) {
+		if (text.length <= 0) {
+			setRangeMinutesError(true)
+			return
+		}
+		const newRangeMinutes = parseFloat(fromText || text)
+		if (isNaN(newRangeMinutes) || newRangeMinutes === 0) {
+			console.log('setting error')
+			setRangeMinutesError(true)
+			return
+		}
+		console.log('checkpoint1')
+		if (newRangeMinutes === rangeMinutes) {
+			console.log('no change, returning')
+			return
+		}
+		console.log('checkpoint2')
+
+		setRangeMinutes(newRangeMinutes)
+		setRangeMinutesError(false)
+		console.log('checkpoint3')
+	}
+
 	function hopTo(index, previousHop = null, forceHop = false) {
 		const safeIndex = index < 0 ? 0 : index
 		setHop(safeIndex)
 		const currentIsHopping = !!nextRef.current
 		const currentMoveBoat = moveBoatRef.current
 		const currentRandomize = randomizeRef.current
+		const currentVisitCard = visitRef.current
+		const currentJoinChatroom = joinRef.current
+		const currentSendNotification = notifyRef.current
+
 		const bookmarkTaskIds = getBookmarkTaskIds()
 		console.log('hop var is', hop)
 		const currentHop = previousHop ? previousHop : hop >= 0 ? hop : 0
@@ -221,27 +266,28 @@ export default function AoHopper(props: {}): JSX.Element {
 			}
 		}
 
-		if (visitCard) {
+		if (currentIsHopping && currentVisitCard) {
 			const destinationCard = aoStore.hashMap.get(destinationTaskId)
 			if (
 				(destinationCard.showChatroom &&
 					!destinationCard.avatars.some(
 						avatar => avatar.memberId === aoStore.member.memberId
 					)) ||
-				(joinChatroom && aoStore.currentChatroom !== destinationTaskId)
+				(currentJoinChatroom && aoStore.currentChatroom !== destinationTaskId)
 			) {
-				api.visitCard(this.props.taskId, joinChatroom)
+				api.visitCard(destinationTaskId, currentJoinChatroom)
 			}
 
 			if (
+				currentJoinChatroom &&
 				destinationCard.showChatroom &&
 				aoStore.currentChatroom !== destinationTaskId
 			) {
-				aoStore.setCurrentChatroom(this.props.taskId)
+				aoStore.setCurrentChatroom(destinationTaskId)
 			}
 		}
 
-		if (sendNotification && aoStore.member.phone) {
+		if (currentIsHopping && currentSendNotification && aoStore.member.phone) {
 			api.hopped(bookmarkTaskIds[index])
 		}
 	}
@@ -305,6 +351,11 @@ export default function AoHopper(props: {}): JSX.Element {
 		saveMinutes(event.target.value)
 	}
 
+	function onChangeRangeText(event) {
+		setRangeText(event.target.value)
+		saveRangeMinutes(event.target.value)
+	}
+
 	function revertText() {
 		setText(minutes.toString())
 	}
@@ -332,7 +383,16 @@ export default function AoHopper(props: {}): JSX.Element {
 			setNextHop(null)
 		}
 
-		const countdown = minutes * 1000 * 60
+		const currentMinutes = minRef.current
+		const currentRangeMinutes = rangeRef.current
+
+		const range = currentRangeMinutes - currentMinutes
+		const variance =
+			currentRangeMinutes && currentRangeMinutes > 0
+				? Math.floor(Math.random() * (range + 1))
+				: 0
+		console.log('variance is ', variance)
+		const countdown = (currentMinutes + variance) * 1000 * 60
 		const newNextHop = setTimeout(hopNow, countdown)
 		setNextHop(newNextHop)
 	}
@@ -445,6 +505,19 @@ export default function AoHopper(props: {}): JSX.Element {
 							size={2}
 							className={minutesError ? 'error' : undefined}
 							onBlur={revertText}
+							placeholder="50"
+							autoFocus
+						/>{' '}
+						to{' '}
+						<input
+							type="text"
+							onChange={onChangeRangeText}
+							onKeyDown={onKeyDown}
+							value={rangeText}
+							size={2}
+							className={rangeMinutesError ? 'error' : undefined}
+							onBlur={revertText}
+							placeholder="60"
 							autoFocus
 						/>{' '}
 						mins

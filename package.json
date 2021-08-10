@@ -18,8 +18,8 @@
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "verifydb": "node src/verifyDb.js",
     "createAccessKey": "node manage/createPrivateKey.js",
-    "connect": "node manage/connect.js ",
-    "registerSignal": "node manage/registerSignal.js"
+    "connect": "node --experimental-specifier-resolution=node -r dotenv/configmanage/connect.js ",
+    "registerSignal": "node --experimental-specifier-resolution=node -r dotenv/config manage/registerSignal.js"
   },
   "lint-staged": {
     "*.js": [
