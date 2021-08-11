@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { computed, reaction } from 'mobx'
 import { observer } from 'mobx-react'
-import { goInCard } from '../cards'
+import { goInCard } from '../cardTypes'
 import aoStore from '../client/store'
 import { Redirect } from 'react-router-dom'
 import Unicorn from '../assets/images/uni.svg'
@@ -14,9 +14,7 @@ interface State {
   dabbed?: boolean
 }
 
-
 export default class AoHome extends React.PureComponent<{}, State> {
-  
   constructor(props) {
     super(props)
 
@@ -26,48 +24,46 @@ export default class AoHome extends React.PureComponent<{}, State> {
   }
 
   executeOnUnmount_list = []
-  holdingThisCardId     = null
-
+  holdingThisCardId = null
 
   componentDidMount() {
-
-    let isDabbedReaction = reaction
-        ( () => { return aoStore.isDabbed },
-          (isDabbed) =>
-          {
-            if (isDabbed === true)
-            { this.setState({"dabbed": true})
-            }
-            else
-            { this.setState({"dabbed": false})
-              this.holdingThisCardId = null
-            }
-          }
-        )
+    let isDabbedReaction = reaction(
+      () => {
+        return aoStore.isDabbed
+      },
+      isDabbed => {
+        if (isDabbed === true) {
+          this.setState({ dabbed: true })
+        } else {
+          this.setState({ dabbed: false })
+          this.holdingThisCardId = null
+        }
+      }
+    )
     this.executeOnUnmount_list.push(isDabbedReaction)
   }
 
   componentWillUnmount() {
-    this.executeOnUnmount_list.forEach( (fn) => fn() )
+    this.executeOnUnmount_list.forEach(fn => fn())
   }
 
   dab() {
     event.stopPropagation()
 
-    console.log("AO: components/home.tsx: dab ", { "props": this.props, "state": this.state, "holdingThisCardId": this.holdingThisCardId})
+    console.log('AO: components/home.tsx: dab ', {
+      props: this.props,
+      state: this.state,
+      holdingThisCardId: this.holdingThisCardId,
+    })
 
-    if (! aoStore.isDabbed)
-    { this.holdingThisCardId = aoStore.currentCard
+    if (!aoStore.isDabbed) {
+      this.holdingThisCardId = aoStore.currentCard
       goInCard(aoStore.member.memberId, false, true)
-    }
-    else
-    {
-      if (this.holdingThisCardId !== null)
-      {
+    } else {
+      if (this.holdingThisCardId !== null) {
         goInCard(this.holdingThisCardId, false, true)
-      }        
+      }
     }
-    
   }
 
   render() {
@@ -90,7 +86,7 @@ export default class AoHome extends React.PureComponent<{}, State> {
             id="home"
             src={Unicorn}
             onClick={this.dab}
-            className={this.state.dabbed?'dabbed':''}
+            className={this.state.dabbed ? 'dabbed' : ''}
           />
         </Tippy>
       </React.Fragment>

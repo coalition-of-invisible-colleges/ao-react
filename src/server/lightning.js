@@ -154,7 +154,11 @@ function checkFunds() {
           ) {
             serverState.tasks.forEach(t => {
               if (t.btcAddr === o.address) {
-                allEvents.taskBoosted(t.taskId, o.value, o.txid)
+                allEvents.trigger('task-boosted', {
+                  taskId: t.taskId,
+                  amount: o.value,
+                  txid: o.txid,
+                })
               }
             })
           }
@@ -203,12 +207,12 @@ export function recordEveryInvoice(start) {
       }
       serverState.tasks.forEach(t => {
         if (t.payment_hash === invoice.payment_hash) {
-          allEvents.taskBoostedLightning(
-            t.taskId,
-            invoice.msatoshi / 1000,
-            invoice.payment_hash,
-            invoice.pay_index
-          )
+          allEvents.trigger('task-boosted-lightning', {
+            taskId: t.taskId,
+            amount: invoice.msatoshi / 1000,
+            payment_hash: invoice.payment_hash,
+            pay_index: invoice.pay_index,
+          })
         }
       })
       recordEveryInvoice(start + 1) // is this recurr broken?

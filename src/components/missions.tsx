@@ -5,16 +5,14 @@ import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
 import { gloss } from '../semantics'
 
+type MissionFilter = 'changed' | 'mine' | 'not mine' | 'all'
+
 type MissionSort = 'alphabetical' | 'hodls' | 'age'
 
 interface State {
   page: number
+  filter: MissionFilter
   sort: MissionSort
-}
-
-export const defaultState: State = {
-  page: 0,
-  sort: 'hodls',
 }
 
 @observer
@@ -22,9 +20,40 @@ export default class AoMissions extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
     makeObservable(this)
-    this.state = defaultState
+    this.state = {
+      page: 0,
+      filter:
+        this.changedMissions.length >= 1
+          ? 'changed'
+          : this.myMissions.length >= 1
+          ? 'mine'
+          : 'all',
+      sort: 'hodls',
+    }
+    this.filterBy = this.filterBy.bind(this)
     this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
+  }
+
+  componentDidUpdate() {
+    if (this.state.filter === 'changed' && this.changedMissions.length < 1) {
+      this.setState({ filter: this.myMissions.length >= 1 ? 'mine' : 'all' })
+    } else if (this.state.filter === 'mine' && this.myMissions.length < 1) {
+      this.setState({ filter: this.myMissions.length >= 1 ? 'mine' : 'all' })
+    } else if (
+      this.state.filter === 'not mine' &&
+      this.otherMissions.length < 1
+    ) {
+      this.setState({ filter: this.myMissions.length >= 1 ? 'mine' : 'all' })
+    }
+  }
+
+  filterBy(event) {
+    const filter = event.currentTarget.getAttribute('data-filter')
+    if (this.state.filter === filter) {
+      return
+    }
+    this.setState({ filter: filter })
   }
 
   sortBy(event) {
@@ -35,21 +64,68 @@ export default class AoMissions extends React.PureComponent<{}, State> {
     this.setState({ sort: sort })
   }
 
-  renderSortButton(sort: MissionSort, label: string) {
-    if (this.state.sort === sort) {
-      return <p className={'action selected'}>{label}</p>
+  renderFilterButton(filter: MissionFilter, label: string) {
+    if (this.state.filter === filter) {
+      return <p className="action selected">{label}</p>
     } else {
       return (
-        <p onClick={this.sortBy} data-sort={sort} className={'action'}>
+        <p onClick={this.filterBy} data-filter={filter} className="action">
           {label}
         </p>
       )
     }
   }
 
+  renderSortButton(sort: MissionSort, label: string) {
+    if (this.state.sort === sort) {
+      return <p className="action selected">{label}</p>
+    } else {
+      return (
+        <p onClick={this.sortBy} data-sort={sort} className="action">
+          {label}
+        </p>
+      )
+    }
+  }
+
+  @computed get changedMissions() {
+    return this.myMissions.filter(
+      mission =>
+        mission.seen &&
+        !mission.seen.some(
+          userseen => userseen.memberId === aoStore.member.memberId
+        )
+    )
+  }
+
+  @computed get myMissions() {
+    return aoStore.topLevelMissions.filter(mission =>
+      mission.deck.includes(aoStore.member.memberId)
+    )
+  }
+
+  @computed get otherMissions() {
+    return aoStore.topLevelMissions.filter(
+      mission => !mission.deck.includes(aoStore.member.memberId)
+    )
+  }
+
   @computed
   get renderMissionsList() {
-    const missions = aoStore.topLevelMissions
+    if (aoStore.topLevelMissions.length < 1) {
+      return null
+    }
+
+    let missions
+    if (this.state.filter === 'changed') {
+      missions = this.changedMissions
+    } else if (this.state.filter === 'mine') {
+      missions = this.myMissions
+    } else if (this.state.filter === 'not mine') {
+      missions = this.otherMissions
+    } else {
+      missions = aoStore.topLevelMissions
+    }
 
     if (this.state.sort === 'alphabetical') {
       missions.sort((a, b) => {
@@ -77,10 +153,26 @@ export default class AoMissions extends React.PureComponent<{}, State> {
   }
 
   render() {
+    const renderChanged = this.changedMissions.length >= 1
+    const renderMine =
+      this.myMissions.length >= 1 &&
+      this.myMissions.length !== aoStore.topLevelMissions.length
+    const renderOther =
+      this.otherMissions.length >= 1 &&
+      this.otherMissions.length !== aoStore.topLevelMissions.length
+    const renderAll =
+      aoStore.topLevelMissions.length >= 1 &&
+      (renderChanged || renderMine || renderOther)
     return (
       <React.Fragment>
-        <h2>{gloss('guild')} Index</h2>
-        <div className={'toolbar'}>
+        <h2>{gloss('Guild')} Index</h2>
+        <div className="toolbar">
+          {renderChanged && this.renderFilterButton('changed', 'Changed')}
+          {renderMine && this.renderFilterButton('mine', 'My Deck')}
+          {renderOther && this.renderFilterButton('not mine', 'Unheld')}
+          {renderAll && this.renderFilterButton('all', 'All')}
+        </div>
+        <div className="toolbar">
           {this.renderSortButton('alphabetical', 'A-Z')}
           {this.renderSortButton('hodls', 'Hodls')}
           {this.renderSortButton('age', 'Order')}

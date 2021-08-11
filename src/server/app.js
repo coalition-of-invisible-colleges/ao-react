@@ -32,12 +32,10 @@ function startDctrlAo() {
   if (PORT !== 8003) {
     dbPath = dbPath.replace('database', PORT)
   }
-
   startDb(dbPath, (err, conn) => {
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
-
       watchSpot()
       rent()
       link()

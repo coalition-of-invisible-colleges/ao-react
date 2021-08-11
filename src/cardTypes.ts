@@ -1,6 +1,7 @@
 import api from './client/api'
 import aoStore, { Task, Signature } from './client/store'
 import { hideAll as hideAllTippys } from 'tippy.js'
+import { blankGrid } from './cards'
 
 export type CardZone =
 	| 'card'
@@ -29,6 +30,46 @@ export interface CardLocation {
 export interface CardPlay {
 	from: CardLocation
 	to: CardLocation
+}
+
+// DUPLICATED FROM cards.js THIS IS THE COPY
+export function blankCard(
+	taskId,
+	name,
+	color,
+	created,
+	deck = [],
+	parents = [],
+	height = undefined,
+	width = undefined
+) {
+	let newCard = {
+		taskId,
+		color,
+		deck,
+		name: typeof name !== 'string' ? 'invalid filename' : name.trim(),
+		address: '',
+		bolt11: '',
+		book: {},
+		boost: 0,
+		priorities: [],
+		subTasks: [],
+		completed: [],
+		parents: parents,
+		claimed: [],
+		passed: [],
+		signed: [],
+		guild: false,
+		created: created,
+		lastClaimed: 0,
+		payment_hash: '',
+		highlights: [],
+		seen: [],
+		time: [],
+		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
+		allocations: [],
+	}
+	return newCard
 }
 
 export function goInCard(
@@ -342,29 +383,7 @@ export function findFirstCardInCard(card: Task) {
 	return null
 }
 
-// A card's .signed is an append-only list of all signing events.
-// This function reduces it to just each member's current opinion
-export function mostRecentSignaturesOnly(signed: Signature[]) {
-	let mostRecentSignaturesOnly = signed.filter((signature, index) => {
-		let lastIndex
-		for (let i = signed.length - 1; i >= 0; i--) {
-			if (signed[i].memberId === signature.memberId) {
-				lastIndex = i
-				break
-			}
-		}
-		return lastIndex === index
-	})
-	return mostRecentSignaturesOnly
-}
-
-export function countCurrentSignatures(signed: Signature[]) {
-	return mostRecentSignaturesOnly(signed).filter(
-		signature => signature.opinion >= 1
-	).length
-}
-
-export function countVouches(memberId: string) {
+export function countVouches(memberId) {
 	const card = aoStore.hashMap.get(memberId)
 	if (!card || !card.hasOwnProperty('deck')) return null
 

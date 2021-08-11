@@ -56,15 +56,19 @@ export function addMeme(name, path, data = null) {
 		return m.hash === hash
 	})
 	if (!foundMeme) {
-		events.memeAdded(name, hash, filetype, (err, event) => {
-			console.log(
-				'\n\n\nmeme-added callback\n\nerr: ',
-				err,
-				'\n event: ',
-				event,
-				'\n\n'
-			)
-		})
+		events.trigger(
+			'meme-added',
+			{ taskId: v1(), filename: name, hash, filetype },
+			(err, event) => {
+				console.log(
+					'\n\n\nmeme-added callback\n\nerr: ',
+					err,
+					'\n event: ',
+					event,
+					'\n\n'
+				)
+			}
+		)
 		return
 	}
 	return

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { CardPlay, CardLocation, CardZone, Coords } from '../cards'
+import { CardPlay, CardLocation, CardZone, Coords } from '../cardTypes'
 import api from '../client/api'
 import { createHash } from '../crypto'
 

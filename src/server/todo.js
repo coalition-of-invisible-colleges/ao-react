@@ -21,7 +21,11 @@ function autoUncheck() {
       console.log('\n\nDURATION is ', dur)
       const intervalInMs = task.claimInterval * 60 * 60 * 1000
       if (dur >= intervalInMs) {
-        events.taskReset(task.taskId, null)
+        events.trigger(
+          'task-reset',
+          { taskId: task.taskId, timestamp: now },
+          null
+        )
       }
     }
   })

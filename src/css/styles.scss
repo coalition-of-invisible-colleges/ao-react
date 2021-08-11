@@ -530,6 +530,10 @@ textarea {
           margin-right: 0.5em;
           float: left;
         }
+
+        .value {
+          top: 0.15em;
+        }
       }
 
       &.face.before {
@@ -779,7 +783,7 @@ textarea {
       .resizer {
         position: absolute;
         margin-top: -5.2em;
-        right: 0;
+        right: 0.1em;
         transform: translateX(100%);
 
         button {
@@ -1585,6 +1589,8 @@ textarea {
         font-weight: bold;
         background: none;
         cursor: default;
+        border: 0.1em solid white;
+        border-radius: 1em;
 
         &:hover {
           text-decoration: none;
@@ -1612,10 +1618,12 @@ textarea {
 
     // action button inside a toolbar, currently only used on .mission-style card
     .toolbar {
+      margin-bottom: 0.5em;
+
       .action {
         display: inline-block;
         margin-right: 0.5em;
-        padding: 0.25em 0.5em;
+        padding: 0.25em 0.75em;
       }
     }
 
@@ -2935,6 +2943,81 @@ textarea {
       padding-top: 43vh;
       font-size: 1.3em;
       color: #666;
+    }
+
+    // red boat button to reprioritize and add a point to a prioritized task
+    .allocate {
+      position: absolute;
+      padding-left: 0.25em;
+      padding-right: 0.5em;
+      width: 1.5em;
+      text-align: center;
+      font-size: 0.95em;
+      margin-top: 0.5em;
+      color: white;
+      font-size: 1.5em;
+      cursor: pointer;
+      top: -0.45em;
+      left: -0.5em;
+
+      img {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.22;
+      }
+
+      .allocation {
+        position: absolute;
+        left: calc(50% + 0.15em);
+        transform: translateX(-50%);
+        text-shadow: 2px 2px 2px rgba(0.05, 0.05, 0.05, 0.5);
+      }
+    }
+
+    // union fair price calculator displayed as part of crowdfund.tsx in card menu
+    .price {
+      label {
+        display: block;
+      }
+
+      input[type='text'] {
+        text-align: center;
+      }
+
+      .buttonGroup {
+        border: 0.1em solid white;
+        border-radius: 1em;
+        width: -moz-fit-content;
+        width: fit-content;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 1em;
+        margin-bottom: 1em;
+
+        button.action {
+          margin: 0;
+          border-right: 0.1em solid white;
+          padding: 0.4em 0.5em 0.3em 0.5em;
+          white-space: nowrap;
+
+          &:first-child {
+            border-radius: 1em 0 0 1em;
+          }
+
+          &:last-child {
+            border-right: none;
+            border-radius: 0 1em 1em 0;
+          }
+
+          &.selected {
+            color: black;
+            background-color: white;
+          }
+        }
+      }
     }
   }
 }

@@ -59,10 +59,13 @@ export function serverAuth(req, res, next) {
         httpOnly: true,
         expires: new Date(253402300000000),
       })
-      events.sessionCreated(
-        ownerId,
-        req.headers.session,
-        token,
+      events.trigger(
+        'session-created',
+        {
+          session: req.headers.session,
+          token: token,
+          ownerId: ownerId,
+        },
         buildResCallback(res)
       )
     } else {

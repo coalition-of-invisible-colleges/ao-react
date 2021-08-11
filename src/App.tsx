@@ -21,7 +21,7 @@ import {
 import { observer } from 'mobx-react'
 import aoStore from './client/store'
 import api from './client/api'
-import { goUp } from './cards'
+import { goUp } from './cardTypes'
 import Login from './components/Login'
 import AoMember from './components/Member'
 import AoCard from './components/Card'

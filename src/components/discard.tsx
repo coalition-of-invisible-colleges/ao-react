@@ -4,7 +4,7 @@ import api from '../client/api'
 import aoStore from '../client/store'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay, goUp } from '../cards'
+import { CardPlay, goUp } from '../cardTypes'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
 @observer

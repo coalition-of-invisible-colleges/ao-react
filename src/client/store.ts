@@ -12,7 +12,8 @@ import {
 import _ from 'lodash'
 import M from '../mutations'
 // import modules from '../modules/index.js'
-import { blankCard, cadToSats } from '../calculations'
+import { cadToSats } from '../calculations'
+import { blankCard } from '../cards.js'
 import AoStack from '../components/stack'
 import cash from '../modules/cash.js'
 import members from '../modules/members.js'
@@ -77,6 +78,13 @@ interface Membership {
   level: number
 }
 
+interface Allocation {
+  type?: string
+  taskId: string
+  allocatedId: string
+  amount: number
+  blame?: string
+}
 export interface Task {
   taskId: string
   color: string
@@ -90,6 +98,7 @@ export interface Task {
     endTs: number
   }
   boost: number
+  allocations: Allocation[]
   priorities: string[]
   subTasks: string[]
   completed: string[]
@@ -108,13 +117,14 @@ export interface Task {
   created: number
   grid?: Grid
   avatars?: AvatarLocation[]
-
   showChatroom?: boolean
   memberships: Membership[]
   stash: {}
-
   loadedFromServer?: boolean
   aoGridToolDoNotUpdateUI?: boolean
+  unionHours: number
+  unionSkill: number
+  unionHazard: number
 }
 
 export interface Meme {
@@ -161,7 +171,6 @@ export interface Signature {
   memberId: string
   timestamp: Date
   opinion: number | string
-  endorsements: Signature[]
 }
 
 export interface AvatarLocation {
@@ -486,6 +495,9 @@ class AoStore {
         })
         return false
       }
+
+      // getSearchResultsForQuery_async(query, callback) {
+      // }
 
       // allSubCards.forEach(tId => {
       //     let subCard = aoStore.hashMap.get(tId)
@@ -974,13 +986,13 @@ class AoStore {
 
   @action.bound
   removeFromContext(taskId: string) {
-    console.log('AO: client/store.ts: removeFromContext: ', { taskId })
+    // console.log('AO: client/store.ts: removeFromContext: ', { taskId })
     this.context = this.context.slice().filter(tId => {
       return tId !== taskId
     })
-    console.log('AO: client/store.ts: removeFromContext: result', {
-      context: this.context,
-    })
+    // console.log('AO: client/store.ts: removeFromContext: result', {
+    // context: this.context,
+    // })
   }
 
   @action.bound

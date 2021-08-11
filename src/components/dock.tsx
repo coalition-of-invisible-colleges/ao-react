@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, comparer, reaction, observable} from 'mobx'
+import { computed, comparer, reaction, observable } from 'mobx'
 import { observer, Observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
@@ -34,92 +34,84 @@ export default class AoDock extends React.Component<{}, State> {
   executeOnUnmount_list = []
   componentDidMount() {
     const dockCardName = aoStore.member.memberId + '-bookmarks'
-    // let myBookmarks = 
-    aoStore.getTaskByName_async
-        ( dockCardName,
-          (myBookmarks) =>
-          {
-            if (!myBookmarks) {
-              api
-                .createCard(dockCardName)
-                .then(res => {
-                  const taskId = JSON.parse(res.text).event.taskId
-                  return api.addGridToCard(taskId, 1, 6)
-                })
-                .then(res => {
-                  const taskId = JSON.parse(res.text).event.taskId
-                  return api.pinCardToGrid(0, 0, 'drop bookmarks here', taskId)
-                })
-                .then(res => {
-                  const taskId = JSON.parse(res.text).event.taskId
-                  this.setState({ bookmarksTaskId: taskId })
-                })
-            } else if (!myBookmarks.hasOwnProperty('grid')) {
-              api
-                .addGridToCard(myBookmarks.taskId, 1, 6)
-                .then(() => {
-                  return api.pinCardToGrid(
-                    0,
-                    0,
-                    'drop bookmarks here',
-                    myBookmarks.taskId
-                  )
-                })
-                .then(res => {
-                  const taskId = JSON.parse(res.text).event.taskId
-                  this.setState({ bookmarksTaskId: taskId })
-                })
-            } else if (!_.has(myBookmarks, 'grid.rows.0')) {
-              api
-                .pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
-                .then(res => {
-                  const taskId = JSON.parse(res.text).event.taskId
-                  this.setState({ bookmarksTaskId: taskId })
-                })
-            } else {
-              this.setState({ bookmarksTaskId: myBookmarks.taskId })
-            }
-          }
-        );
+    // let myBookmarks =
+    aoStore.getTaskByName_async(dockCardName, myBookmarks => {
+      if (!myBookmarks) {
+        api
+          .createCard(dockCardName)
+          .then(res => {
+            const taskId = JSON.parse(res.text).event.taskId
+            return api.addGridToCard(taskId, 1, 6)
+          })
+          .then(res => {
+            const taskId = JSON.parse(res.text).event.taskId
+            return api.pinCardToGrid(0, 0, 'drop bookmarks here', taskId)
+          })
+          .then(res => {
+            const taskId = JSON.parse(res.text).event.taskId
+            this.setState({ bookmarksTaskId: taskId })
+          })
+      } else if (!myBookmarks.hasOwnProperty('grid')) {
+        api
+          .addGridToCard(myBookmarks.taskId, 1, 6)
+          .then(() => {
+            return api.pinCardToGrid(
+              0,
+              0,
+              'drop bookmarks here',
+              myBookmarks.taskId
+            )
+          })
+          .then(res => {
+            const taskId = JSON.parse(res.text).event.taskId
+            this.setState({ bookmarksTaskId: taskId })
+          })
+      } else if (!_.has(myBookmarks, 'grid.rows.0')) {
+        api
+          .pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
+          .then(res => {
+            const taskId = JSON.parse(res.text).event.taskId
+            this.setState({ bookmarksTaskId: taskId })
+          })
+      } else {
+        this.setState({ bookmarksTaskId: myBookmarks.taskId })
+      }
+    })
 
     // here we want to track the subCards and rerender when they change
-    let unMountReactionFunction = 
-        reaction 
-        ( () => 
-          {
-            console.log("AO: client/store.ts: bookmarksCard computing")
-            let bookmarksTaskId = aoStore.bookmarksTaskId
-            let card = aoStore.hashMap.get(bookmarksTaskId)
-            let bookmarkedCardsData = []
-            // card.grid.rows.forEach
-            //     ( (row, y) =>
-            //       {
-            //         row.forEach
-            //             ( (cell, x) =>
-            //               { bookmarkedCardsData.push({y, x, cell})
-            //               }
-            //             ) 
-            //       }
-            //     )
-            return bookmarkedCardsData 
-          },
-          (bookmarkedCardsData) => 
-          { 
-            console.log("AO: components/dock.tsx: gridChangedReaction: actionPhase")
-            this.setState({renderMeNowPlease: true})
-          },
-          { "equals": comparer.structural }
-        )
+    let unMountReactionFunction = reaction(
+      () => {
+        // console.log("AO: client/store.ts: bookmarksCard computing")
+        let bookmarksTaskId = aoStore.bookmarksTaskId
+        let card = aoStore.hashMap.get(bookmarksTaskId)
+        let bookmarkedCardsData = []
+        // card.grid.rows.forEach
+        //     ( (row, y) =>
+        //       {
+        //         row.forEach
+        //             ( (cell, x) =>
+        //               { bookmarkedCardsData.push({y, x, cell})
+        //               }
+        //             )
+        //       }
+        //     )
+        return bookmarkedCardsData
+      },
+      bookmarkedCardsData => {
+        // console.log("AO: components/dock.tsx: gridChangedReaction: actionPhase")
+        this.setState({ renderMeNowPlease: true })
+      },
+      { equals: comparer.structural }
+    )
     this.executeOnUnmount_list.push(unMountReactionFunction)
-    
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     // this.executeOnUnmount_list.forEach ( fn => fn() );
   }
 
   render() {
-    console.log("AO: components/dock.tsx: AoDock: render", {"props": this.props, "state": this.state})
+    // console.log("AO: components/dock.tsx: AoDock: render", {"props": this.props, "state": this.state})
 
     const card = aoStore.hashMap.get(this.state.bookmarksTaskId)
 
@@ -133,16 +125,17 @@ export default class AoDock extends React.Component<{}, State> {
         <AoGem />
         <div id="dock-tour">
           <Observer>
-            { () =>
-              { return <AoGrid
+            {() => {
+              return (
+                <AoGrid
                   taskId={this.state.bookmarksTaskId}
                   grid={card.grid}
                   dropActsLikeFolder={true}
                   height={card.grid.height}
                   width={card.grid.width}
                 />
-              }
-            }
+              )
+            }}
           </Observer>
         </div>
         <div id="deck">

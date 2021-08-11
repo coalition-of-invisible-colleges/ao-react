@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task, Signature } from '../client/store'
 import AoStack from './stack'
-import { mostRecentSignaturesOnly, countCurrentSignatures } from '../cards'
+import { mostRecentSignaturesOnly, countCurrentSignatures } from '../cards.js'
 import AoTip from './tip'
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 export default class AoProposals extends React.Component<Props> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
   }
 
   componentDidMount() {
@@ -52,9 +52,9 @@ export default class AoProposals extends React.Component<Props> {
           ...guildCard.priorities,
           ...gridTaskIds,
           ...guildCard.subTasks,
-          ...guildCard.completed
+          ...guildCard.completed,
         ]
-        const uniqueSubTaskIds = allSubTaskIds.filter(function(item, pos) {
+        const uniqueSubTaskIds = allSubTaskIds.filter(function (item, pos) {
           return allSubTaskIds.indexOf(item) == pos
         })
         uniqueSubTaskIds.forEach(st => {
@@ -134,7 +134,7 @@ export default class AoProposals extends React.Component<Props> {
           cards={this.toSign}
           descriptor={{
             singular: 'More to Sign',
-            plural: 'More to Sign'
+            plural: 'More to Sign',
           }}
           cardStyle="face"
         />
@@ -145,7 +145,7 @@ export default class AoProposals extends React.Component<Props> {
             alwaysShowAll={false}
             descriptor={{
               singular: 'Passed Proposal',
-              plural: 'Passed Proposals'
+              plural: 'Passed Proposals',
             }}
             noFirstCard={true}
           />
@@ -155,7 +155,7 @@ export default class AoProposals extends React.Component<Props> {
             alwaysShowAll={false}
             descriptor={{
               singular: 'Unpassed Proposal',
-              plural: 'Unpassed Proposals'
+              plural: 'Unpassed Proposals',
             }}
             noFirstCard={true}
           />
@@ -188,7 +188,7 @@ export default class AoProposals extends React.Component<Props> {
               style={{
                 textAlign: 'center',
                 position: 'relative',
-                top: '-0.5em'
+                top: '-0.5em',
               }}>
               <small>
                 The community awaits your decision.{' '}

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -8,7 +8,7 @@ import api from '../client/api'
 export default class AoFob extends React.PureComponent {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.activateMe = this.activateMe.bind(this)
   }
 
@@ -29,8 +29,8 @@ export default class AoFob extends React.PureComponent {
       return null
     }
     return (
-      <div className={'activate menu'}>
-        <div onClick={this.activateMe} className={'action'}>
+      <div className="activate menu">
+        <div onClick={this.activateMe} className="action">
           Reactivate Membership
         </div>
       </div>

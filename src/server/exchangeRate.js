@@ -14,7 +14,7 @@ export function watchSpot() {
 function getRecordSpot() {
   getPrice((err, spot) => {
     if (!err) {
-      events.spotUpdated(spot)
+      events.trigger('spot-updated', { spot })
     }
   })
 }

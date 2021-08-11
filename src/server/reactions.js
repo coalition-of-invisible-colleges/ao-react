@@ -61,11 +61,14 @@ function reactions(ev) {
                 defaultPrice = customPrice
               }
               let hopper = t.name.split(':')[0]
-              events.resourceUsed(
-                resourceId,
-                '',
-                defaultPrice,
-                hopper,
+              events.trigger(
+                'resource-used',
+                {
+                  resourceId: resourceId,
+                  memberId: '',
+                  amount: defaultPrice,
+                  charged: hopper,
+                },
                 console.log
               )
               return true
@@ -78,7 +81,7 @@ function reactions(ev) {
       case 'member-paid':
         break
       case 'resource-stocked':
-        events.memberActivated(ev.memberId)
+        events.trigger('member-activated', { memberId: ev.memberId })
         break
       case 'resource-stocked':
         break

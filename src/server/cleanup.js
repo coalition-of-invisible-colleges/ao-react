@@ -11,7 +11,7 @@ const cleanupJob = new cron.CronJob({
   cronTime: '5 * * * * *',
   onTick: cleanup,
   start: true,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'America/Los_Angeles',
 })
 
 function cleanup() {
@@ -30,7 +30,11 @@ function cleanup() {
     console.log('No shitposts to clean up')
     return
   }
-  events.tasksRemoved(oldUnheldCards, null)
+  events.trigger(
+    'tasks-removed',
+    { taskIds: oldUnheldCards, blame: 'cleanup' },
+    null
+  )
 
   const removedCount = beforeCount - serverState.tasks.length
   console.log(
@@ -40,6 +44,6 @@ function cleanup() {
   )
 }
 
-export default function() {
+export default function () {
   cleanupJob.start()
 }

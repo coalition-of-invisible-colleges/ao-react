@@ -2,10 +2,9 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoContextCard, { CardStyle } from './contextCard'
-import { CardZone } from '../cards'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay, Coords } from '../cards'
+import { CardPlay, Coords, CardZone } from '../cardTypes'
 import AoCardComposer from './cardComposer'
 
 interface StackProps {

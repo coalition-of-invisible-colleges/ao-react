@@ -21,12 +21,15 @@ function resourceCheck(req, res, next) {
   let member = memberFromFob(req.body.fob)
   let resource = getResource(req.body.resourceId)
   if (member && resource && access(member, resource)) {
-    events.resourceUsed(
-      req.body.resourceId,
-      member.memberId,
-      req.body.amount || 1,
-      resource.charged || 0,
-      req.body.notes || 'D',
+    events.trigger(
+      'resource-used',
+      {
+        resourceId: req.body.resourceId,
+        memberId: member.memberId,
+        amount: req.body.amount || 1,
+        charged: resource.charged || 0,
+        notes: req.body.notes || 'D',
+      },
       buildResCallback(res)
     )
   } else {

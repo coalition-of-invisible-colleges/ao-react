@@ -5,7 +5,7 @@ import api from '../client/api'
 import AoServerName from './serverName'
 import AoTip from './tip'
 import AoStack from './stack'
-import { CardPlay } from '../cards'
+import { CardPlay } from '../cardTypes'
 import config from '../../configuration'
 import { formatDistanceToNow } from 'date-fns'
 

@@ -119,11 +119,10 @@ function initialize(callback) {
       )
       applyBackup(backup[0])
     }
+    console.log('Loaded state from backup. Applying events since backup...')
     getAll(ts, (err, all) => {
       if (err) return callback(err)
-
       all.forEach((ev, i) => {
-
         applyEvent(serverState, Object.assign({}, ev))
         applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
         if (i > 0 && i % 10000 === 0) {
@@ -132,9 +131,10 @@ function initialize(callback) {
       })
       console.log('applied ', all.length, ' events from the database')
 
-      
-      callback(null);
+      callback(null)
     })
+    console.log('Starting monthly backup cron...')
+    backupJob.start()
   })
 }
 

@@ -159,8 +159,10 @@ class AoApi {
 
   async mute(): Promise<request.Response> {
     const act = {
-      type: 'doge-muted',
+      type: 'member-field-updated',
       memberId: aoStore.member.memberId,
+      field: 'muted',
+      newfield: true,
     }
     return request
       .post('/events')
@@ -173,8 +175,10 @@ class AoApi {
 
   async unmute(): Promise<request.Response> {
     const act = {
-      type: 'doge-unmuted',
+      type: 'member-field-updated',
       memberId: aoStore.member.memberId,
+      field: 'muted',
+      newfield: false,
     }
     return request
       .post('/events')
@@ -451,6 +455,7 @@ class AoApi {
       taskId: taskId,
       inId: inId,
       position: position,
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -494,6 +499,28 @@ class AoApi {
   async refocusPile(inId: string): Promise<request.Response> {
     const act = {
       type: 'pile-refocused',
+      inId: inId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async allocatePriority(
+    inId: string,
+    taskId: string,
+    points = 1
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-allocated',
+      taskId: inId,
+      allocatedId: taskId,
+      amount: points,
+      blame: aoStore.member.memberId,
       inId: inId,
     }
     return request
@@ -580,9 +607,10 @@ class AoApi {
     newClaimInterval: number
   ): Promise<request.Response> {
     const act = {
-      type: 'task-interval-set',
+      type: 'task-property-set',
       taskId: taskId,
-      claimInterval: newClaimInterval,
+      property: 'claimInterval',
+      value: newClaimInterval,
       blame: aoStore.member.memberId,
     }
     return request

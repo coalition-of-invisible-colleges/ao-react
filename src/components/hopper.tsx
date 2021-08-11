@@ -1,7 +1,7 @@
 import * as React from 'react'
 import aoStore from '../client/store'
 import api from '../client/api'
-import { goInCard } from '../cards'
+import { goInCard } from '../cardTypes'
 import Boat from '../assets/images/boat.svg'
 import RedBoat from '../assets/images/boatbtnselected.svg'
 import _ from 'lodash'
@@ -10,6 +10,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import AoTip from './tip'
 import { gloss } from '../semantics'
+import config from '../../configuration.js'
 
 export default function AoHopper(props: {}): JSX.Element {
 	const [hop, setHop] = React.useState<number>(-1)
@@ -227,10 +228,15 @@ export default function AoHopper(props: {}): JSX.Element {
 		console.log('checkpoint3')
 	}
 
-	function hopTo(index, previousHop = null, forceHop = false) {
+	function hopTo(
+		index,
+		previousHop = null,
+		forceHop = false,
+		firstHop = false
+	) {
 		const safeIndex = index < 0 ? 0 : index
 		setHop(safeIndex)
-		const currentIsHopping = !!nextRef.current
+		const currentIsHopping = !!nextRef.current || firstHop
 		const currentMoveBoat = moveBoatRef.current
 		const currentRandomize = randomizeRef.current
 		const currentVisitCard = visitRef.current
@@ -373,7 +379,7 @@ export default function AoHopper(props: {}): JSX.Element {
 			newHop = getNextUncheckedBookmark()
 		}
 
-		hopTo(newHop, undefined, true)
+		hopTo(newHop, undefined, true, true)
 		planHop()
 	}
 
@@ -579,22 +585,24 @@ export default function AoHopper(props: {}): JSX.Element {
 									)}, you will join its chatroom, if it has one.`}
 								/>
 							</label>
-							<label className="option">
-								<input
-									type="checkbox"
-									checked={sendNotification}
-									onChange={onSendNotificationChange}
-									disabled={!aoStore.member.phone}
-								/>
-								Signal alert{' '}
-								<AoTip
-									text={`When you hop, you will receive a signal notification containing the ${gloss(
-										'guild'
-									)} name or ${gloss(
-										'card'
-									)} text, and the text of its top priority.`}
-								/>
-							</label>
+							{config.signal && (
+								<label className="option">
+									<input
+										type="checkbox"
+										checked={sendNotification}
+										onChange={onSendNotificationChange}
+										disabled={!aoStore.member.phone}
+									/>
+									Signal alert{' '}
+									<AoTip
+										text={`When you hop, you will receive a signal notification containing the ${gloss(
+											'guild'
+										)} name or ${gloss(
+											'card'
+										)} text, and the text of its top priority.`}
+									/>
+								</label>
+							)}
 						</div>
 					</div>
 					<div>

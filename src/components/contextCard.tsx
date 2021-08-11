@@ -28,7 +28,8 @@ import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import AoMemberIcon from './memberIcon'
 import BlankBadge from '../assets/images/badge_blank.svg'
-import { goInCard, prioritizeCard, subTaskCard, CardZone } from '../cards'
+import Boat from '../assets/images/boat.svg'
+import { goInCard, prioritizeCard, subTaskCard, CardZone } from '../cardTypes'
 import AoDragZone from './dragZone'
 import AoProposals from './proposals'
 
@@ -538,6 +539,44 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     )
   }
 
+  @computed get priorityCards() {
+    const card = this.props.task
+    if (card.priorities && card.priorities.length >= 1) {
+      return card.priorities
+        .map(tId => aoStore.hashMap.get(tId))
+        .filter(t => t?.deck?.length >= 1)
+    }
+    return null
+  }
+
+  @computed get renderedUpboats() {
+    const card = this.props.task
+    const upboats = {}
+    this.priorityCards?.forEach(priority => {
+      let allocatedHere = 0
+      if (Array.isArray(card.allocations)) {
+        card.allocations.some(allocation => {
+          if (allocation.allocatedId === priority.taskId) {
+            allocatedHere = allocation.amount
+          }
+        })
+      }
+      const totalAllocatedHere = priority.boost + allocatedHere
+      upboats[priority.taskId] = (
+        <div
+          onClick={() => api.allocatePriority(card.taskId, priority.taskId)}
+          className="allocate">
+          <img src={Boat} />
+          {totalAllocatedHere > 0 && (
+            <div className="allocation">{totalAllocatedHere}</div>
+          )}
+        </div>
+      )
+    })
+
+    return upboats
+  }
+
   render = () => {
     const card = this.props.task
     if (!card) {
@@ -566,12 +605,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       }
     }
 
-    let priorityCards: Task[]
-    if (card.priorities && card.priorities.length >= 1) {
-      priorityCards = card.priorities
-        .map(tId => aoStore.hashMap.get(tId))
-        .filter(t => t?.deck?.length >= 1)
-    }
+    let priorityCards: Task[] = this.priorityCards
 
     let subTaskCards: Task[]
     if (card.subTasks && card.subTasks.length >= 1) {
@@ -708,7 +742,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         )
       case 'full':
         const grid = card.grid
-
         return (
           <React.Fragment>
             {this.props.noContextOnFull ? (
@@ -792,6 +825,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       onNewCard={this.newPriority}
                       onDrop={prioritizeCard}
                       zone="priorities"
+                      decorators={this.renderedUpboats}
                     />
                   )
                 }}
