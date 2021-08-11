@@ -1545,8 +1545,7 @@ function tasksMuts(tasks, ev) {
           //         let alreadyHereGrid = false
           // const stLengthBefore = task.subTasks.length
           // if (task.subTasks.length - stLengthBefore > 0) {
-          //   alreadyHereGrid = true
-          // }
+          //   alreadyHereGrid = true          // }
         }
         task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
       })

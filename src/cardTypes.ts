@@ -64,7 +64,7 @@ export function blankCard(
 		lastClaimed: 0,
 		payment_hash: '',
 		highlights: [],
-		seen: [],
+		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
 		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
 		allocations: [],
