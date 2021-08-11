@@ -17,6 +17,7 @@ interface PopupPanelProps {
 	badge?: any
 	badgeColor?: 'green' | 'yellow' | 'red'
 	alsoHideHub?: boolean
+	buttonClass?: string
 }
 
 interface State {
@@ -92,7 +93,10 @@ export default class AoPopupPanel extends React.PureComponent<
 					<div
 						id={this.props.id}
 						className={
-							this.state.isPanelOpen ? 'actionCircle open' : 'actionCircle'
+							this.state.isPanelOpen
+								? 'actionCircle open'
+								: 'actionCircle' +
+								  (this.props.buttonClass ? ' ' + this.props.buttonClass : '')
 						}>
 						<img src={this.props.iconSrc} />
 						{this.props.badge ? (

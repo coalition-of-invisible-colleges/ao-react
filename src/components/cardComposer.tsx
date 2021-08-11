@@ -25,7 +25,7 @@ export default class AoCardComposer extends React.Component<Props, State> {
 	constructor(props) {
 		super(props)
 
-		console.log('AO: components/cardComposer.tsx: constructor: ', { props })
+		// console.log('AO: components/cardComposer.tsx: constructor: ', { props })
 		this.state = {}
 		this.focus = this.focus.bind(this)
 		this.uploadDraft = this.uploadDraft.bind(this)

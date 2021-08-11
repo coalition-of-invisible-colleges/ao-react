@@ -548,6 +548,7 @@ function tasksMuts(tasks, ev) {
           } else {
             addSubTask(task, ev.taskId)
           }
+          clearSeenExcept(task)
         }
       })
       break
@@ -946,6 +947,8 @@ function tasksMuts(tasks, ev) {
             whosSeenPriority = [...whosSeenPriority, ...task.seen]
           }
         }
+      })
+      tasks.forEach(task => {
         if (task.taskId === ev.inId) {
           // Remove task and track if removed
           let alreadyHere = filterFromSubpiles(task, ev.taskId)
@@ -1519,17 +1522,19 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'grid-pin':
+      let whosSeenGrid = []
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
           seeTask(task, ev.memberId)
           grabTask(task, ev.memberId)
           addParent(task, ev.inId)
+          // Accumulate who's seen this task
+          if (task.seen && task.seen?.length >= 1) {
+            whosSeenGrid = [...whosSeenGrid, ...task.seen]
+          }
         }
 
-        if (task.taskId === ev.inId) {
-          if (!task.grid) {
-            task.grid = blankGrid()
-          }
+        if (task.taskId === ev.inId && task.grid) {
           if (!_.has(task, 'grid.rows') || Array.isArray(task.grid.rows)) {
             tasks[i].grid.rows = {}
           }
@@ -1537,15 +1542,15 @@ function tasksMuts(tasks, ev) {
             tasks[i].grid.rows[ev.y] = {}
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
+          //         let alreadyHereGrid = false
+          // const stLengthBefore = task.subTasks.length
+          // if (task.subTasks.length - stLengthBefore > 0) {
+          //   alreadyHereGrid = true
+          // }
         }
-
-        let alreadyHereGrid = false
-        const stLengthBefore = task.subTasks.length
         task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
-        if (task.subTasks.length - stLengthBefore > 0) {
-          alreadyHere = true
-        }
       })
+
       break
     case 'grid-unpin':
       tasks.some((task, i) => {

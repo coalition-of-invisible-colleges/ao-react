@@ -25,7 +25,6 @@ import AoPopupPanel from './popupPanel'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
 import MemberIcon from '../assets/images/loggedWhite.svg'
-import Badge from '../assets/images/badge.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import Scroll from '../assets/images/scroll.svg'
 import Tippy from '@tippyjs/react'
@@ -141,17 +140,8 @@ export default class AoHud extends React.Component<{}, HudState> {
         </Observer>
 
         <AoGifts />
+        <AoMissions />
 
-        <div id="missions">
-          <AoPopupPanel
-            iconSrc={Badge}
-            tooltipText={gloss('Guild') + ' Index'}
-            tooltipPlacement="right"
-            panelPlacement="right"
-            id="tour-missions">
-            <AoMissions />
-          </AoPopupPanel>
-        </div>
         <div id="members">
           <AoPopupPanel
             iconSrc={MemberIcon}

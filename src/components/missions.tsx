@@ -4,6 +4,8 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
 import { gloss } from '../semantics'
+import AoPopupPanel from './popupPanel'
+import Badge from '../assets/images/badge.svg'
 
 type MissionFilter = 'changed' | 'mine' | 'not mine' | 'all'
 
@@ -163,22 +165,37 @@ export default class AoMissions extends React.PureComponent<{}, State> {
     const renderAll =
       aoStore.topLevelMissions.length >= 1 &&
       (renderChanged || renderMine || renderOther)
+
+    const percentChanged = Math.floor(
+      (10 * this.changedMissions.length) / this.myMissions.length
+    )
+    const buttonClass = 'red' + percentChanged.toString()
     return (
-      <React.Fragment>
-        <h2>{gloss('Guild')} Index</h2>
-        <div className="toolbar">
-          {renderChanged && this.renderFilterButton('changed', 'Changed')}
-          {renderMine && this.renderFilterButton('mine', 'My Deck')}
-          {renderOther && this.renderFilterButton('not mine', 'Unheld')}
-          {renderAll && this.renderFilterButton('all', 'All')}
-        </div>
-        <div className="toolbar">
-          {this.renderSortButton('alphabetical', 'A-Z')}
-          {this.renderSortButton('hodls', 'Hodls')}
-          {this.renderSortButton('age', 'Order')}
-        </div>
-        {this.renderMissionsList}
-      </React.Fragment>
+      <div id="missions">
+        <AoPopupPanel
+          iconSrc={Badge}
+          tooltipText={gloss('Guild') + ' Index'}
+          tooltipPlacement="right"
+          panelPlacement="right"
+          id="tour-missions"
+          buttonClass={buttonClass}>
+          <React.Fragment>
+            <h2>{gloss('Guild')} Index</h2>
+            <div className="toolbar">
+              {renderChanged && this.renderFilterButton('changed', 'Changed')}
+              {renderMine && this.renderFilterButton('mine', 'My Deck')}
+              {renderOther && this.renderFilterButton('not mine', 'Unheld')}
+              {renderAll && this.renderFilterButton('all', 'All')}
+            </div>
+            <div className="toolbar">
+              {this.renderSortButton('alphabetical', 'A-Z')}
+              {this.renderSortButton('hodls', 'Hodls')}
+              {this.renderSortButton('age', 'Order')}
+            </div>
+            {this.renderMissionsList}
+          </React.Fragment>
+        </AoPopupPanel>
+      </div>
     )
   }
 }

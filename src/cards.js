@@ -145,7 +145,7 @@ export function filterFromSubpiles(task, taskId) {
 
 // Marks as unseen (clears seen from) the given task, unless it's on the list
 // Unseens bubble-up one level, but if you've seen the child, it doesn't affect you
-export function clearSeenExcept(task, exceptionMemberIds) {
+export function clearSeenExcept(task, exceptionMemberIds = []) {
 	if (task?.seen?.length >= 1) {
 		task.seen = task.seen.filter(userseen =>
 			exceptionMemberIds.includes(userseen.memberId)
