@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -11,14 +11,17 @@ import AoCardComposer from './cardComposer'
 import AoMemberIcon from './memberIcon'
 import Bird from '../assets/images/send.svg'
 import Gift from '../assets/images/gifts.svg'
+import { gloss } from '../semantics'
 
-type GiftBoxTab = 'inbox' | 'sent'
+type GiftBoxTab = 'inbox' | 'changes' | 'sent'
+type ChangesSort = 'alphabetical' | 'hodls' | 'age'
 
 interface State {
   memberId?: string
   name: string
   openSend?: boolean
   tab: GiftBoxTab
+  sort: ChangesSort
 }
 
 @observer
@@ -27,15 +30,25 @@ export default class AoGifts extends React.PureComponent<{}, State> {
 
   constructor(props) {
     super(props)
-    makeObservable(this);
-    this.state = { name: '', tab: 'inbox' }
+    makeObservable(this)
+    this.state = { name: '', tab: 'inbox', sort: 'age' }
     this.toggleSend = this.toggleSend.bind(this)
     this.onChangeTo = this.onChangeTo.bind(this)
     this.onChangeName = this.onChangeName.bind(this)
     this.onClick = this.onClick.bind(this)
     this.newGift = this.newGift.bind(this)
     this.goToTab = this.goToTab.bind(this)
+    this.renderTabButton = this.renderTabButton.bind(this)
+    this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
+  }
+
+  componentDidUpdate() {
+    if (this.state.tab === 'changes' && this.allChanges.length < 1) {
+      this.setState({ tab: 'inbox' })
+    } else if (this.state.tab === 'sent' && this.mySent.length < 1) {
+      this.setState({ tab: 'inbox' })
+    }
   }
 
   toggleSend() {
@@ -121,7 +134,7 @@ export default class AoGifts extends React.PureComponent<{}, State> {
         <table
           id="sent"
           style={{
-            marginBottom: this.state.openSend ? '1em' : '3.5em'
+            marginBottom: this.state.openSend ? '1em' : '3.5em',
           }}>
           {list}
         </table>
@@ -148,30 +161,117 @@ export default class AoGifts extends React.PureComponent<{}, State> {
   }
 
   goToTab(event) {
-    const tab = event.currentTarget.getAttribute('data-sort')
+    const tab = event.currentTarget.getAttribute('data-tab')
     if (this.state.tab === tab) {
       return
     }
     this.setState({ tab: tab })
   }
 
-  renderSortButton(tab: GiftBoxTab, label: string) {
+  renderTabButton(tab: GiftBoxTab, label: string) {
     if (this.state.tab === tab) {
       return <p className="action selected">{label}</p>
     } else {
       return (
-        <p onClick={this.goToTab} data-sort={tab} className="action">
+        <p onClick={this.goToTab} data-tab={tab} className="action">
           {label}
         </p>
       )
     }
   }
 
+  sortBy(event) {
+    const sort = event.currentTarget.getAttribute('data-sort')
+    if (this.state.sort === sort) {
+      return
+    }
+    this.setState({ sort: sort })
+  }
+
+  renderSortButton(sort: ChangesSort, label: string) {
+    if (this.state.sort === sort) {
+      return <p className="action selected">{label}</p>
+    } else {
+      return (
+        <p onClick={this.sortBy} data-sort={sort} className="action">
+          {label}
+        </p>
+      )
+    }
+  }
+
+  @computed get allChanges() {
+    return aoStore.myCards.filter(
+      card =>
+        !(card.guild && card.guild.length >= 1) &&
+        (!card.seen ||
+          (card.seen &&
+            !card.seen.some(
+              userseen => userseen.memberId === aoStore.member.memberId
+            )))
+    )
+  }
+
+  @computed
+  get renderedChangesList() {
+    if (this.allChanges.length < 1) {
+      return null
+    }
+
+    let cards = this.allChanges
+    console.log('allChanges card is', cards)
+
+    if (this.state.sort === 'alphabetical') {
+      cards.sort((a, b) => {
+        return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+      })
+    } else if (this.state.sort === 'hodls') {
+      cards.sort((a, b) => {
+        return a.deck.length - b.deck.length
+      })
+    } else if (this.state.sort === 'age') {
+      cards.reverse()
+      // Default sort is database order, i.e., card creation order
+    }
+
+    return (
+      <div className="results">
+        <AoStack
+          cards={cards}
+          zone="panel"
+          cardStyle="face"
+          cardsBeforeFold={5}
+        />
+      </div>
+    )
+  }
+
+  @computed get renderedChanges() {
+    return (
+      <div id="changes">
+        <h2>Changes</h2>
+        {this.allChanges.length >= 1 && (
+          <div className="toolbar">
+            {this.renderSortButton('alphabetical', 'A-Z')}
+            {this.renderSortButton('hodls', 'Hodls')}
+            {this.renderSortButton('age', 'Order')}
+          </div>
+        )}
+        {this.renderedChangesList}
+      </div>
+    )
+  }
+
   render() {
     const renderedBadge = this.myGifts.length >= 1 && (
       <React.Fragment>{this.myGifts.length}</React.Fragment>
     )
+    const percentChanged = Math.min(Math.floor(this.allChanges.length / 30), 10)
+    const buttonClass = 'red' + percentChanged.toString()
 
+    const hasGifts = this.myGifts.length >= 1
+    const hasChanges = this.allChanges.length >= 1
+    const hasSent = this.mySent.length >= 1
     return (
       <div id="gifts">
         <AoPopupPanel
@@ -179,61 +279,74 @@ export default class AoGifts extends React.PureComponent<{}, State> {
           tooltipText={this.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
           badge={renderedBadge}
           tooltipPlacement="right"
-          panelPlacement="right">
+          panelPlacement="right"
+          buttonClass={buttonClass}>
           <React.Fragment>
-            <h2>Gifts</h2>
-            <div
-              style={{
-                textAlign: 'center',
-                position: 'relative',
-                top: '-0.5em'
-              }}>
-              <small>
-                {this.myGifts.length < 1
-                  ? 'Send a gift to start a conversation.'
-                  : 'Cards passed to you.'}{' '}
-                <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
-              </small>
-            </div>
-            {this.mySent.length >= 1 && (
-              <div className="toolbar">
-                {this.renderSortButton('inbox', 'Received')}
-                {this.renderSortButton('sent', 'Given')}
-              </div>
-            )}
-            {this.renderGiftsList}
-            {this.myGifts.length >= 1 && (
-              <div className="action" onClick={this.toggleSend}>
-                {this.state.openSend ? (
-                  <React.Fragment>Compose &#8963;</React.Fragment>
-                ) : (
-                  <React.Fragment>Compose &#8964;</React.Fragment>
+            <div className="toolbar">
+              {(hasChanges || hasSent) &&
+                this.renderTabButton(
+                  'inbox',
+                  hasGifts ? 'Received' : 'Compose'
                 )}
-              </div>
-            )}
-            {(this.state.openSend || this.myGifts.length < 1) && (
-              <form>
-                <label>To:</label>
-                <AoBirdAutocomplete onChange={this.onChangeTo} />
-                <div style={{ position: 'relative' }}>
-                  <label style={{ position: 'relative', top: '-1em' }}>
-                    Topic:
-                  </label>
-                  <AoCardComposer
-                    ref={this.composeRef}
-                    onNewCard={this.newGift}
-                    onChange={this.onChangeName}
-                  />
+              {hasChanges && this.renderTabButton('changes', 'Changes')}
+              {hasSent && this.renderTabButton('sent', 'Given')}
+            </div>
+            {this.state.tab === 'inbox' && (
+              <React.Fragment>
+                <h2>Gifts</h2>
+                <div
+                  style={{
+                    textAlign: 'center',
+                    position: 'relative',
+                    top: '-0.5em',
+                    marginBottom: hasGifts ? '4em' : undefined,
+                  }}>
+                  <small>
+                    {!hasGifts
+                      ? 'Send a gift to start a conversation.'
+                      : 'Cards passed to you.'}{' '}
+                    <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
+                  </small>
                 </div>
-                <button
-                  type="button"
-                  className="action"
-                  onClick={this.onClick}
-                  disabled={!this.isValid}>
-                  give
-                </button>
-              </form>
+              </React.Fragment>
             )}
+            {this.state.tab === 'inbox' ||
+              (this.state.tab === 'sent' && this.renderGiftsList)}
+            {this.state.tab === 'changes' && this.renderedChanges}
+            {(this.state.tab === 'inbox' && hasGifts) ||
+              (this.state.tab === 'sent' && (
+                <div className="action" onClick={this.toggleSend}>
+                  {this.state.openSend ? (
+                    <React.Fragment>Compose &#8963;</React.Fragment>
+                  ) : (
+                    <React.Fragment>Compose &#8964;</React.Fragment>
+                  )}
+                </div>
+              ))}
+            {this.state.tab === 'inbox' &&
+              (this.state.openSend || this.myGifts.length < 1) && (
+                <form>
+                  <label>To:</label>
+                  <AoBirdAutocomplete onChange={this.onChangeTo} />
+                  <div style={{ position: 'relative' }}>
+                    <label style={{ position: 'relative', top: '-1em' }}>
+                      Topic:
+                    </label>
+                    <AoCardComposer
+                      ref={this.composeRef}
+                      onNewCard={this.newGift}
+                      onChange={this.onChangeName}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="action"
+                    onClick={this.onClick}
+                    disabled={!this.isValid}>
+                    give
+                  </button>
+                </form>
+              )}
           </React.Fragment>
         </AoPopupPanel>
       </div>

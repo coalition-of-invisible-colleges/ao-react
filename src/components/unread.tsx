@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import api from '../client/api'
 import { delay, cancelablePromise } from '../utils'
 import aoStore from '../client/store'
+import { formatDistanceToNow } from 'date-fns'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -102,12 +103,21 @@ export default class AoUnread extends React.PureComponent<UnreadProps> {
     ) {
       return null
     }
+    const cardAge = formatDistanceToNow(card.created, { addSuffix: true })
+    const renderedTooltip = (
+      <React.Fragment>
+        <div>created {cardAge}</div>
+        <div>
+          <small>tap to mark seen</small>
+        </div>
+      </React.Fragment>
+    )
     return (
       <Tippy
         placement="top"
         delay={[475, 200]}
         theme="translucent"
-        content="Unseen change, tap to mark seen"
+        content={renderedTooltip}
         appendTo={document.getElementById('root')}>
         <div className="unread" onClick={this.markSeen} />
       </Tippy>

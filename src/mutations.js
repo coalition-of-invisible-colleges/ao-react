@@ -548,7 +548,7 @@ function tasksMuts(tasks, ev) {
           } else {
             addSubTask(task, ev.taskId)
           }
-          clearSeenExcept(task)
+          clearSeenExcept(task, ev.deck.length >= 1 ? [ev.deck[0]] : undefined) // The very font of novelty
         }
       })
       break
@@ -935,7 +935,7 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-prioritized':
-      let whosSeenPriority = []
+      let whosSeenPriority = [ev.memberId]
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           seeTask(task, ev.blame)
@@ -1052,7 +1052,7 @@ function tasksMuts(tasks, ev) {
       // I think the spec is only run on event creation, not load from database,
       // so make sure the task exists before linking to it from another card
       let taskExistsSubTask = false
-      let whosSeen = []
+      let whosSeen = [ev.memberId]
       tasks.forEach(task => {
         if (task.taskId === ev.subTask) {
           taskExistsSubTask = true
@@ -1527,7 +1527,18 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'grid-pin':
-      let whosSeenGrid = []
+      let whosSeenGrid = [ev.memberId]
+      tasks.forEach((task, i) => {
+        if (task.taskId === ev.taskId) {
+          seeTask(task, ev.memberId)
+          grabTask(task, ev.memberId)
+          addParent(task, ev.inId)
+          // Accumulate who's seen this task
+          if (task.seen && task.seen?.length >= 1) {
+            whosSeenGrid = [...whosSeenGrid, ...task.seen]
+          }
+        }
+      })
       tasks.forEach((task, i) => {
         if (task.taskId === ev.inId) {
           if (!task.grid) {
@@ -1540,26 +1551,17 @@ function tasksMuts(tasks, ev) {
             tasks[i].grid.rows[ev.y] = {}
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
-          //         let alreadyHereGrid = false
-          // const stLengthBefore = task.subTasks.length
-          // if (task.subTasks.length - stLengthBefore > 0) {
-          //   alreadyHereGrid = true          // }
-        }
-      })
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          seeTask(task, ev.memberId)
-          grabTask(task, ev.memberId)
-          addParent(task, ev.inId)
-          // Accumulate who's seen this task
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeenGrid = [...whosSeenGrid, ...task.seen]
+          let alreadyHereGrid = false
+          const stLengthBefore = task.subTasks.length
+          task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
+          if (task.subTasks.length - stLengthBefore > 0) {
+            alreadyHereGrid = true
+          }
+          if (!alreadyHereGrid) {
+            clearSeenExcept(task, whosSeenGrid)
           }
         }
-
-        task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
       })
-
       break
     case 'grid-unpin':
       tasks.some((task, i) => {

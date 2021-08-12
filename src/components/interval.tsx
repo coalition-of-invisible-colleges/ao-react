@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import { computed, makeObservable } from 'mobx'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
@@ -22,6 +23,7 @@ interface State {
 export default class AoInterval extends React.Component<Props, State> {
   constructor(props) {
     super(props)
+    makeObservable(this)
     const card = aoStore.hashMap.get(this.props.taskId)
     if (card) {
       this.state = {
@@ -75,6 +77,12 @@ export default class AoInterval extends React.Component<Props, State> {
     }
   }
 
+  @computed get isGrabbed() {
+    const card = aoStore.hashMap.get(this.props.taskId)
+    if (!card) return undefined
+    return card.deck.indexOf(aoStore.member.memberId) >= 0
+  }
+
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) {
@@ -111,7 +119,7 @@ export default class AoInterval extends React.Component<Props, State> {
           </div>
         )
       default:
-        if (!card.claimInterval || card.claimInterval <= 0) {
+        if (!card.claimInterval || card.claimInterval <= 0 || !this.isGrabbed) {
           return null
         }
         const tooltip =

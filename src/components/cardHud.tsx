@@ -123,7 +123,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<React.Fragment>
 						{isGrabbed && taskId !== card.name && <AoBird taskId={taskId} />}
-						<AoUnread taskId={taskId} />
 						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
@@ -133,6 +132,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 							<AoInterval taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
+						<AoUnread taskId={taskId} />
 					</React.Fragment>
 				)
 			case 'face before':
@@ -176,10 +176,8 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'mini before':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
@@ -187,10 +185,14 @@ export default class CardHud extends React.Component<CardHudProps> {
 				)
 			case 'mini after':
 				return (
-					<div className={'hud ' + hudStyle}>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
-					</div>
+					<React.Fragment>
+						<AoUnread taskId={taskId} />
+						<div className={'hud ' + hudStyle}>
+							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+							<AoPreview taskId={taskId} hudStyle={hudStyle} />
+							<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						</div>
+					</React.Fragment>
 				)
 			case 'badge':
 				return (

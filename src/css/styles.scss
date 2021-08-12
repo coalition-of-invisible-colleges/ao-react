@@ -77,8 +77,8 @@ textarea {
 
       .unread {
         position: absolute;
-        top: 0.3em;
-        left: 2.75em;
+        top: 0.1em;
+        right: 0.125em;
       }
 
       & > .hud > .coin > .hodls {
@@ -232,23 +232,37 @@ textarea {
       }
     }
 
-    // priority-style card
-    .card.priority {
-      min-height: 2.325em;
-
-      .unread {
-        position: absolute;
-        top: 47%;
-        left: -0.9em;
-      }
-    }
-
     // mission-style card shows in the Guilds Index
     .card.mission {
       .coin {
         .hodls {
           top: 0.25em;
         }
+      }
+    }
+
+    // unread dot on a mission- or priority-style card
+    .card.mission .unread,
+    .card.priority .unread {
+      display: inline-block;
+      width: 1.84em;
+      height: 1.84em;
+      opacity: 0.6;
+    }
+
+    // unread dot on a mission-style card
+    .card.mission .unread {
+      transform: translateY(0.25em);
+      margin-right: 0.25em;
+    }
+
+    // priority-style card
+    .card.priority {
+      min-height: 2.325em;
+
+      .unread {
+        transform: translateY(0.135em);
+        margin-right: 1.5em;
       }
     }
 
@@ -291,17 +305,20 @@ textarea {
         }
       }
 
+      .unread {
+        position: absolute;
+        top: 0em;
+        right: 0em;
+        width: 1.6em;
+        height: 1.6em;
+        opacity: 0.6;
+      }
+
       & > .hud {
         position: relative;
         pointer-events: none;
 
         &.mini.before {
-          .unread {
-            position: absolute;
-            top: 0.25em;
-            left: 0.25em;
-          }
-
           & > .mission,
           & > .countdown,
           & > .value,
@@ -335,23 +352,6 @@ textarea {
             float: right;
           }
 
-          & > .preview {
-            position: absolute;
-            right: 1.2em;
-            bottom: 0;
-            font-size: 0.75em;
-            padding: 0.25em;
-            // pointer-events: none;
-            margin: 0;
-            background-color: rgba(0, 0, 0, 0.2);
-            cursor: default;
-
-            & .nopad {
-              padding-left: 0;
-              padding-right: 0;
-            }
-          }
-
           & > .checkbox {
             float: right;
             height: 0.75em;
@@ -383,6 +383,23 @@ textarea {
             padding: 0.25em;
             margin: 0 1em 0 0;
             width: max-content;
+          }
+
+          & > .preview {
+            position: absolute;
+            right: 1.2em;
+            bottom: 0;
+            font-size: 0.75em;
+            padding: 0.25em;
+            // pointer-events: none;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: default;
+
+            & .nopad {
+              padding-left: 0;
+              padding-right: 0;
+            }
           }
 
           & > .cardMenuButton {
@@ -938,7 +955,6 @@ textarea {
 
     // actionCircle and popup panel
     #controls,
-    #changes,
     #gifts,
     #members,
     #missions,
@@ -963,7 +979,6 @@ textarea {
 
     // margin for icons on left edge of page
     #gifts,
-    #changes,
     #members,
     #missions,
     #calendar,
@@ -1003,19 +1018,6 @@ textarea {
           left: -0.05em;
           top: -0.2em;
         }
-      }
-    }
-
-    // changes popup panel
-    #changes {
-      .actionCircle {
-        left: 8em;
-        top: 0.5em;
-      }
-
-      .popupPanel {
-        position: relative;
-        padding: 1em;
       }
     }
 
@@ -1935,8 +1937,8 @@ textarea {
     // unread dot on cards
     .unread {
       content: '';
-      height: 1.89em;
-      width: 1.89em;
+      height: 2.25em;
+      width: 2.25em;
       border-radius: 50%;
       background-color: rgba(255, 10, 10, 0.75);
       cursor: pointer;

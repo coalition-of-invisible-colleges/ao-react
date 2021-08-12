@@ -173,7 +173,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         }
         if (wrappedPriorityCount == undefined) {
           wrappedPriorityCount = (
-            <div className="label">this.priorityCount + '!'</div>
+            <div className="label">{this.priorityCount + '!'}</div>
           )
         }
         if (this.priorityCount >= 1) {

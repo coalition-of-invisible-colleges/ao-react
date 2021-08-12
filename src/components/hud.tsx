@@ -5,7 +5,6 @@ import api from '../client/api'
 import AoHub from './hub'
 import AoControls from './controls'
 import AoDock from './dock'
-import AoChanges from './changes'
 import AoGifts from './gifts'
 import AoMissions from './missions'
 import AoMembers from './members'
@@ -139,7 +138,6 @@ export default class AoHud extends React.Component<{}, HudState> {
             return <AoDock />
           }}
         </Observer>
-        <AoChanges />
         <AoGifts />
         <AoMissions />
 
@@ -189,7 +187,9 @@ export default class AoHud extends React.Component<{}, HudState> {
         {
           //<AoScore prefix={<span>Points: </span>} />
         }
-        {<AoStatus />}
+        {
+          //<AoStatus />
+        }
       </div>
     )
   }
