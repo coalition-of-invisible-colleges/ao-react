@@ -1165,14 +1165,14 @@ class AoApi {
       })
   }
 
-  async fetchMeme(memeHash: string): Promise<request.Response> {
+  async fetchMeme(memeHash: string): Promise<Blob> {
     return request
       .get('/meme/' + memeHash)
       .responseType('blob')
       .set('Authorization', aoStore.state.token)
       .then(res => {
         console.log('got meme! res is ', res)
-        return res
+        return res.body
       })
   }
 

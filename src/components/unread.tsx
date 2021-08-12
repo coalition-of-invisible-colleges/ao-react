@@ -103,10 +103,13 @@ export default class AoUnread extends React.PureComponent<UnreadProps> {
     ) {
       return null
     }
-    const cardAge = formatDistanceToNow(card.created, { addSuffix: true })
+    const cardAge =
+      card.created && card.created > 1628797704071
+        ? formatDistanceToNow(card.created, { addSuffix: true })
+        : null
     const renderedTooltip = (
       <React.Fragment>
-        <div>created {cardAge}</div>
+        <div>{cardAge ? `created {cardAge}` : 'changed'}</div>
         <div>
           <small>tap to mark seen</small>
         </div>

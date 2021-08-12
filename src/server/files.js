@@ -5,6 +5,7 @@ import FileType from 'file-type'
 import events from './events.js'
 import { createHash } from '../crypto.js'
 import state from './state.js'
+import v1 from 'uuid'
 const serverState = state.serverState
 
 export function scanMemes() {

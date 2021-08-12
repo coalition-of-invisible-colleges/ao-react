@@ -15,6 +15,7 @@ interface State {
   page: number
   filter: MissionFilter
   sort: MissionSort
+  loaded: boolean
 }
 
 @observer
@@ -27,26 +28,53 @@ export default class AoMissions extends React.Component<{}, State> {
       filter:
         this.changedMissions.length >= 1
           ? 'changed'
-          : this.myMissions.length >= 1
+          : this.myMissions.length >= 1 &&
+            this.myMissions.length !== aoStore.topLevelMissions.length
           ? 'mine'
           : 'all',
       sort: 'hodls',
+      loaded: false,
     }
+    console.log('this.changedMissions.length is', this.changedMissions.length)
+    console.log('missionstate is', this.state)
     this.filterBy = this.filterBy.bind(this)
     this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
   }
 
-  componentDidUpdate() {
-    if (this.state.filter === 'changed' && this.changedMissions.length < 1) {
-      this.setState({ filter: this.myMissions.length >= 1 ? 'mine' : 'all' })
+  componentDidUpdate(prevProps, prevState) {
+    if (!prevState.loaded && this.changedMissions.length >= 1) {
+      this.setState({ filter: 'changed', loaded: true })
+    } else if (
+      this.state.filter === 'changed' &&
+      this.changedMissions.length < 1
+    ) {
+      this.setState({
+        filter:
+          this.myMissions.length >= 1 &&
+          this.myMissions.length !== aoStore.topLevelMissions.length
+            ? 'mine'
+            : 'all',
+      })
     } else if (this.state.filter === 'mine' && this.myMissions.length < 1) {
-      this.setState({ filter: this.myMissions.length >= 1 ? 'mine' : 'all' })
+      this.setState({
+        filter:
+          this.myMissions.length >= 1 &&
+          this.myMissions.length !== aoStore.topLevelMissions.length
+            ? 'mine'
+            : 'all',
+      })
     } else if (
       this.state.filter === 'not mine' &&
       this.otherMissions.length < 1
     ) {
-      this.setState({ filter: this.myMissions.length >= 1 ? 'mine' : 'all' })
+      this.setState({
+        filter:
+          this.myMissions.length >= 1 &&
+          this.myMissions.length !== aoStore.topLevelMissions.length
+            ? 'mine'
+            : 'all',
+      })
     }
   }
 
@@ -93,10 +121,11 @@ export default class AoMissions extends React.Component<{}, State> {
   @computed get changedMissions() {
     return this.myMissions.filter(
       mission =>
-        mission.seen &&
-        !mission.seen.some(
-          userseen => userseen.memberId === aoStore.member.memberId
-        )
+        !mission.seen ||
+        (mission.seen &&
+          !mission.seen.some(
+            userseen => userseen.memberId === aoStore.member.memberId
+          ))
     )
   }
 

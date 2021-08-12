@@ -51,7 +51,7 @@ export default function applyRouter(app) {
     })
   )
 
-  app.use('/memes', express.static(config.memes.dir))
+  // app.use('/memes', express.static(config.memes.dir))
 
   app.use(serverAuth) // below here requires auth token
 
@@ -241,15 +241,15 @@ export default function applyRouter(app) {
     console.log('originalname is ', req.file.originalname)
     console.log('temppath is ', tempPath)
     console.log('targepath is ', targetPath)
-    console.log('req is ', req)
+    // console.log('req is ', req)
     fs.rename(tempPath, targetPath, err => {
-      if (err) return handleError(err, res)
+      // if (err) return handleError(err, res)
       addMeme(req.file.originalname, targetPath)
       res.status(200).contentType('text/plain').end('File uploaded!')
     })
   })
 
-  app.get('/memes/:memeHash', (req, res) => {
+  app.get('/meme/:memeHash', (req, res) => {
     console.log('download route detected, hash is ', req.params.memeHash)
     const meme = state.serverState.memes.find(meme => {
       return meme.hash === req.params.memeHash
