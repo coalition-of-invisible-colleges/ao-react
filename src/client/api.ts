@@ -43,10 +43,10 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
-          console.log(
-            'AO: client/api.ts: fetchState: initial state: ',
-            res.body
-          )
+          // console.log(
+          //   'AO: client/api.ts: fetchState: initial state: ',
+          //   res.body
+          // )
 
           let dataPackageToSendToClient = res.body
 
@@ -118,7 +118,7 @@ class AoApi {
       type: 'quorum-set',
       quorum: quorum,
     }
-    console.log('act is ', act)
+    // console.log('act is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -205,10 +205,10 @@ class AoApi {
       inId: anonymous ? null : aoStore.memberCard.taskId || null,
       prioritized: false,
     }
-    console.log('AO: client/api.ts: createCard: ', {
-      act,
-      'aoStore.memberCard': aoStore.memberCard,
-    })
+    // console.log('AO: client/api.ts: createCard: ', {
+    //   act,
+    //   'aoStore.memberCard': aoStore.memberCard,
+    // })
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -964,7 +964,6 @@ class AoApi {
     inId: string,
     level: number
   ): Promise<request.Response> {
-    console.log('typeof level is ', typeof level)
     const act = {
       type: 'task-stashed',
       taskId: taskId,
@@ -1004,7 +1003,7 @@ class AoApi {
       taskId: task.taskId,
       memberId: aoStore.member.memberId,
     }
-    console.log('card marked seen')
+    // console.log('card marked seen')
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)

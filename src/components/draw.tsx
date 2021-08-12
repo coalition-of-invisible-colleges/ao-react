@@ -24,12 +24,12 @@ export default class AoDrawPile extends React.PureComponent {
   }
 
   redirect(taskId) {
-    console.log('AO: components/draw.tsx: redirect: ', { taskId })
+    // console.log('AO: components/draw.tsx: redirect: ', { taskId })
 
     if (typeof taskId === 'object' && taskId !== null) taskId = taskId.taskId
 
     if (!taskId) {
-      console.log('AO: components/draw.tsx: redirect: no taskId')
+      // console.log('AO: components/draw.tsx: redirect: no taskId')
       return
     }
     goInCard(taskId)

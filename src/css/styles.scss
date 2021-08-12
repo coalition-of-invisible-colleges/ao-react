@@ -77,8 +77,8 @@ textarea {
 
       .unread {
         position: absolute;
-        top: 0.25em;
-        left: 0.25em;
+        top: 0.3em;
+        left: 2.75em;
       }
 
       & > .hud > .coin > .hodls {
@@ -938,6 +938,7 @@ textarea {
 
     // actionCircle and popup panel
     #controls,
+    #changes,
     #gifts,
     #members,
     #missions,
@@ -962,6 +963,7 @@ textarea {
 
     // margin for icons on left edge of page
     #gifts,
+    #changes,
     #members,
     #missions,
     #calendar,
@@ -1001,6 +1003,19 @@ textarea {
           left: -0.05em;
           top: -0.2em;
         }
+      }
+    }
+
+    // changes popup panel
+    #changes {
+      .actionCircle {
+        left: 8em;
+        top: 0.5em;
+      }
+
+      .popupPanel {
+        position: relative;
+        padding: 1em;
       }
     }
 
@@ -1429,6 +1444,11 @@ textarea {
           max-height: 3em;
           overflow: hidden;
           cursor: pointer;
+
+          .unread {
+            position: absolute;
+            left: 0.5em;
+          }
         }
       }
     }
@@ -1915,10 +1935,15 @@ textarea {
     // unread dot on cards
     .unread {
       content: '';
-      height: 0.375em;
-      width: 0.375em;
+      height: 1.89em;
+      width: 1.89em;
       border-radius: 50%;
-      background-color: rgba(255, 10, 10, 0.85);
+      background-color: rgba(255, 10, 10, 0.75);
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(255, 10, 10, 1);
+      }
     }
 
     // the dock at the bottom of the screen
@@ -2725,7 +2750,7 @@ textarea {
     .stash {
       position: absolute;
       left: 0.5em;
-      top: 2em;
+      top: 3em;
 
       .popupPanel {
         // max-width: 42vw;

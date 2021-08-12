@@ -82,9 +82,9 @@ reaction(
   },
 
   contextCardList => {
-    console.log('@AO: components/Card.tsx: contextStackWatcher: ', {
-      'contextStackWatcher.contextCardList': contextCardList.slice(),
-    })
+    // console.log('@AO: components/Card.tsx: contextStackWatcher: ', {
+    //   'contextStackWatcher.contextCardList': contextCardList.slice(),
+    // })
   }
 )
 // const ContextStackView   = observer( () => <div id="context">

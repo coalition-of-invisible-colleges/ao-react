@@ -8,7 +8,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 
 interface PopupPanelProps {
-	iconSrc: string
+	iconSrc?: string
 	tooltipText?: string
 	tooltipPlacement?: Placement
 	panelPlacement?: Placement
@@ -98,7 +98,7 @@ export default class AoPopupPanel extends React.PureComponent<
 								: 'actionCircle' +
 								  (this.props.buttonClass ? ' ' + this.props.buttonClass : '')
 						}>
-						<img src={this.props.iconSrc} />
+						{this.props.iconSrc && <img src={this.props.iconSrc} />}
 						{this.props.badge ? (
 							<div
 								className={

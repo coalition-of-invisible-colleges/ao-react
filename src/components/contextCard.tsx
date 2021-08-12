@@ -451,40 +451,37 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   }
 
   async onHover(event) {
-    event.preventDefault()
-
-    const card = this.props.task
-    if (
-      card.seen &&
-      card.seen.some(s => s.memberId === aoStore.member.memberId)
-    ) {
-      return
-    }
-
-    if (this.pendingPromise !== undefined) {
-      return
-    }
-
-    this.pendingPromise = cancelablePromise(delay(2000))
-    return this.pendingPromise.promise
-      .then(() => {
-        if (
-          !card.seen ||
-          (card.seen &&
-            !card.seen.some(s => s.memberId === aoStore.member.memberId))
-        ) {
-          api.markSeen(this.props.task.taskId)
-        }
-        this.clearPendingPromise()
-      })
-      .catch(errorInfo => {
-        // rethrow the error if the promise wasn't
-        // rejected because of a cancelation
-        this.clearPendingPromise()
-        if (!errorInfo.isCanceled) {
-          throw errorInfo.error
-        }
-      })
+    // event.preventDefault()
+    // const card = this.props.task
+    // if (
+    //   card.seen &&
+    //   card.seen.some(s => s.memberId === aoStore.member.memberId)
+    // ) {
+    //   return
+    // }
+    // if (this.pendingPromise !== undefined) {
+    //   return
+    // }
+    // this.pendingPromise = cancelablePromise(delay(2000))
+    // return this.pendingPromise.promise
+    //   .then(() => {
+    //     if (
+    //       !card.seen ||
+    //       (card.seen &&
+    //         !card.seen.some(s => s.memberId === aoStore.member.memberId))
+    //     ) {
+    //       api.markSeen(this.props.task.taskId)
+    //     }
+    //     this.clearPendingPromise()
+    //   })
+    //   .catch(errorInfo => {
+    //     // rethrow the error if the promise wasn't
+    //     // rejected because of a cancelation
+    //     this.clearPendingPromise()
+    //     if (!errorInfo.isCanceled) {
+    //       throw errorInfo.error
+    //     }
+    //   })
   }
 
   @computed get applyClassIfCurrentSearchResult() {

@@ -82,7 +82,7 @@ function startDctrlAo() {
         fullEvStream.onValue(ev => {
           state.applyEvent(state.pubState, ev)
           ioServer.emit('eventstream', ev)
-          console.log('emitting:', ev)
+          console.log('emitting:', ev.type)
         })
 
         // ensure there is a community hub card in the state

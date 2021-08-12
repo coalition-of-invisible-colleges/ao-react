@@ -139,7 +139,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<React.Fragment>
 						{isGrabbed && <AoBird taskId={taskId} />}
-						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
@@ -164,6 +163,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
+						<AoUnread taskId={taskId} />
 						<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu

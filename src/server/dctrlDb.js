@@ -118,7 +118,13 @@ function startFeed() {
 }
 
 export function insertEvent(ev, callback) {
-  console.log('insertEvent ev is ', ev)
+  if (ev.type === 'tasks-received') {
+    console.log(`received ${ev?.tasks?.length} tasks`)
+    ev?.tasks?.forEach(task => console.log('p2p:', task.name))
+    console.log('p2p: end of receive')
+  } else {
+    console.log('insertEvent ev is ', ev)
+  }
   if (!conn) return callback('No db connection')
   if (!ev.timestamp) {
     ev.timestamp = Date.now()

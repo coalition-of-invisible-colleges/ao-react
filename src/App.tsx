@@ -44,10 +44,10 @@ const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
       {...rest}
       render={props => {
         aoStore.state.protectedRouteRedirectPath = props.location.pathname
-        console.log('AO: App.tsx: ProtectedRoute: ', {
-          props,
-          protectedRouteRedirectPath: props.location.pathname,
-        })
+        // console.log('AO: App.tsx: ProtectedRoute: ', {
+        // props,
+        //   protectedRouteRedirectPath: props.location.pathname,
+        // })
 
         return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
       }}

@@ -14,19 +14,19 @@ const Login: React.FunctionComponent<{}> = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [socketState, setSocketState] = useState(false)
 
-  console.log(
-    'AO: components/Login.tsx: socketState: inFunctionComponent ' +
-      aoStore.state.socketState
-  )
+  // console.log(
+  //   'AO: components/Login.tsx: socketState: inFunctionComponent ' +
+  //     aoStore.state.socketState
+  // )
   reaction(
     () => {
       return aoStore.state.socketState
     },
     socketState => {
       setSocketState(socketState === 'authenticationSuccess')
-      console.log(
-        'AO: components/Login.tsx: socketState: inReaction' + socketState
-      )
+      // console.log(
+      //   'AO: components/Login.tsx: socketState: inReaction' + socketState
+      // )
     }
   )
 

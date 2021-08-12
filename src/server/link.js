@@ -22,97 +22,114 @@ function sync() {
     a.links.forEach(l => {
       let crawlered = crawler(serverState.tasks, l)
       let expectedHash = crawlerHash(serverState.tasks, l)
-      checkHash(a.address, a.outboundSecret, l, hashRes => {
-        console.log({ expectedHash, hashRes })
-        if (expectedHash !== hashRes) {
-          const tasksToSend = getList(crawlered)
-          postEvent(
-            a.address,
-            a.outboundSecret,
-            {
-              type: 'tasks-received',
-              tasks: tasksToSend,
-            },
-            connectorRes => {
-              console.log('ao relay response', { connectorRes })
-              if (rsync) {
-                console.log('memes are still syncing from last sync trig...')
-              } else {
-                console.log('checking for memes to sync...')
-                const memes = serverState.memes.filter(meme => {
-                  const result = tasksToSend.some(
-                    task => task.taskId === meme.memeId
-                  )
-                  if (result) console.log('Found meme! Meme is', meme)
-                  return result
-                })
-                if (memes?.length >= 1) {
-                  console.log('starting meme sync for', memes.length, 'memes')
-                  const filenames = memes.map(
-                    meme => config.memes.dir + '/' + meme.filename
-                  )
-                  console.log('filenames:', filenames)
-
-                  // Build the command
-                  rsync = new Rsync()
-                    .output(
-                      function (data) {
-                        // do things like parse progress
-                      },
-                      function (data) {
-                        // do things like parse error output
-                        console.log('error output: ', data)
-                      }
-                    )
-                    // .shell('ssh')
-                    .executable(
-                      'torsocks rsync --ignore-existing --chmod=664 -vvutz -e "ssh -i ' +
-                        config.memes.sshKey +
-                        '"'
-                    )
-                    // .shell('sh')
-                    // .flags('-vvuntz')
-                    // .flags('--compress')
-                    // .flags('--upda')
-                    // .flags('--ignore-existing')
-                    // .flags('--times')
-                    // .flags('--chmod=664')
-                    // .flags('--dry-run')
-                    // .flags('--checksum')
-                    .source(filenames)
-                    .destination(
-                      config.memes.sshUsername +
-                        '@' +
-                        a.address +
-                        ':/home/' +
-                        config.memes.sshUsername +
-                        '/.ao/memes/'
-                    )
-
-                  console.log('rsync command is ', rsync.command())
-
-                  // Execute the command
-                  rsync.execute(function (error, code, cmd) {
-                    // we're done
-                    if (error) {
-                      console.log('Error syncing memes: ', error)
-                      return
-                    }
-                    console.log(
-                      'synced',
-                      memes.length,
-                      'memes! code is ',
-                      code,
-                      'and cmd is',
-                      cmd
-                    )
-                  })
-                }
-              }
-            }
+      checkHash(
+        a.address,
+        a.outboundSecret,
+        l,
+        hashRes => {
+          console.log(
+            `expectedHash: ${expectedHash}, hashRes: ${
+              hashRes.length <= 64 ? hashRes : 'Failed'
+            }`
           )
-        }
-      })
+          if (expectedHash !== hashRes) {
+            const tasksToSend = getList(crawlered)
+            postEvent(
+              a.address,
+              a.outboundSecret,
+              {
+                type: 'tasks-received',
+                tasks: tasksToSend,
+              },
+              connectorRes => {
+                console.log(
+                  'ao relay response:',
+                  connectorRes?.statusCode === 200
+                    ? 'sent cards'
+                    : connectorRes?.statusCode
+                )
+                if (rsync) {
+                  console.log('memes are still syncing from last sync trig...')
+                } else {
+                  console.log('checking for memes to sync...')
+                  const memes = serverState.memes.filter(meme => {
+                    const result = tasksToSend.some(
+                      task => task.taskId === meme.memeId
+                    )
+                    if (result)
+                      console.log('Found meme! Meme is', meme.filename)
+                    return result
+                  })
+                  if (memes?.length >= 1) {
+                    console.log('starting meme sync for', memes.length, 'memes')
+                    const filenames = memes.map(
+                      meme => config.memes.dir + '/' + meme.filename
+                    )
+                    console.log('filenames:', filenames)
+
+                    // Build the command
+                    rsync = new Rsync()
+                      .output(
+                        function (data) {
+                          // do things like parse progress
+                        },
+                        function (data) {
+                          // do things like parse error output
+                          console.log('error output: ', data)
+                        }
+                      )
+                      // .shell('ssh')
+                      .executable(
+                        'torsocks rsync --ignore-existing --chmod=664 -vvutz -e "ssh -i ' +
+                          config.memes.sshKey +
+                          '"'
+                      )
+                      // .shell('sh')
+                      // .flags('-vvuntz')
+                      // .flags('--compress')
+                      // .flags('--upda')
+                      // .flags('--ignore-existing')
+                      // .flags('--times')
+                      // .flags('--chmod=664')
+                      // .flags('--dry-run')
+                      // .flags('--checksum')
+                      .source(filenames)
+                      .destination(
+                        config.memes.sshUsername +
+                          '@' +
+                          a.address +
+                          ':/home/' +
+                          config.memes.sshUsername +
+                          '/.ao/memes/'
+                      )
+
+                    console.log('rsync command is ', rsync.command())
+
+                    // Execute the command
+                    rsync.execute(function (error, code, cmd) {
+                      // we're done
+                      if (error) {
+                        console.log('Error syncing memes: ', error)
+                        return
+                      }
+                      console.log(
+                        'synced',
+                        memes.length,
+                        'memes! code is ',
+                        code,
+                        'and cmd is',
+                        cmd
+                      )
+                    })
+                  }
+                }
+              },
+              false
+            )
+          }
+        },
+        false
+      )
     })
   })
 }

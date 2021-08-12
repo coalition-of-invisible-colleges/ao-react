@@ -176,7 +176,7 @@ const AoGridRow: Function = (props: {
 }
 
 const GridView: Function = (props: GridViewProps): JSX.Element => {
-  console.log('AO: components/grid.tsx: GridView component function')
+  // console.log('AO: components/grid.tsx: GridView component function')
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
 

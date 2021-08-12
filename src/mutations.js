@@ -1406,15 +1406,17 @@ function tasksMuts(tasks, ev) {
         if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
           t.grid.rows = Object.entries(t.grid.rows).map(([x, row]) => {
             const filteredRow = {}
-            Object.entries(row).forEach(([y, stId]) => {
-              if (tasks.some(sst => sst.taskId === stId)) {
-                filteredRow[y] = stId
+            if (row) {
+              Object.entries(row).forEach(([y, stId]) => {
+                if (tasks.some(sst => sst.taskId === stId)) {
+                  filteredRow[y] = stId
+                }
+              })
+              if (Object.keys(filteredRow).length <= 0) {
+                return {}
+              } else {
+                return filteredRow
               }
-            })
-            if (Object.keys(filteredRow).length <= 0) {
-              return {}
-            } else {
-              return filteredRow
             }
           })
         }

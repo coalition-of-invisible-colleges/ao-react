@@ -18,7 +18,7 @@ interface State {
 }
 
 @observer
-export default class AoMissions extends React.PureComponent<{}, State> {
+export default class AoMissions extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     makeObservable(this)

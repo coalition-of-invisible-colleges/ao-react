@@ -50,11 +50,11 @@ export default class AoHome extends React.PureComponent<{}, State> {
   dab() {
     event.stopPropagation()
 
-    console.log('AO: components/home.tsx: dab ', {
-      props: this.props,
-      state: this.state,
-      holdingThisCardId: this.holdingThisCardId,
-    })
+    // console.log('AO: components/home.tsx: dab ', {
+    //   props: this.props,
+    //   state: this.state,
+    //   holdingThisCardId: this.holdingThisCardId,
+    // })
 
     if (!aoStore.isDabbed) {
       this.holdingThisCardId = aoStore.currentCard

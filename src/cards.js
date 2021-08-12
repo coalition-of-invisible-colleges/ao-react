@@ -275,17 +275,19 @@ export function safeMerge(cardA, cardZ) {
 			Object.entries(cardZ.grid.rows).forEach(([x, row]) => {
 				const filteredRow = {}
 
-				Object.entries(row).forEach(([y, stId]) => {
-					if (stId !== null && stId !== undefined) {
-						filteredRow[y] = stId
-					}
-				})
+				if (row) {
+					Object.entries(row).forEach(([y, stId]) => {
+						if (stId !== null && stId !== undefined) {
+							filteredRow[y] = stId
+						}
+					})
 
-				if (Object.keys(filteredRow).length >= 1) {
-					if (!cardA.grid.rows) {
-						cardA.grid.rows = {}
+					if (Object.keys(filteredRow).length >= 1) {
+						if (!cardA.grid.rows) {
+							cardA.grid.rows = {}
+						}
+						cardA.grid.rows[x] = filteredRow
 					}
-					cardA.grid.rows[x] = filteredRow
 				}
 			})
 			if (Object.keys(cardA.grid.rows).length < 1) {

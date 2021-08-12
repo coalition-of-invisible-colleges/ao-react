@@ -2,7 +2,7 @@ import state from './state.js'
 
 export function buildResCallback(res) {
   return (err, dbResponse) => {
-    console.log("AO: server/utils.js: buildResCallback: ", { res, err, dbResponse })
+    // console.log("AO: server/utils.js: buildResCallback: ", { res, err, dbResponse })
     if (err) {
       res.status(500).send('db err')
     } else {
