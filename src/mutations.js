@@ -1368,7 +1368,7 @@ function tasksMuts(tasks, ev) {
     case 'tasks-received':
       const startLength = tasks.length
       let changedIndexes = []
-      tasks.forEach(newT => {
+      ev.tasks.forEach(newT => {
         if (
           !tasks.some((cur, i) => {
             if (cur.taskId === newT.taskId) {
@@ -1404,21 +1404,24 @@ function tasksMuts(tasks, ev) {
           tasks.some(sst => sst.taskId === stId && sst.taskId === sst.name)
         )
         if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
-          t.grid.rows = Object.entries(t.grid.rows).map(([x, row]) => {
-            const filteredRow = {}
+          let filteredRows = {}
+          Object.entries(t.grid.rows).forEach(([x, row]) => {
+            let filteredRow = {}
+
             if (row) {
               Object.entries(row).forEach(([y, stId]) => {
-                if (tasks.some(sst => sst.taskId === stId)) {
+                if (taskExists(tasks, stId)) {
                   filteredRow[y] = stId
                 }
               })
-              if (Object.keys(filteredRow).length <= 0) {
-                return {}
+              if (Object.keys(filteredRow).length < 1) {
+                filteredRows[x] = {}
               } else {
-                return filteredRow
+                filteredRows[x] = filteredRow
               }
             }
           })
+          t.grid.rows = filteredRows
         }
       })
       break
@@ -1526,17 +1529,10 @@ function tasksMuts(tasks, ev) {
     case 'grid-pin':
       let whosSeenGrid = []
       tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          seeTask(task, ev.memberId)
-          grabTask(task, ev.memberId)
-          addParent(task, ev.inId)
-          // Accumulate who's seen this task
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeenGrid = [...whosSeenGrid, ...task.seen]
+        if (task.taskId === ev.inId) {
+          if (!task.grid) {
+            task.grid = blankGrid()
           }
-        }
-
-        if (task.taskId === ev.inId && task.grid) {
           if (!_.has(task, 'grid.rows') || Array.isArray(task.grid.rows)) {
             tasks[i].grid.rows = {}
           }
@@ -1549,6 +1545,18 @@ function tasksMuts(tasks, ev) {
           // if (task.subTasks.length - stLengthBefore > 0) {
           //   alreadyHereGrid = true          // }
         }
+      })
+      tasks.forEach((task, i) => {
+        if (task.taskId === ev.taskId) {
+          seeTask(task, ev.memberId)
+          grabTask(task, ev.memberId)
+          addParent(task, ev.inId)
+          // Accumulate who's seen this task
+          if (task.seen && task.seen?.length >= 1) {
+            whosSeenGrid = [...whosSeenGrid, ...task.seen]
+          }
+        }
+
         task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
       })
 
