@@ -60,9 +60,9 @@ export default class AoAttachment extends React.Component<Props, State> {
 
             avRef.current.addEventListener('ended', function () {
               console.log('track finished playing. this taskId is ', taskId)
-              const nextTaskId = aoStore.nextCardWithMediaAttachment
+              let nextTaskId = aoStore.nextCardWithMediaAttachment
               console.log('next taskId is', nextTaskId)
-              if (nextTaskId) {
+              while (nextTaskId) {
                 const nextCard = aoStore.hashMap.get(nextTaskId)
                 if (nextCard) {
                   console.log('next track is', nextCard.name)
@@ -70,12 +70,14 @@ export default class AoAttachment extends React.Component<Props, State> {
                     'playable-' + nextTaskId
                   ) as HTMLMediaElement
                   console.log('nextElement is', nextElement)
-                  if (!nextElement) {
-                    // advance play head and try again
-                  } else {
-                    nextElement.play() //dispatchEvent(new Event('play'))
+
+                  if (nextElement) {
+                    nextElement.play()
+                    return
                   }
                 }
+                aoStore.startedPlaying(inId, nextTaskId)
+                nextTaskId = aoStore.nextCardWithMediaAttachment
               }
             })
           }
