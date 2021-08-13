@@ -948,33 +948,42 @@ class AoStore {
           card.grid.hasOwnProperty('rows') &&
           Object.keys('card.grid.rows').length >= 1
         ) {
-          Object.entries(card.grid.rows).forEach(([y, row]) => {
-            console.log('y is', y)
-            if (!result && parseInt(y, 10) >= gridY) {
-              Object.entries(row).forEach(([x, cell]) => {
-                console.log('x is', x)
+          Object.entries(card.grid.rows)
+            .sort(
+              ([aY, aRow], [bY, bRow]) => parseInt(aY, 10) - parseInt(bY, 10)
+            )
+            .forEach(([y, row]) => {
+              console.log('y is', y)
+              if (!result && parseInt(y, 10) >= gridY) {
+                Object.entries(row)
+                  .sort(
+                    ([aX, aCell], [bX, bCell]) =>
+                      parseInt(aX, 10) - parseInt(bX, 10)
+                  )
+                  .forEach(([x, cell]) => {
+                    console.log('x is', x)
 
-                if (
-                  !result &&
-                  ((parseInt(y, 10) === gridY && parseInt(x, 10) > gridX) ||
-                    parseInt(y, 10) > gridY) &&
-                  cell
-                ) {
-                  console.log('about to get meme:', cell)
-                  const meme = this.memeById.get(cell)
-                  if (meme) {
-                    console.log(
-                      'found next meme in grid! cell is ',
-                      cell,
-                      'memeId is ',
-                      meme.memeId
-                    )
-                    result = meme.memeId
-                  }
-                }
-              })
-            }
-          })
+                    if (
+                      !result &&
+                      ((parseInt(y, 10) === gridY && parseInt(x, 10) > gridX) ||
+                        parseInt(y, 10) > gridY) &&
+                      cell
+                    ) {
+                      console.log('about to get meme:', cell)
+                      const meme = this.memeById.get(cell)
+                      if (meme) {
+                        console.log(
+                          'found next meme in grid! cell is ',
+                          cell,
+                          'memeId is ',
+                          meme.memeId
+                        )
+                        result = meme.memeId
+                      }
+                    }
+                  })
+              }
+            })
         }
         if (result) {
           return result
@@ -1026,25 +1035,31 @@ class AoStore {
       card.grid.hasOwnProperty('rows') &&
       Object.keys('card.grid.rows').length >= 1
     ) {
-      Object.entries(card.grid.rows).forEach(([y, row]) => {
-        if (result) {
-          return
-        }
-        Object.entries(row).forEach(([x, cell]) => {
+      Object.entries(card.grid.rows)
+        .sort(([aY, aRow], [bY, bRow]) => parseInt(aY, 10) - parseInt(bY, 10))
+        .forEach(([y, row]) => {
           if (result) {
             return
           }
-          if (cell === this.mediaPlayHead.taskId) {
-            console.log('found in grid')
-            result = findNextMemeInCard(
-              card,
-              'grid',
-              parseInt(y, 10),
-              parseInt(x, 10)
+          Object.entries(row)
+            .sort(
+              ([aX, aCell], [bX, bCell]) => parseInt(aX, 10) - parseInt(bX, 10)
             )
-          }
+            .forEach(([x, cell]) => {
+              if (result) {
+                return
+              }
+              if (cell === this.mediaPlayHead.taskId) {
+                console.log('found in grid')
+                result = findNextMemeInCard(
+                  card,
+                  'grid',
+                  parseInt(y, 10),
+                  parseInt(x, 10)
+                )
+              }
+            })
         })
-      })
     }
     if (result) {
       return result
