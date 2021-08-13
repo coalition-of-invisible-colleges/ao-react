@@ -10,14 +10,19 @@ export async function cache(url, taskId) {
 			'No memes directory or videoCacher specified in configuration.js. See readme.'
 		)
 	}
-	let stdout = await youtubeDlWrap.execPromise([
-		url,
-		'-f',
-		'best',
-		'-o',
-		config.memes.dir + '/%(title)s-%(uploader)s-%(id)s.%(ext)s',
-	])
-	console.log('stdout type is', typeof stdout, 'and contents is', stdout)
+	try {
+		let stdout = await youtubeDlWrap.execPromise([
+			url,
+			'-f',
+			'best',
+			'-o',
+			config.memes.dir + '/%(title)s-%(uploader)s-%(id)s.%(ext)s',
+		])
+		console.log('stdout type is', typeof stdout, 'and contents is', stdout)
+	} catch (err) {
+		console.log('error caching:', err)
+		return
+	}
 
 	// Extract filename from returned console output (event listener method is more elegant)
 	let newFilename

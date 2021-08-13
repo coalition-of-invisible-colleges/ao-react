@@ -20,6 +20,7 @@ import AoBark from './bark'
 import AoTally from './tally'
 import AoLilypad from './lilypad'
 import AoStash from './stash'
+import config from '../../configuration'
 
 export type HudStyle =
 	| 'context'
@@ -220,6 +221,8 @@ export default class CardHud extends React.Component<CardHudProps> {
 						Cache Media
 					</div>
 				)
+				const showCacheButton = config.memes.dir && config.memes.videoCacher
+
 				return (
 					<div className="hud menu">
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
@@ -238,7 +241,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 						{card.guild && card.guild.length >= 1 && (
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						)}
-						{cacheButton}
+						{showCacheButton && cacheButton}
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 						<AoPalette taskId={taskId} />
