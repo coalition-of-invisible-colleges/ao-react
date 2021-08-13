@@ -14,7 +14,7 @@ async function fetchMeme(hash) {
 
 interface Props {
   taskId: string
-  inId?: string
+  inId: string
   onNextTrack?: (taskId: string) => void
 }
 
@@ -29,6 +29,7 @@ interface State {
 @observer
 export default class AoAttachment extends React.Component<Props, State> {
   private audioRef = React.createRef<HTMLAudioElement>()
+  private videoRef = React.createRef<HTMLVideoElement>()
 
   constructor(props) {
     super(props)
@@ -37,44 +38,55 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     const meme = aoStore.memeById.get(props.taskId)
     if (meme) {
-      this.loadMeme()
+      this.loadMeme().then(() => {
+        console.log('componentDidMount')
+        const taskId = this.props.taskId
+        const inId = this.props.inId
+        let avRef
+        if (this.audioRef.current) {
+          avRef = this.audioRef
+        } else if (this.videoRef.current) {
+          avRef = this.videoRef
+        }
+        if (avRef) {
+          console.log('audioRef exists')
+          if (this.props.inId) {
+            console.log('inId we have it')
+
+            avRef.current.addEventListener('play', function () {
+              console.log('track started playing: ', taskId)
+              aoStore.startedPlaying(inId, taskId)
+            })
+
+            avRef.current.addEventListener('ended', function () {
+              console.log('track finished playing. this taskId is ', taskId)
+              const nextTaskId = aoStore.nextCardWithMediaAttachment
+              console.log('next taskId is', nextTaskId)
+              if (nextTaskId) {
+                const nextCard = aoStore.hashMap.get(nextTaskId)
+                if (nextCard) {
+                  console.log('next track is', nextCard.name)
+                  const nextElement: HTMLMediaElement = document.getElementById(
+                    'playable-' + nextTaskId
+                  ) as HTMLMediaElement
+                  console.log('nextElement is', nextElement)
+                  if (!nextElement) {
+                    // advance play head and try again
+                  } else {
+                    nextElement.play() //dispatchEvent(new Event('play'))
+                  }
+                }
+              }
+            })
+          }
+        }
+      })
     }
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.taskId !== prevProps.taskId) {
       this.loadMeme()
-    }
-    const taskId = this.props.taskId
-    const inId = this.props.inId
-    if (this.audioRef.current) {
-      if (this.props.inId) {
-        this.audioRef.current.addEventListener('play', function () {
-          console.log('track started playing: ', taskId)
-          aoStore.startedPlaying(inId, taskId)
-        })
-
-        this.audioRef.current.addEventListener('ended', function () {
-          console.log('track finished playing. this taskId is ', taskId)
-          const nextTaskId = aoStore.nextCardWithMediaAttachment
-          console.log('next taskId is', nextTaskId)
-          if (nextTaskId) {
-            const nextCard = aoStore.hashMap.get(nextTaskId)
-            if (nextCard) {
-              console.log('next track is', nextCard.name)
-              const nextElement: HTMLMediaElement = document.getElementById(
-                'playable-' + nextTaskId
-              ) as HTMLMediaElement
-              console.log('nextElement is', nextElement)
-              if (!nextElement) {
-                // advance play head and try again
-              } else {
-                nextElement.play() //dispatchEvent(new Event('play'))
-              }
-            }
-          }
-        })
-      }
     }
   }
 
@@ -129,6 +141,7 @@ export default class AoAttachment extends React.Component<Props, State> {
         <div className="attachment">
           <video
             src={this.state.data}
+            ref={this.videoRef}
             id={'playable-' + this.props.taskId}
             controls
           />

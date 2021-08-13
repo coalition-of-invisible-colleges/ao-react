@@ -89,6 +89,7 @@ const AoGridRowObserver = observer(
                     ? 'badge'
                     : 'mini'
                 }
+                inId={props.inId}
               />
             </AoDragZone>
           ) : null}
