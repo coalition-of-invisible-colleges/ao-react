@@ -39,7 +39,6 @@ export default class AoAttachment extends React.Component<Props, State> {
     const meme = aoStore.memeById.get(props.taskId)
     if (meme) {
       this.loadMeme().then(() => {
-        console.log('componentDidMount')
         const taskId = this.props.taskId
         const inId = this.props.inId
         let avRef
@@ -49,27 +48,19 @@ export default class AoAttachment extends React.Component<Props, State> {
           avRef = this.videoRef
         }
         if (avRef) {
-          console.log('audioRef exists')
           if (this.props.inId) {
-            console.log('inId we have it')
-
             avRef.current.addEventListener('play', function () {
-              console.log('track started playing: ', taskId)
               aoStore.startedPlaying(inId, taskId)
             })
 
             avRef.current.addEventListener('ended', function () {
-              console.log('track finished playing. this taskId is ', taskId)
               let nextTaskId = aoStore.nextCardWithMediaAttachment
-              console.log('next taskId is', nextTaskId)
               while (nextTaskId) {
                 const nextCard = aoStore.hashMap.get(nextTaskId)
                 if (nextCard) {
-                  console.log('next track is', nextCard.name)
                   const nextElement: HTMLMediaElement = document.getElementById(
                     'playable-' + nextTaskId
                   ) as HTMLMediaElement
-                  console.log('nextElement is', nextElement)
 
                   if (nextElement) {
                     nextElement.play()

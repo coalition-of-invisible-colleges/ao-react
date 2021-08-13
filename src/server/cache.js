@@ -21,8 +21,8 @@ export async function cache(url, taskId) {
 		.catch(err => {
 			console.log('error caching:', err)
 		})
-	console.log('stdout type is', typeof stdout, 'and contents is', stdout)
 
+	console.log('cached:' + url)
 	// Extract filename from returned console output (event listener method is more elegant)
 	let newFilename
 	let newPath

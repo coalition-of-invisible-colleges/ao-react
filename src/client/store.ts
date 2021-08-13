@@ -895,8 +895,9 @@ class AoStore {
     return topCards
   }
 
+  // The next card after the current mediaPlayHead's location that has (any) attachment
+  // If there are duplicate cards on the grid, playback behavior will weirdly snap back to the earlier copy
   @computed get nextCardWithMediaAttachment(): string {
-    console.log('recomputing nextCardWithMediaAttachment')
     if (!this.mediaPlayHead.inId || !this.mediaPlayHead.taskId) {
       return null
     }
@@ -904,7 +905,6 @@ class AoStore {
     if (!card) {
       return null
     }
-    console.log('current track was valid')
 
     // Get the next card in a stack of cards that has a meme (todo: of video or audio type)
     const getNextMemeIdFromCards = (stack, startIndex) => {
@@ -915,7 +915,6 @@ class AoStore {
         }
       }
       return null
-      // console.log('meme type is ', meme.filetype)
     }
 
     type CardZone = 'priorities' | 'subTasks' | 'grid' | 'completed'
@@ -929,11 +928,9 @@ class AoStore {
       if (startZone === 'priorities') {
         const result = getNextMemeIdFromCards(card.priorities, startY)
         if (result) {
-          console.log('found next meme in priorities!')
           return result
         }
       }
-      console.log('not found in priorities')
       if (startZone === 'priorities' || startZone === 'grid') {
         let gridY = startY
         let gridX = startX
@@ -941,7 +938,6 @@ class AoStore {
           gridY = 0
           gridX = -1
         }
-        console.log('some grid action')
         let result
         if (
           card.grid &&
@@ -949,26 +945,16 @@ class AoStore {
           Object.keys('card.grid.rows').length >= 1
         ) {
           Object.entries(card.grid.rows).forEach(([y, row]) => {
-            console.log('y is', y)
             if (!result && parseInt(y, 10) >= gridY) {
               Object.entries(row).forEach(([x, cell]) => {
-                console.log('x is', x)
-
                 if (
                   !result &&
                   ((parseInt(y, 10) === gridY && parseInt(x, 10) > gridX) ||
                     parseInt(y, 10) > gridY) &&
                   cell
                 ) {
-                  console.log('about to get meme:', cell)
                   const meme = this.memeById.get(cell)
                   if (meme) {
-                    console.log(
-                      'found next meme in grid! cell is ',
-                      cell,
-                      'memeId is ',
-                      meme.memeId
-                    )
                     result = meme.memeId
                   }
                 }
@@ -981,8 +967,6 @@ class AoStore {
         }
       }
 
-      console.log('not found in grid')
-
       if (
         startZone === 'priorities' ||
         startZone === 'grid' ||
@@ -994,21 +978,17 @@ class AoStore {
         }
         const result = getNextMemeIdFromCards(card.subTasks, stY)
         if (result) {
-          console.log('found next meme in subTasks!')
           return result
         }
       }
-      console.log('not found in subTasks')
 
       // Only look in completed if the previous card was in completed (don't usually play completed)
       if (startZone === 'completed') {
         const result = getNextMemeIdFromCards(card.completed, startY)
         if (result) {
-          console.log('found next meme in completed!')
           return result
         }
       }
-      console.log('not found at all')
 
       return null
     }
@@ -1016,10 +996,8 @@ class AoStore {
     // First locate the current track, then call findNextMemeInCard to get the following track
     const prioritiesIndex = card.priorities.indexOf(this.mediaPlayHead.taskId)
     if (prioritiesIndex >= 0) {
-      console.log('found in priorities')
       return findNextMemeInCard(card, 'priorities', prioritiesIndex)
     }
-    console.log('not 1')
     let result
     if (
       card.grid &&
@@ -1035,7 +1013,6 @@ class AoStore {
             return
           }
           if (cell === this.mediaPlayHead.taskId) {
-            console.log('found in grid')
             result = findNextMemeInCard(
               card,
               'grid',
@@ -1049,21 +1026,16 @@ class AoStore {
     if (result) {
       return result
     }
-    console.log('not 2')
 
     const subTasksIndex = card.subTasks.indexOf(this.mediaPlayHead.taskId)
     if (subTasksIndex >= 0) {
-      console.log('found in subTasks')
       return findNextMemeInCard(card, 'subTasks', subTasksIndex)
     }
-    console.log('not 3')
 
     const completedIndex = card.completed.indexOf(this.mediaPlayHead.taskId)
     if (completedIndex >= 0) {
-      console.log('found in completed')
       return findNextMemeInCard(card, 'completed', completedIndex)
     }
-    console.log('not 4')
 
     return null
   }
