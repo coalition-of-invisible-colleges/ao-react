@@ -2,15 +2,6 @@ import config from '../../configuration.js'
 import { loadMeme } from './files.js'
 import YoutubeDlWrap from 'youtube-dl-wrap'
 
-const testString = `[youtube] -rFW2Df5iRs: Downloading webpage
-[download] Destination: /home/deicidus/.ao/memes/Rise-Origa-Fatty Bean--rFW2Df5iRs.mp4
-[download] 100% of 17.37MiB in 06:4954KiB/s ETA 00:00:50`
-
-const testQuery = 'Destination: (.+)'
-const testRegex = new RegExp(testQuery, 'i')
-const testOutput = testRegex.exec(testString)
-console.log('\t\t\tTEST REGEX\noutput:', testOutput)
-
 const youtubeDlWrap = new YoutubeDlWrap(config.memes.videoCacher)
 
 export async function cache(url, taskId) {

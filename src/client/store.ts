@@ -905,24 +905,119 @@ class AoStore {
       return null
     }
     console.log('current track was valid')
-    const prioritiesIndex = card.priorities.indexOf(this.mediaPlayHead.taskId)
 
-    let found: Task
+    // Get the next card in a stack of cards that has a meme (todo: of video or audio type)
+    const getNextMemeIdFromCards = (stack, startIndex) => {
+      for (let i = startIndex - 1; i >= 0; i--) {
+        const meme = this.memeById.get(stack[i])
+        if (meme) {
+          return meme.memeId
+        }
+      }
+      return null
+      // console.log('meme type is ', meme.filetype)
+    }
+
+    type CardZone = 'priorities' | 'subTasks' | 'grid' | 'completed'
+
+    const findNextMemeInCard = (
+      card,
+      startZone: CardZone,
+      startY,
+      startX = null
+    ) => {
+      if (startZone === 'priorities') {
+        const result = getNextMemeIdFromCards(card.priorities, startY)
+        if (result) {
+          console.log('found next meme in priorities!')
+          return result
+        }
+      }
+      console.log('not found in priorities')
+      if (startZone === 'priorities' || startZone === 'grid') {
+        console.log('some grid action')
+        const rows = Object.values(card.grid.rows)
+        for (let i = startY; i >= 0; i++) {
+          if (rows[i]) {
+            const taskIds = Object.entries(rows[i])
+            for (let j = startX + 1; j < taskIds.length; j++) {
+              const meme = this.memeById.get(taskIds[j][1])
+              if (meme) {
+                console.log('found next meme in grid!')
+                return meme.memeId
+              }
+            }
+          }
+        }
+      }
+
+      if (
+        startZone === 'priorities' ||
+        startZone === 'grid' ||
+        startZone === 'subTasks'
+      ) {
+        const result = getNextMemeIdFromCards(card.subTasks, startY)
+        if (result) {
+          console.log('found next meme in subTasks!')
+          return result
+        }
+      }
+
+      // Only look in completed if the previous card was in completed (don't usually play completed)
+      if (startZone === 'completed') {
+        const result = getNextMemeIdFromCards(card.completed, startY)
+        if (result) {
+          console.log('found next meme in completed!')
+          return result
+        }
+      }
+
+      return null
+    }
+
+    const prioritiesIndex = card.priorities.indexOf(this.mediaPlayHead.taskId)
     if (prioritiesIndex >= 0) {
       console.log('found in priorities')
-      // get next card in priorities that has a meme attachment (of video or audio type)
-      for (let i = prioritiesIndex - 1; i >= 0; i--) {
-        const meme = this.memeById.get(card.priorities[i])
-        if (!meme) {
-          console.log(
-            'nextCardWithMediaAttachment: missing card in priorities '
-          )
-          continue
-        }
-        return meme.memeId
-        console.log('meme type is ', meme.filetype)
-      }
+      return findNextMemeInCard(card, 'priorities', prioritiesIndex)
     }
+
+    let result
+    if (
+      card.grid &&
+      card.grid.hasOwnProperty('rows') &&
+      Object.keys('card.grid.rows').length >= 1
+    ) {
+      Object.entries(card.grid.rows).forEach(([y, row]) => {
+        if (result) {
+          return
+        }
+        Object.entries(row).forEach(([x, cell]) => {
+          if (result) {
+            return
+          }
+          if (cell === this.mediaPlayHead.taskId) {
+            console.log('found in grid')
+            result = findNextMemeInCard(card, 'grid', y, x)
+          }
+        })
+      })
+    }
+    if (result) {
+      return result
+    }
+
+    const subTasksIndex = card.subTasks.indexOf(this.mediaPlayHead.taskId)
+    if (subTasksIndex >= 0) {
+      console.log('found in subTasks')
+      return findNextMemeInCard(card, 'subTasks', subTasksIndex)
+    }
+
+    const completedIndex = card.completed.indexOf(this.mediaPlayHead.taskId)
+    if (completedIndex >= 0) {
+      console.log('found in completed')
+      return findNextMemeInCard(card, 'completed', completedIndex)
+    }
+
     return null
   }
 
