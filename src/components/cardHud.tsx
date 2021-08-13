@@ -44,11 +44,16 @@ interface CardHudProps {
 	inId?: string
 }
 
+interface State {
+	clicked?: boolean
+}
+
 @observer
-export default class CardHud extends React.Component<CardHudProps> {
+export default class CardHud extends React.Component<CardHudProps, State> {
 	constructor(props) {
 		super(props)
 		this.addGrid = this.addGrid.bind(this)
+		this.state = {}
 	}
 
 	addGrid() {
@@ -215,11 +220,15 @@ export default class CardHud extends React.Component<CardHudProps> {
 
 				const mediaUrlDetected = true
 				const cacheButton = (
-					<div
+					<button
 						className="cache menu action"
-						onClick={() => api.cacheMeme(this.props.taskId)}>
+						onClick={() => {
+							this.setState({ clicked: true })
+							api.cacheMeme(this.props.taskId)
+						}}
+						disabled={this.state.clicked}>
 						Cache Media
-					</div>
+					</button>
 				)
 				const showCacheButton = config.memes.dir && config.memes.videoCacher
 
