@@ -1232,7 +1232,7 @@ textarea {
     // deck popup
     #deck {
       .actionCircle {
-        bottom: 0.85em;
+        bottom: 0.5em;
         left: calc(100% + 2.5em);
         width: 3.5em;
         height: 3.5em;
@@ -2465,6 +2465,10 @@ textarea {
       audio {
         height: 100%;
         margin: 1em 0;
+        max-width: 100%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
 

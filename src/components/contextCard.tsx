@@ -665,7 +665,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                 <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
               )}
               {member && <AoMemberIcon memberId={taskId} />}
-              <AoAttachment taskId={taskId} />
+              <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content)}
             </div>
             {this.state.showPriorities ? (
@@ -701,7 +701,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div className="content">
               <AoMission taskId={taskId} hudStyle="face before" />
               {member && <AoMemberIcon memberId={taskId} />}
-              <AoAttachment taskId={taskId} />
+              <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content)}
               {card.priorities && card.priorities.length >= 1 ? (
                 <>
@@ -794,7 +794,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     <div className="content">
                       <AoMission taskId={taskId} hudStyle="full before" />
                       {member && <AoMemberIcon memberId={taskId} />}
-                      <AoAttachment taskId={taskId} />
+                      <AoAttachment taskId={taskId} inId={this.props.inId} />
                       {this.renderCardContent(content)}
                     </div>
                   )
@@ -978,7 +978,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <AoCardHud taskId={taskId} hudStyle="mini before" />
             <div className="content">
               {member && <AoMemberIcon memberId={taskId} />}
-              <AoAttachment taskId={taskId} />
+              <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content, true)}
             </div>
             <AoCardHud taskId={taskId} hudStyle="mini after" />

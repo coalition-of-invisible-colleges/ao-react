@@ -14,6 +14,7 @@ async function fetchMeme(hash) {
 
 interface Props {
   taskId: string
+  inId?: string
   onNextTrack?: (taskId: string) => void
 }
 
@@ -44,10 +45,36 @@ export default class AoAttachment extends React.Component<Props, State> {
     if (this.props.taskId !== prevProps.taskId) {
       this.loadMeme()
     }
+    const taskId = this.props.taskId
+    const inId = this.props.inId
     if (this.audioRef.current) {
-      this.audioRef.current.addEventListener('ended', function () {
-        console.log('track finished playing')
-      })
+      if (this.props.inId) {
+        this.audioRef.current.addEventListener('play', function () {
+          console.log('track started playing: ', taskId)
+          aoStore.startedPlaying(inId, taskId)
+        })
+
+        this.audioRef.current.addEventListener('ended', function () {
+          console.log('track finished playing. this taskId is ', taskId)
+          const nextTaskId = aoStore.nextCardWithMediaAttachment
+          console.log('next taskId is', nextTaskId)
+          if (nextTaskId) {
+            const nextCard = aoStore.hashMap.get(nextTaskId)
+            if (nextCard) {
+              console.log('next track is', nextCard.name)
+              const nextElement: HTMLMediaElement = document.getElementById(
+                'playable-' + nextTaskId
+              ) as HTMLMediaElement
+              console.log('nextElement is', nextElement)
+              if (!nextElement) {
+                // advance play head and try again
+              } else {
+                nextElement.play() //dispatchEvent(new Event('play'))
+              }
+            }
+          }
+        })
+      }
     }
   }
 
@@ -87,9 +114,26 @@ export default class AoAttachment extends React.Component<Props, State> {
     }
 
     if (this.state.fileType.mime.includes('audio')) {
-      return <audio src={this.state.data} ref={this.audioRef} controls />
+      return (
+        <div className="attachment">
+          <audio
+            src={this.state.data}
+            ref={this.audioRef}
+            id={'playable-' + this.props.taskId}
+            controls
+          />
+        </div>
+      )
     } else if (this.state.fileType.mime.includes('video')) {
-      return <video src={this.state.data} controls />
+      return (
+        <div className="attachment">
+          <video
+            src={this.state.data}
+            id={'playable-' + this.props.taskId}
+            controls
+          />
+        </div>
+      )
     } else {
       return (
         <div className="attachment">

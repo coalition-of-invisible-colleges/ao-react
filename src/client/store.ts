@@ -308,8 +308,8 @@ class AoStore {
   @observable draft: string = ''
   @observable dabbed: boolean = false
   @observable globalRedirect?: string
-
   @observable memberDeckSize?: number
+  @observable mediaPlayHead: { inId: string; taskId: string }
   bookmarksTaskId?: string
 
   constructor() {
@@ -895,6 +895,37 @@ class AoStore {
     return topCards
   }
 
+  @computed get nextCardWithMediaAttachment(): string {
+    console.log('recomputing nextCardWithMediaAttachment')
+    if (!this.mediaPlayHead.inId || !this.mediaPlayHead.taskId) {
+      return null
+    }
+    const card = this.hashMap.get(this.mediaPlayHead.inId)
+    if (!card) {
+      return null
+    }
+    console.log('current track was valid')
+    const prioritiesIndex = card.priorities.indexOf(this.mediaPlayHead.taskId)
+
+    let found: Task
+    if (prioritiesIndex >= 0) {
+      console.log('found in priorities')
+      // get next card in priorities that has a meme attachment (of video or audio type)
+      for (let i = prioritiesIndex - 1; i >= 0; i--) {
+        const meme = this.memeById.get(card.priorities[i])
+        if (!meme) {
+          console.log(
+            'nextCardWithMediaAttachment: missing card in priorities '
+          )
+          continue
+        }
+        return meme.memeId
+        console.log('meme type is ', meme.filetype)
+      }
+    }
+    return null
+  }
+
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -1073,6 +1104,11 @@ class AoStore {
 
   @action.bound setSocketState(newState) {
     this.state.socketState = newState
+  }
+
+  @action.bound
+  startedPlaying(inId, taskId) {
+    this.mediaPlayHead = { inId, taskId }
   }
 }
 const aoStore = new AoStore()

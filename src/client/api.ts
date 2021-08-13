@@ -1197,6 +1197,20 @@ class AoApi {
       })
   }
 
+  async cacheMeme(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'meme-cached',
+      taskId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   logout() {
     aoStore.resetState()
     window.localStorage.clear()

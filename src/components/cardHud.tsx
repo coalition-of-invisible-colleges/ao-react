@@ -212,6 +212,14 @@ export default class CardHud extends React.Component<CardHudProps> {
 					!grid.hasOwnProperty('height') ||
 					!grid.hasOwnProperty('width')
 
+				const mediaUrlDetected = true
+				const cacheButton = (
+					<div
+						className="cache menu action"
+						onClick={() => api.cacheMeme(this.props.taskId)}>
+						Cache Media
+					</div>
+				)
 				return (
 					<div className="hud menu">
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
@@ -230,6 +238,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 						{card.guild && card.guild.length >= 1 && (
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						)}
+						{cacheButton}
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 						<AoPalette taskId={taskId} />

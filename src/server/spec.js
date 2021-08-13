@@ -9,6 +9,8 @@ import { postEvent } from './connector.js'
 import lightning from './lightning.js'
 import { sendNotification } from './signal.js'
 import { createHash } from '../crypto.js'
+import getUrls from 'get-urls'
+import { cache } from './cache.js'
 
 const router = express.Router()
 
@@ -529,7 +531,25 @@ router.post('/events', (req, res, next) => {
     //       resCallback
     //     )
     //   } else sendErrorStatus()
+    case 'meme-cached':
+      console.log('meme-cached')
+      if (validators.isTaskId(req.body.taskId, errRes)) {
+        const card = state.serverState.tasks.find(
+          task => task.taskId === req.body.taskId
+        )
+        if (card) {
+          console.log('found card: ', card.name)
 
+          const urls = Array.from(getUrls(card.name))
+          console.log('Found Urls: ', urls)
+          if (urls.length >= 1) {
+            cache(urls[0], req.body.taskId)
+          } else sendErrorStatus()
+        } else {
+          sendErrorStatus()
+        }
+      } else sendErrorStatus()
+      break
     case 'session-killed':
       if (validators.isSession(req.body.session, errRes)) {
         events.trigger(eventType, req.body.session, resCallback)
@@ -554,23 +574,8 @@ router.post('/events', (req, res, next) => {
       } else sendErrorStatus()
       break
     case 'task-created':
-      function taskCreated(name, color, deck, inId, prioritized, callback) {
-        if (!isExist) {
-          let newEvent = {
-            type: 'task-created',
-            taskId: v1(),
-            lastClaimed: Date.now(),
-            name,
-            color,
-            deck,
-            hash,
-            inId,
-            prioritized,
-          }
-          insertEvent(newEvent, callback)
-        }
-      }
-
+      const hash = createHash(req.body.name)
+      const isExist = state.serverState.tasks.some(t => t.hash === hash)
       if (
         validators.isNotes(req.body.name, errRes) &&
         !validators.taskNameExists(req.body.name, errRes) &&
@@ -580,9 +585,6 @@ router.post('/events', (req, res, next) => {
           validators.isTaskId(req.body.inId, errRes)) &&
         validators.isBool(req.body.prioritized, errRes)
       ) {
-        let hash = createHash(req.body.name)
-        const isExist = state.serverState.tasks.some(t => t.hash === hash)
-
         if (!isExist) {
           events.trigger(
             eventType,

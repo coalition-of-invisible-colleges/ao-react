@@ -22,18 +22,22 @@ export function scanMemes() {
 		files.forEach(filename => {
 			// console.log(filename)
 			const filepath = path.join(memeFolder, filename)
-			fs.readFile(filepath, (err, data) => {
-				if (err) {
-					console.log('Directory or other error-causing file found, ignoring')
-					return
-				}
-				addMeme(filename, filepath, data)
-			})
+			loadMeme(filename, filepath)
 		})
 	})
 }
 
-export function addMeme(name, path, data = null) {
+export function loadMeme(name, path, taskId = null) {
+	fs.readFile(path, (err, data) => {
+		if (err) {
+			console.log('Directory or other error-causing file found, ignoring')
+			return
+		}
+		addMeme(name, path, data, taskId)
+	})
+}
+
+export function addMeme(name, path, data = null, taskId = null) {
 	if (!data) {
 		fs.readFile(path, (err, data) => {
 			if (err) {
@@ -59,7 +63,7 @@ export function addMeme(name, path, data = null) {
 	if (!foundMeme) {
 		events.trigger(
 			'meme-added',
-			{ taskId: v1(), filename: name, hash, filetype },
+			{ taskId: taskId || v1(), filename: name, hash, filetype },
 			(err, event) => {
 				console.log(
 					'\n\n\nmeme-added callback\n\nerr: ',

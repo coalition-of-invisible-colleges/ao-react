@@ -41,6 +41,7 @@ function startDctrlAo() {
       link()
       scanMemes()
       todo()
+      cleanup()
       if (config.clightning.enable) {
         lightning.recordEveryInvoice(state.serverState.cash.pay_index)
         lightning.watchOnChain()

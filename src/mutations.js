@@ -528,7 +528,9 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'meme-added':
-      tasks.push(blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp))
+      if (!tasks.some(t => t.taskId === ev.taskId)) {
+        tasks.push(blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp))
+      }
       break
     case 'task-created':
       tasks.push(
