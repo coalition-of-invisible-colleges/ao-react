@@ -2470,6 +2470,10 @@ textarea {
         left: 50%;
         transform: translateX(-50%);
       }
+
+      .mini .attachment {
+        margin: 0;
+      }
     }
 
     // the name of the attached file, after the attachment
@@ -3117,6 +3121,17 @@ textarea {
       &:hover {
         background-color: rgba(255, 0, 0, 0.8);
       }
+    }
+
+    // Tighten layout on paragraph on mini style card
+    .mini p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .mini .attachment img {
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
 }

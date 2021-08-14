@@ -14,7 +14,7 @@ interface UnreadProps {
 }
 
 @observer
-export default class AoUnread extends React.PureComponent<UnreadProps> {
+export default class AoUnread extends React.Component<UnreadProps> {
   pendingPromise = undefined
 
   constructor(props: UnreadProps) {
@@ -54,30 +54,7 @@ export default class AoUnread extends React.PureComponent<UnreadProps> {
       return
     }
 
-    if (this.pendingPromise !== undefined) {
-      return
-    }
-
-    this.pendingPromise = cancelablePromise(delay(2000))
-    return this.pendingPromise.promise
-      .then(() => {
-        if (
-          !card.seen ||
-          (card.seen &&
-            !card.seen.some(s => s.memberId === aoStore.member.memberId))
-        ) {
-          api.markSeen(taskId)
-        }
-        this.clearPendingPromise()
-      })
-      .catch(errorInfo => {
-        // rethrow the error if the promise wasn't
-        // rejected because of a cancelation
-        this.clearPendingPromise()
-        if (!errorInfo.isCanceled) {
-          throw errorInfo.error
-        }
-      })
+    api.markSeen(taskId)
   }
 
   @computed
@@ -109,7 +86,7 @@ export default class AoUnread extends React.PureComponent<UnreadProps> {
         : null
     const renderedTooltip = (
       <React.Fragment>
-        <div>{cardAge ? `created {cardAge}` : 'changed'}</div>
+        <div>{cardAge ? `created ${cardAge}` : 'changed'}</div>
         <div>
           <small>tap to mark seen</small>
         </div>

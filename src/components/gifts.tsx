@@ -266,7 +266,7 @@ export default class AoGifts extends React.PureComponent<{}, State> {
     const renderedBadge = this.myGifts.length >= 1 && (
       <React.Fragment>{this.myGifts.length}</React.Fragment>
     )
-    const percentChanged = Math.min(Math.floor(this.allChanges.length / 30), 10)
+    const percentChanged = Math.min(Math.floor(this.allChanges.length / 10), 10)
     const buttonClass = 'red' + percentChanged.toString()
 
     const hasGifts = this.myGifts.length >= 1

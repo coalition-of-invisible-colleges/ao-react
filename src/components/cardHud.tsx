@@ -231,6 +231,9 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					</button>
 				)
 				const showCacheButton = config.memes.dir && config.memes.videoCacher
+				const parentCard = this.props.inId
+					? aoStore.hashMap.get(this.props.inId)
+					: null
 
 				return (
 					<div className="hud menu">
@@ -243,11 +246,8 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 								+grid
 							</div>
 						)}
-						{((card.guild && card.guild.length >= 1) ||
-							card.claimInterval > 0) && (
-							<AoInterval taskId={taskId} hudStyle={hudStyle} />
-						)}
-						{card.guild && card.guild.length >= 1 && (
+						<AoInterval taskId={taskId} hudStyle={hudStyle} />
+						{parentCard && parentCard.guild && parentCard.guild.length >= 1 && (
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						)}
 						{showCacheButton && cacheButton}
