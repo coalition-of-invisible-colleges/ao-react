@@ -60,6 +60,10 @@ const AoGridRowObserver = observer(
       }
 
       const card = aoStore.hashMap.get(tId)
+      if (!card) {
+        console.log('missing card in grid: ', tId)
+        continue
+      }
       render.push(
         <AoDropZone
           taskId={tId}
@@ -139,6 +143,10 @@ const AoGridRow: Function = (props: {
     }
 
     const card = aoStore.hashMap.get(tId)
+    if (!card) {
+      console.log('missing card in grid row: ', tId)
+      continue
+    }
     render.push(
       <AoDropZone
         taskId={tId}
