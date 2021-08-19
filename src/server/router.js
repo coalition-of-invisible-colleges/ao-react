@@ -61,7 +61,7 @@ export default function applyRouter(app) {
 
   app.post('/state', (req, res) => {
     // console.log(req);
-    // console.log("AO: server/router.js: app post /state")
+    // console.log("AO: server/router.js: app post /state", {"req": util.inspect(req)} )
 
     debugger
 
