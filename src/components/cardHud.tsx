@@ -247,9 +247,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							</div>
 						)}
 						<AoInterval taskId={taskId} hudStyle={hudStyle} />
-						{parentCard && parentCard.guild && parentCard.guild.length >= 1 && (
-							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
-						)}
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						{showCacheButton && cacheButton}
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
