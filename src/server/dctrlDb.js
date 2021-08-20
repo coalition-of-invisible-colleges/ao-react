@@ -3,6 +3,7 @@ import _ from 'lodash'
 import v1 from 'uuid'
 import dbengine from 'better-sqlite3'
 import { createHash } from '../crypto.js'
+import { blankCard } from '../cards'
 
 const preparedStmts = {}
 
@@ -42,18 +43,28 @@ function initializeSqlite(cb) {
   if (err) {
     cb(err, conn)
   } else {
+    const firstMemberId = v1()
     insertEvent({
       type: 'member-created',
       name: 'dctrl',
       fob: '0000000000',
       secret: createHash('dctrl'), // init user-password is dctrl
-      memberId: v1(),
+      memberId: firstMemberId,
       address: '2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu',
       active: 1,
       balance: 0,
       badges: [],
       info: {},
     })
+    let blankCardEvent = blankCard(
+      v1(),
+      'community hub',
+      'yellow',
+      Date.now(),
+      [firstMemberId]
+    )
+    blankCardEvent.type = 'task-created'
+    insertEvent(blankCardEvent)
     startFeed()
     cb(null, conn)
   }

@@ -619,6 +619,7 @@ class AoStore {
   @computed get cardByName(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
+      if (!t || !t.name) return
       hashMap.set(t.name.toLowerCase(), t)
     })
     this.allGuilds.forEach(t => {
@@ -666,18 +667,19 @@ class AoStore {
 
     this.getTaskByName_async('community hub', communityHubCard => {
       if (!communityHubCard) {
+        callback(null)
         // console.log("AO: client/store.ts: creating community hub card on server")
 
-        api.createCard('community hub', true).then(result => {
-          const newTaskId = JSON.parse(result.text).event.taskId
+        // api.createCard('community hub', true).then(result => {
+        //   const newTaskId = JSON.parse(result.text).event.taskId
 
-          // console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
+        //   // console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
 
-          // aoStore.setCurrentCard(newTaskId)
-          callback(newTaskId)
-          // setHubId(newTaskId)
-          // initialStateComplete();
-        })
+        //   // aoStore.setCurrentCard(newTaskId)
+        //   callback(newTaskId)
+        //   // setHubId(newTaskId)
+        //   // initialStateComplete();
+        // })
       } else {
         // console.log("AO: client/store.ts: community hub card found in client state: ", { "taskId": communityHubCard.taskId });
 
@@ -816,7 +818,11 @@ class AoStore {
   @computed get allEvents(): Task[] {
     return aoStore.state.tasks
       .filter(task => {
-        return task.book.hasOwnProperty('startTs') && task.book.startTs > 0
+        return (
+          task.book &&
+          task.book.hasOwnProperty('startTs') &&
+          task.book.startTs > 0
+        )
       })
       .sort((a, b) => {
         return b.book.startTs - a.book.startTs

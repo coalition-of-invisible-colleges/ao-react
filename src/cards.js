@@ -1,11 +1,12 @@
 import _ from 'lodash'
 import { isString } from './calculations.js'
+import v1 from 'uuid'
 
 // With this set to 1, actions will occur immediately, as if they were not potential-based actions
 export const POTENTIALS_TO_EXECUTE = 1
 
 export function blankCard(
-	taskId,
+	taskId = null,
 	name,
 	color,
 	created,
@@ -14,8 +15,9 @@ export function blankCard(
 	height = undefined,
 	width = undefined
 ) {
+	const newTaskId = taskId === null ? v1() : taskId
 	let newCard = {
-		taskId,
+		taskId: newTaskId,
 		color,
 		deck,
 		name: typeof name !== 'string' ? 'invalid filename' : name.trim(),

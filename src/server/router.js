@@ -96,12 +96,21 @@ export default function applyRouter(app) {
     dataPackageToSendToClient.stateToSend = stateToSend
 
     let bookmarksTaskId
+    let reqOwnerName
+    state.pubState.members.some(member => {
+      if (member.memberId === reqOwner) {
+        reqOwnerName = member.name
+        return true
+      }
+    })
+    console.log('reqOwnerName is', reqOwnerName)
     state.pubState.tasks.forEach(taskItem => {
       if (taskItem.deck && taskItem.deck.indexOf(reqOwner) !== -1)
         memberDeckSize++
 
-      if (taskItem.name === reqOwner + '-bookmarks') {
+      if (taskItem.name === reqOwnerName + '-bookmarks') {
         bookmarksTaskId = taskItem.taskId
+        console.log('bookmarksTaskId is', bookmarksTaskId)
         stateToSend.tasks.push(taskItem)
       }
     })

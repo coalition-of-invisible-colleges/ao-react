@@ -33,47 +33,11 @@ export default class AoDock extends React.Component<{}, State> {
 
   executeOnUnmount_list = []
   componentDidMount() {
-    const dockCardName = aoStore.member.memberId + '-bookmarks'
+    const dockCardName = aoStore.member.name + '-bookmarks'
     // let myBookmarks =
     aoStore.getTaskByName_async(dockCardName, myBookmarks => {
-      if (!myBookmarks) {
-        api
-          .createCard(dockCardName)
-          .then(res => {
-            const taskId = JSON.parse(res.text).event.taskId
-            return api.addGridToCard(taskId, 1, 6)
-          })
-          .then(res => {
-            const taskId = JSON.parse(res.text).event.taskId
-            return api.pinCardToGrid(0, 0, 'drop bookmarks here', taskId)
-          })
-          .then(res => {
-            const taskId = JSON.parse(res.text).event.taskId
-            this.setState({ bookmarksTaskId: taskId })
-          })
-      } else if (!myBookmarks.hasOwnProperty('grid')) {
-        api
-          .addGridToCard(myBookmarks.taskId, 1, 6)
-          .then(() => {
-            return api.pinCardToGrid(
-              0,
-              0,
-              'drop bookmarks here',
-              myBookmarks.taskId
-            )
-          })
-          .then(res => {
-            const taskId = JSON.parse(res.text).event.taskId
-            this.setState({ bookmarksTaskId: taskId })
-          })
-      } else if (!_.has(myBookmarks, 'grid.rows.0')) {
-        api
-          .pinCardToGrid(0, 0, 'drop bookmarks here', myBookmarks.taskId)
-          .then(res => {
-            const taskId = JSON.parse(res.text).event.taskId
-            this.setState({ bookmarksTaskId: taskId })
-          })
-      } else {
+      console.log('myBookmarks is', myBookmarks)
+      if (myBookmarks) {
         this.setState({ bookmarksTaskId: myBookmarks.taskId })
       }
     })
@@ -114,8 +78,19 @@ export default class AoDock extends React.Component<{}, State> {
     // console.log("AO: components/dock.tsx: AoDock: render", {"props": this.props, "state": this.state})
 
     const card = aoStore.hashMap.get(this.state.bookmarksTaskId)
+    if (!card) {
+      return null
+    }
+    console.log(
+      'loaded dock card is ',
+      JSON.stringify(card.grid),
+      'and has is ',
+      _.has(card, 'grid.rows.0')
+    )
+    const hasBookmarksCard =
+      card && _.has(card, 'grid.rows') && card?.grid?.height >= 1
 
-    if (!card || !_.has(card, 'grid.rows.0')) {
+    if (!hasBookmarksCard) {
       return null
     }
     return (
