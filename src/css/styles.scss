@@ -2274,15 +2274,21 @@ textarea {
     }
 
     // Start Tour button at top left of screen before you've take the tour once
-    #hud > .tour {
+    // Becomes the Manual button after you take the tour
+    #hud > .tour,
+    #hud .manual {
       position: fixed;
       bottom: 0.625em;
       left: 5em;
-      animation: rainbow 4s linear 0s infinite;
       border: 0.25em solid;
       font-size: 1.25em;
       font-weight: bold;
       background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    // Rainbow animation effect on the to
+    #hud > .tour {
+      animation: rainbow 4s linear 0s infinite;
     }
 
     @keyframes rainbow {
@@ -3129,9 +3135,119 @@ textarea {
       margin-bottom: 0;
     }
 
+    // Remove space above image attachments on grid cards
     .mini .attachment img {
       margin-top: 0;
       margin-bottom: 0;
+    }
+
+    // Modal dialog containing the hardcoded (but glossed) AO user manual
+    #theManual {
+      background-color: rgba(5, 0, 10, 0.9);
+      border-radius: 1em;
+      height: 86vh;
+      width: -miz-fit-content;
+      width: fit-content;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 3vh;
+      text-align: left;
+      border: 0.25em solid rgba(255, 255, 255, 0.14);
+      padding: 1em;
+      font-family: 'Arial';
+
+      h1,
+      h2,
+      h3 {
+        font-size: 1.35em;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: -moz-fit-content;
+        width: fit-content;
+        margin-top: 0.5em;
+      }
+
+      h2 {
+        font-size: 1.35em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+        margin-bottom: 0;
+        margin-top: 1em;
+      }
+
+      .browser {
+        display: flex;
+        max-height: calc(100% - 3em);
+        margin-bottom: 1em;
+
+        .topics,
+        .topicContent {
+          font-size: 0.9em;
+          background-color: white;
+          color: black;
+          border-radius: 0.25em;
+          overflow-y: auto;
+        }
+
+        .topics {
+          flex-basis: 30%;
+          margin: 0;
+          padding: 0.5em 0;
+          min-width: 22vw;
+
+          li {
+            color: black;
+            cursor: pointer;
+            list-style-type: none;
+            line-height: 2.5em;
+            padding-left: 1em;
+            position: relative;
+
+            .triangle {
+              color: black;
+              position: absolute;
+              right: 0.5em;
+              top: 0;
+            }
+
+            &.selected {
+              color: white;
+              background-color: rgba(0, 0, 0, 0.8);
+
+              & > .triangle {
+                color: white;
+              }
+            }
+          }
+        }
+
+        .topicContent {
+          flex-basis: calc(70% - 2.5em);
+          padding: 1em;
+          min-width: 46vw;
+          max-width: 40em;
+          margin-left: 0.5em;
+        }
+
+        .subTopic {
+          padding-left: 2em;
+          background-color: rgba(0, 0, 0, 0.15);
+          max-height: 0;
+          overflow-y: hidden;
+          -webkit-transition: max-height 0.75s linear;
+          -moz-transition: max-height 0.75s linear;
+          -o-transition: max-height 0.75s linear;
+          transition: max-height 0.75s linear;
+
+          &.show {
+            max-height: 200em;
+          }
+        }
+      }
     }
   }
 }

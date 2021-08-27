@@ -21,6 +21,7 @@ import AoFob from './fob'
 import AoVolume from './volume'
 import AoReactivator from './reactivator'
 import AoTour from './tour'
+import AoManual from './manual'
 import AoPopupPanel from './popupPanel'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
@@ -129,7 +130,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           </Tippy>
         </div>
         <AoHub />
-        {!aoStore.member.tutorial && <AoTour />}
+        {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
 
         <AoControls />
 
