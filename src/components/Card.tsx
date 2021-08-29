@@ -144,12 +144,12 @@ class CurrentContextCard {
 const currentContextCard = new CurrentContextCard()
 const currentCardReaction = reaction(
   () => {
-    console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
+    // console.log("AO: client/Card.tsx: currentCardReaction: testPhase: aoStore.currentCard: "+ aoStore.currentCard)
 
     return aoStore.currentCard
   },
   currentCard => {
-    console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
+    // console.log("AO: client/Card.tsx: currentCardReaction: reactionPhase: aoStore.currentCard: "+ currentCard)
     currentContextCard.setCardItem(currentCard)
   }
 )
@@ -176,18 +176,15 @@ const PageTitleView = observer(() => {
   )
 })
 
-const ContextCardView = 
-    observer
-    ( () => {
-        if (currentContextCard.cardItem === null) {
-          // console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
-          return <AoDrawPile />
-        } else {
-          // console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
-          return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
-        }
-      }
-    )
+const ContextCardView = observer(() => {
+  if (currentContextCard.cardItem === null) {
+    // console.log("AO: client/Card.tsx: ContextCardView: render: drawPile: "+ currentContextCard.cardItem)
+    return <AoDrawPile />
+  } else {
+    // console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
+    return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
+  }
+})
 
 // const CardTitleView = observer( ({currentContextCard}) => <Helmet><title>{currentContextCard.cardItem.name}</title></Helmet> );
 // ReactDOM.render(<PageTitleView currentContextCard={currentContextCard} />, document.getElementById("root"));
@@ -287,16 +284,15 @@ export default function AoCard(props) {
     // else
     {
       let targetTaskId = props.match.params.taskId
-      console.log("@: components/Card.tsx: rendering task: ", { targetTaskId } )
+      console.log('@: components/Card.tsx: rendering task: ', { targetTaskId })
 
-      aoStore.getTaskById_async
-          ( targetTaskId,
-            () => 
-            { 
-              console.log("@: components/Card.tsx: task loaded from server: ", { targetTaskId, "clientSideData": aoStore.hashMap.get(targetTaskId) } )
-              aoStore.setCurrentCard(targetTaskId)
-            }
-          )
+      aoStore.getTaskById_async(targetTaskId, () => {
+        console.log('@: components/Card.tsx: task loaded from server: ', {
+          targetTaskId,
+          clientSideData: aoStore.hashMap.get(targetTaskId),
+        })
+        aoStore.setCurrentCard(targetTaskId)
+      })
     }
   }
 

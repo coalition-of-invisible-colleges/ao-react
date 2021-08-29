@@ -24,11 +24,8 @@ const serverGlossary = { ...defaultSemantics.glossary, ...loadedGlossary }
 
 function pluralize(word) {
 	let plural = word
-	console.log('pluralize')
 	if (Array.isArray(plural)) {
-		console.log('word is array')
 		plural = plural[1]
-		console.log('plural was an array but is now ', plural)
 	} else {
 		if (plural[plural.length - 1] === 's') {
 			plural = plural + 'es'
@@ -41,9 +38,7 @@ function pluralize(word) {
 
 export function gloss(wordOrSentence, plural = false) {
 	let result
-	console.log('wordOrSentence is ', wordOrSentence)
 	if (wordOrSentence.indexOf(' ') < 0) {
-		console.log('tripped 1')
 		const word = wordOrSentence
 
 		result = word
@@ -56,13 +51,11 @@ export function gloss(wordOrSentence, plural = false) {
 				)
 			}
 		)
-		console.log(word, 'isPlural is', pluralEntry)
 		const singularEntry = Object.entries(serverGlossary).find(
 			([keyword, synonym]) =>
 				(Array.isArray(keyword) && keyword[0] === lowercase) ||
 				keyword === lowercase
 		)
-		console.log(word, 'isSingular is', singularEntry)
 		if (pluralEntry || singularEntry) {
 			result = pluralEntry ? pluralize(pluralEntry[1]) : singularEntry[1]
 			if (Array.isArray(result)) {
@@ -73,17 +66,13 @@ export function gloss(wordOrSentence, plural = false) {
 			}
 		}
 	} else {
-		console.log('tripped 2')
 		result = wordOrSentence
-		console.log('serverGlossary is', serverGlossary)
 		Object.entries(serverGlossary).forEach(([keyword, synonym]) => {
 			let pluralKeyword = pluralize(keyword)
 			let pluralSynonym = pluralize(synonym)
-			console.log('before replace. result is', result)
 
 			let regexp = new RegExp(pluralKeyword, 'gi')
 			result = result.replace(regexp, pluralSynonym)
-			console.log('after first replace. result is', result)
 			// if (result === firstReplace) {
 			regexp = new RegExp(keyword, 'gi')
 			const singularSynonym = Array.isArray(synonym) ? synonym[0] : synonym

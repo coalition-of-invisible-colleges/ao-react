@@ -303,7 +303,7 @@ export function findOrphans(count: number) {
 			return false
 		}
 
-		const dockCardName = aoStore.member.name + '-bookmarks'
+		const dockCardName = aoStore.member.memberId + '-bookmarks'
 		if (t.name === dockCardName) {
 			return false
 		}

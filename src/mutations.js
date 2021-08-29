@@ -482,7 +482,7 @@ function tasksMuts(tasks, ev) {
       tasks.push(
         blankCard(
           undefined,
-          ev.name + '-bookmarks',
+          ev.memberId + '-bookmarks',
           'blue',
           ev.timestamp,
           [ev.memberId],

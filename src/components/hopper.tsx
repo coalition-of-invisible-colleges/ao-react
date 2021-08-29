@@ -72,7 +72,7 @@ export default function AoHopper(props: {}): JSX.Element {
 	}, [])
 
 	function getBookmarkTaskIds(): Array<string> {
-		const dockCardName = aoStore.member.name + '-bookmarks'
+		const dockCardName = aoStore.member.memberId + '-bookmarks'
 		let myBookmarks = aoStore.cardByName.get(dockCardName)
 
 		if (!myBookmarks || !_.has(myBookmarks, 'grid.rows.0')) {

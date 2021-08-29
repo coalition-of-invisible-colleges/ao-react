@@ -11,7 +11,7 @@ The AO (ao-react project) is currently at version 0.7.0.
 
 This user manual is currently at version 0.7.0
 
-There are currently two bugs in this manual. The manual is customized for the language on each server, and this is done word replacement. This may lose some capital letters and replace some non-whole-words.`,
+There are currently two bugs in this manual. The manual is customized for the language on each server, and this is done with word replacement. This may lose some capital letters and replace some non-whole-words.`,
   Overview: {
     index: `The AO is a free software project and a lived practice of creating open-source software for a peer-to-peer community.`,
     "What's it For?": `There are many reasons you might set up an AO server. Here are some of the types of community projects the AO was specifically designed to support:
@@ -79,7 +79,7 @@ For content creators, the AO will make it easy to publish your content publicly 
     'Receiving cards':
       'Your inbox is located just under the Community Hub icon in the top-left corner of the screen.',
     'Bookmarking cards':
-      'You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen. This is just a normal grid on a reserved card that is named based on your account name. Therefore, if you change your account name, your bookmarks will also change. This is by design and in the future will make it easier to improve the bookmarks bar by allowing it to display locations besides your bookmarks.',
+      'You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen. This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).',
     'The Community Hub Card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
@@ -179,7 +179,7 @@ For content creators, the AO will make it easy to publish your content publicly 
     Security:
       'The AO has not been adequately secured, tested or vetted and is not secure. It is not recommended to use the AO for storing private information. However, the AO has been made with modern web technologies in a fairly standard way, so in theory it should be "secure by default" to most common attacks.',
   },
-  Developerment: {
+  Development: {
     index:
       'If you are a software developer, you can help improve the AO! Some AO developers volunteer, and others opt to claim bounties put up by hackerspaces who want to see the AO improved. Either way, we would realy appreciate your help! You can join us at ao.coalitionofinvisiblecolleges.org.',
     Roadmap: `Here is a roadmap of the next few versions of the AO:
@@ -194,6 +194,8 @@ For content creators, the AO will make it easy to publish your content publicly 
 * AO version 1.0, codename "Shrigma", will be complete
 
 * AO version 1.1 will add important convenience features such as the ability for end-users to export their cards for download, sound effects, and better theming.`,
+    'How to help':
+      'Please contact an existing developer to request an account at ao.coalitionofinvisiblecolleges.org, where ao-react development goals are currently being organized.',
   },
 }
 

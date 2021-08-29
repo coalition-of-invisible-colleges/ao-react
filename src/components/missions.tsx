@@ -35,8 +35,6 @@ export default class AoMissions extends React.Component<{}, State> {
       sort: 'hodls',
       loaded: false,
     }
-    console.log('this.changedMissions.length is', this.changedMissions.length)
-    console.log('missionstate is', this.state)
     this.filterBy = this.filterBy.bind(this)
     this.sortBy = this.sortBy.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)

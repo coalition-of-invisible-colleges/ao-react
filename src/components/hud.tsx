@@ -37,7 +37,7 @@ interface State {
 }
 
 @observer
-class MainMenu extends React.PureComponent<{}, State> {
+class MainMenu extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = { theme: aoStore.state.cash.theme }
@@ -130,7 +130,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           </Tippy>
         </div>
         <AoHub />
-        {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
+        {/*!aoStore.member.tutorial ? <AoTour /> : <AoManual />*/}
 
         <AoControls />
 

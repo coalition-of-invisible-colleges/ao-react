@@ -33,10 +33,10 @@ export default class AoDock extends React.Component<{}, State> {
 
   executeOnUnmount_list = []
   componentDidMount() {
-    const dockCardName = aoStore.member.name + '-bookmarks'
+    const dockCardName = aoStore.member.memberId + '-bookmarks'
     // let myBookmarks =
     aoStore.getTaskByName_async(dockCardName, myBookmarks => {
-      console.log('myBookmarks is', myBookmarks)
+      // console.log('myBookmarks is', myBookmarks)
       if (myBookmarks) {
         this.setState({ bookmarksTaskId: myBookmarks.taskId })
       }
@@ -81,12 +81,6 @@ export default class AoDock extends React.Component<{}, State> {
     if (!card) {
       return null
     }
-    console.log(
-      'loaded dock card is ',
-      JSON.stringify(card.grid),
-      'and has is ',
-      _.has(card, 'grid.rows.0')
-    )
     const hasBookmarksCard =
       card && _.has(card, 'grid.rows') && card?.grid?.height >= 1
 
