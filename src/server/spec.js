@@ -1097,8 +1097,8 @@ router.post('/events', (req, res, next) => {
 
     case 'grid-pin':
       if (
-        validators.isTaskId(req.body.inId) &&
-        validators.isTaskId(req.body.taskId) &&
+        validators.isTaskId(req.body.inId, errRes) &&
+        validators.isTaskId(req.body.taskId, errRes) &&
         Number.isInteger(req.body.x) &&
         req.body.x >= 0 &&
         Number.isInteger(req.body.y) &&
