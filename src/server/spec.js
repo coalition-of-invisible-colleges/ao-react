@@ -3,7 +3,7 @@ import v1 from 'uuid'
 import state from './state.js'
 import { buildResCallback } from './utils.js'
 import validators from './validators.js'
-import { blankCard } from '../cards.js'
+import { blankCard, blankGrid } from '../cards.js'
 import events from './events.js'
 import { postEvent } from './connector.js'
 import lightning from './lightning.js'
@@ -42,7 +42,7 @@ router.post('/events', (req, res, next) => {
     case 'ao-linked':
       if (
         validators.isAddress(req.body.address, errRes) &&
-        validators.isTaskId(req.body.taskId)
+        validators.isTaskId(req.body.taskId, errRes)
       ) {
         events.trigger(eventType, {
           address: req.body.address,
@@ -185,18 +185,37 @@ router.post('/events', (req, res, next) => {
         !validators.isMemberName(req.body.name, errRes)
       ) {
         const memberId = v1()
+        events.trigger(eventType, {
+          memberId,
+          fob: req.body.fob,
+          name: req.body.name,
+          secret: req.body.secret,
+          active: 1,
+          balance: 0,
+          badges: [],
+          info: {},
+          lastActivated: 7,
+        })
+        const newBookmarksTaskId = v1()
+        const newBookmarksName = memberId + '-bookmarks'
+        const newBookmarksHash = createHash(newBookmarksName)
+        events.trigger('task-created', {
+          taskId: newBookmarksTaskId,
+          lastClaimed: Date.now(),
+          name: newBookmarksName,
+          color: 'blue',
+          deck: [memberId],
+          hash: newBookmarksHash,
+          inId: null,
+          prioritized: false,
+          grid: false,
+        })
         events.trigger(
-          eventType,
+          'grid-added',
           {
-            memberId,
-            fob: req.body.fob,
-            name: req.body.name,
-            secret: req.body.secret,
-            active: 1,
-            balance: 0,
-            badges: [],
-            info: {},
-            lastActivated: 7,
+            taskId: newBookmarksTaskId,
+            height: 1,
+            width: 6,
           },
           resCallback
         )
@@ -1097,8 +1116,8 @@ router.post('/events', (req, res, next) => {
 
     case 'grid-pin':
       if (
-        validators.isTaskId(req.body.inId, errRes) &&
-        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.taskIdExists(req.body.inId, errRes) &&
+        validators.taskIdExists(req.body.taskId, errRes) &&
         Number.isInteger(req.body.x) &&
         req.body.x >= 0 &&
         Number.isInteger(req.body.y) &&
@@ -1120,7 +1139,7 @@ router.post('/events', (req, res, next) => {
       break
     case 'grid-unpin':
       if (
-        validators.isTaskId(req.body.inId) &&
+        validators.isTaskId(req.body.inId, errRes) &&
         Number.isInteger(req.body.x) &&
         req.body.x >= 0 &&
         Number.isInteger(req.body.y) &&

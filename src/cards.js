@@ -15,7 +15,7 @@ export function blankCard(
 	height = undefined,
 	width = undefined
 ) {
-	const newTaskId = taskId === null ? v1() : taskId
+	const newTaskId = !taskId ? v1() : taskId
 	let newCard = {
 		taskId: newTaskId,
 		color,

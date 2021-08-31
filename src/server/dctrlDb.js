@@ -44,6 +44,7 @@ function initializeSqlite(cb) {
     cb(err, conn)
   } else {
     const firstMemberId = v1()
+    const now = Date.now()
     insertEvent({
       type: 'member-created',
       name: 'dctrl',
@@ -56,13 +57,26 @@ function initializeSqlite(cb) {
       badges: [],
       info: {},
     })
-    let blankCardEvent = blankCard(
-      v1(),
-      'community hub',
-      'yellow',
-      Date.now(),
+    const bookmarksCardTaskId = v1()
+    let bookmarksCardEvent = blankCard(
+      bookmarksCardTaskId,
+      firstMemberId + '-bookmarks',
+      'blue',
+      now,
       [firstMemberId]
     )
+    bookmarksCardEvent.type = 'task-created'
+    insertEvent(bookmarksCardEvent)
+    insertEvent({
+      type: 'grid-added',
+      taskId: bookmarksCardTaskId,
+      height: 1,
+      width: 6,
+    })
+
+    let blankCardEvent = blankCard(v1(), 'community hub', 'yellow', now, [
+      firstMemberId,
+    ])
     blankCardEvent.type = 'task-created'
     insertEvent(blankCardEvent)
     startFeed()

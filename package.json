@@ -42,7 +42,6 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.0",
-    "@throneless/libsignal-service": "^1.2.1",
     "@tippyjs/react": "^4.0.2",
     "@types/lodash": "^4.14.149",
     "@types/socket.io": "^3.0.2",

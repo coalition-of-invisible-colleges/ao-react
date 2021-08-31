@@ -130,7 +130,6 @@ export default class AoHud extends React.Component<{}, HudState> {
           </Tippy>
         </div>
         <AoHub />
-        {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
 
         <AoControls />
 
@@ -139,6 +138,8 @@ export default class AoHud extends React.Component<{}, HudState> {
             return <AoDock />
           }}
         </Observer>
+        {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
+
         <AoGifts />
         <AoMissions />
 

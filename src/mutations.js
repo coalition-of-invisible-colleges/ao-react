@@ -479,18 +479,6 @@ function tasksMuts(tasks, ev) {
       break
     case 'member-created':
       tasks.push(blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp))
-      tasks.push(
-        blankCard(
-          undefined,
-          ev.memberId + '-bookmarks',
-          'blue',
-          ev.timestamp,
-          [ev.memberId],
-          undefined,
-          1,
-          6
-        )
-      )
       break
     case 'member-purged':
       // This is terribly redundant since the same potential builds up on the member.

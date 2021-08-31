@@ -1,4 +1,4 @@
-import Signal from '@throneless/libsignal-service'
+// import Signal from '@throneless/libsignal-service'
 import events from './events.js'
 import state from './state.js'
 const serverState = state.serverState
