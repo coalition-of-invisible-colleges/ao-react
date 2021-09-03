@@ -25,7 +25,7 @@ interface State {
 }
 
 @observer
-export default class AoGifts extends React.PureComponent<{}, State> {
+export default class AoGifts extends React.Component<{}, State> {
   private composeRef = React.createRef<AoCardComposer>()
 
   constructor(props) {
@@ -272,6 +272,8 @@ export default class AoGifts extends React.PureComponent<{}, State> {
     const hasGifts = this.myGifts.length >= 1
     const hasChanges = this.allChanges.length >= 1
     const hasSent = this.mySent.length >= 1
+
+    console.log('renderGifts length is ', this.myGifts.length)
     return (
       <div id="gifts">
         <AoPopupPanel
@@ -310,8 +312,8 @@ export default class AoGifts extends React.PureComponent<{}, State> {
                 </div>
               </React.Fragment>
             )}
-            {this.state.tab === 'inbox' ||
-              (this.state.tab === 'sent' && this.renderGiftsList)}
+            {(this.state.tab === 'inbox' || this.state.tab === 'sent') &&
+              this.renderGiftsList}
             {this.state.tab === 'changes' && this.renderedChanges}
             {(this.state.tab === 'inbox' && hasGifts) ||
               (this.state.tab === 'sent' && (

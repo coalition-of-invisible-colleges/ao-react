@@ -118,6 +118,14 @@ export default function applyRouter(app) {
       }
     })
 
+    let inboxTaskItems = []
+    state.pubState.tasks.forEach(taskItem => {
+      if (taskItem.passed.some(pass => pass[1] === req.reqOwner)) {
+        stateToSend.tasks.push(taskItem)
+        inboxTaskItems.push(taskItem)
+      }
+    })
+
     dataPackageToSendToClient.metaData = { memberDeckSize, bookmarksTaskId }
 
     // console.log(util.inspect(req))
