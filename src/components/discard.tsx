@@ -79,6 +79,23 @@ export default class AoDiscardZone extends React.Component {
 				aoStore.addToDiscardHistory([card])
 				api.dropCard(move.from.taskId)
 				break
+			case 'stash':
+				aoStore.addToDiscardHistory([card])
+				const guildMemberLevel = () => {
+					if (!card || !card.memberships || !card.memberships.length)
+						return null
+
+					let found = card.memberships.find(
+						membership => membership.memberId === aoStore.member.memberId
+					)
+
+					return found ? found.level : 0
+				}
+
+				if (guildMemberLevel() >= move.from.level) {
+					api.unstashCard(move.from.taskId, move.from.inId, move.from.level)
+				}
+				break
 		}
 	}
 

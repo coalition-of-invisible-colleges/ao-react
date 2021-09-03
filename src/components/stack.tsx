@@ -20,6 +20,7 @@ interface StackProps {
   onNewCard?: (string) => void
   onDrop?: (CardPlay) => void
   zone?: CardZone
+  stashLevel?: number
   noPopups?: boolean
   noFindOnPage?: boolean
   cardsBeforeFold?: number
@@ -159,6 +160,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           taskId={task.taskId}
           dragContext={{
             zone: this.props.zone ? this.props.zone : 'panel',
+            level:
+              this.props.zone === 'stash' ? this.props.stashLevel : undefined,
             inId: this.props.inId,
             y: i,
           }}
@@ -192,6 +195,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             taskId={task.taskId}
             dragContext={{
               zone: this.props.zone ? this.props.zone : 'panel',
+              level:
+                this.props.zone === 'stash' ? this.props.stashLevel : undefined,
               inId: this.props.inId,
               y: 0,
             }}

@@ -980,6 +980,27 @@ class AoApi {
       })
   }
 
+  async unstashCard(
+    taskId: string,
+    inId: string,
+    level: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-unstashed',
+      taskId: taskId,
+      inId: inId,
+      level: level,
+      blame: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async visitCard(taskId: string, inChat = false): Promise<request.Response> {
     const act = {
       type: 'task-visited',

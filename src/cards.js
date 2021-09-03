@@ -112,13 +112,47 @@ export function dropTask(task, memberId) {
 	task.deck = _.filter(task.deck, d => d !== memberId)
 }
 
-// Adds the given taskId to list of th card's parents (this is a cache)
+// Adds the given taskId to list of the card's parents (this is a cache)
 export function addParent(task, parentId) {
 	if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
 		task.parents = []
 	}
 	if (!task.parents.some(pId => pId === parentId)) {
 		task.parents.push(parentId)
+	}
+}
+
+// Removes the given taskId from the list of the card's parents
+export function removeParent(task, parentId) {
+	if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
+		return
+	}
+	let gridCells = []
+	let gridRows
+	if (task.grid && task.rows) {
+		gridRows = Object.entries(task.rows)
+		gridCells = [
+			...gridRows.map(([index, cells]) => {
+				return Object.values(cells)
+			}),
+		]
+	}
+
+	let stashItems = []
+	if (task.stash && Object.keys(task.stash) >= 1) {
+		stashitems = [...Object.values(task.stash)]
+	}
+
+	const allSubTasks = [
+		...task.priorities,
+		...task.subTasks,
+		...gridCells,
+		...task.completed,
+		...stashItems,
+	]
+
+	if (!allSubTasks.some(stId => stId === parentId)) {
+		task.parents = _.filter(task.parents, tId => tId !== parentId)
 	}
 }
 
@@ -187,6 +221,24 @@ export function stashTask(task, taskId, level) {
 	}
 	task.stash[level] = _.filter(task.stash[level], tId => tId !== taskId)
 	task.stash[level].push(taskId)
+}
+
+// Removes the given taskId from the given card's stash of the specified level
+export function unstashTask(task, taskId, level) {
+	if (
+		!_.has(task, 'stash') ||
+		!(
+			typeof task.stash === 'object' &&
+			task.stash !== null &&
+			!Array.isArray(task.stash)
+		)
+	) {
+		return
+	}
+	if (!_.has(task.stash, level)) {
+		return
+	}
+	task.stash[level] = _.filter(task.stash[level], tId => tId !== taskId)
 }
 
 // A potentials list is a list of signatures, each signature endorsing a specific task event-type

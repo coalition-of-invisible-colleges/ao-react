@@ -47,6 +47,7 @@ export type CardStyle =
 
 export interface DragContext {
   zone: CardZone
+  level?: number
   inId?: string
   x?: number
   y: number

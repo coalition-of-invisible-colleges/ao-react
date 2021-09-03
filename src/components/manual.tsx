@@ -211,7 +211,9 @@ export default function AoManual() {
   }
 
   const hideManual = event => {
-    event.stopPropagation()
+    if (event) {
+      event.stopPropagation()
+    }
     setShow(false)
   }
 
@@ -228,12 +230,12 @@ export default function AoManual() {
   }
 
   function selectSubTopic(newSubTopic) {
-    console.log('selectSubTopic st is ', newSubTopic)
+    // console.log('selectSubTopic st is ', newSubTopic)
     setSubTopic(newSubTopic)
   }
 
   function renderSubTopics(heading, subTopics) {
-    console.log('render subTopics is ', subTopics)
+    // console.log('render subTopics is ', subTopics)
     return Object.keys(subTopics)
       .filter(st => st !== 'index')
       .map(st => (

@@ -139,7 +139,7 @@ export default class AoChatroom extends React.Component<Props, State> {
           <div className="lilypad menu">
             <div onClick={addChatroom} className="action">
               <img src={Lilypad} />
-              add chatroom
+              +chatroom
             </div>
           </div>
         )

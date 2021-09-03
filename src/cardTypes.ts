@@ -24,6 +24,7 @@ export interface CardLocation {
 	taskId: string
 	inId: string
 	zone: CardZone
+	level?: number
 	coords: Coords
 }
 

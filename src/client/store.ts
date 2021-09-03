@@ -118,6 +118,7 @@ export interface Task {
   grid?: Grid
   avatars?: AvatarLocation[]
   showChatroom?: boolean
+  showStash?: boolean
   memberships: Membership[]
   stash: {}
   loadedFromServer?: boolean

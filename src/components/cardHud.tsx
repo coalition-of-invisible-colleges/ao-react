@@ -239,7 +239,10 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					<div className="hud menu">
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						{card.guild && card.guild.length >= 1 && (
-							<AoLilypad taskId={taskId} hudStyle={hudStyle} />
+							<React.Fragment>
+								<AoLilypad taskId={taskId} hudStyle={hudStyle} />
+								<AoStash taskId={taskId} hudStyle={hudStyle} />
+							</React.Fragment>
 						)}
 						{noGrid && (
 							<div className="gridMenu action" onClick={this.addGrid}>

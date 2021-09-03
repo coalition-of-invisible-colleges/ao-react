@@ -145,6 +145,10 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
+		let fromLevel: number = parseInt(
+			event.dataTransfer.getData('text/fromLevel'),
+			10
+		)
 		let fromCoords: Coords = {
 			x: parseInt(event.dataTransfer.getData('text/fromX'), 10),
 			y: parseInt(event.dataTransfer.getData('text/fromY'), 10),
@@ -153,6 +157,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			taskId: fromId,
 			inId: fromInId,
 			zone: fromZone,
+			level: fromLevel,
 			coords: fromCoords,
 		}
 
@@ -209,7 +214,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		if (this.props.zoneStyle === 'discard') {
 			return (
 				<div
-					className={'discard'}
+					className="discard"
 					onDragEnter={this.allowDrop}
 					onDragOver={this.continueDrop}
 					onDragLeave={this.hideDrop}

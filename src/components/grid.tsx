@@ -113,7 +113,7 @@ const AoGridRow: Function = (props: {
   selectGridSquare: (selection: Coords) => void
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
-  console.log('AoGridRow render()')
+  // console.log('AoGridRow render()')
 
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {

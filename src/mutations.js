@@ -15,11 +15,13 @@ import {
   grabTask,
   dropTask,
   addParent,
+  removeParent,
   filterFromSubpiles,
   clearSeenExcept,
   addSubTask,
   addPriority,
   stashTask,
+  unstashTask,
   addPotential,
   checkPotential,
   clearPotential,
@@ -762,11 +764,26 @@ function tasksMuts(tasks, ev) {
       const toStash = getTask(tasks, ev.taskId)
       if (toStash) {
         grabTask(toStash, ev.blame)
-        addParent(toStash, ev.taskId)
+        addParent(toStash, ev.inId)
 
         tasks.forEach(task => {
           if (task.taskId === ev.inId) {
             stashTask(task, ev.taskId, ev.level)
+          }
+        })
+      }
+      break
+    case 'task-unstashed':
+      // I think the spec is only run on event creation, not load from database,
+      // so make sure the task exists before linking to it from another card
+      const toUnstash = getTask(tasks, ev.taskId)
+      if (toUnstash) {
+        grabTask(toUnstash, ev.blame)
+
+        tasks.forEach(task => {
+          if (task.taskId === ev.inId) {
+            unstashTask(task, ev.taskId, ev.level)
+            removeParent(task, ev.inId)
           }
         })
       }
@@ -1094,7 +1111,7 @@ function tasksMuts(tasks, ev) {
           task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
         }
         if (task.taskId === ev.subTask) {
-          task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
+          removeParent(task, ev.taskId)
         }
       })
       break
@@ -1109,7 +1126,7 @@ function tasksMuts(tasks, ev) {
       })
       tasks.forEach(task => {
         if (updateParents.indexOf(task.taskId) >= 0) {
-          task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
+          removeParent(task, ev.taskId)
         }
       })
       break

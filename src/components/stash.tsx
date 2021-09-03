@@ -66,7 +66,7 @@ export default class AoStash extends React.Component<Props, State> {
 		const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
 
 		const myLevel = this.guildMemberLevel
-		let numLevel: number = level || Math.min(myLevel + 1, this.maxLevel)
+		let numLevel: number = level || this.state.tab
 		if (typeof numLevel === 'string') {
 			numLevel = parseInt(numLevel, 10)
 		}
@@ -106,6 +106,24 @@ export default class AoStash extends React.Component<Props, State> {
 			console.log('missing card in stash')
 		}
 
+		if (this.props.hudStyle === 'menu') {
+			if (!card.showStash) {
+				const addStash = () => {
+					api.setCardProperty(this.props.taskId, 'showStash', true)
+				}
+				return (
+					<div className="stash menu">
+						<div onClick={addStash} className="action">
+							<img src={Stash} />
+							+stash
+						</div>
+					</div>
+				)
+			} else {
+				return null
+			}
+		}
+
 		const stashedTaskIds =
 			card.stash && card.stash.hasOwnProperty(this.state.tab)
 				? card.stash[this.state.tab]
@@ -123,6 +141,13 @@ export default class AoStash extends React.Component<Props, State> {
 					}
 				}
 			)
+		}
+
+		if (
+			(!card.guild || card.guild.length <= 1 || !card.showStash) &&
+			totalStashedCards < 1
+		) {
+			return null
 		}
 
 		const renderTabButton = (tab: number, label: string, enabled: boolean) => {
@@ -149,8 +174,7 @@ export default class AoStash extends React.Component<Props, State> {
 							<button
 								onClick={this.goToTab}
 								data-page={tab}
-								className="action inline"
-								disabled={true}>
+								className="action inline">
 								{label}
 							</button>
 						</Tippy>
@@ -167,35 +191,50 @@ export default class AoStash extends React.Component<Props, State> {
 		const onDropFactory = (move: CardPlay) => {
 			this.dropToStash(move, this.state.tab as number)
 		}
+
+		let numLevel: number = this.state.tab
+		if (typeof numLevel === 'string') {
+			numLevel = parseInt(numLevel, 10)
+		}
+
 		return (
 			<AoDropZone onDrop={this.dropToStash} zoneStyle="stash">
 				<AoPopupPanel
 					iconSrc={Stash}
-					tooltipText={`${gloss(
-						'Guild'
-					)} Stash / Dropbox (cards dropped and stored here will only be visible to members of that level or above)`}
+					tooltipText={`Drop to ${glossLevel(this.state.tab)} stash`}
 					panelPlacement="right-start"
 					id="tour-stash"
 					badge={renderedBadge}
 					badgeColor="red">
 					<React.Fragment>
 						{renderedTabs}
-						<h4>
-							{stashedCards.length} Stashed Card
-							{stashedCards.length === 0 || stashedCards.length >= 2 ? 's' : ''}
-						</h4>
-						<AoStack
-							inId={taskId}
-							cards={stashedCards}
-							cardStyle="priority"
-							onDrop={onDropFactory}
-							alwaysShowAll={true}
-							descriptor={{
-								singular: 'stashed card',
-								plural: 'stashed cards',
-							}}
-							zone="stash"
-						/>
+						{this.guildMemberLevel >= this.state.tab ? (
+							<React.Fragment>
+								<h4>
+									{stashedCards.length} Stashed Card
+									{stashedCards.length === 0 || stashedCards.length >= 2
+										? 's'
+										: ''}
+								</h4>
+								<AoStack
+									inId={taskId}
+									cards={stashedCards}
+									cardStyle="priority"
+									onDrop={onDropFactory}
+									alwaysShowAll={true}
+									descriptor={{
+										singular: 'stashed card',
+										plural: 'stashed cards',
+									}}
+									zone="stash"
+									stashLevel={numLevel}
+								/>
+							</React.Fragment>
+						) : (
+							<p>{`This stash is above your membership level in this ${gloss(
+								'guild'
+							)}, but you can drop cards here (drop on stash icon with this tab selected).`}</p>
+						)}
 					</React.Fragment>
 				</AoPopupPanel>
 			</AoDropZone>

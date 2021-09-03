@@ -2782,6 +2782,11 @@ textarea {
           min-width: 24em;
         }
       }
+
+      p {
+        margin-top: 5em;
+        max-width: 25em;
+      }
     }
 
     // the text box to create a new crypto ticker in the main menu
