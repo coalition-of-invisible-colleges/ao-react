@@ -29,7 +29,7 @@ export default class AoDiscardZone extends React.Component {
 		if (!move.from.taskId) {
 			return
 		}
-		const cardFrom = aoStore.hashMap.get(move.from.taskId)
+		const cardFrom = aoStore.hashMap.get(move.from.inId)
 		if (!cardFrom) {
 			return
 		}
@@ -81,18 +81,22 @@ export default class AoDiscardZone extends React.Component {
 				break
 			case 'stash':
 				aoStore.addToDiscardHistory([card])
-				const guildMemberLevel = () => {
-					if (!card || !card.memberships || !card.memberships.length)
+				const guildMemberLevel = guildCard => {
+					if (
+						!guildCard ||
+						!guildCard.memberships ||
+						!guildCard.memberships.length
+					)
 						return null
 
-					let found = card.memberships.find(
+					let found = guildCard.memberships.find(
 						membership => membership.memberId === aoStore.member.memberId
 					)
 
 					return found ? found.level : 0
 				}
-
-				if (guildMemberLevel() >= move.from.level) {
+				console.log('guildMemberLevel is ', guildMemberLevel(cardFrom))
+				if (guildMemberLevel(cardFrom) >= move.from.level) {
 					api.unstashCard(move.from.taskId, move.from.inId, move.from.level)
 				}
 				break
