@@ -232,18 +232,16 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			this.setState({ pause: false })
 		}
 		return (
-			<div className="">
-				<ReactUpload
-					mode="light"
-					fileName={this.state.filename}
-					percentage={this.state.percent}
-					paused={this.state.pause}
-					disabled={this.state.percent === 100}
-					completed={this.state.percent === 100}
-					onPause={handlePause}
-					onStart={handleStart}
-				/>
-			</div>
+			<ReactUpload
+				mode="dark"
+				fileName={this.state.filename}
+				percentage={this.state.percent.toFixed(2)}
+				paused={this.state.pause}
+				disabled={this.state.percent === 100}
+				completed={this.state.percent === 100}
+				onPause={handlePause}
+				onStart={handleStart}
+			/>
 		)
 	}
 
@@ -305,7 +303,14 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 				</div>
 			)
 		} else if (this.state.percent) {
-			return this.renderUploadProgress()
+			return (
+				<div
+					id={this.props.x + '-' + this.props.y}
+					className={'dropZone ' + this.props.zoneStyle}
+					style={style}>
+					{this.renderUploadProgress()}
+				</div>
+			)
 		} else {
 			return this.emptySquare()
 		}
