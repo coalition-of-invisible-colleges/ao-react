@@ -1207,11 +1207,17 @@ class AoApi {
       })
   }
 
-  async uploadMemes(formData): Promise<request.Response> {
+  async uploadMemes(formData, progressCallback): Promise<request.Response> {
     return request
       .post('/upload')
       .set('Authorization', aoStore.state.token)
       .send(formData)
+      .on('progress', function (e) {
+        console.log('Percentage done: ', e)
+        if (e && e.hasOwnProperty('percent') && e.percent >= 0) {
+          progressCallback(e.percent)
+        }
+      })
       .then(res => {
         console.log('sent files. res is', res)
         return res

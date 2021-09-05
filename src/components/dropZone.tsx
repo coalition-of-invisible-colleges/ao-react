@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import aoStore from '../client/store'
 import { CardPlay, CardLocation, CardZone, Coords } from '../cardTypes'
 import api from '../client/api'
 import { createHash } from '../crypto'
+import { ReactUpload } from 'react-upload-box'
 
 interface DropZoneProps {
 	taskId?: string
@@ -19,6 +21,9 @@ interface DropZoneProps {
 export interface State {
 	text?: string
 	draggedKind?: string
+	percent?: number
+	pause?: boolean
+	filename?: string
 }
 
 // export type CardSource =
@@ -42,6 +47,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		this.continueDrop = this.continueDrop.bind(this)
 		this.hideDrop = this.hideDrop.bind(this)
 		this.drop = this.drop.bind(this)
+		this.renderUploadProgress = this.renderUploadProgress.bind(this)
 	}
 
 	onClick() {
@@ -123,20 +129,28 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 				console.log('... file[' + i + '].name = ' + file.name)
 			})
 			const hash = createHash(data)
-
+			this.setState({ filename: lastUploadedName })
 			// todo: api.createCard() first but you have to include the hash so it links retroactively
 
-			api.uploadMemes(data).then(res => {
-				console.log('uploaded file. res is ', res, '. About to pin card')
-				// todo: allow uploads on stacks as well
-				// todo: if there are multiple uploads, make one card and put all the files inside on more cards
-				api.pinCardToGrid(
-					this.props.x,
-					this.props.y,
-					lastUploadedName,
-					this.props.inId
-				)
-			})
+			api
+				.uploadMemes(data, percent => this.setState({ percent }))
+				.then(res => {
+					console.log('uploaded. res is', res)
+					if (res && res.text) {
+						const newTaskId = res.text
+						aoStore.getTaskById_async(newTaskId, () => res => {
+							console.log('uploaded file. res is ', res, '. About to pin card')
+							// todo: allow uploads on stacks as well
+							// todo: if there are multiple uploads, make one card and put all the files inside on more cards
+							api.pinCardToGrid(
+								this.props.x,
+								this.props.y,
+								lastUploadedName,
+								this.props.inId
+							)
+						})
+					}
+				})
 			return
 		}
 		this.hideDrop(event)
@@ -210,6 +224,29 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		)
 	}
 
+	renderUploadProgress() {
+		const handlePause = async () => {
+			this.setState({ pause: true })
+		}
+		const handleStart = async () => {
+			this.setState({ pause: false })
+		}
+		return (
+			<div className="">
+				<ReactUpload
+					mode="light"
+					fileName={this.state.filename}
+					percentage={this.state.percent}
+					paused={this.state.pause}
+					disabled={this.state.percent === 100}
+					completed={this.state.percent === 100}
+					onPause={handlePause}
+					onStart={handleStart}
+				/>
+			</div>
+		)
+	}
+
 	render() {
 		if (this.props.zoneStyle === 'discard') {
 			return (
@@ -267,6 +304,8 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					)}
 				</div>
 			)
+		} else if (this.state.percent) {
+			return this.renderUploadProgress()
 		} else {
 			return this.emptySquare()
 		}

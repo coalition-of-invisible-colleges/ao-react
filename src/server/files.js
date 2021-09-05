@@ -37,19 +37,21 @@ export function loadMeme(name, path, taskId = null) {
 	})
 }
 
-export function addMeme(name, path, data = null, taskId = null) {
+export async function addMeme(name, path, data = null, taskId = null) {
+	console.log('addMeme function')
 	if (!data) {
-		fs.readFile(path, (err, data) => {
+		return fs.readFile(path, (err, data) => {
 			if (err) {
 				console.log('Directory or other error-causing file found, ignoring')
-				return
-			}
-			if (data) {
-				addMeme(name, path, data)
-				return
+				return Promise.reject()
+			} else if (data) {
+				console.log('going deeper in addMeme')
+				return addMeme(name, path, data)
+			} else {
+				console.log('readFile failed')
+				return Promise.reject()
 			}
 		})
-		return
 	}
 
 	const hash = createHash(data)
@@ -60,21 +62,31 @@ export function addMeme(name, path, data = null, taskId = null) {
 	const foundMeme = serverState.memes.find(m => {
 		return m.hash === hash
 	})
-	if (!foundMeme) {
+	console.log('foundMeme is', foundMeme)
+	if (foundMeme) {
+		console.log('returning existing meme')
+		return Promise.resolve(foundMeme.taskId)
+	}
+
+	const newTaskId = taskId || v1()
+	console.log('returning new promise')
+	return new Promise((resolve, reject) => {
 		events.trigger(
 			'meme-added',
-			{ taskId: taskId || v1(), filename: name, hash, filetype },
+			{ taskId: newTaskId, filename: name, hash, filetype },
 			(err, event) => {
 				console.log(
 					'\n\n\nmeme-added callback\n\nerr: ',
 					err,
 					'\n event: ',
 					event,
-					'\n\n'
+					'\n\n',
+					'newTaskId: ',
+					newTaskId
 				)
+				console.log('newTaskId is about to resolve:', newTaskId)
+				resolve(newTaskId)
 			}
 		)
-		return
-	}
-	return
+	})
 }

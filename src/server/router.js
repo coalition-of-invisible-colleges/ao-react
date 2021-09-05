@@ -251,10 +251,20 @@ export default function applyRouter(app) {
     console.log('temppath is ', tempPath)
     console.log('targepath is ', targetPath)
     // console.log('req is ', req)
+
     fs.rename(tempPath, targetPath, err => {
       // if (err) return handleError(err, res)
-      addMeme(req.file.originalname, targetPath)
-      res.status(200).contentType('text/plain').end('File uploaded!')
+      const memePromise = addMeme(req.file.originalname, targetPath)
+      console.log('memePromise is ', memePromise)
+      memePromise.then(newTaskId => {
+        console.log('returned. newTaskId is', newTaskId)
+        if (newTaskId) {
+          res.status(200).send(newTaskId)
+        } else {
+          res.status(400).send([])
+        }
+      })
+      // .catch(res.status(400).send([]))
     })
   })
 
