@@ -235,7 +235,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			<ReactUpload
 				mode="dark"
 				fileName={this.state.filename}
-				percentage={this.state.percent.toFixed(2)}
+				percentage={parseFloat(this.state.percent).toFixed(2)}
 				paused={this.state.pause}
 				disabled={this.state.percent === 100}
 				completed={this.state.percent === 100}
@@ -303,6 +303,14 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 				</div>
 			)
 		} else if (this.state.percent) {
+			let style = this.props.style
+			if (this.props.zoneStyle === 'grid') {
+				style = {
+					gridRow: (this.props.y + 1).toString(),
+					gridColumn: (this.props.x + 1).toString(),
+				}
+			}
+
 			return (
 				<div
 					id={this.props.x + '-' + this.props.y}
