@@ -314,7 +314,11 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			return (
 				<div
 					id={this.props.x + '-' + this.props.y}
-					className={'dropZone ' + this.props.zoneStyle}
+					className={
+						'dropZone ' +
+						this.props.zoneStyle +
+						(this.state.percent > 0 ? ' uploadProgress' : '')
+					}
 					style={style}>
 					{this.renderUploadProgress()}
 				</div>

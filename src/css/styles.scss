@@ -3161,7 +3161,7 @@ textarea {
       background-color: rgba(5, 0, 10, 0.9);
       border-radius: 1em;
       height: 86vh;
-      width: -miz-fit-content;
+      width: -moz-fit-content;
       width: fit-content;
       position: fixed;
       left: 50%;
@@ -3263,6 +3263,12 @@ textarea {
           }
         }
       }
+    }
+
+    // upload progress bar
+    .uploadProgress div {
+      padding: 0;
+      background-color: rgba(0.2, 0.2, 0.2, 0.55);
     }
   }
 }
