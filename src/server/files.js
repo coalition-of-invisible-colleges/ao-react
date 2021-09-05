@@ -40,17 +40,19 @@ export function loadMeme(name, path, taskId = null) {
 export async function addMeme(name, path, data = null, taskId = null) {
 	console.log('addMeme function')
 	if (!data) {
-		return fs.readFile(path, (err, data) => {
-			if (err) {
-				console.log('Directory or other error-causing file found, ignoring')
-				return Promise.reject()
-			} else if (data) {
-				console.log('going deeper in addMeme')
-				return addMeme(name, path, data)
-			} else {
-				console.log('readFile failed')
-				return Promise.reject()
-			}
+		return new Promise((resolve, reject) => {
+			fs.readFile(path, (err, data) => {
+				if (err) {
+					console.log('Directory or other error-causing file found, ignoring')
+					reject(err)
+				} else if (data) {
+					console.log('going deeper in addMeme')
+					resolve(addMeme(name, path, data))
+				} else {
+					console.log('readFile failed')
+					reject(false)
+				}
+			})
 		})
 	}
 
