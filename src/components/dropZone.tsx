@@ -21,7 +21,7 @@ interface DropZoneProps {
 export interface State {
 	text?: string
 	draggedKind?: string
-	percent?: number
+	percent: number
 	pause?: boolean
 	filename?: string
 }
@@ -40,7 +40,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	constructor(props) {
 		super(props)
-		this.state = {}
+		this.state = { percent: 0 }
 		this.onClick = this.onClick.bind(this)
 		this.detectDragKind = this.detectDragKind.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
@@ -235,7 +235,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			<ReactUpload
 				mode="dark"
 				fileName={this.state.filename}
-				percentage={parseFloat(this.state.percent).toFixed(2)}
+				percentage={parseFloat(this.state.percent.toFixed(2))}
 				paused={this.state.pause}
 				disabled={this.state.percent === 100}
 				completed={this.state.percent === 100}
