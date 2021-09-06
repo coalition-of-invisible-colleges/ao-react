@@ -42,7 +42,7 @@ export default function applyRouter(app) {
   //   console.log('any route detected')
   //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
   // })
-  app.use(bodyParser.json({ limit: '10mb' }))
+  app.use(bodyParser.json({ limit: '1000mb' }))
   app.use(cookieParser())
   app.use(
     bodyParser.urlencoded({
