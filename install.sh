@@ -6,6 +6,18 @@
 # To run it, first give it execute permissions with 'chmod u+x install.sh',
 # then run with './install.sh'.
 
+# New notes for installing signal-cli on Manjaro:
+# install base-devel on Manjaro
+# install rustup
+# rustup install stable
+# 0. install gradle5
+# sudo ln -s gradle5 /usr/bin/gradle
+# 1. pacman -S libzkgroup (edit build file to change gradle to gradle5)
+# 2. pacman -S libsignal-client (edit build file to change gradle to gradle5)
+# 3. pacman -S signal-cli (edit build file to change gradle to gradle5)
+
+# To make this script compatible with MacOS, use Brew, the MacOs package manager
+
 # detect OS
 if [ -f "/etc/debian_version" ]; then
 	DISTRO="debian"
@@ -13,6 +25,9 @@ if [ -f "/etc/debian_version" ]; then
 elif [ -f "/etc/arch-release" ]; then
 	DISTRO="arch"
 	echo Arch- or Manjaro-based OS detected, proceeding with Arch-compatible AO installation.
+elif [ $(uname | grep -c "Darwin") -eq 1 ]; then
+	DISTRO="mac"
+	echo MacOS detected, proceeding with Mac-compatible AO installation.
 else
 	echo Could not detect your OS distribution. Running this script could make a mess, so installing manually is recommended.
 	exit 1
@@ -73,7 +88,7 @@ if [ "$DISTRO" = "debian" ]; then
 	# do we need make and gcc?
 
 # update system and install prereqs (Arch)
-else
+elif [ "$DISTRO" = "arch" ]; then
 	# update, but do not automatically clean up for Arch users
 	sudo pacman -Syu 1>/dev/null
 	echo pacman update complete
@@ -106,6 +121,53 @@ else
 		echo sqlite already installed
 	else
 		sudo pacman -S sqlite
+	fi
+elif [ "$DISTRO" = "mac" ]; then
+	# install homebrew
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+	# update
+	brew update -yqqq 2>/dev/null
+	sudo apt autoremove -yqqq
+	echo apt update complete
+
+	# upgrade
+	sudo apt upgrade -yqqq
+	echo apt upgrade complete
+
+	# more cleanup
+	#sudo apt-get dist-upgrade -yqqq
+	#sudo apt-get clean -yqqq
+	#sudo apt-get autoclean -yqqq
+
+	# check for sudo install and fail if not
+
+	# install curl
+	if [ $(dpkg-query -W -f='${Status}' curl 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+		echo curl already installed
+	else
+		sudo apt install -y curl
+	fi
+
+	# install wget
+	if [ $(dpkg-query -W -f='${Status}' wget 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+		echo wget already installed
+	else
+		sudo apt install -y wget
+	fi
+
+	# install git
+	if [ $(dpkg-query -W -f='${Status}' git 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+		echo git already installed
+	else
+		sudo apt install -y git
+	fi
+
+	# install sqlite3
+	if [ $(dpkg-query -W -f='${Status}' sqlite3 2>/dev/null | grep -c "ok installed") -eq 1 ]; then
+		echo sqlite3 already installed
+	else
+		sudo apt install -y sqlite3
 	fi
 fi
 
