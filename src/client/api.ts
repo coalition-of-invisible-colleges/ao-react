@@ -1218,6 +1218,10 @@ class AoApi {
           progressCallback(e.percent)
         }
       })
+      .on('error', err => {
+        console.log('Upload  failed with error:', err)
+        return false
+      })
       .then(res => {
         console.log('sent files. res is', res)
         return res

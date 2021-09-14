@@ -47,7 +47,7 @@ export default function applyRouter(app) {
   app.use(
     bodyParser.urlencoded({
       extended: true,
-      limit: '10mb',
+      limit: '1000mb',
     })
   )
 
@@ -244,7 +244,11 @@ export default function applyRouter(app) {
 
   const uploadFormName = 'file'
 
-  app.post('/upload', upload.single(uploadFormName), (req, res) => {
+  app.post('/upload', upload.single(uploadFormName), (req, res, err) => {
+    if (err) {
+      console.log('UPLOAD ERROR: ', err)
+      res.status(400).send([])
+    }
     const tempPath = req.file.path
     const targetPath = path.join(config.memes.dir, req.file.originalname)
     console.log('originalname is ', req.file.originalname)
