@@ -196,6 +196,7 @@ export default {
     proxy: [
       {
         context: [
+          '/logout',
           '/state',
           '/events',
           '/session',
