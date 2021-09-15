@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
-import { CardPlay, CardLocation, CardZone, Coords } from '../cardTypes'
+import { CardPlay, CardLocation, CardZone, Coords } from '../cards'
 import api from '../client/api'
-import { createHash } from '../crypto'
-import { ReactUpload } from 'react-upload-box'
+import crypto from '../crypto'
 
 interface DropZoneProps {
 	taskId?: string
@@ -21,18 +19,15 @@ interface DropZoneProps {
 export interface State {
 	text?: string
 	draggedKind?: string
-	percent: number
-	pause?: boolean
-	filename?: string
 }
 
-// export type CardSource =
-// 	| 'card'
-// 	| 'list'
-// 	| 'stack'
-// 	| 'grid'
-// 	| 'discard'
-// 	| 'context'
+export type CardSource =
+	| 'card'
+	| 'list'
+	| 'stack'
+	| 'grid'
+	| 'discard'
+	| 'context'
 
 @observer
 export default class AoDropZone extends React.Component<DropZoneProps, State> {
@@ -40,20 +35,19 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	constructor(props) {
 		super(props)
-		this.state = { percent: 0 }
+		this.state = {}
 		this.onClick = this.onClick.bind(this)
 		this.detectDragKind = this.detectDragKind.bind(this)
 		this.allowDrop = this.allowDrop.bind(this)
 		this.continueDrop = this.continueDrop.bind(this)
 		this.hideDrop = this.hideDrop.bind(this)
 		this.drop = this.drop.bind(this)
-		this.renderUploadProgress = this.renderUploadProgress.bind(this)
 	}
 
 	onClick() {
 		this.props.onSelect({
 			y: this.props.y,
-			x: this.props.x,
+			x: this.props.x
 		})
 	}
 
@@ -128,29 +122,21 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 				lastUploadedName = file.name
 				console.log('... file[' + i + '].name = ' + file.name)
 			})
-			const hash = createHash(data)
-			this.setState({ filename: lastUploadedName })
+			const hash = crypto.createHash(data)
+
 			// todo: api.createCard() first but you have to include the hash so it links retroactively
 
-			api
-				.uploadMemes(data, percent => this.setState({ percent }))
-				.then(res => {
-					console.log('uploaded. res is', res)
-					if (res && res.text) {
-						const newTaskId = res.text
-						aoStore.getTaskById_async(newTaskId, res => {
-							console.log('uploaded file. res is ', res, '. About to pin card')
-							// todo: allow uploads on stacks as well
-							// todo: if there are multiple uploads, make one card and put all the files inside on more cards
-							api.pinCardToGrid(
-								this.props.x,
-								this.props.y,
-								lastUploadedName,
-								this.props.inId
-							)
-						})
-					}
-				})
+			api.uploadMemes(data).then(res => {
+				console.log('uploaded file. res is ', res, '. About to pin card')
+				// todo: allow uploads on stacks as well
+				// todo: if there are multiple uploads, make one card and put all the files inside on more cards
+				api.pinCardToGrid(
+					this.props.x,
+					this.props.y,
+					lastUploadedName,
+					this.props.inId
+				)
+			})
 			return
 		}
 		this.hideDrop(event)
@@ -159,20 +145,15 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone: CardZone = event.dataTransfer.getData('text/fromZone')
-		let fromLevel: number = parseInt(
-			event.dataTransfer.getData('text/fromLevel'),
-			10
-		)
 		let fromCoords: Coords = {
 			x: parseInt(event.dataTransfer.getData('text/fromX'), 10),
-			y: parseInt(event.dataTransfer.getData('text/fromY'), 10),
+			y: parseInt(event.dataTransfer.getData('text/fromY'), 10)
 		}
 		let fromLocation: CardLocation = {
 			taskId: fromId,
 			inId: fromInId,
 			zone: fromZone,
-			level: fromLevel,
-			coords: fromCoords,
+			coords: fromCoords
 		}
 
 		let toCoords: Coords = { x: this.props.x, y: this.props.y }
@@ -181,7 +162,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			taskId: taskId,
 			inId: this.props.inId,
 			zone: this.props.zoneStyle,
-			coords: toCoords,
+			coords: toCoords
 		}
 
 		if (toLocation === fromLocation) {
@@ -200,16 +181,14 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	emptySquare() {
 		let message = ''
-		if (this.props.zoneStyle === 'stash') {
-			message = 'drop to stash'
-		} else if (['card', 'grid'].includes(this.state.draggedKind)) {
+		if (['card', 'grid'].includes(this.state.draggedKind)) {
 			message = 'drop to place'
 		} else if (
 			['priorities', 'subTasks', 'completed'].includes(this.state.draggedKind)
 		) {
 			message = 'drop to place'
 		} else if (this.state.draggedKind === 'file') {
-			message = 'drop file to upload'
+			'drop file to upload'
 		}
 		return (
 			<div
@@ -224,32 +203,11 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 		)
 	}
 
-	renderUploadProgress() {
-		const handlePause = async () => {
-			this.setState({ pause: true })
-		}
-		const handleStart = async () => {
-			this.setState({ pause: false })
-		}
-		return (
-			<ReactUpload
-				mode="dark"
-				fileName={this.state.filename}
-				percentage={parseFloat(this.state.percent.toFixed(2))}
-				paused={this.state.pause}
-				disabled={this.state.percent === 100}
-				completed={this.state.percent === 100}
-				onPause={handlePause}
-				onStart={handleStart}
-			/>
-		)
-	}
-
 	render() {
 		if (this.props.zoneStyle === 'discard') {
 			return (
 				<div
-					className="discard"
+					className={'discard'}
 					onDragEnter={this.allowDrop}
 					onDragOver={this.continueDrop}
 					onDragLeave={this.hideDrop}
@@ -279,7 +237,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			if (this.props.zoneStyle === 'grid') {
 				style = {
 					gridRow: (this.props.y + 1).toString(),
-					gridColumn: (this.props.x + 1).toString(),
+					gridColumn: (this.props.x + 1).toString()
 				}
 			}
 
@@ -300,27 +258,6 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					) : (
 						''
 					)}
-				</div>
-			)
-		} else if (this.state.percent) {
-			let style = this.props.style
-			if (this.props.zoneStyle === 'grid') {
-				style = {
-					gridRow: (this.props.y + 1).toString(),
-					gridColumn: (this.props.x + 1).toString(),
-				}
-			}
-
-			return (
-				<div
-					id={this.props.x + '-' + this.props.y}
-					className={
-						'dropZone ' +
-						this.props.zoneStyle +
-						(this.state.percent > 0 ? ' uploadProgress' : '')
-					}
-					style={style}>
-					{this.renderUploadProgress()}
 				</div>
 			)
 		} else {

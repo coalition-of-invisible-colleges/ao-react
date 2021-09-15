@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -24,7 +24,6 @@ interface MemberIconProps {
 export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
   constructor(props) {
     super(props)
-    makeObservable(this)
   }
 
   @computed get isActive() {
@@ -46,6 +45,8 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
       return false
     }
     const fourHoursMs: number = 4 * 60 * 60 * 1000
+    console.log('typeof is ', typeof fourHoursMs)
+    console.log('member.lastUsed is ', member.lastUsed)
     const timeSinceLastUse = Date.now() - member.lastUsed
     const recentlyUsed = timeSinceLastUse < fourHoursMs
 
@@ -53,17 +54,9 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
   }
 
   @computed get deckSize() {
-    // this cannot be computed in general
-    //   currently on update of of the tasks we want to be able to add to this when we know that we have made
-    //   a new task. This could probably be done when we create a card, and would be
-    //   more or less accurate in almost all cases, and refesh to accurate when re reload the browser tab
-
-    // return aoStore.state.tasks.filter(t => {
-    //   return t.deck.indexOf(this.props.memberId) >= 0
-    // }).length
-
-    return aoStore.memberDeckSize
-
+    return aoStore.state.tasks.filter(t => {
+      return t.deck.indexOf(this.props.memberId) >= 0
+    }).length
   }
 
   @computed get renderRecentStatusIcon() {

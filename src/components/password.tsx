@@ -13,7 +13,7 @@ export const defaultState: State = {
   editing: false,
   text: '',
   repeat: '',
-  match: false,
+  match: false
 }
 
 @observer
@@ -45,10 +45,8 @@ export default class AoPassword extends React.PureComponent<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
-      event.stopPropagation()
       this.saveValue(event)
     } else if (event.key === 'Escape') {
-      event.stopPropagation()
       this.setState({ editing: false, text: '', repeat: '' })
     }
   }

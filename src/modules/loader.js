@@ -1,5 +1,6 @@
-import request from 'superagent'
-import io from 'socket.io-client'
+const request = require('superagent')
+const uuidV1 = require('uuid/v1')
+const io = require('socket.io-client')
 const socket = io()
 
 var attached = false
@@ -13,7 +14,7 @@ function attachSocket(commit, dispatch) {
       commit('setConnected', 'connecting')
       socket.emit('authentication', {
         session: state.session,
-        token: state.token,
+        token: state.token
       })
     })
 
@@ -76,7 +77,7 @@ const actions = {
           console.log('got ', res.body.length, 'tasks from tasks endpoint')
           commit('applyEvent', {
             type: 'tasks-received',
-            tasks: res.body,
+            tasks: res.body
           })
         }
       })
@@ -113,7 +114,7 @@ const actions = {
           commit('setReqStatus', 'ready')
         }
       })
-  },
+  }
 }
 
 const state = {
@@ -122,7 +123,7 @@ const state = {
   connected: 'disconnected',
   connectionError: '',
   reqStatus: 'ready',
-  lastPing: 1,
+  lastPing: 1
 }
 
 const mutations = {
@@ -145,11 +146,11 @@ const mutations = {
       return
     }
     loader.connectionError = error
-  },
+  }
 }
 
-export default {
+module.exports = {
   state,
   mutations,
-  actions,
+  actions
 }

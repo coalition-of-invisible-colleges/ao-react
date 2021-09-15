@@ -1,18 +1,18 @@
-// // state
-// import cash from './cash.js'
-// import members from './members.js'
-// import tasks from './tasks.js'
-// import resources from './resources.js'
-// import memes from './memes.js'
-// import sessions from './sessions.js'
-// import ao from './ao.js'
+// state
+const cash = require('./cash')
+const members = require('./members')
+const tasks = require('./tasks')
+const resources = require('./resources')
+const memes = require('./memes')
+const sessions = require('./sessions')
+const ao = require('./ao')
 
-// export default {
-// 	cash,
-// 	members,
-// 	tasks,
-// 	resources,
-// 	memes,
-// 	sessions,
-// 	ao
-// }
+module.exports = {
+	cash,
+	members,
+	tasks,
+	resources,
+	memes,
+	sessions,
+	ao
+}

@@ -4,7 +4,7 @@ import { computed } from 'mobx'
 import { Redirect } from 'react-router-dom'
 import AoCardComposer from './cardComposer'
 import api from '../client/api'
-import { goInCard } from '../cardTypes'
+import { goInCard } from '../cards'
 import Tippy from '@tippyjs/react'
 import aoStore, { Task } from '../client/store'
 import 'tippy.js/dist/tippy.css'
@@ -44,7 +44,6 @@ export default class AoGem extends React.Component<{}, State> {
 
 	detectEscape(event) {
 		if (event.key === 'Escape') {
-			event.stopPropagation()
 			this.close()
 		}
 	}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -14,11 +14,6 @@ interface CheckboxProps {
 
 @observer
 export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
-  constructor(props: CheckboxProps) {
-    super(props)
-    makeObservable(this)
-  }
-
   @computed get isCompleted() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return undefined
@@ -50,15 +45,10 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'full before':
       case 'face before':
       case 'collapsed':
-      case 'badge':
         if (this.isCompleted || this.isGrabbed) {
           return (
             <img
-              className={
-                'checkbox ' +
-                this.props.hudStyle +
-                (this.isCompleted ? ' checked' : ' unchecked')
-              }
+              className="checkbox"
               src={this.isCompleted ? Completed : Uncompleted}
               onClick={onClick}
               onDoubleClick={event => {
@@ -71,8 +61,9 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
         return null
       case 'mini before':
         if (this.isCompleted) {
-          return <img src={Completed} className="checkbox mini" />
+          return <img src={Completed} className={'checkbox mini'} />
         }
+        return null
       default:
         return null
     }

@@ -1,11 +1,10 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
-import { countCurrentSignatures } from '../cards'
-import { countVouches } from '../cardTypes'
+import { countCurrentSignatures, countVouches } from '../cards'
 import Coin from '../assets/images/coin.svg'
 import GoldenDoge from '../assets/images/goldendoge.svg'
 import Paw from '../assets/images/paw.svg'
@@ -13,7 +12,6 @@ import LazyTippy from './lazyTippy'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
-import { gloss } from '../semantics'
 
 interface CoinProps {
   taskId: string
@@ -26,7 +24,6 @@ export default class AoCoin extends React.Component<CoinProps> {
 
   constructor(props) {
     super(props)
-    makeObservable(this)
     this.sign = this.sign.bind(this)
     this.unsign = this.unsign.bind(this)
     this.signatureDecorators = this.signatureDecorators.bind(this)
@@ -283,27 +280,29 @@ export default class AoCoin extends React.Component<CoinProps> {
           <React.Fragment>
             <Tippy
               zIndex={4}
-              theme="translucent"
-              content="Your Attack is the same as your vouches"
+              theme={'translucent'}
+              content={'Your Attack is the same as your vouches'}
               delay={[625, 200]}>
               <span
                 style={{
                   cursor: 'default',
                   marginRight: '1em',
-                  display: 'inline-block',
+                  display: 'inline-block'
                 }}>
                 Attack: {memberCards.length}
               </span>
             </Tippy>
             <Tippy
               zIndex={4}
-              theme="translucent"
-              content='Your Defense is the highest Attack score amongst you and everyone who vouches for you. To ban or delete your account, another member must have a higher Attack than your Defense AND be listed before you in the ordered list of members (sort members by "Order")'
+              theme={'translucent'}
+              content={
+                'Your Defense is the highest Attack score amongst you and everyone who vouches for you. To ban or delete your account, another member must have a higher Attack than your Defense AND be listed before you in the ordered list of members (sort members by "Order")'
+              }
               delay={[625, 200]}>
               <span
                 style={{
                   cursor: 'default',
-                  display: 'inline-block',
+                  display: 'inline-block'
                 }}>
                 Defense: {this.defenseScore}
               </span>
@@ -313,8 +312,8 @@ export default class AoCoin extends React.Component<CoinProps> {
         {memberCards.length >= 1 ? (
           <AoStack
             cards={memberCards}
-            zone="panel"
-            cardStyle="member"
+            zone={'panel'}
+            cardStyle={'member'}
             cardsBeforeFold={3}
             noPopups={true}
             decorators={this.signatureDecorators(memberCards)}
@@ -322,7 +321,7 @@ export default class AoCoin extends React.Component<CoinProps> {
           />
         ) : null}
         <div>
-          {card.guild && <p>Sign to join this {gloss('guild')}</p>}
+          {card.guild && <p>Sign to join this squad</p>}
           {mySignature && mySignature.opinion >= 1 ? (
             <span>
               <strong>signed</strong>

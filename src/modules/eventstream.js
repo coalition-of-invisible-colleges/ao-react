@@ -1,4 +1,4 @@
-import _ from 'lodash'
+const _ = require('lodash')
 
 let memes = [
   'very database',
@@ -7,7 +7,7 @@ let memes = [
   'much store',
   'wow',
   'very happen',
-  'much do',
+  'much do'
 ]
 
 let colors = ['white', 'red', 'yellow', 'lime', 'aqua', 'blue', 'fuchsia']
@@ -27,7 +27,7 @@ const mutations = {
       randomX: '45%',
       randomColors: [],
       randomXs: [],
-      randomYs: [],
+      randomYs: []
     }
     _.assign(newBubble, ev)
     newBubble.meme = bestMeme()
@@ -47,7 +47,7 @@ const mutations = {
   hide(state) {
     state[0].showEvent = false
     state.shift()
-  },
+  }
 }
 
 const actions = {
@@ -63,11 +63,11 @@ const actions = {
     setTimeout(() => {
       commit('hide')
     }, 3567)
-  },
+  }
 }
 
-export default {
+module.exports = {
   state,
   mutations,
-  actions,
+  actions
 }

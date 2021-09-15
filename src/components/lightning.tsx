@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import request from 'superagent'
 import aoStore, { LightningChannel, SatInfo } from '../client/store'
 import api from '../client/api'
+import calculations from '../calculations'
 
 // function getSats() {
 //   return calculations.cadToSats(1, aoStore.state.cash.spot)

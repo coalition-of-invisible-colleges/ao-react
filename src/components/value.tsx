@@ -10,7 +10,7 @@ interface Props {
 }
 
 @observer
-export default class AoValue extends React.Component<Props> {
+export default class AoValue extends React.PureComponent<Props> {
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return null

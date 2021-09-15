@@ -1,8 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import Tippy, { TippyProps } from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
-import 'tippy.js/themes/translucent.css'
 
 export type LazyTippyProps = TippyProps
 
@@ -16,8 +14,8 @@ const LazyTippy: React.FunctionComponent<LazyTippyProps> = props => {
   const lazyPlugin = {
     fn: () => ({
       onShow: () => setMounted(true),
-      onHidden: () => setMounted(false),
-    }),
+      onHidden: () => setMounted(false)
+    })
   }
 
   const computedProps = { ...props }

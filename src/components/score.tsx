@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 
@@ -12,7 +12,6 @@ interface ScoreProps {
 export default class AoScore extends React.PureComponent<ScoreProps> {
   constructor(props) {
     super(props)
-    makeObservable(this);
   }
 
   @computed get memberId() {

@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed, makeObservable } from 'mobx'
+import { computed } from 'mobx'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoMemberIcon from './memberIcon'
-import { HudStyle } from './cardHud'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -12,7 +11,6 @@ import Lilypad from '../assets/images/chatroom.svg'
 
 interface Props {
   taskId: string
-  hudStyle?: HudStyle
 }
 
 interface State {
@@ -24,7 +22,6 @@ interface State {
 export default class AoChatroom extends React.Component<Props, State> {
   constructor(props) {
     super(props)
-    makeObservable(this)
     this.state = { show: false, now: Date.now() }
     this.hopHere = this.hopHere.bind(this)
     this.toggleChat = this.toggleChat.bind(this)
@@ -42,6 +39,7 @@ export default class AoChatroom extends React.Component<Props, State> {
   }
 
   toggleChat() {
+    console.log('showing chatroom')
     if (aoStore.currentChatroom === this.props.taskId) {
       api.visitCard(this.props.taskId, false)
       aoStore.setCurrentChatroom(null)
@@ -70,7 +68,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       return (
         <div key={memberId}>
           <AoMemberIcon memberId={memberId} /> {name}{' '}
-          {area === 1 && seconds <= 100 && <small>in chat</small>}
+          {area === 1 && seconds <= 70 && <small>in chat</small>}
         </div>
       )
     })
@@ -130,33 +128,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       //   </div>
       // )
       // altMessage = 'Move your avatar here'
-    } else if (this.props.hudStyle === 'menu') {
-      if (!card.showChatroom) {
-        const addChatroom = () => {
-          api.setCardProperty(this.props.taskId, 'showChatroom', true)
-        }
-        return (
-          <div className="lilypad menu">
-            <div onClick={addChatroom} className="action">
-              <img src={Lilypad} />
-              +chatroom
-            </div>
-          </div>
-        )
-      } else {
-        const removeChatroom = () => {
-          api.setCardProperty(this.props.taskId, 'showChatroom', false)
-        }
-        return (
-          <div className="lilypad menu">
-            <div onClick={removeChatroom} className="action">
-              <img src={Lilypad} />
-              remove chatroom
-            </div>
-          </div>
-        )
-      }
-    } else if (card.showChatroom) {
+    } else {
       const renderedBadge = (
         <div className="badge green">{chatroomPop + '/' + cardPop}</div>
       )
@@ -186,6 +158,5 @@ export default class AoChatroom extends React.Component<Props, State> {
         </Tippy>
       )
     }
-    return null
   }
 }

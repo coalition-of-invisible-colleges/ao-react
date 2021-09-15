@@ -5,7 +5,6 @@ import api from '../client/api'
 import { ShepherdTourContext } from 'react-shepherd'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { hideAll as hideAllTippys } from 'tippy.js'
-import { gloss } from '../semantics'
 
 type PopperPlacement =
   | 'auto'
@@ -54,19 +53,19 @@ function completeAction() {
 const cancelButton = {
   text: 'Skip Tour',
   classes: 'action',
-  action: cancelAction,
+  action: cancelAction
 }
 
 const backButton = {
   text: 'Back',
   classes: 'action',
-  action: backAction,
+  action: backAction
 }
 
 const nextButton = {
   text: 'Next',
   classes: 'action',
-  action: nextAction,
+  action: nextAction
 }
 
 const standardButtons = [cancelButton, backButton, nextButton]
@@ -94,98 +93,95 @@ export const steps = [
         </p>
       </div>
     ),
-    buttons: [cancelButton, nextButton],
+    buttons: [cancelButton, nextButton]
   },
   {
     id: 'mainMenu',
     attachTo: { element: '#mainMenu-tour', on: placeLeftTop },
     title: 'Main Menu',
-    text: 'The main menu (three dots in lower-right corner of page) allows you to change your username and password. You should change your password now if you havent done so yet. You can also set your RFID fob number here.',
-    buttons: standardButtons,
+    text:
+      'The main menu (three dots in lower-right corner of page) allows you to change your username and password. You should change your password now if you havent done so yet. You can also set your RFID fob number here.',
+    buttons: standardButtons
   },
   {
     id: 'gem',
     attachTo: { element: '#gem', on: placeTop },
     title: 'Create New Cards',
-    text: 'The AO includes a universal activist trading card game. Click +card to create a new card. The card will appear in the current card you are looking at.',
-    buttons: standardButtons,
+    text:
+      'The AO includes a universal activist trading card game. Click +card to create a new card. The card will appear in the current card you are looking at.',
+    buttons: standardButtons
   },
   {
     id: 'deck',
     attachTo: { element: '#tour-deck', on: placeLeft },
     title: 'Collect Cards in Your Deck',
-    text: 'Anytime you click the moon on a card, that card will be added to your collection. You can view and search all your cards here.',
-    buttons: standardButtons,
+    text:
+      'Anytime you click the moon on a card, that card will be added to your collection. You can view and search all your cards here.',
+    buttons: standardButtons
   },
   {
     id: 'dock',
     attachTo: { element: '#dock-tour', on: placeTop },
     title: 'Bookmark Cards on the Dock',
-    text: `Drag-and-drop cards to the dock for easy access. ${gloss(
-      'guild'
-    )} cards will act like a folder when on the dock (non-${gloss(
-      'guild'
-    )} cards dropped on it drop inside instead of swapping). Like any grid, the dock can be resized with the +/- buttons at its edge.`,
-    buttons: standardButtons,
+    text:
+      'Drag-and-drop cards to the dock for easy access. Squad cards will act like a folder when on the dock (non-squad cards dropped on it drop inside instead of swapping). Like any grid, the dock can be resized with the +/- buttons at its edge.',
+    buttons: standardButtons
   },
   {
     id: 'chatroom',
     attachTo: { element: '#chatroom', on: placeLeft },
     title: 'Secure Video Chat',
-    text: `Jitsi is an open-source, end-to-end encrypted video chat that can be installed alongside the AO on a server. Click 'Join Chat' in the lower left corner of a ${gloss(
-      'guild'
-    )} (group) card to open up a live video chatroom! You can also do audio-only or use the text chat box within Jitsi. If you want more than one room, go to meet.yourdomain.com to manually create additional rooms (guildhalls coming soon).`,
-    buttons: standardButtons,
+    text:
+      "Jitsi is an open-source, end-to-end encrypted video chat that can be installed alongside the AO on a server. Click 'Join Chat' in the lower left corner of a squad (group) card to open up a live video chatroom! You can also do audio-only or use the text chat box within Jitsi. If you want more than one room, go to meet.yourdomain.com to manually create additional rooms (guildhalls coming soon).",
+    buttons: standardButtons
   },
   {
     id: 'hub',
     attachTo: { element: '#tour-hub', on: placeRight },
     title: 'The Hub',
-    text: 'Ah, the Hub! The beating heart of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
-    buttons: standardButtons,
+    text:
+      'Ah, the Hub! The beating heart of the community! Visit the Community Hub often to stay up-to-date, like a shared newspaper.',
+    buttons: standardButtons
   },
   {
     id: 'missions',
     attachTo: { element: '#tour-missions', on: placeRight },
-    title: `${gloss('guild')} Index`,
-    text: `Put it on the Index! ${gloss(
-      'guild'
-    )}, also known as groups, guilds, missions, categories, or rooms, are a basic way to organize cards. Any card with a ${gloss(
-      'guild'
-    )} title shows up here. Click 'add ${gloss(
-      'guild'
-    )} title' in a card's menu to give it a title and upgrade it to a ${gloss(
-      'guild'
-    )}.`,
-    buttons: standardButtons,
+    title: 'Squad Index',
+    text:
+      "Put it on the Index! Squads, also known as groups, guilds, missions, categories, or rooms, are a basic way to organize cards. Any card with a squad title shows up here. Click 'add squad title' in a card's menu to give it a title and upgrade it to a squad.",
+    buttons: standardButtons
   },
   {
     id: 'accomplishments',
     attachTo: { element: '#tour-accomplishments', on: placeLeft },
     title: 'Check Off Accomplisments',
-    text: 'Every card has a checkmark. When you discard a card that someone has checked off, it will be saved in the Accomplishments section of the card from which it was discarded.',
-    buttons: standardButtons,
+    text:
+      'Every card has a checkmark. When you discard a card that someone has checked off, it will be saved in the Accomplishments section of the card from which it was discarded.',
+    buttons: standardButtons
   },
   {
     id: 'members',
     attachTo: { element: '#tour-members', on: placeRight },
     title: 'Members',
-    text: "This panel contains a list of every member on the server. You can vouch for other members by grabbing their card (clicking the sun/moon). You can sort members alphabetically, by recent events (account creation, fob tap, or bark), by number of vouches from other members, or by 'order'. The order can change consensually, but starts out as the order accounts are created in.",
-    buttons: standardButtons,
+    text:
+      "This panel contains a list of every member on the server. You can vouch for other members by grabbing their card (clicking the sun/moon). You can sort members alphabetically, by recent events (account creation, fob tap, or bark), by number of vouches from other members, or by 'order'. The order can change consensually, but starts out as the order accounts are created in.",
+    buttons: standardButtons
   },
   {
     id: 'calendar',
     attachTo: { element: '#tour-calendar', on: placeRight },
     title: 'Community Calendar',
-    text: "This is the calendar. See events here! Schedule an event on a card by clicking 'schedule event' in its card menu. Events that you hodl (mooned) will remain as 'overdue' until you check them off or drop the card (unmoon).",
-    buttons: standardButtons,
+    text:
+      "This is the calendar. See events here! Schedule an event on a card by clicking 'schedule event' in its card menu. Events that you hodl (mooned) will remain as 'overdue' until you check them off or drop the card (unmoon).",
+    buttons: standardButtons
   },
   {
     id: 'search',
     attachTo: { element: '#tour-search', on: placeRight },
     title: 'Search',
-    text: 'Search all cards on this server (except private cards). This search box uses regular expressions, a syntax for constructing search queries. Search online for a regular expression guide or cheatsheet to learn how to use regular expressions. For example, search for .* (period, asterisk) to search for any character (the dot) zero or more times (the asterisk)—this will find all cards on the server.',
-    buttons: standardButtons,
+    text:
+      'Search all cards on this server (except private cards). This search box uses regular expressions, a syntax for constructing search queries. Search online for a regular expression guide or cheatsheet to learn how to use regular expressions. For example, search for .* (period, asterisk) to search for any character (the dot) zero or more times (the asterisk)—this will find all cards on the server.',
+    buttons: standardButtons
   },
   // {
   //   id: 'proposals',
@@ -207,30 +203,33 @@ export const steps = [
     id: 'controls',
     attachTo: { element: '#tour-controls', on: placeLeft },
     title: 'Server Controls',
-    text: "The Bull represents the physical server hardware (the element of Earth). Whoever controls the server could delete everything or manually read the database. The Bull allows you to connect to hardware resources, connect two AOs over tor, connect the AO to the lightning network, and control monthly memberships. Anyone can edit server settings, reflecting the AO's do-ocratic and trust-oriented design.",
-    buttons: standardButtons,
+    text:
+      "The Bull represents the physical server hardware (the element of Earth). Whoever controls the server could delete everything or manually read the database. The Bull allows you to connect to hardware resources, connect two AOs over tor, connect the AO to the lightning network, and control monthly memberships. Anyone can edit server settings, reflecting the AO's do-ocratic and trust-oriented design.",
+    buttons: standardButtons
   },
   {
     id: 'tickers',
     attachTo: { element: '#tickers', on: placeLeft },
     title: 'Crypto Tickers',
-    text: 'The AO comes equipped with convenient and comprehensive crypto tickers, so you can monitor the relative worthlessness of various shitcoins. Click a crypto ticker to set it (and display further instructions).',
-    buttons: standardButtons,
+    text:
+      'The AO comes equipped with convenient and comprehensive crypto tickers, so you can monitor the relative worthlessness of various shitcoins. Click a crypto ticker to set it (and display further instructions).',
+    buttons: standardButtons
   },
   {
     id: 'the_end',
     title: 'End of Tour',
-    text: 'Help make the tour longer by suggesting tour stops in the AO Guild card!',
+    text:
+      'Help make the tour longer by suggesting tour stops in the AO Guild card!',
     buttons: [
       backButton,
-      { text: 'End Tour', classes: 'action', action: completeAction },
-    ],
-  },
+      { text: 'End Tour', classes: 'action', action: completeAction }
+    ]
+  }
 ]
 
 export const tourOptions = {
   defaultStepOptions: { scrollTo: true },
-  useModalOverlay: false,
+  useModalOverlay: false
 }
 
 export default function AoTour() {

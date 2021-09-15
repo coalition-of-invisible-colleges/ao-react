@@ -5,7 +5,7 @@ import api from '../client/api'
 import Jitsi from 'react-jitsi'
 import config from '../../configuration'
 import Chatbox from './chatbox'
-import { goInCard } from '../cardTypes'
+import { goInCard } from '../cards'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -143,7 +143,7 @@ export default class AoChatroom extends React.Component<Props, State> {
           displayName={aoStore.member.name}
           containerStyle={{
             width: 'calc((100vw - 39em)/2)',
-            height: 'calc(((100vw - 39em)/2)*4/6)',
+            height: 'calc(((100vw - 39em)/2)*4/6)'
           }}
           loadingComponent={() => (
             <div className="loading">Loading video room…</div>
