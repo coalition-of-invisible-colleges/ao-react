@@ -60,11 +60,10 @@ export default function applyRouter(app) {
   app.use(lightningRouter)
 
   app.post('/logout', (req, res) => {
-    console.log("Logging out and clearing token")
-    res.cookie('token', 'none', {
-      expires: new Date(Date.now() + 5 * 1000),
-      httpOnly: true,
-  })
+    console.log("Logging out and clearing token (new way)");
+    res.clearCookie("token");
+    console.log('sending end() res');
+    res.end();
   })
 
   app.post('/state', (req, res) => {

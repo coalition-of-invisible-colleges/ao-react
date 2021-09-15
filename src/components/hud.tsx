@@ -58,6 +58,7 @@ class MainMenu extends React.Component<{}, State> {
   }
 
   onLogout = () => {
+    console.log("calling api logout")
     api.logout()
     console.log('logged out', aoStore.state.loggedIn)
   }
