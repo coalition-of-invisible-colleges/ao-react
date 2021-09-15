@@ -1242,9 +1242,10 @@ class AoApi {
       })
   }
 
-  logout() {
+  async logout(): Promise<request.Response> {
     aoStore.resetState()
     window.localStorage.clear()
+    //clear cookie
   }
 
   startSocketListeners() {
