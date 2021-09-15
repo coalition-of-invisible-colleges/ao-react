@@ -15,6 +15,7 @@ class AoApi {
     const session = uuidV1()
     let sessionKey = createHash(session + createHash(pass))
     const token = hmacHex(session, sessionKey)
+    console.log("Creating session")
     return request
       .post('/session')
       .set('authorization', token)
