@@ -1,18 +1,16 @@
-const config = require('../../configuration.js')
-const uuidV1 = require('uuid/v1')
-const express = require('express')
-const lightningRouter = express.Router()
-const allEvents = require('./events')
-const calculations = require('../calculations')
-const LightningClient = require('./lightning-client')
-const { serverState } = require('./state')
+import config from '../../configuration.js'
+import express from 'express'
+export const lightningRouter = express.Router()
+import allEvents from './events.js'
+import LightningClient from './lightning-client.js'
+import state from './state.js'
+const serverState = state.serverState
 const client = new LightningClient(config.clightning.dir, true)
-const Client = require('bitcoin-core')
+import Client from 'bitcoin-core'
 const bitClient = new Client(config.bitcoind)
-const chalk = require('chalk')
+import chalk from 'chalk'
 
-const _ = require('lodash')
-const crypto = require('../crypto')
+import _ from 'lodash'
 
 bitClient
   .getBlockchainInfo()
@@ -124,11 +122,11 @@ lightningRouter.post('/bitcoin/transaction', (req, res) => {
 //         })
 // })
 
-function createInvoice(sat, label, description, expiresInSec) {
+export function createInvoice(sat, label, description, expiresInSec) {
   return client.invoice(sat * 1000, label, description, expiresInSec)
 }
 
-function newAddress() {
+export function newAddress() {
   return client.newaddr()
 }
 
@@ -137,7 +135,7 @@ function updateAll() {
   getInfo()
 }
 
-function watchOnChain() {
+export function watchOnChain() {
   setInterval(updateAll, 1000 * 60 * 4)
   setTimeout(() => {
     updateAll()
@@ -156,7 +154,11 @@ function checkFunds() {
           ) {
             serverState.tasks.forEach(t => {
               if (t.btcAddr === o.address) {
-                allEvents.taskBoosted(t.taskId, o.value, o.txid)
+                allEvents.trigger('task-boosted', {
+                  taskId: t.taskId,
+                  amount: o.value,
+                  txid: o.txid,
+                })
               }
             })
           }
@@ -196,7 +198,7 @@ function getInfo() {
     .catch(console.log)
 }
 
-function recordEveryInvoice(start) {
+export function recordEveryInvoice(start) {
   client
     .waitanyinvoice(start)
     .then(invoice => {
@@ -205,12 +207,12 @@ function recordEveryInvoice(start) {
       }
       serverState.tasks.forEach(t => {
         if (t.payment_hash === invoice.payment_hash) {
-          allEvents.taskBoostedLightning(
-            t.taskId,
-            invoice.msatoshi / 1000,
-            invoice.payment_hash,
-            invoice.pay_index
-          )
+          allEvents.trigger('task-boosted-lightning', {
+            taskId: t.taskId,
+            amount: invoice.msatoshi / 1000,
+            payment_hash: invoice.payment_hash,
+            pay_index: invoice.pay_index,
+          })
         }
       })
       recordEveryInvoice(start + 1) // is this recurr broken?
@@ -218,10 +220,12 @@ function recordEveryInvoice(start) {
     .catch(err => {})
 }
 
-module.exports = {
+const lightning = {
   createInvoice,
   newAddress,
   recordEveryInvoice,
   watchOnChain,
-  lightningRouter
+  lightningRouter,
 }
+
+export default lightning

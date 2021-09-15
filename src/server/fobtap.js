@@ -1,9 +1,9 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 
-const state = require('./state')
-const utils = require('./utils')
-const events = require('./events')
+import state from './state.js'
+import { memberFromFob, getResource, buildResCallback } from './utils.js'
+import events from './events.js'
 
 function access(member, resource) {
   if (member.active < 0) {
@@ -18,16 +18,19 @@ function access(member, resource) {
 
 function resourceCheck(req, res, next) {
   console.log('resourceCheck')
-  let member = utils.memberFromFob(req.body.fob)
-  let resource = utils.getResource(req.body.resourceId)
+  let member = memberFromFob(req.body.fob)
+  let resource = getResource(req.body.resourceId)
   if (member && resource && access(member, resource)) {
-    events.resourceUsed(
-      req.body.resourceId,
-      member.memberId,
-      req.body.amount || 1,
-      resource.charged || 0,
-      req.body.notes || 'D',
-      utils.buildResCallback(res)
+    events.trigger(
+      'resource-used',
+      {
+        resourceId: req.body.resourceId,
+        memberId: member.memberId,
+        amount: req.body.amount || 1,
+        charged: resource.charged || 0,
+        notes: req.body.notes || 'D',
+      },
+      buildResCallback(res)
     )
   } else {
     next()
@@ -40,4 +43,4 @@ router.use('/fobtap', (req, res) => {
   res.end('fobtap not handled')
 })
 
-module.exports = router
+export default router

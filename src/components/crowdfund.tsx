@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
+import AoPrice from './price'
 import Chest from '../assets/images/chest.svg'
 
 interface Props {
@@ -17,7 +18,7 @@ interface State {
 
 export const defaultState: State = {
   editing: false,
-  text: ''
+  text: '',
 }
 
 @observer
@@ -48,7 +49,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
 
     if (card.goal) {
       this.setState({
-        text: card.goal.toString()
+        text: card.goal.toString(),
       })
     }
     this.setState({ editing: true })
@@ -79,8 +80,10 @@ export default class AoCrowdfund extends React.Component<Props, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.saveGoal(event)
     } else if (event.key === 'Escape') {
+      event.stopPropagation()
       this.setState({ editing: false, text: '' })
     }
   }
@@ -135,6 +138,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
               <img src={Chest} />
               {hasGoal ? 'Goal: ' + goal : 'set crowdfund goal'}
             </div>
+            {hasGoal && <AoPrice taskId={this.props.taskId} />}
           </div>
         )
       case 'face before':

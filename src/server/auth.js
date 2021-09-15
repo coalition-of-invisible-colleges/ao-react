@@ -1,9 +1,9 @@
-const utils = require('./utils')
-const events = require('./events')
-const cryptoUtils = require('../crypto')
-const state = require('./state')
+import { buildResCallback } from './utils.js'
+import events from './events.js'
+import { createHash, hmacHex } from '../crypto.js'
+import state from './state.js'
 
-const getIdSecret = function(identifier) {
+const getIdSecret = function (identifier) {
   var ownerId, secret
 
   try {
@@ -31,7 +31,7 @@ const getIdSecret = function(identifier) {
   return { ownerId, secret }
 }
 // Used in socketio-auth creation, checks token (https://www.npmjs.com/package/socketio-auth)
-function socketAuth(socket, data, callback) {
+export function socketAuth(socket, data, callback) {
   let authorized
   state.serverState.sessions.forEach(session => {
     if (session.token === data.token) {
@@ -42,28 +42,40 @@ function socketAuth(socket, data, callback) {
   callback(null, authorized)
 }
 
-function serverAuth(req, res, next) {
+export function serverAuth(req, res, next) {
   const { ownerId, secret } = getIdSecret(req.headers.name)
-
-  if (secret && req.headers.authorization && req.headers.session) {
-    let sessionKey = cryptoUtils.createHash(req.headers.session + secret)
-    let token = cryptoUtils.hmacHex(req.headers.session, sessionKey)
-    if (token === req.headers.authorization) {
+  let authorization
+  if (req.cookies.token) {
+    authorization = req.cookies.token
+  } else {
+    authorization = req.headers.authorization
+  }
+  if (secret && authorization && req.headers.session) {
+    let sessionKey = createHash(req.headers.session + secret)
+    let token = hmacHex(req.headers.session, sessionKey)
+    if (token === authorization) {
       // client able to create the token, must have secret
-      events.sessionCreated(
-        ownerId,
-        req.headers.session,
-        token,
-        utils.buildResCallback(res)
+      res.cookie('token', token, {
+        httpOnly: true,
+        expires: new Date(253402300000000),
+      })
+      events.trigger(
+        'session-created',
+        {
+          session: req.headers.session,
+          token: token,
+          ownerId: ownerId,
+        },
+        buildResCallback(res)
       )
     } else {
       res.status(401).end('unauthorized')
     }
   } else {
-    // otherwise we validate there authorization token in the header
+    // otherwise we validate their authorization token in the header
     let authorized = false
     state.serverState.sessions.forEach(session => {
-      if (session.token === req.headers.authorization) {
+      if (session.token === authorization) {
         authorized = true
         req.reqOwner = session.ownerId
       }
@@ -74,9 +86,4 @@ function serverAuth(req, res, next) {
       res.status(401).end('unauthorized')
     }
   }
-}
-
-module.exports = {
-  socketAuth,
-  serverAuth
 }

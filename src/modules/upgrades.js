@@ -1,4 +1,3 @@
-const Vue = require('vue')
 const modes = ['doge', 'boat', 'badge', 'chest', 'timecube']
 const payments = ['bitcoin', 'lightning']
 const dimensions = ['unicorn', 'sun', 'bull']
@@ -169,7 +168,7 @@ const actions = {
 }
 const getters = {}
 
-module.exports = {
+export default {
   state,
   mutations,
   actions,

@@ -63,605 +63,665 @@ textarea {
       padding: 0.5em 1.5em;
       background-color: black;
       margin-bottom: 1em;
+    }
 
-      &.full,
-      &.face {
-        min-height: 6em;
-        max-width: 98vw;
+    // full- and face-style card
+    .card.full,
+    .card.face {
+      min-height: 6em;
+      max-width: 98vw;
 
-        @media only screen and (min-width: 600px) {
-          min-width: 30em;
-        }
-
-        .unread {
-          position: absolute;
-          top: 0.25em;
-          left: 0.25em;
-        }
-
-        & > .hud > .coin > .hodls {
-          top: 0.65em;
-        }
+      @media only screen and (min-width: 600px) {
+        min-width: 30em;
       }
 
-      &.full {
-        box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
-
-        .priority {
-          min-height: 2.325em;
-
-          .coin {
-            margin-top: 0;
-            .hodls {
-              top: 0.375em;
-            }
-          }
-        }
+      .unread {
+        position: absolute;
+        top: 0.1em;
+        right: 0.125em;
       }
 
-      &.compact {
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 8em;
-        height: 8em;
-        overflow: hidden;
-        transform: unset;
-
-        .coin {
-          position: absolute;
-        }
+      & > .hud > .coin > .hodls {
+        top: 0.65em;
       }
+    }
 
-      &.priority,
-      &.context,
-      &.mission {
-        position: relative;
-        margin-top: 0.25em;
-        text-align: left;
-        min-height: 0;
-        width: 100%;
-        min-width: unset;
+    // full-style card used for full-page card
+    .card.full {
+      box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
 
-        .content,
-        .content > p {
-          margin-top: 0;
-          margin-bottom: 0;
-        }
-
-        .stack {
-          margin-right: 1em;
-          margin-left: 1em;
-        }
-      }
-
-      &.priority,
-      &.mission {
-        padding: 0;
-        margin-bottom: 0.5em;
-
-        &.padbottom {
-          padding-bottom: 0.25em;
-        }
-
-        .content {
-          padding: 0.55em 1em 0.55em 1em;
-        }
-
-        .coin {
-          transform: unset;
-          margin: 0;
-          left: -0.5em;
-          bottom: 0;
-          top: -0.35em;
-          display: inline-block;
-          float: left;
-
-          img {
-            width: 2em;
-            // height: 2em;
-          }
-        }
-
-        & > .hud {
-          z-index: 1;
-          position: relative;
-          float: right;
-          margin-left: 0.5em;
-
-          .mission,
-          .preview,
-          .countdown,
-          .value,
-          .goal,
-          .checkbox,
-          .cardMenuButton {
-            display: inline-block;
-          }
-
-          .mission,
-          .preview,
-          .countdown,
-          .value,
-          .goal {
-            font-size: 0.8em;
-          }
-
-          .mission,
-          .preview,
-          .countdown,
-          .barkButton {
-            margin-right: 0.75em;
-          }
-
-          .mission {
-            .badge {
-              height: 1.5em;
-              margin-right: 0.25em;
-              position: relative;
-              top: 0.31em;
-            }
-          }
-
-          .value,
-          .goal {
-            margin-right: 2.5em;
-          }
-
-          .checkbox {
-            position: relative;
-            top: 0.4em;
-          }
-
-          .cardMenuButton {
-            font-size: 1.15em;
-            padding: 0.35em 0.25em;
-          }
-
-          .action {
-            display: inline;
-            margin-right: 0.5em;
-            padding-bottom: 0.2975em;
-          }
-        }
-      }
-
-      &.priority {
+      .priority {
         min-height: 2.325em;
 
-        .unread {
-          position: absolute;
-          top: 47%;
-          left: -0.9em;
-        }
-      }
-
-      &.mission {
         .coin {
+          margin-top: 0;
           .hodls {
-            top: 0.25em;
+            top: 0.375em;
           }
         }
       }
+    }
 
-      .context {
-        max-height: 3.5em;
-        overflow-y: hidden;
-      }
+    // compact-style card is square and used for drag-and-drop
+    .card.compact {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 8em;
+      height: 8em;
+      overflow: hidden;
+      transform: unset;
 
-      &.mini {
+      .coin {
         position: absolute;
-        top: 0;
-        background-color: black;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        overflow: hidden;
+      }
+    }
 
-        &:hover {
-        }
+    // priority-, context-, and mission-style cards (all are "collapsed" style)
+    .card.priority,
+    .card.context,
+    .card.mission {
+      position: relative;
+      margin-top: 0.25em;
+      text-align: left;
+      min-height: 0;
+      width: 100%;
+      min-width: unset;
 
-        & > .content {
-          position: relative;
-          font-size: 0.8em;
-          margin: 0;
-          height: 100%;
-          cursor: default;
-
-          h1 {
-            font-size: 1.1em;
-          }
-
-          h2,
-          h3,
-          h4,
-          h5,
-          h6 {
-            font-size: 1.05em;
-          }
-
-          ol {
-            list-style-position: inside;
-            padding-inline-start: 0;
-          }
-        }
-
-        & > .hud {
-          position: relative;
-          pointer-events: none;
-
-          &.mini.before {
-            .unread {
-              position: absolute;
-              top: 0.25em;
-              left: 0.25em;
-            }
-
-            & > .mission,
-            & > .countdown,
-            & > .value,
-            & > .goal {
-              background-color: rgba(0, 0, 0, 0.2);
-              font-size: 0.75em;
-              padding: 0.25em;
-              margin: 0;
-            }
-
-            & > .countdown,
-            & > .mission {
-              float: left;
-              pointer-events: none;
-            }
-
-            & > .mission {
-              text-align: left;
-              .badge {
-                height: 1.1em;
-                margin-right: 0.25em;
-                position: relative;
-                top: 0.2em;
-                left: 0.05em;
-              }
-            }
-
-            & > .value,
-            & > .goal {
-              font-size: 0.6em;
-              float: right;
-            }
-
-            & > .checkbox {
-              float: right;
-              height: 0.75em;
-              width: 0.75em;
-              opacity: 0.75;
-              display: inline;
-              pointer-events: none;
-              padding-top: 0.175em;
-              padding-right: 0.15em;
-            }
-          }
-
-          &.mini.after {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            pointer-events: auto;
-
-            .countdown {
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              background-color: rgba(0, 0, 0, 0.2);
-              font-size: 0.6em;
-              padding: 0.25em;
-              margin: 0 1em 0 0;
-              width: max-content;
-            }
-
-            & > .preview {
-              position: absolute;
-              right: 1.2em;
-              bottom: 0;
-              font-size: 0.75em;
-              padding: 0.25em;
-              // pointer-events: none;
-              margin: 0;
-              background-color: rgba(0, 0, 0, 0.2);
-              cursor: default;
-
-              & .nopad {
-                padding-left: 0;
-                padding-right: 0;
-              }
-            }
-
-            & > .cardMenuButton {
-              position: absolute;
-              right: 0;
-              bottom: 0;
-              font-size: 0.9em;
-              padding: 0.1em 0.25em 0.185em 0.5em;
-            }
-          }
-        }
+      .content,
+      .content > p {
+        margin-top: 0;
+        margin-bottom: 0;
       }
 
-      &.badge {
-        transform: unset;
-        left: unset;
-        position: unset;
+      .stack {
+        margin-right: 1em;
+        margin-left: 1em;
+      }
+    }
 
-        .background {
-          position: absolute;
-          left: 0;
-          top: 0;
-          height: 100%;
-          width: 100%;
-        }
+    // priority- and mission-style are like real cards and not just tabs
+    .card.priority,
+    .card.mission {
+      padding: 0;
+      margin-bottom: 0.5em;
 
-        & > .mission.badge {
-          position: absolute;
-          top: 44%;
-          left: 50%;
-          transform: translateX(-50%) translateY(-50%);
-          font-size: 0.75em;
-          padding: 0;
-          word-break: break-all;
-          width: calc(100% - 1.25em);
-        }
-
-        & > .hud.badge {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          left: 0;
-          top: 0;
-          cursor: pointer;
-
-          & > .preview.nopad {
-            width: 100%;
-            height: 100%;
-            cursor: default;
-            padding: 0;
-            font-size: 0.8em;
-            right: unset;
-            position: absolute;
-            cursor: pointer;
-
-            .label {
-              position: absolute;
-              top: 4em;
-              left: 50%;
-              transform: translateX(-50%);
-            }
-          }
-
-          .cardMenuButton {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            padding-bottom: 0.05em;
-            padding-right: 0.1em;
-          }
-        }
+      &.padbottom {
+        padding-bottom: 0.25em;
       }
 
-      .stack > .dropZone > .action,
-      .grid .menu .action {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-      }
-
-      .stack > .dropZone {
-        position: relative;
-      }
-
-      .hud {
-        .cardMenuButton {
-          padding: 0.5em 0.5em 0.5em 0.75em;
-          font-size: 1.15em;
-          font-size: 1.25em;
-          font-weight: bold;
-          cursor: pointer;
-          user-select: none;
-          color: rgba(255, 255, 255, 0.8);
-
-          &:hover {
-            color: white;
-          }
-        }
-
-        &.full.before,
-        &.face.before {
-          position: absolute;
-          right: 0.5em;
-          top: 0.5em;
-
-          .countdown,
-          .value,
-          .goal .checkbox {
-            font-size: 0.9em;
-            display: inline-block;
-          }
-
-          .countdown,
-          .value,
-          .goal {
-            position: relative;
-            top: -0.4em;
-            margin-right: 0.5em;
-            float: left;
-          }
-        }
-
-        &.face.before {
-          .value,
-          .goal {
-            margin-left: 0.5em;
-          }
-        }
-
-        &.full.after,
-        &.face.after {
-          & > .preview {
-            position: absolute;
-            right: 2em;
-            bottom: 0.75em;
-          }
-
-          .cardMenuButton {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-          }
-        }
-      }
-
-      .value,
-      .value.full,
-      .goal,
-      .goal.full {
-        font-size: 0.9em;
-
-        &.menu {
-          float: none;
-          font-size: 1em;
-        }
-
-        &.collapsed {
-          font-size: 0.8em;
-          .action {
-            cursor: default;
-            text-decoration: none;
-            padding: 0.25em;
-          }
-        }
-      }
-
-      .checkbox {
-        height: 1.5em;
-        width: 1.5em;
-        cursor: pointer;
-        opacity: 0.5;
-        user-select: none;
-      }
-
-      @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
+      .content {
+        padding: 0.55em 1em 0.55em 1em;
       }
 
       .coin {
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 0.75em;
-        margin-top: 1.5em;
-        cursor: pointer;
-        user-select: none;
-        width: fit-content;
-
-        // the paw in the moon, shown when a card has signatures
-        img.moonpaw {
-          height: 1.45em;
-          width: 1.6em;
-          position: absolute;
-          top: 0.5em;
-          left: calc(50% - 0.7em);
-          opacity: 0.4;
-          pointer-events: none;
-        }
+        transform: unset;
+        margin: 0;
+        left: -0.5em;
+        bottom: 0;
+        top: -0.35em;
+        display: inline-block;
+        float: left;
 
         img {
-          width: 2.5em;
-          // height: 2.5em;
-        }
-
-        &.ungrabbed > img,
-        &.ungrabbed > .hodls {
-          opacity: 0.3;
-        }
-
-        img.spin {
-          animation: spin 32s linear infinite;
-        }
-
-        .pendingDeletion {
-          position: absolute;
-          width: 100%;
-          height: calc(100% - 0.25em);
-          background: red;
-          mix-blend-mode: multiply;
-          top: 0;
-          left: 0;
-          border-radius: 50%;
-          pointer-events: none;
-          opacity: 0.65;
-        }
-
-        .hodls {
-          position: absolute;
-          left: 50%;
-          top: 0.25em;
-          transform: translateX(-50%);
-          text-align: center;
-          width: 2.75em;
-          bottom: 0.25em;
-          padding-bottom: 0.4em;
-          margin-bottom: 0;
-          font-weight: bold;
-          color: rgba(255, 255, 255, 1);
-          pointer-events: none;
-          text-shadow: -0.1em 0.1em 0.2em #000;
+          width: 2em;
+          // height: 2em;
         }
       }
 
-      .hourglass {
-        img {
-          width: 2em;
+      & > .hud {
+        z-index: 1;
+        position: relative;
+        float: right;
+        margin-left: 0.5em;
+
+        .mission,
+        .preview,
+        .countdown,
+        .value,
+        .goal,
+        .checkbox,
+        .cardMenuButton {
+          display: inline-block;
         }
 
-        .history {
-          display: none;
-          position: absolute;
-          left: 100%;
-          top: 0;
-          width: 24em;
-          background-color: rgba(22, 22, 22, 0.4);
+        .mission,
+        .preview,
+        .countdown,
+        .value,
+        .goal {
+          font-size: 0.8em;
         }
 
-        .action:hover + .history {
-          display: block;
+        .mission,
+        .preview,
+        .countdown,
+        .barkButton {
+          margin-right: 0.75em;
         }
 
-        .stopped {
-        }
-
-        .started {
-        }
-
-        .cardTimeLog {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          margin-left: auto;
-          margin-right: auto;
-          .cardTimeLogDate {
-            align-self: left;
-            margin-left: 10px;
+        .mission {
+          .badge {
+            height: 1.5em;
+            margin-right: 0.25em;
+            position: relative;
+            top: 0.31em;
           }
-          .cardTimeLogDateNull {
-            align-self: left;
+        }
 
-            &.orangeLog {
-              color: orange;
+        .value,
+        .goal {
+          margin-right: 2.5em;
+        }
+
+        .checkbox {
+          position: relative;
+          top: 0.4em;
+        }
+
+        .cardMenuButton {
+          font-size: 1.15em;
+          padding: 0.35em 0.25em;
+        }
+
+        .action {
+          display: inline;
+          margin-right: 0.5em;
+          padding-bottom: 0.2975em;
+        }
+      }
+    }
+
+    // mission-style card shows in the Guilds Index
+    .card.mission {
+      .coin {
+        .hodls {
+          top: 0.25em;
+        }
+      }
+    }
+
+    // unread dot on a mission- or priority-style card
+    .card.mission .unread,
+    .card.priority .unread {
+      display: inline-block;
+      width: 1.84em;
+      height: 1.84em;
+      opacity: 0.6;
+    }
+
+    // unread dot on a mission-style card
+    .card.mission .unread {
+      transform: translateY(0.25em);
+      margin-right: 0.25em;
+    }
+
+    // priority-style card
+    .card.priority {
+      min-height: 2.325em;
+
+      .unread {
+        transform: translateY(0.135em);
+        margin-right: 1.5em;
+      }
+    }
+
+    // mini-style card that displays in grid squares
+    .card.mini {
+      position: absolute;
+      top: 0;
+      background-color: black;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+
+      &:hover {
+      }
+
+      & > .content {
+        position: relative;
+        font-size: 0.8em;
+        margin: 0;
+        height: 100%;
+        cursor: default;
+
+        h1 {
+          font-size: 1.1em;
+        }
+
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+          font-size: 1.05em;
+        }
+
+        ol {
+          list-style-position: inside;
+          padding-inline-start: 0;
+        }
+      }
+
+      .unread {
+        position: absolute;
+        top: 0em;
+        right: 0em;
+        width: 1.6em;
+        height: 1.6em;
+        opacity: 0.6;
+      }
+
+      & > .hud {
+        position: relative;
+        pointer-events: none;
+
+        &.mini.before {
+          & > .mission,
+          & > .countdown,
+          & > .value,
+          & > .goal {
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.75em;
+            padding: 0.25em;
+            margin: 0;
+          }
+
+          & > .countdown,
+          & > .mission {
+            float: left;
+            pointer-events: none;
+          }
+
+          & > .mission {
+            text-align: left;
+            .badge {
+              height: 1.1em;
+              margin-right: 0.25em;
+              position: relative;
+              top: 0.2em;
+              left: 0.05em;
             }
+          }
+
+          & > .value,
+          & > .goal {
+            font-size: 0.6em;
+            float: right;
+          }
+
+          & > .checkbox {
+            float: right;
+            height: 0.75em;
+            width: 0.75em;
+            opacity: 0.75;
+            display: inline;
+            pointer-events: none;
+            padding-top: 0.175em;
+            padding-right: 0.15em;
+          }
+
+          & > .tally {
+            margin-left: 0.15em;
+          }
+        }
+
+        &.mini.after {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          pointer-events: auto;
+
+          .countdown {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-size: 0.6em;
+            padding: 0.25em;
+            margin: 0 1em 0 0;
+            width: max-content;
+          }
+
+          & > .preview {
+            position: absolute;
+            right: 1.2em;
+            bottom: 0;
+            font-size: 0.75em;
+            padding: 0.25em;
+            // pointer-events: none;
+            margin: 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            cursor: default;
+
+            & .nopad {
+              padding-left: 0;
+              padding-right: 0;
+            }
+          }
+
+          & > .cardMenuButton {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            font-size: 0.9em;
+            padding: 0.1em 0.25em 0.185em 0.5em;
+          }
+        }
+      }
+    }
+
+    // badge-style card that replaces mini card for guilds
+    .card.badge {
+      transform: unset;
+      left: unset;
+      position: unset;
+
+      .background {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      & > .mission.badge {
+        position: absolute;
+        top: 44%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        font-size: 0.75em;
+        padding: 0;
+        word-break: break-all;
+        width: calc(100% - 1.25em);
+        pointer-events: none;
+      }
+
+      & > .hud.badge {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+
+        & > .preview.nopad {
+          width: 100%;
+          height: 100%;
+          padding: 0;
+          font-size: 0.8em;
+          right: unset;
+          position: absolute;
+          pointer-events: auto;
+          cursor: pointer;
+
+          .label {
+            position: absolute;
+            left: calc(50% + 0.16em);
+            transform: translateX(-50%);
+            top: 4em;
+          }
+        }
+
+        .cardMenuButton {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          padding-bottom: 0.05em;
+          padding-right: 0.1em;
+          padding-left: 0.4em;
+          pointer-events: auto;
+        }
+
+        .checkbox.badge,
+        .cardMenuButton {
+          pointer-events: auto;
+        }
+
+        .checkbox.unchecked {
+          opacity: 0;
+        }
+      }
+    }
+
+    .card.badge:hover {
+      & > .hud {
+        .checkbox.unchecked {
+          opacity: 1;
+          transition-property: opacity;
+          transition-delay: 0.35s;
+          transition-duration: 0.25s;
+        }
+      }
+    }
+
+    // action button in a card or in a menu
+    .card .stack > .dropZone > .action,
+    .card .grid .menu .action {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+
+    // fix position on dropZone in a card
+    .card .stack > .dropZone {
+      position: relative;
+    }
+
+    // card hud (cardHud.tsx)
+    .card .hud {
+      .cardMenuButton {
+        padding: 0.5em 0.5em 0.5em 0.75em;
+        font-size: 1.15em;
+        font-size: 1.25em;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        color: rgba(255, 255, 255, 0.8);
+
+        &:hover {
+          color: white;
+        }
+      }
+
+      &.full.before,
+      &.face.before {
+        position: absolute;
+        right: 0.5em;
+        top: 0.5em;
+
+        .countdown,
+        .value,
+        .goal .checkbox {
+          font-size: 0.9em;
+          display: inline-block;
+        }
+
+        .countdown,
+        .value,
+        .goal {
+          position: relative;
+          top: -0.4em;
+          margin-right: 0.5em;
+          float: left;
+        }
+
+        .value {
+          top: 0.15em;
+        }
+      }
+
+      &.face.before {
+        .value,
+        .goal {
+          margin-left: 0.5em;
+        }
+      }
+
+      &.full.after,
+      &.face.after {
+        & > .preview {
+          position: absolute;
+          right: 2em;
+          bottom: 0.75em;
+        }
+
+        .cardMenuButton {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+      }
+    }
+
+    // card value (crowdFund) and goal components on cardHud
+    .card .value,
+    .card .value.full,
+    .card .goal,
+    .card .goal.full {
+      font-size: 0.9em;
+
+      &.menu {
+        float: none;
+        font-size: 1em;
+      }
+
+      &.collapsed {
+        font-size: 0.8em;
+        .action {
+          cursor: default;
+          text-decoration: none;
+          padding: 0.25em;
+        }
+      }
+    }
+
+    // checkbox on a card
+    .card .checkbox {
+      height: 1.5em;
+      width: 1.5em;
+      cursor: pointer;
+      opacity: 0.5;
+      user-select: none;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    // coin on a card
+    .card .coin {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 0.75em;
+      margin-top: 1.5em;
+      cursor: pointer;
+      user-select: none;
+      width: fit-content;
+
+      // the paw in the moon, shown when a card has signatures
+      img.moonpaw {
+        height: 1.45em;
+        width: 1.6em;
+        position: absolute;
+        top: 0.5em;
+        left: calc(50% - 0.7em);
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      img {
+        width: 2.5em;
+        // height: 2.5em;
+      }
+
+      &.ungrabbed > img,
+      &.ungrabbed > .hodls {
+        opacity: 0.3;
+      }
+
+      img.spin {
+        animation: spin 32s linear infinite;
+      }
+
+      .pendingDeletion {
+        position: absolute;
+        width: 100%;
+        height: calc(100% - 0.25em);
+        background: red;
+        mix-blend-mode: multiply;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.65;
+      }
+
+      .hodls {
+        position: absolute;
+        left: 50%;
+        top: 0.25em;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 2.75em;
+        bottom: 0.25em;
+        padding-bottom: 0.4em;
+        margin-bottom: 0;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 1);
+        pointer-events: none;
+        text-shadow: -0.1em 0.1em 0.2em #000;
+      }
+    }
+
+    // hourglass (timeclock) on a card
+    .card .hourglass {
+      img {
+        width: 2em;
+      }
+
+      .history {
+        display: none;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        width: 24em;
+        background-color: rgba(22, 22, 22, 0.4);
+      }
+
+      .action:hover + .history {
+        display: block;
+      }
+
+      .stopped {
+      }
+
+      .started {
+      }
+
+      .cardTimeLog {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-left: auto;
+        margin-right: auto;
+        .cardTimeLogDate {
+          align-self: left;
+          margin-left: 10px;
+        }
+        .cardTimeLogDateNull {
+          align-self: left;
+
+          &.orangeLog {
+            color: orange;
           }
         }
       }
@@ -739,8 +799,8 @@ textarea {
 
       .resizer {
         position: absolute;
-        margin-top: -4.75em; // -4.75
-        right: 0;
+        margin-top: -5.2em;
+        right: 0.1em;
         transform: translateX(100%);
 
         button {
@@ -824,40 +884,56 @@ textarea {
     // the card menu
     .hud.menu,
     #mainMenu {
-      background: white;
-      color: black;
+      // background: rgba(0, 0, 0, 0.2);
+      color: white;
+      padding: 0.25em 0 0 0;
 
       .action {
-        color: black;
+        // color: black;
         width: calc(100% - 1em);
         border: none;
         border-radius: 0;
         text-shadow: none;
         margin: 0;
+
+        &.inline {
+          width: min-content;
+        }
       }
 
       .action,
       .palette {
-        background: linear-gradient(
-          0deg,
-          rgba(102, 102, 102, 1) 0%,
-          rgba(238, 238, 238, 1) 20%,
-          rgba(242, 242, 242, 1) 37%,
-          rgba(242, 242, 242, 1) 80%,
-          rgba(102, 102, 102, 1) 100%
-        );
+        // background: linear-gradient(
+        //   0deg,
+        //   rgba(102, 102, 102, 1) 0%,
+        //   rgba(238, 238, 238, 1) 20%,
+        //   rgba(242, 242, 242, 1) 37%,
+        //   rgba(242, 242, 242, 1) 80%,
+        //   rgba(102, 102, 102, 1) 100%
+        // );
       }
     }
 
-    // connection status indicator, currently unused
+    // connection status indicator
     #status {
       position: fixed;
-      bottom: 0;
-      left: 0;
+      bottom: 0.5em;
+      left: 4.5em;
       margin-left: 0.5em;
       margin-bottom: 0.3em;
       cursor: pointer;
       height: 3em;
+
+      &.disconnected {
+        filter: hue-rotate(-38deg);
+      }
+    }
+
+    // full-screen overlay when disconnected
+    #disconnected {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.2);
     }
 
     // theme changer, in main menu?
@@ -1156,7 +1232,7 @@ textarea {
     // deck popup
     #deck {
       .actionCircle {
-        top: 2.5em;
+        bottom: 0.5em;
         left: calc(100% + 2.5em);
         width: 3.5em;
         height: 3.5em;
@@ -1370,6 +1446,11 @@ textarea {
           max-height: 3em;
           overflow: hidden;
           cursor: pointer;
+
+          .unread {
+            position: absolute;
+            left: 0.5em;
+          }
         }
       }
     }
@@ -1530,6 +1611,8 @@ textarea {
         font-weight: bold;
         background: none;
         cursor: default;
+        border: 0.1em solid white;
+        border-radius: 1em;
 
         &:hover {
           text-decoration: none;
@@ -1557,10 +1640,12 @@ textarea {
 
     // action button inside a toolbar, currently only used on .mission-style card
     .toolbar {
+      margin-bottom: 0.5em;
+
       .action {
         display: inline-block;
         margin-right: 0.5em;
-        padding: 0.25em 0.5em;
+        padding: 0.25em 0.75em;
       }
     }
 
@@ -1644,6 +1729,10 @@ textarea {
 
       &.yellow {
         background-color: rgba(175, 175, 10, 0.85);
+      }
+
+      &.red {
+        background-color: rgba(255, 10, 10, 0.85);
       }
 
       // on bird
@@ -1848,10 +1937,15 @@ textarea {
     // unread dot on cards
     .unread {
       content: '';
-      height: 0.375em;
-      width: 0.375em;
+      height: 2.25em;
+      width: 2.25em;
       border-radius: 50%;
-      background-color: rgba(255, 10, 10, 0.85);
+      background-color: rgba(255, 10, 10, 0.75);
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(255, 10, 10, 1);
+      }
     }
 
     // the dock at the bottom of the screen
@@ -2017,6 +2111,15 @@ textarea {
       h4 {
         margin: 0.5em 0;
       }
+
+      p {
+        margin-top: 0.5em;
+        margin-bottom: 1em;
+      }
+
+      p:last-child {
+        margin-bottom: 0.55em;
+      }
     }
 
     .signatureDecorated {
@@ -2171,15 +2274,21 @@ textarea {
     }
 
     // Start Tour button at top left of screen before you've take the tour once
-    #hud > .tour {
+    // Becomes the Manual button after you take the tour
+    #hud > .tour,
+    #hud .manual {
       position: fixed;
       bottom: 0.625em;
       left: 5em;
-      animation: rainbow 4s linear 0s infinite;
       border: 0.25em solid;
       font-size: 1.25em;
       font-weight: bold;
       background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    // Rainbow animation effect on the to
+    #hud > .tour {
+      animation: rainbow 4s linear 0s infinite;
     }
 
     @keyframes rainbow {
@@ -2252,7 +2361,7 @@ textarea {
         }
 
         .label {
-          color: black;
+          color: white;
           margin-top: 0.75em;
           position: absolute;
           left: 50%;
@@ -2362,6 +2471,14 @@ textarea {
       audio {
         height: 100%;
         margin: 1em 0;
+        max-width: 100%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .mini .attachment {
+        margin: 0;
       }
     }
 
@@ -2490,6 +2607,7 @@ textarea {
         .dropZone {
           width: 100%;
           height: max-content;
+          min-height: 2.5em;
         }
       }
     }
@@ -2559,8 +2677,8 @@ textarea {
       color: red;
     }
 
-    // area for avatars on the card
-    .lilypad {
+    // button that opens the chatroom, area for avatars on the card
+    .lilypad.actionCircle {
       position: absolute;
       top: 3em;
       right: 0.5em;
@@ -2616,18 +2734,18 @@ textarea {
       }
     }
 
-    // Red warning text on the bark menu
+    // red warning text on the bark menu
     .warning {
       font-weight: bold;
       color: red;
     }
 
-    // A wrapper for the current card
+    // a wrapper for the current card
     #tour-current-card {
       padding-bottom: 8.5em;
     }
 
-    // Star / medals / badges / accomplishments button on a card
+    // star / medals / badges / accomplishments button on a card
     .accomplishments {
       position: absolute;
       left: 0.5em;
@@ -2644,19 +2762,45 @@ textarea {
       }
     }
 
-    // The text box to create a new crypto ticker in the main menu
+    // stash/dropbox on a card
+    .stash {
+      position: absolute;
+      left: 0.5em;
+      top: 3em;
+
+      .popupPanel {
+        // max-width: 42vw;
+        width: max-content;
+        max-height: 96vh;
+        min-width: 25em;
+        height: max-content;
+        min-height: 16em;
+
+        .stack {
+          // max-height: 44vh;
+          // overflow-y: auto;
+          min-width: 24em;
+        }
+      }
+
+      p {
+        margin-top: 4em;
+        max-width: 25em;
+      }
+    }
+
+    // the text box to create a new crypto ticker in the main menu
     #mainMenu .ticker textarea {
       max-width: 10em;
       height: 1.5em;
     }
 
-    // The hopper icon that hops above each square on the dock grid
+    // the hopper icon that hops above each square on the dock grid
     #hopper {
       position: absolute;
       height: 1.5em;
-      top: 0.5em;
+      bottom: 6em;
       transform: translateX(-50%);
-      cursor: pointer;
       // width: min-content;
       transition-property: left;
       transition-duration: 1s;
@@ -2665,11 +2809,466 @@ textarea {
       img {
         max-height: 100%;
         fill: blue;
+        cursor: pointer;
       }
 
       .inPort {
         opacity: 0.75;
       }
+    }
+
+    // popupPanel for the Hopper
+    .popupPanel.hopperPanel {
+      width: max-content;
+      max-width: 33vw;
+
+      input[type='text'] {
+        // text-align: center;
+      }
+
+      .options {
+        width: -moz-fit-content;
+        width: fit-content;
+        text-align: left;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .option {
+        cursor: pointer;
+        display: block;
+        margin-top: 0.75em;
+        // width: fit-content;
+
+        &.first {
+          margin-top: 1em;
+        }
+
+        input[type='checkbox'] {
+          margin-right: 0.5em;
+        }
+      }
+
+      .action.inline.playPause {
+        margin-top: 0.25em;
+        font-size: 1.75em;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    // the checkbox on a badge (guild mini) card
+    .badge .checkbox {
+      position: absolute;
+      top: -0.15em;
+      right: 0;
+      padding: 0.1em;
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.7);
+      width: 1.35em;
+    }
+
+    // the card menu button on a badge
+    .badge .cardMenuButton {
+      padding-left: 0;
+    }
+
+    // textbox with an error (used in Hopper)
+    input[type='text'].error {
+      border: 2px solid red;
+    }
+
+    // claim reset icon in the top right corner of a card, next to the checkbox
+    .claimInterval.full {
+      display: inline-block;
+      cursor: default;
+      padding-right: 0.5em;
+
+      img {
+        height: 1.5em;
+      }
+    }
+
+    // claim interval option in card menu
+    .claimInterval.menu {
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
+      img {
+        height: 1em;
+        margin-right: 0.25em;
+      }
+
+      input[type='text'] {
+        text-align: center;
+      }
+    }
+
+    // glossary section on the Membership tab of the Bull controls
+    #glossary {
+      position: relative;
+      table {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    // card while it is loading
+    // .card.badge.loading {
+    // background-color: rgba(0, 0, 0, 0.5);
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // width: 100%;
+    // height: 100%;
+    // transform: unset;
+    // left: unset;
+    // position: unset;
+    // width: 100%;
+    // height: 100%;
+    // width: unset;
+    // height: unset;
+    // }
+
+    // spinner for when cards are loading
+    .spinner {
+      width: 3em;
+      height: 3em;
+      margin: 0;
+      position: relative;
+      top: 25%;
+      margin-left: auto;
+      margin-right: auto;
+      // transform: translateX(-50%);
+      // margin: 100px auto;
+      background-color: #444;
+      border-radius: 100%;
+      -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+      animation: sk-scaleout 1s infinite ease-in-out;
+    }
+
+    @-webkit-keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0);
+      }
+      100% {
+        -webkit-transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    // drag-and-drop source zone
+    .dragZone {
+      // width: 100%;
+      // height: 100%;
+      // position: relative;
+    }
+
+    // cards while they are loading
+    .card.loading,
+    .card.mini.loading,
+    .card.badge.loading {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    // loading screen
+    #loading {
+      padding-top: 43vh;
+      font-size: 1.3em;
+      color: #666;
+    }
+
+    // red boat button to reprioritize and add a point to a prioritized task
+    .allocate {
+      position: absolute;
+      padding-left: 0.25em;
+      padding-right: 0.5em;
+      width: 1.5em;
+      text-align: center;
+      font-size: 0.95em;
+      margin-top: 0.5em;
+      color: white;
+      font-size: 1.5em;
+      cursor: pointer;
+      top: -0.45em;
+      left: -0.5em;
+
+      img {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.22;
+      }
+
+      .allocation {
+        position: absolute;
+        left: calc(50% + 0.15em);
+        transform: translateX(-50%);
+        text-shadow: 2px 2px 2px rgba(0.05, 0.05, 0.05, 0.5);
+      }
+    }
+
+    // union fair price calculator displayed as part of crowdfund.tsx in card menu
+    .price {
+      label {
+        display: block;
+      }
+
+      input[type='text'] {
+        text-align: center;
+      }
+
+      .buttonGroup {
+        border: 0.1em solid white;
+        border-radius: 1em;
+        width: -moz-fit-content;
+        width: fit-content;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 1em;
+        margin-bottom: 1em;
+
+        button.action {
+          margin: 0;
+          border-right: 0.1em solid white;
+          padding: 0.4em 0.5em 0.3em 0.5em;
+          white-space: nowrap;
+
+          &:first-child {
+            border-radius: 1em 0 0 1em;
+          }
+
+          &:last-child {
+            border-right: none;
+            border-radius: 0 1em 1em 0;
+          }
+
+          &.selected {
+            color: black;
+            background-color: white;
+          }
+        }
+      }
+    }
+
+    // Background color of the popupPanel buttons when they have unreads/unseens
+    .red0 {
+      background-color: rgba(200, 200, 200, 0.25);
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+    }
+    .red1 {
+      background-color: rgba(220, 180, 180, 0.25);
+      &:hover {
+        background-color: rgba(220, 180, 180, 0.45);
+      }
+    }
+    .red2 {
+      background-color: rgba(240, 160, 160, 0.25);
+      &:hover {
+        background-color: rgba(240, 160, 160, 0.45);
+      }
+    }
+    .red3 {
+      background-color: rgba(255, 140, 140, 0.25);
+      &:hover {
+        background-color: rgba(255, 140, 140, 0.45);
+      }
+    }
+    .red4 {
+      background-color: rgba(255, 120, 120, 0.3);
+      &:hover {
+        background-color: rgba(255, 120, 120, 0.5);
+      }
+    }
+    .red5 {
+      background-color: rgba(255, 100, 100, 0.35);
+      &:hover {
+        background-color: rgba(255, 100, 100, 0.55);
+      }
+    }
+    .red6 {
+      background-color: rgba(255, 80, 80, 0.4);
+      &:hover {
+        background-color: rgba(255, 80, 80, 0.6);
+      }
+    }
+    .red7 {
+      background-color: rgba(255, 60, 60, 0.45);
+      &:hover {
+        background-color: rgba(255, 60, 60, 0.65);
+      }
+    }
+    .red8 {
+      background-color: rgba(255, 40, 40, 0.5);
+      &:hover {
+        background-color: rgba(255, 40, 40, 0.7);
+      }
+    }
+    .red9 {
+      background-color: rgba(255, 20, 20, 0.55);
+      &:hover {
+        background-color: rgba(255, 20, 20, 0.75);
+      }
+    }
+    .red10 {
+      background-color: rgba(255, 0, 0, 0.6);
+      &:hover {
+        background-color: rgba(255, 0, 0, 0.8);
+      }
+    }
+
+    // Tighten layout on paragraph on mini style card
+    .mini p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    // Remove space above image attachments on grid cards
+    .mini .attachment img {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    // Background behind a modal dialog
+    .dimBackground {
+      background-color: rgba(0, 0, 0, 0.6);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    // Modal dialog containing the hardcoded (but glossed) AO user manual
+    #theManual {
+      background-color: rgba(5, 0, 10, 0.9);
+      border-radius: 1em;
+      height: 86vh;
+      width: -moz-fit-content;
+      width: fit-content;
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 3vh;
+      text-align: left;
+      border: 0.25em solid rgba(255, 255, 255, 0.14);
+      padding: 1em;
+      font-family: 'Arial';
+
+      h1,
+      h2,
+      h3 {
+        font-size: 1.35em;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: -moz-fit-content;
+        width: fit-content;
+        margin-top: 0.5em;
+      }
+
+      h2 {
+        font-size: 1.35em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+        margin-bottom: 0;
+        margin-top: 1em;
+      }
+
+      .browser {
+        display: flex;
+        max-height: calc(100% - 3em);
+        margin-bottom: 1em;
+
+        .topics,
+        .topicContent {
+          font-size: 0.9em;
+          background-color: white;
+          color: black;
+          border-radius: 0.25em;
+          overflow-y: auto;
+        }
+
+        .topics {
+          flex-basis: 30%;
+          margin: 0;
+          padding: 0.5em 0;
+          min-width: 22vw;
+
+          li {
+            color: black;
+            cursor: pointer;
+            list-style-type: none;
+            line-height: 2.5em;
+            padding-left: 1em;
+            position: relative;
+
+            .triangle {
+              color: black;
+              position: absolute;
+              right: 0.5em;
+              top: 0;
+            }
+
+            &.selected {
+              color: white;
+              background-color: rgba(0, 0, 0, 0.8);
+
+              & > .triangle {
+                color: white;
+              }
+            }
+          }
+        }
+
+        .topicContent {
+          flex-basis: calc(70% - 2.5em);
+          padding: 1em;
+          min-width: 46vw;
+          max-width: 40em;
+          margin-left: 0.5em;
+        }
+
+        .subTopic {
+          padding-left: 2em;
+          background-color: rgba(0, 0, 0, 0.15);
+          max-height: 0;
+          overflow-y: hidden;
+          -webkit-transition: max-height 0.75s linear;
+          -moz-transition: max-height 0.75s linear;
+          -o-transition: max-height 0.75s linear;
+          transition: max-height 0.75s linear;
+
+          &.show {
+            max-height: 200em;
+          }
+        }
+      }
+    }
+
+    // upload progress bar
+    .uploadProgress div {
+      padding: 0;
+      background-color: rgba(0.2, 0.2, 0.2, 0.55);
     }
   }
 }

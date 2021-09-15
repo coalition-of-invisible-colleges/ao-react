@@ -1,6 +1,7 @@
-const cron = require('cron')
-const events = require('./events')
-const { serverState } = require('./state')
+import cron from 'cron'
+import events from './events'
+import state from './state'
+const serverState = state.serverState
 
 // Six minutes - one minute grace period, deleted every five minutes
 const deleteAfterMs = 6 * 60 * 1000
@@ -10,7 +11,7 @@ const cleanupJob = new cron.CronJob({
   cronTime: '5 * * * * *',
   onTick: cleanup,
   start: true,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'America/Los_Angeles',
 })
 
 function cleanup() {
@@ -29,7 +30,11 @@ function cleanup() {
     console.log('No shitposts to clean up')
     return
   }
-  events.tasksRemoved(oldUnheldCards, null)
+  events.trigger(
+    'tasks-removed',
+    { taskIds: oldUnheldCards, blame: 'cleanup' },
+    null
+  )
 
   const removedCount = beforeCount - serverState.tasks.length
   console.log(
@@ -39,6 +44,6 @@ function cleanup() {
   )
 }
 
-module.exports = function() {
+export default function () {
   cleanupJob.start()
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -17,7 +17,7 @@ interface State {
 export const defaultState: State = {
   page: 0,
   text: '',
-  color: 'blue'
+  color: 'blue',
 }
 
 @observer
@@ -26,6 +26,7 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
 
   constructor(props) {
     super(props)
+    makeObservable(this)
     this.state = defaultState
     this.focusShitpostBox = this.focusShitpostBox.bind(this)
     this.shitpost = this.shitpost.bind(this)
@@ -105,6 +106,7 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.shitpost()
     }
   }

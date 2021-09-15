@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -15,7 +15,7 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 import { formatDistanceToNow, format } from 'date-fns'
 import AoMemberIcon from './memberIcon'
-import { POTENTIALS_TO_EXECUTE as VOTES_TO_EXECUTE } from '../mutations'
+//import { POTENTIALS_TO_EXECUTE as VOTES_TO_EXECUTE } from '../mutations'
 
 interface CardMenuProps {
   memberId: string
@@ -26,6 +26,7 @@ interface CardMenuProps {
 export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   constructor(props) {
     super(props)
+    makeObservable(this);
     this.activateMember = this.activateMember.bind(this)
     this.deactivateMember = this.deactivateMember.bind(this)
     this.resetPassword = this.resetPassword.bind(this)

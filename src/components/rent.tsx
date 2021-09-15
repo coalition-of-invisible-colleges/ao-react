@@ -1,15 +1,17 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoTip from './tip'
 import AoQuorum from './quorum'
+import { getSemantics, gloss } from '../semantics'
 
 @observer
 export default class AoRent extends React.PureComponent<{}> {
   constructor(props) {
     super(props)
+    makeObservable(this)
     this.state = {}
     this.renderPendingDeactivation = this.renderPendingDeactivation.bind(this)
   }
@@ -58,6 +60,41 @@ export default class AoRent extends React.PureComponent<{}> {
     )
   }
 
+  @computed get renderedGlossary() {
+    const { glossary, levels } = getSemantics()
+    const renamedLevels = Object.entries(levels).map(([level, word]) => [
+      'Level ' + level,
+      word,
+    ])
+    const combinedGlossary = [
+      ...Object.entries(glossary),
+      ...renamedLevels,
+    ].sort((a, b) => {
+      return a[0].localeCompare(b[0], undefined, {
+        sensitivity: 'base',
+      })
+    })
+    const renderedGlossary = combinedGlossary.map(([keyword, gloss]) => (
+      <tr>
+        <td>{keyword}</td>
+        <td>{gloss}</td>
+      </tr>
+    ))
+
+    return (
+      <div id="glossary">
+        <h4>Glossary</h4>
+        <table>
+          <tr>
+            <th>Word</th>
+            <th>Gloss</th>
+          </tr>
+          {renderedGlossary}
+        </table>
+      </div>
+    )
+  }
+
   render() {
     const monthlyCost = aoStore.state.cash.rent
     const monthlyCap = aoStore.state.cash.cap
@@ -79,9 +116,14 @@ export default class AoRent extends React.PureComponent<{}> {
         {this.renderPendingDeactivation()}
         <div>
           Quorum{' '}
-          <AoTip text="Number of signatures required to pass a proposal. Passed proposals appear in the Passed Proposals section of each squad. Anyone can change this setting at any time to change how proposals are displayed in squads." />
+          <AoTip
+            text={`Number of signatures required to pass a proposal. Passed proposals appear in the Passed Proposals section of each {gloss('guild')}. Anyone can change this setting at any time to change how proposals are displayed in ${gloss(
+              'guild'
+            )}s.`}
+          />
           : <AoQuorum />
         </div>
+        {this.renderedGlossary}
       </React.Fragment>
     )
   }

@@ -1,17 +1,21 @@
-const express = require('express')
-const uuidV1 = require('uuid/v1')
-const state = require('./state')
-const utils = require('./utils')
-const validators = require('./validators')
-const members = require('../members')
-const calculations = require('../calculations')
-const events = require('./events')
-const connector = require('./connector')
-const lightning = require('./lightning')
+import express from 'express'
+import v1 from 'uuid'
+import state from './state.js'
+import { buildResCallback } from './utils.js'
+import validators from './validators.js'
+import { blankCard, blankGrid } from '../cards.js'
+import events from './events.js'
+import { postEvent } from './connector.js'
+import lightning from './lightning.js'
+import { sendNotification } from './signal.js'
+import { createHash } from '../crypto.js'
+import getUrls from 'get-urls'
+import { cache } from './cache.js'
 
 const router = express.Router()
 
 router.post('/events', (req, res, next) => {
+  // console.log('AO: server/spec.js: router.post(/events):', {})
   state.serverState.sessions.forEach(s => {
     if (s.token === req.headers.authorization) {
       req.body.blame = s.ownerId
@@ -21,21 +25,30 @@ router.post('/events', (req, res, next) => {
 })
 
 router.post('/events', (req, res, next) => {
+  // console.log('AO: server/spec.js: router.post(/events):', {
+  // 'req.body': req.body,
+  // })
   let errRes = []
-  switch (req.body.type) {
+
+  function sendErrorStatus() {
+    res.status(400).send(errRes)
+  }
+
+  const eventType = req.body.type
+
+  const resCallback = buildResCallback(res)
+
+  switch (eventType) {
     case 'ao-linked':
       if (
         validators.isAddress(req.body.address, errRes) &&
-        validators.isTaskId(req.body.taskId)
+        validators.isTaskId(req.body.taskId, errRes)
       ) {
-        events.aoLinked(
-          req.body.address,
-          req.body.taskId,
-          utils.buildResCallback(res)
-        )
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, {
+          address: req.body.address,
+          taskId: req.body.taskId,
+        })
+      } else sendErrorStatus()
       break
     case 'highlighted':
       if (
@@ -43,93 +56,86 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.memberId, errRes) &&
         validators.isBool(req.body.valence, errRes)
       ) {
-        events.highlighted(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.valence,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            valence: req.body.valence,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'ao-disconnected':
       if (validators.isAddress(req.body.address, errRes)) {
-        events.aoDisconnected(req.body.address, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { address: req.body.address }, resCallback)
+      } else sendErrorStatus()
       break
     case 'ao-named':
       if (validators.isNotes(req.body.alias, errRes)) {
-        events.aoNamed(req.body.alias, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { alias: req.body.alias }, resCallback)
+      } else sendErrorStatus()
       break
     case 'rent-set':
       if (validators.isAmount(req.body.amount, errRes)) {
-        events.rentSet(req.body.amount, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { amount: req.body.amount }, resCallback)
+      } else sendErrorStatus()
       break
     case 'cap-set':
       if (validators.isAmount(req.body.amount, errRes)) {
-        events.capSet(req.body.amount, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { amount: req.body.amount }, resCallback)
+      } else sendErrorStatus()
       break
     case 'quorum-set':
       if (validators.isAmount(req.body.quorum, errRes)) {
-        events.quorumSet(req.body.quorum, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { quorum: req.body.quorum }, resCallback)
+      } else sendErrorStatus()
       break
     case 'ao-outbound-connected':
       if (
         validators.isNotes(req.body.address, errRes) &&
         validators.isNotes(req.body.secret, errRes)
       ) {
-        connector.postEvent(
+        postEvent(
           req.body.address,
           req.body.secret,
           {
             type: 'ao-inbound-connected',
             address: state.serverState.cash.address,
-            secret: req.body.secret //
+            secret: req.body.secret, //
           },
           subscriptionResponse => {
             if (!subscriptionResponse.lastInsertRowid) {
               return res.status(200).send(['ao-connect failed'])
             }
             console.log('subscribe success, attempt ao connect')
-            events.aoOutboundConnected(
-              req.body.address,
-              req.body.secret,
-              utils.buildResCallback(res)
+            events.trigger(
+              eventType,
+              {
+                address: req.body.address,
+                secret: req.body.secret,
+              },
+              resCallback
             )
           }
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'ao-inbound-connected':
       if (
         validators.isNotes(req.body.address, errRes) &&
         validators.isNotes(req.body.secret, errRes)
       ) {
-        events.aoInboundConnected(
-          req.body.address,
-          req.body.secret,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            address: req.body.address,
+            secret: req.body.secret,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'ao-relay':
       let secret
@@ -139,14 +145,9 @@ router.post('/events', (req, res, next) => {
         }
       })
       if (secret) {
-        connector.postEvent(
-          req.body.address,
-          secret,
-          req.body.ev,
-          connectorRes => {
-            console.log('ao relay response', { connectorRes })
-          }
-        )
+        postEvent(req.body.address, secret, req.body.ev, connectorRes => {
+          console.log('ao relay response', { connectorRes })
+        })
       } else {
         console.log('no connection for ', req.body.address)
         next()
@@ -158,22 +159,23 @@ router.post('/events', (req, res, next) => {
         validators.isAmount(req.body.amount, errRes)
       ) {
         lightning
-          .createInvoice(req.body.amount, '<3' + uuidV1(), '~', 3600)
+          .createInvoice(req.body.amount, '<3' + v1(), '~', 3600)
           .then(result => {
-            events.invoiceCreated(
-              req.body.taskId,
-              result.bolt11,
-              result.payment_hash,
-              utils.buildResCallback(res)
+            events.trigger(
+              eventType,
+              {
+                taskId: req.body.taskId,
+                bolt11: result.bolt11,
+                payment_hash: result.payment_hash,
+              },
+              resCallback
             )
           })
           .catch(err => {
             console.log({ err })
             res.status(200).send('attempt failed')
           })
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-created':
       if (
@@ -182,29 +184,52 @@ router.post('/events', (req, res, next) => {
         validators.isNotes(req.body.secret) &&
         !validators.isMemberName(req.body.name, errRes)
       ) {
-        events.memberCreated(
-          req.body.name,
-          req.body.fob,
-          req.body.secret,
-          utils.buildResCallback(res)
+        const memberId = v1()
+        events.trigger(eventType, {
+          memberId,
+          fob: req.body.fob,
+          name: req.body.name,
+          secret: req.body.secret,
+          active: 1,
+          balance: 0,
+          badges: [],
+          info: {},
+          lastActivated: 7,
+        })
+        const newBookmarksTaskId = v1()
+        const newBookmarksName = memberId + '-bookmarks'
+        const newBookmarksHash = createHash(newBookmarksName)
+        events.trigger('task-created', {
+          taskId: newBookmarksTaskId,
+          lastClaimed: Date.now(),
+          name: newBookmarksName,
+          color: 'blue',
+          deck: [memberId],
+          hash: newBookmarksHash,
+          inId: null,
+          prioritized: false,
+          grid: false,
+        })
+        events.trigger(
+          'grid-added',
+          {
+            taskId: newBookmarksTaskId,
+            height: 1,
+            width: 6,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-activated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberActivated(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { memberId: req.body.memberId }, resCallback)
+      } else sendErrorStatus()
       break
     case 'member-deactivated':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberDeactivated(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { memberId: req.body.memberId }, resCallback)
+      } else sendErrorStatus()
       break
     case 'member-secret-reset':
       if (
@@ -212,14 +237,12 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.senpaiId, errRes) &&
         validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes) === 1
       ) {
-        events.memberSecretReset(
-          req.body.kohaiId,
-          req.body.senpaiId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { kohaiId: req.body.kohaiId, senpaiId: req.body.senpaiId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-promoted':
       if (
@@ -227,14 +250,12 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.senpaiId, errRes) &&
         validators.isAheadOf(req.body.senpaiId, req.body.kohaiId, errRes) === 1
       ) {
-        events.memberPromoted(
-          req.body.kohaiId,
-          req.body.senpaiId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { kohaiId: req.body.kohaiId, senpaiId: req.body.senpaiId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-banned':
       if (
@@ -242,14 +263,12 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.senpaiId, errRes) &&
         validators.isSenpaiOf(req.body.senpaiId, req.body.kohaiId, errRes) === 1
       ) {
-        events.memberBanned(
-          req.body.kohaiId,
-          req.body.senpaiId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { kohaiId: req.body.kohaiId, senpaidId: req.body.senpaiId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-unbanned':
       if (
@@ -257,25 +276,21 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.senpaiId, errRes) &&
         validators.hasBanOn(req.body.senpaiId, req.body.kohaiId, errRes)
       ) {
-        events.memberUnbanned(
-          req.body.kohaiId,
-          req.body.senpaiId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { kohaiId: req.body.kohaiId, senpaiId: req.body.senpaiId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-purged':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.memberPurged(
-          req.body.memberId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { memberId: req.body.memberId, blame: req.body.blame },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-field-updated':
       if (
@@ -283,15 +298,16 @@ router.post('/events', (req, res, next) => {
         validators.isField(req.body.field, errRes) &&
         validators.isNotes(req.body.newfield, errRes)
       ) {
-        events.memberFieldUpdated(
-          req.body.memberId,
-          req.body.field,
-          req.body.newfield,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            memberId: req.body.memberId,
+            field: req.body.field,
+            newfield: req.body.newfield,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'member-ticker-set':
       if (
@@ -300,43 +316,74 @@ router.post('/events', (req, res, next) => {
         validators.isAmount(req.body.index, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.memberTickerSet(
-          req.body.fromCoin,
-          req.body.toCoin,
-          req.body.index,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            fromCoin: req.body.fromCoin,
+            toCoin: req.body.toCoin,
+            index: req.body.index,
+            memberId: req.body.memberId,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'doge-barked':
       if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeBarked(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        console.log('memberId is', req.body.memberId)
+        sendNotification(req.body.memberId, 'HellAO WAOrld!')
+        // events.trigger(eventType, req.body.memberId, resCallback)
+      } else sendErrorStatus()
       break
-    case 'doge-muted':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events.dogeMuted(req.body.memberId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+    case 'doge-hopped':
+      if (
+        validators.isMemberId(req.body.memberId, errRes) &&
+        validators.isTaskId(req.body.taskId, errRes)
+      ) {
+        console.log('memberId is', req.body.memberId)
+        state.serverState.tasks.forEach(task => {
+          if (task.taskId === req.body.taskId) {
+            let firstPriorityId
+            if (task.priorities && task.priorities.length >= 1) {
+              firstPriorityId = task.priorities[task.priorities.length - 1]
+            }
+
+            if (!firstPriorityId && task.grid && task.grid.rows) {
+              const rows = Object.values(task.grid.rows)
+              if (rows && rows.length && rows.length >= 1) {
+                const cells = Object.values(rows[0])
+                if (cells && cells.length && cells.length >= 1) {
+                  firstPriorityId = cells[0]
+                }
+              }
+            }
+
+            if (
+              !firstPriorityId &&
+              task.subTasks &&
+              task.subTasks.length >= 1
+            ) {
+              firstPriorityId = task.subTasks[task.subTasks.length - 1]
+            }
+
+            const cardContent = task.guild || task.name
+            let firstPriorityContent
+            if (firstPriorityId) {
+              const firstPriorityCard = state.serverState.tasks.find(
+                st => st.taskId === firstPriorityId
+              )
+              firstPriorityContent =
+                firstPriorityCard.guild || firstPriorityCard.name
+            }
+
+            const notificationMessage = `${cardContent} - ${firstPriorityContent}`
+
+            sendNotification(req.body.memberId, notificationMessage)
+          }
+        })
+      } else sendErrorStatus()
       break
-    case 'doge-unmuted':
-      if (validators.isMemberId(req.body.memberId, errRes)) {
-        events
-          .dogeUnmuted(req.body.memberId, utils.buildResCallback(res))
-          .catch(err => {
-            console.log({ err })
-            res.status(200).send('attempt failed')
-          })
-      } else {
-        res.status(200).send(errRes)
-      }
-      break
+
     case 'doge-migrated':
       let tasks = []
       let memberCard
@@ -357,7 +404,7 @@ router.post('/events', (req, res, next) => {
           let name = m.name
         }
       })
-      let envelope = calculations.blankCard(uuidV1(), name, 'blue')
+      let envelope = blankCard(v1(), name, 'blue')
       envelope.name = memberCard.name
       envelope.subTasks = [...new Set(taskIds)]
       envelope.passed = [[req.body.address, req.body.toMemberId]]
@@ -381,19 +428,14 @@ router.post('/events', (req, res, next) => {
       while (next100.length > 0) {
         let newEvent = {
           type: 'tasks-received',
-          tasks: next100
+          tasks: next100,
         }
         setTimeout(() => {
-          connector.postEvent(
-            serverAddress,
-            serverSecret,
-            newEvent,
-            connectorRes => {
-              console.log('migrate connection response', {
-                connectorRes
-              })
-            }
-          )
+          postEvent(serverAddress, serverSecret, newEvent, connectorRes => {
+            console.log('migrate connection response', {
+              connectorRes,
+            })
+          })
         }, delay)
         next100 = tasks.splice(0, 50)
         delay += 500
@@ -407,17 +449,19 @@ router.post('/events', (req, res, next) => {
         validators.isNotes(req.body.secret, errRes) &&
         validators.isBool(req.body.trackStock, errRes)
       ) {
-        events.resourceCreated(
-          req.body.resourceId,
-          req.body.name,
-          req.body.charged,
-          req.body.secret,
-          req.body.trackStock,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            resourceId: req.body.resourceId,
+            name: req.body.name,
+            charged: req.body.charged,
+            secret: req.body.secret,
+            trackStock: req.body.trackStock,
+            stock: req.body.trackStock ? 0 : undefined,
+          },
+          resCallback
         )
-      } else {
-        res.status(200).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'resource-used':
       if (
@@ -427,17 +471,18 @@ router.post('/events', (req, res, next) => {
         validators.isAmount(req.body.charged, errRes) &&
         validators.isNotes(req.body.notes, errRes)
       ) {
-        events.resourceUsed(
-          req.body.resourceId,
-          req.body.memberId,
-          req.body.amount,
-          req.body.charged,
-          req.body.notes,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            resourceId: req.body.resourceId,
+            memberId: req.body.memberId,
+            amount: req.body.amount,
+            charged: req.body.charged,
+            notes: req.body.notes,
+          },
+          resCallback
         )
-      } else {
-        res.status(200).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'resource-stocked':
       if (
@@ -447,17 +492,18 @@ router.post('/events', (req, res, next) => {
         validators.isAmount(req.body.paid, errRes) &&
         validators.isNotes(req.body.notes, errRes)
       ) {
-        events.resourceStocked(
-          req.body.resourceId,
-          req.body.memberId,
-          req.body.amount,
-          req.body.paid,
-          req.body.notes,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            resourceId: req.body.resourceId,
+            memberId: req.body.memberId,
+            amount: req.body.amount,
+            paid: req.body.paid,
+            notes: req.body.notes,
+          },
+          resCallback
         )
-      } else {
-        res.status(200).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'resource-booked':
       if (
@@ -469,51 +515,64 @@ router.post('/events', (req, res, next) => {
         validators.isNotes(req.body.charge, errRes) &&
         validators.isNotes(req.body.notes, errRes)
       ) {
-        events.resourceBooked(
-          req.body.resourceId,
-          req.body.blame,
-          req.body.startTs,
-          req.body.endTs,
-          req.body.eventType,
-          req.body.charge,
-          req.body.notes,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            resourceId: req.body.resourceId,
+            memberId: req.body.blame,
+            startTs: req.body.startTs,
+            endTs: req.body.endTs,
+            eventType: req.body.eventType,
+            charge: req.body.charge,
+            notes: req.body.notes,
+          },
+          resCallback
         )
-      } else {
-        res.status(200).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'resource-purged':
       if (validators.isResourceId(req.body.resourceId, errRes)) {
-        events.resourcePurged(
-          req.body.resourceId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { resourceId: req.body.resourceId, blame: req.body.blame },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
-    case 'meme-added':
-      if (
-        validators.isNotes(req.body.hash) &&
-        validators.isNotes(reqbody.filename)
-      ) {
-        events.memeAdded(
-          req.body.filename,
-          req.body.hash,
-          utils.buildResCallback(res)
+    // case 'meme-added':
+    //   if (
+    //     validators.isNotes(req.body.hash) &&
+    //     validators.isNotes(reqbody.filename)
+    //   ) {
+    //     events.trigger(
+    //       eventType,
+    //       { filename: req.body.filename, hash: req.body.hash },
+    //       resCallback
+    //     )
+    //   } else sendErrorStatus()
+    case 'meme-cached':
+      console.log('meme-cached')
+      if (validators.isTaskId(req.body.taskId, errRes)) {
+        const card = state.serverState.tasks.find(
+          task => task.taskId === req.body.taskId
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+        if (card) {
+          console.log('found card: ', card.name)
 
+          const urls = Array.from(getUrls(card.name))
+          console.log('Found Urls: ', urls)
+          if (urls.length >= 1) {
+            cache(urls[0], req.body.taskId)
+          } else sendErrorStatus()
+        } else {
+          sendErrorStatus()
+        }
+      } else sendErrorStatus()
+      break
     case 'session-killed':
       if (validators.isSession(req.body.session, errRes)) {
-        events.sessionKilled(req.body.session, utils.buildResCallback(res))
-      } else {
-        res.status(200).send(errRes)
-      }
+        events.trigger(eventType, req.body.session, resCallback)
+      } else sendErrorStatus()
       break
     case 'address-updated':
       if (validators.isTaskId(req.body.taskId, errRes)) {
@@ -521,68 +580,71 @@ router.post('/events', (req, res, next) => {
           .newAddress()
           .then(result => {
             let addr = result['p2sh-segwit']
-            events.addressUpdated(
-              req.body.taskId,
+            events.trigger(
+              eventType,
+              { taskId: req.body.taskId },
               addr,
-              utils.buildResCallback(res)
+              resCallback
             )
           })
           .catch(err => {
             res.status(200).send('attempt failed')
           })
-      } else {
-        res.status(200).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-created':
+      const hash = createHash(req.body.name)
+      const isExist = state.serverState.tasks.some(t => t.hash === hash)
       if (
         validators.isNotes(req.body.name, errRes) &&
-        !validators.isTaskName(req.body.name, errRes) &&
+        !validators.taskNameExists(req.body.name, errRes) &&
         validators.isNotes(req.body.color, errRes) &&
         validators.isNotes(req.body.deck, errRes) &&
         (req.body.inId === null ||
           validators.isTaskId(req.body.inId, errRes)) &&
         validators.isBool(req.body.prioritized, errRes)
       ) {
-        events.taskCreated(
-          req.body.name,
-          req.body.color,
-          req.body.deck,
-          req.body.inId,
-          req.body.prioritized,
-          utils.buildResCallback(res)
-        )
-      } else {
-        res.status(400).send(errRes)
-      }
+        if (!isExist) {
+          events.trigger(
+            eventType,
+            {
+              taskId: v1(),
+              lastClaimed: Date.now(),
+              name: req.body.name,
+              color: req.body.color,
+              deck: req.body.deck,
+              hash: hash,
+              inId: req.body.inId,
+              prioritized: req.body.prioritized,
+            },
+            resCallback
+          )
+        }
+      } else sendErrorStatus()
       break
     case 'task-guilded':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isNotes(req.body.guild, errRes)
       ) {
-        events.taskGuilded(
-          req.body.taskId,
-          req.body.guild,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, guild: req.body.guild },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-seen':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.taskSeen(
-          req.body.taskId,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, memberId: req.body.memberId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-sub-tasked':
       if (
@@ -590,41 +652,42 @@ router.post('/events', (req, res, next) => {
         validators.isTaskId(req.body.subTask, errRes) &&
         validators.isMemberId(req.body.blame)
       ) {
-        events.taskSubTasked(
-          req.body.taskId,
-          req.body.subTask,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          eventType,
+          {
+            taskId: req.body.taskId,
+            subTask: req.body.subTask,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-de-sub-tasked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.subTask, errRes)
       ) {
-        events.taskDeSubTasked(
-          req.body.taskId,
-          req.body.subTask,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            subTask: req.body.subTask,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-emptied':
       if (validators.isTaskId(req.body.taskId, errRes)) {
-        events.taskEmptied(
-          req.body.taskId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, memberId: req.body.blame },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-property-set':
       if (
@@ -633,16 +696,17 @@ router.post('/events', (req, res, next) => {
           req.body.property instanceof String) &&
         validators.isNotes(req.body.value, errRes)
       ) {
-        events.taskPropertySet(
-          req.body.taskId,
-          req.body.property,
-          req.body.value,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            property: req.body.property,
+            value: req.body.value,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-colored':
       if (
@@ -651,31 +715,33 @@ router.post('/events', (req, res, next) => {
           req.body.inId === null) &&
         validators.isColor(req.body.color, errRes)
       ) {
-        events.taskColored(
-          req.body.taskId,
-          req.body.inId,
-          req.body.color,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            inId: req.body.inId,
+            color: req.body.color,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-claimed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.taskClaimed(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-unclaimed':
       if (
@@ -683,52 +749,69 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.memberId, errRes) &&
         validators.isNotes(req.body.notes, errRes)
       ) {
-        events.taskUnclaimed(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-refocused':
       if (
         validators.isTaskId(req.body.inId, errRes) &&
         validators.isTaskId(req.body.taskId, errRes)
       ) {
-        events.taskRefocused(
-          req.body.taskId,
-          req.body.inId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            inId: req.body.inId,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'pile-refocused':
       if (validators.isTaskId(req.body.inId, errRes)) {
-        events.pileRefocused(
-          req.body.inId,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { inId: req.body.inId, blame: req.body.blame },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
+      break
+    case 'task-allocated':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isTaskId(req.body.allocatedId, errRes) &&
+        validators.isAmount(req.body.amount, errRes) &&
+        validators.isMemberId(req.body.blame, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            allocatedId: req.body.allocatedId,
+            amount: req.body.amount,
+            memberId: req.body.blame,
+          },
+          resCallback
+        )
+      } else sendErrorStatus()
       break
     case 'tasks-removed':
       if (req.body.taskIds.every(tId => validators.isTaskId(tId, errRes))) {
-        events.tasksRemoved(
-          req.body.taskIds,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskIds: req.body.taskIds, blame: req.body.blame },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-passed':
       if (
@@ -736,15 +819,16 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.fromMemberId, errRes) &&
         validators.isMemberId(req.body.toMemberId, errRes)
       ) {
-        events.taskPassed(
-          req.body.taskId,
-          req.body.fromMemberId,
-          req.body.toMemberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            fromMemberId: req.body.fromMemberId,
+            toMemberId: req.body.toMemberId,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-grabbed':
       if (
@@ -752,14 +836,12 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.memberId, errRes) &&
         req.body.memberId !== req.body.taskId
       ) {
-        events.taskGrabbed(
-          req.body.taskId,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, memberId: req.body.memberId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'pile-grabbed':
       if (
@@ -767,42 +849,36 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.memberId, errRes) &&
         req.body.memberId !== req.body.taskId
       ) {
-        events.pileGrabbed(
-          req.body.taskId,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, memberId: req.body.memberId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-dropped':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.taskDropped(
-          req.body.taskId,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, memberId: req.body.memberId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'pile-dropped':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.pileDropped(
-          req.body.taskId,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, memberId: req.body.memberId },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-swapped':
       if (
@@ -811,16 +887,17 @@ router.post('/events', (req, res, next) => {
         (validators.isTaskId(req.body.swapId2, errRes) ||
           req.body.swapId2 === -1)
       ) {
-        events.taskSwapped(
-          req.body.taskId,
-          req.body.swapId1,
-          req.body.swapId2,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            swapId1: req.body.swapId1,
+            swapId2: req.body.swapId2,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-bumped':
       if (
@@ -828,49 +905,53 @@ router.post('/events', (req, res, next) => {
         validators.isTaskId(req.body.bumpId, errRes) &&
         (req.body.direction === -1 || req.body.direction === 1)
       ) {
-        events.taskBumped(
-          req.body.taskId,
-          req.body.bumpId,
-          req.body.direction,
-          req.body.blame,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            bumpId: req.body.bumpId,
+            direction: req.body.direction,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
-
     case 'task-prioritized':
       if (
         validators.isTaskId(req.body.inId, errRes) &&
         validators.isTaskId(req.body.taskId, errRes) &&
-        Number.isInteger(req.body.position)
+        Number.isInteger(req.body.position) &&
+        validators.isMemberId(req.body.blame, errRes)
       ) {
-        events.taskPrioritized(
-          req.body.taskId,
-          req.body.inId,
-          req.body.position,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            inId: req.body.inId,
+            position: req.body.position,
+            blame: req.body.blame,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-time-clocked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.taskTimeClocked(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.seconds,
-          req.body.date,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            seconds: req.body.seconds,
+            date: req.body.date,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-signed':
       if (
@@ -879,33 +960,102 @@ router.post('/events', (req, res, next) => {
         !validators.isMemberId(req.body.taskId, errRes) &&
         Number.isInteger(req.body.opinion)
       ) {
-        events.taskSigned(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.opinion,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            opinion: req.body.opinion,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
+      break
+    case 'task-membership':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isMemberId(req.body.memberId, errRes) &&
+        !validators.isMemberId(req.body.taskId, errRes) &&
+        Number.isInteger(req.body.level) &&
+        validators.isMemberId(req.body.blame, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            level: req.body.level,
+            blame: req.body.blame,
+          },
+          resCallback
+        )
+      } else sendErrorStatus()
+      break
+    case 'task-stashed':
+      // const val1 = validators.isTaskId(req.body.taskId, errRes)
+      // const val2 = validators.isTaskId(req.body.inId, errRes)
+      // const val3 = Number.isInteger(req.body.level)
+      // console.log('typeof level is', typeof req.body.level)
+      // const val4 = validators.isMemberId(req.body.blame, errRes)
+      // console.log('stashed vals ar e', { val1, val2, val3, val4 })
+
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isTaskId(req.body.inId, errRes) &&
+        Number.isInteger(req.body.level) &&
+        validators.isMemberId(req.body.blame, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            inId: req.body.inId,
+            level: req.body.level,
+            blame: req.body.blame,
+          },
+          resCallback
+        )
+      } else sendErrorStatus()
+      break
+    case 'task-unstashed':
+      // const vala1 = validators.isTaskId(req.body.taskId, errRes)
+      // const vala2 = validators.isTaskId(req.body.inId, errRes)
+      // const vala3 = Number.isInteger(req.body.level)
+      // console.log('typeof level is', typeof req.body.level)
+      // const vala4 = validators.isMemberId(req.body.blame, errRes)
+      // console.log('stashed vals ar e', { val1, val2, val3, val4 })
+
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        validators.isTaskId(req.body.inId, errRes) &&
+        Number.isInteger(req.body.level) &&
+        validators.isMemberId(req.body.blame, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            inId: req.body.inId,
+            level: req.body.level,
+            blame: req.body.blame,
+          },
+          resCallback
+        )
+      } else sendErrorStatus()
       break
     case 'pile-prioritized':
       if (validators.isTaskId(req.body.inId, errRes)) {
-        events.pilePrioritized(req.body.inId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { inId: req.body.inId }, resCallback)
+      } else sendErrorStatus()
     case 'tasks-received':
       if (true) {
-        // XXX
-        events.tasksReceived(
-          req.body.tasks,
-          req.body.blame,
-          utils.buildResCallback(res)
+        // TODO
+        events.trigger(
+          eventType,
+          { tasks: req.body.tasks, blame: req.body.blame },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'task-visited':
       if (
@@ -913,15 +1063,17 @@ router.post('/events', (req, res, next) => {
         validators.isMemberId(req.body.memberId, errRes) &&
         Number.isInteger(req.body.area)
       ) {
-        events.taskVisited(
-          req.body.taskId,
-          req.body.memberId,
-          req.body.area,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            memberId: req.body.memberId,
+            area: req.body.area,
+            timestamp: Date.now(),
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
     case 'grid-created':
       if (
@@ -931,17 +1083,19 @@ router.post('/events', (req, res, next) => {
         validators.isColor(req.body.color) &&
         Array.isArray(req.body.deck)
       ) {
-        events.gridCreated(
-          req.body.name,
-          req.body.height,
-          req.body.width,
-          req.body.color,
-          req.body.deck,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: v1(),
+            name: req.body.name,
+            height: req.body.height,
+            width: req.body.width,
+            color: req.body.color,
+            deck: req.body.deck,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
 
     case 'grid-added':
@@ -950,25 +1104,22 @@ router.post('/events', (req, res, next) => {
         Number.isInteger(req.body.height, errRes) &&
         Number.isInteger(req.body.width)
       ) {
-        events.gridAdded(
-          req.body.taskId,
-          req.body.height,
-          req.body.width,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            height: req.body.height,
+            width: req.body.width,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
-
     case 'grid-removed':
       if (validators.isTaskId(req.body.taskId)) {
-        events.gridRemoved(req.body.taskId, utils.buildResCallback(res))
-      } else {
-        res.status(400).send(errRes)
-      }
+        events.trigger(eventType, { taskId: req.body.taskId }, resCallback)
+      } else sendErrorStatus()
       break
-
     case 'grid-resized':
       if (
         validators.isTaskId(req.body.taskId) &&
@@ -977,58 +1128,55 @@ router.post('/events', (req, res, next) => {
         Number.isInteger(req.body.width) &&
         req.body.width >= 1
       ) {
-        events.gridResized(
-          req.body.taskId,
-          req.body.height,
-          req.body.width,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            taskId: req.body.taskId,
+            height: req.body.height,
+            width: req.body.width,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
 
     case 'grid-pin':
       if (
-        validators.isTaskId(req.body.inId) &&
-        validators.isTaskId(req.body.taskId) &&
+        validators.taskIdExists(req.body.inId, errRes) &&
+        validators.taskIdExists(req.body.taskId, errRes) &&
         Number.isInteger(req.body.x) &&
         req.body.x >= 0 &&
         Number.isInteger(req.body.y) &&
         req.body.y >= 0 &&
         validators.isMemberId(req.body.memberId, errRes)
       ) {
-        events.gridPin(
-          req.body.inId,
-          req.body.taskId,
-          req.body.x,
-          req.body.y,
-          req.body.memberId,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          {
+            inId: req.body.inId,
+            taskId: req.body.taskId,
+            x: req.body.x,
+            y: req.body.y,
+            memberId: req.body.memberId,
+          },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
-
+      } else sendErrorStatus()
       break
-
     case 'grid-unpin':
       if (
-        validators.isTaskId(req.body.inId) &&
+        validators.isTaskId(req.body.inId, errRes) &&
         Number.isInteger(req.body.x) &&
         req.body.x >= 0 &&
         Number.isInteger(req.body.y) &&
         req.body.y >= 0
       ) {
-        events.gridUnpin(
-          req.body.inId,
-          req.body.x,
-          req.body.y,
-          utils.buildResCallback(res)
+        events.trigger(
+          eventType,
+          { inId: req.body.inId, x: req.body.x, y: req.body.y },
+          resCallback
         )
-      } else {
-        res.status(400).send(errRes)
-      }
+      } else sendErrorStatus()
       break
 
     default:
@@ -1036,4 +1184,4 @@ router.post('/events', (req, res, next) => {
   }
 })
 
-module.exports = router
+export default router

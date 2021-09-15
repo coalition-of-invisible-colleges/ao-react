@@ -1,42 +1,48 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx'
 import aoStore, { Task } from '../client/store'
-import { goInCard, findOrphans, findFirstCardInCard } from '../cards'
+import { goInCard, findOrphans, findFirstCardInCard } from '../cardTypes'
 import BuddhaDoge from '../assets/images/buddadoge.svg'
 import RedBoat from '../assets/images/boatbtnselected.svg'
 import Badge from '../assets/images/badge.svg'
 import Unicorn from '../assets/images/uni.svg'
 import MoonBag from '../assets/images/archive.svg'
+import { gloss } from '../semantics'
 
-@observer
 export default class AoDrawPile extends React.PureComponent {
   constructor(props) {
     super(props)
+    makeObservable(this)
     this.state = {}
     this.meditate = this.meditate.bind(this)
     this.goTopPriority = this.goTopPriority.bind(this)
-    this.goNextSquad = this.goNextSquad.bind(this)
+    this.goNextGuild = this.goNextGuild.bind(this)
     this.goNextCard = this.goNextCard.bind(this)
     this.goLostCard = this.goLostCard.bind(this)
     this.redirect = this.redirect.bind(this)
   }
 
-  redirect(card: Task) {
-    if (!card) {
-      console.log('missing card')
+  redirect(taskId) {
+    // console.log('AO: components/draw.tsx: redirect: ', { taskId })
+
+    if (typeof taskId === 'object' && taskId !== null) taskId = taskId.taskId
+
+    if (!taskId) {
+      // console.log('AO: components/draw.tsx: redirect: no taskId')
       return
     }
-    goInCard(card.taskId)
-    aoStore.setGlobalRedirect(card.taskId)
+    goInCard(taskId)
+    // aoStore.setGlobalRedirect(card.taskId)
+    aoStore.setCurrentCard(taskId)
   }
 
   meditate(event) {
     const piles = [
       this.goTopPriority,
-      this.goNextSquad,
+      this.goNextGuild,
       this.goNextCard,
-      this.goLostCard
+      this.goLostCard,
     ].filter(pile => !!pile)
 
     if (piles.length <= 0) {
@@ -66,12 +72,12 @@ export default class AoDrawPile extends React.PureComponent {
     return findFirstCardInCard(hub)
   }
 
-  goNextSquad(event) {
+  goNextGuild(event) {
     event.stopPropagation()
-    this.redirect(this.nextSquad)
+    this.redirect(this.nextGuild)
   }
 
-  @computed get nextSquad() {
+  @computed get nextGuild() {
     const missions = aoStore.topLevelMissions
 
     if (missions.length < 1) {
@@ -87,13 +93,16 @@ export default class AoDrawPile extends React.PureComponent {
 
   goNextCard(event) {
     event.stopPropagation()
-    aoStore.dab()
+    // aoStore.dab()
     aoStore.addToContext([aoStore.memberCard.taskId])
     this.redirect(this.nextCard)
   }
 
   @computed get nextCard() {
-    return findFirstCardInCard(aoStore.memberCard)
+    let toReturn = findFirstCardInCard(aoStore.memberCard)
+    if (!toReturn) toReturn = aoStore.memberCard.taskId
+
+    return toReturn
   }
 
   goLostCard(event) {
@@ -129,10 +138,10 @@ export default class AoDrawPile extends React.PureComponent {
               <div>Next Card</div>
             </div>
           )}
-          {this.nextSquad && (
-            <div className="drawSource" onClick={this.goNextSquad}>
+          {this.nextGuild && (
+            <div className="drawSource" onClick={this.goNextGuild}>
               <img src={Badge} />
-              <div>Top Squad</div>
+              <div>Top {gloss('Guild')}</div>
             </div>
           )}
           {this.topReturnedCard && (

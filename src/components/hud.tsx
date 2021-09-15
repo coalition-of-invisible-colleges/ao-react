@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { observer } from 'mobx-react'
+import { observer, Observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoHub from './hub'
@@ -16,25 +16,28 @@ import AoTickerHud, { AoTicker } from './tickerHud'
 import AoScore from './score'
 import AoUsername from './username'
 import AoPassword from './password'
+import AoPhone from './phone'
 import AoFob from './fob'
 import AoVolume from './volume'
 import AoReactivator from './reactivator'
 import AoTour from './tour'
+import AoManual from './manual'
 import AoPopupPanel from './popupPanel'
 import AoChatroom from './chatroom'
+import AoStatus from './status'
 import MemberIcon from '../assets/images/loggedWhite.svg'
-import Badge from '../assets/images/badge.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import Scroll from '../assets/images/scroll.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
+import { gloss } from '../semantics'
 
 interface State {
   theme: number
 }
 
 @observer
-class MainMenu extends React.PureComponent<{}, State> {
+class MainMenu extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = { theme: aoStore.state.cash.theme }
@@ -64,6 +67,7 @@ class MainMenu extends React.PureComponent<{}, State> {
       <div id="mainMenu">
         <AoUsername />
         <AoPassword />
+        <AoPhone />
         <AoFob />
         <AoReactivator />
         <AoVolume />
@@ -126,20 +130,19 @@ export default class AoHud extends React.Component<{}, HudState> {
           </Tippy>
         </div>
         <AoHub />
-        {!aoStore.member.tutorial && <AoTour />}
+
         <AoControls />
-        <AoDock />
+
+        <Observer>
+          {() => {
+            return <AoDock />
+          }}
+        </Observer>
+        {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
+
         <AoGifts />
-        <div id="missions">
-          <AoPopupPanel
-            iconSrc={Badge}
-            tooltipText="Squad Index"
-            tooltipPlacement="right"
-            panelPlacement="right"
-            id="tour-missions">
-            <AoMissions />
-          </AoPopupPanel>
-        </div>
+        <AoMissions />
+
         <div id="members">
           <AoPopupPanel
             iconSrc={MemberIcon}
@@ -150,20 +153,11 @@ export default class AoHud extends React.Component<{}, HudState> {
             <AoMembers />
           </AoPopupPanel>
         </div>
+
         <AoCalendar />
-        {/*        <div id="proposals">
-          <AoPopupPanel
-            iconSrc={Scroll}
-            tooltipText="Proposals"
-            badge={renderedBadge}
-            tooltipPlacement="right"
-            panelPlacement="right"
-            id="tour-proposals">
-            <AoProposals updateBadge={this.updateProposalCount} />
-          </AoPopupPanel>
-        </div>
-*/}
+
         <AoBounties />
+
         <div id="search">
           <AoPopupPanel
             iconSrc={MagnifyingGlass}
@@ -175,9 +169,29 @@ export default class AoHud extends React.Component<{}, HudState> {
             <AoSearch ref={this.searchRef} />
           </AoPopupPanel>
         </div>
+
         <AoTickerHud />
+
+        {/*        <div id="proposals">
+            <AoPopupPanel
+              iconSrc={Scroll}
+              tooltipText="Proposals"
+              badge={renderedBadge}
+              tooltipPlacement="right"
+              panelPlacement="right"
+              id="tour-proposals">
+              <AoProposals updateBadge={this.updateProposalCount} />
+            </AoPopupPanel>
+          </div>
+          */}
+
         <AoChatroom taskId={aoStore.currentChatroom} />
-        {/*<AoScore prefix={<span>Points: </span>} />*/}
+        {
+          //<AoScore prefix={<span>Points: </span>} />
+        }
+        {
+          //<AoStatus />
+        }
       </div>
     )
   }

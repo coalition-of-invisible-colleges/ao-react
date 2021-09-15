@@ -1,10 +1,10 @@
 import React from 'react'
-import { observable, computed } from 'mobx'
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
-import { CardPlay } from '../cards'
+import { CardPlay } from '../cardTypes'
 import AoPopupPanel from './popupPanel'
 import Star from '../assets/images/star.svg'
 
@@ -14,6 +14,11 @@ interface CompletedProps {
 
 @observer
 export default class AoCompleted extends React.PureComponent<CompletedProps> {
+	constructor(props: CompletedProps) {
+		super(props)
+		makeObservable(this)
+	}
+
 	@computed get completedCards() {
 		const card = aoStore.hashMap.get(this.props.taskId)
 
@@ -96,7 +101,7 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 							alwaysShowAll={true}
 							descriptor={{
 								singular: 'accomplishment',
-								plural: 'accomplishments'
+								plural: 'accomplishments',
 							}}
 							zone="completed"
 						/>

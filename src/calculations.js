@@ -1,27 +1,39 @@
 const satsPerBtc = 100000000 // one hundred million per btc
-const _ = require('lodash')
-const cryptoUtils = require('./crypto')
+import _ from 'lodash'
+import { createHash } from './crypto.js'
 
-function crawlerHash(tasks, taskId) {
-  return cryptoUtils.createHash(Buffer.from(crawler(tasks, taskId)))
+export function crawlerHash(tasks, taskId) {
+  return createHash(Buffer.from(crawler(tasks, taskId)))
 }
 
-function crawler(tasks, taskId) {
+export function crawler(tasks, taskId) {
   let history = []
   tasks.forEach(task => {
     if (task.taskId === taskId) {
       let crawler = [taskId]
       do {
-        newCards = []
+        let newCards = []
         crawler.forEach(t => {
           if (history.indexOf(t) >= 0) return
           history.push(t)
           let subTask = tasks.filter(pst => pst.taskId === t)[0]
           if (subTask) {
+            let gridCells = []
+            if (
+              subTask?.grid?.rows &&
+              Object.keys(subTask.grid.rows).length >= 1
+            ) {
+              const rowsArray = Object.values(subTask.grid.rows).forEach(
+                row => {
+                  gridCells = gridCells.concat(Object.values(row))
+                }
+              )
+            }
             newCards = newCards
               .concat(subTask.subTasks)
               .concat(subTask.priorities)
               .concat(subTask.completed)
+              .concat(gridCells)
           }
         })
         crawler = newCards
@@ -31,7 +43,7 @@ function crawler(tasks, taskId) {
   return history
 }
 
-function shortName(name) {
+export function shortName(name) {
   let limit = 280
   let shortened = name.substring(0, limit)
   if (name.length > limit) {
@@ -40,132 +52,38 @@ function shortName(name) {
   return shortened
 }
 
-function cardColorCSS(color) {
+export function cardColorCSS(color) {
   return {
     redwx: color == 'red',
     bluewx: color == 'blue',
     greenwx: color == 'green',
     yellowwx: color == 'yellow',
     purplewx: color == 'purple',
-    blackwx: color == 'black'
+    blackwx: color == 'black',
   }
 }
 
-function blankCard(
-  taskId,
-  name,
-  color,
-  created,
-  deck = [],
-  parents = [],
-  height = undefined,
-  width = undefined
-) {
-  let newCard = {
-    taskId,
-    color,
-    deck,
-    name: typeof name !== 'string' ? 'invalid filename' : name.trim(),
-    address: '',
-    bolt11: '',
-    book: {},
-    boost: 0,
-    priorities: [],
-    subTasks: [],
-    completed: [],
-    parents: parents,
-    claimed: [],
-    passed: [],
-    signed: [],
-    guild: false,
-    created: created,
-    lastClaimed: 0,
-    payment_hash: '',
-    highlights: [],
-    seen: [],
-    time: [],
-    grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false
-  }
-  return newCard
-}
-
-function blankGrid(height = 3, width = 3) {
-  let newGrid = {
-    height: height,
-    width: width,
-    rows: {}
-  }
-  return newGrid
-}
-
-function isString(x) {
+export function isString(x) {
   return Object.prototype.toString.call(x) === '[object String]'
 }
 
-function safeMerge(cardA, cardZ) {
-  // grids are not merged yet
-  if (!cardA || !cardZ) {
-    console.log('attempt to merge nonexistent card')
-    return
-  }
-
-  if (!cardZ.taskId || !isString(cardZ.taskId)) {
-    console.log('attempt to merge card with a missing or invalid taskId')
-    return
-  }
-
-  if (!cardZ.color) {
-    console.log('attempt to merge card without a color')
-    return
-  }
-
-  if (isString(cardZ.color) && !_.isEmpty(cardZ.color.trim())) {
-    cardA.color = cardZ.color
-  }
-
-  if (isString(cardZ.guild) && !_.isEmpty(cardZ.guild.trim())) {
-    cardA.guild = cardZ.guild
-  }
-
-  const filterNull = tasks => {
-    return tasks.filter(task => task !== null && task !== undefined)
-  }
-
-  cardA.book = cardZ.guild
-  cardA.address = cardZ.guild
-  cardA.bolt11 = cardZ.guild
-  cardA.priorities = [
-    ...new Set(cardA.priorities.concat(filterNull(cardZ.priorities)))
-  ]
-  cardA.subTasks = [
-    ...new Set(cardA.subTasks.concat(filterNull(cardZ.subTasks)))
-  ]
-  cardA.completed = [
-    ...new Set(cardA.completed.concat(filterNull(cardZ.completed)))
-  ]
-  cardA.passed = [...new Set(cardA.passed.concat(filterNull(cardZ.passed)))]
-  // XXX only add in merge for now
-  // XXX bolt11 / address need to clearly indicate origin ao
-  // XXX book should be a list?
-}
-
-function cadToSats(cadAmt, spot) {
+export function cadToSats(cadAmt, spot) {
   let sats = (parseFloat(cadAmt) / parseFloat(spot)) * satsPerBtc
   return parseInt(sats)
 }
 
-function satsToCad(sats, spot) {
+export function satsToCad(sats, spot) {
   let cad = sats * (spot / satsPerBtc)
   return cad.toFixed(2)
 }
 
-function calculateMsThisMonth() {
+export function calculateMsThisMonth() {
   let today = new Date()
   let daysThisMonth = new Date(today.getYear(), today.getMonth(), 0).getDate()
   return daysThisMonth * 24 * 60 * 60 * 1000
 }
 
-function getMeridienTime(ts) {
+export function getMeridienTime(ts) {
   let d = new Date(parseInt(ts))
   let hour24 = d.getHours()
 
@@ -194,16 +112,8 @@ function getMeridienTime(ts) {
   return { weekday, year, month, date, hour, minute, meridien }
 }
 
-module.exports = {
-  cadToSats,
-  satsToCad,
-  getMeridienTime,
-  shortName,
-  cardColorCSS,
-  blankCard,
-  blankGrid,
-  // safeClone,
-  safeMerge,
-  crawler,
-  crawlerHash
+export function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  })
 }

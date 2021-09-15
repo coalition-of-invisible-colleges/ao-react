@@ -1,16 +1,25 @@
-const _ = require('lodash')
-const dctrlDb = require('./dctrlDb')
-const M = require('../mutations')
-const modules = require('../modules')
-const config = require('../../configuration')
-const { formatDistanceToNow } = require('date-fns')
-const cron = require('cron')
+import _ from 'lodash'
+import { recover, getAll, insertBackup, insertEvent } from './dctrlDb.js'
+import M from '../mutations.js'
+import config from '../../configuration.js'
+import { formatDistanceToNow } from 'date-fns'
+import cron from 'cron'
+
+import cash from '../modules/cash.js'
+import members from '../modules/members.js'
+import tasks from '../modules/tasks.js'
+import resources from '../modules/resources.js'
+import memes from '../modules/memes.js'
+import sessions from '../modules/sessions.js'
+import ao from '../modules/ao.js'
+
+const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 const backupJob = new cron.CronJob({
   cronTime: '0 0 0 1 * *',
   onTick: backupState,
   start: true,
-  timeZone: 'America/Los_Angeles'
+  timeZone: 'America/Los_Angeles',
 })
 
 const serverState = {
@@ -32,8 +41,8 @@ const serverState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: config.theme || 1
-  }
+    theme: config.theme || 1,
+  },
 }
 
 const pubState = {
@@ -55,8 +64,8 @@ const pubState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: config.theme || 1
-  }
+    theme: config.theme || 1,
+  },
 }
 
 function setCurrent(state, b) {
@@ -91,7 +100,7 @@ function applyEvent(state, ev) {
 }
 
 function initialize(callback) {
-  dctrlDb.recover((err, backup) => {
+  recover((err, backup) => {
     let ts = 0
     if (backup.length > 0) {
       ts = backup[0].timestamp
@@ -104,13 +113,14 @@ function initialize(callback) {
           (backup.length > 1 ? ' the most recent' : '') +
           ' backup from',
         formatDistanceToNow(ts, {
-          addSuffix: true
+          addSuffix: true,
         }),
         '...\n'
       )
       applyBackup(backup[0])
     }
-    dctrlDb.getAll(ts, (err, all) => {
+    console.log('Loaded state from backup. Applying events since backup...')
+    getAll(ts, (err, all) => {
       if (err) return callback(err)
       all.forEach((ev, i) => {
         applyEvent(serverState, Object.assign({}, ev))
@@ -120,8 +130,11 @@ function initialize(callback) {
         }
       })
       console.log('applied ', all.length, ' events from the database')
+
       callback(null)
     })
+    console.log('Starting monthly backup cron...')
+    backupJob.start()
   })
 }
 
@@ -129,7 +142,7 @@ function backupState() {
   console.log(
     "\nTaking a monthly snapshot of the AO's current loaded state to improve performance..."
   )
-  dctrlDb.insertBackup(serverState)
+  insertBackup(serverState)
   console.log('Snapshot saved.')
 }
 
@@ -142,7 +155,7 @@ function removeSensitive(ev) {
     'payment_hash',
     'inboundSecret',
     'outboundSecret',
-    'draft'
+    'draft',
   ]
   if (ev.type === 'member-field-updated') {
     ;['fob', 'secret', 'email'].forEach(str => {
@@ -154,11 +167,13 @@ function removeSensitive(ev) {
   return _.omit(ev, secretStuff)
 }
 
-module.exports = {
+const state = {
   serverState,
   pubState,
   initialize,
   applyEvent,
   removeSensitive,
-  setCurrent
+  setCurrent,
 }
+
+export default state

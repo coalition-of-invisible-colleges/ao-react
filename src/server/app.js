@@ -2,22 +2,25 @@
 
 let PORT = process.env.PORT || 8003
 
-const Kefir = require('kefir')
-const express = require('express')
-const socketIo = require('socket.io')
-const socketProtector = require('socketio-auth')
-const config = require('../../configuration')
-const dctrlDb = require('./dctrlDb')
-const state = require('./state')
-const reactions = require('./reactions')
-const applyRouter = require('./router')
-const { socketAuth } = require('./auth')
-const { watchSpot } = require('./exchangeRate')
-const rent = require('./rent')
-const link = require('./link')
-const cleanup = require('./cleanup')
-const { scanMemes } = require('./files')
-const lightning = require('./lightning')
+console.log('AO: Listening on PORT: ', PORT)
+
+import Kefir from 'kefir'
+import express from 'express'
+import { Server } from 'socket.io'
+import socketProtector from 'socketio-auth'
+import config from '../../configuration.js'
+import { startDb, changeFeed, shadowFeed, insertEvent } from './dctrlDb.js'
+import state from './state.js'
+import reactions from './reactions.js'
+import applyRouter from './router.js'
+import { socketAuth } from './auth.js'
+import { watchSpot } from './exchangeRate.js'
+import rent from './rent.js'
+import link from './link.js'
+import cleanup from './cleanup.js'
+import todo from './todo.js'
+import { scanMemes } from './files.js'
+import lightning from './lightning.js'
 
 const app = express()
 applyRouter(app)
@@ -29,21 +32,21 @@ function startDctrlAo() {
   if (PORT !== 8003) {
     dbPath = dbPath.replace('database', PORT)
   }
-
-  dctrlDb.startDb(dbPath, (err, conn) => {
+  startDb(dbPath, (err, conn) => {
     let start = Date.now()
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
-
       watchSpot()
-      rent()
+      // rent()
       link()
       scanMemes()
+      todo()
+      cleanup()
       if (config.clightning.enable) {
         lightning.recordEveryInvoice(state.serverState.cash.pay_index)
         lightning.watchOnChain()
       }
-      const serverReactions = dctrlDb.changeFeed
+      const serverReactions = changeFeed
         .onValue(ev => {
           state.applyEvent(state.serverState, ev)
         })
@@ -52,22 +55,86 @@ function startDctrlAo() {
       const server = app.listen(PORT, err => {
         console.log('Listening on port', PORT)
 
-        const io = socketIo(server)
+        // TODO continue merge argument about this functionality
+        //   likely best option is to use an ENV variable to determine
+        //   if we are behind a proxy or not. This is likely useful / necessary
+        //   also for express configuration
+        // const ioServer = new Server(server, {
+        //   cors: {
+        //     origin: ['http://127.0.0.1:3000', 'http://localhost:3000'],
+        //     methods: ['GET', 'POST'],
+        //   },
+        // })
 
-        socketProtector(io, {
-          authenticate: socketAuth,
-          timeout: 2000
+        // ioServer.listen(PORT)
+        const ioServer = new Server(server, {
+          cors: { origin: 'http://127.0.0.1:3000' },
         })
 
-        const filteredStream = dctrlDb.changeFeed.map(state.removeSensitive)
+        socketProtector(ioServer, {
+          authenticate: socketAuth,
+          timeout: 2000,
+        })
 
-        const fullEvStream = Kefir.merge([filteredStream, dctrlDb.shadowFeed])
+        const filteredStream = changeFeed.map(state.removeSensitive)
+
+        const fullEvStream = Kefir.merge([filteredStream, shadowFeed])
 
         fullEvStream.onValue(ev => {
           state.applyEvent(state.pubState, ev)
-          io.emit('eventstream', ev)
-          console.log('emitting:', ev)
+          ioServer.emit('eventstream', ev)
+          console.log('emitting:', ev.type)
         })
+
+        // ensure there is a community hub card in the state
+        // console.log("AO: server/state.js: initialize: checking for community hub card", { "tasks": state.pubState.tasks } );
+        // let communityHubCardFound = false;
+        // state.pubState.tasks.forEach
+        //     ( (taskItem, index) =>
+        //       {
+        //         if (taskItem.name.toLowerCase() === "community hub")
+        //         {
+        //           communityHubCardFound = true;
+        //           console.log("AO: server/state.js: initialize: community hub card found");
+        //           return;
+        //         }
+        //       }
+        //     );
+        // if (communityHubCardFound === false)
+        // {
+        //   let newCommunityHubCardEvent =
+        //       {
+        //         type        : "task-create",
+        //         name        : "community hub",
+        //         color       : "blue",
+        //         deck        : [],
+        //         inId        : null,
+        //         prioritized : false,
+        //       }
+        //   // setImmediate
+        //   //     (
+        //         // () =>
+        //         // {
+        //           insertEvent
+        //           ( newCommunityHubCardEvent,
+        //             (error, {event, result}) =>
+        //             {
+
+        //               if (error)
+        //               {
+        //                 // this should never happen... umm... not sure what to do here
+        //                 console.log("AO: server/state.js: initialize: error running insertEvent for communityHubCard", {error, event, result});
+
+        //               }
+        //               else
+        //               {
+        //                 // we should be good to go to send data to any clients.
+        //               }
+        //             }
+        //           )
+        //         // }
+        //       // );
+        // }
       })
     })
   })

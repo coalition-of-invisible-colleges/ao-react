@@ -4,11 +4,11 @@ import api from '../client/api'
 import aoStore from '../client/store'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay, goUp } from '../cards'
+import { CardPlay, goUp } from '../cardTypes'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
 @observer
-export default class AoDiscardZone extends React.PureComponent {
+export default class AoDiscardZone extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {}
@@ -29,7 +29,7 @@ export default class AoDiscardZone extends React.PureComponent {
 		if (!move.from.taskId) {
 			return
 		}
-		const cardFrom = aoStore.hashMap.get(move.from.taskId)
+		const cardFrom = aoStore.hashMap.get(move.from.inId)
 		if (!cardFrom) {
 			return
 		}
@@ -78,6 +78,27 @@ export default class AoDiscardZone extends React.PureComponent {
 			case 'gifts':
 				aoStore.addToDiscardHistory([card])
 				api.dropCard(move.from.taskId)
+				break
+			case 'stash':
+				aoStore.addToDiscardHistory([card])
+				const guildMemberLevel = guildCard => {
+					if (
+						!guildCard ||
+						!guildCard.memberships ||
+						!guildCard.memberships.length
+					)
+						return null
+
+					let found = guildCard.memberships.find(
+						membership => membership.memberId === aoStore.member.memberId
+					)
+
+					return found ? found.level : 0
+				}
+				console.log('guildMemberLevel is ', guildMemberLevel(cardFrom))
+				if (guildMemberLevel(cardFrom) >= move.from.level) {
+					api.unstashCard(move.from.taskId, move.from.inId, move.from.level)
+				}
 				break
 		}
 	}

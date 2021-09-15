@@ -1,7 +1,8 @@
-const { getResource } = require('./utils')
-const events = require('./events')
-const { serverState } = require('./state')
-// const lightning = require('./lightning')
+import { getResource } from './utils.js'
+import events from './events.js'
+import state from './state.js'
+const serverState = state.serverState
+// const lightning from ./lightning')
 
 function checkForChargedEvent(resourceId) {
   let charged
@@ -60,11 +61,14 @@ function reactions(ev) {
                 defaultPrice = customPrice
               }
               let hopper = t.name.split(':')[0]
-              events.resourceUsed(
-                resourceId,
-                '',
-                defaultPrice,
-                hopper,
+              events.trigger(
+                'resource-used',
+                {
+                  resourceId: resourceId,
+                  memberId: '',
+                  amount: defaultPrice,
+                  charged: hopper,
+                },
                 console.log
               )
               return true
@@ -77,7 +81,7 @@ function reactions(ev) {
       case 'member-paid':
         break
       case 'resource-stocked':
-        events.memberActivated(ev.memberId)
+        events.trigger('member-activated', { memberId: ev.memberId })
         break
       case 'resource-stocked':
         break
@@ -91,4 +95,4 @@ function reactions(ev) {
   })
 }
 
-module.exports = reactions
+export default reactions

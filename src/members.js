@@ -1,4 +1,4 @@
-function isAheadOf(senpaiId, kohaiId, state, errRes) {
+export function isAheadOf(senpaiId, kohaiId, state, errRes) {
   if (errRes === undefined) {
     errRes = []
   }
@@ -16,7 +16,7 @@ function isAheadOf(senpaiId, kohaiId, state, errRes) {
 
 // This method does not check if vouchers exist, therefore it depends on the mutations being perfect
 // and there not being any invalid members leftover in the .deck / vouchers list of the other member
-function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
+export function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
   if (errRes === undefined) {
     errRes = []
   }
@@ -55,7 +55,7 @@ function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
   return 0
 }
 
-function isSenpaiOf(senpaiId, kohaiId, state, errRes) {
+export function isSenpaiOf(senpaiId, kohaiId, state, errRes) {
   if (errRes === undefined) {
     errRes = []
   }
@@ -70,10 +70,4 @@ function isSenpaiOf(senpaiId, kohaiId, state, errRes) {
 
   errRes.push('member is not a senpai of the other member')
   return 0
-}
-
-module.exports = {
-  isAheadOf,
-  isDecidedlyMorePopularThan,
-  isSenpaiOf
 }

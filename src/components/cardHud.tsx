@@ -10,6 +10,7 @@ import AoBoat from './boat'
 import AoCheckbox from './checkbox'
 import AoValue from './value'
 import AoCrowdfund from './crowdfund'
+import AoInterval from './interval'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
 import AoCardMenu from './cardMenu'
@@ -18,6 +19,8 @@ import AoMission from './mission'
 import AoBark from './bark'
 import AoTally from './tally'
 import AoLilypad from './lilypad'
+import AoStash from './stash'
+import config from '../../configuration'
 
 export type HudStyle =
 	| 'context'
@@ -41,11 +44,16 @@ interface CardHudProps {
 	inId?: string
 }
 
+interface State {
+	clicked?: boolean
+}
+
 @observer
-export default class CardHud extends React.Component<CardHudProps> {
+export default class CardHud extends React.Component<CardHudProps, State> {
 	constructor(props) {
 		super(props)
 		this.addGrid = this.addGrid.bind(this)
+		this.state = {}
 	}
 
 	addGrid() {
@@ -60,6 +68,8 @@ export default class CardHud extends React.Component<CardHudProps> {
 
 		const hudStyle = this.props.hudStyle
 		const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
+
+		// let cardHudIdentifierFunction =
 
 		switch (hudStyle) {
 			case 'context':
@@ -119,21 +129,22 @@ export default class CardHud extends React.Component<CardHudProps> {
 				return (
 					<React.Fragment>
 						{isGrabbed && taskId !== card.name && <AoBird taskId={taskId} />}
-						<AoUnread taskId={taskId} />
+						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
+							<AoInterval taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
+						<AoUnread taskId={taskId} />
 					</React.Fragment>
 				)
 			case 'face before':
 				return (
 					<React.Fragment>
 						{isGrabbed && <AoBird taskId={taskId} />}
-						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
@@ -158,6 +169,7 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
+						<AoUnread taskId={taskId} />
 						<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu
@@ -170,7 +182,6 @@ export default class CardHud extends React.Component<CardHudProps> {
 			case 'mini before':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
@@ -178,20 +189,23 @@ export default class CardHud extends React.Component<CardHudProps> {
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
-
 			case 'mini after':
 				return (
-					<div className={'hud ' + hudStyle}>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
-					</div>
+					<React.Fragment>
+						<AoUnread taskId={taskId} />
+						<div className={'hud ' + hudStyle}>
+							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+							<AoPreview taskId={taskId} hudStyle={hudStyle} />
+							<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+						</div>
+					</React.Fragment>
 				)
 			case 'badge':
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
@@ -204,18 +218,41 @@ export default class CardHud extends React.Component<CardHudProps> {
 					!grid.hasOwnProperty('height') ||
 					!grid.hasOwnProperty('width')
 
+				const mediaUrlDetected = true
+				const cacheButton = (
+					<button
+						className="cache menu action"
+						onClick={() => {
+							this.setState({ clicked: true })
+							api.cacheMeme(this.props.taskId)
+						}}
+						disabled={this.state.clicked}>
+						Cache Media
+					</button>
+				)
+				const showCacheButton = config.memes.dir && config.memes.videoCacher
+				const parentCard = this.props.inId
+					? aoStore.hashMap.get(this.props.inId)
+					: null
+
 				return (
 					<div className="hud menu">
+						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						{card.guild && card.guild.length >= 1 && (
+							<React.Fragment>
+								<AoLilypad taskId={taskId} hudStyle={hudStyle} />
+								<AoStash taskId={taskId} hudStyle={hudStyle} />
+							</React.Fragment>
+						)}
 						{noGrid && (
 							<div className="gridMenu action" onClick={this.addGrid}>
 								+grid
 							</div>
 						)}
-						<AoMission taskId={taskId} hudStyle={hudStyle} />
+						<AoInterval taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
+						{showCacheButton && cacheButton}
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						{card.guild && card.guild.length >= 1 && (
-							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
-						)}
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 						<AoPalette taskId={taskId} />
 					</div>

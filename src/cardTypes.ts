@@ -1,6 +1,7 @@
 import api from './client/api'
 import aoStore, { Task, Signature } from './client/store'
 import { hideAll as hideAllTippys } from 'tippy.js'
+import { blankGrid } from './cards'
 
 export type CardZone =
 	| 'card'
@@ -12,6 +13,7 @@ export type CardZone =
 	| 'discard'
 	| 'panel'
 	| 'gifts'
+	| 'stash'
 
 export interface Coords {
 	x?: number
@@ -22,6 +24,7 @@ export interface CardLocation {
 	taskId: string
 	inId: string
 	zone: CardZone
+	level?: number
 	coords: Coords
 }
 
@@ -30,34 +33,96 @@ export interface CardPlay {
 	to: CardLocation
 }
 
-export function goInCard(taskId: string, isContext = false, doNotSave = false) {
-	hideAllTippys()
-	aoStore.closeAllCloseables()
-
-	console.log('goInCard taskId is ', taskId)
-	if (isContext) {
-		aoStore.clearContextTo(taskId)
-	} else if (aoStore.currentCard) {
-		if (!doNotSave) {
-			aoStore.addToContext([aoStore.currentCard])
-		}
+// DUPLICATED FROM cards.js THIS IS THE COPY
+export function blankCard(
+	taskId,
+	name,
+	color,
+	created,
+	deck = [],
+	parents = [],
+	height = undefined,
+	width = undefined
+) {
+	let newCard = {
+		taskId,
+		color,
+		deck,
+		name: typeof name !== 'string' ? 'invalid filename' : name.trim(),
+		address: '',
+		bolt11: '',
+		book: {},
+		boost: 0,
+		priorities: [],
+		subTasks: [],
+		completed: [],
+		parents: parents,
+		claimed: [],
+		passed: [],
+		signed: [],
+		guild: false,
+		created: created,
+		lastClaimed: 0,
+		payment_hash: '',
+		highlights: [],
+		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
+		time: [],
+		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
+		allocations: [],
 	}
+	return newCard
+}
+
+export function goInCard(
+	taskId: string,
+	removeContextLowerThanTaskId = false,
+	addCurrentCardToContext = true
+) {
+	if (taskId === aoStore.currentCard) {
+		console.log(
+			'Attempted to go in the same card! Maybe catch this earlier in the GUI.'
+		)
+	}
+	// hideAllTippys()
+	// aoStore.closeAllCloseables()
+
+	// console.log('AO: cards.ts: goInCard: ', { taskId, isContext, doNotSave })
+	// if (isContext) {
+	// 	aoStore.clearContextTo(taskId)
+	// } else if (aoStore.currentCard) {
+	// 	if (!doNotSave) {
+	// 		aoStore.addToContext([aoStore.currentCard])
+	// 	}
+	// }
+	// aoStore.removeFromContext(taskId)
+	// aoStore.setCurrentCard(taskId)
+	if (removeContextLowerThanTaskId === true) aoStore.clearContextTo(taskId)
+	if (aoStore.currentCard && addCurrentCardToContext === true)
+		aoStore.addToContext([aoStore.currentCard])
+
 	aoStore.setCurrentCard(taskId)
-	aoStore.removeFromContext(taskId)
 }
 
 export function goUp() {
-	if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
-		const go = aoStore.contextCards[0]
-		if (go) {
-			goInCard(go.taskId, true)
-		}
-	} else if (aoStore.contextCards.length < 1) {
-		hideAllTippys()
-		aoStore.closeAllCloseables()
+	console.log('AO: cards.ts: goUp', { context: aoStore.context })
 
+	if (aoStore.context.length > 0) {
+		goInCard(aoStore.context.slice(-1)[0], false, false)
+	} else {
 		aoStore.setCurrentCard(null)
 	}
+
+	// if (aoStore.contextCards && aoStore.contextCards.length >= 1) {
+	// 	const go = aoStore.contextCards[0]
+	// 	if (go) {
+	// 		goInCard(go.taskId, true)
+	// 	}
+	// } else if (aoStore.contextCards.length < 1) {
+	//  hideAllTippys()
+	//	aoStore.closeAllCloseables()
+
+	// 	aoStore.setCurrentCard(null)
+	// }
 }
 
 export function prioritizeCard(move: CardPlay) {
@@ -319,29 +384,7 @@ export function findFirstCardInCard(card: Task) {
 	return null
 }
 
-// A card's .signed is an append-only list of all signing events.
-// This function reduces it to just each member's current opinion
-export function mostRecentSignaturesOnly(signed: Signature[]) {
-	let mostRecentSignaturesOnly = signed.filter((signature, index) => {
-		let lastIndex
-		for (let i = signed.length - 1; i >= 0; i--) {
-			if (signed[i].memberId === signature.memberId) {
-				lastIndex = i
-				break
-			}
-		}
-		return lastIndex === index
-	})
-	return mostRecentSignaturesOnly
-}
-
-export function countCurrentSignatures(signed: Signature[]) {
-	return mostRecentSignaturesOnly(signed).filter(
-		signature => signature.opinion >= 1
-	).length
-}
-
-export function countVouches(memberId: string) {
+export function countVouches(memberId) {
 	const card = aoStore.hashMap.get(memberId)
 	if (!card || !card.hasOwnProperty('deck')) return null
 

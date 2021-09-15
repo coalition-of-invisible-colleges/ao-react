@@ -1,16 +1,18 @@
 import * as React from 'react'
-import { computed } from 'mobx'
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoStack from './stack'
 import AoPopupPanel from './popupPanel'
 import AoTip from './tip'
 import Chest from '../assets/images/chest.svg'
+import { gloss } from '../semantics'
 
 @observer
 export default class AoBounties extends React.Component {
   constructor(props) {
     super(props)
+    makeObservable(this)
   }
 
   @computed get bounties() {
@@ -62,11 +64,17 @@ export default class AoBounties extends React.Component {
               style={{
                 textAlign: 'center',
                 position: 'relative',
-                top: '-0.5em'
+                top: '-0.5em',
               }}>
               <small>
                 Earn points by completing tasks.{' '}
-                <AoTip text="Cards can be given one-time or recurring bounties. One-time bounties (aka 'bonus points') can be assigned from a mission card with points. To add points to a mission card, click 'Add points' in its menu. To set a recurring bounty, choose 'Set checkmark value' from the card's menu." />
+                <AoTip
+                  text={`Cards can be given one-time or recurring bounties. One-time bounties (aka 'bonus points') can be assigned from a ${gloss(
+                    'guild'
+                  )} card with points. To add points to a ${gloss(
+                    'guild'
+                  )} card, click 'Add points' in its menu. To set a recurring bounty, choose 'Set checkmark value' from the card's menu.`}
+                />
               </small>
             </div>
             {this.renderBountiesList}

@@ -21,7 +21,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
     this.state = {}
-    this.addCommunityCard = this.addCommunityCard.bind(this)
+    // this.addCommunityCard = this.addCommunityCard.bind(this)
     this.goHub = this.goHub.bind(this)
   }
 
@@ -31,54 +31,51 @@ export default class AoHub extends React.PureComponent<{}, State> {
     }
   }
 
-  addCommunityCard() {
-    api.createCard('community hub')
-    console.log('community hub card created')
-  }
+  // addCommunityCard() {
+  //   api.createCard('community hub')
+  //   console.log('community hub card created')
+  // }
 
   goHub() {
     event.stopPropagation()
     hideAllTippys()
     aoStore.closeAllCloseables()
 
-    let card = aoStore.cardByName.get('community hub')
-    if (!card) {
-      api.createCard('community hub').then(() => {
-        this.goHub()
-      })
-      return
-    }
-    const taskId = card.taskId
-
-    if (aoStore.currentCard === taskId) {
-      let redirectCard
-      if (aoStore.context.length <= 0) {
-        redirectCard = aoStore.memberCard.taskId
-      } else {
-        redirectCard = aoStore.context[aoStore.context.length - 1]
+    aoStore.getTaskByName_async('community hub', communityHubCard => {
+      if (!communityHubCard) {
+        // api.createCard('community hub').then(() => {
+        // this.goHub()
+        // })
+        return
       }
+      const taskId = communityHubCard.taskId
+
+      let redirectCard
+
+      if (aoStore.currentCard === taskId) {
+        // let redirectCard
+        if (aoStore.context.length <= 0) {
+          redirectCard = aoStore.memberCard.taskId
+        } else {
+          redirectCard = aoStore.context[aoStore.context.length - 1]
+        }
+      } else {
+        console.log('goInCard taskId is ', taskId)
+        if (aoStore.currentCard) {
+          aoStore.addToContext([aoStore.currentCard])
+        }
+        redirectCard = taskId
+      }
+
       aoStore.setCurrentCard(redirectCard)
       aoStore.removeFromContext(redirectCard)
-      this.setState({
-        redirect: redirectCard
-      })
-    } else {
-      console.log('goInCard taskId is ', taskId)
-      if (aoStore.currentCard) {
-        aoStore.addToContext([aoStore.currentCard])
-      }
-      aoStore.setCurrentCard(taskId)
-      aoStore.removeFromContext(taskId)
-      this.setState({
-        redirect: taskId
-      })
-    }
+    })
   }
 
   render() {
-    if (this.state.redirect) {
-      return <Redirect to={this.state.redirect} />
-    }
+    // if (this.state.redirect) {
+    //   return <Redirect to={this.state.redirect} />
+    // }
 
     let communityCard = aoStore.cardByName.get('community hub')
     let youAreHere =

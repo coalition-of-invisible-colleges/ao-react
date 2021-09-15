@@ -1,9 +1,34 @@
-import { observable, computed, observe, action } from 'mobx'
+import {
+  observable,
+  computed,
+  observe,
+  action,
+  makeObservable,
+  reaction,
+  extendObservable,
+  makeAutoObservable,
+  runInAction,
+} from 'mobx'
 import _ from 'lodash'
 import M from '../mutations'
-import modules from '../modules'
-import calculations from '../calculations'
+// import modules from '../modules/index.js'
+import { cadToSats } from '../calculations'
+import { blankCard } from '../cards.js'
 import AoStack from '../components/stack'
+import cash from '../modules/cash.js'
+import members from '../modules/members.js'
+import tasks from '../modules/tasks.js'
+import resources from '../modules/resources.js'
+import memes from '../modules/memes.js'
+import sessions from '../modules/sessions.js'
+import ao from '../modules/ao.js'
+
+import request from 'superagent'
+
+import ContextCard from '../components/Card'
+import api from './api'
+
+const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 function setCurrent(state: AoState, b: AoState) {
   modules.cash.mutations.setCurrent(state.cash, b)
@@ -45,8 +70,21 @@ export interface Member {
   draft: string
   tutorial?: boolean
   p0wned?: boolean
+  phone?: string
 }
 
+interface Membership {
+  memberId: string
+  level: number
+}
+
+interface Allocation {
+  type?: string
+  taskId: string
+  allocatedId: string
+  amount: number
+  blame?: string
+}
 export interface Task {
   taskId: string
   color: string
@@ -60,11 +98,13 @@ export interface Task {
     endTs: number
   }
   boost: number
+  allocations: Allocation[]
   priorities: string[]
   subTasks: string[]
   completed: string[]
   parents: string[]
   claimed: string[]
+  claimInterval?: number
   signed: Signature[]
   passed: number[]
   guild: string
@@ -77,6 +117,15 @@ export interface Task {
   created: number
   grid?: Grid
   avatars?: AvatarLocation[]
+  showChatroom?: boolean
+  showStash?: boolean
+  memberships: Membership[]
+  stash: {}
+  loadedFromServer?: boolean
+  aoGridToolDoNotUpdateUI?: boolean
+  unionHours: number
+  unionSkill: number
+  unionHazard: number
 }
 
 export interface Meme {
@@ -178,6 +227,8 @@ export interface AoState {
   tasks: Task[]
   resources: Resource[]
   memes: Meme[]
+  socketState?: string
+  protectedRouteRedirectPath?: string
   cash: {
     address: string
     alias: string
@@ -203,7 +254,7 @@ export interface AoState {
   }
 }
 
-const defaultState: AoState = {
+const defaultState: AoState = observable({
   session: '',
   token: '',
   user: '',
@@ -227,9 +278,9 @@ const defaultState: AoState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: 1
-  }
-}
+    theme: 1,
+  },
+})
 
 export interface SearchResults {
   missions: Task[]
@@ -244,14 +295,12 @@ export const emptySearchResults = {
   members: [],
   tasks: [],
   all: [],
-  length: 0
+  length: 0,
 }
 
 class AoStore {
-  @observable
-  state: AoState = defaultState
-  @observable
-  searchResults?: SearchResults
+  @observable state: AoState = defaultState
+  @observable searchResults?: SearchResults
   @observable context: string[] = []
   @observable currentCard: string
   @observable discard: Task[] = []
@@ -260,6 +309,13 @@ class AoStore {
   @observable draft: string = ''
   @observable dabbed: boolean = false
   @observable globalRedirect?: string
+  @observable memberDeckSize?: number
+  @observable mediaPlayHead: { inId: string; taskId: string }
+  bookmarksTaskId?: string
+
+  constructor() {
+    makeObservable(this)
+  }
 
   @computed get member(): Member {
     let loggedInMember: Member
@@ -278,19 +334,231 @@ class AoStore {
   }
 
   @computed get memberCard(): Task {
-    let memberCard = _.merge(
-      calculations.blankCard('', '', ''),
-      this.hashMap.get(this.member.memberId)
-    )
-    return memberCard
+    // let memberCard = _.merge(
+    //   blankCard('', '', ''),
+    return this.hashMap.get(this.member.memberId)
+    // )
+    // return memberCard
   }
+
+  // getMemberCard_async(callback) {
+
+  // }
 
   @computed get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
+
     return hashMap
+  }
+
+  // @computed get bookmarksTaskCard() {
+  //   console.log("AO: client/store.ts: bookmarksCard computing")
+  //   let bookmarksTaskId = aoStore.bookmarksTaskId
+  //   let card = this.hashMap.get(bookmarksTaskId)
+  //   let bookmarkedCardsData = []
+  //   card.grid.rows.forEach
+  //       ( (row, y) =>
+  //         {
+  //           row.forEach
+  //               ( (cell, x) =>
+  //                 { bookmarkedCardsData.push({y, x, cell})
+  //                 }
+  //               )
+  //         }
+  //       )
+  //   return bookmarkedCardsData
+  // }
+
+  getTaskById_async(taskId, callbackOriginal) {
+    let callback = parentTaskItem => {
+      this.getAllLinkedCardsForThisTaskId_async(parentTaskItem.taskId, () => {})
+      callbackOriginal(parentTaskItem)
+    }
+
+    taskId = taskId.toLowerCase()
+    let taskToGet = this.hashMap.get(taskId)
+    if (taskToGet !== undefined) {
+      // console.log("AO: client/store.ts: getTaskById_async: task found in client store: ", { taskId, taskToGet });
+      callback(taskToGet)
+    } else {
+      // console.log("AO: client/store.ts: getTaskById_async: fetching task from server", { taskId });
+
+      let stateClosure = this.state
+      request
+        .post('/fetchTaskByID')
+        .set('Authorization', stateClosure.token)
+        .send({ taskId })
+        .then(result => {
+          // console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
+
+          runInAction(() => {
+            stateClosure.tasks.push(result.body)
+            setImmediate(() => callback(this.hashMap.get(taskId)))
+          })
+          // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+        })
+        .catch(error => {
+          // console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
+
+          callback(false)
+        })
+    }
+  }
+
+  getAllLinkedCardsForThisTaskId_async(parentTaskId, callback) {
+    let parentTaskItem = this.hashMap.get(parentTaskId)
+
+    // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ", {parentTaskId, parentTaskItem})
+
+    if (!parentTaskItem) {
+      // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: parentTask not loaded, ignoring")
+
+      setImmediate(() => callback(false))
+      return false
+    } else {
+      // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ")
+
+      let allChildTaskIds = []
+
+      let allSubCardsSet = new Set(
+        parentTaskItem.priorities.concat(
+          parentTaskItem.subTasks,
+          parentTaskItem.completed
+        )
+      )
+      if (parentTaskItem.grid && parentTaskItem.grid.rows) {
+        Object.entries(parentTaskItem.grid.rows).forEach(([y, row]) => {
+          Object.entries(row).forEach(([x, cell]) => {
+            allSubCardsSet.add(cell)
+          })
+        })
+      }
+
+      let allTaskItemsLoadedInClient = true
+      let taskItemsOnClient = []
+      let taskIdsToLoadFromServer = []
+      allSubCardsSet.forEach(taskId => {
+        let taskItem = this.hashMap.get(taskId)
+
+        if (!taskItem) {
+          allTaskItemsLoadedInClient = false
+          taskIdsToLoadFromServer.push(taskId)
+        }
+        {
+          taskItemsOnClient.push(taskItem)
+        }
+      })
+
+      if (allTaskItemsLoadedInClient === true) {
+        setImmediate(() => callback(false))
+        return taskItemsOnClient
+      } else {
+        setImmediate(() => {
+          // let counter = taskIdsToLoadFromServer.length
+          // let decrementCounter =
+          //     () =>
+          //     { counter--;
+          //       if (counter === 0)
+          //       {
+          //         callback(true)
+          //       }
+          //     }
+          // taskIdsToLoadFromServer.forEach
+          //     ( (taskId) =>
+          //       {
+          //         this.getTaskById_async(taskId, decrementCounter)
+          //       }
+          //     )
+
+          let stateClosure = this.state
+          request
+            .post('/fetchTaskByID')
+            .set('Authorization', stateClosure.token)
+            .send({ taskId: taskIdsToLoadFromServer })
+            .then(result => {
+              // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
+
+              runInAction(() => {
+                stateClosure.tasks.push(...result.body.foundThisTaskList)
+                // setImmediate(() => callback(this.hashMap.get(taskId)));
+                callback(true)
+              })
+              // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+            })
+            .catch(error => {
+              // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  error fetching task list", {taskIdsToLoadFromServer, error});
+
+              callback(false)
+            })
+        })
+        return false
+      }
+
+      // getSearchResultsForQuery_async(query, callback) {
+      // }
+
+      // allSubCards.forEach(tId => {
+      //     let subCard = aoStore.hashMap.get(tId)
+      //     if (subCard) {
+      //         if (
+      //             subCard.guild &&
+      //             subCard.guild.length >= 1 &&
+      //             subCard.deck.length >= 1
+      //         ) {
+      //             projectCards.push(subCard)
+      //         }
+      //     }
+      // })
+
+      // if (card.grid && card.grid.rows) {
+      //     Object.entries(card.grid.rows).forEach(([y, row]) => {
+      //         Object.entries(row).forEach(([x, cell]) => {
+      //             let gridCard = aoStore.hashMap.get(cell)
+      //             if (
+      //                 gridCard &&
+      //                 gridCard.guild &&
+      //                 gridCard.guild.length >= 1 &&
+      //                 gridCard.deck.length >= 1
+      //             ) {
+      //                 projectCards.push(gridCard)
+      //             }
+      //         })
+      //     })
+      // }
+
+      // return projectCards
+    }
+
+    // let stateClosure = this.state;
+    // request
+    //     .post('/fetchTaskByID')
+    //     .set('Authorization', stateClosure.token)
+    //     .send( {taskId} )
+    //     .then
+    //         ( (result) =>
+    //           {
+    //             console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
+
+    //             runInAction
+    //                 ( () =>
+    //                   { stateClosure.tasks.push(result.body)
+    //                     setImmediate(() => callback(this.hashMap.get(taskId)));
+    //                   }
+    //                 );
+    //             // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+    //           }
+    //         )
+    //     .catch
+    //         ( ( error ) =>
+    //           {
+    //             console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
+
+    //             callback(false);
+    //           }
+    //         )
   }
 
   @computed get memberById(): Map<string, Member> {
@@ -333,7 +601,7 @@ class AoStore {
 
   @computed get satPointSpot() {
     if (this.state.cash.spot > 0) {
-      return calculations.cadToSats(1, this.state.cash.spot)
+      return cadToSats(1, this.state.cash.spot)
     }
     return 10000
   }
@@ -352,6 +620,7 @@ class AoStore {
   @computed get cardByName(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
     this.state.tasks.forEach(t => {
+      if (!t || !t.name) return
       hashMap.set(t.name.toLowerCase(), t)
     })
     this.allGuilds.forEach(t => {
@@ -359,6 +628,74 @@ class AoStore {
     })
     return hashMap
   }
+
+  getTaskByName_async(taskName, callback) {
+    taskName = taskName.toLowerCase()
+    let taskToGet = this.cardByName.get(taskName)
+
+    if (taskToGet !== undefined) {
+      // console.log("AO: client/store.ts: getTaskByName_async: task found in client store: ", { taskName, taskToGet });
+      callback(taskToGet)
+    } else {
+      // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
+
+      let stateClosure = this.state
+      request
+        .post('/fetchTaskByName')
+        .set('Authorization', stateClosure.token)
+        .send({ taskName })
+        .then(result => {
+          // console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
+
+          runInAction(() => {
+            let taskItem = result.body
+            stateClosure.tasks.push(taskItem)
+            taskItem = this.hashMap.get(taskItem.taskId)
+            setImmediate(() => callback(taskItem))
+            // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+          })
+        })
+        .catch(error => {
+          // console.log("AO: client/store.ts: getTaskByName_async: error fetching task", {taskName, error});
+
+          callback(false)
+        })
+    }
+  }
+
+  getCommunityHubCardId(callback): void {
+    // console.log("AO: client/store.ts: getCommunityHubCardId")
+
+    this.getTaskByName_async('community hub', communityHubCard => {
+      if (!communityHubCard) {
+        callback(null)
+        // console.log("AO: client/store.ts: creating community hub card on server")
+
+        // api.createCard('community hub', true).then(result => {
+        //   const newTaskId = JSON.parse(result.text).event.taskId
+
+        //   // console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
+
+        //   // aoStore.setCurrentCard(newTaskId)
+        //   callback(newTaskId)
+        //   // setHubId(newTaskId)
+        //   // initialStateComplete();
+        // })
+      } else {
+        // console.log("AO: client/store.ts: community hub card found in client state: ", { "taskId": communityHubCard.taskId });
+
+        callback(communityHubCard.taskId)
+
+        // aoStore.setCurrentCard(communityCard.taskId)
+        // setHubId(communityCard.taskId)
+        // initialStateComplete();
+      }
+    })
+  }
+
+  // @computed get communityHubTaskItem(): Task {
+  //   return this.cardByName.get("community hub");
+  // }
 
   @computed get memeById(): Map<string, Meme> {
     let hashMap: Map<string, Meme> = new Map()
@@ -373,7 +710,9 @@ class AoStore {
     this.context.forEach(tId => {
       cards.push(this.hashMap.get(tId))
     })
-    cards.reverse()
+    // cards.reverse()
+
+    // throw new Error("Insane bullshit error");
 
     return cards
   }
@@ -417,7 +756,7 @@ class AoStore {
     my = my.filter(st => {
       if (!st.hasOwnProperty('taskId')) {
         console.log(
-          'Invalid mission card detected while retrieving member missions list.'
+          'Invalid guild card detected while retrieving member guilds list.'
         )
         return false
       }
@@ -480,7 +819,11 @@ class AoStore {
   @computed get allEvents(): Task[] {
     return aoStore.state.tasks
       .filter(task => {
-        return task.book.hasOwnProperty('startTs') && task.book.startTs > 0
+        return (
+          task.book &&
+          task.book.hasOwnProperty('startTs') &&
+          task.book.startTs > 0
+        )
       })
       .sort((a, b) => {
         return b.book.startTs - a.book.startTs
@@ -559,6 +902,151 @@ class AoStore {
     return topCards
   }
 
+  // The next card after the current mediaPlayHead's location that has (any) attachment
+  // If there are duplicate cards on the grid, playback behavior will weirdly snap back to the earlier copy
+  @computed get nextCardWithMediaAttachment(): string {
+    if (!this.mediaPlayHead.inId || !this.mediaPlayHead.taskId) {
+      return null
+    }
+    const card = this.hashMap.get(this.mediaPlayHead.inId)
+    if (!card) {
+      return null
+    }
+
+    // Get the next card in a stack of cards that has a meme (todo: of video or audio type)
+    const getNextMemeIdFromCards = (stack, startIndex) => {
+      for (let i = startIndex - 1; i >= 0; i--) {
+        const meme = this.memeById.get(stack[i])
+        if (meme) {
+          return meme.memeId
+        }
+      }
+      return null
+    }
+
+    type CardZone = 'priorities' | 'subTasks' | 'grid' | 'completed'
+
+    const findNextMemeInCard = (
+      card,
+      startZone: CardZone,
+      startY,
+      startX = 0
+    ) => {
+      if (startZone === 'priorities') {
+        const result = getNextMemeIdFromCards(card.priorities, startY)
+        if (result) {
+          return result
+        }
+      }
+      if (startZone === 'priorities' || startZone === 'grid') {
+        let gridY = startY
+        let gridX = startX
+        if (startZone !== 'grid') {
+          gridY = 0
+          gridX = -1
+        }
+        let result
+        if (
+          card.grid &&
+          card.grid.hasOwnProperty('rows') &&
+          Object.keys('card.grid.rows').length >= 1
+        ) {
+          Object.entries(card.grid.rows).forEach(([y, row]) => {
+            if (!result && parseInt(y, 10) >= gridY) {
+              Object.entries(row).forEach(([x, cell]) => {
+                if (
+                  !result &&
+                  ((parseInt(y, 10) === gridY && parseInt(x, 10) > gridX) ||
+                    parseInt(y, 10) > gridY) &&
+                  cell
+                ) {
+                  const meme = this.memeById.get(cell)
+                  if (meme) {
+                    result = meme.memeId
+                  }
+                }
+              })
+            }
+          })
+        }
+        if (result) {
+          return result
+        }
+      }
+
+      if (
+        startZone === 'priorities' ||
+        startZone === 'grid' ||
+        startZone === 'subTasks'
+      ) {
+        let stY = startY
+        if (startZone !== 'subTasks') {
+          stY = card.subTasks.length
+        }
+        const result = getNextMemeIdFromCards(card.subTasks, stY)
+        if (result) {
+          return result
+        }
+      }
+
+      // Only look in completed if the previous card was in completed (don't usually play completed)
+      if (startZone === 'completed') {
+        const result = getNextMemeIdFromCards(card.completed, startY)
+        if (result) {
+          return result
+        }
+      }
+
+      return null
+    }
+
+    // First locate the current track, then call findNextMemeInCard to get the following track
+    const prioritiesIndex = card.priorities.indexOf(this.mediaPlayHead.taskId)
+    if (prioritiesIndex >= 0) {
+      return findNextMemeInCard(card, 'priorities', prioritiesIndex)
+    }
+    let result
+    if (
+      card.grid &&
+      card.grid.hasOwnProperty('rows') &&
+      Object.keys('card.grid.rows').length >= 1
+    ) {
+      Object.entries(card.grid.rows).forEach(([y, row]) => {
+        if (result) {
+          return
+        }
+        Object.entries(row).forEach(([x, cell]) => {
+          if (result) {
+            return
+          }
+          if (cell === this.mediaPlayHead.taskId) {
+            result = findNextMemeInCard(
+              card,
+              'grid',
+              parseInt(y, 10),
+              parseInt(x, 10)
+            )
+          }
+        })
+      })
+    }
+    if (result) {
+      return result
+    }
+
+    const subTasksIndex = card.subTasks.indexOf(this.mediaPlayHead.taskId)
+    if (subTasksIndex >= 0) {
+      return findNextMemeInCard(card, 'subTasks', subTasksIndex)
+    }
+
+    const completedIndex = card.completed.indexOf(this.mediaPlayHead.taskId)
+    if (completedIndex >= 0) {
+      return findNextMemeInCard(card, 'completed', completedIndex)
+    }
+
+    return null
+  }
+
   @action.bound
   initializeState(state: AoState) {
     Object.keys(state).forEach(key =>
@@ -625,7 +1113,7 @@ class AoStore {
         members: foundMembers,
         tasks: foundCards,
         all: foundGuilds.concat(foundMembers, foundCards),
-        length: foundGuilds.length + foundMembers.length + foundCards.length
+        length: foundGuilds.length + foundMembers.length + foundCards.length,
       })
     } catch (err) {
       console.log('regex search terminated in error: ', err)
@@ -635,11 +1123,12 @@ class AoStore {
   @action.bound
   addToContext(taskIds: string[], alwaysAddMember = true) {
     if (taskIds.length < 1) return
+
     this.context = this.context.filter(tId => {
       return !taskIds.includes(tId)
     })
     this.context.push(...taskIds)
-    if (alwaysAddMember && this.context[0] !== this.member.memberId) {
+    if (this.context[0] !== this.member.memberId) {
       this.context = this.context.filter(tId => {
         return tId !== this.member.memberId
       })
@@ -649,9 +1138,13 @@ class AoStore {
 
   @action.bound
   removeFromContext(taskId: string) {
-    this.context = this.context.filter(tId => {
+    // console.log('AO: client/store.ts: removeFromContext: ', { taskId })
+    this.context = this.context.slice().filter(tId => {
       return tId !== taskId
     })
+    // console.log('AO: client/store.ts: removeFromContext: result', {
+    // context: this.context,
+    // })
   }
 
   @action.bound
@@ -669,7 +1162,13 @@ class AoStore {
 
   @action.bound
   setCurrentCard(taskId: string) {
+    this.removeFromContext(taskId)
     this.currentCard = taskId
+  }
+
+  @computed
+  get isDabbed(): boolean {
+    return this.currentCard === this.member.memberId
   }
 
   @action.bound
@@ -722,6 +1221,15 @@ class AoStore {
 
   @action.bound dab() {
     this.dabbed = !this.dabbed
+  }
+
+  @action.bound setSocketState(newState) {
+    this.state.socketState = newState
+  }
+
+  @action.bound
+  startedPlaying(inId, taskId) {
+    this.mediaPlayHead = { inId, taskId }
   }
 }
 const aoStore = new AoStore()

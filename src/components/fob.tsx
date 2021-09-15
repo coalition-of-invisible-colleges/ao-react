@@ -10,7 +10,7 @@ interface State {
 
 export const defaultState: State = {
   editing: false,
-  text: ''
+  text: '',
 }
 
 @observer
@@ -41,8 +41,10 @@ export default class AoFob extends React.PureComponent<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.saveValue(event)
     } else if (event.key === 'Escape') {
+      event.stopPropagation()
       this.setState({ editing: false, text: '' })
     }
   }
@@ -70,8 +72,8 @@ export default class AoFob extends React.PureComponent<{}, State> {
       )
     }
     return (
-      <div className={'fob menu'}>
-        <div onClick={this.startEditing} className={'action'}>
+      <div className="fob menu">
+        <div onClick={this.startEditing} className="action">
           Change Fob
         </div>
       </div>

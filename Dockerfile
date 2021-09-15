@@ -60,7 +60,7 @@ COPY . ./
 
 # RUN npm install
 
-# ENV CONFIG="module.exports = { \
+# ENV CONFIG="export default { \
 #     bitcoind: { \
 #         network: 'mainnet' \
 #     }, \

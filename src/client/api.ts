@@ -1,20 +1,20 @@
 import request from 'superagent'
 import uuidV1 from 'uuid/v1'
-import cryptoUtils from '../crypto'
+import { createHash, hmacHex } from '../crypto'
 import _ from 'lodash'
 import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
 import { io } from 'socket.io-client'
+
+import { runInAction, reaction } from 'mobx'
 
 class AoApi {
   constructor(public socket) {}
 
   async createSession(user: string, pass: string): Promise<boolean> {
     const session = uuidV1()
-    let sessionKey = cryptoUtils.createHash(
-      session + cryptoUtils.createHash(pass)
-    )
-    const token = cryptoUtils.hmacHex(session, sessionKey)
+    let sessionKey = createHash(session + createHash(pass))
+    const token = hmacHex(session, sessionKey)
     return request
       .post('/session')
       .set('authorization', token)
@@ -43,8 +43,19 @@ class AoApi {
           aoStore.state.session = session
           aoStore.state.token = token
           aoStore.state.user = user
-          console.log('initial state: ', res.body)
-          aoStore.initializeState(res.body)
+          // console.log(
+          //   'AO: client/api.ts: fetchState: initial state: ',
+          //   res.body
+          // )
+
+          let dataPackageToSendToClient = res.body
+
+          aoStore.initializeState(dataPackageToSendToClient.stateToSend)
+
+          let metaData = dataPackageToSendToClient.metaData
+          aoStore.memberDeckSize = metaData.memberDeckSize
+          aoStore.bookmarksTaskId = metaData.bookmarksTaskId
+
           return true
         })
         .catch(() => false)
@@ -55,7 +66,7 @@ class AoApi {
   async nameAo(newName: string): Promise<request.Response> {
     const act = {
       type: 'ao-named',
-      alias: newName
+      alias: newName,
     }
     return request
       .post('/events')
@@ -73,7 +84,7 @@ class AoApi {
     const act = {
       type: 'ao-outbound-connected',
       address: address,
-      secret: secret
+      secret: secret,
     }
     return request
       .post('/events')
@@ -91,7 +102,7 @@ class AoApi {
     const act = {
       type: 'ao-linked',
       address: address,
-      taskId: taskId
+      taskId: taskId,
     }
     return request
       .post('/events')
@@ -105,9 +116,9 @@ class AoApi {
   async setQuorum(quorum: number): Promise<request.Response> {
     const act = {
       type: 'quorum-set',
-      quorum: quorum
+      quorum: quorum,
     }
-    console.log('act is ', act)
+    // console.log('act is ', act)
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -120,7 +131,22 @@ class AoApi {
   async bark(): Promise<request.Response> {
     const act = {
       type: 'doge-barked',
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async hopped(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'doge-hopped',
+      memberId: aoStore.member.memberId,
+      taskId: taskId,
     }
     return request
       .post('/events')
@@ -133,8 +159,10 @@ class AoApi {
 
   async mute(): Promise<request.Response> {
     const act = {
-      type: 'doge-muted',
-      memberId: aoStore.member.memberId
+      type: 'member-field-updated',
+      memberId: aoStore.member.memberId,
+      field: 'muted',
+      newfield: true,
     }
     return request
       .post('/events')
@@ -147,8 +175,10 @@ class AoApi {
 
   async unmute(): Promise<request.Response> {
     const act = {
-      type: 'doge-unmuted',
-      memberId: aoStore.member.memberId
+      type: 'member-field-updated',
+      memberId: aoStore.member.memberId,
+      field: 'muted',
+      newfield: false,
     }
     return request
       .post('/events')
@@ -167,10 +197,18 @@ class AoApi {
       type: 'task-created',
       name: name,
       color: 'blue',
-      deck: anonymous ? [] : [aoStore.member.memberId],
-      inId: anonymous ? null : aoStore.memberCard.taskId,
-      prioritized: false
+      deck: anonymous
+        ? []
+        : aoStore.member && aoStore.member.memberId
+        ? [aoStore.member.memberId]
+        : [],
+      inId: anonymous ? null : aoStore.memberCard.taskId || null,
+      prioritized: false,
     }
+    // console.log('AO: client/api.ts: createCard: ', {
+    //   act,
+    //   'aoStore.memberCard': aoStore.memberCard,
+    // })
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -197,7 +235,7 @@ class AoApi {
           type: 'task-sub-tasked',
           taskId: inId,
           subTask: found.taskId,
-          memberId: anonymous ? null : aoStore.member.memberId
+          memberId: anonymous ? null : aoStore.member.memberId,
         }
       }
     } else {
@@ -207,7 +245,7 @@ class AoApi {
         color: color,
         deck: anonymous ? [] : [aoStore.member.memberId],
         inId: inId,
-        prioritized: prioritized
+        prioritized: prioritized,
       }
     }
     return request
@@ -227,7 +265,7 @@ class AoApi {
       type: 'task-de-sub-tasked',
       taskId: inId,
       subTask: taskId,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -243,7 +281,7 @@ class AoApi {
     const act = {
       type: 'task-emptied',
       taskId: taskId,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -260,7 +298,7 @@ class AoApi {
       taskId: taskId,
       color: color,
       inId: null, // add this when we have context, mutation works on server
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -275,7 +313,7 @@ class AoApi {
     const act = {
       type: 'task-grabbed',
       taskId: taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -290,7 +328,7 @@ class AoApi {
     const act = {
       type: 'pile-grabbed',
       taskId: taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -305,7 +343,7 @@ class AoApi {
     const act = {
       type: 'task-dropped',
       taskId: taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -320,7 +358,7 @@ class AoApi {
     const act = {
       type: 'tasks-removed',
       taskIds: taskIds,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -335,7 +373,7 @@ class AoApi {
     const act = {
       type: 'pile-dropped',
       taskId: taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -354,7 +392,7 @@ class AoApi {
       type: 'task-passed',
       taskId: taskId,
       toMemberId: toMemberId,
-      fromMemberId: aoStore.member.memberId
+      fromMemberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -375,7 +413,7 @@ class AoApi {
       taskId: inId,
       swapId1: taskId1,
       swapId2: taskId2,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -396,7 +434,7 @@ class AoApi {
       taskId: inId,
       bumpId: taskId,
       direction: direction,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -416,7 +454,8 @@ class AoApi {
       type: 'task-prioritized',
       taskId: taskId,
       inId: inId,
-      position: position
+      position: position,
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -430,7 +469,7 @@ class AoApi {
   async prioritizePile(inId: string): Promise<request.Response> {
     const act = {
       type: 'task-prioritized',
-      inId: inId
+      inId: inId,
     }
     return request
       .post('/events')
@@ -446,7 +485,7 @@ class AoApi {
       type: 'task-refocused',
       taskId: taskId,
       inId: inId,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -460,7 +499,29 @@ class AoApi {
   async refocusPile(inId: string): Promise<request.Response> {
     const act = {
       type: 'pile-refocused',
-      inId: inId
+      inId: inId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async allocatePriority(
+    inId: string,
+    taskId: string,
+    points = 1
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-allocated',
+      taskId: inId,
+      allocatedId: taskId,
+      amount: points,
+      blame: aoStore.member.memberId,
+      inId: inId,
     }
     return request
       .post('/events')
@@ -479,7 +540,7 @@ class AoApi {
       type: 'task-guilded',
       taskId: taskId,
       guild: newTitle,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -500,7 +561,7 @@ class AoApi {
       taskId: taskId,
       property: property,
       value: value,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -515,7 +576,7 @@ class AoApi {
     const act = {
       type: 'task-claimed',
       taskId: taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -530,7 +591,27 @@ class AoApi {
     const act = {
       type: 'task-unclaimed',
       taskId: taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async setClaimInterval(
+    taskId: string,
+    newClaimInterval: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-property-set',
+      taskId: taskId,
+      property: 'claimInterval',
+      value: newClaimInterval,
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -554,7 +635,7 @@ class AoApi {
       name: name,
       charged: charged,
       secret: secret,
-      trackStock: trackStock
+      trackStock: trackStock,
     }
     return request
       .post('/events')
@@ -577,7 +658,7 @@ class AoApi {
       memberId: aoStore.member.memberId,
       amount: amount,
       charged: charged,
-      notes: notes
+      notes: notes,
     }
     return request
       .post('/events')
@@ -600,7 +681,7 @@ class AoApi {
       memberId: aoStore.member.memberId,
       amount: amount,
       paid: paid,
-      notes: notes
+      notes: notes,
     }
     return request
       .post('/events')
@@ -615,7 +696,7 @@ class AoApi {
     const act = {
       type: 'resource-purged',
       resourceId: resourceId,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -636,7 +717,7 @@ class AoApi {
       resourceId: taskId,
       memberId: aoStore.member.memberId,
       startTs: startTime,
-      endTs: endTime
+      endTs: endTime,
     }
     return request
       .post('/events')
@@ -651,12 +732,12 @@ class AoApi {
     name: string,
     fob: string = ''
   ): Promise<request.Response> {
-    const secret = cryptoUtils.createHash(name)
+    const secret = createHash(name)
     const act = {
       type: 'member-created',
       name,
       secret,
-      fob
+      fob,
     }
     return request
       .post('/events')
@@ -670,7 +751,7 @@ class AoApi {
   async activateMember(memberId: string): Promise<request.Response> {
     const act = {
       type: 'member-activated',
-      memberId: memberId
+      memberId: memberId,
     }
     return request
       .post('/events')
@@ -684,7 +765,7 @@ class AoApi {
   async deactivateMember(memberId: string): Promise<request.Response> {
     const act = {
       type: 'member-deactivated',
-      memberId: memberId
+      memberId: memberId,
     }
     return request
       .post('/events')
@@ -700,7 +781,7 @@ class AoApi {
     const act = {
       type: 'member-secret-reset',
       kohaiId: memberId,
-      senpaiId: aoStore.member.memberId
+      senpaiId: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -716,7 +797,7 @@ class AoApi {
     const act = {
       type: 'member-promoted',
       kohaiId: memberId,
-      senpaiId: aoStore.member.memberId
+      senpaiId: aoStore.member.memberId,
     }
 
     return request
@@ -733,7 +814,7 @@ class AoApi {
     const act = {
       type: 'member-banned',
       kohaiId: memberId,
-      senpaiId: aoStore.member.memberId
+      senpaiId: aoStore.member.memberId,
     }
 
     return request
@@ -750,7 +831,7 @@ class AoApi {
     const act = {
       type: 'member-unbanned',
       kohaiId: memberId,
-      senpaiId: aoStore.member.memberId
+      senpaiId: aoStore.member.memberId,
     }
 
     return request
@@ -767,7 +848,7 @@ class AoApi {
     const act = {
       type: 'member-purged',
       memberId: memberId,
-      blame: aoStore.member.memberId
+      blame: aoStore.member.memberId,
     }
 
     return request
@@ -784,13 +865,13 @@ class AoApi {
     newValue: any
   ): Promise<request.Response> {
     if (field === 'secret') {
-      newValue = cryptoUtils.createHash(newValue)
+      newValue = createHash(newValue)
     }
     const act = {
       type: 'member-field-updated',
       memberId: aoStore.member.memberId,
       field: field,
-      newfield: newValue
+      newfield: newValue,
     }
     return request
       .post('/events')
@@ -813,7 +894,7 @@ class AoApi {
       memberId: aoStore.member.memberId,
       fromCoin: fromCoin,
       toCoin: toCoin,
-      index: tickerListIndex
+      index: tickerListIndex,
     }
     return request
       .post('/events')
@@ -830,7 +911,7 @@ class AoApi {
       taskId: taskId,
       memberId: aoStore.member.memberId,
       seconds: seconds,
-      date: date
+      date: date,
     }
     return request
       .post('/events')
@@ -846,7 +927,70 @@ class AoApi {
       type: 'task-signed',
       taskId: taskId,
       memberId: aoStore.member.memberId,
-      opinion: opinion
+      opinion: opinion,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async assignMembership(
+    taskId: string,
+    memberId: string,
+    level: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-membership',
+      taskId: taskId,
+      memberId: memberId,
+      level: level,
+      blame: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async stashCard(
+    taskId: string,
+    inId: string,
+    level: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-stashed',
+      taskId: taskId,
+      inId: inId,
+      level: level,
+      blame: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async unstashCard(
+    taskId: string,
+    inId: string,
+    level: number
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-unstashed',
+      taskId: taskId,
+      inId: inId,
+      level: level,
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')
@@ -862,7 +1006,7 @@ class AoApi {
       type: 'task-visited',
       taskId: taskId,
       memberId: aoStore.member.memberId,
-      area: inChat ? 1 : 0
+      area: inChat ? 1 : 0,
     }
     return request
       .post('/events')
@@ -878,9 +1022,9 @@ class AoApi {
     const act = {
       type: 'task-seen',
       taskId: task.taskId,
-      memberId: aoStore.member.memberId
+      memberId: aoStore.member.memberId,
     }
-    console.log('card marked seen')
+    // console.log('card marked seen')
     return request
       .post('/events')
       .set('Authorization', aoStore.state.token)
@@ -899,7 +1043,7 @@ class AoApi {
       type: 'grid-resized',
       taskId: taskId,
       height: newHeight,
-      width: newWidth
+      width: newWidth,
     }
     return request
       .post('/events')
@@ -921,7 +1065,7 @@ class AoApi {
       height: height,
       width: width,
       color: 'blue',
-      deck: [aoStore.member.memberId]
+      deck: [aoStore.member.memberId],
     }
     return request
       .post('/events')
@@ -941,7 +1085,7 @@ class AoApi {
       type: 'grid-added',
       taskId: taskId,
       height: height,
-      width: width
+      width: width,
     }
     return request
       .post('/events')
@@ -955,7 +1099,7 @@ class AoApi {
   async removeGridFromCard(taskId: string): Promise<request.Response> {
     const act = {
       type: 'grid-removed',
-      taskId: taskId
+      taskId: taskId,
     }
     return request
       .post('/events')
@@ -973,6 +1117,8 @@ class AoApi {
     inId: string
   ): Promise<request.Response> {
     const task: Task = aoStore.cardByName.get(name.toLowerCase())
+    // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
+
     if (_.isObject(task)) {
       const act = {
         type: 'grid-pin',
@@ -980,7 +1126,7 @@ class AoApi {
         taskId: task.taskId,
         x: x,
         y: y,
-        memberId: aoStore.member.memberId
+        memberId: aoStore.member.memberId,
       }
       return request
         .post('/events')
@@ -996,7 +1142,7 @@ class AoApi {
         color: 'blue',
         deck: [aoStore.member.memberId],
         inId: inId,
-        prioritized: false
+        prioritized: false,
       }
       return request
         .post('/events')
@@ -1010,7 +1156,7 @@ class AoApi {
             taskId: taskId,
             x: x,
             y: y,
-            memberId: aoStore.member.memberId
+            memberId: aoStore.member.memberId,
           }
           return request
             .post('/events')
@@ -1029,7 +1175,7 @@ class AoApi {
       type: 'grid-unpin',
       x,
       y,
-      inId
+      inId,
     }
     return request
       .post('/events')
@@ -1040,14 +1186,14 @@ class AoApi {
       })
   }
 
-  async fetchMeme(memeHash: string): Promise<request.Response> {
+  async fetchMeme(memeHash: string): Promise<Blob> {
     return request
       .get('/meme/' + memeHash)
       .responseType('blob')
       .set('Authorization', aoStore.state.token)
       .then(res => {
         console.log('got meme! res is ', res)
-        return res
+        return res.body
       })
   }
 
@@ -1061,46 +1207,104 @@ class AoApi {
       })
   }
 
-  async uploadMemes(formData): Promise<request.Response> {
+  async uploadMemes(formData, progressCallback): Promise<request.Response> {
     return request
       .post('/upload')
       .set('Authorization', aoStore.state.token)
       .send(formData)
+      .on('progress', function (e) {
+        console.log('Percentage done: ', e)
+        if (e && e.hasOwnProperty('percent') && e.percent >= 0) {
+          progressCallback(e.percent)
+        }
+      })
+      .on('error', err => {
+        console.log('Upload  failed with error:', err)
+        return false
+      })
       .then(res => {
         console.log('sent files. res is', res)
         return res
       })
   }
 
-  logout() {
+  async cacheMeme(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'meme-cached',
+      taskId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async logout(): Promise<request.Response> {
     aoStore.resetState()
     window.localStorage.clear()
+    //clear cookie
   }
 
   startSocketListeners() {
     this.socket.connect()
     this.socket.on('connect', () => {
-      console.log('connected')
+      console.log('connected', { 'aoStore.state': aoStore.state })
+
+      if (aoStore.state.socketState === undefined) {
+        aoStore.state.session = window.localStorage.getItem('session')
+        aoStore.state.token = window.localStorage.getItem('token')
+      }
+
+      runInAction(() => {
+        aoStore.state.socketState = 'attemptingAuthentication'
+      })
+
       this.socket.emit('authentication', {
         session: aoStore.state.session,
-        token: aoStore.state.token
+        token: aoStore.state.token,
       })
     })
     this.socket.on('authenticated', () => {
       console.log('authenticated')
+
+      this.fetchState().then(() => {
+        runInAction(() => {
+          aoStore.state.socketState = 'authenticationSuccess'
+        })
+      })
+
       this.socket.on('eventstream', ev => {
-        console.log('event', ev)
+        console.log('AO: client/api.ts: socketListener: event:', ev)
+
         aoStore.applyEvent(ev)
       })
     })
     this.socket.on('disconnect', reason => {
       console.log('disconnected')
+
+      runInAction(() => {
+        aoStore.state.socketState = 'authenticationFailed'
+      })
+
+      aoStore.state.session = ''
+      aoStore.state.token = ''
+
       this.socket.connect()
     })
   }
 }
+
+reaction(
+  () => {
+    return aoStore.state.socketState
+  },
+  socketState => console.log('AO: client/api.ts: socketState: ' + socketState)
+)
 const socket = io(config.socketUrl ? config.socketUrl : '/', {
-  autoConnect: false
+  autoConnect: false,
 })
 const api = new AoApi(socket)
 export default api

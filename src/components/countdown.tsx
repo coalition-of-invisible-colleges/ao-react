@@ -18,7 +18,7 @@ interface State {
 
 export const defaultState: State = {
   editing: false,
-  startTime: undefined
+  startTime: undefined,
 }
 
 interface CountdownProps {
@@ -72,7 +72,7 @@ export default class AoCountdown extends React.Component<
       let newStartTime: Date = new Date(0)
       newStartTime.setUTCMilliseconds(card.book.startTs)
       this.setState({
-        startTime: newStartTime
+        startTime: newStartTime,
       })
     }
     this.setState({ editing: true })
@@ -161,7 +161,6 @@ export default class AoCountdown extends React.Component<
 
     return (
       <Tippy
-        interactive={true}
         placement="top"
         delay={[475, 200]}
         theme="translucent"

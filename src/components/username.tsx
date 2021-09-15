@@ -10,7 +10,7 @@ interface State {
 
 export const defaultState: State = {
   editing: false,
-  text: ''
+  text: '',
 }
 
 @observer
@@ -28,7 +28,7 @@ export default class AoUsername extends React.PureComponent<{}, State> {
     event.stopPropagation()
     if (aoStore.member.name) {
       this.setState({
-        text: aoStore.member.name
+        text: aoStore.member.name,
       })
     }
     this.setState({ editing: true })
@@ -49,8 +49,10 @@ export default class AoUsername extends React.PureComponent<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
+      event.stopPropagation()
       this.saveValue(event)
     } else if (event.key === 'Escape') {
+      event.stopPropagation()
       this.setState({ editing: false, text: '' })
     }
   }
