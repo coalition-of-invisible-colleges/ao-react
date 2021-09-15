@@ -1,4 +1,4 @@
-import M from '../mutations.js'
+const M = require('../mutations')
 
 const state = [] // aka files (in this file):
 
@@ -17,7 +17,7 @@ const mutations = {
 
 const actions = {}
 
-export default {
+module.exports = {
   state,
   mutations,
   actions

@@ -2,9 +2,10 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoContextCard, { CardStyle } from './contextCard'
+import { CardZone } from '../cards'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import { CardPlay, Coords, CardZone } from '../cardTypes'
+import { CardPlay, Coords } from '../cards'
 import AoCardComposer from './cardComposer'
 
 interface StackProps {
@@ -20,13 +21,11 @@ interface StackProps {
   onNewCard?: (string) => void
   onDrop?: (CardPlay) => void
   zone?: CardZone
-  stashLevel?: number
   noPopups?: boolean
   noFindOnPage?: boolean
   cardsBeforeFold?: number
   decorators?: {}
   className?: string
-  doNotReverseList?: boolean
 }
 
 interface StackState {
@@ -43,10 +42,10 @@ interface CounterWord {
 export const defaultState: StackState = {
   selected: undefined,
   showAll: false,
-  showCompose: false,
+  showCompose: false
 }
 
-// @observer
+@observer
 export default class AoStack extends React.Component<StackProps, StackState> {
   constructor(props) {
     super(props)
@@ -106,34 +105,28 @@ export default class AoStack extends React.Component<StackProps, StackState> {
     )
   }
 
-  render = () => {
-    // console.log('AO: components/stack.tsx: AoStack: render() =>', {
-    //   props: this.props,
-    // })
-
-    // either make a reversed list of cards, or the empty list
+  render() {
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
-        ? this.props.cards.slice().filter(t => {
-            if (!t) {
-              console.log(
-                'Missing card detected. card is ',
-                t,
-                ' and this.props.cards is ',
-                this.props.cards,
-                ' and cardStyle is ',
-                this.props.cardStyle
-              )
-              return false
-            }
-            return true
-          })
+        ? this.props.cards
+            .slice()
+            .filter(t => {
+              if (!t) {
+                console.log(
+                  'Missing card detected. card is ',
+                  t,
+                  ' and this.props.cards is ',
+                  this.props.cards,
+                  ' and cardStyle is ',
+                  this.props.cardStyle
+                )
+                return false
+              }
+              return true
+            })
+            .reverse()
         : []
-    // .reverse()
 
-    if (this.props.doNotReverseList !== true) cardsToRender.reverse()
-
-    // generate jsx for an addButton
     let addButton
     if (this.state.showCompose) {
       addButton = (
@@ -160,10 +153,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           taskId={task.taskId}
           dragContext={{
             zone: this.props.zone ? this.props.zone : 'panel',
-            level:
-              this.props.zone === 'stash' ? this.props.stashLevel : undefined,
             inId: this.props.inId,
-            y: i,
+            y: i
           }}
           key={task.taskId + this.props.inId + this.props.cardStyle}>
           {this.decorate(
@@ -176,7 +167,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
                 this.props.cardStyle === 'context'
                   ? {
                       maxWidth:
-                        (30 - (cardsToRender.length - i)).toString() + 'em',
+                        (30 - (cardsToRender.length - i)).toString() + 'em'
                     }
                   : {}
               }
@@ -195,10 +186,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
             taskId={task.taskId}
             dragContext={{
               zone: this.props.zone ? this.props.zone : 'panel',
-              level:
-                this.props.zone === 'stash' ? this.props.stashLevel : undefined,
               inId: this.props.inId,
-              y: 0,
+              y: 0
             }}
             key={task.taskId + this.props.inId + this.props.cardStyle}>
             {this.decorate(
@@ -230,11 +219,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           : this.props.descriptor.singular
       renderedDescriptor = renderedDescriptor + ' '
     }
-
-    // console.log('AO: components/stack.tsx: render: ', {
-    //   props: this.props,
-    //   state: this.state,
-    // })
 
     let showButton = (
       <>

@@ -1,19 +1,21 @@
-import express from 'express'
+const express = require('express')
 const router = express.Router()
-import tr from 'tor-request'
+const tr = require('tor-request')
+const crypto = require('../crypto')
+const calculations = require('../calculations')
 
-export function postEvent(address, secret, body, callback, logErrors = true) {
+function postEvent(address, secret, body, callback) {
   tr.request(
     {
       url: 'http://' + address + '/events',
       headers: { Authorization: secret },
       method: 'post',
       body,
-      json: true,
+      json: true
     },
-    function (err, res, resBody) {
+    function(err, res, resBody) {
       if (err) {
-        if (logErrors) console.log('error res', err)
+        console.log('error res', err)
         return callback(err)
       }
       callback(resBody)
@@ -21,17 +23,17 @@ export function postEvent(address, secret, body, callback, logErrors = true) {
   )
 }
 
-export function checkHash(address, secret, taskId, callback, logErrors = true) {
+function checkHash(address, secret, taskId, callback) {
   tr.request(
     {
       url: 'http://' + address + '/taskhash/' + taskId,
       headers: { Authorization: secret },
       method: 'post',
-      json: true,
+      json: true
     },
-    function (err, res, resBody) {
+    function(err, res, resBody) {
       if (err) {
-        if (logErrors) console.log('error res', err)
+        console.log('error res', err)
         return callback(err)
       }
       callback(resBody)
@@ -39,16 +41,16 @@ export function checkHash(address, secret, taskId, callback, logErrors = true) {
   )
 }
 
-export function getState(address, secret, callback) {
+function getState(address, secret, callback) {
   tr.request(
     {
       url: 'http://' + address + '/state',
       headers: { Authorization: secret },
       method: 'post',
       body: { x: true },
-      json: true,
+      json: true
     },
-    function (err, res, resBody) {
+    function(err, res, resBody) {
       if (err) {
         console.log('error res', err)
         return callback(err)
@@ -56,4 +58,10 @@ export function getState(address, secret, callback) {
       callback(null, resBody)
     }
   )
+}
+
+module.exports = {
+  postEvent,
+  getState,
+  checkHash
 }

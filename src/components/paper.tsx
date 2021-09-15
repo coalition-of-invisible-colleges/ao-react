@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import Paper1 from '../assets/images/paper_1.png'
@@ -14,11 +14,6 @@ interface PaperProps {
 
 @observer
 export default class AoPaper extends React.PureComponent<PaperProps> {
-  constructor(props: PaperProps) {
-    super(props);
-    makeObservable(this);
-  }
-
   @computed
   get cardColor() {
     if (this.props && this.props.color) {

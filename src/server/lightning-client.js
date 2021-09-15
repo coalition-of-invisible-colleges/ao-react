@@ -1,10 +1,9 @@
-import path from 'path'
-import net from 'net'
-import debug from 'debug'
-debug('lightning-client')
-import { EventEmitter } from 'events'
-import _ from 'lodash'
-import chalk from 'chalk'
+const path = require('path')
+const net = require('net')
+const debug = require('debug')('lightning-client')
+const { EventEmitter } = require('events')
+const _ = require('lodash')
+const chalk = require('chalk')
 const methods = [
   'autocleaninvoice',
   'check',
@@ -72,7 +71,7 @@ const methods = [
   'withdraw'
 ]
 
-export default class LightningClient extends EventEmitter {
+class LightningClient extends EventEmitter {
   constructor(rpcPath, debugFlag = false) {
     if (!path.isAbsolute(rpcPath)) {
       throw new Error('The rpcPath must be an absolute path')
@@ -257,3 +256,5 @@ methods.forEach(k => {
     return this.call(k, args)
   }
 })
+
+module.exports = LightningClient

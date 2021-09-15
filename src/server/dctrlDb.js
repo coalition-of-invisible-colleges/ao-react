@@ -1,25 +1,22 @@
-import Kefir from 'kefir'
-import _ from 'lodash'
-import v1 from 'uuid'
-import dbengine from 'better-sqlite3'
-import { createHash } from '../crypto.js'
-import { blankCard } from '../cards'
+const Kefir = require('kefir')
+const _ = require('lodash')
+const uuidV1 = require('uuid/v1')
+const dbengine = require('better-sqlite3')
+const cryptoUtils = require('../crypto')
 
 const preparedStmts = {}
 
-export var conn
+var conn, eventEmitter, shadowEmitter
 
-var eventEmitter, shadowEmitter
-
-export const changeFeed = Kefir.stream(e => {
+const changeFeed = Kefir.stream(e => {
   eventEmitter = e
 })
 
-export const shadowFeed = Kefir.stream(e => {
+const shadowFeed = Kefir.stream(e => {
   shadowEmitter = e
 })
 
-export function triggerShadow(x) {
+function triggerShadow(x) {
   shadowEmitter.emit(x)
 }
 
@@ -43,49 +40,24 @@ function initializeSqlite(cb) {
   if (err) {
     cb(err, conn)
   } else {
-    const firstMemberId = v1()
-    const now = Date.now()
     insertEvent({
       type: 'member-created',
       name: 'dctrl',
       fob: '0000000000',
-      secret: createHash('dctrl'), // init user-password is dctrl
-      memberId: firstMemberId,
+      secret: cryptoUtils.createHash('dctrl'), // init user-password is dctrl
+      memberId: uuidV1(),
       address: '2Mz6BQSTkmK4WHCntwNfvdSfWHddTqQX4vu',
       active: 1,
       balance: 0,
       badges: [],
-      info: {},
+      info: {}
     })
-    const bookmarksCardTaskId = v1()
-    let bookmarksCardEvent = blankCard(
-      bookmarksCardTaskId,
-      firstMemberId + '-bookmarks',
-      'blue',
-      now,
-      [firstMemberId]
-    )
-    bookmarksCardEvent.type = 'task-created'
-    insertEvent(bookmarksCardEvent)
-    insertEvent({
-      type: 'grid-added',
-      taskId: bookmarksCardTaskId,
-      height: 1,
-      width: 6,
-    })
-
-    let blankCardEvent = blankCard(v1(), 'community hub', 'yellow', now, [
-      firstMemberId,
-    ])
-    blankCardEvent.type = 'task-created'
-    insertEvent(blankCardEvent)
     startFeed()
     cb(null, conn)
   }
 }
 
 function createStatements() {
-  // console.log("AO: server/dctrlDb.js: createStatements");
   conn.function('eventFeed', doc => {
     eventEmitter.emit(JSON.parse(doc))
   })
@@ -99,7 +71,7 @@ function createStatements() {
   )
 }
 
-export function recover(callback) {
+function recover(callback) {
   try {
     let all = []
 
@@ -113,7 +85,7 @@ export function recover(callback) {
   }
 }
 
-export function getAll(timestamp, callback) {
+function getAll(timestamp, callback) {
   try {
     let all = []
 
@@ -127,29 +99,18 @@ export function getAll(timestamp, callback) {
 }
 
 function startFeed() {
-  console.log('AO: server/dctrlDb.js: startFeed')
   conn.function('eventFeed', doc => {
     eventEmitter.emit(JSON.parse(doc))
   })
-  try {
-    conn
-      .prepare(
-        'CREATE TRIGGER updateHook AFTER INSERT ON events BEGIN SELECT eventFeed(NEW.document); END'
-      )
-      .run()
-  } catch (error) {
-    console.log('AO: server/dctrlDb.js: startFeed: error running conn prepare')
-  }
+  conn
+    .prepare(
+      'CREATE TRIGGER updateHook AFTER INSERT ON events BEGIN SELECT eventFeed(NEW.document); END'
+    )
+    .run()
 }
 
-export function insertEvent(ev, callback) {
-  if (ev.type === 'tasks-received') {
-    console.log(`received ${ev?.tasks?.length} tasks`)
-    ev?.tasks?.forEach(task => console.log('p2p:', task.name))
-    console.log('p2p: end of receive')
-  } else {
-    console.log('insertEvent ev is ', ev)
-  }
+function insertEvent(ev, callback) {
+  console.log('insertEvent ev is ', ev)
   if (!conn) return callback('No db connection')
   if (!ev.timestamp) {
     ev.timestamp = Date.now()
@@ -166,7 +127,7 @@ export function insertEvent(ev, callback) {
   }
 }
 
-export function insertBackup(state, callback) {
+function insertBackup(state, callback) {
   if (!conn) return callback('No db connection')
 
   state.timestamp = Date.now()
@@ -184,7 +145,7 @@ export function insertBackup(state, callback) {
   if (callback) return callback(err, result)
 }
 
-export function startDb(path, callback) {
+function startDb(path, callback) {
   conn = dbengine(path, {})
   var checkTable = conn.prepare(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
@@ -194,12 +155,11 @@ export function startDb(path, callback) {
     initializeSqlite(callback)
   } else {
     createStatements()
-    // startFeed()
     callback(null, conn)
   }
 }
 
-export function verifyAndLoadDb(path) {
+function verifyAndLoadDb(path) {
   conn = dbengine(path, {})
   var checkTable = conn.prepare(
     "SELECT name FROM sqlite_master WHERE type='table' AND name='events'"
@@ -211,4 +171,17 @@ export function verifyAndLoadDb(path) {
     createStatements()
   }
   return true
+}
+
+module.exports = {
+  conn: conn,
+  startDb,
+  verifyAndLoadDb,
+  getAll,
+  changeFeed,
+  shadowFeed,
+  triggerShadow,
+  insertEvent,
+  insertBackup,
+  recover
 }

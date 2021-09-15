@@ -3,32 +3,12 @@
 // `server/state.js` for server; `modules/*` for vuex.
 
 // const Vue = require('vue')
-import _ from 'lodash'
-import { createHash } from './crypto.js'
-import {
-  blankCard,
-  blankGrid,
-  getTask,
-  taskExists,
-  seeTask,
-  clearPassesTo,
-  grabTask,
-  dropTask,
-  addParent,
-  removeParent,
-  filterFromSubpiles,
-  clearSeenExcept,
-  addSubTask,
-  addPriority,
-  stashTask,
-  unstashTask,
-  addPotential,
-  checkPotential,
-  clearPotential,
-  updateLastUsed,
-  safeMerge,
-  POTENTIALS_TO_EXECUTE,
-} from './cards.js'
+const _ = require('lodash')
+const uuidv1 = require('uuid/v1')
+const cryptoUtils = require('./crypto')
+const calculations = require('./calculations')
+
+const POTENTIALS_TO_EXECUTE = 1
 
 function aoMuts(aos, ev) {
   switch (ev.type) {
@@ -53,12 +33,13 @@ function aoMuts(aos, ev) {
           outboundSecret: false,
           inboundSecret: ev.secret,
           lastContact: Date.now(),
-          links: [],
+          links: []
         }
         aos.push(newEv)
       }
       break
     case 'ao-outbound-connected':
+      console.log('outbound mutation')
       let outAddressConnect = aos.some(a => {
         if (a.address === ev.address) {
           a.outboundSecret = ev.secret
@@ -72,7 +53,7 @@ function aoMuts(aos, ev) {
           outboundSecret: ev.secret,
           inboundSecret: false,
           lastContact: Date.now(),
-          links: [],
+          links: []
         }
         aos.push(newEv)
       }
@@ -112,7 +93,7 @@ function cashMuts(cash, ev) {
       cash.quorum = ev.quorum
       break
     case 'task-boosted':
-      if (ev.txid) cash.usedTxIds.push(ev.txid)
+      cash.usedTxIds.push(ev.txid)
       break
     case 'task-boosted-lightning':
       cash.pay_index = ev.pay_index
@@ -130,7 +111,7 @@ function membersMuts(members, ev) {
     case 'ao-disconnected':
       break
     case 'member-created':
-      updateLastUsed(ev, ev.timestamp)
+      ev.lastUsed = ev.timestamp
       ev.muted = true
       ev.p0wned = true
       members.push(ev)
@@ -171,7 +152,7 @@ function membersMuts(members, ev) {
     case 'task-visited':
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
-          updateLastUsed(member, ev.timestamp)
+          member.lastUsed = ev.timestamp
         }
       })
     case 'member-deactivated':
@@ -186,18 +167,31 @@ function membersMuts(members, ev) {
     case 'member-secret-reset':
       members.forEach(member => {
         if (member.memberId === ev.kohaiId) {
-          const newSig = {
+          if (!member.potentials) {
+            member.potentials = []
+          }
+          member.potentials = member.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.senpaiId)
+          )
+
+          let newSig = {
             memberId: ev.senpaiId,
             timestamp: ev.timestamp,
-            opinion: ev.type,
+            opinion: ev.type
           }
 
-          addPotential(member, newSig)
+          member.potentials.push(newSig)
 
-          if (checkPotential(member, 'member-secret-reset')) {
+          let totalResets = member.potentials.filter(
+            pot => pot.opinion === 'member-secret-reset'
+          )
+
+          if (totalResets.length >= POTENTIALS_TO_EXECUTE) {
             member.p0wned = true
-            member.secret = createHash(member.name)
-            clearPotential(member, 'member-secret-reset')
+            member.secret = cryptoUtils.createHash(member.name)
+            member.potentials = member.potentials.filter(
+              pot => pot.opinion !== 'member-secret-reset'
+            )
           }
         }
       })
@@ -224,15 +218,26 @@ function membersMuts(members, ev) {
     case 'member-banned':
       members.forEach(member => {
         if (member.memberId === ev.kohaiId) {
-          const newSig = {
+          if (!member.potentials) {
+            member.potentials = []
+          }
+          member.potentials = member.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.senpaiId)
+          )
+
+          let newSig = {
             memberId: ev.senpaiId,
             timestamp: ev.timestamp,
-            opinion: ev.type,
+            opinion: ev.type
           }
 
-          addPotential(member, newSig)
+          member.potentials.push(newSig)
 
-          if (checkPotential(member, 'member-banned')) {
+          let totalBans = member.potentials.filter(
+            pot => pot.opinion === 'member-banned'
+          )
+
+          if (totalBans.length >= POTENTIALS_TO_EXECUTE) {
             member.banned = true
             if (member.active >= 0) {
               member.active = -1 * member.active - 1
@@ -273,15 +278,26 @@ function membersMuts(members, ev) {
       for (let i = members.length - 1; i >= 0; i--) {
         const member = members[i]
         if (member.memberId === ev.memberId) {
-          const newSig = {
+          if (!member.potentials) {
+            member.potentials = []
+          }
+          member.potentials = member.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.blame)
+          )
+
+          let newSig = {
             memberId: ev.blame,
             timestamp: ev.timestamp,
-            opinion: ev.type,
+            opinion: ev.type
           }
 
-          addPotential(member, newSig)
+          member.potentials.push(newSig)
 
-          if (testPotential(member, 'member-purged')) {
+          let totalPurges = member.potentials.filter(
+            pot => pot.opinion === 'member-purged'
+          )
+
+          if (totalPurges.length >= POTENTIALS_TO_EXECUTE) {
             members.splice(i, 1)
           }
         }
@@ -291,7 +307,7 @@ function membersMuts(members, ev) {
     case 'resource-used':
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
-          updateLastUsed(member, ev.timestamp)
+          member.lastUsed = ev.timestamp
         }
       })
       break
@@ -323,7 +339,7 @@ function membersMuts(members, ev) {
           } else {
             member.tickers[ev.index] = {
               from: ev.fromCoin.trim().toLowerCase(),
-              to: ev.toCoin.trim().toLowerCase(),
+              to: ev.toCoin.trim().toLowerCase()
             }
           }
         }
@@ -334,8 +350,24 @@ function membersMuts(members, ev) {
       members.forEach(member => {
         // this should only bump up for mutual doges
         if (member.memberId === ev.memberId) {
-          updateLastUsed(member, ev.timestamp)
+          member.lastUsed = ev.timestamp
           // then bark
+        }
+      })
+      break
+
+    case 'doge-muted':
+      members.forEach(member => {
+        if (member.memberId === ev.memberId) {
+          member.muted = true
+        }
+      })
+      break
+
+    case 'doge-unmuted':
+      members.forEach(member => {
+        if (member.memberId === ev.memberId) {
+          member.muted = false
         }
       })
       break
@@ -398,11 +430,11 @@ function memesMuts(memes, ev) {
           memeId: ev.taskId,
           filename: ev.filename,
           hash: ev.hash,
-          filetype: ev.filetype,
+          filetype: ev.filetype
         })
-        // console.log('added meme file: ', ev.filename)
+        console.log('added meme file: ', ev.filename)
       } else {
-        // console.log('meme file already in state: ', ev.filename)
+        console.log('meme file already in state: ', ev.filename)
       }
       break
   }
@@ -439,14 +471,13 @@ function sessionsMuts(sessions, ev) {
       sessions.push({
         ownerId: ev.address,
         token: ev.secret,
-        session: ev.address,
+        session: ev.address
       })
       break
   }
 }
 
 function tasksMuts(tasks, ev) {
-  // try {
   switch (ev.type) {
     case 'highlighted':
       tasks.forEach(task => {
@@ -465,25 +496,36 @@ function tasksMuts(tasks, ev) {
           if (!didUpdateInline) {
             task.highlights.push({
               memberId: ev.memberId,
-              valence: ev.valence,
+              valence: ev.valence
             })
           }
         }
       })
       break
     case 'ao-outbound-connected':
-      tasks.push(blankCard(ev.address, ev.address, 'purple', ev.timestamp))
+      tasks.push(
+        calculations.blankCard(ev.address, ev.address, 'purple', ev.timestamp)
+      )
       break
     case 'ao-disconnected':
       break
     case 'resource-created':
-      tasks.push(blankCard(ev.resourceId, ev.resourceId, 'red', ev.timestamp))
+      tasks.push(
+        calculations.blankCard(
+          ev.resourceId,
+          ev.resourceId,
+          'red',
+          ev.timestamp
+        )
+      )
       break
     case 'member-created':
-      tasks.push(blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp))
+      tasks.push(
+        calculations.blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
+      )
       break
     case 'member-purged':
-      // This is terribly redundant since the same potential builds up on the member.
+      // This is terribly reduntant since the same potential builds up on the member.
       // Maybe the potentials system should be abstracted out to the spec or validation layer;
       // Attempts to call limited functions instead produce an action-potential event.
       // The original idea was potentials would only build up on members, not tasks.
@@ -491,15 +533,26 @@ function tasksMuts(tasks, ev) {
       for (let i = tasks.length - 1; i >= 0; i--) {
         const task = tasks[i]
         if (task.taskId === ev.memberId) {
+          if (!task.potentials) {
+            task.potentials = []
+          }
+          task.potentials = task.potentials.filter(
+            pot => !(pot.opinion === ev.type && pot.memberId === ev.blame)
+          )
+
           let newSig = {
             memberId: ev.blame,
             timestamp: ev.timestamp,
-            opinion: ev.type,
+            opinion: ev.type
           }
 
-          addPotential(task, newSig)
+          task.potentials.push(newSig)
 
-          if (checkPotential(task, 'member-purged')) {
+          let totalPurges = task.potentials.filter(
+            pot => pot.opinion === 'member-purged'
+          )
+
+          if (totalPurges.length >= POTENTIALS_TO_EXECUTE) {
             tasks.splice(i, 1)
             purgedMemberCard = true
           }
@@ -513,7 +566,9 @@ function tasksMuts(tasks, ev) {
           t.completed.filter(st => st !== ev.memberId)
           t.claimed = t.claimed.filter(st => st !== ev.memberId)
           t.deck = t.deck.filter(st => st !== ev.memberId)
-          clearPassesTo(t, ev.memberId, true)
+          t.passed = t.passed.filter(
+            p => !(p[0] === ev.memberId || p[1] === ev.memberId)
+          )
           if (_.has(t, 'grid.rows')) {
             Object.entries(t.grid.rows).forEach(([y, row]) => {
               Object.entries(row).forEach(([x, cell]) => {
@@ -530,13 +585,13 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'meme-added':
-      if (!tasks.some(t => t.taskId === ev.taskId)) {
-        tasks.push(blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp))
-      }
+      tasks.push(
+        calculations.blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp)
+      )
       break
     case 'task-created':
       tasks.push(
-        blankCard(
+        calculations.blankCard(
           ev.taskId,
           ev.name,
           ev.color,
@@ -548,11 +603,12 @@ function tasksMuts(tasks, ev) {
       tasks.forEach(task => {
         if (ev.inId && task.taskId === ev.inId) {
           if (ev.prioritized) {
-            addPriority(task, ev.taskId)
+            task.priorities = _.filter(task.subTasks, tId => tId !== ev.taskId)
+            task.priorities.push(ev.taskId)
           } else {
-            addSubTask(task, ev.taskId)
+            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+            task.subTasks.push(ev.taskId)
           }
-          clearSeenExcept(task, ev.deck.length >= 1 ? [ev.deck[0]] : undefined) // The very font of novelty
         }
       })
       break
@@ -585,7 +641,6 @@ function tasksMuts(tasks, ev) {
       // since it will show up on the "Where is this card" list
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          // Add the card to their member card
           if (task.passed.find(d => d[1] === ev.memberId)) {
             tasks.forEach(t => {
               if (t.taskId === ev.memberId) {
@@ -593,7 +648,7 @@ function tasksMuts(tasks, ev) {
               }
             })
           }
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {
               task.deck.push(ev.memberId)
@@ -628,7 +683,7 @@ function tasksMuts(tasks, ev) {
             task.time.push({
               memberId: ev.memberId,
               timelog: [ev.seconds],
-              date: [ev.date],
+              date: [ev.date]
             })
           } else {
             if (!found.timelog) {
@@ -653,140 +708,21 @@ function tasksMuts(tasks, ev) {
     case 'task-signed':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             task.deck.push(ev.memberId)
           }
           let newSig = {
             memberId: ev.memberId,
             timestamp: ev.timestamp,
-            opinion: ev.opinion,
+            opinion: ev.opinion
           }
           if (!task.signed) {
             task.signed = []
           }
           task.signed.push(newSig)
-          if (task.guild && task.guild.length >= 1) {
-            if (
-              ev.opinion === 1 &&
-              (!task.hasOwnProperty('memberships') ||
-                (_.has(task, 'membershipstask.length') &&
-                  task.memberships.length < 1))
-            ) {
-              if (!task.memberships) {
-                task.memberships = []
-              }
-              task.memberships.push({ memberId: ev.memberId, level: 2 })
-            } else if (ev.opinion === 0 && _.has(task, 'memberships.length')) {
-              task.memberships.filter(memb => memb.memberId !== ev.memberId)
-            }
-          }
         }
       })
-      break
-    case 'task-membership':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          if (task.guild && task.guild.length >= 1) {
-            // The member must have signed the task affirmatively
-            if (!task.signed || !task.signed.length || task.signed.length < 1) {
-              return
-            }
-
-            let mostRecentOpinion
-            for (let i = task.signed.length - 1; i--; i >= 0) {
-              const signature = task.signed[i]
-              if (signature.memberId === ev.memberId) {
-                mostRecentOpinion = signature.opinion
-                break
-              }
-            }
-
-            if (mostRecentOpinion < 1) {
-              return
-            }
-
-            if (
-              !task.memberships ||
-              !task.memberships.length ||
-              task.memberships.length < 1
-            ) {
-              return
-            }
-
-            const promoterLevel = task.memberships.find(
-              membership => membership.memberId === ev.blame
-            )?.level
-
-            if (!promoterLevel || promoterLevel < 1) {
-              return
-            }
-
-            const promotedLevel =
-              task.memberships.find(
-                membership => membership.memberId === ev.memberId
-              )?.level || 0
-
-            let maxLevel = 0
-            task.memberships.forEach(membership => {
-              maxLevel = Math.max(maxLevel, membership.level)
-            })
-
-            // The promoter must be a member at least one level higher
-            // Or, the highest-level member of a group can promote themselves
-            const canPromote =
-              (promoterLevel > promotedLevel &&
-                promoterLevel >= ev.level + 1) ||
-              (ev.memberId === ev.blame &&
-                promoterLevel === maxLevel &&
-                maxLevel >= 1)
-
-            if (!canPromote) {
-              return
-            }
-
-            task.memberships = task.memberships.filter(
-              memb => memb.memberId !== ev.memberId
-            )
-            if (ev.level !== 0) {
-              task.memberships.push({
-                memberId: ev.memberId,
-                level: ev.level,
-              })
-            }
-          }
-        }
-      })
-      break
-    case 'task-stashed':
-      // I think the spec is only run on event creation, not load from database,
-      // so make sure the task exists before linking to it from another card
-      const toStash = getTask(tasks, ev.taskId)
-      if (toStash) {
-        grabTask(toStash, ev.blame)
-        addParent(toStash, ev.inId)
-
-        tasks.forEach(task => {
-          if (task.taskId === ev.inId) {
-            stashTask(task, ev.taskId, ev.level)
-          }
-        })
-      }
-      break
-    case 'task-unstashed':
-      // I think the spec is only run on event creation, not load from database,
-      // so make sure the task exists before linking to it from another card
-      const toUnstash = getTask(tasks, ev.taskId)
-      if (toUnstash) {
-        grabTask(toUnstash, ev.blame)
-
-        tasks.forEach(task => {
-          if (task.taskId === ev.inId) {
-            unstashTask(task, ev.taskId, ev.level)
-            removeParent(task, ev.inId)
-          }
-        })
-      }
       break
     case 'pile-grabbed':
       if (!ev.memberId) {
@@ -794,7 +730,7 @@ function tasksMuts(tasks, ev) {
       }
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           let crawler = [ev.taskId]
           let history = []
           let newCards = []
@@ -830,7 +766,10 @@ function tasksMuts(tasks, ev) {
                 subTask.deck.indexOf(ev.memberId) === -1 &&
                 ev.taskId !== ev.memberId
               ) {
-                clearPassesTo(subTask, ev.memberId)
+                subTask.passed = _.filter(
+                  subTask.passed,
+                  d => d[1] !== ev.memberId
+                )
                 subTask.deck.push(ev.memberId)
               }
               newCards = newCards
@@ -847,7 +786,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           task.deck = _.filter(task.deck, d => d !== ev.memberId)
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
         }
       })
       break
@@ -857,7 +796,7 @@ function tasksMuts(tasks, ev) {
       }
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           let crawler = [ev.taskId]
           let history = []
           let newCards = []
@@ -890,8 +829,11 @@ function tasksMuts(tasks, ev) {
                 subTask.deck.indexOf(ev.memberId) >= 0 &&
                 ev.taskId !== ev.memberId
               ) {
-                clearPassesTo(subTask, ev.memberId)
-                dropTask(subTask, ev.memberId)
+                subTask.passed = _.filter(
+                  subTask.passed,
+                  d => d[1] !== ev.memberId
+                )
+                subTask.deck = _.filter(subTask.deck, d => d !== ev.memberId)
               }
               newCards = newCards
                 .concat(subTask.subTasks)
@@ -954,41 +896,34 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-prioritized':
-      let whosSeenPriority = [ev.memberId]
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          seeTask(task, ev.blame)
-          grabTask(task, ev.blame)
-          addParent(task, ev.inId)
-
-          // Accumulate who's seen this task
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeenPriority = [...whosSeenPriority, ...task.seen]
-          }
-        }
-      })
       tasks.forEach(task => {
         if (task.taskId === ev.inId) {
-          // Remove task and track if removed
-          let alreadyHere = filterFromSubpiles(task, ev.taskId)
-
-          if (_.has(task, 'grid,rows')) {
-            Object.values(task.grid.rows).forEach(row => {
-              const cells = Object.values(row)
-              if (cells.includes(ev.taskId)) {
-                alreadyHere = true
-              }
-            })
-          }
+          task.priorities = _.filter(
+            task.priorities,
+            taskId => taskId !== ev.taskId
+          )
+          task.subTasks = _.filter(
+            task.subTasks,
+            taskId => taskId !== ev.taskId
+          )
+          task.completed = _.filter(
+            task.completed,
+            taskId => taskId !== ev.taskId
+          )
           // if (ev.position) {
           //   task.priorities = task.priorities.splice(ev.position, 0, ev.taskId)
           // } else {
           // console.log('task-prioritized position is ', ev.position)
           task.priorities.push(ev.taskId)
           // }
+        }
+        if (task.taskId === ev.taskId) {
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
+            task.parents = []
+          }
 
-          if (!alreadyHere) {
-            clearSeenExcept(task, whosSeenPriority)
+          if (!task.parents.some(pId => pId === ev.inId)) {
+            task.parents.push(ev.inId)
           }
         }
       })
@@ -1029,17 +964,6 @@ function tasksMuts(tasks, ev) {
           } else if (claimed !== undefined) {
             task.subTasks.push(ev.taskId)
           }
-
-          if (task.allocations && Array.isArray(task.allocations)) {
-            task.allocations = _.filter(task.allocations, al => {
-              if (al.allocatedId !== ev.taskId) {
-                return true
-              } else {
-                task.boost = task.boost + al.amount
-                return false
-              }
-            })
-          }
         }
       })
       break
@@ -1057,12 +981,6 @@ function tasksMuts(tasks, ev) {
               }
             })
             task.priorities = []
-            if (task.allocations && Array.isArray(task.allocations)) {
-              task.allocations.forEach(allocation => {
-                task.boost += allocation.amount
-              })
-              task.allocations = []
-            }
           })
         }
       })
@@ -1070,30 +988,33 @@ function tasksMuts(tasks, ev) {
     case 'task-sub-tasked':
       // I think the spec is only run on event creation, not load from database,
       // so make sure the task exists before linking to it from another card
-      let taskExistsSubTask = false
-      let whosSeen = [ev.memberId]
+      let taskExists = false
       tasks.forEach(task => {
         if (task.taskId === ev.subTask) {
-          taskExistsSubTask = true
-          // See the task
-          seeTask(task, ev.memberId)
-          grabTask(task, ev.memberId)
-          addParent(task, ev.taskId)
-
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeen = [...whosSeen, ...task.seen]
+          taskExists = true
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+          if (ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
+            if (ev.subTask !== ev.memberId) {
+              task.deck.push(ev.memberId)
+            }
+          }
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
+            console.log(
+              'Task with missing parents found in task-sub-tasked. This should never happen.'
+            )
+            task.parents = []
           }
 
-          // check if alreadyHere and do not clearSeenExcept if so
-        }
-        if (task.taskId === ev.taskId) {
-          clearSeenExcept(task, whosSeen)
+          if (!task.parents.some(pId => pId === ev.taskId)) {
+            task.parents.push(ev.taskId)
+          }
         }
       })
-      if (taskExistsSubTask) {
+      if (taskExists) {
         tasks.forEach(task => {
           if (task.taskId === ev.taskId) {
-            addSubTask(task, ev.subTask)
+            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
+            task.subTasks.push(ev.subTask)
           }
         })
       } /*else { */
@@ -1101,17 +1022,16 @@ function tasksMuts(tasks, ev) {
       //   'A task with references to subTasks that are missing was found in an event in the database. This should have been filtered before storing.'
       // )
       // }
-
       break
     case 'task-de-sub-tasked':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
           task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
         }
         if (task.taskId === ev.subTask) {
-          removeParent(task, ev.taskId)
+          task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
         }
       })
       break
@@ -1126,7 +1046,7 @@ function tasksMuts(tasks, ev) {
       })
       tasks.forEach(task => {
         if (updateParents.indexOf(task.taskId) >= 0) {
-          removeParent(task, ev.taskId)
+          task.parents = _.filter(task.parents, tId => tId !== ev.taskId)
         }
       })
       break
@@ -1150,7 +1070,8 @@ function tasksMuts(tasks, ev) {
           task.color = ev.color
         }
         if (ev.inId && task.taskId === ev.inId) {
-          addSubTask(task, ev.taskId)
+          task.subTasks = _.filter(task.subTasks, tId => tId !== ev.taskId)
+          task.subTasks.push(ev.taskId)
         }
       })
       break
@@ -1158,44 +1079,34 @@ function tasksMuts(tasks, ev) {
       let paid = parseFloat(ev.paid) > 0 ? parseFloat(ev.paid) : 0
       let bounty = 0
       tasks.forEach(task => {
-        let found = false
-        task.priorities.some(taskId => {
-          if (taskId !== ev.taskId) {
-            return false
-          } else {
-            found = true
-            return true
-          }
-        })
+        // let found = false
+        // task.priorities.some(taskId => {
+        //   if (taskId !== ev.taskId) {
+        //     return false
+        //   } else {
+        //     found = true
+        //     return true
+        //   }
+        // })
 
-        task.subTasks.some(taskId => {
-          if (taskId !== ev.taskId) {
-            return false
-          } else {
-            found = true
-            return true
-          }
-        })
+        // task.subTasks.some(taskId => {
+        //   if (taskId !== ev.taskId) {
+        //     return false
+        //   } else {
+        //     found = true
+        //     return true
+        //   }
+        // })
 
-        if (found) {
-          if (task.priorities.indexOf(ev.taskId) === -1) {
-            task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
-            task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
-            task.completed.push(ev.taskId)
-          }
-          let alloc = false
-          if (task.allocations && Array.isArray(task.allocations)) {
-            task.allocations = _.filter(task.allocations, al => {
-              if (al.allocatedId === ev.taskId) {
-                alloc = al.amount
-                return false
-              }
-              return true
-            })
-          }
-        }
+        // if (found) {
+        //   if (task.priorities.indexOf(ev.taskId) === -1) {
+        //     task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
+        //     task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
+        //     task.completed.push(ev.taskId)
+        //   }
+        // }
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {
               task.deck.push(ev.memberId)
@@ -1224,18 +1135,11 @@ function tasksMuts(tasks, ev) {
                 p.completed.indexOf(ev.taskId) > -1
               ) {
                 p.completed = p.completed.filter(taskId => taskId !== ev.taskId)
-                addSubTask(task, ev.taskId)
+                p.subTasks = p.subTasks.filter(taskId => taskId !== ev.taskId)
+                p.subTasks.push(ev.taskId)
               }
             })
           }
-        }
-      })
-      break
-    case 'task-reset': // unused
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.claimed = []
-          task.lastkClaimed = ev.timestamp
         }
       })
       break
@@ -1261,39 +1165,6 @@ function tasksMuts(tasks, ev) {
             task.bolt11 = ''
             task.payment_hash = ''
           }
-        }
-      })
-      break
-    case 'task-allocated':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          if (task.boost >= 1) {
-            task.boost--
-            if (
-              !task.hasOwnProperty('allocations') ||
-              !Array.isArray(task.allocations)
-            ) {
-              task.allocations = []
-            }
-            let alreadyPointed = task.allocations.some(als => {
-              if (als.allocatedId === ev.allocatedId) {
-                als.amount += 1
-                return true
-              }
-            })
-            if (!alreadyPointed) {
-              if (!ev.amount || !Number.isInteger(ev.amount) || ev.amount < 1) {
-                ev.amount = 1
-              }
-              task.allocations.push(ev)
-            }
-          }
-          let reprioritized = _.filter(
-            task.priorities,
-            d => d !== ev.allocatedId
-          )
-          reprioritized.push(ev.allocatedId)
-          task.priorities = reprioritized
         }
       })
       break
@@ -1391,57 +1262,48 @@ function tasksMuts(tasks, ev) {
         if (
           !tasks.some((cur, i) => {
             if (cur.taskId === newT.taskId) {
-              safeMerge(cur, newT)
+              calculations.safeMerge(cur, newT)
               changedIndexes.push(i)
               return true
             }
           })
         ) {
-          let safeClone = blankCard(
+          let safeClone = calculations.blankCard(
             newT.taskId,
             newT.name,
             newT.color,
             newT.timestamp,
             newT.parents,
-            newT.height,
-            newT.width
+            newT.height
           )
-          safeMerge(safeClone, newT)
+          calculations.safeMerge(safeClone, newT)
           tasks.push(safeClone)
           changedIndexes.push(tasks.length - 1)
         }
       })
-
       // Loop through the new cards and remove invalid references to cards that don't exist on this server
       changedIndexes.forEach(tId => {
         const t = tasks[tId]
         let beforeLength = t.subTasks.length
-        t.subTasks = _.filter(t.subTasks, stId => taskExists(tasks, stId))
-        t.priorities = t.priorities.filter(stId => taskExists(tasks, stId))
-        t.completed = t.completed.filter(stId => taskExists(tasks, stId))
+        let filtered = []
+        t.subTasks = _.filter(t.subTasks, stId => {
+          if (tasks.some(sst => sst.taskId === stId)) {
+            filtered.push(stId)
+            return true
+          }
+          return false
+        })
+        t.priorities = t.priorities.filter(stId =>
+          tasks.some(sst => sst.taskId === stId)
+        )
+        t.completed = t.completed.filter(stId =>
+          tasks.some(sst => sst.taskId === stId)
+        )
         t.deck = t.deck.filter(stId =>
           tasks.some(sst => sst.taskId === stId && sst.taskId === sst.name)
         )
-        if (t?.grid?.rows && Object.keys(t.grid.rows).length >= 1) {
-          let filteredRows = {}
-          Object.entries(t.grid.rows).forEach(([x, row]) => {
-            let filteredRow = {}
-
-            if (row) {
-              Object.entries(row).forEach(([y, stId]) => {
-                if (taskExists(tasks, stId)) {
-                  filteredRow[y] = stId
-                }
-              })
-              if (Object.keys(filteredRow).length < 1) {
-                filteredRows[x] = {}
-              } else {
-                filteredRows[x] = filteredRow
-              }
-            }
-          })
-          t.grid.rows = filteredRows
-        }
+        // Grids are not received yet (because they did not exist when p2p AO was previously implemented)
+        // so they do not need to be checked for valid references to other cards (yet)
       })
       break
     case 'task-visited':
@@ -1459,7 +1321,7 @@ function tasksMuts(tasks, ev) {
           task.avatars.push({
             memberId: ev.memberId,
             timestamp: ev.timestamp,
-            area: ev.area,
+            area: ev.area
           })
         }
       })
@@ -1476,7 +1338,7 @@ function tasksMuts(tasks, ev) {
       break
     case 'grid-created':
       tasks.push(
-        blankCard(
+        calculations.blankCard(
           ev.taskId,
           ev.name,
           ev.color,
@@ -1490,7 +1352,7 @@ function tasksMuts(tasks, ev) {
     case 'grid-added':
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
-          task.grid = blankGrid(ev.height, ev.width)
+          task.grid = calculations.blankGrid(ev.height, ev.width)
         }
       })
       break
@@ -1511,7 +1373,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
           if (!task.grid) {
-            task.grid = blankGrid(ev.height, ev.width)
+            task.grid = calculations.blankGrid(ev.height, ev.width)
           }
           task.grid.height = ev.height
           task.grid.width = ev.width
@@ -1546,55 +1408,44 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'grid-pin':
-      let whosSeenGrid = [ev.memberId]
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          seeTask(task, ev.memberId)
-          grabTask(task, ev.memberId)
-          addParent(task, ev.inId)
-          // Accumulate who's seen this task
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeenGrid = [...whosSeenGrid, ...task.seen]
-          }
-        }
-      })
       tasks.forEach((task, i) => {
         if (task.taskId === ev.inId) {
           if (!task.grid) {
-            task.grid = blankGrid()
-          }
-          if (!_.has(task, 'grid.rows') || Array.isArray(task.grid.rows)) {
-            tasks[i].grid.rows = {}
+            task.grid = calculations.blankGrid()
           }
           if (!_.has(task, 'grid.rows.' + ev.y)) {
             tasks[i].grid.rows[ev.y] = {}
           }
           tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
-          let alreadyHereGrid = false
-          const stLengthBefore = task.subTasks.length
-          task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
-          if (task.subTasks.length - stLengthBefore > 0) {
-            alreadyHereGrid = true
+        }
+        // Same as task-sub-tasked: Grab the card and removed the pass from it, if any. And add parents.
+        if (task.taskId === ev.taskId) {
+          task.passed = _.filter(task.passed, d => d[1] !== ev.memberId)
+          if (ev.memberId && task.deck.indexOf(ev.memberId) === -1) {
+            if (ev.taskId !== ev.memberId) {
+              task.deck.push(ev.memberId)
+            }
           }
-          if (!alreadyHereGrid) {
-            clearSeenExcept(task, whosSeenGrid)
+          if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
+            task.parents = []
+          }
+          if (!task.parents.some(pId => pId === ev.inId)) {
+            task.parents.push(ev.inId)
           }
         }
+
+        task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
       })
       break
     case 'grid-unpin':
       tasks.some((task, i) => {
         if (task.taskId == ev.inId) {
-          if (!_.has(task, 'grid.rows.' + ev.y + '.' + ev.x)) {
-            return false
-          }
-          if (!tasks[i].grid.rows[ev.y]) {
-            console.log('\n\nSOMETHING VERY WEIRD')
+          if (!_.has(task, 'grid.rows.' + ev.y)) {
             return false
           }
           let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
           delete tasks[i].grid.rows[ev.y][ev.x]
-          if (Object.keys(task.grid.rows[ev.y]).length == 0) {
+          if (task.grid.rows[ev.y].length == 0) {
             delete tasks[i].grid.rows[ev.y]
           }
           if (tasks.some(t => t.taskId === gridTaskId)) {
@@ -1606,9 +1457,6 @@ function tasksMuts(tasks, ev) {
       })
       break
   }
-  // } catch (err) {
-  //   console.log('\n\n\nMUTATIONS ERROR:', err)
-  // }
 }
 
 function applyEvent(state, ev) {
@@ -1621,7 +1469,7 @@ function applyEvent(state, ev) {
   aoMuts(state.ao, ev)
 }
 
-export default {
+module.exports = {
   aoMuts,
   cashMuts,
   membersMuts,
@@ -1630,5 +1478,5 @@ export default {
   sessionsMuts,
   tasksMuts,
   applyEvent,
-  POTENTIALS_TO_EXECUTE,
+  POTENTIALS_TO_EXECUTE
 }

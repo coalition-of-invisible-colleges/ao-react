@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
 import api from '../client/api'
 import Loud from '../assets/images/loud.svg'
 
@@ -47,18 +46,15 @@ export default class AoStatus extends React.PureComponent<{}, AoStatusState> {
 
   render() {
     return (
-      <React.Fragment>
-        <img
-          id="status"
-          src={Loud}
-          onTouchStart={this.handleButtonPress}
-          onTouchEnd={this.handleButtonRelease}
-          onMouseDown={this.handleButtonPress}
-          onMouseUp={this.handleButtonRelease}
-          onMouseLeave={this.handleButtonRelease}
-        />
-        {!aoStore.state.socketState && <div id="disconnected" />}
-      </React.Fragment>
+      <img
+        id="status"
+        src={Loud}
+        onTouchStart={this.handleButtonPress}
+        onTouchEnd={this.handleButtonRelease}
+        onMouseDown={this.handleButtonPress}
+        onMouseUp={this.handleButtonRelease}
+        onMouseLeave={this.handleButtonRelease}
+      />
     )
   }
 }

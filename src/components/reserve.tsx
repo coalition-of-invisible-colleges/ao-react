@@ -1,15 +1,13 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
-import { gloss } from '../semantics'
 
 @observer
 export default class AoReserve extends React.PureComponent<{}> {
   constructor(props) {
     super(props)
-    makeObservable(this)
     this.state = {}
   }
 
@@ -89,7 +87,7 @@ export default class AoReserve extends React.PureComponent<{}> {
       members,
       guilds,
       cards,
-      resources,
+      resources
     }
   }
 
@@ -106,7 +104,7 @@ export default class AoReserve extends React.PureComponent<{}> {
       members,
       guilds,
       cards,
-      resources,
+      resources
     } = this.reserveData
 
     return (
@@ -119,9 +117,7 @@ export default class AoReserve extends React.PureComponent<{}> {
         </p>
         <p>{totalMembers.toFixed(0)} in accounts [list]</p>
         <p>{totalResources.toFixed(0)} in resources [list]</p>
-        <p>
-          {totalGuilds.toFixed(0)} on {gloss('guild')}s [list]
-        </p>
+        <p>{totalGuilds.toFixed(0)} on missions [list]</p>
         <p>{totalCards.toFixed(0)} on cards [list]</p>
       </React.Fragment>
     )

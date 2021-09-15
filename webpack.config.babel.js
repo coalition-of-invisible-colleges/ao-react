@@ -1,31 +1,25 @@
-import webpack from 'webpack'
-import path from 'path'
-// import dotenv from 'dotenv'
-// dotenv.config()
+var webpack = require('webpack')
+var path = require('path')
 
 // variables
-import { fileURLToPath } from 'url'
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const isProduction =
+var isProduction =
   process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
-const sourcePath = path.join(__dirname, './src')
-const outPath = path.join(__dirname, './dist')
-import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
+var sourcePath = path.join(__dirname, './src')
+var outPath = path.join(__dirname, './dist')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 // plugins
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-// var MiniCssExtractPlugin from mini-css-extract-plugin'
-import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
-//const ESLintPlugin from eslint-webpack-plugin'
+var HtmlWebpackPlugin = require('html-webpack-plugin')
+// var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+var { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
+//const ESLintPlugin = require('eslint-webpack-plugin')
 
-export default {
-  mode: isProduction ? 'production' : 'development',
+module.exports = {
+  mode: "production",
   context: __dirname,
   entry: {
-    app: './src/index.tsx',
+    app: './src/index.tsx'
   },
   output: {
     path: outPath,
@@ -33,7 +27,7 @@ export default {
     chunkFilename: isProduction
       ? '[id].[name].[contenthash].js'
       : '[id].[name].[hash].js',
-    publicPath: '/',
+    publicPath: '/'
   },
   target: 'web',
   resolve: {
@@ -42,8 +36,8 @@ export default {
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
     mainFields: ['module', 'browser', 'main'],
     alias: {
-      'react-dom': '@hot-loader/react-dom',
-    },
+      'react-dom': '@hot-loader/react-dom'
+    }
   },
   module: {
     rules: [
@@ -58,23 +52,23 @@ export default {
             presets: [
               [
                 '@babel/preset-env',
-                { targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
+                { targets: { browsers: 'last 2 versions' } } // or whatever your project requires
               ],
               '@babel/preset-typescript',
-              '@babel/preset-react',
+              '@babel/preset-react'
             ],
             plugins: [
               // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
               ['@babel/plugin-proposal-decorators', { legacy: true }],
-              ['@babel/plugin-proposal-class-properties', { loose: false }],
-              ['react-hot-loader/babel', { safetyNet: false }],
-            ],
-          },
-        },
+              ['@babel/plugin-proposal-class-properties', { loose: true }],
+              'react-hot-loader/babel'
+            ]
+          }
+        }
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.s[ac]ss$/i,
@@ -84,8 +78,8 @@ export default {
           // Translates CSS into CommonJS
           'css-loader',
           // Compiles Sass to CSS
-          'sass-loader',
-        ],
+          'sass-loader'
+        ]
       },
       // {
       //   test: /\.css$/,
@@ -130,15 +124,15 @@ export default {
         use: [
           {
             loader: 'svg-url-loader',
-            options: {},
-          },
-        ],
+            options: {}
+          }
+        ]
       },
       {
         test: /\.(gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
-        use: 'file-loader',
-      },
-    ],
+        use: 'file-loader'
+      }
+    ]
   },
   optimization: {
     splitChunks: {
@@ -146,7 +140,7 @@ export default {
       cacheGroups: {
         commons: {
           chunks: 'initial',
-          minChunks: 2,
+          minChunks: 2
         },
         vendors: {
           test: /[\\/]node_modules[\\/]/,
@@ -154,17 +148,17 @@ export default {
           priority: -10,
           filename: isProduction
             ? 'vendor.[contenthash].js'
-            : 'vendor.[hash].js',
-        },
-      },
+            : 'vendor.[hash].js'
+        }
+      }
     },
     runtimeChunk: true,
-    moduleIds: 'named',
+    moduleIds: 'named'
   },
   plugins: [
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'production', // use 'development' unless process.env.NODE_ENV is defined
-      DEBUG: false,
+      NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
+      DEBUG: false
     }),
     new CleanWebpackPlugin(),
     // new MiniCssExtractPlugin({
@@ -174,24 +168,21 @@ export default {
     new ForkTsCheckerWebpackPlugin(),
     //new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/assets/index.html',
+      template: 'src/assets/index.html'
     }),
     new WebpackManifestPlugin({
-      fileName: 'public/manifest.json',
+      fileName: '%PUBLIC_URL%/manifest.json'
     }),
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
-    disableHostCheck: true,
+    contentBase: sourcePath,
     hot: true,
     inline: true,
-    host: '127.0.0.1',
-    // public: '127.0.0.1:3000',
-    allowedHosts: ['127.0.0.1'],
+    host: '0.0.0.0',
     historyApiFallback: {
-      disableDotRule: true,
+      disableDotRule: true
     },
     proxy: [
       {
@@ -201,20 +192,14 @@ export default {
           '/session',
           '/meme',
           '/upload',
-          '/download',
-          '/fetchTaskByID',
-          '/fetchTaskByName',
+          '/download'
         ],
-        target: 'http://127.0.0.1:8003',
-        // changeOrigin: true,
-      },
-      // { context: [ "/socket.io"],
-      //   ws: true,
-      // }
+        target: 'http://0.0.0.0:8003',
+        changeOrigin: true
+      }
     ],
-
     stats: 'minimal',
-    clientLogLevel: 'debug',
+    clientLogLevel: 'debug'
   },
   // https://webpack.js.org/configuration/devtool/
   devtool: 'eval-source-map',
@@ -224,5 +209,5 @@ export default {
     // https://github.com/webpack/webpack-dev-server/issues/60#issuecomment-103411179
     //fs: 'empty',
     //net: 'empty'
-  },
+  }
 }

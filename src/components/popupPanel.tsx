@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import Tippy from '@tippyjs/react'
 import LazyTippy from './lazyTippy'
@@ -8,16 +8,15 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 
 interface PopupPanelProps {
-	iconSrc?: string
+	iconSrc: string
 	tooltipText?: string
 	tooltipPlacement?: Placement
 	panelPlacement?: Placement
 	onShown?: (instance) => void
 	id?: string
 	badge?: any
-	badgeColor?: 'green' | 'yellow' | 'red'
+	badgeColor?: 'green' | 'yellow'
 	alsoHideHub?: boolean
-	buttonClass?: string
 }
 
 interface State {
@@ -31,7 +30,6 @@ export default class AoPopupPanel extends React.PureComponent<
 > {
 	constructor(props) {
 		super(props)
-		makeObservable(this)
 		this.state = {}
 		this.onPanelOpen = this.onPanelOpen.bind(this)
 		this.onPanelClose = this.onPanelClose.bind(this)
@@ -43,7 +41,7 @@ export default class AoPopupPanel extends React.PureComponent<
 		} else {
 			hideAllTippys({
 				// This is messy but hopefully works consistently.
-				exclude: document.querySelectorAll('#hub')[1],
+				exclude: document.querySelectorAll('#hub')[1]
 			})
 		}
 		this.setState({ isPanelOpen: true })
@@ -77,8 +75,7 @@ export default class AoPopupPanel extends React.PureComponent<
 					this.props.onShown ? this.props.onShown(instance) : undefined
 				}}
 				onHide={this.onPanelClose}
-				hideOnClick="toggle"
-				theme="translucent">
+				hideOnClick="toggle">
 				<Tippy
 					zIndex={4}
 					theme="translucent"
@@ -93,12 +90,9 @@ export default class AoPopupPanel extends React.PureComponent<
 					<div
 						id={this.props.id}
 						className={
-							this.state.isPanelOpen
-								? 'actionCircle open'
-								: 'actionCircle' +
-								  (this.props.buttonClass ? ' ' + this.props.buttonClass : '')
+							this.state.isPanelOpen ? 'actionCircle open' : 'actionCircle'
 						}>
-						{this.props.iconSrc && <img src={this.props.iconSrc} />}
+						<img src={this.props.iconSrc} />
 						{this.props.badge ? (
 							<div
 								className={

@@ -1,10 +1,10 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
 import AoStack from './stack'
-import { prioritizeCard } from '../cardTypes'
+import { prioritizeCard } from '../cards'
 import Tippy from '@tippyjs/react'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
@@ -23,11 +23,6 @@ interface PreviewProps {
 
 @observer
 export default class AoPreview extends React.PureComponent<PreviewProps> {
-  constructor(props: PreviewProps) {
-    super(props)
-    makeObservable(this)
-  }
-
   preventDoubleClick(event) {
     event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()
@@ -157,7 +152,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         )
       case 'collapsed-mission':
       case 'face after':
-        return <div className="preview">({this.subCardCount})</div>
+        return <div className={'preview'}>({this.subCardCount})</div>
       case 'badge':
         delay = [0, 0]
         if (this.priorityCount >= 1) {
@@ -167,39 +162,28 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         } else {
           return null
         }
-      case 'mini before':
+      case 'mini after':
         if (delay === undefined) {
           delay = [625, 200]
         }
         if (wrappedPriorityCount == undefined) {
-          wrappedPriorityCount = (
-            <div className="label">{this.priorityCount + '!'}</div>
-          )
+          wrappedPriorityCount = this.priorityCount + '!'
         }
         if (this.priorityCount >= 1) {
-          const placement = this.props.hudStyle === 'badge' ? 'top' : 'bottom'
           return (
-            <div
-              className="preview nopad"
-              onClickCapture={event => {
-                console.log('propagating to', event.currentTarget.parentElement)
-                document.getElementById('card-clickable-' + taskId).click()
-              }}>
-              <Tippy
-                interactive={true}
-                maxWidth="none"
-                placement={placement}
-                animation="scale-extreme"
-                delay={delay}
-                theme="translucent"
-                appendTo={() =>
-                  document.getElementById('card-' + taskId).parentElement
-                    .parentElement.parentElement
-                }
-                content={this.renderedPriorities}>
-                {wrappedPriorityCount}
-              </Tippy>
-            </div>
+            <Tippy
+              interactive={true}
+              maxWidth="none"
+              placement="bottom"
+              animation="scale-extreme"
+              delay={delay}
+              appendTo={() =>
+                document.getElementById('card-' + taskId).parentElement
+                  .parentElement.parentElement
+              }
+              content={this.renderedPriorities}>
+              <div className="preview nopad">{wrappedPriorityCount}</div>
+            </Tippy>
           )
         }
         return <div className="preview">({this.subCardCount})</div>

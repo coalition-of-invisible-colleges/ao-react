@@ -1,83 +1,61 @@
 # ao-react
 
-ao-react is a reimplementation of the [AO on Vue](https://github.com/AutonomousOrganization/ao-3/) frontend using TypeScript and React.
+ao-react is a reimplementation of the AO frontend using TypeScript and React.
 
-## Install
+Benefits compared to the [AO on Vue](https://github.com/AutonomousOrganization/ao/):
 
-The AO comes with an install script that will install all the prerequisites for the AO, including sqlite3, as well as tor, bitcoin, c-lightning, and other apps that the AO integrates. The script has been tested on Debian, Raspbian, and Manjaro.
+- AO API abstracted to one file
+- Totally responsive—platform bugs, slowdowns and memory leaks are gone (afaict).
+- CSS organized in one place, in one structure which matches page layout.
+- React elements use native HTML; custom components appear as native HTML elements (no extra divs needed!).
+- TypeScript ubiquitously checks types, speeding up coding, reducing errors, and improving security.
+- CSS themes already work.
+- New card grid with working drag-and-drop makes it easy to organize cards spatially.
 
-1. `wget http://raw.githubusercontent.com/coalition-of-invisible-colleges/ao-react/staging/install.sh`
+Disadvantages:
 
-or clone the repository, which contains the install.sh script:
+- Vue is community-built from the ground up; React is maintained by Facebook and TypeScript by Microsoft. Both are open-source, though. Vue 3.0 might be great but it is still delayed.
+- Vue might be more fun to code in. In React you have to deal with all verbosity of HTML and JavaScript.
+- Still missing about half the features of the original AO (these are being rapidly ported).
+- A few mutations have changed, which might make databases incompatible.
+- Still no way to easily migrate cards between databases.
+- Vue's idiosyncratic page layout language is more concise than React's HTML-like components.
+- Consolidating CSS means it is not compartmentalized with each component.
+- Original AO layout will need to be ported over (or, a new streamlined layout based around grids).
+- Possible performance issues (computer seems to run moderately hot).
+
+#### Install
+
+AO is a vue project get started with the developer mode that allows you to explore the code.
 
 ```
-git clone https://github.com/coalition-of-invisible-colleges/ao-react.git
-cd ao-react
+npm install
+npm run serve
 ```
 
-2. `chmod +x install.sh`
+To be fully setup ao requires (tested on) Ubuntu 18 and Raspbian lite. These dependencies will be installed:
 
-3. `./install.sh`
+- sqlite3 - `~/.ao/database.sqlite3` file where history is stored
+- clightning - `~/.lightning/` directory where bitcoin wallet is created
+- tor - `/usr/local/etc/tor/torrc` file that configures external access
 
-4. `rm ao-react/configuration.js`
+```
+npm run setup
+npm install
+npm run compile
+```
 
-5. `./install.sh`
+After compiling a webserver should be hosted on localhost:8003.
 
-The script will generate a valid configuration file, so step #4 has you delete the script so it will be regenerated after tor has been installed.
+- The **name _and_ password** of the first account is **dctrl**.
 
-### Default URL, port, and login
+At this time [clightning](https://github.com/ElementsProject/lightning) requires [bitcoind](https://www.bitcoin.org/download). Ao facilitates getting addresses and invoices from this wallet. Backup the ~/.lightning/bitcoin/hsm_secret file. Use responsibly and at your own risk!
 
-After compiling a webserver should be hosted on 127.0.0.1:3000.
+After setup, the ao and any information you put into it are meaningfully _yours_.
 
-The **name _and_ password** of the first account is **dctrl**.
+### Anatomy of Autonomous Organization
 
-Once you log into the AO, you can take a tour of its features by clicking Start Tour, near the bottom-left corner of the page.
-
-### Installing manually / using NPM
-
-The AO runs on Node.js, which is controlled using three commands: `node` itself, `nvm` (node version manager), and `npm` (node package manager). `node` is the JavaScript platform itself, and it compiles and executes your code, hosting the AO server. `nvm` installs and manages your different versions of node. `npm` is used to install the packages for a node project, compile a node project, or run node project scripts. `npx` is also sometimes used as a shortcut to execute node scripts directly.
-
-#### `npm install`
-
-`npm i` is a synonym for `npm install`.
-
-Run `npm i` to install package dependences that are listed in the `package.json` file, generating the `node_modules` folder. You can always delete the `node_modules` folder and run `npm i` again to regenerate it. Whenever you change node versions (e.g., with `nvm use current` or `nvm use 16`), you will need to run `npm i` again to reinstall the project and its dependencies using the current version of node.
-
-#### `npm run <script name>`
-
-The `npm run <script name>` command runs the named bash script from the `packages.json` file. See this file for available scripts. Some of the most important ones are:
-
-`npm run webpack` - compiles the client (the server is interpreted and does not need to be compiled)
-
-`npm run start` - launches the server, recompiles the client and begins serving it, watching the folder for changes and recompiling when changed files are detected
-
-## Important locations
-
-Here are some important locations the AO uses:
-
-### `~/ao-react/configuration.js`
-
-Assuming you installed the AO to ~/ao-react/, this will be the location of your configuration.js file. This file is used at compiletime to configure settings for your AO server. To generate a fresh and valid configuration file, delete or rename (`mv`) your current configuration.js file, then run the install.sh script. See below for a complete description of what can be configured in this file.
-
-### sqlite3 - `~/.ao/database.sqlite3`
-
-This is the default path where the AO's sqlite3 database file is stored. You can manually read and edit this file using the `sqlite3` command. (Example query: `select * from events where document like '%hippopotamus%';`, where the % signs are wildcards surrounding the search string.)
-
-### c-lightning `~/.lightning/`
-
-This is the directory where the bitcoin lightning wallet is created
-
-### c-lightning `~/.lightning/bitcoin/hsm_secret file`
-
-At this time [clightning](https://github.com/ElementsProject/lightning) requires [bitcoind](https://www.bitcoin.org/download). AO facilitates getting addresses and invoices from this wallet. Backup the . Use responsibly and at your own risk!
-
-### tor - `/usr/local/etc/tor/torrc`
-
-This file configures tor's external access. The install.sh script will add a line to the end of this file to host the AO on tor.
-
-## Anatomy of Autonomous Organization
-
-### Three dimensions:
+#### - Three dimensions:
 
 The dimensions of ao are the three aspects of a decentralized society.
 
@@ -85,7 +63,7 @@ The dimensions of ao are the three aspects of a decentralized society.
 - **Sun**: We, the community
 - **Bull**: The Computer, the server
 
-### Five modes:
+#### - Five modes:
 
 The modes of ao correspond loosely to
 

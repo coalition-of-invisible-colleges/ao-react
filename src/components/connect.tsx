@@ -5,7 +5,7 @@ import api from '../client/api'
 import AoServerName from './serverName'
 import AoTip from './tip'
 import AoStack from './stack'
-import { CardPlay } from '../cardTypes'
+import { CardPlay } from '../cards'
 import config from '../../configuration'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -41,7 +41,6 @@ export default class AoConnect extends React.PureComponent<{}, State> {
 
   onKeyDown(event) {
     if (event.key === 'Enter') {
-      event.stopPropagation()
       this.newConnection(event)
     }
   }
@@ -52,7 +51,6 @@ export default class AoConnect extends React.PureComponent<{}, State> {
 
   render() {
     const list = aoStore.state.ao.map(ao => {
-      console.log('AO to render is: ', ao)
       let linkedCards: Task[] = ao.links?.map(tId => aoStore.hashMap.get(tId))
 
       const linkCard = (move: CardPlay) => {
@@ -61,14 +59,14 @@ export default class AoConnect extends React.PureComponent<{}, State> {
       }
 
       const formattedLastContact = formatDistanceToNow(ao.lastContact, {
-        addSuffix: true,
+        addSuffix: true
       })
 
       return (
         <li key={ao.address}>
           Address: {ao.address}
           <br />
-          Direction: Unknown {/* !ao.outboundSecret ? 'Inbound' : 'Outbound' */}
+          Direction: {!ao.outboundSecret ? 'Inbound' : 'Outbound'}
           <br />
           Last seen {formattedLastContact}
           <br />
@@ -76,7 +74,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
           <AoStack
             cards={linkedCards}
             cardStyle="priority"
-            onDrop={linkCard}
+            onDrop={ao.outboundSecret ? linkCard : null}
             alwaysShowAll={true}
           />
         </li>

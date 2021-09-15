@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
-import { Coords } from '../cardTypes'
+import { Coords } from '../cards'
 
 interface Props {
 	onNewCard: (string, coords?) => void
@@ -24,8 +24,6 @@ export default class AoCardComposer extends React.Component<Props, State> {
 
 	constructor(props) {
 		super(props)
-
-		// console.log('AO: components/cardComposer.tsx: constructor: ', { props })
 		this.state = {}
 		this.focus = this.focus.bind(this)
 		this.uploadDraft = this.uploadDraft.bind(this)
@@ -73,7 +71,6 @@ export default class AoCardComposer extends React.Component<Props, State> {
 	onKeyDown(event) {
 		if (event.key === 'Enter' && !event.shiftKey) {
 			event.preventDefault()
-			event.stopPropagation()
 			if (this.state.uploadDraftTimer) {
 				clearTimeout(this.state.uploadDraftTimer)
 			}
@@ -83,12 +80,10 @@ export default class AoCardComposer extends React.Component<Props, State> {
 				console.log('Empty card—nothing created.')
 				return
 			}
-
 			this.props.onNewCard(trimmed, this.props.coords)
 			this.clear()
 			this.onBlur(event)
 		} else if (event.key === 'Escape') {
-			event.stopPropagation()
 			this.onBlur(event)
 		}
 	}
@@ -131,7 +126,7 @@ export default class AoCardComposer extends React.Component<Props, State> {
 							right: '1.25em',
 							bottom: '1em',
 							fontSize: '0.8em',
-							color: 'gray',
+							color: 'gray'
 						}}>
 						saved
 					</div>

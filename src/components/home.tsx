@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { computed, reaction } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
-import { goInCard } from '../cardTypes'
 import aoStore from '../client/store'
 import { Redirect } from 'react-router-dom'
 import Unicorn from '../assets/images/uni.svg'
@@ -11,71 +10,69 @@ import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 
 interface State {
+  redirect?: string
   dabbed?: boolean
+  memory?: string
 }
 
+@observer
 export default class AoHome extends React.PureComponent<{}, State> {
   constructor(props) {
     super(props)
-
     this.state = {}
-
-    this.dab = this.dab.bind(this)
+    this.goHome = this.goHome.bind(this)
   }
 
-  executeOnUnmount_list = []
-  holdingThisCardId = null
-
-  componentDidMount() {
-    let isDabbedReaction = reaction(
-      () => {
-        return aoStore.isDabbed
-      },
-      isDabbed => {
-        if (isDabbed === true) {
-          this.setState({ dabbed: true })
-        } else {
-          this.setState({ dabbed: false })
-          this.holdingThisCardId = null
-        }
-      }
-    )
-    this.executeOnUnmount_list.push(isDabbedReaction)
-  }
-
-  componentWillUnmount() {
-    this.executeOnUnmount_list.forEach(fn => fn())
-  }
-
-  dab() {
-    event.stopPropagation()
-
-    // console.log('AO: components/home.tsx: dab ', {
-    //   props: this.props,
-    //   state: this.state,
-    //   holdingThisCardId: this.holdingThisCardId,
-    // })
-
-    if (!aoStore.isDabbed) {
-      this.holdingThisCardId = aoStore.currentCard
-      goInCard(aoStore.member.memberId, false, true)
-    } else {
-      if (this.holdingThisCardId !== null) {
-        goInCard(this.holdingThisCardId, false, true)
-      }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.redirect !== undefined) {
+      this.setState({ redirect: undefined })
     }
   }
 
+  goHome() {
+    event.stopPropagation()
+    hideAllTippys()
+    aoStore.closeAllCloseables()
+
+    let card
+    let newMemory
+    if (this.state.dabbed) {
+      card = aoStore.hashMap.get(this.state.memory)
+      newMemory = undefined
+    } else {
+      card = aoStore.memberCard
+      newMemory = aoStore.currentCard
+    }
+
+    if (!card) {
+      console.log('missing card')
+      return
+    }
+    const taskId = card.taskId
+    console.log('goInCard taskId is ', taskId)
+    if (aoStore.currentCard) {
+      aoStore.addToContext([aoStore.currentCard])
+    }
+    aoStore.setCurrentCard(taskId)
+    aoStore.removeFromContext(taskId)
+    this.setState({
+      redirect: taskId,
+      dabbed: !this.state.dabbed,
+      memory: newMemory
+    })
+  }
+
   render() {
-    // if (
-    //   aoStore.currentCard === aoStore.memberCard.taskId &&
-    //   !this.state.memory
-    // ) {
-    //   return null
-    // }
+    if (
+      aoStore.currentCard === aoStore.memberCard.taskId &&
+      !this.state.memory
+    ) {
+      return null
+    }
 
     return (
       <React.Fragment>
+        {this.state.redirect && <Redirect to={this.state.redirect} />}
         <Tippy
           zIndex={4}
           theme="translucent"
@@ -85,8 +82,8 @@ export default class AoHome extends React.PureComponent<{}, State> {
           <img
             id="home"
             src={Unicorn}
-            onClick={this.dab}
-            className={this.state.dabbed ? 'dabbed' : ''}
+            onClick={this.goHome}
+            className={this.state.dabbed && 'dabbed'}
           />
         </Tippy>
       </React.Fragment>

@@ -1,12 +1,8 @@
-import _ from 'lodash'
-import state from './state.js'
-import {
-  isAheadOf,
-  isDecidedlyMorePopularThan,
-  isSenpaiOf,
-} from '../members.js'
+const _ = require('lodash')
+const state = require('./state')
+const members = require('../members')
 
-export default {
+module.exports = {
   isAmount(val, errRes) {
     let parsed = parseFloat(val)
     if (parsed !== 0 && !parsed) {
@@ -26,8 +22,7 @@ export default {
       val === 'secret' ||
       val === 'fob' ||
       val === 'draft' ||
-      val === 'tutorial' ||
-      val === 'phone'
+      val === 'tutorial'
     if (!isField) {
       errRes.push('invalid field')
       return false
@@ -93,7 +88,6 @@ export default {
   isTaskId(val, errRes) {
     let result = false
     state.serverState.tasks.forEach(task => {
-      // console.log("AO: server/validators.js: isTaskId: ", {val, task})
       if (task.taskId == val) {
         result = true
       }
@@ -101,50 +95,14 @@ export default {
     if (!result) {
       errRes.push('invalid task')
     }
-    // console.log("AO: server/validators.js: isTaskId: ", {result, val, errRes});
     return result
-  },
-  isTaskId_sane(val, errRes) {
-    let result = false
-    try {
-      let taskName = val.trim().toLowerCase()
-      if (taskName === val) result = true
-    } catch (erorr) {
-      // do nothing
-    }
-    if (result === false) {
-      errRes.push('invalid task id, must be a lower case, trimmed string')
-    }
-    // console.log("AO: server/validators.js: isTaskId_sane: ", {result, val, errRes})
-    return result
-  },
-  taskIdExists(val, errRes) {
-    let result = false
-    if (!this.isTaskId_sane(val)) {
-      errRes.push('invalid task id')
-    } else {
-      let taskId = val
-      state.serverState.tasks.some(task => {
-        if (task.taskId.trim().toLowerCase() === val) {
-          result = true
-          return true
-        }
-      })
-      if (result === false) {
-        errRes.push(
-          'AO: server/validators.js: taskIdExists: task not found: ' + val
-        )
-      }
-      // console.log('AO: server/validators.js: taskIdExists: ', {result, val, errRes});
-      return result
-    }
   },
   isTaskName(val, errRes) {
     let result = false
     state.serverState.tasks.forEach(task => {
       if (
         task.name.trim().localeCompare(val.trim(), undefined, {
-          sensitivity: 'base',
+          sensitivity: 'base'
         })
       ) {
         result = true
@@ -153,43 +111,7 @@ export default {
     if (result) {
       errRes.push('invalid task')
     }
-    // console.log("AO: server/validators.js: isTaskName: ", {result, val, errRes});
     return !result
-  },
-  isTaskName_sane(val, errRes) {
-    let result = false
-    try {
-      let taskName = val.trim().toLowerCase()
-      if (taskName === val) result = true
-    } catch (erorr) {
-      // do nothing
-    }
-    if (result === false) {
-      errRes.push('invalid task name, must be a lower case, trimmed string')
-    }
-    // console.log("AO: server/validators.js: isTaskName_sane: ", {result, val, errRes})
-    return result
-  },
-  taskNameExists(val, errRes) {
-    let result = false
-    if (!this.isTaskName_sane(val, errRes)) {
-      errRes.push('invalid task')
-    } else {
-      let taskName = val
-      state.serverState.tasks.some(task => {
-        if (task.name.trim().toLowerCase() === val) {
-          result = true
-          return true
-        }
-      })
-      if (result === false) {
-        errRes.push(
-          'AO: server/validators.js: taskNameExists: task not found: ' + val
-        )
-      }
-      // console.log("AO: server/validators.js: taskNameExists: ", {result, val, errRes});
-      return result
-    }
   },
   isSession(val, errRes) {
     let result = false
@@ -257,10 +179,10 @@ export default {
     return colors.indexOf(val) >= 0
   },
   isAheadOf(senpaiId, kohaiId, errRes) {
-    return isAheadOf(senpaiId, kohaiId, state.serverState, errRes)
+    return members.isAheadOf(senpaiId, kohaiId, state.serverState, errRes)
   },
   isDecidedlyMorePopularThan(senpaiId, kohaiId, errRes) {
-    return isDecidedlyMorePopularThan(
+    return members.isDecidedlyMorePopularThan(
       senpaiId,
       kohaiId,
       state.serverState,
@@ -268,7 +190,7 @@ export default {
     )
   },
   isSenpaiOf(senpaiId, kohaiId, errRes) {
-    return isSenpaiOf(senpaiId, kohaiId, state.serverState, errRes)
+    return members.isSenpaiOf(senpaiId, kohaiId, state.serverState, errRes)
   },
   hasBanOn(senpaiId, kohaiId, errRes) {
     const kohai = state.serverState.members.find(t => t.memberId === kohaiId)
@@ -288,5 +210,5 @@ export default {
     return kohai.potentials.some(
       pot => pot.memberId === senpaiId && pot.opinion === 'member-banned'
     )
-  },
+  }
 }

@@ -46,22 +46,19 @@ export default class AoDragZone extends React.Component<DragZoneProps> {
 			event.dataTransfer.setData('text/fromX', this.props.dragContext.x)
 		}
 		event.dataTransfer.setData('text/fromY', this.props.dragContext.y)
-		if (this.props.dragContext.level >= 1) {
-			event.dataTransfer.setData('text/fromLevel', this.props.dragContext.level)
-		}
 
 		let fromId: string = event.dataTransfer.getData('text/taskId')
 		let fromInId: string = event.dataTransfer.getData('text/fromInId')
 		let fromZone = event.dataTransfer.getData('text/fromZone')
 		let fromCoords = {
 			x: event.dataTransfer.getData('text/fromX'),
-			y: event.dataTransfer.getData('text/fromY'),
+			y: event.dataTransfer.getData('text/fromY')
 		}
 		let fromLocation = {
 			taskId: fromId,
 			inId: fromInId,
 			zone: fromZone,
-			coords: fromCoords,
+			coords: fromCoords
 		}
 
 		// Do this last, because some cards don't render properly

@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed, makeObservable } from 'mobx'
+import { computed } from 'mobx'
 import { Redirect } from 'react-router-dom'
 import aoStore from '../client/store'
 import api from '../client/api'
-import { goInCard } from '../cardTypes'
+import { goInCard } from '../cards'
 import AoPaper from './paper'
 
 interface Props {
@@ -19,7 +19,6 @@ interface State {
 export default class AoResourcePanel extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props)
-    makeObservable(this)
     this.state = {}
     this.useResource = this.useResource.bind(this)
     this.purgeResource = this.purgeResource.bind(this)
@@ -66,7 +65,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
   @computed get optionsList() {
     const card = aoStore.hashMap.get(this.props.resourceId)
     if (!card) {
-      return null
+      return []
     }
     let ol = card.priorities.map(taskId => {
       const option = aoStore.hashMap.get(taskId)
@@ -113,8 +112,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       return <div>Invalid resource</div>
     }
     const renderOptions = this.optionsList.map(option => {
-      const [notes, name, color] =
-        Array.isArray(option) && option.length >= 3 ? option : null
+      const [notes, name, color] = option
       return (
         <div className="option">
           <AoPaper color={color} />

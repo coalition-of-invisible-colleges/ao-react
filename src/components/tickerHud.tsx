@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import { computed, makeObservable } from 'mobx'
+import { computed } from 'mobx'
 import ReactDOM from 'react-dom'
 import aoStore, { Ticker } from '../client/store'
 import api from '../client/api'
@@ -43,7 +43,7 @@ const defaultTickerState: TickerState = {
   error: undefined,
   fromSymbol: undefined,
   toSymbol: undefined,
-  exchangeRate: undefined,
+  exchangeRate: undefined
 }
 
 @observer
@@ -54,7 +54,6 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
 
   constructor(props) {
     super(props)
-    makeObservable(this)
     this.state = defaultTickerState
     this.isValidCoin = this.isValidCoin.bind(this)
     this.startEditing = this.startEditing.bind(this)
@@ -118,7 +117,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
 
       const toBtcExchangeData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.to,
-        vs_currencies: ['btc', 'usd', 'cad', 'eth'],
+        vs_currencies: ['btc', 'usd', 'cad', 'eth']
       })
       toBtcExchange = 1 / Object.values(toBtcExchangeData.data)[0]['btc']
       this.setState({ toSymbol: symbol })
@@ -148,7 +147,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
       this.setState({
         fromSymbol: ticker.from,
         fromCoinId: coinId,
-        exchangeRate: exchangeRate,
+        exchangeRate: exchangeRate
       })
     } else if (isAddress(ticker.from)) {
       const symbolData = await CoinGeckoClient.coins.fetchCoinContractInfo(
@@ -160,7 +159,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
 
       const priceData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.from,
-        vs_currencies: 'btc',
+        vs_currencies: 'btc'
       })
 
       const price = 1 / Object.values(priceData.data)[0]['btc']
@@ -169,7 +168,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
       this.setState({
         fromSymbol: symbol,
         fromCoinId: coinId,
-        exchangeRate: exchangeRate,
+        exchangeRate: exchangeRate
       })
     }
   }
@@ -192,7 +191,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
 
     const priceData = await CoinGeckoClient.simple.fetchTokenPrice({
       contract_addresses: trimmed,
-      vs_currencies: ['btc', 'usd', 'cad', 'eth'],
+      vs_currencies: ['btc', 'usd', 'cad', 'eth']
     })
 
     const price = Object.values(priceData.data)[0]['btc']
@@ -214,8 +213,8 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
 
   onKeyDown(event) {
     if (event.key === 'Escape') {
-      event.stopPropagation()
       this.stopEditing()
+      event.stopPropagation()
     }
 
     if (event.key === 'Enter') {
@@ -338,7 +337,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
       decimalPlaces = 6
     }
     const exchangeRate = this.state.exchangeRate.toLocaleString('en-US', {
-      maximumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces
     })
 
     const actionCircle = (

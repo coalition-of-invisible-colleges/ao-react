@@ -1,11 +1,10 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx'
+import { computed } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoCardHud, { HudStyle } from './cardHud'
 import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
-import 'tippy.js/themes/translucent.css'
 
 interface Props {
   taskId: string
@@ -15,11 +14,6 @@ interface Props {
 
 @observer
 export default class CardMenu extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props)
-    makeObservable(this)
-  }
-
   @computed
   get renderMenuButton() {
     return (
@@ -47,7 +41,7 @@ export default class CardMenu extends React.Component<Props> {
         trigger="click"
         placement="top-end"
         appendTo={document.getElementById('root')}
-        theme="translucent">
+        theme="white">
         {this.renderMenuButton}
       </LazyTippy>
     )
