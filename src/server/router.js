@@ -244,11 +244,12 @@ export default function applyRouter(app) {
 
   const uploadFormName = 'file'
 
-  app.post('/upload', upload.single(uploadFormName), (req, res, err) => {
-    if (err) {
-      console.log('UPLOAD ERROR: ', err)
-      res.status(400).send([])
-    }
+  app.post('/upload', upload.single(uploadFormName), (req, res) => {
+    // if (err) {
+    //   console.log('UPLOAD ERROR: ', err)
+    //   res.status(400).send([])
+    //   return
+    // }
     const tempPath = req.file.path
     const targetPath = path.join(config.memes.dir, req.file.originalname)
     console.log('originalname is ', req.file.originalname)

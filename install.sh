@@ -18,6 +18,11 @@
 
 # To make this script compatible with MacOS, use Brew, the MacOs package manager
 
+# improvements for configure tor on mac
+# create a group, add them to the group
+# improve the $USER:$USER line to correctly create the group on mac
+# brew services start tor
+
 # detect OS
 if [ -f "/etc/debian_version" ]; then
 	DISTRO="debian"
