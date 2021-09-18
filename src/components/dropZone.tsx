@@ -139,15 +139,21 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 					if (res && res.text) {
 						const newTaskId = res.text
 						aoStore.getTaskById_async(newTaskId, res => {
-							console.log('uploaded file. res is ', res, '. About to pin card')
-							// todo: allow uploads on stacks as well
-							// todo: if there are multiple uploads, make one card and put all the files inside on more cards
-							api.pinCardToGrid(
-								this.props.x,
-								this.props.y,
-								lastUploadedName,
-								this.props.inId
-							)
+							if (res) {
+								console.log(
+									'uploaded file. res is ',
+									res,
+									'. About to pin card'
+								)
+								// todo: allow uploads on stacks as well
+								// todo: if there are multiple uploads, make one card and put all the files inside on more cards
+								api.pinCardToGrid(
+									this.props.x,
+									this.props.y,
+									lastUploadedName,
+									this.props.inId
+								)
+							}
 						})
 					}
 				})
