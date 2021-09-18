@@ -1242,9 +1242,18 @@ class AoApi {
       })
   }
 
-  logout() {
+  async logout(): Promise<request.Response> {
+    console.log("processing logoutz")
     aoStore.resetState()
     window.localStorage.clear()
+    //clear cookie
+    return request
+      .post('/logout')
+      .set('Authorization', aoStore.state.token)
+      .send({})
+      .then(res => {
+        return res
+      })
   }
 
   startSocketListeners() {

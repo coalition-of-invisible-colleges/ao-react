@@ -59,6 +59,13 @@ export default function applyRouter(app) {
   app.use(fobtap) // handles rfid scan devices
   app.use(lightningRouter)
 
+  app.post('/logout', (req, res) => {
+    console.log("Logging out and clearing token (new way)");
+    res.clearCookie("token");
+    console.log('sending end() res');
+    res.end();
+  })
+
   app.post('/state', (req, res) => {
     // console.log(req);
     // console.log("AO: server/router.js: app post /state", {"req": util.inspect(req)} )
