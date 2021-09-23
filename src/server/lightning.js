@@ -1,18 +1,17 @@
-const config = require('../../configuration.js')
-const uuidV1 = require('uuid/v1')
-const express = require('express')
-const lightningRouter = express.Router()
-const allEvents = require('./events')
-const calculations = require('../calculations')
-const LightningClient = require('./lightning-client')
-const { serverState } = require('./state')
-const client = new LightningClient(config.clightning.dir, true)
-const Client = require('bitcoin-core')
-const bitClient = new Client(config.bitcoind)
-const chalk = require('chalk')
+import config from '../../configuration.js'
+import uuidV1 from 'uuid/v1'
+import express from 'express'
+import allEvents from './events'
+import LightningClient from './lightning-client'
+import state from './state'
+import Client from 'bitcoin-core'
+import chalk from 'chalk'
+import _ from 'lodash'
 
-const _ = require('lodash')
-const crypto = require('../crypto')
+const serverState = state.serverState
+const lightningRouter = express.Router()
+const client = new LightningClient(config.clightning.dir, true)
+const bitClient = new Client(config.bitcoind)
 
 bitClient
   .getBlockchainInfo()
@@ -133,11 +132,11 @@ lightningRouter.post('/bitcoin/transaction', (req, res) => {
     })
 })
 
-function createInvoice(sat, label, description, expiresInSec) {
+export function createInvoice(sat, label, description, expiresInSec) {
   return client.invoice(sat * 1000, label, description, expiresInSec)
 }
 
-function newAddress() {
+export function newAddress() {
   return client.newaddr()
 }
 
@@ -146,7 +145,7 @@ function updateAll() {
   getInfo()
 }
 
-function watchOnChain() {
+export function watchOnChain() {
   setInterval(updateAll, 1000 * 60 * 4)
   setTimeout(() => {
     updateAll()
@@ -205,7 +204,7 @@ function getInfo() {
     .catch(console.log)
 }
 
-function recordEveryInvoice(start) {
+export function recordEveryInvoice(start) {
   client
     .waitanyinvoice(start)
     .then(invoice => {
@@ -227,10 +226,4 @@ function recordEveryInvoice(start) {
     .catch(err => {})
 }
 
-export default {
-  createInvoice,
-  newAddress,
-  recordEveryInvoice,
-  watchOnChain,
-  lightningRouter,
-}
+export default lightningRouter

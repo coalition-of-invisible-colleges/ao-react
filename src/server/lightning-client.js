@@ -1,9 +1,12 @@
-const path = require('path')
-const net = require('net')
-const debug = require('debug')('lightning-client')
-const { EventEmitter } = require('events')
-const _ = require('lodash')
-const chalk = require('chalk')
+import path from 'path'
+import net from 'net'
+import debug from 'debug'
+import { EventEmitter } from 'events'
+import _ from 'lodash'
+import chalk from 'chalk'
+
+const debugLightning = debug('lightning-client')
+
 const methods = [
   'autocleaninvoice',
   'check',
@@ -79,7 +82,7 @@ class LightningClient extends EventEmitter {
 
     rpcPath = path.join(rpcPath, '/lightning-rpc')
 
-    debug(`Connecting to ${rpcPath}`)
+    debugLightning(`Connecting to ${rpcPath}`)
 
     super()
     this.rpcPath = rpcPath
@@ -198,7 +201,7 @@ class LightningClient extends EventEmitter {
     }
 
     this.reconnectTimeout = setTimeout(() => {
-      debug('Trying to reconnect...')
+      debugLightning('Trying to reconnect...')
 
       _self.client.connect(_self.rpcPath)
       _self.reconnectTimeout = null
@@ -255,4 +258,4 @@ methods.forEach(k => {
   }
 })
 
-export default = LightningClient
+export default LightningClient

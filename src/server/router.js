@@ -7,7 +7,7 @@ import state from './state.js'
 import spec from './spec.js'
 import fobtap from './fobtap.js'
 import { serverAuth } from './auth.js'
-import { lightningRouter } from './lightning.js'
+import lightningRouter from './lightning.js'
 import fs from 'fs'
 import multer from 'multer'
 
@@ -60,10 +60,10 @@ export default function applyRouter(app) {
   app.use(lightningRouter)
 
   app.post('/logout', (req, res) => {
-    console.log("Logging out and clearing token (new way)");
-    res.clearCookie("token");
-    console.log('sending end() res');
-    res.end();
+    console.log('Logging out and clearing token (new way)')
+    res.clearCookie('token')
+    console.log('sending end() res')
+    res.end()
   })
 
   app.post('/state', (req, res) => {
