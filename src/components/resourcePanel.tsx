@@ -119,18 +119,25 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       return <div>Invalid resource</div>
     }
     const renderOptions = this.optionsList.map(option => {
+      if (!option) {
+        return (
+          <div className="option">
+            <AoPaper color={option.color || 'blue'} />
+            Unnamed resource
+          </div>
+        )
+      }
       return (
         <div className="option">
-          <AoPaper color={option?.color || 'blue'} />
+          <AoPaper color={option.color} />
           <button
             type="button"
             className="action"
             onClick={this.useResource}
-            data-letter={option?.notes}
+            data-letter={option.notes}
             disabled={!this.canAfford}
-            key={option?.notes + '-' + option?.name}>
-            {option.notes || 'Generic Resource'}:{' '}
-            {option?.name || 'Resource Name'}
+            key={option.notes + '-' + option.name}>
+            {option.notes}: {option.name}
           </button>
         </div>
       )
