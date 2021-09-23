@@ -1,21 +1,31 @@
-import config from '../../configuration.js'
-import express from 'express'
-export const lightningRouter = express.Router()
-import allEvents from './events.js'
-import LightningClient from './lightning-client.js'
-import state from './state.js'
-const serverState = state.serverState
+const config = require('../../configuration.js')
+const uuidV1 = require('uuid/v1')
+const express = require('express')
+const lightningRouter = express.Router()
+const allEvents = require('./events')
+const calculations = require('../calculations')
+const LightningClient = require('./lightning-client')
+const { serverState } = require('./state')
 const client = new LightningClient(config.clightning.dir, true)
-import Client from 'bitcoin-core'
+const Client = require('bitcoin-core')
 const bitClient = new Client(config.bitcoind)
-import chalk from 'chalk'
+const chalk = require('chalk')
 
-import _ from 'lodash'
+const _ = require('lodash')
+const crypto = require('../crypto')
 
 bitClient
   .getBlockchainInfo()
   .then(x => {
-    console.log(chalk.yellow(x.blocks.toLocaleString(), 'verified blocks'))
+    if (x.initialblockdownload) {
+      console.log(
+        'Initial bitcoin sync detected',
+        chalk.red((100 * x.verificationprogress).toFixed(2)),
+        '% complete'
+      )
+    } else {
+      console.log(chalk.yellow(x.blocks.toLocaleString()), 'bitcoin blocks')
+    }
   })
   .catch(err => {
     console.log(chalk.red('cannot connect to bitcoind'))
@@ -77,6 +87,17 @@ function getMempool() {
   })
 }
 
+lightningRouter.post('/lightning/peer', (req, res) => {
+  client
+    .listpeers(req.body.pubkey)
+    .then(x => {
+      res.send(x.peers[0].channels[0])
+    })
+    .catch(err => {
+      res.status(400).end()
+    })
+})
+
 lightningRouter.post('/bitcoin/transaction', (req, res) => {
   bitClient
     .getMempoolEntry(req.body.txid)
@@ -112,21 +133,11 @@ lightningRouter.post('/bitcoin/transaction', (req, res) => {
     })
 })
 
-// lightningRouter.post('/lightning/channel',(req, res) => {
-//     client.fundchannel(req.body.id, 'all', 'normal', true, 0)
-//         .then(channel => {
-//             res.send(true)
-//         })
-//         .catch(err => {
-//             res.send(false)
-//         })
-// })
-
-export function createInvoice(sat, label, description, expiresInSec) {
+function createInvoice(sat, label, description, expiresInSec) {
   return client.invoice(sat * 1000, label, description, expiresInSec)
 }
 
-export function newAddress() {
+function newAddress() {
   return client.newaddr()
 }
 
@@ -135,7 +146,7 @@ function updateAll() {
   getInfo()
 }
 
-export function watchOnChain() {
+function watchOnChain() {
   setInterval(updateAll, 1000 * 60 * 4)
   setTimeout(() => {
     updateAll()
@@ -154,11 +165,7 @@ function checkFunds() {
           ) {
             serverState.tasks.forEach(t => {
               if (t.btcAddr === o.address) {
-                allEvents.trigger('task-boosted', {
-                  taskId: t.taskId,
-                  amount: o.value,
-                  txid: o.txid,
-                })
+                allEvents.taskBoosted(t.taskId, o.value, o.txid)
               }
             })
           }
@@ -198,7 +205,7 @@ function getInfo() {
     .catch(console.log)
 }
 
-export function recordEveryInvoice(start) {
+function recordEveryInvoice(start) {
   client
     .waitanyinvoice(start)
     .then(invoice => {
@@ -207,12 +214,12 @@ export function recordEveryInvoice(start) {
       }
       serverState.tasks.forEach(t => {
         if (t.payment_hash === invoice.payment_hash) {
-          allEvents.trigger('task-boosted-lightning', {
-            taskId: t.taskId,
-            amount: invoice.msatoshi / 1000,
-            payment_hash: invoice.payment_hash,
-            pay_index: invoice.pay_index,
-          })
+          allEvents.taskBoostedLightning(
+            t.taskId,
+            invoice.msatoshi / 1000,
+            invoice.payment_hash,
+            invoice.pay_index
+          )
         }
       })
       recordEveryInvoice(start + 1) // is this recurr broken?
@@ -220,12 +227,10 @@ export function recordEveryInvoice(start) {
     .catch(err => {})
 }
 
-const lightning = {
+export default {
   createInvoice,
   newAddress,
   recordEveryInvoice,
   watchOnChain,
   lightningRouter,
 }
-
-export default lightning

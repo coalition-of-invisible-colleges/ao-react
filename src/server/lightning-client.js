@@ -1,10 +1,9 @@
-import path from 'path'
-import net from 'net'
-import debug from 'debug'
-debug('lightning-client')
-import { EventEmitter } from 'events'
-import _ from 'lodash'
-import chalk from 'chalk'
+const path = require('path')
+const net = require('net')
+const debug = require('debug')('lightning-client')
+const { EventEmitter } = require('events')
+const _ = require('lodash')
+const chalk = require('chalk')
 const methods = [
   'autocleaninvoice',
   'check',
@@ -69,10 +68,10 @@ const methods = [
   'waitblockheight',
   'waitinvoice',
   'waitsendpay',
-  'withdraw'
+  'withdraw',
 ]
 
-export default class LightningClient extends EventEmitter {
+class LightningClient extends EventEmitter {
   constructor(rpcPath, debugFlag = false) {
     if (!path.isAbsolute(rpcPath)) {
       throw new Error('The rpcPath must be an absolute path')
@@ -101,13 +100,11 @@ export default class LightningClient extends EventEmitter {
       })
 
       _self.client.on('end', () => {
-        console.error('Lightning client connection closed, reconnecting')
         _self.increaseWaitTime()
         _self.reconnect()
       })
 
       _self.client.on('error', error => {
-        console.error(chalk.red(`Lightning cannot connect`))
         _self.increaseWaitTime()
         _self.reconnect()
       })
@@ -170,7 +167,7 @@ export default class LightningClient extends EventEmitter {
           parts.push({
             partial: false,
             string: str.slice(start, end),
-            openCount: 0
+            openCount: 0,
           })
 
           lastSplit = end
@@ -226,7 +223,7 @@ export default class LightningClient extends EventEmitter {
     const sendObj = {
       method,
       params: args,
-      id: callInt.toString()
+      id: callInt.toString(),
     }
 
     // Wait for the client to connect
@@ -253,7 +250,9 @@ export default class LightningClient extends EventEmitter {
 const protify = s => s.replace(/-([a-z])/g, m => m[1].toUpperCase())
 
 methods.forEach(k => {
-  LightningClient.prototype[protify(k)] = function(...args) {
+  LightningClient.prototype[protify(k)] = function (...args) {
     return this.call(k, args)
   }
 })
+
+export default = LightningClient
