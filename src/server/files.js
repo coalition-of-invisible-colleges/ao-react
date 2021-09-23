@@ -64,7 +64,7 @@ export async function addMeme(name, path, data = null, taskId = null) {
 	const foundMeme = serverState.memes.find(m => {
 		return m.hash === hash
 	})
-	console.log('foundMeme is', foundMeme)
+	// console.log('foundMeme is', foundMeme)
 	if (foundMeme) {
 		console.log('returning existing meme')
 		return Promise.resolve(foundMeme.memeId)
