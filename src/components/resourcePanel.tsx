@@ -15,6 +15,12 @@ interface State {
   redirect?: string
 }
 
+interface ResourceDisplayOptions {
+  notes: string
+  name: string
+  color: string
+}
+
 @observer
 export default class AoResourcePanel extends React.PureComponent<Props, State> {
   constructor(props) {
@@ -63,7 +69,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
     }
   }
 
-  @computed get optionsList() {
+  @computed get optionsList(): ResourceDisplayOptions[] {
     const card = aoStore.hashMap.get(this.props.resourceId)
     if (!card) {
       return null
@@ -75,13 +81,13 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       }
       const split = option.name.split(':')
       if (split.length >= 2) {
-        return [split[0], split[1], option.color] // notes, name, color
+        return { notes: split[0], name: split[1], color: option.color }
       } else {
-        return ['A', option.name, option.color]
+        return { notes: 'A', name: option.name, color: option.color }
       }
     })
     if (ol.length < 1) {
-      ol = [['A', 'Use', 'blue']]
+      ol = [{ notes: 'A', name: 'Use', color: 'blue' }]
     }
     // return ol.filter(list => {
     //     return !!list
@@ -113,19 +119,17 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       return <div>Invalid resource</div>
     }
     const renderOptions = this.optionsList.map(option => {
-      const [notes, name, color] =
-        Array.isArray(option) && option.length >= 3 ? option : null
       return (
         <div className="option">
-          <AoPaper color={color} />
+          <AoPaper color={option.color || 'blue'} />
           <button
             type="button"
             className="action"
             onClick={this.useResource}
-            data-letter={notes}
+            data-letter={option.notes}
             disabled={!this.canAfford}
-            key={notes + '-' + name}>
-            {notes}: {name}
+            key={option.notes + '-' + option.name}>
+            {option.notes}: {option.name}
           </button>
         </div>
       )
