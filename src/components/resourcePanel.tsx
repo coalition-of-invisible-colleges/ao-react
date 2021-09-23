@@ -121,15 +121,16 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
     const renderOptions = this.optionsList.map(option => {
       return (
         <div className="option">
-          <AoPaper color={option.color || 'blue'} />
+          <AoPaper color={option?.color || 'blue'} />
           <button
             type="button"
             className="action"
             onClick={this.useResource}
-            data-letter={option.notes}
+            data-letter={option?.notes}
             disabled={!this.canAfford}
-            key={option.notes + '-' + option.name}>
-            {option.notes}: {option.name}
+            key={option?.notes + '-' + option?.name}>
+            {option.notes || 'Generic Resource'}:{' '}
+            {option?.name || 'Resource Name'}
           </button>
         </div>
       )
