@@ -27,7 +27,7 @@ bitClient
     }
   })
   .catch(err => {
-    console.log(chalk.red('cannot connect to bitcoind'))
+    console.log(chalk.red('cannot connect to bitcoind:', err))
   })
 
 function getDecode(rawx) {
