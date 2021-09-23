@@ -38,7 +38,7 @@ export function loadMeme(name, path, taskId = null) {
 }
 
 export async function addMeme(name, path, data = null, taskId = null) {
-	console.log('addMeme function')
+	// console.log('addMeme function')
 	if (!data) {
 		return new Promise((resolve, reject) => {
 			fs.readFile(path, (err, data) => {
@@ -60,7 +60,7 @@ export async function addMeme(name, path, data = null, taskId = null) {
 	const lastIndex = name.lastIndexOf('.')
 	const filetype = lastIndex < 0 ? '' : name.substr(lastIndex + 1)
 
-	console.log(`${hash} ${name}`)
+	// console.log(`${hash} ${name}`)
 	const foundMeme = serverState.memes.find(m => {
 		return m.hash === hash
 	})
