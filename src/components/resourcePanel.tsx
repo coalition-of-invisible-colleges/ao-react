@@ -118,7 +118,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
     if (!resource) {
       return <div>Invalid resource</div>
     }
-    const renderOptions = this.optionsList.map(option => {
+    const renderOptions = this.optionsList?.map(option => {
       if (!option) {
         return (
           <div className="option">
