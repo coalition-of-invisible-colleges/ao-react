@@ -122,7 +122,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       if (!option) {
         return (
           <div className="option">
-            <AoPaper color={option.color || 'blue'} />
+            <AoPaper color="blue" />
             Unnamed resource
           </div>
         )

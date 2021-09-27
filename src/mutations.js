@@ -1461,6 +1461,7 @@ function tasksMuts(tasks, ev) {
             timestamp: ev.timestamp,
             area: ev.area,
           })
+          task.lastClaimed = ev.timestamp
         }
       })
       break

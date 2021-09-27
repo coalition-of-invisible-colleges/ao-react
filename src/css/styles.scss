@@ -966,7 +966,7 @@ textarea {
     #deck {
       z-index: 1;
 
-      .actionCircle {
+      .popupButton.actionCircle {
         position: fixed;
         left: 0.5em;
         z-index: 1;
@@ -992,7 +992,7 @@ textarea {
 
     // community hub popup panel
     #controls {
-      .actionCircle {
+      .popupButton.actionCircle {
         top: 0.5em;
         width: 3.5em;
         height: 3.5em;
@@ -1009,7 +1009,7 @@ textarea {
     }
 
     #controls {
-      .actionCircle {
+      .popupButton.actionCircle {
         left: unset;
         right: 0.5em;
 
@@ -1103,7 +1103,7 @@ textarea {
     // missions popup panel
     #missions,
     .popupPanel > .right > .stack .card.mission {
-      .actionCircle {
+      .popupButton.actionCircle {
         top: calc(45vh - 6em);
       }
 
@@ -1231,7 +1231,7 @@ textarea {
 
     // deck popup
     #deck {
-      .actionCircle {
+      .popupButton.actionCircle {
         bottom: 0.5em;
         left: calc(100% + 2.5em);
         width: 3.5em;
@@ -2682,6 +2682,15 @@ textarea {
       position: absolute;
       top: 3em;
       right: 0.5em;
+    }
+
+    .card.mission .lilypad.actionCircle {
+      position: relative;
+      top: 0.35em;
+      right: unset;
+      display: inline-block;
+      height: 1.5em;
+      width: 1.5em;
     }
 
     // remove padding on Tippy box

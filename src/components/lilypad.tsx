@@ -87,6 +87,33 @@ export default class AoChatroom extends React.Component<Props, State> {
     )
   }
 
+  @computed get shitpostCount() {
+    const taskId = this.props.taskId
+    const card = aoStore.hashMap.get(taskId)
+
+    if (!card) {
+      console.log('Missing card in lilypad')
+      return null
+    }
+
+    let shitposts = 0
+
+    if (card) {
+      ;[...card.priorities, ...card.subTasks, ...card.completed].forEach(st => {
+        const subCard = aoStore.hashMap.get(st)
+        if (!subCard) {
+          console.log('Missing subcard in lilypad')
+          return
+        }
+        if (subCard.deck && subCard.deck.length <= 0) {
+          shitposts++
+        }
+      })
+    }
+
+    return shitposts
+  }
+
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) {
@@ -157,15 +184,18 @@ export default class AoChatroom extends React.Component<Props, State> {
         )
       }
     } else if (card.showChatroom) {
-      const renderedBadge = (
-        <div className="badge green">{chatroomPop + '/' + cardPop}</div>
-      )
+      const renderedBadge = <div className="badge green">{chatroomPop}</div>
+      const percentChanged = Math.min(Math.floor(this.shitpostCount), 10)
+      const buttonClass = ' red' + percentChanged.toString()
+
       button = (
         <div
-          className={'lilypad actionCircle' + (youAreHere ? ' open' : '')}
+          className={
+            'lilypad actionCircle' + buttonClass + (youAreHere ? ' open' : '')
+          }
           onClick={this.toggleChat}>
           <img src={Lilypad} />
-          {(chatroomPop >= 1 || cardPop >= 1) && renderedBadge}
+          {chatroomPop >= 1 && renderedBadge}
         </div>
       )
       altMessage = youAreHere

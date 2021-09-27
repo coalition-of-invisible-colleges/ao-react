@@ -9,7 +9,7 @@ import Badge from '../assets/images/badge.svg'
 
 type MissionFilter = 'changed' | 'mine' | 'not mine' | 'all'
 
-type MissionSort = 'alphabetical' | 'hodls' | 'age'
+type MissionSort = 'recents' | 'alphabetical' | 'hodls' | 'age'
 
 interface State {
   page: number
@@ -32,7 +32,7 @@ export default class AoMissions extends React.Component<{}, State> {
             this.myMissions.length !== aoStore.topLevelMissions.length
           ? 'mine'
           : 'all',
-      sort: 'hodls',
+      sort: 'recents',
       loaded: false,
     }
     this.filterBy = this.filterBy.bind(this)
@@ -156,7 +156,15 @@ export default class AoMissions extends React.Component<{}, State> {
       missions = aoStore.topLevelMissions
     }
 
-    if (this.state.sort === 'alphabetical') {
+    console.log('missions is ')
+    missions.forEach(mission => console.log(mission.guild))
+
+    if (this.state.sort === 'recents') {
+      missions.sort((a, b) => {
+        return a.lastClaimed - b.lastClaimed
+        // return tempLastClaimeds[b.taskId] - tempLastClaimeds[a.taskId]
+      })
+    } else if (this.state.sort === 'alphabetical') {
       missions.sort((a, b) => {
         return b.guild.toLowerCase().localeCompare(a.guild.toLowerCase())
       })
@@ -215,6 +223,7 @@ export default class AoMissions extends React.Component<{}, State> {
               {renderAll && this.renderFilterButton('all', 'All')}
             </div>
             <div className="toolbar">
+              {this.renderSortButton('recents', 'Recent')}
               {this.renderSortButton('alphabetical', 'A-Z')}
               {this.renderSortButton('hodls', 'Hodls')}
               {this.renderSortButton('age', 'Order')}
