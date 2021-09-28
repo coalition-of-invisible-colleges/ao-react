@@ -174,6 +174,7 @@ function membersMuts(members, ev) {
           updateLastUsed(member, ev.timestamp)
         }
       })
+      break
     case 'member-deactivated':
       members.forEach(member => {
         if (member.memberId === ev.memberId) {
