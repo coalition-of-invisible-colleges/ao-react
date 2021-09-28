@@ -280,7 +280,8 @@ export default class AoSearch extends React.PureComponent<{}, State> {
 
   render() {
     return (
-      <React.Fragment>
+      <div id="search">
+        <h2>Search</h2>
         <input
           ref={this.searchBox}
           type="search"
@@ -290,9 +291,10 @@ export default class AoSearch extends React.PureComponent<{}, State> {
           size={36}
           placeholder="search for a card"
           autoFocus
+          id="searchBox"
         />
         {this.renderSearchResults()}
-      </React.Fragment>
+      </div>
     )
   }
 }

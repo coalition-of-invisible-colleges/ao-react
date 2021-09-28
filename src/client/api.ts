@@ -1192,7 +1192,7 @@ class AoApi {
       .responseType('blob')
       .set('Authorization', aoStore.state.token)
       .then(res => {
-        console.log('got meme! res is ', res)
+        // console.log('got meme! res is ', res)
         return res.body
       })
   }
@@ -1202,7 +1202,7 @@ class AoApi {
       .get('/download/' + memeHash)
       .set('Authorization', aoStore.state.token)
       .then(res => {
-        console.log('got meme! res is ', res)
+        // console.log('got meme! res is ', res)
         return res
       })
   }
@@ -1243,7 +1243,7 @@ class AoApi {
   }
 
   async logout(): Promise<request.Response> {
-    console.log("processing logoutz")
+    console.log('processing logoutz')
     aoStore.resetState()
     window.localStorage.clear()
     //clear cookie

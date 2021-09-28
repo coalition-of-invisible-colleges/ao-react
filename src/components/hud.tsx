@@ -22,9 +22,15 @@ import AoVolume from './volume'
 import AoReactivator from './reactivator'
 import AoTour from './tour'
 import AoManual from './manual'
-import AoPopupPanel from './popupPanel'
+import AoSidebarButton from './sidebarButton'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
+import Sun from '../assets/images/sun.svg'
+import Bird from '../assets/images/send.svg'
+import Gift from '../assets/images/gifts.svg'
+import Badge from '../assets/images/badge.svg'
+import Timecube from '../assets/images/timecube.svg'
+import Chest from '../assets/images/chest.svg'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import Scroll from '../assets/images/scroll.svg'
@@ -58,7 +64,7 @@ class MainMenu extends React.Component<{}, State> {
   }
 
   onLogout = () => {
-    console.log("calling api logout")
+    console.log('calling api logout')
     api.logout()
     console.log('logged out', aoStore.state.loggedIn)
   }
@@ -101,6 +107,7 @@ export default class AoHud extends React.Component<{}, HudState> {
     this.state = {}
     this.focusSearchbox = this.focusSearchbox.bind(this)
     this.updateProposalCount = this.updateProposalCount.bind(this)
+    this.renderSidebar = this.renderSidebar.bind(this)
   }
 
   focusSearchbox() {
@@ -111,12 +118,65 @@ export default class AoHud extends React.Component<{}, HudState> {
     this.setState({ proposals })
   }
 
+  renderSidebar() {
+    if (!aoStore.leftSidebar) {
+      return null
+    }
+
+    let rendered
+
+    switch (aoStore.leftSidebar) {
+      // case 'hub':
+      // maybe hub
+      // break
+      case 'gifts':
+        rendered = <AoGifts />
+        break
+      case 'guilds':
+        rendered = <AoMissions />
+        break
+      case 'members':
+        rendered = <AoMembers />
+        break
+      case 'calendar':
+        rendered = <AoCalendar />
+        break
+      case 'bounties':
+        rendered = <AoBounties />
+        break
+      case 'search':
+        rendered = <AoSearch ref={this.searchRef} />
+        break
+    }
+    return (
+      <div id="leftSidebar">
+        <div className="leftBorder" />
+        {rendered}
+      </div>
+    )
+  }
+
   render() {
+    console.log('hud render')
     const renderedBadge =
       this.state.proposals && this.state.proposals >= 1 ? (
         <React.Fragment>{this.state.proposals}</React.Fragment>
       ) : null
 
+    const giftsPercentChanged = Math.min(
+      Math.floor(aoStore.allChanges.length / 10),
+      10
+    )
+    const giftsButtonClass = 'red' + giftsPercentChanged.toString()
+    const giftsRenderedBadge = aoStore.myGifts.length >= 1 && (
+      <React.Fragment>{aoStore.myGifts.length}</React.Fragment>
+    )
+
+    const guildsPercentChanged = Math.floor(
+      (10 * aoStore.changedMissions.length) / aoStore.myMissions.length
+    )
+    const guildsButtonClass = 'red' + guildsPercentChanged.toString()
+    console.log('returning render')
     return (
       <div id="hud">
         <div id="mainMenu-tour">
@@ -131,48 +191,62 @@ export default class AoHud extends React.Component<{}, HudState> {
           </Tippy>
         </div>
         <AoHub />
-
+        {this.renderSidebar()}
         <AoControls />
-
         <Observer>
           {() => {
             return <AoDock />
           }}
         </Observer>
         {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
-
-        <AoGifts />
-        <AoMissions />
-
-        <div id="members">
-          <AoPopupPanel
-            iconSrc={MemberIcon}
-            tooltipText="Members"
-            tooltipPlacement="right"
-            panelPlacement="right"
-            id="tour-members">
-            <AoMembers />
-          </AoPopupPanel>
-        </div>
-
-        <AoCalendar />
-
-        <AoBounties />
-
-        <div id="search">
-          <AoPopupPanel
-            iconSrc={MagnifyingGlass}
-            tooltipText="Search"
-            tooltipPlacement="top"
-            panelPlacement="top"
-            onShown={this.focusSearchbox}
-            id="tour-search">
-            <AoSearch ref={this.searchRef} />
-          </AoPopupPanel>
-        </div>
-
+        <AoSidebarButton
+          sidebarTab="gifts"
+          iconSrc={aoStore.myGifts.length <= 0 ? Bird : Gift}
+          tooltipText={aoStore.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
+          badge={giftsRenderedBadge}
+          tooltipPlacement="right"
+          id="tour-gifts"
+          buttonClass={giftsButtonClass}
+        />
+        <AoSidebarButton
+          sidebarTab="guilds"
+          iconSrc={Badge}
+          tooltipText={gloss('Guilds')}
+          tooltipPlacement="right"
+          id="tour-missions"
+          buttonClass={guildsButtonClass}
+        />
+        <AoSidebarButton
+          sidebarTab="members"
+          iconSrc={MemberIcon}
+          tooltipText="Members"
+          tooltipPlacement="right"
+          id="tour-members"
+        />
+        <AoSidebarButton
+          sidebarTab="calendar"
+          iconSrc={Timecube}
+          tooltipText="Calendar"
+          badge={renderedBadge}
+          tooltipPlacement="right"
+          id="tour-calendar"
+        />
+        <AoSidebarButton
+          sidebarTab="bounties"
+          iconSrc={Chest}
+          tooltipText="Bounties"
+          tooltipPlacement="right"
+          id="tour-bounties"
+        />
+        <AoSidebarButton
+          sidebarTab="search"
+          iconSrc={MagnifyingGlass}
+          tooltipText="Search"
+          tooltipPlacement="top"
+          onShown={this.focusSearchbox}
+          id="tour-search"
+        />
         <AoTickerHud />
-
         {/*        <div id="proposals">
             <AoPopupPanel
               iconSrc={Scroll}
@@ -185,7 +259,6 @@ export default class AoHud extends React.Component<{}, HudState> {
             </AoPopupPanel>
           </div>
           */}
-
         <AoChatroom taskId={aoStore.currentChatroom} />
         {
           //<AoScore prefix={<span>Points: </span>} />

@@ -197,6 +197,7 @@ For content creators, the AO will make it easy to publish your content publicly 
     'How to help':
       'Please contact an existing developer to request an account at ao.coalitionofinvisiblecolleges.org, where ao-react development goals are currently being organized.',
   },
+  'Components Guide': 'Describe, visualize and name every component',
 }
 
 export default function AoManual() {

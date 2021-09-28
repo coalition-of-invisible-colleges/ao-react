@@ -298,6 +298,16 @@ export const emptySearchResults = {
   length: 0,
 }
 
+export type LeftSidebarTab =
+  | 'hub'
+  | 'gifts'
+  | 'guilds'
+  | 'members'
+  | 'calendar'
+  | 'bounties'
+  | 'manual'
+  | 'search'
+
 class AoStore {
   @observable state: AoState = defaultState
   @observable searchResults?: SearchResults
@@ -311,6 +321,7 @@ class AoStore {
   @observable globalRedirect?: string
   @observable memberDeckSize?: number
   @observable mediaPlayHead: { inId: string; taskId: string }
+  @observable leftSidebar?: LeftSidebarTab
   bookmarksTaskId?: string
 
   constructor() {
@@ -733,6 +744,24 @@ class AoStore {
       .reverse()
   }
 
+  @computed get myGifts() {
+    return aoStore.state.tasks.filter(task => {
+      return task.passed.some(pass => pass[1] === aoStore.member.memberId)
+    })
+  }
+
+  @computed get allChanges() {
+    return aoStore.myCards.filter(
+      card =>
+        !(card.guild && card.guild.length >= 1) &&
+        (!card.seen ||
+          (card.seen &&
+            !card.seen.some(
+              userseen => userseen.memberId === aoStore.member.memberId
+            )))
+    )
+  }
+
   @computed get allGuilds(): Task[] {
     return aoStore.state.tasks.filter(task => {
       return task.hasOwnProperty('guild') && task.guild.length >= 1
@@ -871,6 +900,23 @@ class AoStore {
     })
 
     return missions
+  }
+
+  @computed get myMissions() {
+    return aoStore.topLevelMissions.filter(mission =>
+      mission.deck.includes(aoStore.member.memberId)
+    )
+  }
+
+  @computed get changedMissions() {
+    return this.myMissions.filter(
+      mission =>
+        !mission.seen ||
+        (mission.seen &&
+          !mission.seen.some(
+            userseen => userseen.memberId === aoStore.member.memberId
+          ))
+    )
   }
 
   @computed get topMissions(): Task[] {
@@ -1217,6 +1263,7 @@ class AoStore {
   @action.bound
   closeAllCloseables() {
     this.guiCloseables.forEach(callback => callback())
+    this.closeLeftSidebar()
   }
 
   @action.bound dab() {
@@ -1230,6 +1277,16 @@ class AoStore {
   @action.bound
   startedPlaying(inId, taskId) {
     this.mediaPlayHead = { inId, taskId }
+  }
+
+  @action.bound
+  setLeftSidebar(tab) {
+    this.leftSidebar = tab
+  }
+
+  @action.bound
+  closeLeftSidebar() {
+    this.leftSidebar = null
   }
 }
 const aoStore = new AoStore()

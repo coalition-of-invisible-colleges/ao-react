@@ -72,7 +72,7 @@ textarea {
       max-width: 98vw;
 
       @media only screen and (min-width: 600px) {
-        min-width: 30em;
+        min-width: calc(min(30em, calc(100% - 3em)));
       }
 
       .unread {
@@ -957,7 +957,6 @@ textarea {
     #controls,
     #gifts,
     #members,
-    #missions,
     #calendar,
     #proposals,
     #bounties,
@@ -975,6 +974,133 @@ textarea {
       .popupPanel {
         max-height: 96vh;
       }
+    }
+
+    #leftSidebar {
+      position: fixed;
+      height: 100vh;
+      width: 25vw;
+      top: 0;
+      left: 0;
+      background-color: #333;
+      border-left: 4.6em solid #111;
+      padding-left: 0.75em;
+      padding-right: 0.5em;
+      box-shadow: 7px 7px 7px 1px rgba(21, 21, 21, 0.5);
+
+      .leftBorder {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        border-left: 0.2em solid #6c70a0;
+      }
+    }
+
+    // circlular icon that opens one of the main popups
+    .actionCircle {
+      background-color: rgba(200, 200, 200, 0.25);
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 0.5em;
+      user-select: none;
+      width: 2.5em;
+      height: 2.5em;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      &.open {
+        img {
+          width: 4.5em;
+          height: 4.5em;
+          position: relative;
+        }
+
+        .badge {
+          font-size: 1.5em;
+          padding: 0.25em 0.45em;
+        }
+      }
+    }
+
+    // Position of guilds tab button
+    .sidebarButton.actionCircle {
+      position: fixed;
+      left: 0.25em;
+      z-index: 1;
+      padding: 2em;
+      border: none;
+      margin: 0;
+
+      img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 3em;
+        height: 3em;
+      }
+
+      &.open {
+        border-top: 0.2em solid #6c70a0;
+        border-bottom: 0.2em solid #6c70a0;
+        border-left: 0.2em solid #6c70a0;
+        border-right: 0.3em solid #333;
+        border-radius: 0.2em;
+        padding: 2.5em;
+        margin-top: -0.5em;
+        left: 0;
+        background-color: #333;
+
+        &.open {
+          img {
+            width: 4em;
+            height: 4em;
+          }
+        }
+      }
+    }
+
+    #tour-gifts {
+      top: 8em;
+    }
+
+    #tour-members {
+      top: calc(45vh - 9em);
+    }
+
+    // Guilds sidebar button
+    #tour-missions {
+      top: calc(45vh - 3em);
+    }
+
+    // Calendar sidebar button
+    #tour-calendar {
+      top: calc(45vh + 3em);
+    }
+
+    // Bounties sidebar button
+    #tour-bounties {
+      top: calc(45vh + 9em);
+    }
+
+    // Search sidebar button
+    #tour-search {
+      bottom: 0.5em;
+    }
+
+    // The search box in the sidebar
+    #searchBox {
+      width: calc(100% - 1em);
     }
 
     // margin for icons on left edge of page
@@ -1103,10 +1229,6 @@ textarea {
     // missions popup panel
     #missions,
     .popupPanel > .right > .stack .card.mission {
-      .popupButton.actionCircle {
-        top: calc(45vh - 6em);
-      }
-
       .mission.summary.collapsed {
         display: inline-block;
       }
@@ -1672,42 +1794,6 @@ textarea {
       }
     }
 
-    // circlular icon that opens one of the main popups
-    .actionCircle {
-      background-color: rgba(200, 200, 200, 0.25);
-      border-radius: 50%;
-      cursor: pointer;
-      padding: 0.5em;
-      user-select: none;
-      width: 2.5em;
-      height: 2.5em;
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.25);
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-
-      &.open {
-        img {
-          width: 4.5em;
-          height: 4.5em;
-          position: relative;
-          left: -1em;
-          top: -1em;
-        }
-
-        .badge {
-          font-size: 1.5em;
-          padding: 0.25em 0.45em;
-        }
-      }
-    }
-
     // badge used on .actionCircle and on the bird on cards
     .actionCircle .badge,
     .bird > .badge {
@@ -2155,12 +2241,15 @@ textarea {
 
     // sun / community hub icon in top left
     #hub {
+      z-index: 1;
+      position: relative;
+
       img {
         position: fixed;
         top: 0;
         left: 0;
         padding: 0.5em 0 0 0.5em;
-        width: 5em;
+        width: 4em;
         cursor: pointer;
 
         &:hover {

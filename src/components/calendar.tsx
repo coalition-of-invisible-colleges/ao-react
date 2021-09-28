@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import AoStack from './stack'
 import AoPopupPanel from './popupPanel'
-import Timecube from '../assets/images/timecube.svg'
 import { formatDistanceToNow } from 'date-fns'
 
 @observer
@@ -176,25 +175,17 @@ export default class AoCalendar extends React.PureComponent {
             {overdue.length >= 1
               ? 'overdue'
               : formatDistanceToNow(nowPlusSoon[0].book.startTs, {
-                  addSuffix: true
+                  addSuffix: true,
                 })}
           </div>
         </React.Fragment>
-      ) : (
-        undefined
-      )
+      ) : undefined
 
     return (
       <div id="calendar">
-        <AoPopupPanel
-          iconSrc={Timecube}
-          tooltipText={'Calendar'}
-          badge={renderedBadge}
-          tooltipPlacement={'right'}
-          panelPlacement={'right'}
-          id="tour-calendar">
-          {renderedCalendarList}
-        </AoPopupPanel>
+        {' '}
+        <h2>Calendar</h2>
+        {renderedCalendarList}
       </div>
     )
   }

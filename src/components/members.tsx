@@ -219,7 +219,7 @@ export default class AoMembers extends React.Component<{}, State> {
 
   render() {
     return (
-      <React.Fragment>
+      <div id="members">
         <h2>Members</h2>
         {this.renderMembersList()}
         <div className="action" onClick={this.toggleNew}>
@@ -247,7 +247,7 @@ export default class AoMembers extends React.Component<{}, State> {
             </button>
           </div>
         )}
-      </React.Fragment>
+      </div>
     )
   }
 }

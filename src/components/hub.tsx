@@ -82,7 +82,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
       communityCard && aoStore.currentCard === communityCard.taskId
 
     return (
-      <div id={'hub'}>
+      <div id="hub">
         <Tippy
           zIndex={4}
           theme="translucent"

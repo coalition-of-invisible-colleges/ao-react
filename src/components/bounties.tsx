@@ -5,7 +5,6 @@ import aoStore from '../client/store'
 import AoStack from './stack'
 import AoPopupPanel from './popupPanel'
 import AoTip from './tip'
-import Chest from '../assets/images/chest.svg'
 import { gloss } from '../semantics'
 
 @observer
@@ -52,34 +51,25 @@ export default class AoBounties extends React.Component {
 
     return (
       <div id="bounties">
-        <AoPopupPanel
-          iconSrc={Chest}
-          tooltipText="Bounties"
-          tooltipPlacement="right"
-          panelPlacement="right"
-          id="tour-bounties">
-          <React.Fragment>
-            <h2>Bounties</h2>
-            <div
-              style={{
-                textAlign: 'center',
-                position: 'relative',
-                top: '-0.5em',
-              }}>
-              <small>
-                Earn points by completing tasks.{' '}
-                <AoTip
-                  text={`Cards can be given one-time or recurring bounties. One-time bounties (aka 'bonus points') can be assigned from a ${gloss(
-                    'guild'
-                  )} card with points. To add points to a ${gloss(
-                    'guild'
-                  )} card, click 'Add points' in its menu. To set a recurring bounty, choose 'Set checkmark value' from the card's menu.`}
-                />
-              </small>
-            </div>
-            {this.renderBountiesList}
-          </React.Fragment>
-        </AoPopupPanel>
+        <h2>Bounties</h2>
+        <div
+          style={{
+            textAlign: 'center',
+            position: 'relative',
+            top: '-0.5em',
+          }}>
+          <small>
+            Earn points by completing tasks.{' '}
+            <AoTip
+              text={`Cards can be given one-time or recurring bounties. One-time bounties (aka 'bonus points') can be assigned from a ${gloss(
+                'guild'
+              )} card with points. To add points to a ${gloss(
+                'guild'
+              )} card, click 'Add points' in its menu. To set a recurring bounty, choose 'Set checkmark value' from the card's menu.`}
+            />
+          </small>
+        </div>
+        {this.renderBountiesList}
       </div>
     )
   }

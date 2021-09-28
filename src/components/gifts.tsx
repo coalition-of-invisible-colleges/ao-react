@@ -9,8 +9,6 @@ import AoTip from './tip'
 import AoBirdAutocomplete from './birdAutocomplete'
 import AoCardComposer from './cardComposer'
 import AoMemberIcon from './memberIcon'
-import Bird from '../assets/images/send.svg'
-import Gift from '../assets/images/gifts.svg'
 import { gloss } from '../semantics'
 
 type GiftBoxTab = 'inbox' | 'changes' | 'sent'
@@ -44,7 +42,7 @@ export default class AoGifts extends React.Component<{}, State> {
   }
 
   componentDidUpdate() {
-    if (this.state.tab === 'changes' && this.allChanges.length < 1) {
+    if (this.state.tab === 'changes' && aoStore.allChanges.length < 1) {
       this.setState({ tab: 'inbox' })
     } else if (this.state.tab === 'sent' && this.mySent.length < 1) {
       this.setState({ tab: 'inbox' })
@@ -77,12 +75,6 @@ export default class AoGifts extends React.Component<{}, State> {
       const newTaskId = JSON.parse(res.text).event.taskId
 
       api.passCard(newTaskId, this.state.memberId)
-    })
-  }
-
-  @computed get myGifts() {
-    return aoStore.state.tasks.filter(task => {
-      return task.passed.some(pass => pass[1] === aoStore.member.memberId)
     })
   }
 
@@ -141,7 +133,7 @@ export default class AoGifts extends React.Component<{}, State> {
       )
     }
 
-    const listForTab = this.myGifts
+    const listForTab = aoStore.myGifts
 
     if (listForTab.length < 1) {
       return ''
@@ -200,25 +192,13 @@ export default class AoGifts extends React.Component<{}, State> {
     }
   }
 
-  @computed get allChanges() {
-    return aoStore.myCards.filter(
-      card =>
-        !(card.guild && card.guild.length >= 1) &&
-        (!card.seen ||
-          (card.seen &&
-            !card.seen.some(
-              userseen => userseen.memberId === aoStore.member.memberId
-            )))
-    )
-  }
-
   @computed
   get renderedChangesList() {
-    if (this.allChanges.length < 1) {
+    if (aoStore.allChanges.length < 1) {
       return null
     }
 
-    let cards = this.allChanges
+    let cards = aoStore.allChanges
     console.log('allChanges card is', cards)
 
     if (this.state.sort === 'alphabetical') {
@@ -250,7 +230,7 @@ export default class AoGifts extends React.Component<{}, State> {
     return (
       <div id="changes">
         <h2>Changes</h2>
-        {this.allChanges.length >= 1 && (
+        {aoStore.allChanges.length >= 1 && (
           <div className="toolbar">
             {this.renderSortButton('alphabetical', 'A-Z')}
             {this.renderSortButton('hodls', 'Hodls')}
@@ -263,94 +243,75 @@ export default class AoGifts extends React.Component<{}, State> {
   }
 
   render() {
-    const renderedBadge = this.myGifts.length >= 1 && (
-      <React.Fragment>{this.myGifts.length}</React.Fragment>
-    )
-    const percentChanged = Math.min(Math.floor(this.allChanges.length / 10), 10)
-    const buttonClass = 'red' + percentChanged.toString()
-
-    const hasGifts = this.myGifts.length >= 1
-    const hasChanges = this.allChanges.length >= 1
+    const hasGifts = aoStore.myGifts.length >= 1
+    const hasChanges = aoStore.allChanges.length >= 1
     const hasSent = this.mySent.length >= 1
 
-    console.log('renderGifts length is ', this.myGifts.length)
+    console.log('renderGifts length is ', aoStore.myGifts.length)
     return (
       <div id="gifts">
-        <AoPopupPanel
-          iconSrc={this.myGifts.length <= 0 ? Bird : Gift}
-          tooltipText={this.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
-          badge={renderedBadge}
-          tooltipPlacement="right"
-          panelPlacement="right"
-          buttonClass={buttonClass}>
+        <div className="toolbar">
+          {(hasChanges || hasSent) &&
+            this.renderTabButton('inbox', hasGifts ? 'Received' : 'Compose')}
+          {hasChanges && this.renderTabButton('changes', 'Changes')}
+          {hasSent && this.renderTabButton('sent', 'Given')}
+        </div>
+        {this.state.tab === 'inbox' && (
           <React.Fragment>
-            <div className="toolbar">
-              {(hasChanges || hasSent) &&
-                this.renderTabButton(
-                  'inbox',
-                  hasGifts ? 'Received' : 'Compose'
-                )}
-              {hasChanges && this.renderTabButton('changes', 'Changes')}
-              {hasSent && this.renderTabButton('sent', 'Given')}
+            <h2>Gifts</h2>
+            <div
+              style={{
+                textAlign: 'center',
+                position: 'relative',
+                top: '-0.5em',
+                marginBottom: hasGifts ? '4em' : undefined,
+              }}>
+              <small>
+                {!hasGifts
+                  ? 'Send a gift to start a conversation.'
+                  : 'Cards passed to you.'}{' '}
+                <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
+              </small>
             </div>
-            {this.state.tab === 'inbox' && (
-              <React.Fragment>
-                <h2>Gifts</h2>
-                <div
-                  style={{
-                    textAlign: 'center',
-                    position: 'relative',
-                    top: '-0.5em',
-                    marginBottom: hasGifts ? '4em' : undefined,
-                  }}>
-                  <small>
-                    {!hasGifts
-                      ? 'Send a gift to start a conversation.'
-                      : 'Cards passed to you.'}{' '}
-                    <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
-                  </small>
-                </div>
-              </React.Fragment>
-            )}
-            {(this.state.tab === 'inbox' || this.state.tab === 'sent') &&
-              this.renderGiftsList}
-            {this.state.tab === 'changes' && this.renderedChanges}
-            {(this.state.tab === 'inbox' && hasGifts) ||
-              (this.state.tab === 'sent' && (
-                <div className="action" onClick={this.toggleSend}>
-                  {this.state.openSend ? (
-                    <React.Fragment>Compose &#8963;</React.Fragment>
-                  ) : (
-                    <React.Fragment>Compose &#8964;</React.Fragment>
-                  )}
-                </div>
-              ))}
-            {this.state.tab === 'inbox' &&
-              (this.state.openSend || this.myGifts.length < 1) && (
-                <form>
-                  <label>To:</label>
-                  <AoBirdAutocomplete onChange={this.onChangeTo} />
-                  <div style={{ position: 'relative' }}>
-                    <label style={{ position: 'relative', top: '-1em' }}>
-                      Topic:
-                    </label>
-                    <AoCardComposer
-                      ref={this.composeRef}
-                      onNewCard={this.newGift}
-                      onChange={this.onChangeName}
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    className="action"
-                    onClick={this.onClick}
-                    disabled={!this.isValid}>
-                    give
-                  </button>
-                </form>
-              )}
           </React.Fragment>
-        </AoPopupPanel>
+        )}
+        {(this.state.tab === 'inbox' || this.state.tab === 'sent') &&
+          this.renderGiftsList}
+        {this.state.tab === 'changes' && this.renderedChanges}
+        {(this.state.tab === 'inbox' && hasGifts) ||
+          (this.state.tab === 'sent' && (
+            <div className="action" onClick={this.toggleSend}>
+              {this.state.openSend ? (
+                <React.Fragment>Compose &#8963;</React.Fragment>
+              ) : (
+                <React.Fragment>Compose &#8964;</React.Fragment>
+              )}
+            </div>
+          ))}
+        {this.state.tab === 'inbox' &&
+          (this.state.openSend || aoStore.myGifts.length < 1) && (
+            <form>
+              <label>To:</label>
+              <AoBirdAutocomplete onChange={this.onChangeTo} />
+              <div style={{ position: 'relative' }}>
+                <label style={{ position: 'relative', top: '-1em' }}>
+                  Topic:
+                </label>
+                <AoCardComposer
+                  ref={this.composeRef}
+                  onNewCard={this.newGift}
+                  onChange={this.onChangeName}
+                />
+              </div>
+              <button
+                type="button"
+                className="action"
+                onClick={this.onClick}
+                disabled={!this.isValid}>
+                give
+              </button>
+            </form>
+          )}
       </div>
     )
   }
