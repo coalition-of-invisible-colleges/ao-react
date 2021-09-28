@@ -32,7 +32,7 @@ export function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
     return null
   }
 
-  const senpaiVouches = senpaiCard.deck.length
+  const senpaiVouches = countVouches(senpaiId, state)
 
   let kohaiVouchCards = state.tasks.filter(
     t => kohaiCard.deck.indexOf(t.taskId) >= 0
@@ -42,7 +42,7 @@ export function isDecidedlyMorePopularThan(senpaiId, kohaiId, state, errRes) {
 
   kohaiVouchCards.forEach(card => {
     if (card.taskId !== senpaiCard.taskId) {
-      kohaiVouches = Math.max(kohaiVouches, card.deck.length)
+      kohaiVouches = Math.max(kohaiVouches, countVouches(card.taskId, state))
     }
   })
   if (senpaiVouches > kohaiVouches) {
@@ -70,4 +70,23 @@ export function isSenpaiOf(senpaiId, kohaiId, state, errRes) {
 
   errRes.push('member is not a senpai of the other member')
   return 0
+}
+
+// Note: duplicated from cardTypes.ts because it is in TypeScript and this file is not
+function countVouches(memberId, state) {
+  const card = state.tasks.find(t => t.taskId === memberId)
+
+  if (!card || !card.hasOwnProperty('deck')) return null
+
+  let count = 0
+
+  const memberCards = card.deck
+    .map(memberId => state.tasks.find(t => t.taskId === memberId))
+    .forEach(memberCard => {
+      if (memberCard !== undefined) {
+        count++
+      }
+    })
+
+  return count
 }
