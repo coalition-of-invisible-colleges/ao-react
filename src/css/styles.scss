@@ -2461,6 +2461,7 @@ textarea {
 
     .chatbox {
       max-height: 15em;
+      overflow-y: scroll;
       overflow-y: overlay;
       display: flex;
       flex-direction: column-reverse;
