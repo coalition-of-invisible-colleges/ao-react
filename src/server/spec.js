@@ -578,7 +578,7 @@ router.post('/events', (req, res, next) => {
         newAddress()
           .then(result => {
             console.log('new lightning address generated is ', result)
-            let addr = result['p2sh-segwit']
+            let addr = result['bech32']
             events.trigger(
               eventType,
               { taskId: req.body.taskId, address: addr },
