@@ -1256,6 +1256,20 @@ class AoApi {
       })
   }
 
+  async requestBtcQr(taskId: string): Promise<request.Response> {
+    const act = {
+      type: 'address-updated',
+      taskId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   startSocketListeners() {
     this.socket.connect()
     this.socket.on('connect', () => {

@@ -329,6 +329,7 @@ class AoStore {
   }
 
   @computed get member(): Member {
+    console.log('this.state.session is', this.state.session)
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
       if (this.state.session === session.session) {

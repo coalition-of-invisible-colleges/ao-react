@@ -20,6 +20,7 @@ import AoBark from './bark'
 import AoTally from './tally'
 import AoLilypad from './lilypad'
 import AoStash from './stash'
+import AoFund from './fund'
 import config from '../../configuration'
 
 export type HudStyle =
@@ -255,6 +256,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						{showCacheButton && cacheButton}
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
+						<AoFund taskId={taskId} />
 						<AoPalette taskId={taskId} />
 					</div>
 				)

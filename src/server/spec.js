@@ -582,14 +582,14 @@ router.post('/events', (req, res, next) => {
             let addr = result['p2sh-segwit']
             events.trigger(
               eventType,
-              { taskId: req.body.taskId },
-              addr,
+              { taskId: req.body.taskId, address: addr },
               resCallback
             )
           })
           .catch(err => {
             res.status(200).send('attempt failed')
           })
+        break
       } else sendErrorStatus()
       break
     case 'task-created':
