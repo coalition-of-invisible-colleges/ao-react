@@ -38,10 +38,9 @@ export default class AoFund extends React.Component<Props, State> {
       console.log('Attempt to access lightning QR code on mssing card.')
       return null
     }
-
-    if (!card.address) {
+    if (card.address) {
       return (
-        <div className="lilypad menu">
+        <div className="fund menu">
           Send mainnet BTC here to fund this card:
           <QRCode value={card.address} />
         </div>
