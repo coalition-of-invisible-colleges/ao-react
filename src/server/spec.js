@@ -6,7 +6,7 @@ import validators from './validators.js'
 import { blankCard, blankGrid } from '../cards.js'
 import events from './events.js'
 import { postEvent } from './connector.js'
-import lightning from './lightning.js'
+import { newAddress, createInvoice } from './lightning.js'
 import { sendNotification } from './signal.js'
 import { createHash } from '../crypto.js'
 import getUrls from 'get-urls'
@@ -158,8 +158,7 @@ router.post('/events', (req, res, next) => {
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isAmount(req.body.amount, errRes)
       ) {
-        lightning
-          .createInvoice(req.body.amount, '<3' + v1(), '~', 3600)
+        createInvoice(req.body.amount, '<3' + v1(), '~', 3600)
           .then(result => {
             events.trigger(
               eventType,
@@ -576,8 +575,7 @@ router.post('/events', (req, res, next) => {
       break
     case 'address-updated':
       if (validators.isTaskId(req.body.taskId, errRes)) {
-        lightning
-          .newAddress()
+        newAddress()
           .then(result => {
             let addr = result['p2sh-segwit']
             events.trigger(
