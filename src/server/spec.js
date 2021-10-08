@@ -577,7 +577,7 @@ router.post('/events', (req, res, next) => {
       if (validators.isTaskId(req.body.taskId, errRes)) {
         newAddress()
           .then(result => {
-            console.log('new lightning address generated is ', addr)
+            console.log('new lightning address generated is ', result)
             let addr = result['p2sh-segwit']
             events.trigger(
               eventType,
