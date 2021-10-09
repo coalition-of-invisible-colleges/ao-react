@@ -9,7 +9,7 @@ import AoDragZone from './dragZone'
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
 
 interface State {
-  query: string
+  value: string
   sort: SearchSort
   items?: number
   hasMore: boolean
@@ -17,10 +17,75 @@ interface State {
 }
 
 export const defaultState: State = {
-  query: '',
+  value: '',
   sort: 'newest',
   hasMore: true,
 }
+
+
+// let searchState =
+//       {
+//         "searchString": "",
+//         "sortConfig"  : "",
+//       }
+
+
+// const searchToolbarView_searchStringInput_onChange = (event) =>
+//     {
+//       let newSearchString = event.target.value
+//       searchState.searchString=newSearchString;
+//       console.log("ao: search.tsx: newSearchString", newSearchString)
+
+      
+//     }
+// const searchToolbarView_searchStringInput_onKeyUp = (event) =>
+//     {
+//       if (event.key === "Enter")
+//       { 
+//         console.log("ao: search.tsx: newSearchString: pressed Enter (send search to server)")
+//       }
+//     }
+// const searchToolbarView_searchStringInput_onKeyDown = (event) =>
+//     {
+//       if (event.key === "Escape")     
+//       { 
+//         console.log("ao: search.tsx: newSearchString: pressed Escape (close search / dismiss search?)")
+//       }
+//     }
+
+
+
+// const SearchToolbarView = observer( () =>
+//       {
+//         return (
+//             <div id="search">
+//               <h2>Search</h2>
+//               <SearchToolbarInput/>
+//               <SearchResultsView />
+//             </div>
+//         )
+//       }
+//     )
+
+// const SearchToolbarInput = observer( () =>
+//     {
+
+//     }
+//   )
+
+// const SearchResultsView = observer( () =>
+//       {
+//         return (
+//           <div>search results</div>
+//         )
+//       }
+//     )
+
+
+
+
+// export { SearchToolbarView }
+
 
 @observer
 export default class AoSearch extends React.PureComponent<{}, State> {
@@ -28,10 +93,11 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     super(props)
     makeObservable(this)
     this.state = defaultState
-    this.componentDidMount = this.componentDidMount.bind(this)
-    this.focus = this.focus.bind(this)
+    // this.componentDidMount = this.componentDidMount.bind(this)
+    // this.focus = this.focus.bind(this)
     this.onChange = this.onChange.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+    this.onKeyUp   = this.onKeyUp.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.scrollMore = this.scrollMore.bind(this)
     this.sortBy = this.sortBy.bind(this)
@@ -40,17 +106,17 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     this.renderSearchResults = this.renderSearchResults.bind(this)
   }
 
-  private searchBox = React.createRef<HTMLInputElement>()
+  // private searchBox = React.createRef<HTMLInputElement>()
 
-  componentDidMount() {
-    this.searchBox.current.select()
-    // ;(this.searchBox.current as any).onsearch = this.onSearch
-    // ;(this.searchBox.current as any).incremental = true
-  }
+  // componentDidMount() {
+  //   this.searchBox.current.select()
+  //   // ;(this.searchBox.current as any).onsearch = this.onSearch
+  //   // ;(this.searchBox.current as any).incremental = true
+  // }
 
-  focus() {
-    this.searchBox.current.select()
-  }
+  // focus() {
+  //   this.searchBox.current.select()
+  // }
 
   onChange(event) {
     console.log('about to debounce')
@@ -59,7 +125,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     }
 
     this.setState({
-      query: event.target.value,
+      value: event.target.value,
       debounce: setTimeout(this.onSearch, 500),
     })
   }
@@ -68,44 +134,54 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     if (event.key === 'Escape') {
       event.stopPropagation()
       // this should also close the entire search box tippy
-      this.setState({ query: '' })
+      this.setState({ value: '' })
+    }
+  }
+
+  onKeyUp(event) {
+    if (event.key === "Enter") {
+      event.stopPropagation();
+
+      console.log("ao: components/search.tsx: AoSearch: onKeyUp: Enter: "+event.target.value)
+
+      // do some kind of search stuff, probably in the aoStore?
     }
   }
 
   onSearch() {
-    const query = this.state.query
-    console.log('search. query is ', query)
-    if (query === undefined) {
-      return
-    }
+    const value = this.state.value
+    console.log('ao: components/search.tsx: AoSearch: state:', this.state)
+    // if (value === undefined) {
+    //   return
+    // }
 
-    if (query === '') {
-      this.setState({ query: undefined, items: undefined })
-      // Hack to get the Tippy box to recalculate its position so it won't go offscreen
-      window.scrollTo(window.scrollX, window.scrollY + 1)
-      window.scrollTo(window.scrollX, window.scrollY - 1)
-      return
-    }
+    // if (value === '') {
+    //   this.setState({ value: undefined, items: undefined })
+    //   // Hack to get the Tippy box to recalculate its position so it won't go offscreen
+    //   window.scrollTo(window.scrollX, window.scrollY + 1)
+    //   window.scrollTo(window.scrollX, window.scrollY - 1)
+    //   return
+    // }
 
-    if (query.length === 1) {
-      // For snappier performance, you must type at least two characters to search
-      return
-    }
+    // if (value.length === 1) {
+    //   // For snappier performance, you must type at least two characters to search
+    //   return
+    // }
 
-    aoStore.updateSearchResults(query)
-    const minResults =
-      aoStore.searchResults.length >= 1
-        ? Math.min(aoStore.searchResults.length, 10)
-        : 0
-    let itemCount
-    if (query.length >= 1 && minResults >= 1) {
-      itemCount = Math.min(minResults)
-    }
-    this.setState({ query: query, items: itemCount })
+    // // aoStore.updateSearchResults(value)
+    // const minResults =
+    //   aoStore.searchResults.length >= 1
+    //     ? Math.min(aoStore.searchResults.length, 10)
+    //     : 0
+    // let itemCount
+    // if (value.length >= 1 && minResults >= 1) {
+    //   itemCount = Math.min(minResults)
+    // }
+    // this.setState({ value: value, items: itemCount })
 
-    // Hack to get the Tippy box to recalculate its position so it won't go offscreen
-    window.scrollTo(window.scrollX, window.scrollY + 1)
-    window.scrollTo(window.scrollX, window.scrollY - 1)
+    // // Hack to get the Tippy box to recalculate its position so it won't go offscreen
+    // window.scrollTo(window.scrollX, window.scrollY + 1)
+    // window.scrollTo(window.scrollX, window.scrollY - 1)
   }
 
   @computed get sortedResults() {
@@ -224,7 +300,7 @@ export default class AoSearch extends React.PureComponent<{}, State> {
     }
 
     if (this.sortedResults.length === 0) {
-      if (this.state.query && this.state.query.length >= 1) {
+      if (this.state.value && this.state.value.length >= 1) {
         return (
           <div id="searchResults" className="results">
             0 results
@@ -283,11 +359,11 @@ export default class AoSearch extends React.PureComponent<{}, State> {
       <div id="search">
         <h2>Search</h2>
         <input
-          ref={this.searchBox}
+          // ref={this.searchBox}
           type="search"
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
-          value={this.state.query}
+          value={this.state.value}
           size={36}
           placeholder="search for a card"
           autoFocus

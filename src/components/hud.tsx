@@ -100,19 +100,19 @@ interface HudState {
 
 @observer
 export default class AoHud extends React.Component<{}, HudState> {
-  private searchRef = React.createRef<AoSearch>()
+  // private searchRef = React.createRef<AoSearch>()
 
   constructor(props) {
     super(props)
     this.state = {}
-    this.focusSearchbox = this.focusSearchbox.bind(this)
+    // this.focusSearchbox = this.focusSearchbox.bind(this)
     this.updateProposalCount = this.updateProposalCount.bind(this)
     this.renderSidebar = this.renderSidebar.bind(this)
   }
 
-  focusSearchbox() {
-    this.searchRef.current.focus()
-  }
+  // focusSearchbox() {
+  //   this.searchRef.current.focus()
+  // }
 
   updateProposalCount(proposals: number) {
     this.setState({ proposals })
@@ -145,7 +145,8 @@ export default class AoHud extends React.Component<{}, HudState> {
         rendered = <AoBounties />
         break
       case 'search':
-        rendered = <AoSearch ref={this.searchRef} />
+        // rendered = <AoSearch ref={this.searchRef} />
+        rendered = <AoSearch />
         break
     }
     return (
@@ -243,7 +244,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           iconSrc={MagnifyingGlass}
           tooltipText="Search"
           tooltipPlacement="top"
-          onShown={this.focusSearchbox}
+          // onShown={this.focusSearchbox}
           id="tour-search"
         />
         <AoTickerHud />
