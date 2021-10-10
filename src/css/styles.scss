@@ -1093,6 +1093,11 @@ textarea {
       top: calc(45vh + 9em);
     }
 
+    // Manual sidebar buton
+    #tour-manual {
+      top: calc(45vh + 15em);
+    }
+
     // Search sidebar button
     #tour-search {
       bottom: 0.5em;
@@ -3263,9 +3268,9 @@ textarea {
       height: 86vh;
       width: -moz-fit-content;
       width: fit-content;
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
+      // position: fixed;
+      // left: 50%;
+      // transform: translateX(-50%);
       top: 3vh;
       text-align: left;
       border: 0.25em solid rgba(255, 255, 255, 0.14);

@@ -32,6 +32,7 @@ import Gift from '../assets/images/gifts.svg'
 import Badge from '../assets/images/badge.svg'
 import Timecube from '../assets/images/timecube.svg'
 import Chest from '../assets/images/chest.svg'
+import Manual from '../assets/images/manual.svg'
 import MemberIcon from '../assets/images/loggedWhite.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import Scroll from '../assets/images/scroll.svg'
@@ -148,6 +149,9 @@ export default class AoHud extends React.Component<{}, HudState> {
       case 'search':
         rendered = <AoSearch ref={this.searchRef} />
         break
+      case 'manual':
+        rendered = <AoManual />
+        break
     }
     return (
       <div id="leftSidebar">
@@ -200,7 +204,7 @@ export default class AoHud extends React.Component<{}, HudState> {
             return <AoDock />
           }}
         </Observer>
-        {!aoStore.member.tutorial ? <AoTour /> : <AoManual />}
+        {aoStore.member.tutorial || <AoTour />}
         <AoSidebarButton
           sidebarTab="gifts"
           iconSrc={aoStore.myGifts.length <= 0 ? Bird : Gift}
@@ -247,6 +251,13 @@ export default class AoHud extends React.Component<{}, HudState> {
           tooltipPlacement="top"
           onShown={this.focusSearchbox}
           id="tour-search"
+        />
+        <AoSidebarButton
+          sidebarTab="manual"
+          iconSrc={Manual}
+          tooltipText="Manual"
+          tooltipPlacement="right"
+          id="tour-manual"
         />
         <AoTickerHud />
         {/*        <div id="proposals">

@@ -287,35 +287,24 @@ export default function AoManual() {
   ))
 
   return (
-    <div style={{ position: 'fixed' }}>
-      <div
-        onClick={!show ? showManual : hideManual}
-        className="manual menu action">
-        Manual
-      </div>
-      {show && (
-        <div className="dimBackground" onClick={hideManual}>
-          <div id="theManual">
-            <div className="theX" onClick={hideManual} />
-            <h1>AO User Manual</h1>
-            <div className="browser">
-              <ul className="topics">{renderedTopics}</ul>
-              <div className="topicContent">
-                {subTopic ? (
-                  <h2>{gloss(subTopic)}</h2>
-                ) : (
-                  <h2>{toTitleCase(gloss(topic))}</h2>
-                )}
-                {subTopic
-                  ? renderContent(topics[topic][subTopic])
-                  : topic && typeof topics[topic] === 'string'
-                  ? renderContent(topics[topic])
-                  : renderContent(topics[topic]['index'])}
-              </div>
-            </div>
-          </div>
+    <div id="theManual">
+      <div className="theX" onClick={hideManual} />
+      <h1>AO User Manual</h1>
+      <div className="browser">
+        <ul className="topics">{renderedTopics}</ul>
+        <div className="topicContent">
+          {subTopic ? (
+            <h2>{gloss(subTopic)}</h2>
+          ) : (
+            <h2>{toTitleCase(gloss(topic))}</h2>
+          )}
+          {subTopic
+            ? renderContent(topics[topic][subTopic])
+            : topic && typeof topics[topic] === 'string'
+            ? renderContent(topics[topic])
+            : renderContent(topics[topic]['index'])}
         </div>
-      )}
+      </div>
     </div>
   )
 }
