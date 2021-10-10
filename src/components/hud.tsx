@@ -134,11 +134,11 @@ export default class AoHud extends React.Component<{}, HudState> {
       case 'gifts':
         rendered = <AoGifts />
         break
-      case 'guilds':
-        rendered = <AoMissions />
-        break
       case 'members':
         rendered = <AoMembers />
+        break
+      case 'guilds':
+        rendered = <AoMissions />
         break
       case 'calendar':
         rendered = <AoCalendar />
@@ -215,19 +215,19 @@ export default class AoHud extends React.Component<{}, HudState> {
           buttonClass={giftsButtonClass}
         />
         <AoSidebarButton
+          sidebarTab="members"
+          iconSrc={MemberIcon}
+          tooltipText="Members"
+          tooltipPlacement="right"
+          id="tour-members"
+        />
+        <AoSidebarButton
           sidebarTab="guilds"
           iconSrc={Badge}
           tooltipText={gloss('Guilds')}
           tooltipPlacement="right"
           id="tour-missions"
           buttonClass={guildsButtonClass}
-        />
-        <AoSidebarButton
-          sidebarTab="members"
-          iconSrc={MemberIcon}
-          tooltipText="Members"
-          tooltipPlacement="right"
-          id="tour-members"
         />
         <AoSidebarButton
           sidebarTab="calendar"

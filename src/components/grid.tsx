@@ -84,6 +84,7 @@ const AoGridRowObserver = observer(
                 task={card}
                 cardStyle={
                   props.dropActsLikeFolder &&
+                  card &&
                   card.guild &&
                   card.guild.length >= 1
                     ? 'badge'

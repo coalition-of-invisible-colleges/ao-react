@@ -20,6 +20,23 @@ const ARBITRARY_START = 1633859359993
 
 interface State {
   clock?: React.ReactElement
+  motivational?: string
+}
+
+const motivationalPhrases = [
+  'GO!',
+  'DO IT NOW!!!',
+  'Get it done!',
+  'You can do it!',
+  'doge habeebs in u',
+  'Go do the thing please',
+  'prodoos',
+  'try harder!',
+]
+
+function randomMotivational() {
+  const i = Math.floor(Math.random() * motivationalPhrases.length)
+  return motivationalPhrases[i]
 }
 
 export const convertToDuration = (secondsAmount: number) => {
@@ -51,6 +68,7 @@ export const convertToDuration = (secondsAmount: number) => {
 @observer
 export default class AoDoing extends React.Component<{}, State> {
   private interval
+  private motivationalInterval
 
   constructor(props) {
     super(props)
@@ -64,10 +82,15 @@ export default class AoDoing extends React.Component<{}, State> {
       () => this.setState({ clock: this.renderClock() }),
       100
     )
+    this.motivationalInterval = setInterval(
+      () => this.setState({ motivational: randomMotivational() }),
+      1000 * 20
+    )
   }
 
   componentWillUnmount() {
     clearInterval(this.interval)
+    clearInterval(this.motivationalInterval)
   }
 
   @computed get mostRecentStartTime() {
@@ -107,6 +130,7 @@ export default class AoDoing extends React.Component<{}, State> {
     }
     return (
       <div id="doing">
+        <div id="motivational">{this.state.motivational}</div>
         <AoMetric taskId={aoStore.taskDoingNow.taskId} />
         <AoContextCard task={aoStore.taskDoingNow} cardStyle="priority" />
         {this.state.clock}
