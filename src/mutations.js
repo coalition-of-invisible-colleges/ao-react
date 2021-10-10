@@ -619,6 +619,70 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-started':
+      const tsFound = getTask(tasks, ev.taskId)
+
+      if (tsFound) {
+        if (!tsFound.timelog) {
+          tsFound.timelog = []
+        }
+        // console.log('task-started pre timelog is', tsFound.timelog)
+        tsFound.timelog.push({
+          memberId: ev.memberId,
+          taskId: ev.taskId,
+          inId: ev.inId,
+          start: ev.timestamp,
+          stop: null,
+        })
+      }
+      // console.log('task-started post timelog is', tsFound.timelog)
+      break
+    case 'task-stopped':
+      // console.log('task-stopped 1')
+      const tstFound = getTask(tasks, ev.taskId)
+      // console.log('task-stopped 2')
+      if (tstFound) {
+        // console.log('task-stopped 3')
+        // console.log('task-stopped pre timelog is', tstFound.timelog)
+        if (!tstFound.timelog) {
+          return
+        }
+        // console.log('task-stopped 4')
+        for (var i = tstFound.timelog.length - 1; i >= 0; i--) {
+          // console.log('task-stopped 5')
+          if (tstFound.timelog[i].memberId === ev.memberId) {
+            // console.log('task-stopped 6')
+            if (
+              tstFound.timelog[i].stop &&
+              tstFound.timelog[i].stop > tstFound.timelog[i].start
+            ) {
+              // console.log(
+              //   'task-stopped 7 stop is',
+              //   tstFound.timelog[i].stop,
+              //   ' and start is',
+              //   tstFound.timelog[i].start
+              // )
+              console.log(
+                'Stop time already set for most recent start time, triggering this event should not be possible in the GUI'
+              )
+            } else {
+              // console.log('task-stopped 8')
+              tstFound.timelog[i].stop = ev.timestamp
+              // tstFound.timelog.push({
+              //   memberId: 'test',
+              //   taskId: 'testId',
+              //   inId: null,
+              //   start: null,
+              //   stop: null,
+              // })
+            }
+          }
+          // console.log('task-stopped post timelog is', tstFound.timelog)
+
+          break
+        }
+      }
+      break
     case 'task-time-clocked':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {

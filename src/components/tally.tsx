@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -21,8 +21,8 @@ interface Props {
 @observer
 export default class AoTally extends React.PureComponent<Props> {
   constructor(props: Props) {
-    super(props);
-    makeObservable(this);
+    super(props)
+    makeObservable(this)
   }
 
   @computed get tally() {
@@ -87,7 +87,7 @@ export default class AoTally extends React.PureComponent<Props> {
           return (
             <Tippy
               zIndex={4}
-              theme={'translucent'}
+              theme="translucent"
               content={this.renderClaimsList}
               delay={[625, 200]}>
               <div className="tally">{this.renderTallyMarks}</div>

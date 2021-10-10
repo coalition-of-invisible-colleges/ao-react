@@ -26,6 +26,7 @@ import AoCoin from './coin'
 import AoBird from './bird'
 import AoPreview from './preview'
 import AoCheckmark from './checkmark'
+import AoMetric from './metric'
 import AoMemberIcon from './memberIcon'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Boat from '../assets/images/boat.svg'
@@ -62,6 +63,7 @@ interface CardProps {
   noPopups?: boolean
   noFindOnPage?: boolean
   inId?: string
+  padTop?: boolean
 }
 
 interface State {
@@ -550,7 +552,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   @computed get renderedUpboats() {
     const card = this.props.task
     const upboats = {}
-    this.priorityCards?.forEach(priority => {
+    this.priorityCards?.forEach((priority, i) => {
       let allocatedHere = 0
       if (Array.isArray(card.allocations)) {
         card.allocations.some(allocation => {
@@ -570,6 +572,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           )}
         </div>
       )
+      if (i === this.priorityCards.length - 1) {
+        upboats[priority.taskId] = (
+          <div>
+            <AoMetric taskId={priority.taskId} inId={card.taskId} />
+            {upboats[priority.taskId]}
+          </div>
+        )
+      }
     })
 
     return upboats
@@ -745,7 +755,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             {this.props.noContextOnFull ? (
               ''
             ) : (
-              <div id="context">
+              <div
+                id="context"
+                style={{
+                  marginTop: this.props.padTop ? '4em' : 'inherit',
+                }}>
                 <Observer>
                   {() => {
                     return (

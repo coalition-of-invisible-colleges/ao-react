@@ -113,7 +113,8 @@ export interface Task {
   payment_hash: string
   highlights: number[]
   seen: Userseen[]
-  time: Usertime[]
+  // time: Usertime[] // deprecated
+  timelog: LabourTime[]
   created: number
   grid?: Grid
   avatars?: AvatarLocation[]
@@ -157,10 +158,12 @@ export interface ConnectedAo {
   links: string[]
 }
 
-interface Usertime {
+export interface LabourTime {
   memberId: string
-  timelog: number[]
-  date: Date[]
+  taskId: string
+  inId: string
+  start: number
+  stop: number
 }
 
 interface Userseen {
@@ -947,6 +950,42 @@ class AoStore {
     }
     topCards.reverse()
     return topCards
+  }
+
+  // The top priority in the member's member card, if the timeclock is currently running on it (or null)
+  @computed get taskDoingNow() {
+    let memberPriorities = aoStore.memberCard.priorities
+
+    if (!memberPriorities || memberPriorities.length <= 0) {
+      return null
+    }
+
+    const topMemberPriorityId = memberPriorities[memberPriorities.length - 1]
+    const topMemberPriority = aoStore.hashMap.get(topMemberPriorityId)
+
+    if (
+      !topMemberPriority ||
+      !topMemberPriority.timelog ||
+      topMemberPriority.timelog.length <= 0
+    ) {
+      return null
+    }
+
+    for (let i = topMemberPriority.timelog.length - 1; i >= 0; i--) {
+      if (topMemberPriority.timelog[i].memberId === aoStore.member.memberId) {
+        if (
+          !topMemberPriority.timelog[i].stop ||
+          topMemberPriority.timelog[i].stop <=
+            topMemberPriority.timelog[i].start
+        ) {
+          return topMemberPriority
+        } else {
+          return null
+        }
+      }
+    }
+
+    return null
   }
 
   // The next card after the current mediaPlayHead's location that has (any) attachment

@@ -935,6 +935,39 @@ router.post('/events', (req, res, next) => {
         )
       } else sendErrorStatus()
       break
+    case 'task-started':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        (!req.body.inId || validators.isTaskId(req.body.inId, errRes)) &&
+        validators.isMemberId(req.body.memberId, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          {
+            memberId: req.body.memberId,
+            taskId: req.body.taskId,
+            inId: req.body.inId,
+          },
+          resCallback
+        )
+      } else sendErrorStatus()
+      break
+    case 'task-stopped':
+      if (
+        validators.isTaskId(req.body.taskId, errRes) &&
+        (!req.body.inId || validators.isTaskId(req.body.inId, errRes)) &&
+        validators.isMemberId(req.body.memberId, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          {
+            memberId: req.body.memberId,
+            taskId: req.body.taskId,
+          },
+          resCallback
+        )
+      } else sendErrorStatus()
+      break
     case 'task-time-clocked':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
@@ -1068,7 +1101,6 @@ router.post('/events', (req, res, next) => {
             taskId: req.body.taskId,
             memberId: req.body.memberId,
             area: req.body.area,
-            timestamp: Date.now(),
           },
           resCallback
         )

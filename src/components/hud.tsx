@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer, Observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
+import AoDoing from './doing'
 import AoHub from './hub'
 import AoControls from './controls'
 import AoDock from './dock'
@@ -190,6 +191,7 @@ export default class AoHud extends React.Component<{}, HudState> {
             <div id="mainMenuButton">&#x22EE;</div>
           </Tippy>
         </div>
+        <AoDoing />
         <AoHub />
         {this.renderSidebar()}
         <AoControls />

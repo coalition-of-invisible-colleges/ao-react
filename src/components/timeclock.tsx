@@ -1,9 +1,13 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
+import Hourglass from '../assets/images/hourglass.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface TimeClockProps {
   taskId: string
@@ -16,13 +20,13 @@ interface TimeClockState {
   t: any
 }
 
-class AoTimeClock extends React.PureComponent<TimeClockProps, TimeClockState> {
+class AoTimeClock extends React.Component<TimeClockProps, TimeClockState> {
   constructor(props) {
     super(props)
     this.state = {
       seconds: 0,
       timer: false,
-      t: null
+      t: null,
     }
     this.setTrigger = this.setTrigger.bind(this)
     this.run = this.run.bind(this)
@@ -75,28 +79,44 @@ class AoTimeClock extends React.PureComponent<TimeClockProps, TimeClockState> {
   }
 
   render() {
-    return (
-      <div className={'hourglass'}>
-        <div
-          onClick={this.run}
-          className={this.state.timer ? 'started action' : 'stopped action'}>
-          {this.state.timer ? 'stop timeclock' : 'start timeclock'}
-        </div>
-        <AoTimeHistory taskId={this.props.taskId} />
-        {this.state.timer || this.state.seconds > 0 ? (
-          <div>{this.toHHMMSS()}</div>
-        ) : (
-          ''
-        )}
-        {!this.state.timer && this.state.seconds > 0 ? (
-          <button id="cardTimerCommit" onClick={this.commit}>
-            Commit Time
-          </button>
-        ) : (
-          ''
-        )}
-      </div>
-    )
+    switch (this.props.hudStyle) {
+      case 'full before':
+        return (
+          <div className="hourglass">
+            <Tippy
+              zIndex={4}
+              theme="translucent"
+              content={<AoTimeHistory taskId={this.props.taskId} />}
+              delay={[625, 200]}>
+              <img src={Hourglass} />
+            </Tippy>
+          </div>
+        )
+      default:
+        return (
+          <div className="hourglass">
+            <div
+              onClick={this.run}
+              className={
+                this.state.timer ? 'started action' : 'stopped action'
+              }>
+              {this.state.timer ? 'stop timeclock' : 'start timeclock'}
+            </div>
+            {this.state.timer || this.state.seconds > 0 ? (
+              <div>{this.toHHMMSS()}</div>
+            ) : (
+              ''
+            )}
+            {!this.state.timer && this.state.seconds > 0 ? (
+              <button id="cardTimerCommit" onClick={this.commit}>
+                Commit Time
+              </button>
+            ) : (
+              ''
+            )}
+          </div>
+        )
+    }
   }
 }
 
@@ -108,7 +128,7 @@ interface TimeHistoryProps {
 class AoTimeHistory extends React.Component<TimeHistoryProps> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.state = {}
   }
 
@@ -131,30 +151,31 @@ class AoTimeHistory extends React.Component<TimeHistoryProps> {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
 
-    if (!card.time || (card.time && card.time.length < 1)) {
-      return ''
-    }
-    let timeLogOut = null
-    if (
-      card.time.length > 0 &&
-      card.time.find(t => {
-        return t.memberId === aoStore.member.memberId
-      })
-    ) {
-      timeLogOut = aoStore.hashMap
-        .get(taskId)
-        .time.find(t => {
-          return t.memberId === aoStore.member.memberId
-        })
-        .timelog.map((num, i) => {
-          return (
-            <div className={`${i % 2 === 0 ? 'orangeLog' : ''}`} key={i}>
-              {this.formatTime(num)} on{' '}
-            </div>
-          )
-        })
-    }
-    return timeLogOut
+    return ''
+    // if (!card.time || (card.time && card.time.length < 1)) {
+    //   return ''
+    // }
+    // let timeLogOut = null
+    // if (
+    //   card.time.length > 0 &&
+    //   card.time.find(t => {
+    //     return t.memberId === aoStore.member.memberId
+    //   })
+    // ) {
+    //   timeLogOut = aoStore.hashMap
+    //     .get(taskId)
+    //     .time.find(t => {
+    //       return t.memberId === aoStore.member.memberId
+    //     })
+    //     .timelog.map((num, i) => {
+    //       return (
+    //         <div className={`${i % 2 === 0 ? 'orangeLog' : ''}`} key={i}>
+    //           {this.formatTime(num)} on{' '}
+    //         </div>
+    //       )
+    //     })
+    // }
+    // return timeLogOut
   }
 
   @computed get dateLog() {
@@ -163,42 +184,43 @@ class AoTimeHistory extends React.Component<TimeHistoryProps> {
 
     let dateLogOut = null
 
-    if (
-      card.time &&
-      card.time.length > 0 &&
-      card.time.some(t => {
-        return t.memberId === aoStore.member.memberId
-      })
-    ) {
-      dateLogOut = aoStore.hashMap
-        .get(taskId)
-        .time.find(t => {
-          return t.memberId === aoStore.member.memberId
-        })
-        .date.map((num, i) => {
-          if (num) {
-            return (
-              <div
-                className={`cardTimeLogDate ${i % 2 === 0 ? 'orangeLog' : ''}`}
-                key={i}>
-                {new Date(Number(num) - 25200000).toUTCString().slice(0, 25)}
-              </div>
-            )
-          } else {
-            return (
-              <div
-                className={`cardTimeLogDateNull ${
-                  i % 2 === 0 ? 'orangeLog' : ''
-                }`}
-                key={i}>
-                Null
-              </div>
-            )
-          }
-        })
+    return ''
+    // if (
+    //   card.time &&
+    //   card.time.length > 0 &&
+    //   card.time.some(t => {
+    //     return t.memberId === aoStore.member.memberId
+    //   })
+    // ) {
+    //   dateLogOut = aoStore.hashMap
+    //     .get(taskId)
+    //     .time.find(t => {
+    //       return t.memberId === aoStore.member.memberId
+    //     })
+    //     .date.map((num, i) => {
+    //       if (num) {
+    //         return (
+    //           <div
+    //             className={`cardTimeLogDate ${i % 2 === 0 ? 'orangeLog' : ''}`}
+    //             key={i}>
+    //             {new Date(Number(num) - 25200000).toUTCString().slice(0, 25)}
+    //           </div>
+    //         )
+    //       } else {
+    //         return (
+    //           <div
+    //             className={`cardTimeLogDateNull ${
+    //               i % 2 === 0 ? 'orangeLog' : ''
+    //             }`}
+    //             key={i}>
+    //             Null
+    //           </div>
+    //         )
+    //       }
+    //     })
 
-      return dateLogOut
-    }
+    //   return dateLogOut
+    // }
   }
 
   render() {

@@ -922,6 +922,37 @@ class AoApi {
       })
   }
 
+  async startTimeClock(taskId, inId): Promise<request.Response> {
+    const act = {
+      type: 'task-started',
+      taskId: taskId,
+      inId: inId,
+      memberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async stopTimeClock(taskId): Promise<request.Response> {
+    const act = {
+      type: 'task-stopped',
+      taskId: taskId,
+      memberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async signCard(taskId: string, opinion = 1): Promise<request.Response> {
     const act = {
       type: 'task-signed',

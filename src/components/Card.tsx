@@ -182,7 +182,13 @@ const ContextCardView = observer(() => {
     return <AoDrawPile />
   } else {
     // console.log("AO: client/Card.tsx: ContextCardView: render: aoStore.currentCard: "+ currentContextCard.cardItem.taskId)
-    return <AoContextCard task={currentContextCard.cardItem} cardStyle="full" />
+    return (
+      <AoContextCard
+        task={currentContextCard.cardItem}
+        cardStyle="full"
+        padTop={!!aoStore.taskDoingNow}
+      />
+    )
   }
 })
 
