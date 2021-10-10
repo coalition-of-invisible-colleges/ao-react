@@ -209,7 +209,7 @@ if [ $(npm --v  2>/dev/null | grep -c "7\.") -eq 1 ]; then
 	NPMVERSION=`npm -v`
 	echo npm v$NPMVERSION already installed
 else
-	curl -L https://www.npmjs.com/install.sh | sh
+	curl -L https://www.npmjs.com/install.sh | sh # this line might not be needed
 	npm install -g npm # why doesn't the npm install script install the current version?
 fi
 
