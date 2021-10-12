@@ -22,8 +22,11 @@ class AoApi {
       .set('name', user)
       .on('error', () => false)
       .then(res => {
-        aoStore.state.token = token
-        aoStore.state.session = session
+        // clear any existing stale data from localstorage
+        window.localStorage.removeItem('user')
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('session')
+        // set new session info
         window.localStorage.setItem('user', user)
         window.localStorage.setItem('token', token)
         window.localStorage.setItem('session', session)
@@ -40,8 +43,6 @@ class AoApi {
         .post('/state')
         .set('Authorization', token)
         .then(res => {
-          aoStore.state.session = session
-          aoStore.state.token = token
           aoStore.state.user = user
           // console.log(
           //   'AO: client/api.ts: fetchState: initial state: ',
@@ -1306,18 +1307,14 @@ class AoApi {
     this.socket.on('connect', () => {
       console.log('connected', { 'aoStore.state': aoStore.state })
 
-      if (aoStore.state.socketState === undefined) {
-        aoStore.state.session = window.localStorage.getItem('session')
-        aoStore.state.token = window.localStorage.getItem('token')
-      }
-
       runInAction(() => {
         aoStore.state.socketState = 'attemptingAuthentication'
       })
 
+      console.log("emit auth: session: " + window.localStorage.getItem('session') + ", token: " + window.localStorage.getItem('token'));
       this.socket.emit('authentication', {
-        session: aoStore.state.session,
-        token: aoStore.state.token,
+        session: window.localStorage.getItem('session'),
+        token: window.localStorage.getItem('token'),
       })
     })
     this.socket.on('authenticated', () => {
@@ -1341,9 +1338,6 @@ class AoApi {
       runInAction(() => {
         aoStore.state.socketState = 'authenticationFailed'
       })
-
-      aoStore.state.session = ''
-      aoStore.state.token = ''
 
       this.socket.connect()
     })

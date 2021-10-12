@@ -332,10 +332,11 @@ class AoStore {
   }
 
   @computed get member(): Member {
-    console.log('this.state.session is', this.state.session)
+    let currentSession = window.localStorage.getItem('session');
+    console.log('current session is: ', currentSession)
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
-      if (this.state.session === session.session) {
+      if (currentSession === session.session) {
         console.log('found existing session')
         const memberId = session.ownerId
         this.state.members.forEach(m => {
