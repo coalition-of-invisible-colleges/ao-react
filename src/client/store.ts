@@ -332,7 +332,7 @@ class AoStore {
   }
 
   @computed get member(): Member {
-    let currentSession = window.localStorage.getItem('session');
+    let currentSession = window.localStorage.getItem('session')
     console.log('current session is: ', currentSession)
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
@@ -350,6 +350,10 @@ class AoStore {
   }
 
   @computed get memberCard(): Task {
+    if (!this.member) {
+      return null
+    }
+
     // let memberCard = _.merge(
     //   blankCard('', '', ''),
     return this.hashMap.get(this.member.memberId)
@@ -780,6 +784,9 @@ class AoStore {
   }
 
   @computed get myGuilds(): Task[] {
+    if (!this.member) {
+      return []
+    }
     let my = this.state.tasks.filter(t => {
       if (!t.guild) return false
       if (t.deck.indexOf(this.member.memberId) === -1) {
@@ -955,7 +962,11 @@ class AoStore {
 
   // The top priority in the member's member card, if the timeclock is currently running on it (or null)
   @computed get taskDoingNow() {
-    let memberPriorities = aoStore.memberCard.priorities
+    if (!this.memberCard) {
+      return null
+    }
+
+    let memberPriorities = this.memberCard.priorities
 
     if (!memberPriorities || memberPriorities.length <= 0) {
       return null
@@ -1209,6 +1220,10 @@ class AoStore {
 
   @action.bound
   addToContext(taskIds: string[], alwaysAddMember = true) {
+    if (!this.member) {
+      return
+    }
+
     if (taskIds.length < 1) return
 
     this.context = this.context.filter(tId => {
@@ -1255,6 +1270,10 @@ class AoStore {
 
   @computed
   get isDabbed(): boolean {
+    if (!this.member) {
+      return false
+    }
+
     return this.currentCard === this.member.memberId
   }
 

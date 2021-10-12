@@ -1279,6 +1279,7 @@ class AoApi {
     aoStore.resetState()
     window.localStorage.clear()
     //clear cookie
+
     return request
       .post('/logout')
       .set('Authorization', aoStore.state.token)
@@ -1311,7 +1312,12 @@ class AoApi {
         aoStore.state.socketState = 'attemptingAuthentication'
       })
 
-      console.log("emit auth: session: " + window.localStorage.getItem('session') + ", token: " + window.localStorage.getItem('token'));
+      console.log(
+        'emit auth: session: ' +
+          window.localStorage.getItem('session') +
+          ', token: ' +
+          window.localStorage.getItem('token')
+      )
       this.socket.emit('authentication', {
         session: window.localStorage.getItem('session'),
         token: window.localStorage.getItem('token'),

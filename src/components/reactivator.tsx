@@ -17,6 +17,9 @@ export default class AoFob extends React.PureComponent {
   }
 
   @computed get isActive() {
+    if (!aoStore.member) {
+      return false
+    }
     return aoStore.member.active >= 1
   }
 

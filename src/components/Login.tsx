@@ -30,6 +30,20 @@ const Login: React.FunctionComponent<{}> = () => {
     }
   )
 
+  let timer
+
+  React.useEffect(() => {
+    console.log('error effect')
+    if (error.length >= 1) {
+      if (timer) {
+        clearTimeout(timer)
+      }
+      console.log('setting timer')
+      timer = setTimeout(() => setError(''), 2200)
+    }
+    return () => clearTimeout(timer)
+  }, [error])
+
   const onClick = e => {
     api
       .createSession(user, pass)

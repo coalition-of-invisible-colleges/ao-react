@@ -22,7 +22,7 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 	@computed get completedCards() {
 		const card = aoStore.hashMap.get(this.props.taskId)
 
-		if (!card.completed || card.completed.length < 1) {
+		if (!card || !card.completed || card.completed.length < 1) {
 			return null
 		}
 
@@ -37,6 +37,10 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 	render() {
 		const taskId = this.props.taskId
 		const card = aoStore.hashMap.get(taskId)
+
+		if (!card) {
+			return null
+		}
 
 		const archiveCheckmark = (move: CardPlay) => {
 			if (!move.from.taskId) {

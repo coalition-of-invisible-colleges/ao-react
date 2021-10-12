@@ -62,6 +62,10 @@ export default class AoUsername extends React.PureComponent<{}, State> {
   }
 
   render() {
+    if (!aoStore.member) {
+      return '<not logged in>'
+    }
+
     if (this.state.editing) {
       return (
         <div className="username">
@@ -80,7 +84,7 @@ export default class AoUsername extends React.PureComponent<{}, State> {
       )
     }
     return (
-      <div className={'username menu'}>
+      <div className="username menu">
         <div onClick={this.startEditing} className={'action'}>
           {aoStore.member.name}
         </div>

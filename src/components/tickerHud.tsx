@@ -374,6 +374,10 @@ export default class AoTickerHud extends React.Component {
   }
 
   render() {
+    if (!aoStore.member) {
+      return null
+    }
+
     const myTickers: Ticker[] = aoStore.member.tickers
 
     let tickers = []

@@ -25,13 +25,22 @@ interface State {
 
 const motivationalPhrases = [
   'GO!',
-  'DO IT NOW!!!',
-  'Get it done!',
-  'You can do it!',
-  'doge habeebs in u',
-  'Go do the thing please',
+  'doo now!!!1',
+  'get thing done!',
+  'you can do it!',
+  'doge habeeb in u',
+  'go do the thing please',
   'prodoos',
   'try harder!',
+  'wow',
+  'wow',
+  'very productive',
+  'such productivity',
+  'plz go',
+  'wow',
+  'much prodoos',
+  'we together do',
+  'very intention',
 ]
 
 function randomMotivational() {
@@ -94,6 +103,10 @@ export default class AoDoing extends React.Component<{}, State> {
   }
 
   @computed get mostRecentStartTime() {
+    if (!aoStore.taskDoingNow) {
+      return false
+    }
+
     const card = aoStore.hashMap.get(aoStore.taskDoingNow.taskId)
     if (!card || !card.timelog || card.timelog.length <= 0) {
       return false

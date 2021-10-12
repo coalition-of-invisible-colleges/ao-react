@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Redirect } from 'react-router-dom'
 import { observer, Observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -42,6 +43,7 @@ import { gloss } from '../semantics'
 
 interface State {
   theme: number
+  redirect?: string
 }
 
 @observer
@@ -67,11 +69,17 @@ class MainMenu extends React.Component<{}, State> {
 
   onLogout = () => {
     console.log('calling api logout')
-    api.logout()
+    api.logout().then(() => {
+      this.setState({ redirect: '/login' })
+    })
     console.log('logged out', aoStore.state.loggedIn)
   }
 
   render() {
+    if (this.state.redirect !== undefined) {
+      return <Redirect to={this.state.redirect} />
+    }
+
     return (
       <div id="mainMenu">
         <AoUsername />
@@ -85,7 +93,7 @@ class MainMenu extends React.Component<{}, State> {
         </div>
         <AoTicker
           ticker={null}
-          index={aoStore.member.tickers ? aoStore.member.tickers.length : 0}
+          index={aoStore.member?.tickers ? aoStore.member.tickers.length : 0}
         />
         <AoTour />
         <div onClick={this.onLogout} id="logout" className="action">
@@ -204,7 +212,7 @@ export default class AoHud extends React.Component<{}, HudState> {
             return <AoDock />
           }}
         </Observer>
-        {aoStore.member.tutorial || <AoTour />}
+        {aoStore.member?.tutorial || <AoTour />}
         <AoSidebarButton
           sidebarTab="gifts"
           iconSrc={aoStore.myGifts.length <= 0 ? Bird : Gift}

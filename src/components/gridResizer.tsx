@@ -45,7 +45,7 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
 
-    if (!card.grid) {
+    if (!card || !card.grid) {
       return null
     }
 

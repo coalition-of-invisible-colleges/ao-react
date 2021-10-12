@@ -23,6 +23,10 @@ export default class AoVolume extends React.PureComponent<{}> {
   }
 
   render() {
+    if (!aoStore.member) {
+      return null
+    }
+
     return (
       <div id="volume" onClick={this.toggleMute} className="action">
         <img src={aoStore.member.muted ? Muted : Unmuted} />
