@@ -22,6 +22,11 @@ class AoApi {
       .set('name', user)
       .on('error', () => false)
       .then(res => {
+        // clear any existing stale data from localstorage
+        window.localStorage.removeItem('user')
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('session')
+        // set new session info
         window.localStorage.setItem('user', user)
         window.localStorage.setItem('token', token)
         window.localStorage.setItem('session', session)
