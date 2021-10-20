@@ -26,7 +26,7 @@ import Login from './components/Login'
 import AoMember from './components/Member'
 import AoCard from './components/Card'
 import AoPopupPanel from './components/popupPanel'
-// import './css/themes/my_theme.scss' // import custom CSS themes here
+// import './css/themes/_florid.scss' // import custom CSS themes here - not same file as themable file
 
 const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
   let loggedIn = aoStore.state.loggedIn

@@ -1644,7 +1644,6 @@ textarea {
         top: 0;
         left: 0;
         pointer-events: none;
-        opacity: 0.25;
 
         &.red {
           background-color: $card-red;
@@ -3277,7 +3276,7 @@ textarea {
       text-align: left;
       border: 0.25em solid rgba(255, 255, 255, 0.14);
       padding: 1em;
-      font-family: 'Arial';
+      font-family: 'Open Sans', 'Arial';
 
       h1,
       h2,
@@ -3291,6 +3290,10 @@ textarea {
         margin-top: 0.5em;
       }
 
+      h1 {
+        margin-bottom: 0.5em;
+      }
+
       h2 {
         font-size: 1.35em;
       }
@@ -3298,7 +3301,13 @@ textarea {
       h3 {
         font-size: 1.2em;
         margin-bottom: 0;
-        margin-top: 1em;
+        margin-top: 1.15em;
+      }
+
+      p {
+        margin-top: 0.7em;
+        line-height: 1.5;
+        text-indent: 2.5em;
       }
 
       .browser {
@@ -3350,8 +3359,9 @@ textarea {
         .topicContent {
           flex-basis: calc(70% - 2.5em);
           padding: 1em;
-          min-width: 46vw;
-          max-width: 40em;
+          min-width: 20em;
+          width: 28vw;
+          max-width: 28em;
           margin-left: 0.5em;
         }
 
@@ -3479,3 +3489,4 @@ textarea {
 @import './themes/light';
 @import './themes/green';
 @import './themes/isom';
+@import './themes/florid';

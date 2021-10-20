@@ -28,9 +28,9 @@ import AoSidebarButton from './sidebarButton'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
 import Sun from '../assets/images/sun.svg'
-import Bird from '../assets/images/send.svg'
+import Bird from '../assets/images/mailbox.svg'
 import Gift from '../assets/images/gifts.svg'
-import Badge from '../assets/images/badge.svg'
+import Badge from '../assets/images/bulletin.svg'
 import Timecube from '../assets/images/timecube.svg'
 import Chest from '../assets/images/chest.svg'
 import Manual from '../assets/images/manual.svg'
@@ -57,7 +57,7 @@ class MainMenu extends React.Component<{}, State> {
   }
 
   changeTheme = () => {
-    if (this.state.theme == 4) {
+    if (this.state.theme == 5) {
       this.setState({ theme: 1 })
       document.body.className = 'theme-1'
     } else {

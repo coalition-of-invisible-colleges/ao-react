@@ -66,20 +66,34 @@ For content creators, the AO will make it easy to publish your content publicly 
     'Getting Started': `Someone else will need to create an account for you and tell you the URL, username and password so you can log in. Visit the URL and type the username and password and press Enter to log in. There is a bug right now so you will also need to refresh the page after login.`,
   },
   Cards: {
-    index: `The AO is full of cards`,
-    'Creating a Card': `There are three ways to create a card: 1. First way
-2. Second way
-3. Third way`,
+    index: `The AO stores a deck of cards for each member on a server. You can put text, images, links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over tor.`,
+    'Creating a Card': `There are four ways to create a card:
+
+1. Click the "+priority" button inside of a card. This button disappear after one priority has been created.
+
+2. Click the "+card" button inside a card. This button appears after the first priority has been created. It disappears after a second card has been created.
+
+3. Click the "+card" button at the top of the bookmarks bar (bottom center). This is always visible and will create a card in card you are curently viewing.
+
+4. Create and send a card in the Inbox. Click "Send Gift / Inbox" on the left edge of the screen, then click "Compose". Compose your card, type the name of the recipient, and click "Give". The card will be created and sent to the recipient.`,
     'Viewing your deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
     'Grabbing cards':
       'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the moon icon on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
-    'Finding cards': `To find a card you are looking for, you can use the search box.`,
-    'Sharing Cards': `Gifts inbox works like this`,
+    'Finding cards': `To find a card you are looking for, you can use the search box.
+
+Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
+
+The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\*" (period asterisk). For more information on regular expressions, search the web for "regular expression guide" or "regular expressoin cheatsheet". If you want to avoid using regular expressions, you must escape certain punctuation marks by preceding them with a backslash. For example, period (.) and asterisk(\*) are special characters, so to search for them, search for "\\." and "\\\*" respectively.`,
+    'Sharing Cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
     'Receiving cards':
-      'Your inbox is located just under the Community Hub icon in the top-left corner of the screen.',
-    'Bookmarking cards':
-      'You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen. This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).',
+      'Your inbox is located just under the Community Hub icon in the top-left corner of the screen. Here, you can view received cards, compose and send new cards, and see changed cards on this server.',
+    'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen. Use the bookmarks bar to store frequently-used groups or cards, or use it as a clipboard or composition area.
+
+You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
+
+Guild cards placed in the bookmarks bar will act like folders, and cards dropped on them will be moved within to that card's priorities. By placing a few different guilds on the bookmarks bar, can use the boomarks bar to quickly sort cards into categories.
+  This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).`,
     'The Community Hub Card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
@@ -131,7 +145,7 @@ For content creators, the AO will make it easy to publish your content publicly 
   },
   Members: {
     index:
-      'Click the triangle icon on the left edge of the screen to show the Members panel. It contains all of the member cards on this server.',
+      'Click the Members icon on the left edge of the screen to show the Members panel. It contains all of the member cards on this server.',
     'Creating new users': 'Invite them on the member panel',
     'Monthly memberships':
       'If your server offers monthly memberships, here is how they work and how to pay them.',
