@@ -87,7 +87,13 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
       }
     })
     if (ol.length < 1) {
-      ol = [{ notes: 'A', name: 'Use', color: 'blue' }]
+      ol = [
+        { notes: 'A', name: 'Use', color: 'blue' },
+        { notes: 'B', name: 'Use', color: 'red' },
+        { notes: 'C', name: 'Use', color: 'green' },
+        { notes: 'D', name: 'Use', color: 'purple' },
+        { notes: 'E', name: 'Use', color: 'green' },
+      ]
     }
     // return ol.filter(list => {
     //     return !!list
