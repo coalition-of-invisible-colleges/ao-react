@@ -1,0 +1,88 @@
+body.florid {
+	background-color: #070722;
+}
+
+.florid {
+	.red {
+		background-color: #ffb3b1;
+	}
+
+	.yellow {
+		background-color: #ff9;
+	}
+
+	.green {
+		background-color: #b3ffb3;
+	}
+
+	.blue {
+		background-color: #79aeff;
+	}
+
+	.purple {
+		background-color: #b39ef7;
+	}
+
+	// unset dark card background and change font to black
+	.card {
+		color: #000;
+		background-color: unset;
+	}
+
+	// show colors fully
+	.card .paper .color {
+		opacity: 1;
+	}
+
+	// hide the paper
+	.paper > img {
+		display: none;
+	}
+
+	// background color of grid square
+	.gridContainer > .grid .zone {
+		background: rgba(127, 127, 127, 0.05);
+	}
+
+	// .zone,
+	// .dropZone.grid {
+	// 	color: white;
+	// }
+
+	// text on grid square when about to drop a card
+	.dropZone.grid .overlay .label {
+		color: white;
+	}
+
+	// switch from dark to light background for action buttons
+	.action {
+		background-color: rgba(255, 255, 255, 0.45);
+	}
+
+	// dark blue background on the sidebar buttons
+	.actionCircle {
+		background-color: rgba(100, 127, 208, 0.45);
+	}
+
+	// light blue highlight on actionCircle on hover
+	.actionCircle:hover {
+		background-color: rgba(154, 154, 255, 0.5);
+	}
+
+	// dark on light for clickable actions
+	.action {
+		border-color: rgba(255, 255, 255, 0.1);
+		color: black;
+		text-shadow: none;
+	}
+
+	// switch all svg icons to black
+	svg {
+		fill: black;
+	}
+
+	// change all card menu buttons to black so they are visible
+	.cardMenuButton {
+		color: black;
+	}
+}
