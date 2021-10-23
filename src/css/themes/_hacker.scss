@@ -1,0 +1,70 @@
+body.hacker {
+	background-color: black;
+	color: #0f0;
+}
+
+.hacker {
+	.red,
+	.yellow,
+	.green,
+	.blue,
+	.purple {
+		background-color: unset;
+		border: 0.35em solid;
+		width: calc(100% - 0.7em);
+		height: calc(100% - 0.7em);
+	}
+
+	.red {
+		border-color: red;
+	}
+
+	.yellow {
+		border-color: yellow;
+	}
+
+	.green {
+		border-color: #0f0;
+	}
+
+	.blue {
+		border-color: blue;
+	}
+
+	.purple {
+		border-color: rebeccapurple;
+	}
+
+	// change all fonts
+	.card,
+	.action,
+	.summary {
+		color: #0f0;
+	}
+
+	// unset dark card background and change font to black
+	.card {
+		background-color: unset;
+	}
+
+	// show colors fully
+	.card .paper .color {
+		opacity: 0.5;
+	}
+
+	// hide the paper
+	.paper > img {
+		display: none;
+	}
+
+	// background color of grid square
+	.gridContainer > .grid .zone,
+	.gridContainer > .grid .dropZone.grid {
+		background: unset;
+	}
+
+	// remove drop shadow on full card, hackers
+	.card.full {
+		box-shadow: none;
+	}
+}

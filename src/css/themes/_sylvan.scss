@@ -1,0 +1,57 @@
+body.sylvan {
+	background-color: #9c9;
+}
+
+.sylvan {
+	.red {
+		background-color: #b0544f;
+	}
+
+	.yellow {
+		background-color: #690;
+	}
+
+	.green {
+		background-color: #68d44a;
+	}
+
+	.blue {
+		background-color: #7feffb;
+	}
+
+	.purple {
+		background-color: #3b8a3b;
+	}
+
+	// unset dark card background
+	.card {
+		color: #210;
+		background-color: unset;
+	}
+
+	// make colors translucent for a stained-glass effect
+	.card .paper .color {
+		opacity: 0.35;
+	}
+
+	// golden border on the grid
+	.grid .zone,
+	.grid .dropZone.grid {
+		border-color: rgba(191, 143, 0, 0.8);
+	}
+
+	.grid .zone.empty {
+		// background-color: #df7f6245;
+	}
+
+	// cards against the dark background should be opaque
+	// .card.full > .paper .color,
+	// .card.context > .paper.color {
+	// 	opacity: 1;
+	// }
+
+	// hide the paper
+	.paper > img {
+		display: none;
+	}
+}
