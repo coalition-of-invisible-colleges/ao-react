@@ -1,5 +1,5 @@
 import React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
@@ -10,6 +10,7 @@ import Gun from '../assets/images/goodbye.svg'
 import Ascend from '../assets/images/ascend.svg'
 import GoldenDoge from '../assets/images/goldendoge.svg'
 import Banhammer from '../assets/images/banhammer.svg'
+import ResetPassword from '../assets/images/resetPassword.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -26,7 +27,7 @@ interface CardMenuProps {
 export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.activateMember = this.activateMember.bind(this)
     this.deactivateMember = this.deactivateMember.bind(this)
     this.resetPassword = this.resetPassword.bind(this)
@@ -194,7 +195,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
         const senpai = aoStore.memberById.get(pot.memberId)
         const senpaiName = senpai ? senpai.name : 'deleted member'
         const distanceToNow = formatDistanceToNow(pot.timestamp, {
-          addSuffix: true
+          addSuffix: true,
         })
 
         return (
@@ -292,6 +293,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
             </div>
             {this.banCount >= 1 && this.renderBanList()}
             <div className="action" onClick={this.resetPassword}>
+              <img src={ResetPassword} className="reset" />
               Reset Password
             </div>
             {(member.p0wned || !member.hasOwnProperty('p0wned')) && (

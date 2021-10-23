@@ -194,7 +194,9 @@ export default class AoChatroom extends React.Component<Props, State> {
             'lilypad actionCircle' + buttonClass + (youAreHere ? ' open' : '')
           }
           onClick={this.toggleChat}>
-          <img src={Lilypad} />
+          {/*          <img src={Lilypad} />
+           */}
+          <object type="image/svg+xml" data={Lilypad} />
           {chatroomPop >= 1 && renderedBadge}
         </div>
       )

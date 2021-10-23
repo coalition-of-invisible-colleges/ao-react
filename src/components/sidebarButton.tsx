@@ -68,9 +68,11 @@ export default class AoSidebarButton extends React.Component<
 				zIndex={4}
 				theme="translucent"
 				content={
-					this.props.tooltipText && this.props.tooltipText.length >= 1
-						? this.props.tooltipText
-						: 'click to open'
+					<span className="largeTooltip">
+						{this.props.tooltipText && this.props.tooltipText.length >= 1
+							? this.props.tooltipText
+							: 'click to open'}
+					</span>
 				}
 				placement={
 					this.props.tooltipPlacement ? this.props.tooltipPlacement : 'auto'
@@ -92,7 +94,9 @@ export default class AoSidebarButton extends React.Component<
 							: 'sidebarButton actionCircle' +
 							  (this.props.buttonClass ? ' ' + this.props.buttonClass : '')
 					}>
-					{this.props.iconSrc && <img src={this.props.iconSrc} />}
+					{this.props.iconSrc && (
+						<object type="image/svg+xml" data={this.props.iconSrc} />
+					)}
 					{this.props.badge ? (
 						<div
 							className={

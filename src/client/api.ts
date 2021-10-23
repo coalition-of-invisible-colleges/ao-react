@@ -637,6 +637,7 @@ class AoApi {
       charged: charged,
       secret: secret,
       trackStock: trackStock,
+      blame: aoStore.member.memberId,
     }
     return request
       .post('/events')

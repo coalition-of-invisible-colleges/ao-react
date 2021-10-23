@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
-import Badge from '../assets/images/badge.svg'
+import Badge from '../assets/images/bulletin.svg'
 import { gloss } from '../semantics'
 
 interface MissionProps {

@@ -103,7 +103,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
@@ -121,7 +120,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoLilypad taskId={taskId} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
@@ -152,7 +150,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoValue taskId={taskId} hudStyle={hudStyle} />
-							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 							{this.props.inId ? (
 								<AoBoat taskId={taskId} inId={this.props.inId} />
 							) : (
@@ -189,7 +186,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoValue taskId={taskId} hudStyle={hudStyle} />
-						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'mini after':

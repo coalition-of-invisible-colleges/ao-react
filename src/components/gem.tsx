@@ -7,6 +7,7 @@ import api from '../client/api'
 import { goInCard } from '../cardTypes'
 import Tippy from '@tippyjs/react'
 import aoStore, { Task } from '../client/store'
+import Quill from '../assets/images/compose.svg'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 
@@ -88,9 +89,13 @@ export default class AoGem extends React.Component<{}, State> {
 
 		const theGem = (
 			<div
-				className={'action' + (this.state.open ? ' open' : '')}
+				className={
+					'action' +
+					(this.state.open ? ' open' : '') +
+					(aoStore.member.draft || aoStore.draft.length >= 1 ? ' draft' : '')
+				}
 				onClick={this.toggle}>
-				{aoStore.member.draft || aoStore.draft.length >= 1 ? 'draft' : '+card'}
+				<img src={Quill} />
 			</div>
 		)
 

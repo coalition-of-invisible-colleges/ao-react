@@ -460,7 +460,7 @@ export default function AoGrid(props: GridProps) {
     )
   }
 
-  const gridWidth = props.dropActsLikeFolder ? '5em' : '6em'
+  const gridWidth = props.dropActsLikeFolder ? '5em' : '9em'
 
   return (
     <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>

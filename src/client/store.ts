@@ -245,7 +245,6 @@ export interface AoState {
     outputs: Output[]
     channels: Channel[]
     info: SatInfo
-    theme: number
   }
   loader?: {
     token: string
@@ -281,7 +280,6 @@ const defaultState: AoState = observable({
     outputs: [],
     channels: [],
     info: {},
-    theme: 1,
   },
 })
 
@@ -892,6 +890,77 @@ class AoStore {
       })
 
     return my
+  }
+
+  @computed get eventsAsAgenda() {
+    let events = this.allEvents
+
+    const todayMs = 64800000 // 18 hours
+    const tomorrowMs = 172800000 // 48 hours
+    const thisWeekMs = 604800000 // 1 week
+    const nextWeekMs = thisWeekMs * 2 // 2 weeks
+    const thisMonthMs = thisWeekMs * 4 // 4 weeks
+    const nextMonthMs = thisMonthMs * 2 // 2 months
+    const thisYearMs = 31536000000 // 365 days
+    const pastBufferMs = 3600000 // assuming 1 hour event length by default
+
+    let now: Task[] = [],
+      today: Task[] = [],
+      tomorrow: Task[] = [],
+      thisWeek: Task[] = [],
+      nextWeek: Task[] = [],
+      thisMonth: Task[] = [],
+      nextMonth: Task[] = [],
+      thisYear: Task[] = [],
+      eventually: Task[] = [],
+      past: Task[] = [],
+      overdue: Task[] = []
+
+    events.forEach(task => {
+      const timeToNow = task.book.startTs - Date.now()
+      const isChecked = task.claimed.indexOf(aoStore.member.memberId) !== -1
+      const isHodld = task.deck.indexOf(aoStore.member.memberId) !== -1
+
+      if (timeToNow < -pastBufferMs && (!isHodld || isChecked)) {
+        past.push(task)
+      } else if (timeToNow < -pastBufferMs) {
+        overdue.push(task)
+      } else if (timeToNow > -pastBufferMs && timeToNow <= 0) {
+        now.push(task)
+      } else if (timeToNow > 0 && timeToNow <= todayMs) {
+        today.push(task)
+      } else if (timeToNow > todayMs && timeToNow <= tomorrowMs) {
+        tomorrow.push(task)
+      } else if (timeToNow > tomorrowMs && timeToNow <= thisWeekMs) {
+        thisWeek.push(task)
+      } else if (timeToNow > thisWeekMs && timeToNow <= nextWeekMs) {
+        nextWeek.push(task)
+      } else if (timeToNow > nextWeekMs && timeToNow <= thisMonthMs) {
+        thisMonth.push(task)
+      } else if (timeToNow > thisMonthMs && timeToNow <= nextMonthMs) {
+        nextMonth.push(task)
+      } else if (timeToNow > nextMonthMs && timeToNow <= thisYearMs) {
+        thisYear.push(task)
+      } else {
+        eventually.push(task)
+      }
+    })
+
+    past.reverse()
+
+    return {
+      now,
+      today,
+      tomorrow,
+      thisWeek,
+      nextWeek,
+      thisMonth,
+      nextMonth,
+      thisYear,
+      eventually,
+      past,
+      overdue,
+    }
   }
 
   @computed get topLevelMissions(): Task[] {

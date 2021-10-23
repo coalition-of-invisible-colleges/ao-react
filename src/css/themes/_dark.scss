@@ -1,14 +1,25 @@
-@include themable(
-	theme-5,
-	#000,
-	white,
-	rgba(255, 255, 255, 0.075),
-	1px solid rgba(255, 255, 255, 0.3),
-	rgba(80, 110, 255, 0.6),
-	#912c3e,
-	#9e8600,
-	#276b16,
-	#1c4eb0,
-	#8642a9,
-	black
-);
+body.dark {
+	background-color: black;
+}
+
+.dark {
+	.red {
+		background-color: #912c3e;
+	}
+
+	.yellow {
+		background-color: #9e8600;
+	}
+
+	.green {
+		background-color: #276b16;
+	}
+
+	.blue {
+		background-color: #1c4eb0;
+	}
+
+	.purple {
+		background-color: #8642a9;
+	}
+}

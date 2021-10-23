@@ -29,42 +29,50 @@ import AoChatroom from './chatroom'
 import AoStatus from './status'
 import Sun from '../assets/images/sun.svg'
 import Bird from '../assets/images/mailbox.svg'
-import Gift from '../assets/images/gifts.svg'
 import Badge from '../assets/images/bulletin.svg'
 import Timecube from '../assets/images/timecube.svg'
 import Chest from '../assets/images/chest.svg'
 import Manual from '../assets/images/manual.svg'
-import MemberIcon from '../assets/images/loggedWhite.svg'
+import MemberIcon from '../assets/images/heartnet.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import Scroll from '../assets/images/scroll.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import { gloss } from '../semantics'
+import config from '../../configuration'
 
 interface State {
   theme: number
   redirect?: string
 }
 
+const themeCount = config?.themes?.length
+
 @observer
 class MainMenu extends React.Component<{}, State> {
   constructor(props) {
     super(props)
-    this.state = { theme: aoStore.state.cash.theme }
-    if (this.state.theme !== 1) {
-      document.body.className = 'theme-' + this.state.theme
+    this.state = { theme: 0 }
+    if (this.state.theme !== 0) {
+      document.body.className = config.themes[this.state.theme]
     }
   }
 
   changeTheme = () => {
-    if (this.state.theme == 5) {
-      this.setState({ theme: 1 })
-      document.body.className = 'theme-1'
-    } else {
-      const newTheme = this.state.theme + 1
-      document.body.className = 'theme-' + newTheme
-      this.setState({ theme: newTheme })
+    let newTheme = this.state.theme + 1
+    if (newTheme >= themeCount) {
+      newTheme = 0
     }
+    this.setState({ theme: newTheme })
+    document.body.className = config.themes[newTheme]
+    console.log(
+      'setting theme to',
+      newTheme,
+      'which is',
+      config.themes[newTheme],
+      'and themeCount is',
+      themeCount
+    )
   }
 
   onLogout = () => {
@@ -88,9 +96,11 @@ class MainMenu extends React.Component<{}, State> {
         <AoFob />
         <AoReactivator />
         <AoVolume />
-        <div onClick={this.changeTheme} id="themer" className="action">
-          Next Theme
-        </div>
+        {themeCount >= 2 && (
+          <div onClick={this.changeTheme} id="themer" className="action">
+            Theme: {config.themes[this.state.theme]}
+          </div>
+        )}
         <AoTicker
           ticker={null}
           index={aoStore.member?.tickers ? aoStore.member.tickers.length : 0}
@@ -171,10 +181,17 @@ export default class AoHud extends React.Component<{}, HudState> {
 
   render() {
     console.log('hud render')
-    const renderedBadge =
-      this.state.proposals && this.state.proposals >= 1 ? (
-        <React.Fragment>{this.state.proposals}</React.Fragment>
-      ) : null
+
+    let { now, today, tomorrow, overdue } = aoStore.eventsAsAgenda
+    const eventCount =
+      now.length + today.length + tomorrow.length + overdue.length
+    const renderedCalendarBadge =
+      eventCount >= 1 ? <React.Fragment>{eventCount}</React.Fragment> : null
+
+    // const renderedProposalsBadge =
+    //   this.state.proposals && this.state.proposals >= 1 ? (
+    //     <React.Fragment>{this.state.proposals}</React.Fragment>
+    //   ) : null
 
     const giftsPercentChanged = Math.min(
       Math.floor(aoStore.allChanges.length / 10),
@@ -215,7 +232,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         {aoStore.member?.tutorial || <AoTour />}
         <AoSidebarButton
           sidebarTab="gifts"
-          iconSrc={aoStore.myGifts.length <= 0 ? Bird : Gift}
+          iconSrc={Bird}
           tooltipText={aoStore.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
           badge={giftsRenderedBadge}
           tooltipPlacement="right"
@@ -241,7 +258,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           sidebarTab="calendar"
           iconSrc={Timecube}
           tooltipText="Calendar"
-          badge={renderedBadge}
+          badge={renderedCalendarBadge}
           tooltipPlacement="right"
           id="tour-calendar"
         />

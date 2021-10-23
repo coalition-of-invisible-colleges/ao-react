@@ -658,7 +658,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               this.applyClassIfCurrentSearchResult +
               (this.state.showPriorities ? ' padbottom' : '')
             }
-            onDoubleClick={this.goInCard}
+            onClick={this.goInCard}
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
@@ -699,7 +699,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               this.props.cardStyle +
               this.applyClassIfCurrentSearchResult
             }
-            onDoubleClick={this.goInCard}
+            onClick={this.goInCard}
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
@@ -920,7 +920,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               this.applyClassIfCurrentSearchResult
             }
             id={'card-' + taskId}
-            onDoubleClick={this.goInCard}
+            onClick={this.goInCard}
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
@@ -968,7 +968,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
             <AoPaper taskId={taskId} />
-            <img className="background" src={BlankBadge} />
             <AoMission taskId={taskId} hudStyle="badge" />
             <AoCardHud taskId={taskId} hudStyle="badge" />
           </div>
@@ -985,7 +984,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           <div
             id={'card-' + taskId}
             className={'card mini' + this.applyClassIfCurrentSearchResult}
-            onDoubleClick={this.goInCard}
+            onClick={this.goInCard}
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>

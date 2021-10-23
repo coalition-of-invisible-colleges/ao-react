@@ -1,1 +1,43 @@
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" height="300" width="300"  fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" x="0px" y="0px"><path d="M88.428,18.094a1.721,1.721,0,0,0-1.332-.471,50.535,50.535,0,0,1-5.252.092h0A49.121,49.121,0,0,1,51.165,5.474a1.772,1.772,0,0,0-2.345,0A48.975,48.975,0,0,1,16.384,17.747c-1.027,0-2.134-.043-3.48-.137a1.724,1.724,0,0,0-1.332.472,1.77,1.77,0,0,0-.562,1.294V44.235A52.724,52.724,0,0,0,49.465,94.887,1.78,1.78,0,0,0,50,94.97a1.718,1.718,0,0,0,.472-.065A52.723,52.723,0,0,0,88.99,44.235V19.389A1.774,1.774,0,0,0,88.428,18.094ZM49.993,37.487h0L50,37.5c.221-.378.459-.735.708-1.078,6.725-9.326,23.1-6.075,23.1,6.918,0,8.96-10.381,18.124-22.63,30.2-.391.386-.778.765-1.173,1.156l-.007-.007h0ZM14.551,44.235V21.25c.648.026,1.251.039,1.833.039A52.511,52.511,0,0,0,49.993,9.133V35.388a14.342,14.342,0,0,0-15.206-5,12.906,12.906,0,0,0-9.769,12.951c0,8.569,8.562,16.936,19.4,27.53,1.54,1.5,3.126,3.056,4.74,4.657l.831.825v15A49.174,49.174,0,0,1,14.551,44.235Z"></path></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="199.02"
+   width="276"
+   fill="#ffffff"
+   data-name="Layer 1"
+   viewBox="0 0 92 66.340001"
+   x="0px"
+   y="0px"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="loggedOut.svg"
+   inkscape:version="1.1 (c4e8f9ed74, 2021-05-24)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     id="namedview8"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="2.1966667"
+     inkscape:cx="138.16388"
+     inkscape:cy="99.468892"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     inkscape:window-x="0"
+     inkscape:window-y="33"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">106all</title>
+  <path
+     d="M 82,0 H 10 A 10,10 0 0 0 0,10 v 46.34 a 10,10 0 0 0 10,10 h 72 a 10,10 0 0 0 10,-10 V 10 A 10,10 0 0 0 82,0 Z m -35.94,31.17 -7,6.81 1.65,9.62 a 2,2 0 0 1 -2.9,2.11 l -8.63,-4.54 -8.64,4.5 a 2,2 0 0 1 -2.9,-2.11 l 1.65,-9.62 -6.99,-6.77 a 2,2 0 0 1 1.11,-3.41 l 9.66,-1.4 4.32,-8.75 a 2,2 0 0 1 3.59,0 l 4.32,8.75 9.7,1.35 a 2,2 0 0 1 1.06,3.46 z M 80.3,41.67 H 54 v -4 h 26.3 z m 0,-13 H 54 v -4 h 26.3 z"
+     id="path4" />
+</svg>

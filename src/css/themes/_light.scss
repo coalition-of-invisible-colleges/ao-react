@@ -1,21 +1,31 @@
-@include themable(
-	theme-2,
-	#ffe9c4,
-	black,
-	rgba(15, 15, 15, 0.075),
-	1px solid rgba(15, 15, 15, 0.3),
-	rgba(202, 79, 49, 0.6),
-	#ffb0b0,
-	#fff89c,
-	#c2ffc2,
-	#8ab7ff,
-	#c0b3ff,
-	black
-);
+.green {
+	body {
+		background-color: #ffe9c4;
+	}
 
-// This changes the search outline around cards to green, proving that hotswapping the CSS works.
-// Maybe we could get rid of the variables and just use pure swapping of the CSS instead
+	.red {
+		background-color: #ffb0b0;
+	}
 
-.theme-2 .card.searchedOnPage:after {
-	border: 0.2em solid green;
+	.yellow {
+		background-color: #fff89c;
+	}
+
+	.green {
+		background-color: #c2ffc2;
+	}
+
+	.blue {
+		background-color: #8ab7ff;
+	}
+
+	.purple {
+		background-color: #c0b3ff;
+	}
+
+	// This changes the search outline around cards to green, proving that hotswapping the CSS works.
+	// Maybe we could get rid of the variables and just use pure swapping of the CSS instead
+	.card.searchedOnPage:after {
+		border: 0.2em solid green;
+	}
 }

@@ -41,7 +41,7 @@ const serverState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: config.theme || 1,
+    theme: 0,
   },
 }
 
@@ -64,7 +64,7 @@ const pubState = {
     outputs: [],
     channels: [],
     info: {},
-    theme: config.theme || 1,
+    theme: 0,
   },
 }
 

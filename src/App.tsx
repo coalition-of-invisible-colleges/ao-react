@@ -26,7 +26,8 @@ import Login from './components/Login'
 import AoMember from './components/Member'
 import AoCard from './components/Card'
 import AoPopupPanel from './components/popupPanel'
-// import './css/themes/_florid.scss' // import custom CSS themes here - not same file as themable file
+import config from '../configuration'
+// import './css/themes/_florid.scss' // import custom CSS themes here for permanent application to your server
 
 const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
   let loggedIn = aoStore.state.loggedIn
@@ -98,7 +99,9 @@ const detectGlobalHotkey = event => {
 // })
 
 if (!document.body.classList.contains('initialiseBodyClasses')) {
-  document.body.className = 'theme-1'
+  if (config?.themes?.length >= 1) {
+    document.body.className = config.themes[0]
+  }
   document.body.addEventListener('keyup', detectGlobalHotkey)
 
   document.body.classList.add('initialiseBodyClasses')

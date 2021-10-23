@@ -18,24 +18,35 @@ export default class AoValue extends React.Component<Props> {
     const bonus = card.boost || 0
     const hasPoints = bonus > 0
 
+    const goal = card.hasOwnProperty('goal') && card.goal >= 0 ? card.goal : 0
+    const hasGoal = goal > 0
+
+    const pointsSlashGoal = (
+      <span>
+        {hasPoints ? bonus : hasGoal ? '0' : ''}
+        {hasGoal && '/'}
+        {hasGoal && goal}
+      </span>
+    )
+
     switch (this.props.hudStyle) {
       case 'full before':
-        if (hasPoints) {
-          return <div className="value full">{bonus + ' points'}</div>
+        if (hasPoints || hasGoal) {
+          return <div className="value full">{pointsSlashGoal} points</div>
         }
         return null
       case 'mini before':
-        if (hasPoints) {
-          return <span className="value mini">{bonus + 'p'}</span>
+        if (hasPoints || hasGoal) {
+          return <span className="value mini">{pointsSlashGoal}</span>
         }
         return null
       case 'face before':
       case 'collapsed':
       default:
-        if (hasPoints) {
+        if (hasPoints || hasGoal) {
           return (
             <div className={'value summary ' + this.props.hudStyle}>
-              {bonus + 'p'}
+              {pointsSlashGoal}
             </div>
           )
         }
