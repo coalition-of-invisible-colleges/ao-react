@@ -1142,7 +1142,7 @@ router.post('/events', (req, res, next) => {
             )
             const vouchers = memberCard.deck
             vouchers.forEach(memberId => {
-              sendNotification(req.body.toMemberId, notificationMessage)
+              sendNotification(memberId, notificationMessage)
             })
             return true
           }
