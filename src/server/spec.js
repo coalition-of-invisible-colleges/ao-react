@@ -1136,7 +1136,7 @@ router.post('/events', (req, res, next) => {
               const inChat = req.body.area === 1
               const notificationMessage = `${visitingMemberName} ${
                 inChat ? 'joined' : 'visited'
-              } ${cardContent}${inChat ? 'chat' : ''}`
+              } ${cardContent}${inChat ? ' chat' : ''}`
 
               const memberCard = state.serverState.tasks.find(
                 task => task.taskId === req.body.memberId
