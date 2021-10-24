@@ -1034,12 +1034,17 @@ class AoApi {
       })
   }
 
-  async visitCard(taskId: string, inChat = false): Promise<request.Response> {
+  async visitCard(
+    taskId: string,
+    inChat = false,
+    notify = false
+  ): Promise<request.Response> {
     const act = {
       type: 'task-visited',
       taskId: taskId,
       memberId: aoStore.member.memberId,
       area: inChat ? 1 : 0,
+      notify: notify,
     }
     return request
       .post('/events')

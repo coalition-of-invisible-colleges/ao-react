@@ -1122,31 +1122,33 @@ router.post('/events', (req, res, next) => {
           },
           resCallback
         )
-        let visitingMemberName = 'unknown member'
-        state.serverState.members.forEach(member => {
-          if (member.memberId === req.body.memberId) {
-            visitingMemberName = member.name
-          }
-        })
+        if (req.body.notify) {
+          let visitingMemberName = 'unknown member'
+          state.serverState.members.forEach(member => {
+            if (member.memberId === req.body.memberId) {
+              visitingMemberName = member.name
+            }
+          })
 
-        state.serverState.tasks.some(task => {
-          if (task.taskId === req.body.taskId) {
-            const cardContent = task.guild || task.name
-            const inChat = req.body.area === 1
-            const notificationMessage = `${visitingMemberName} ${
-              inChat ? 'joined' : 'visited'
-            } ${cardContent}${inChat ? 'chat' : ''}`
+          state.serverState.tasks.some(task => {
+            if (task.taskId === req.body.taskId) {
+              const cardContent = task.guild || task.name
+              const inChat = req.body.area === 1
+              const notificationMessage = `${visitingMemberName} ${
+                inChat ? 'joined' : 'visited'
+              } ${cardContent}${inChat ? 'chat' : ''}`
 
-            const memberCard = state.serverState.tasks.find(
-              task => task.taskId === req.body.memberId
-            )
-            const vouchers = memberCard.deck
-            vouchers.forEach(memberId => {
-              sendNotification(memberId, notificationMessage)
-            })
-            return true
-          }
-        })
+              const memberCard = state.serverState.tasks.find(
+                task => task.taskId === req.body.memberId
+              )
+              const vouchers = memberCard.deck
+              vouchers.forEach(memberId => {
+                sendNotification(memberId, notificationMessage)
+              })
+              return true
+            }
+          })
+        }
       } else sendErrorStatus()
       break
     case 'grid-created':

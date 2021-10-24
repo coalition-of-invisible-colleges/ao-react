@@ -47,7 +47,7 @@ export default class AoChatroom extends React.Component<Props, State> {
       aoStore.setCurrentChatroom(null)
     } else {
       aoStore.setCurrentChatroom(this.props.taskId)
-      api.visitCard(this.props.taskId, true)
+      api.visitCard(this.props.taskId, true, true)
     }
   }
 
