@@ -18,15 +18,14 @@ export function sendNotification(memberId, message) {
 		)
 		return
 	}
-	const dir = exec(
-		`signal-cli -u ${process.env.SIGNAL_PHONE} send -m "${message}" ${member.phone}`,
-		function (err, stdout, stderr) {
-			if (err) {
-				console.log(`Signal send to ${member.name} at ${member.phone} failed`)
-			}
-			console.log(stdout)
+	const signalCommand = `signal-cli -u ${process.env.SIGNAL_PHONE} send -m "${message}" ${member.phone}`
+	console.log('signalCommand is', signalCommand)
+	const dir = exec(signalCommand, function (err, stdout, stderr) {
+		if (err) {
+			console.log(`Signal send to ${member.name} at ${member.phone} failed`)
 		}
-	)
+		console.log(stdout)
+	})
 
 	dir.on('exit', function (code) {
 		if (code === 0) {

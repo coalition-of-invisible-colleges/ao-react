@@ -1,8 +1,5 @@
 import webpack from 'webpack'
 import path from 'path'
-import dotenv from 'dotenv'
-dotenv.config()
-
 // variables
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
@@ -20,6 +17,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
 //const ESLintPlugin from eslint-webpack-plugin'
+import Dotenv from 'dotenv-webpack'
 
 export default {
   mode: isProduction ? 'production' : 'development',
@@ -68,6 +66,7 @@ export default {
               ['@babel/plugin-proposal-decorators', { legacy: true }],
               ['@babel/plugin-proposal-class-properties', { loose: false }],
               ['react-hot-loader/babel', { safetyNet: false }],
+              new Dotenv(),
             ],
           },
         },

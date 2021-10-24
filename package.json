@@ -57,6 +57,7 @@
     "crypto-es": "^1.2.7",
     "data-uri-to-buffer": "^3.0.1",
     "dotenv": "^10.0.0",
+    "dotenv-webpack": "^7.0.3",
     "express": "^4.17.1",
     "file-loader": "^6.2.0",
     "file-type": "^16.5.3",

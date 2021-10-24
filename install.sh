@@ -589,7 +589,7 @@ else
 Description=ao-daemon
 
 [Service]
-ExecStart=$HOME/.nvm/versions/node/v16.0.0/bin/node $HOME/ao-react/src/server/app.js
+ExecStart=$HOME/.nvm/versions/node/v16.5.0/bin/node --experimental-specifier-resolution=node $HOME/ao-react/src/server/app.js
 User=$USER
 Type=simple
 Restart=always
