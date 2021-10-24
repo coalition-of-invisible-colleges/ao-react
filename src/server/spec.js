@@ -827,6 +827,24 @@ router.post('/events', (req, res, next) => {
           },
           resCallback
         )
+        console.log('memberId is', req.body.toMemberId)
+        let fromMemberName = 'unknown member'
+        state.serverState.members.forEach(member => {
+          if (val === member.memberId) {
+            fromMemberName = member.name
+          }
+        })
+
+        state.serverState.tasks.some(task => {
+          if (task.taskId === req.body.taskId) {
+            const cardContent = task.guild || task.name
+
+            const notificationMessage = `${fromMemberName}: ${cardContent}`
+
+            sendNotification(req.body.toMemberId, notificationMessage)
+            return true
+          }
+        })
       } else sendErrorStatus()
       break
     case 'task-grabbed':

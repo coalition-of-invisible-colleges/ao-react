@@ -3,7 +3,6 @@
 let PORT = process.env.PORT || 8003
 
 console.log('AO: Listening on PORT: ', PORT)
-console.log('\n\nSTART\n\nprocess.env is', process.env)
 import Kefir from 'kefir'
 import express from 'express'
 import { Server } from 'socket.io'
