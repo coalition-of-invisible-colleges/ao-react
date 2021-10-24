@@ -179,7 +179,7 @@ export default {
     }),
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
-    new Dotenv(),
+    new Dotenv({ path: path.join(__dirname, './.env') }),
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
