@@ -66,7 +66,6 @@ export default {
               ['@babel/plugin-proposal-decorators', { legacy: true }],
               ['@babel/plugin-proposal-class-properties', { loose: false }],
               ['react-hot-loader/babel', { safetyNet: false }],
-              new Dotenv(),
             ],
           },
         },
@@ -180,6 +179,7 @@ export default {
     }),
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
+    new Dotenv(),
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),
