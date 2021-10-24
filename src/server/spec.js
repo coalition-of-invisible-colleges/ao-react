@@ -1137,7 +1137,13 @@ router.post('/events', (req, res, next) => {
               inChat ? 'joined' : 'visited'
             } ${cardContent}${inChat ? 'chat' : ''}`
 
-            sendNotification(req.body.toMemberId, notificationMessage)
+            const memberCard = state.serverState.tasks.find(
+              task => task.taskId === req.body.memberId
+            )
+            const vouchers = memberCard.deck
+            vouchers.forEach(memberId => {
+              sendNotification(req.body.toMemberId, notificationMessage)
+            })
             return true
           }
         })
