@@ -147,7 +147,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
       !(this.props.hideAddWhenCards && cardsToRender.length >= 1)
     ) {
       addButton = (
-        <p className={'action'} onClick={this.toggleCompose}>
+        <p className="action" onClick={this.toggleCompose}>
           {this.props.addButtonText ? this.props.addButtonText : '+card'}
         </p>
       )
@@ -241,11 +241,11 @@ export default class AoStack extends React.Component<StackProps, StackState> {
         {(!this.props.alwaysShowAll && numCards >= 1) ||
         (this.props.noFirstCard && numCards >= 1) ? (
           !this.state.showAll ? (
-            <div onClick={this.show} className={'action'}>
+            <div onClick={this.show} className="action">
               {numCards} {renderedDescriptor}&#8964;
             </div>
           ) : (
-            <div onClick={this.hide} className={'action open'}>
+            <div onClick={this.hide} className="action open">
               {this.props.noFirstCard ? (
                 <>
                   {numCards} {renderedDescriptor}

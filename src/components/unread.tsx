@@ -39,7 +39,7 @@ export default class AoUnread extends React.Component<UnreadProps> {
     this.pendingPromise = undefined
   }
 
-  markSeen() {
+  markSeen(event) {
     event.preventDefault()
 
     const taskId = this.props.taskId

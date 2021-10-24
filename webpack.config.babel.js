@@ -1,7 +1,7 @@
 import webpack from 'webpack'
 import path from 'path'
-// import dotenv from 'dotenv'
-// dotenv.config()
+import dotenv from 'dotenv'
+dotenv.config()
 
 // variables
 import { fileURLToPath } from 'url'

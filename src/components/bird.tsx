@@ -436,7 +436,7 @@ export default class AoBird extends React.Component<Props, State> {
           content={this.renderPassList}
           delay={[625, 200]}
           placement="right-start">
-          <div className="bird">
+          <div className="bird" onClick={event => event.stopPropagation()}>
             <img src={Bird} />
             {this.memberRequests && this.memberRequests?.length >= 1 && (
               <div className="badge red">{this.memberRequests.length}</div>

@@ -20,6 +20,7 @@ export default class AoBoat extends React.PureComponent<Props> {
   }
 
   upboat(event) {
+    event.stopPropagation()
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) {
       return

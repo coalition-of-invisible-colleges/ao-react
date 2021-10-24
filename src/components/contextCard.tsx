@@ -32,7 +32,7 @@ import BlankBadge from '../assets/images/badge_blank.svg'
 import Boat from '../assets/images/boat.svg'
 import { goInCard, prioritizeCard, subTaskCard, CardZone } from '../cardTypes'
 import AoDragZone from './dragZone'
-import AoProposals from './proposals'
+// import AoProposals from './proposals'
 
 export type CardStyle =
   | 'priority'
@@ -815,7 +815,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   )
                 }}
               </Observer>
-              <Observer>
+              {/*              <Observer>
                 {() => {
                   if (card.guild) {
                     return <AoProposals filterByGuildId={taskId} />
@@ -824,6 +824,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   }
                 }}
               </Observer>
+*/}{' '}
               <Observer>
                 {() => {
                   return (

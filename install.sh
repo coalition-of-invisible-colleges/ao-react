@@ -12,9 +12,31 @@
 # rustup install stable
 # 0. install gradle5
 # sudo ln -s gradle5 /usr/bin/gradle
-# 1. pacman -S libzkgroup (edit build file to change gradle to gradle5)
-# 2. pacman -S libsignal-client (edit build file to change gradle to gradle5)
+# 1. pacman -S libzkgroup (edit build file to change gradle to gradle5)# 2. pacman -S libsignal-client (edit build file to change gradle to gradle5)
 # 3. pacman -S signal-cli (edit build file to change gradle to gradle5)
+
+# install signal-cli on Ubuntu:
+# sudo apt install default-jre
+# wget https://github.com/AsamK/signal-cli/releases/download/v0.9.1/signal-cli-0.9.1.tar.gz
+# sudo tar xf signal-cli-0.9.1.tar.gz -C /opt
+# sudo ln -sf /opt/signal-cli-0.9.1/bin/signal-cli /usr/local/bin/
+
+sudo apt install cargo
+
+git clone https://github.com/signalapp/zkgroup.git
+cd zkgroup/ffi/java && make
+# Ignore error messages
+cd ../../target/release
+zip -u ../../../signal-cli-$VERSION/lib/zkgroup-java-*.jar libzkgroup.so
+
+git clone https://github.com/signalapp/libsignal-client.git
+cd libsignal-client/java/ && ./build_jni.sh desktop
+cd ../target/release
+zip -u ../../../signal-cli-$VERSION/lib/signal-client-java-*.jar libsignal_jni.so
+
+#... yeah all that
+
+# Linking other devices with Signal: https://github.com/AsamK/signal-cli/wiki/Linking-other-devices-(Provisioning)
 
 # To make this script compatible with MacOS, use Brew, the MacOs package manager
 
