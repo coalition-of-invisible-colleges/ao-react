@@ -1122,6 +1122,25 @@ router.post('/events', (req, res, next) => {
           },
           resCallback
         )
+        let visitingMemberName = 'unknown member'
+        state.serverState.members.forEach(member => {
+          if (member.memberId === req.body.memberId) {
+            visitingMemberName = member.name
+          }
+        })
+
+        state.serverState.tasks.some(task => {
+          if (task.taskId === req.body.taskId) {
+            const cardContent = task.guild || task.name
+            const inChat = req.body.area === 1
+            const notificationMessage = `${visitingMemberName} ${
+              inChat ? 'joined' : 'visited'
+            } ${cardContent}${inChat ? 'chat' : ''}`
+
+            sendNotification(req.body.toMemberId, notificationMessage)
+            return true
+          }
+        })
       } else sendErrorStatus()
       break
     case 'grid-created':
