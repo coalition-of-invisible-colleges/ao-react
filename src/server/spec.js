@@ -830,7 +830,7 @@ router.post('/events', (req, res, next) => {
         console.log('memberId is', req.body.toMemberId)
         let fromMemberName = 'unknown member'
         state.serverState.members.forEach(member => {
-          if (val === member.memberId) {
+          if (member.memberId === req.body.fromMemberId) {
             fromMemberName = member.name
           }
         })
