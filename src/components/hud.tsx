@@ -172,7 +172,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         break
     }
     return (
-      <div id="leftSidebar">
+      <div id="leftSidebar" className={aoStore.leftSidebar}>
         <div className="leftBorder" />
         {rendered}
       </div>

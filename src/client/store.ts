@@ -413,7 +413,10 @@ class AoStore {
           // console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
 
           runInAction(() => {
-            stateClosure.tasks.push(result.body)
+            let taskToGet = this.hashMap.get(taskId)
+            if (taskToGet === undefined) {
+              stateClosure.tasks.push(result.body)
+            }
             setImmediate(() => callback(this.hashMap.get(taskId)))
           })
           // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
@@ -510,19 +513,29 @@ class AoStore {
               // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
 
               runInAction(() => {
+                // sometimes multiple overlapping requests for subcads cause
+                // duplicates to be returned from different queries.
+                stateClosure.tasks.filter(
+                  existingTask =>
+                    !result.body.foundThisTaskList.some(
+                      t => t.taskId === existingTask.taskId
+                    )
+                )
                 stateClosure.tasks.push(...result.body.foundThisTaskList)
                 // setImmediate(() => callback(this.hashMap.get(taskId)));
-                console.log(
-                  'got tasks and about to get priorities:',
-                  result.body.foundThisTaskList
-                )
-                stateClosure.tasks.forEach(foundTask => {
-                  this.getAllLinkedCardsForThisTaskId_async(
-                    foundTask.taskId,
-                    () => {},
-                    true
+                if (!prioritiesOnly) {
+                  console.log(
+                    'got tasks and about to get priorities:',
+                    result.body.foundThisTaskList
                   )
-                })
+                  stateClosure.tasks.forEach(foundTask => {
+                    this.getAllLinkedCardsForThisTaskId_async(
+                      foundTask.taskId,
+                      () => {},
+                      true
+                    )
+                  })
+                }
                 callback(true)
               })
               // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
@@ -688,7 +701,12 @@ class AoStore {
 
           runInAction(() => {
             let taskItem = result.body
-            stateClosure.tasks.push(taskItem)
+            let existingTask = this.cardByName.get(taskName)
+            // here we prefer client data, in the other places that use filter we prefer server data
+            // since cards are immutable it shouldn't matter too much
+            if (existingTask === undefined) {
+              stateClosure.tasks.push(taskItem)
+            }
             taskItem = this.hashMap.get(taskItem.taskId)
             setImmediate(() => callback(taskItem))
             // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )

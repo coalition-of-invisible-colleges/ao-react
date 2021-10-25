@@ -1047,6 +1047,11 @@ body {
   padding-right: 0.5em;
   box-shadow: 7px 7px 7px 1px rgba(21, 21, 21, 0.5);
 
+  &.guilds {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
   .leftBorder {
     position: absolute;
     left: 0;
