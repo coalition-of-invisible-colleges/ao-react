@@ -67,10 +67,14 @@ export default class AoChatroom extends React.Component<Props, State> {
       const msSince = now - avatarLocation.timestamp
       const seconds = msSince / 1000
 
+      if (area !== 1 || seconds >= 100) {
+        return null
+      }
+
       return (
         <div key={memberId}>
           <AoMemberIcon memberId={memberId} /> {name}{' '}
-          {area === 1 && seconds <= 100 && <small>in chat</small>}
+          {/*area === 1 && seconds <= 100 && <small>in chat</small>*/}
         </div>
       )
     })
@@ -81,7 +85,11 @@ export default class AoChatroom extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <h4>Who's Here</h4>
+        <h4>
+          {renderedAvatars && renderedAvatars.length >= 1
+            ? "Who's Here"
+            : 'Join Room'}
+        </h4>
         {renderedAvatars}
       </React.Fragment>
     )

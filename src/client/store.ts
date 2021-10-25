@@ -426,7 +426,11 @@ class AoStore {
     }
   }
 
-  getAllLinkedCardsForThisTaskId_async(parentTaskId, callback) {
+  getAllLinkedCardsForThisTaskId_async(
+    parentTaskId,
+    callback,
+    prioritiesOnly = false
+  ) {
     let parentTaskItem = this.hashMap.get(parentTaskId)
 
     // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ", {parentTaskId, parentTaskItem})
@@ -441,18 +445,24 @@ class AoStore {
 
       let allChildTaskIds = []
 
-      let allSubCardsSet = new Set(
-        parentTaskItem.priorities.concat(
-          parentTaskItem.subTasks,
-          parentTaskItem.completed
+      let allSubCardsSet
+
+      if (prioritiesOnly) {
+        allSubCardsSet = new Set(parentTaskItem.priorities)
+      } else {
+        allSubCardsSet = new Set(
+          parentTaskItem.priorities.concat(
+            parentTaskItem.subTasks,
+            parentTaskItem.completed
+          )
         )
-      )
-      if (parentTaskItem.grid && parentTaskItem.grid.rows) {
-        Object.entries(parentTaskItem.grid.rows).forEach(([y, row]) => {
-          Object.entries(row).forEach(([x, cell]) => {
-            allSubCardsSet.add(cell)
+        if (parentTaskItem.grid && parentTaskItem.grid.rows) {
+          Object.entries(parentTaskItem.grid.rows).forEach(([y, row]) => {
+            Object.entries(row).forEach(([x, cell]) => {
+              allSubCardsSet.add(cell)
+            })
           })
-        })
+        }
       }
 
       let allTaskItemsLoadedInClient = true
@@ -502,6 +512,17 @@ class AoStore {
               runInAction(() => {
                 stateClosure.tasks.push(...result.body.foundThisTaskList)
                 // setImmediate(() => callback(this.hashMap.get(taskId)));
+                console.log(
+                  'got tasks and about to get priorities:',
+                  result.body.foundThisTaskList
+                )
+                stateClosure.tasks.forEach(foundTask => {
+                  this.getAllLinkedCardsForThisTaskId_async(
+                    foundTask.taskId,
+                    () => {},
+                    true
+                  )
+                })
                 callback(true)
               })
               // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )

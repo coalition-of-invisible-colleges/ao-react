@@ -4,8 +4,12 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
+import Grab from '../assets/images/grab.svg'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface CheckboxProps {
   taskId: string
@@ -17,6 +21,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
   constructor(props: CheckboxProps) {
     super(props)
     makeObservable(this)
+    this.grabCard = this.grabCard.bind(this)
   }
 
   @computed get isCompleted() {
@@ -29,6 +34,13 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return undefined
     return card.deck.indexOf(aoStore.member.memberId) >= 0
+  }
+
+  grabCard(event) {
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+
+    api.grabCard(this.props.taskId)
   }
 
   render() {
@@ -66,6 +78,35 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                 event.nativeEvent.stopImmediatePropagation()
               }}
             />
+          )
+        } else {
+          return (
+            <Tippy
+              zIndex={4}
+              theme="translucent"
+              content={
+                <span>
+                  <p>Click to grab card to deck</p>
+                  <p>
+                    <small>
+                      Cards in your collection cannot be deleted by other
+                      members.
+                    </small>
+                  </p>
+                </span>
+              }
+              delay={[625, 200]}
+              placement="left-start">
+              <img
+                className={'grab ' + this.props.hudStyle}
+                src={Grab}
+                onClick={this.grabCard}
+                onDoubleClick={event => {
+                  event.stopPropagation()
+                  event.nativeEvent.stopImmediatePropagation()
+                }}
+              />
+            </Tippy>
           )
         }
         return null

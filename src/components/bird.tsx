@@ -448,8 +448,7 @@ export default class AoBird extends React.Component<Props, State> {
           theme="translucent"
           content={this.renderPassList}
           delay={[625, 200]}
-          placement="right-start"
-          onTrigger={touchCard}>
+          placement="right-start">
           <div className="bird" onClick={event => event.stopPropagation()}>
             <img src={Bird} />
             {this.memberRequests && this.memberRequests?.length >= 1 && (

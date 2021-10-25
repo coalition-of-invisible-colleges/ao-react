@@ -396,6 +396,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   }
 
   togglePriorities(event) {
+    event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()
     if (!this.state.showPriorities) {
       this.setState({ showPriorities: true, showProjects: false })
@@ -709,7 +710,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               hudStyle="face before"
               inId={this.props.inId}
             />
-            <div className="content">
+            <div
+              className={
+                'content' + (card.priorities.length < 1 ? ' padBefore' : '')
+              }>
               <AoMission taskId={taskId} hudStyle="face before" />
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
@@ -806,7 +810,16 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <Observer>
                 {() => {
                   return (
-                    <div className="content">
+                    <div
+                      className={
+                        'content' +
+                        (card.priorities.length < 1 &&
+                        (!card.grid ||
+                          (card.grid && card.grid.height < 1) ||
+                          card.grid.width < 1)
+                          ? ' padBefore'
+                          : '')
+                      }>
                       <AoMission taskId={taskId} hudStyle="full before" />
                       {member && <AoMemberIcon memberId={taskId} />}
                       <AoAttachment taskId={taskId} inId={this.props.inId} />
@@ -874,9 +887,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     <AoStack
                       inId={taskId}
                       cards={subTaskCards}
-                      showAdd={priorityCards && priorityCards.length >= 1}
-                      addButtonText="+card"
-                      hideAddWhenCards={true}
+                      showAdd={false}
                       cardStyle="face"
                       onNewCard={this.newSubTask}
                       onDrop={subTaskCard}

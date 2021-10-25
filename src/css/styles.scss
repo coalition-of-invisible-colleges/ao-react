@@ -80,6 +80,13 @@ body {
   min-height: 12em;
   max-width: 98vw;
 
+  .content {
+    position: relative;
+    top: unset;
+    //   transform: tranlateY(-50%);
+    //   margin-top: 0;
+  }
+
   @media only screen and (min-width: 600px) {
     min-width: calc(min(30em, calc(100% - 3em)));
   }
@@ -130,7 +137,7 @@ body {
 
 .card.full .content,
 .card.face .content {
-  margin-top: 1.5em;
+  margin-top: 2.5em;
   margin-bottom: 0;
   min-height: 3em;
 }
@@ -144,7 +151,8 @@ body {
 
   .countdown,
   .value,
-  .goal .checkbox {
+  .goal,
+  .checkbox {
     font-size: 0.9em;
     display: inline-block;
   }
@@ -377,12 +385,22 @@ body {
   }
 
   & > .content {
-    position: absolute;
+    position: relative;
     margin: 0;
     max-height: 100%;
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
+
+    & > img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    img {
+      max-width: 8em;
+      max-height: 8em;
+    }
 
     h1 {
       font-size: 1.1em;
@@ -712,6 +730,16 @@ body {
     pointer-events: none;
     text-shadow: -0.1em 0.1em 0.2em #000;
   }
+}
+
+// grab on a card (new coin)
+.grab {
+  height: 1.75em;
+  cursor: pointer;
+  // position: absolute;
+  // top: 0.75em;
+  // right: 0.65em;
+  opacity: 0.5;
 }
 
 // hourglass (timeclock) on a card
@@ -1649,11 +1677,14 @@ body {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     max-width: 30em;
+
     &.priority {
       min-width: 20em;
       margin-top: 0.375em;
       margin-bottom: 0.375em;
-      max-width: 75%;
+      max-width: 70%;
+      position: relative;
+      left: calc(50% + 1.5em);
     }
   }
   textarea {
@@ -1728,7 +1759,7 @@ body {
 .action img,
 .summary img,
 img.icon {
-  max-height: 1em;
+  max-height: 1.25em;
   margin-right: 0.5em;
   position: relative;
   top: 0.1em;
@@ -2178,7 +2209,7 @@ img.icon {
   opacity: 0.5;
 
   img {
-    height: 1em;
+    height: 1.5em;
   }
 }
 
@@ -3514,8 +3545,15 @@ textarea {
 }
 
 // Add height to priorities section so it can be dropped on without the +priority button displayed
-.dropZone.priorities {
+.dropZone.priorities,
+.dropZone.subTasks {
   min-height: 1.5em;
+}
+
+// On cards without either priorities or grid to display, add padding to center content
+.card.full .content.padBefore,
+.card.face .content.padBefore {
+  margin-top: 3em;
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
