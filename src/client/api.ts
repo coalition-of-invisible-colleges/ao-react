@@ -1230,12 +1230,10 @@ class AoApi {
       .responseType('blob')
       .set('Authorization', aoStore.state.token)
       .on('progress', function (e) {
-        console.log(e.direction, 'is done', e.percent, '%')
         progressCallback(e.percent)
       })
-
       .then(res => {
-        // console.log('got meme! res is ', res)
+        console.log('got meme! res is ', res)
         return res.body
       })
   }

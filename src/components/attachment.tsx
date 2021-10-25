@@ -116,19 +116,16 @@ export default class AoAttachment extends React.Component<Props, State> {
   }
 
   render() {
-    console.log('attachment render')
     if (!this.props.taskId) {
       return null
     }
-    console.log('attachment render 2')
 
     const meme = aoStore.memeById.get(this.props.taskId)
     if (!meme) {
       return null
     }
-    console.log('attachment render3')
 
-    if (!this.state.data || !this.state.fileType) {
+    if (!this.state.fileType || !this.state.data) {
       return (
         <div className="progressBar">
           <div style={{ width: (this.state.percent || 0) + '%' }}></div>
