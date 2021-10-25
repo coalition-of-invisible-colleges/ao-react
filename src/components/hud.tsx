@@ -229,7 +229,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           }}
         </Observer>
         {aoStore.member?.tutorial || <AoTour />}
-        <AoSidebarButton
+        {/*        <AoSidebarButton
           sidebarTab="gifts"
           iconSrc={Bird}
           tooltipText={aoStore.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
@@ -238,6 +238,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           id="tour-gifts"
           buttonClass={giftsButtonClass}
         />
+*/}{' '}
         <AoSidebarButton
           sidebarTab="members"
           iconSrc={MemberIcon}

@@ -166,6 +166,7 @@ export function prioritizeCard(move: CardPlay) {
 			aoStore.popDiscardHistory()
 		case 'subTasks':
 		case 'context':
+		case 'gifts':
 		case 'panel':
 			api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
 			break

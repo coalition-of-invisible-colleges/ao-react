@@ -9,6 +9,8 @@ import AoTip from './tip'
 import AoBirdAutocomplete from './birdAutocomplete'
 import AoCardComposer from './cardComposer'
 import AoMemberIcon from './memberIcon'
+import AoDragZone from './dragZone'
+import AoContextCard from './contextCard'
 import { gloss } from '../semantics'
 
 type GiftBoxTab = 'inbox' | 'sent'
@@ -190,6 +192,28 @@ export default class AoGifts extends React.Component<{}, State> {
     }
   }
 
+  render() {
+    const hasGifts = aoStore.myGifts.length >= 1
+    if (!hasGifts) {
+      return null
+    }
+
+    const renderedGifts = aoStore.myGifts.map((task, i) => {
+      return (
+        <AoDragZone
+          taskId={task.taskId}
+          dragContext={{
+            zone: 'gifts',
+            y: i,
+          }}>
+          <AoContextCard task={task} cardStyle="envelope" />
+        </AoDragZone>
+      )
+    })
+
+    return <div className="envelopes">{renderedGifts}</div>
+  }
+
   // @computed
   // get renderedChangesList() {
   //   if (aoStore.allChanges.length < 1) {
@@ -240,74 +264,74 @@ export default class AoGifts extends React.Component<{}, State> {
   //   )
   // }
 
-  render() {
-    const hasGifts = aoStore.myGifts.length >= 1
-    const hasSent = this.mySent.length >= 1
+  // render() {
+  //   const hasGifts = aoStore.myGifts.length >= 1
+  //   const hasSent = this.mySent.length >= 1
 
-    console.log('renderGifts length is ', aoStore.myGifts.length)
-    return (
-      <div id="gifts">
-        <div className="toolbar">
-          {hasSent &&
-            this.renderTabButton('inbox', hasGifts ? 'Received' : 'Compose')}
-          {hasSent && this.renderTabButton('sent', 'Given')}
-        </div>
-        {this.state.tab === 'inbox' && (
-          <React.Fragment>
-            <h2>Gifts</h2>
-            <div
-              style={{
-                textAlign: 'center',
-                position: 'relative',
-                top: '-0.5em',
-                marginBottom: hasGifts ? '4em' : undefined,
-              }}>
-              <small>
-                {!hasGifts
-                  ? 'Send a gift to start a conversation.'
-                  : 'Cards passed to you.'}{' '}
-                <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
-              </small>
-            </div>
-          </React.Fragment>
-        )}
-        {(this.state.tab === 'inbox' || this.state.tab === 'sent') &&
-          this.renderGiftsList}
-        {(this.state.tab === 'inbox' && hasGifts) ||
-          (this.state.tab === 'sent' && (
-            <div className="action" onClick={this.toggleSend}>
-              {this.state.openSend ? (
-                <React.Fragment>Compose &#8963;</React.Fragment>
-              ) : (
-                <React.Fragment>Compose &#8964;</React.Fragment>
-              )}
-            </div>
-          ))}
-        {this.state.tab === 'inbox' &&
-          (this.state.openSend || aoStore.myGifts.length < 1) && (
-            <form>
-              <label>To:</label>
-              <AoBirdAutocomplete onChange={this.onChangeTo} />
-              <div style={{ position: 'relative' }}>
-                <label style={{ position: 'relative', top: '-1em' }}>
-                  Topic:
-                </label>
-                <AoCardComposer
-                  ref={this.composeRef}
-                  onNewCard={this.newGift}
-                  onChange={this.onChangeName}
-                />
-              </div>
-              <button
-                type="button"
-                className="action"
-                onClick={this.onClick}
-                disabled={!this.isValid}>
-                give
-              </button>
-            </form>
-          )}
-      </div>
-    )
-  }
+  //   console.log('renderGifts length is ', aoStore.myGifts.length)
+  //   return (
+  //     <div id="gifts">
+  //       <div className="toolbar">
+  //         {hasSent &&
+  //           this.renderTabButton('inbox', hasGifts ? 'Received' : 'Compose')}
+  //         {hasSent && this.renderTabButton('sent', 'Given')}
+  //       </div>
+  //       {this.state.tab === 'inbox' && (
+  //         <React.Fragment>
+  //           <h2>Gifts</h2>
+  //           <div
+  //             style={{
+  //               textAlign: 'center',
+  //               position: 'relative',
+  //               top: '-0.5em',
+  //               marginBottom: hasGifts ? '4em' : undefined,
+  //             }}>
+  //             <small>
+  //               {!hasGifts
+  //                 ? 'Send a gift to start a conversation.'
+  //                 : 'Cards passed to you.'}{' '}
+  //               <AoTip text="You can send cards as gifts to other members. Use the box below to create a new card and send it immediately, Or, click the bird in the top-left corner of any card to send it to someone else on this server." />
+  //             </small>
+  //           </div>
+  //         </React.Fragment>
+  //       )}
+  //       {(this.state.tab === 'inbox' || this.state.tab === 'sent') &&
+  //         this.renderGiftsList}
+  //       {(this.state.tab === 'inbox' && hasGifts) ||
+  //         (this.state.tab === 'sent' && (
+  //           <div className="action" onClick={this.toggleSend}>
+  //             {this.state.openSend ? (
+  //               <React.Fragment>Compose &#8963;</React.Fragment>
+  //             ) : (
+  //               <React.Fragment>Compose &#8964;</React.Fragment>
+  //             )}
+  //           </div>
+  //         ))}
+  //       {this.state.tab === 'inbox' &&
+  //         (this.state.openSend || aoStore.myGifts.length < 1) && (
+  //           <form>
+  //             <label>To:</label>
+  //             <AoBirdAutocomplete onChange={this.onChangeTo} />
+  //             <div style={{ position: 'relative' }}>
+  //               <label style={{ position: 'relative', top: '-1em' }}>
+  //                 Topic:
+  //               </label>
+  //               <AoCardComposer
+  //                 ref={this.composeRef}
+  //                 onNewCard={this.newGift}
+  //                 onChange={this.onChangeName}
+  //               />
+  //             </div>
+  //             <button
+  //               type="button"
+  //               className="action"
+  //               onClick={this.onClick}
+  //               disabled={!this.isValid}>
+  //               give
+  //             </button>
+  //           </form>
+  //         )}
+  //     </div>
+  //   )
+  // }
 }

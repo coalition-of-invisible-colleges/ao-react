@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoPalette from './palette'
+import AoGifts from './gifts'
 import AoBird from './bird'
 import AoBoat from './boat'
 import AoCheckbox from './checkbox'
@@ -71,7 +72,8 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 		switch (hudStyle) {
 			case 'context':
 				return (
-					<div className={'hud'}>
+					<div className="hud">
+						{taskId === aoStore.memberCard.taskId && <AoGifts />}
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
 							taskId={taskId}
@@ -122,6 +124,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 				return (
 					<React.Fragment>
 						<AoBird taskId={taskId} />
+						{taskId === aoStore.memberCard.taskId && <AoGifts />}
 						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />

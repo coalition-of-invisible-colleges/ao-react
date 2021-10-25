@@ -98,7 +98,9 @@ export default class AoPopupPanel extends React.PureComponent<
 								: 'popupButton actionCircle' +
 								  (this.props.buttonClass ? ' ' + this.props.buttonClass : '')
 						}>
-						{this.props.iconSrc && <img src={this.props.iconSrc} />}
+						{this.props.iconSrc && (
+							<object type="image/svg+xml" data={this.props.iconSrc} />
+						)}
 						{this.props.badge ? (
 							<div
 								className={

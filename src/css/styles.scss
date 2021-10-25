@@ -794,7 +794,7 @@ body {
   z-index: 1; // So grid resize button show above of main stack drop zone.
 
   &.padbottom {
-    margin-bottom: 2.5em;
+    margin-bottom: 3em;
   }
 
   & > .grid {
@@ -1271,6 +1271,28 @@ body {
 
       #autocomplete- {
         width: 100%;
+      }
+    }
+  }
+}
+
+// small row of envelopes in top left of member card (new gifts)
+.envelopes {
+  position: absolute;
+  top: 0.5em;
+  left: 3em;
+
+  .dragZone {
+    display: inline-block;
+
+    .card.envelope {
+      cursor: pointer;
+      padding: 0;
+      margin-right: 0;
+
+      img {
+        height: 3.5em;
+        position: relative;
       }
     }
   }
@@ -2257,7 +2279,8 @@ img.icon {
   left: 0.65em;
   opacity: 0.5;
 
-  img {
+  img,
+  object {
     height: 1.5em;
   }
 }
@@ -2969,7 +2992,7 @@ pre {
 .stash {
   position: absolute;
   left: 0.5em;
-  top: 3em;
+  top: 5em;
 
   .popupPanel {
     // max-width: 42vw;
@@ -3088,7 +3111,8 @@ input[type='text'].error {
   cursor: default;
   padding-right: 0.5em;
 
-  img {
+  img,
+  object {
     height: 1.5em;
   }
 }
@@ -3097,7 +3121,9 @@ input[type='text'].error {
 .claimInterval.menu {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
-  img {
+
+  img,
+  object {
     height: 1em;
     margin-right: 0.25em;
   }

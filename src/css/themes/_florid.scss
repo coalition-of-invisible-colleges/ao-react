@@ -89,12 +89,29 @@ body.florid {
 
 	// switch all svg icons to black
 	svg {
-		fill: black;
+		filter: brightness(0.001);
 	}
 
 	// change all card menu buttons to black so they are visible, and guild titles
 	.card > .hud .cardMenuButton,
 	.mission.summary {
 		color: black;
+	}
+
+	// turn all the icons on the cards black
+	img.memberIcon,
+	.bird img,
+	img.checkbox,
+	.claimInterval img,
+	#tour-stash > img,
+	img.grab,
+	.lilypad > object,
+	#tour-accomplishments > img,
+	img.badge {
+		filter: brightness(0.001);
+	}
+
+	img.memberIcon {
+		opacity: 0.7;
 	}
 }

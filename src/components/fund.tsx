@@ -21,7 +21,7 @@ interface State {
 export default class AoFund extends React.Component<Props, State> {
   constructor(props) {
     super(props)
-    makeObservable(this)
+    // makeObservable(this)
     this.state = {}
     this.requestQr = this.requestQr.bind(this)
   }
