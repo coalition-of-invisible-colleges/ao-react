@@ -1235,10 +1235,17 @@ class AoApi {
       })
   }
 
-  async downloadMeme(memeHash: string): Promise<request.Response> {
+  async downloadMeme(
+    memeHash: string,
+    progressCallback
+  ): Promise<request.Response> {
     return request
       .get('/download/' + memeHash)
       .set('Authorization', aoStore.state.token)
+      .on('progress', function (e) {
+        console.log(e.direction, 'is done', e.percent, '%')
+        progressCallback(e.percent)
+      })
       .then(res => {
         // console.log('got meme! res is ', res)
         return res

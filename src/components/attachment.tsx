@@ -24,6 +24,7 @@ interface State {
   blob?
   mimeType?: string
   downloadPath?: string
+  percent?: number
 }
 
 @observer
@@ -35,6 +36,7 @@ export default class AoAttachment extends React.Component<Props, State> {
     super(props)
     this.state = {}
     this.loadMeme = this.loadMeme.bind(this)
+    this.updateProgress = this.updateProgress.bind(this)
 
     const meme = aoStore.memeById.get(props.taskId)
     if (meme) {
@@ -105,7 +107,11 @@ export default class AoAttachment extends React.Component<Props, State> {
     if (!meme) {
       return null
     }
-    api.downloadMeme(meme.hash)
+    api.downloadMeme(meme.hash, this.updateProgress)
+  }
+
+  updateProgress(percent) {
+    this.setState({ percent })
   }
 
   render() {
@@ -115,7 +121,11 @@ export default class AoAttachment extends React.Component<Props, State> {
 
     const meme = aoStore.memeById.get(this.props.taskId)
     if (!meme || !this.state.fileType || !this.state.data) {
-      return null
+      return (
+        <div className="progressBar">
+          <div style={{ width: (this.state.percent || 0) + '%' }}></div>
+        </div>
+      )
     }
 
     if (this.state.fileType.mime.includes('audio')) {

@@ -1618,7 +1618,7 @@ body {
       overflow: hidden;
       cursor: pointer;
       padding-top: 1em;
-      padding-bottom: 1.25em;
+      padding-bottom: 1em;
 
       .unread {
         position: absolute;
@@ -3398,8 +3398,23 @@ input[type='text'].error {
 
 // upload progress bar
 .uploadProgress div {
-  padding: 0;
   background-color: rgba(0.2, 0.2, 0.2, 0.55);
+  padding: 0;
+}
+
+// downlod progress bar
+.progressBar {
+  height: 1em;
+  border: 0.01em rgba(0, 0, 0, 0.4);
+  margin-right: 1em;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  background-color: rgba(0.2, 0.2, 0.2, 0.55);
+
+  div {
+    height: 100%;
+    color: rgba(0, 255, 255, 0.3);
+  }
 }
 
 // play/pause button for the timeclock next to the top priority in each card
@@ -3498,6 +3513,7 @@ textarea {
   margin: 0.5em;
 }
 
+// Add height to priorities section so it can be dropped on without the +priority button displayed
 .dropZone.priorities {
   min-height: 1.5em;
 }
