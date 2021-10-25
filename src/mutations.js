@@ -531,7 +531,9 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'meme-added':
+      console.log('meme-added taskId is', ev.taskId)
       if (!tasks.some(t => t.taskId === ev.taskId)) {
+        console.log('adding meme', ev.taskId)
         tasks.push(blankCard(ev.taskId, ev.filename, 'yellow', ev.timestamp))
       }
       break

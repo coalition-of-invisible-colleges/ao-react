@@ -184,7 +184,7 @@ export default function applyRouter(app) {
 
         console.log('AO: server/router.js: fetchTaskByID: ', {
           taskId: req.body.taskId,
-          result: foundThisTask,
+          result: foundThisTaskList,
         })
         let objectToSend
         if (taskIdListParameterWasSingleValue === true) {
