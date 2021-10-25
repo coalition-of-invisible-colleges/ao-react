@@ -150,7 +150,7 @@ export default function applyRouter(app) {
       let errRes = []
       let foundThisTask
 
-      // console.log("AO: server/router.js: fetchTaskByID: ");
+      console.log('AO: server/router.js: fetchTaskByID: ')
 
       let taskIdList = req.body.taskId
       let taskIdListParameterWasSingleValue = false
@@ -162,6 +162,7 @@ export default function applyRouter(app) {
       let allTaskIdsAreSane = true
       taskIdList.some(taskId => {
         if (!validators.isTaskId_sane(taskId, errRes)) {
+          console.log('Not all requested task IDs are sane')
           allTaskIdsAreSane = false
           return true
         }
@@ -181,7 +182,10 @@ export default function applyRouter(app) {
           }
         })
 
-        // console.log("AO: server/router.js: fetchTaskByID: ", {"taskId": req.body.taskId, "result": foundThisTask});
+        console.log('AO: server/router.js: fetchTaskByID: ', {
+          taskId: req.body.taskId,
+          result: foundThisTask,
+        })
         let objectToSend
         if (taskIdListParameterWasSingleValue === true) {
           if (foundThisTaskList.length === 0) {
