@@ -50,8 +50,9 @@ body.florid {
 	// }
 
 	// text on grid square when about to drop a card
-	.dropZone.grid .overlay .label {
-		color: white;
+	.gridContainer > .grid .zone,
+	.gridContainer > .grid .dropZone.grid {
+		color: black;
 	}
 
 	// switch from dark to light background for action buttons
@@ -81,8 +82,9 @@ body.florid {
 		fill: black;
 	}
 
-	// change all card menu buttons to black so they are visible
-	.cardMenuButton {
+	// change all card menu buttons to black so they are visible, and guild titles
+	.card > .hud .cardMenuButton,
+	.mission.summary {
 		color: black;
 	}
 }

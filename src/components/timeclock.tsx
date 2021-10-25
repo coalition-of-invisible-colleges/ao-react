@@ -81,6 +81,7 @@ class AoTimeClock extends React.Component<TimeClockProps, TimeClockState> {
   render() {
     switch (this.props.hudStyle) {
       case 'full before':
+        return null
         return (
           <div className="hourglass">
             <Tippy

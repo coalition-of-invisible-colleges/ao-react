@@ -326,10 +326,23 @@ export default class AoBird extends React.Component<Props, State> {
     if (!card) {
       return null
     }
+
+    const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
     const isGuild = card.guild && card.guild?.length >= 1
     const signed = this.isSigned
     const isMember = signed && this.guildMemberLevel > 0
     const level = signed ? this.guildMemberLevel : null
+
+    const touchCard = event => {
+      event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
+
+      if (isGrabbed) {
+        api.dropCard(taskId)
+      } else {
+        api.grabCard(taskId)
+      }
+    }
 
     return (
       <LazyTippy
@@ -435,7 +448,8 @@ export default class AoBird extends React.Component<Props, State> {
           theme="translucent"
           content={this.renderPassList}
           delay={[625, 200]}
-          placement="right-start">
+          placement="right-start"
+          onTrigger={touchCard}>
           <div className="bird" onClick={event => event.stopPropagation()}>
             <img src={Bird} />
             {this.memberRequests && this.memberRequests?.length >= 1 && (

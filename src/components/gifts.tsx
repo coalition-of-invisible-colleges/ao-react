@@ -11,7 +11,7 @@ import AoCardComposer from './cardComposer'
 import AoMemberIcon from './memberIcon'
 import { gloss } from '../semantics'
 
-type GiftBoxTab = 'inbox' | 'changes' | 'sent'
+type GiftBoxTab = 'inbox' | 'sent'
 type ChangesSort = 'alphabetical' | 'hodls' | 'age'
 
 interface State {
@@ -42,9 +42,7 @@ export default class AoGifts extends React.Component<{}, State> {
   }
 
   componentDidUpdate() {
-    if (this.state.tab === 'changes' && aoStore.allChanges.length < 1) {
-      this.setState({ tab: 'inbox' })
-    } else if (this.state.tab === 'sent' && this.mySent.length < 1) {
+    if (this.state.tab === 'sent' && this.mySent.length < 1) {
       this.setState({ tab: 'inbox' })
     }
   }
@@ -192,68 +190,66 @@ export default class AoGifts extends React.Component<{}, State> {
     }
   }
 
-  @computed
-  get renderedChangesList() {
-    if (aoStore.allChanges.length < 1) {
-      return null
-    }
+  // @computed
+  // get renderedChangesList() {
+  //   if (aoStore.allChanges.length < 1) {
+  //     return null
+  //   }
 
-    let cards = aoStore.allChanges
-    console.log('allChanges card is', cards)
+  //   let cards = aoStore.allChanges
+  //   console.log('allChanges card is', cards)
 
-    if (this.state.sort === 'alphabetical') {
-      cards.sort((a, b) => {
-        return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
-      })
-    } else if (this.state.sort === 'hodls') {
-      cards.sort((a, b) => {
-        return a.deck.length - b.deck.length
-      })
-    } else if (this.state.sort === 'age') {
-      cards.reverse()
-      // Default sort is database order, i.e., card creation order
-    }
+  //   if (this.state.sort === 'alphabetical') {
+  //     cards.sort((a, b) => {
+  //       return b.name.toLowerCase().localeCompare(a.name.toLowerCase())
+  //     })
+  //   } else if (this.state.sort === 'hodls') {
+  //     cards.sort((a, b) => {
+  //       return a.deck.length - b.deck.length
+  //     })
+  //   } else if (this.state.sort === 'age') {
+  //     cards.reverse()
+  //     // Default sort is database order, i.e., card creation order
+  //   }
 
-    return (
-      <div className="results">
-        <AoStack
-          cards={cards}
-          zone="panel"
-          cardStyle="face"
-          cardsBeforeFold={5}
-        />
-      </div>
-    )
-  }
+  //   return (
+  //     <div className="results">
+  //       <AoStack
+  //         cards={cards}
+  //         zone="panel"
+  //         cardStyle="face"
+  //         cardsBeforeFold={5}
+  //       />
+  //     </div>
+  //   )
+  // }
 
-  @computed get renderedChanges() {
-    return (
-      <div id="changes">
-        <h2>Changes</h2>
-        {aoStore.allChanges.length >= 1 && (
-          <div className="toolbar">
-            {this.renderSortButton('alphabetical', 'A-Z')}
-            {this.renderSortButton('hodls', 'Hodls')}
-            {this.renderSortButton('age', 'Order')}
-          </div>
-        )}
-        {this.renderedChangesList}
-      </div>
-    )
-  }
+  // @computed get renderedChanges() {
+  //   return (
+  //     <div id="changes">
+  //       <h2>Changes</h2>
+  //       {aoStore.allChanges.length >= 1 && (
+  //         <div className="toolbar">
+  //           {this.renderSortButton('alphabetical', 'A-Z')}
+  //           {this.renderSortButton('hodls', 'Hodls')}
+  //           {this.renderSortButton('age', 'Order')}
+  //         </div>
+  //       )}
+  //       {this.renderedChangesList}
+  //     </div>
+  //   )
+  // }
 
   render() {
     const hasGifts = aoStore.myGifts.length >= 1
-    const hasChanges = aoStore.allChanges.length >= 1
     const hasSent = this.mySent.length >= 1
 
     console.log('renderGifts length is ', aoStore.myGifts.length)
     return (
       <div id="gifts">
         <div className="toolbar">
-          {(hasChanges || hasSent) &&
+          {hasSent &&
             this.renderTabButton('inbox', hasGifts ? 'Received' : 'Compose')}
-          {hasChanges && this.renderTabButton('changes', 'Changes')}
           {hasSent && this.renderTabButton('sent', 'Given')}
         </div>
         {this.state.tab === 'inbox' && (
@@ -277,7 +273,6 @@ export default class AoGifts extends React.Component<{}, State> {
         )}
         {(this.state.tab === 'inbox' || this.state.tab === 'sent') &&
           this.renderGiftsList}
-        {this.state.tab === 'changes' && this.renderedChanges}
         {(this.state.tab === 'inbox' && hasGifts) ||
           (this.state.tab === 'sent' && (
             <div className="action" onClick={this.toggleSend}>

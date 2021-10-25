@@ -151,6 +151,8 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           {this.props.addButtonText ? this.props.addButtonText : '+card'}
         </p>
       )
+    } else {
+      addButton = <div className="vertSpacer" />
     }
 
     let list = []

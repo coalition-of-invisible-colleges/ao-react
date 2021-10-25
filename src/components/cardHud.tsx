@@ -4,11 +4,8 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import AoPalette from './palette'
 import AoBird from './bird'
-import AoUnread from './unread'
-import AoCoin from './coin'
 import AoBoat from './boat'
 import AoCheckbox from './checkbox'
-import AoValue from './value'
 import AoCrowdfund from './crowdfund'
 import AoInterval from './interval'
 import AoCountdown from './countdown'
@@ -68,7 +65,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 		const isMember = this.props.taskId === card.name
 
 		const hudStyle = this.props.hudStyle
-		const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
 
 		// let cardHudIdentifierFunction =
 
@@ -76,7 +72,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'context':
 				return (
 					<div className={'hud'}>
-						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
 							taskId={taskId}
@@ -91,7 +86,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'collapsed':
 				return (
 					<div className="hud">
-						<AoUnread taskId={taskId} />
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						{isMember ? <AoBark memberId={taskId} /> : ''}
 						<AoPreview
@@ -102,7 +96,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
@@ -110,7 +104,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'collapsed-mission':
 				return (
 					<div className="hud">
-						<AoUnread taskId={taskId} />
 						<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}
@@ -119,7 +112,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoLilypad taskId={taskId} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
@@ -128,28 +121,26 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'full before':
 				return (
 					<React.Fragment>
-						{isGrabbed && taskId !== card.name && <AoBird taskId={taskId} />}
+						<AoBird taskId={taskId} />
 						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
-							<AoValue taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 							<AoInterval taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
-						<AoUnread taskId={taskId} />
 					</React.Fragment>
 				)
 			case 'face before':
 				return (
 					<React.Fragment>
-						{isGrabbed && <AoBird taskId={taskId} />}
+						<AoBird taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
-							<AoValue taskId={taskId} hudStyle={hudStyle} />
+							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 							{this.props.inId ? (
 								<AoBoat taskId={taskId} inId={this.props.inId} />
 							) : (
@@ -161,7 +152,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'full after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoCoin taskId={taskId} />
 						<AoLilypad taskId={taskId} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
@@ -169,8 +159,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoUnread taskId={taskId} />
-						<AoCoin taskId={taskId} noPopups={this.props.noPopups} />
 						<AoPreview taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu
 							taskId={taskId}
@@ -185,13 +173,12 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoValue taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'mini after':
 				return (
 					<React.Fragment>
-						<AoUnread taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoPreview taskId={taskId} hudStyle={hudStyle} />
@@ -235,7 +222,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					: null
 
 				return (
-					<div className="hud menu">
+					<div className="hud menu" onClick={event => event.stopPropagation()}>
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						{card.guild && card.guild.length >= 1 && (
 							<React.Fragment>

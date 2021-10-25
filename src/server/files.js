@@ -47,7 +47,7 @@ export async function addMeme(name, path, data = null, taskId = null) {
 					reject(err)
 				} else if (data) {
 					console.log('going deeper in addMeme')
-					resolve(addMeme(name, path, data))
+					resolve(addMeme(name, path, data, taskId))
 				} else {
 					console.log('readFile failed')
 					reject(false)

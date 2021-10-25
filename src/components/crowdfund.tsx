@@ -96,8 +96,19 @@ export default class AoCrowdfund extends React.Component<Props, State> {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return null
 
+    const bonus = card.boost || 0
+    const hasPoints = bonus > 0
+
     const goal = card.hasOwnProperty('goal') && card.goal >= 0 ? card.goal : 0
     const hasGoal = goal > 0
+
+    const pointsSlashGoal = (
+      <span>
+        {hasPoints ? bonus : hasGoal ? '0' : ''}
+        {hasGoal && '/'}
+        {hasGoal && goal}
+      </span>
+    )
 
     if (this.state.editing) {
       return (
@@ -121,14 +132,14 @@ export default class AoCrowdfund extends React.Component<Props, State> {
         if (hasGoal) {
           return (
             <div onClick={this.startEditing} className="goal full action">
-              {'Goal: ' + goal}
+              {pointsSlashGoal} points
             </div>
           )
         }
         return null
       case 'mini before':
         if (hasGoal) {
-          return <span className="goal mini">{'Goal: ' + goal}</span>
+          return <span className="goal mini">{pointsSlashGoal}</span>
         }
         return null
       case 'menu':
@@ -148,7 +159,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
         if (hasGoal) {
           return (
             <div className={'goal summary ' + this.props.hudStyle}>
-              {'Goal: ' + goal}
+              {pointsSlashGoal}
             </div>
           )
         }

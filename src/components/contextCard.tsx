@@ -729,7 +729,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     <AoStack
                       inId={taskId}
                       cards={priorityCards}
-                      showAdd={true}
+                      showAdd={false}
                       hideAddWhenCards={true}
                       addButtonText="+priority"
                       cardStyle="priority"
@@ -831,7 +831,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     <AoStack
                       inId={taskId}
                       cards={priorityCards}
-                      showAdd={true}
+                      showAdd={false}
                       hideAddWhenCards={true}
                       addButtonText="+priority"
                       cardStyle="priority"
@@ -928,7 +928,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <AoPaper taskId={taskId} />
             <AoCardHud taskId={taskId} hudStyle="collapsed-mission" />
             <div className="content">
-              <AoCoin taskId={taskId} />
               <AoMission taskId={taskId} hudStyle="collapsed" />
               <AoPreview
                 taskId={taskId}
