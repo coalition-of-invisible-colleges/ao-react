@@ -157,7 +157,7 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
           className="action corner"
           onClick={this.purgeResource}
           data-resourceid={resource.resourceId}>
-          Delete
+          Delete&hellip;
         </span>
         {renderOptions}
       </div>

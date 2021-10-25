@@ -180,6 +180,8 @@ export default class AoHud extends React.Component<{}, HudState> {
   }
 
   render() {
+    console.log('hud render')
+
     let { now, today, tomorrow, overdue } = aoStore.eventsAsAgenda
     const eventCount =
       now.length + today.length + tomorrow.length + overdue.length

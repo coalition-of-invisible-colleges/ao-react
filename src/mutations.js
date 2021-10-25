@@ -1215,16 +1215,13 @@ function tasksMuts(tasks, ev) {
     case 'task-property-set':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          console.log('changing property fo task from', task[ev.property])
           task[ev.property] = ev.value
         }
       })
       // Maybe this should be a separate mutation? Reaction only for setting grid to pyramid
       if (ev.property === 'gridStyle' && ev.value === 'pyramid') {
-        console.log('gridStyle mutation variation')
         tasks.forEach((task, i) => {
           if (task.taskId === ev.taskId) {
-            console.log('found the task with gridStyle change!:', task)
             if (!task.grid) {
               task.grid = blankGrid(ev.height, ev.width)
             }

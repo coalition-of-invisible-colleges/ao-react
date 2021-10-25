@@ -185,7 +185,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                 console.log('propagating to', event.currentTarget.parentElement)
                 document.getElementById('card-clickable-' + taskId).click()
               }}>
-              <Tippy
+              <LazyTippy
                 interactive={true}
                 maxWidth="none"
                 placement={placement}
@@ -198,7 +198,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                 }
                 content={this.renderedPriorities}>
                 {wrappedPriorityCount}
-              </Tippy>
+              </LazyTippy>
             </div>
           )
         }
