@@ -1215,9 +1215,50 @@ function tasksMuts(tasks, ev) {
     case 'task-property-set':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
+          console.log('changing property fo task from', task[ev.property])
           task[ev.property] = ev.value
         }
       })
+      // Maybe this should be a separate mutation? Reaction only for setting grid to pyramid
+      if (ev.property === 'gridStyle' && ev.value === 'pyramid') {
+        console.log('gridStyle mutation variation')
+        tasks.forEach((task, i) => {
+          if (task.taskId === ev.taskId) {
+            console.log('found the task with gridStyle change!:', task)
+            if (!task.grid) {
+              task.grid = blankGrid(ev.height, ev.width)
+            }
+            Object.entries(task.grid.rows).forEach(([y, row]) => {
+              Object.entries(row).forEach(([x, cell]) => {
+                if (x >= y + 1 || y >= ev.height) {
+                  tasks.forEach(st => {
+                    if (st.taskId === cell) {
+                      task.subTasks = _.filter(
+                        task.subTasks,
+                        taskId => taskId !== cell
+                      )
+                      task.completed = _.filter(
+                        task.completed,
+                        taskId => taskId !== cell
+                      )
+                      if (st.claimed && st.claimed.length >= 1) {
+                        task.completed.push(cell)
+                      } else {
+                        task.subTasks.unshift(cell)
+                      }
+                    }
+                  })
+                  delete tasks[i].grid.rows[y][x]
+                }
+              })
+              if (row.length === 0) {
+                delete tasks[i].grid.rows[y]
+              }
+            })
+          }
+        })
+      }
+
       break
     case 'task-colored':
       tasks.forEach(task => {

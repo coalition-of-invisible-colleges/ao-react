@@ -1,10 +1,11 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { GridStyle } from '../client/store'
 import api from '../client/api'
 
 interface GridResizerProps {
   taskId: string
+  gridStyle: GridStyle
 }
 
 @observer
@@ -49,21 +50,23 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
       return null
     }
 
+    const isPyramid = card.gridStyle === 'pyramid'
+
     return (
       <div className="resizer">
-        <div className={'columns'}>
+        <div className={'columns' + (isPyramid ? ' hide' : '')}>
           <button
             type="button"
             onClick={this.decreaseColumns}
             disabled={card.grid.width <= 1}
-            className={'action minus'}>
+            className="action minus">
             -
           </button>
           <button
             type="button"
             onClick={this.increaseColumns}
             disabled={card.grid.width >= 100}
-            className={'action plus'}>
+            className="action plus">
             +
           </button>
         </div>

@@ -5,6 +5,7 @@ import v1 from 'uuid'
 // With this set to 1, actions will occur immediately, as if they were not potential-based actions
 export const POTENTIALS_TO_EXECUTE = 1
 
+// See duplicate of this function in cardTypes.ts
 export function blankCard(
 	taskId = null,
 	name,
@@ -40,6 +41,7 @@ export function blankCard(
 		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
 		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
+		gridStyle: 'grid',
 		allocations: [],
 	}
 	return newCard

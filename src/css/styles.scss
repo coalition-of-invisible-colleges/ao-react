@@ -385,7 +385,7 @@ body {
   }
 
   & > .content {
-    position: relative;
+    position: absolute;
     margin: 0;
     max-height: 100%;
     width: 100%;
@@ -523,7 +523,7 @@ body {
       right: 0;
       bottom: 0;
       font-size: 0.9em;
-      padding: 0.1em 0.25em 0.185em 0.5em;
+      padding: 0.5em 0.5em 0.185em 0.5em;
     }
   }
 }
@@ -739,7 +739,7 @@ body {
   // position: absolute;
   // top: 0.75em;
   // right: 0.65em;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 // hourglass (timeclock) on a card
@@ -794,7 +794,7 @@ body {
   z-index: 1; // So grid resize button show above of main stack drop zone.
 
   &.padbottom {
-    margin-bottom: 2em;
+    margin-bottom: 2.5em;
   }
 
   & > .grid {
@@ -843,7 +843,7 @@ body {
 
     .cardComposer,
     .cardComposer .zone {
-      width: 99%;
+      width: 97%;
       height: 98%;
       margin: 0;
       padding: 0;
@@ -854,63 +854,68 @@ body {
       background-color: rgba(0, 0, 0, 0.01);
     }
   }
-
-  .resizer {
-    position: absolute;
-    margin-top: -5.2em;
-    right: 0.1em;
-    transform: translateX(100%);
-
-    button {
-      display: block;
-    }
-
-    .minus,
-    .plus,
-    .remove {
-      outline: none;
-      font-family: monospace;
-      margin: 0;
-      position: relative;
-    }
-
-    .columns {
-      .minus,
-      .plus {
-        right: -0.275em;
-        margin-top: 0.25em;
-        padding-left: 0.25em;
-        padding-right: 0.25em;
-      }
-    }
-
-    .rows {
-      .minus,
-      .plus,
-      .remove {
-        display: inline;
-        left: -5.5em;
-        margin-top: 0.6em;
-        margin-right: 0.25em;
-        padding: 0 0.75em;
-      }
-
-      .remove {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-      }
-    }
-  }
 }
 
 // gridContainer inside the main card on the page
 .card.full .gridContainer {
-  margin-bottom: 2em;
+  margin-bottom: 2.5em;
   margin-top: 0.5em;
 
   &.noPad {
     margin-bottom: 0;
+  }
+}
+
+// grid resizer element to increase or decrease rows or columns, and delete a grid
+.gridContainer .resizer {
+  position: absolute;
+  margin-top: -5.2em;
+  right: 0.1em;
+  transform: translateX(100%);
+
+  button {
+    display: block;
+  }
+
+  .minus,
+  .plus,
+  .remove {
+    outline: none;
+    font-family: monospace;
+    margin: 0;
+    position: relative;
+  }
+
+  .columns {
+    &.hide {
+      visibility: hidden;
+    }
+
+    .minus,
+    .plus {
+      right: -0.275em;
+      margin-top: 0.25em;
+      padding-left: 0.25em;
+      padding-right: 0.25em;
+    }
+  }
+
+  .rows {
+    .minus,
+    .plus,
+    .remove {
+      display: inline;
+      left: -5.5em;
+      margin-top: 0.6em;
+      margin-right: 0.25em;
+      padding: 0 0.75em;
+    }
+
+    .remove {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
   }
 }
 
@@ -1673,6 +1678,45 @@ body {
         font-size: 0.9em;
       }
     }
+  }
+}
+
+// each row of a pyramid is a separate whole grid, since a grid is always rectangular
+.grid.pyramidRow {
+  width: -moz-fit-content;
+  width: fit-content;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow-y: hidden;
+
+  .dropZone.grid,
+  .zone.empty {
+  }
+}
+
+// the small triangle menu to the right of the grid
+.gridMenuButton {
+  color: black;
+  position: absolute;
+  left: 100%;
+  top: 0;
+}
+
+// the content of the grid menu itself
+.gridMenu {
+  // img {
+  //   height: 1.5em;
+  // }
+
+  .action {
+    display: inline-block;
+    margin: 0 0.5em;
+  }
+
+  .action.selected {
+    background-color: rgba(127, 255, 255, 0.5);
+    border-radius: 0.5em;
   }
 }
 
@@ -2635,7 +2679,7 @@ pre {
 #gem {
   cursor: pointer;
   width: min-content;
-  position: relative;
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
 
@@ -2643,6 +2687,7 @@ pre {
     margin-bottom: 0;
     border-radius: 50% 50% 0 0;
     background-color: rgba(0, 0, 0, 0.4);
+    top: -3.5em;
 
     &.draft {
       background-color: rgba(0, 0, 255, 0.15);
@@ -2664,8 +2709,10 @@ pre {
     }
   }
   textarea {
+    position: relative;
     width: 24em;
     height: 11em;
+    top: -13em;
   }
 }
 

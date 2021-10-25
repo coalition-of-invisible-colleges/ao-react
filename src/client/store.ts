@@ -85,6 +85,9 @@ interface Allocation {
   amount: number
   blame?: string
 }
+
+export type GridStyle = 'grid' | 'pyramid'
+
 export interface Task {
   taskId: string
   color: string
@@ -117,6 +120,7 @@ export interface Task {
   timelog: LabourTime[]
   created: number
   grid?: Grid
+  gridStyle?: GridStyle
   avatars?: AvatarLocation[]
   showChatroom?: boolean
   showStash?: boolean

@@ -102,6 +102,7 @@ export default class AoDock extends React.Component<{}, State> {
                   dropActsLikeFolder={true}
                   height={card.grid.height}
                   width={card.grid.width}
+                  gridStyle="grid"
                 />
               )
             }}

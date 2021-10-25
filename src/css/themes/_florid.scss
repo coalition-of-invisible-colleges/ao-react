@@ -62,7 +62,17 @@ body.florid {
 
 	// dark blue background on the sidebar buttons
 	.actionCircle {
-		background-color: rgba(100, 127, 208, 0.45);
+		background-color: rgba(100, 127, 208, 0.4);
+	}
+
+	// darker action circles on cards for contrast
+	.card .actionCircle {
+		background-color: rgba(63, 63, 63, 0.4);
+	}
+
+	// darker action buttons on cards for contrast
+	.card .action {
+		background-color: rgba(63, 63, 63, 0.15);
 	}
 
 	// light blue highlight on actionCircle on hover

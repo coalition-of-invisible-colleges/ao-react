@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { GridStyle } from '../client/store'
 import { CardPlay, CardLocation, CardZone, Coords } from '../cardTypes'
 import api from '../client/api'
 import { createHash } from '../crypto'
@@ -16,6 +16,7 @@ interface DropZoneProps {
 	onSelect?: (selection: Coords) => void
 	onDrop?: (move: CardPlay) => void
 	dropActsLikeFolder?: boolean
+	pyramidRows?: boolean
 }
 
 export interface State {
@@ -284,7 +285,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			let style = this.props.style
 			if (this.props.zoneStyle === 'grid') {
 				style = {
-					gridRow: (this.props.y + 1).toString(),
+					gridRow: this.props.pyramidRows ? 1 : (this.props.y + 1).toString(),
 					gridColumn: (this.props.x + 1).toString(),
 				}
 			}
@@ -312,7 +313,7 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 			let style = this.props.style
 			if (this.props.zoneStyle === 'grid') {
 				style = {
-					gridRow: (this.props.y + 1).toString(),
+					gridRow: this.props.pyramidRows ? 1 : (this.props.y + 1).toString(),
 					gridColumn: (this.props.x + 1).toString(),
 				}
 			}

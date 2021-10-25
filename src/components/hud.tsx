@@ -180,8 +180,6 @@ export default class AoHud extends React.Component<{}, HudState> {
   }
 
   render() {
-    console.log('hud render')
-
     let { now, today, tomorrow, overdue } = aoStore.eventsAsAgenda
     const eventCount =
       now.length + today.length + tomorrow.length + overdue.length
@@ -206,7 +204,6 @@ export default class AoHud extends React.Component<{}, HudState> {
       (10 * aoStore.changedMissions.length) / aoStore.myMissions.length
     )
     const guildsButtonClass = 'red' + guildsPercentChanged.toString()
-    console.log('returning render')
     return (
       <div id="hud">
         <div id="mainMenu-tour">
