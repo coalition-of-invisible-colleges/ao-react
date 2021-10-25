@@ -1224,28 +1224,26 @@ class AoApi {
       })
   }
 
-  async fetchMeme(memeHash: string): Promise<Blob> {
+  async fetchMeme(memeHash: string, progressCallback): Promise<Blob> {
     return request
       .get('/meme/' + memeHash)
       .responseType('blob')
       .set('Authorization', aoStore.state.token)
+      .on('progress', function (e) {
+        console.log(e.direction, 'is done', e.percent, '%')
+        progressCallback(e.percent)
+      })
+
       .then(res => {
         // console.log('got meme! res is ', res)
         return res.body
       })
   }
 
-  async downloadMeme(
-    memeHash: string,
-    progressCallback
-  ): Promise<request.Response> {
+  async downloadMeme(memeHash: string): Promise<request.Response> {
     return request
       .get('/download/' + memeHash)
       .set('Authorization', aoStore.state.token)
-      .on('progress', function (e) {
-        console.log(e.direction, 'is done', e.percent, '%')
-        progressCallback(e.percent)
-      })
       .then(res => {
         // console.log('got meme! res is ', res)
         return res

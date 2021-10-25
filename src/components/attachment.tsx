@@ -5,8 +5,8 @@ import api from '../client/api'
 
 import FileType from 'file-type/browser'
 
-async function fetchMeme(hash) {
-  const blob = await api.fetchMeme(hash)
+async function fetchMeme(hash, progressCallback) {
+  const blob = await api.fetchMeme(hash, progressCallback)
   const fileType = await FileType.fromBlob(blob)
 
   return { fileType, data: blob }
@@ -88,7 +88,7 @@ export default class AoAttachment extends React.Component<Props, State> {
   async loadMeme() {
     const meme = aoStore.memeById.get(this.props.taskId)
     if (meme) {
-      const { fileType, data } = await fetchMeme(meme.hash)
+      const { fileType, data } = await fetchMeme(meme.hash, this.updateProgress)
       if (fileType) {
         var urlCreator = window.URL || window.webkitURL
         var imageUrl = urlCreator.createObjectURL(data)
@@ -107,7 +107,8 @@ export default class AoAttachment extends React.Component<Props, State> {
     if (!meme) {
       return null
     }
-    api.downloadMeme(meme.hash, this.updateProgress)
+    console.log('about to download meme')
+    api.downloadMeme(meme.hash)
   }
 
   updateProgress(percent) {
@@ -115,12 +116,19 @@ export default class AoAttachment extends React.Component<Props, State> {
   }
 
   render() {
+    console.log('attachment render')
     if (!this.props.taskId) {
       return null
     }
+    console.log('attachment render 2')
 
     const meme = aoStore.memeById.get(this.props.taskId)
-    if (!meme || !this.state.fileType || !this.state.data) {
+    if (!meme) {
+      return null
+    }
+    console.log('attachment render3')
+
+    if (!this.state.data || !this.state.fileType) {
       return (
         <div className="progressBar">
           <div style={{ width: (this.state.percent || 0) + '%' }}></div>
