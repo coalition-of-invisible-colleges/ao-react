@@ -66,27 +66,27 @@ export async function addMeme(name, path, data = null, taskId = null) {
 	})
 	// console.log('foundMeme is', foundMeme)
 	if (foundMeme) {
-		// console.log('returning existing meme')
+		console.log('returning existing meme')
 		return Promise.resolve(foundMeme.memeId)
 	}
 
 	const newTaskId = taskId || v1()
-	// console.log('returning new promise')
+	console.log('returning new promise')
 	return new Promise((resolve, reject) => {
 		events.trigger(
 			'meme-added',
 			{ taskId: newTaskId, filename: name, hash, filetype },
 			(err, event) => {
-				// console.log(
-				// 	'\n\n\nmeme-added callback\n\nerr: ',
-				// 	err,
-				// 	'\n event: ',
-				// 	event,
-				// 	'\n\n',
-				// 	'newTaskId: ',
-				// 	newTaskId
-				// )
-				// console.log('newTaskId is about to resolve:', newTaskId)
+				console.log(
+					'\n\n\nmeme-added callback\n\nerr: ',
+					err,
+					'\n event: ',
+					event,
+					'\n\n',
+					'newTaskId: ',
+					newTaskId
+				)
+				console.log('newTaskId is about to resolve:', newTaskId)
 				resolve(newTaskId)
 			}
 		)
