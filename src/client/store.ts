@@ -527,19 +527,20 @@ class AoStore {
                 )
                 stateClosure.tasks.push(...result.body.foundThisTaskList)
                 // setImmediate(() => callback(this.hashMap.get(taskId)));
-                if (!prioritiesOnly) {
-                  console.log(
-                    'got tasks and about to get priorities:',
-                    result.body.foundThisTaskList
-                  )
-                  stateClosure.tasks.forEach(foundTask => {
-                    this.getAllLinkedCardsForThisTaskId_async(
-                      foundTask.taskId,
-                      () => {},
-                      true
-                    )
-                  })
-                }
+                // this works to solve the missing prorities dropdown problem but it ruins performance
+                // if (!prioritiesOnly) {
+                //   console.log(
+                //     'got tasks and about to get priorities:',
+                //     result.body.foundThisTaskList
+                //   )
+                //   stateClosure.tasks.forEach(foundTask => {
+                //     this.getAllLinkedCardsForThisTaskId_async(
+                //       foundTask.taskId,
+                //       () => {},
+                //       true
+                //     )
+                //   })
+                // }
                 callback(true)
               })
               // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
