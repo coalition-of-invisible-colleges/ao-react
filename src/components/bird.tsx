@@ -45,6 +45,7 @@ export default class AoBird extends React.Component<Props, State> {
   }
 
   passCard(event) {
+    event.stopPropagation()
     console.log('passCard!')
     if (this.state.memberId !== undefined) {
       api.passCard(this.props.taskId, this.state.memberId)
@@ -101,6 +102,7 @@ export default class AoBird extends React.Component<Props, State> {
   }
 
   goToTab(event) {
+    event.stopPropagation()
     const tab = event.currentTarget.getAttribute('data-page')
     if (this.state.tab === tab) {
       return
@@ -299,11 +301,13 @@ export default class AoBird extends React.Component<Props, State> {
     )
   }
 
-  signCard() {
+  signCard(event) {
+    event.stopPropagation()
     api.signCard(this.props.taskId)
   }
 
-  unsignCard() {
+  unsignCard(event) {
+    event.stopPropagation()
     api.signCard(this.props.taskId, 0)
   }
 
@@ -354,7 +358,11 @@ export default class AoBird extends React.Component<Props, State> {
         maxWidth="none"
         content={
           <React.Fragment>
-            <div className="toolbar">
+            <div
+              className="toolbar"
+              onClick={event => {
+                event.stopPropagation()
+              }}>
               {this.renderTabButton('send', 'Send')}
               {isGuild &&
                 this.renderTabButton('sign', isGuild ? 'Join' : 'Sign')}
@@ -442,7 +450,8 @@ export default class AoBird extends React.Component<Props, State> {
           </React.Fragment>
         }
         placement="right-start"
-        interactive={true}>
+        interactive={true}
+        appendTo={document.getElementById('root')}>
         <Tippy
           zIndex={4}
           theme="translucent"

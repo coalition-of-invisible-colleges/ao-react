@@ -98,8 +98,14 @@ body.florid {
 		color: black;
 	}
 
+	// change the number on the bird to black
+	.bird .badge.subscript {
+		color: black;
+		font-weight: bold;
+	}
+
 	// turn all the icons on the cards black
-	img.memberIcon,
+	.content > img.memberIcon,
 	.bird img,
 	img.checkbox,
 	.claimInterval img,

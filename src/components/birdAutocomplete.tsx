@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { computed, makeObservable } from 'mobx';
+import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -22,7 +22,7 @@ export default class AoBirdAutocomplete extends React.PureComponent<
 > {
   constructor(props) {
     super(props)
-    makeObservable(this);
+    makeObservable(this)
     this.state = { query: '' }
     this.onChange = this.onChange.bind(this)
     this.onChangeSelect = this.onChangeSelect.bind(this)
@@ -35,6 +35,7 @@ export default class AoBirdAutocomplete extends React.PureComponent<
 
   onChangeSelect(event, value) {
     console.log('onChangeSelect', event, value)
+    event.stopPropagation()
     this.setState({ memberId: value.memberId })
     this.props.onChange(value.memberId)
   }
@@ -82,6 +83,9 @@ export default class AoBirdAutocomplete extends React.PureComponent<
               onChange={this.onChange}
               value={this.state.query}
               autoFocus={!!this.props.taskId}
+              onClick={event => {
+                event.stopPropagation()
+              }}
               {...params.inputProps}
             />
           </div>

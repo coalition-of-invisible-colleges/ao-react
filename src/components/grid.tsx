@@ -38,7 +38,7 @@ interface PyramidViewProps extends GridProps {
   gridWidth: string
 }
 
-function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
+async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
   if (!move.from.taskId) {
     return
   }
@@ -51,118 +51,171 @@ function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
   const cardTo = aoStore.hashMap.get(move.to.taskId)
   const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
 
-  switch (move.from.zone) {
-    case 'card':
-      if (
-        move.to.taskId &&
-        dropActsLikeFolder &&
-        move.from.inId !== move.to.inId
-      ) {
-        api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(goUp)
-      } else if (move.to.taskId) {
-        api
-          .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-          .then(() =>
-            api.pinCardToGrid(
+  return new Promise((resolve, reject) => {
+    switch (move.from.zone) {
+      case 'card':
+        if (
+          move.to.taskId &&
+          dropActsLikeFolder &&
+          move.from.inId !== move.to.inId
+        ) {
+          api
+            .findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+            .then(goUp)
+            .then(resolve)
+        } else if (move.to.taskId) {
+          api
+            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
+            .then(() =>
+              api
+                .pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                )
+                .then(resolve)
+            )
+        } else {
+          api
+            .pinCardToGrid(
               move.to.coords.x,
               move.to.coords.y,
               nameFrom,
               move.to.inId
             )
-          )
-      } else {
-        api.pinCardToGrid(
-          move.to.coords.x,
-          move.to.coords.y,
-          nameFrom,
-          move.to.inId
-        )
-      }
-      break
-    case 'priorities':
-      if (move.to.taskId && dropActsLikeFolder) {
-        api.refocusCard(move.from.taskId, move.from.inId).then(() => {
+            .then(resolve)
+        }
+        break
+      case 'priorities':
+        if (move.to.taskId && dropActsLikeFolder) {
+          api.refocusCard(move.from.taskId, move.from.inId).then(() => {
+            api
+              .discardCardFromCard(move.from.taskId, move.from.inId)
+              .then(() =>
+                api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+              )
+              .then(resolve)
+          })
+        } else if (move.to.taskId) {
           api
-            .discardCardFromCard(move.from.taskId, move.from.inId)
+            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
+            .then(() => api.refocusCard(move.from.taskId, move.from.inId))
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+            .then(resolve)
+        } else {
+          api
+            .refocusCard(move.from.taskId, move.from.inId)
+            .then(() =>
+              api.pinCardToGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                nameFrom,
+                move.to.inId
+              )
+            )
+            .then(resolve)
+        }
+        break
+      case 'grid':
+        if (
+          move.to.taskId &&
+          dropActsLikeFolder &&
+          move.from.inId !== move.to.inId
+        ) {
+          api
+            .unpinCardFromGrid(
+              move.from.coords.x,
+              move.from.coords.y,
+              move.from.inId
+            )
+            .then(() => {
+              api.discardCardFromCard(move.from.taskId, move.from.inId)
+            })
             .then(() =>
               api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
             )
-        })
-      } else if (move.to.taskId) {
-        api
-          .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-          .then(() => api.refocusCard(move.from.taskId, move.from.inId))
-          .then(() =>
-            api.pinCardToGrid(
+            .then(resolve)
+        } else if (move.to.taskId) {
+          api
+            .pinCardToGrid(
               move.to.coords.x,
               move.to.coords.y,
               nameFrom,
               move.to.inId
             )
-          )
-      } else {
-        api
-          .refocusCard(move.from.taskId, move.from.inId)
-          .then(() =>
-            api.pinCardToGrid(
-              move.to.coords.x,
-              move.to.coords.y,
-              nameFrom,
-              move.to.inId
+            .then(() =>
+              api
+                .pinCardToGrid(
+                  move.from.coords.x,
+                  move.from.coords.y,
+                  nameTo,
+                  move.from.inId
+                )
+                .then(resolve)
             )
-          )
-      }
-      break
-    case 'grid':
-      if (
-        move.to.taskId &&
-        dropActsLikeFolder &&
-        move.from.inId !== move.to.inId
-      ) {
-        api
-          .unpinCardFromGrid(
-            move.from.coords.x,
-            move.from.coords.y,
+        } else {
+          let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
             move.from.inId
           )
-          .then(() => {
-            api.discardCardFromCard(move.from.taskId, move.from.inId)
-          })
-          .then(() =>
-            api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+          runInAction(
+            () =>
+              (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+                true)
           )
-      } else if (move.to.taskId) {
-        api
-          .pinCardToGrid(
-            move.to.coords.x,
-            move.to.coords.y,
-            nameFrom,
-            move.to.inId
-          )
-          .then(() =>
-            api.pinCardToGrid(
+          api
+            .unpinCardFromGrid(
               move.from.coords.x,
               move.from.coords.y,
-              nameTo,
               move.from.inId
             )
-          )
-      } else {
-        let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
-          move.from.inId
-        )
-        runInAction(
-          () =>
-            (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-              true)
-        )
-        api
-          .unpinCardFromGrid(
-            move.from.coords.x,
-            move.from.coords.y,
-            move.from.inId
-          )
-          .then(() => {
+            .then(() => {
+              api
+                .pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                )
+                .then(() => {
+                  runInAction(
+                    () =>
+                      (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+                        false)
+                  )
+                })
+                .then(resolve)
+            })
+        }
+        break
+      case 'subTasks':
+        api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
+          if (move.to.taskId && dropActsLikeFolder) {
+            api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+          } else if (move.to.taskId) {
+            api
+              .unpinCardFromGrid(
+                move.to.coords.x,
+                move.to.coords.y,
+                move.to.inId
+              )
+              .then(() =>
+                api.pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                )
+              )
+              .then(resolve)
+          } else {
             api
               .pinCardToGrid(
                 move.to.coords.x,
@@ -170,20 +223,21 @@ function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
                 nameFrom,
                 move.to.inId
               )
-              .then(() => {
-                runInAction(
-                  () =>
-                    (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                      false)
-                )
-              })
-          })
-      }
-      break
-    case 'subTasks':
-      api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
+              .then(resolve)
+          }
+        })
+        break
+      case 'discard':
+        aoStore.popDiscardHistory()
+        resolve(null)
+      case 'completed':
+      case 'context':
+      case 'panel':
+      default:
         if (move.to.taskId && dropActsLikeFolder) {
-          api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+          api
+            .findOrCreateCardInCard(nameFrom, move.to.taskId, false)
+            .then(resolve)
         } else if (move.to.taskId) {
           api
             .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
@@ -195,45 +249,20 @@ function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
                 move.to.inId
               )
             )
+            .then(resolve)
         } else {
-          api.pinCardToGrid(
-            move.to.coords.x,
-            move.to.coords.y,
-            nameFrom,
-            move.to.inId
-          )
-        }
-      })
-      break
-    case 'discard':
-      aoStore.popDiscardHistory()
-    case 'completed':
-    case 'context':
-    case 'panel':
-    default:
-      if (move.to.taskId && dropActsLikeFolder) {
-        api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
-      } else if (move.to.taskId) {
-        api
-          .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-          .then(() =>
-            api.pinCardToGrid(
+          api
+            .pinCardToGrid(
               move.to.coords.x,
               move.to.coords.y,
               nameFrom,
               move.to.inId
             )
-          )
-      } else {
-        api.pinCardToGrid(
-          move.to.coords.x,
-          move.to.coords.y,
-          nameFrom,
-          move.to.inId
-        )
-      }
-      break
-  }
+            .then(resolve)
+        }
+        break
+    }
+  })
 }
 
 const AoGridRowObserver = observer(
@@ -398,6 +427,11 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
   // console.log('AO: components/grid.tsx: GridView component function')
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
+  const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
+
+  React.useEffect(() => {
+    if (renderMeNowPlease) setRenderMeNowPlease(false)
+  }, [renderMeNowPlease])
 
   function selectGridSquare(selection: Coords) {
     setSelected(selection)
@@ -412,7 +446,9 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
   }
 
   function dropToGridSquareCaller(move: CardPlay) {
-    dropToGridSquare(move, props.dropActsLikeFolder)
+    dropToGridSquare(move, props.dropActsLikeFolder).then(result => {
+      setRenderMeNowPlease(true)
+    })
   }
 
   const render: JSX.Element[] = []
@@ -449,6 +485,13 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
   // console.log('AO: components/grid.tsx: GridView component function')
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
+  const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
+
+  React.useEffect(() => {
+    if (renderMeNowPlease) {
+      setRenderMeNowPlease(false)
+    }
+  }, [renderMeNowPlease])
 
   function selectGridSquare(selection: Coords) {
     setSelected(selection)
@@ -463,7 +506,9 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
   }
 
   function dropToGridSquareCaller(move: CardPlay) {
-    dropToGridSquare(move, props.dropActsLikeFolder)
+    dropToGridSquare(move, props.dropActsLikeFolder).then(() => {
+      setRenderMeNowPlease(true)
+    })
   }
 
   const render: JSX.Element[] = []
