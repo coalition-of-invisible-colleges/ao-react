@@ -165,11 +165,11 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
           let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
             move.from.inId
           )
-          runInAction(
-            () =>
-              (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                true)
-          )
+          // runInAction(
+          //   () =>
+          //     (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+          //       true)
+          // )
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -447,6 +447,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 
   function dropToGridSquareCaller(move: CardPlay) {
     dropToGridSquare(move, props.dropActsLikeFolder).then(result => {
+      console.log('setting renderMeNowPlease to true')
       setRenderMeNowPlease(true)
     })
   }
@@ -507,6 +508,7 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
 
   function dropToGridSquareCaller(move: CardPlay) {
     dropToGridSquare(move, props.dropActsLikeFolder).then(() => {
+      console.log('setting renderMeNowPlease to true')
       setRenderMeNowPlease(true)
     })
   }
