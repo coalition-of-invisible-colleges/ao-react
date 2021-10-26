@@ -165,11 +165,11 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
           let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
             move.from.inId
           )
-          // runInAction(
-          //   () =>
-          //     (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-          //       true)
-          // )
+          runInAction(
+            () =>
+              (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+                true)
+          )
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -430,7 +430,9 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
 
   React.useEffect(() => {
-    if (renderMeNowPlease) setRenderMeNowPlease(false)
+    if (renderMeNowPlease) {
+      setRenderMeNowPlease(false)
+    }
   }, [renderMeNowPlease])
 
   function selectGridSquare(selection: Coords) {
