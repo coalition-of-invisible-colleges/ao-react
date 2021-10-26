@@ -656,7 +656,7 @@ router.post('/events', (req, res, next) => {
           {
             taskId: req.body.taskId,
             subTask: req.body.subTask,
-            memberId: req.body.blame,
+            memberId: req.body.memberId,
           },
           resCallback
         )

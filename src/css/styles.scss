@@ -2483,9 +2483,7 @@ img.ascend {
 }
 
 // Start Tour button at top left of screen before you've take the tour once
-// Becomes the Manual button after you take the tour
-#hud > .tour,
-#hud .manual {
+#hud > .tour {
   position: fixed;
   bottom: 0.625em;
   left: 5em;
