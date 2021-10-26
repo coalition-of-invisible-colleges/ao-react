@@ -166,11 +166,11 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
           let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
             move.from.inId
           )
-          runInAction(
-            () =>
-              (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                true)
-          )
+          // runInAction(
+          //   () =>
+          //     (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+          //       true)
+          // )
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -186,11 +186,11 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
                   move.to.inId
                 )
                 .then(() => {
-                  runInAction(
-                    () =>
-                      (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                        false)
-                  )
+                  // runInAction(
+                  //   () =>
+                  //     (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+                  //       false)
+                  // )
                 })
                 .then(resolve)
             })
@@ -500,8 +500,10 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
   console.log('PyramidView render()')
   React.useEffect(() => {
-    console.log('PyramidView useEffect triggered, renderMeNowPlease is'),
+    console.log(
+      'PyramidView useEffect triggered, renderMeNowPlease is',
       renderMeNowPlease
+    )
     if (renderMeNowPlease) {
       setRenderMeNowPlease(false)
     }
