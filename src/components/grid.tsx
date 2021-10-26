@@ -39,6 +39,7 @@ interface PyramidViewProps extends GridProps {
 }
 
 async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
+  console.log('dropToGridSquare')
   if (!move.from.taskId) {
     return
   }
@@ -279,6 +280,8 @@ const AoGridRowObserver = observer(
     dropToGridSquare: (move: CardPlay) => void
     gridStyle: GridStyle
   }) => {
+    console.log('AoGridRowObserver render()')
+
     let render: JSX.Element[] = []
     for (let i = 0; i < props.width; i++) {
       if (
@@ -360,7 +363,7 @@ const AoGridRow: Function = (props: {
   selectGridSquare: (selection: Coords) => void
   dropToGridSquare: (move: CardPlay) => void
 }): JSX.Element => {
-  // console.log('AoGridRow render()')
+  console.log('AoGridRow render()')
 
   let render: JSX.Element[] = []
   for (let i = 0; i < props.width; i++) {
@@ -428,8 +431,12 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
+  console.log('GridView render()'), renderMeNowPlease
 
   React.useEffect(() => {
+    console.log('GridView useEffect triggered, renderMeNowPlease is'),
+      renderMeNowPlease
+
     if (renderMeNowPlease) {
       setRenderMeNowPlease(false)
     }
@@ -489,8 +496,10 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
-
+  console.log('PyramidView render()')
   React.useEffect(() => {
+    console.log('PyramidView useEffect triggered, renderMeNowPlease is'),
+      renderMeNowPlease
     if (renderMeNowPlease) {
       setRenderMeNowPlease(false)
     }
@@ -576,7 +585,7 @@ function AoGridMenu(props: GridMenuProps) {
   }
 
   const isPyramid = props.gridStyle === 'pyramid'
-
+  console.log('AoGridMenu render()')
   const renderedGridMenu = (
     <div className="gridMenu">
       <button
@@ -657,7 +666,7 @@ export default function AoGrid(props: GridProps) {
   }
 
   const gridWidth = props.dropActsLikeFolder ? '5em' : '9em'
-
+  console.log('AoGrid render()')
   if (!isPyramid) {
     return (
       <div className={'gridContainer' + (grid.width <= 2 ? ' padbottom' : '')}>
