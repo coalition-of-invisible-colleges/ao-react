@@ -649,7 +649,7 @@ router.post('/events', (req, res, next) => {
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
         validators.isTaskId(req.body.subTask, errRes) &&
-        validators.isMemberId(req.body.blame)
+        validators.isMemberId(req.body.memberId)
       ) {
         events.trigger(
           eventType,
@@ -657,7 +657,7 @@ router.post('/events', (req, res, next) => {
           {
             taskId: req.body.taskId,
             subTask: req.body.subTask,
-            blame: req.body.blame,
+            memberId: req.body.blame,
           },
           resCallback
         )
