@@ -653,7 +653,6 @@ router.post('/events', (req, res, next) => {
       ) {
         events.trigger(
           eventType,
-          eventType,
           {
             taskId: req.body.taskId,
             subTask: req.body.subTask,
