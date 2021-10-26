@@ -507,7 +507,7 @@ router.post('/events', (req, res, next) => {
     case 'resource-booked':
       if (
         validators.isTaskId(req.body.resourceId, errRes) &&
-        validators.isMemberId(req.body.blame, errRes) &&
+        validators.isMemberId(req.body.memberId, errRes) &&
         validators.isNotes(req.body.startTs, errRes) &&
         validators.isNotes(req.body.endTs, errRes) &&
         validators.isNotes(req.body.eventType, errRes) &&
@@ -518,7 +518,7 @@ router.post('/events', (req, res, next) => {
           eventType,
           {
             resourceId: req.body.resourceId,
-            memberId: req.body.blame,
+            memberId: req.body.memberId,
             startTs: req.body.startTs,
             endTs: req.body.endTs,
             eventType: req.body.eventType,
