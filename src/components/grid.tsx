@@ -126,6 +126,7 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
         }
         break
       case 'grid':
+        console.log('dropped card from grid')
         if (
           move.to.taskId &&
           dropActsLikeFolder &&
