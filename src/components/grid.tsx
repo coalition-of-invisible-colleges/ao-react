@@ -166,11 +166,11 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
           let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
             move.from.inId
           )
-          // runInAction(
-          //   () =>
-          //     (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-          //       true)
-          // )
+          runInAction(
+            () =>
+              (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+                true)
+          )
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -186,11 +186,11 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
                   move.to.inId
                 )
                 .then(() => {
-                  // runInAction(
-                  //   () =>
-                  //     (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                  //       false)
-                  // )
+                  runInAction(
+                    () =>
+                      (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
+                        false)
+                  )
                 })
                 .then(resolve)
             })
@@ -301,6 +301,7 @@ const AoGridRowObserver = observer(
         continue
       }
       let tId: string
+      console.log('props.row is', props.row)
       if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
         tId = props.row[i]
       }
@@ -351,80 +352,80 @@ const AoGridRowObserver = observer(
   }
 )
 
-const AoGridRow: Function = (props: {
-  row: {}
-  y: number
-  inId: string
-  selected?: Coords
-  width: number
-  dropActsLikeFolder: boolean
-  onBlur: () => void
-  onNewGridCard: (name: string, coords: Coords) => void
-  selectGridSquare: (selection: Coords) => void
-  dropToGridSquare: (move: CardPlay) => void
-}): JSX.Element => {
-  console.log('AoGridRow render()')
+// const AoGridRow: Function = (props: {
+//   row: {}
+//   y: number
+//   inId: string
+//   selected?: Coords
+//   width: number
+//   dropActsLikeFolder: boolean
+//   onBlur: () => void
+//   onNewGridCard: (name: string, coords: Coords) => void
+//   selectGridSquare: (selection: Coords) => void
+//   dropToGridSquare: (move: CardPlay) => void
+// }): JSX.Element => {
+//   console.log('AoGridRow render()')
 
-  let render: JSX.Element[] = []
-  for (let i = 0; i < props.width; i++) {
-    if (
-      props.selected &&
-      props.selected.x == i &&
-      props.selected.y == props.y
-    ) {
-      render.push(
-        <React.Fragment key={i + '-' + props.y}>
-          <AoCardComposer
-            onNewCard={props.onNewGridCard}
-            coords={{ x: i, y: props.y }}
-            onBlur={props.onBlur}
-          />
-        </React.Fragment>
-      )
-      continue
-    }
-    let tId: string
-    if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
-      tId = props.row[i]
-    }
+//   let render: JSX.Element[] = []
+//   for (let i = 0; i < props.width; i++) {
+//     if (
+//       props.selected &&
+//       props.selected.x == i &&
+//       props.selected.y == props.y
+//     ) {
+//       render.push(
+//         <React.Fragment key={i + '-' + props.y}>
+//           <AoCardComposer
+//             onNewCard={props.onNewGridCard}
+//             coords={{ x: i, y: props.y }}
+//             onBlur={props.onBlur}
+//           />
+//         </React.Fragment>
+//       )
+//       continue
+//     }
+//     let tId: string
+//     if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
+//       tId = props.row[i]
+//     }
 
-    const card = aoStore.hashMap.get(tId)
-    render.push(
-      <AoDropZone
-        taskId={tId}
-        inId={props.inId}
-        x={i}
-        y={props.y}
-        onSelect={props.selectGridSquare}
-        onDrop={props.dropToGridSquare}
-        zoneStyle="grid"
-        key={i + '-' + props.y}
-        dropActsLikeFolder={props.dropActsLikeFolder}>
-        {tId ? (
-          <AoDragZone
-            taskId={tId}
-            dragContext={{
-              zone: 'grid',
-              inId: props.inId,
-              x: i,
-              y: props.y,
-            }}>
-            <AoContextCard
-              task={card}
-              cardStyle={
-                props.dropActsLikeFolder && card.guild && card.guild.length >= 1
-                  ? 'badge'
-                  : 'mini'
-              }
-            />
-          </AoDragZone>
-        ) : null}
-      </AoDropZone>
-    )
-  }
+//     const card = aoStore.hashMap.get(tId)
+//     render.push(
+//       <AoDropZone
+//         taskId={tId}
+//         inId={props.inId}
+//         x={i}
+//         y={props.y}
+//         onSelect={props.selectGridSquare}
+//         onDrop={props.dropToGridSquare}
+//         zoneStyle="grid"
+//         key={i + '-' + props.y}
+//         dropActsLikeFolder={props.dropActsLikeFolder}>
+//         {tId ? (
+//           <AoDragZone
+//             taskId={tId}
+//             dragContext={{
+//               zone: 'grid',
+//               inId: props.inId,
+//               x: i,
+//               y: props.y,
+//             }}>
+//             <AoContextCard
+//               task={card}
+//               cardStyle={
+//                 props.dropActsLikeFolder && card.guild && card.guild.length >= 1
+//                   ? 'badge'
+//                   : 'mini'
+//               }
+//             />
+//           </AoDragZone>
+//         ) : null}
+//       </AoDropZone>
+//     )
+//   }
 
-  return <>{render}</>
-}
+//   return <>{render}</>
+// }
 
 const GridView: Function = (props: GridViewProps): JSX.Element => {
   // console.log('AO: components/grid.tsx: GridView component function')
