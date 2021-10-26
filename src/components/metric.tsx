@@ -33,19 +33,21 @@ export default class AoMetric extends React.Component<Props, State> {
 
   private interval
 
-  componentDidMount() {
-    this.interval = setInterval(
-      () => this.setState({ clocked: this.renderMyTimeClocked() }),
-      1000
-    )
-  }
-
   componentWillUnmount() {
-    clearInterval(this.interval)
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
   }
 
   startTimeClock() {
     api.startTimeClock(this.props.taskId, this.props.inId)
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
+    this.interval = setInterval(
+      () => this.setState({ clocked: this.renderMyTimeClocked() }),
+      1000
+    )
 
     if (
       aoStore.memberCard.priorities &&
@@ -61,6 +63,7 @@ export default class AoMetric extends React.Component<Props, State> {
 
   stopTimeClock() {
     api.stopTimeClock(this.props.taskId)
+    clearInterval(this.interval)
   }
 
   // Returns true if the timeclock has been started for the card and not stopped yet
@@ -127,7 +130,7 @@ export default class AoMetric extends React.Component<Props, State> {
   }
 
   render() {
-    console.log('metric render')
+    // console.log('metric render')
     if (!this.started) {
       return (
         <Tippy

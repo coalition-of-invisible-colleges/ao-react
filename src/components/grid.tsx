@@ -431,11 +431,13 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
-  console.log('GridView render()'), renderMeNowPlease
+  console.log('GridView render()')
 
   React.useEffect(() => {
-    console.log('GridView useEffect triggered, renderMeNowPlease is'),
+    console.log(
+      'GridView useEffect triggered, renderMeNowPlease is',
       renderMeNowPlease
+    )
 
     if (renderMeNowPlease) {
       setRenderMeNowPlease(false)
