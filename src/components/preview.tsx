@@ -167,7 +167,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         } else {
           return null
         }
-      case 'mini before':
+      case 'mini after':
         if (delay === undefined) {
           delay = [625, 200]
         }
@@ -194,7 +194,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                 theme="translucent"
                 appendTo={() =>
                   document.getElementById('card-' + taskId).parentElement
-                    .parentElement.parentElement
+                    .parentElement.parentElement.parentElement
                 }
                 content={this.renderedPriorities}>
                 {wrappedPriorityCount}

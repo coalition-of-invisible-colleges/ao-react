@@ -576,7 +576,12 @@ interface GridMenuProps {
 
 function AoGridMenu(props: GridMenuProps) {
   const card = aoStore.hashMap.get(props.taskId)
-  if (!card || !card.grid || card.grid.height <= 0) {
+  if (
+    !card ||
+    !card.grid ||
+    card.grid.height <= 1 ||
+    (card.gridStyle !== 'pyramid' && card.grid.width <= 1)
+  ) {
     return null
   }
 
@@ -691,8 +696,8 @@ export default function AoGrid(props: GridProps) {
             dropActsLikeFolder={props.dropActsLikeFolder}
           />
         </div>
-        <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
         <AoGridResizer taskId={taskId} gridStyle={props.gridStyle} />
+        <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
       </div>
     )
   } else {
@@ -705,8 +710,8 @@ export default function AoGrid(props: GridProps) {
           dropActsLikeFolder={props.dropActsLikeFolder}
           gridWidth={gridWidth}
         />
-        <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
         <AoGridResizer taskId={taskId} gridStyle={props.gridStyle} />
+        <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
       </div>
     )
   }

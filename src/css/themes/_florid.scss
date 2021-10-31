@@ -113,8 +113,14 @@ body.florid {
 	img.grab,
 	.lilypad > object,
 	#tour-accomplishments > img,
-	img.badge {
+	img.badge,
+	.tally > img,
+	#hopper img {
 		filter: brightness(0.001);
+	}
+
+	#hopper img.inPort {
+		opacity: 0.5;
 	}
 
 	img.memberIcon {

@@ -46,7 +46,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
-    if (!card) return null
+    if (!card || card.taskId === aoStore.memberCard.taskId) return null
 
     const onClick = event => {
       event.stopPropagation()
@@ -58,11 +58,13 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
         api.completeCard(taskId)
       }
     }
+
     switch (this.props.hudStyle) {
       case 'full before':
       case 'face before':
       case 'collapsed':
       case 'badge':
+      case 'mini before':
         if (this.isCompleted || this.isGrabbed) {
           return (
             <img
@@ -108,11 +110,6 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
               />
             </Tippy>
           )
-        }
-        return null
-      case 'mini before':
-        if (this.isCompleted) {
-          return <img src={Completed} className="checkbox mini" />
         }
       default:
         return null
