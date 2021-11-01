@@ -61,16 +61,12 @@ function fundGuilds() {
   })
   if (Object.keys(activeMembers).length >= 1) {
     const multiplier =
-      config?.jubilee?.multiplier > 0 ? config.jubilee.multiplier : 10
+      config?.jubilee?.multiplier > 0 ? config.jubilee.multiplier : 100
     serverState.tasks.forEach(task => {
       if (task.guild) {
-        let opinions = {}
-        task?.signed?.forEach(signature => {
-          if (!!activeMembers[signature.memberId]) {
-            opinions[signature.memberId] = signature.opinion
-          }
-        })
-        const totalCurrentEndorsements = Object.values(opinions)?.length || 0
+        let hodlrsNoDuplicates = [...task?.deck]
+
+        const totalCurrentEndorsements = hodlrsNoDuplicates?.length || 0
         if (totalCurrentEndorsements > 0) {
           events.trigger(
             'task-boosted',
@@ -88,6 +84,6 @@ function fundGuilds() {
 
 export default function () {
   rentJob.start()
-  deactivateJob.start()
+  // deactivateJob.start()
   fundJob.start()
 }
