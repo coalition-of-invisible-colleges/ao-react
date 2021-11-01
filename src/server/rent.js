@@ -65,7 +65,6 @@ function fundGuilds() {
     serverState.tasks.forEach(task => {
       if (task.guild) {
         let hodlrsNoDuplicates = [...task?.deck]
-
         const totalCurrentEndorsements = hodlrsNoDuplicates?.length || 0
         if (totalCurrentEndorsements > 0) {
           events.trigger(
@@ -86,4 +85,5 @@ export default function () {
   rentJob.start()
   // deactivateJob.start()
   fundJob.start()
+  fundGuilds()
 }

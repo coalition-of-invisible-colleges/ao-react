@@ -129,7 +129,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
     }
     switch (this.props.hudStyle) {
       case 'full before':
-        if (hasGoal) {
+        if (hasGoal || hasPoints) {
           return (
             <div onClick={this.startEditing} className="goal full action">
               {pointsSlashGoal} points
@@ -138,7 +138,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
         }
         return null
       case 'mini before':
-        if (hasGoal) {
+        if (hasGoal || hasPoints) {
           return <span className="goal mini">{pointsSlashGoal}</span>
         }
         return null
@@ -156,7 +156,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
       case 'collapsed':
       case 'collapsed-mission':
       default:
-        if (hasGoal) {
+        if (hasGoal || hasPoints) {
           return (
             <div className={'goal summary ' + this.props.hudStyle}>
               {pointsSlashGoal}

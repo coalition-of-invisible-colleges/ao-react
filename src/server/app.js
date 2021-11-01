@@ -36,7 +36,7 @@ function startDctrlAo() {
     state.initialize(err => {
       if (err) return console.log('state initialize failed:', err)
       watchSpot()
-      // rent()
+      rent()
       link()
       scanMemes()
       todo()
