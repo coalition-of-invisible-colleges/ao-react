@@ -307,7 +307,7 @@ export default function applyRouter(app) {
       return meme.hash === req.params.memeHash
     })
     const memePath = path.join(config.memes.dir, meme.filename)
-    console.log('meme path is ', memePath
+    console.log('meme path is ', memePath)
     // res.contentType(memePath)
     res.download(memePath)
   })
