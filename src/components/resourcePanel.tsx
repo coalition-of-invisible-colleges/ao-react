@@ -13,6 +13,7 @@ interface Props {
 
 interface State {
   redirect?: string
+  loaded?: boolean
 }
 
 interface ResourceDisplayOptions {
@@ -22,7 +23,7 @@ interface ResourceDisplayOptions {
 }
 
 @observer
-export default class AoResourcePanel extends React.PureComponent<Props, State> {
+export default class AoResourcePanel extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     makeObservable(this)
@@ -30,6 +31,9 @@ export default class AoResourcePanel extends React.PureComponent<Props, State> {
     this.useResource = this.useResource.bind(this)
     this.purgeResource = this.purgeResource.bind(this)
     this.goInCard = this.goInCard.bind(this)
+    aoStore.getAllLinkedCardsForThisTaskId_async(props.resourceId, () => {
+      this.setState({ loaded: true })
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {

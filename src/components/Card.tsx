@@ -108,12 +108,6 @@ class CurrentContextCard {
     makeObservable(this, { cardItem: observable })
   }
 
-  componentDidLoad() {
-    aoStore.state.resources.forEach(resourceId => {
-      aoStore.getTaskById_async(resourceId, taskItem => {})
-    })
-  }
-
   setCardItem(taskId) {
     let taskIdUrlString = '/task/'
 

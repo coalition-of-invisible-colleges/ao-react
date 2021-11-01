@@ -1353,17 +1353,14 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-boosted':
-      console.log('task-boosted event taskId is', ev.taskId)
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          console.log('found task! pre, ', task.boost)
           let amount = parseFloat(ev.amount)
           let boost = parseFloat(task.boost)
           if (amount > 0) {
             task.boost = amount + boost
             task.address = ''
           }
-          console.log('found task! post, ', task.boost)
         }
       })
       break
