@@ -106,6 +106,9 @@ class CurrentContextCard {
 
   constructor() {
     makeObservable(this, { cardItem: observable })
+    aoStore.state.resources.forEach(resourceId => {
+      aoStore.getTaskById_async(resourceId, taskItem => {})
+    })
   }
 
   setCardItem(taskId) {
