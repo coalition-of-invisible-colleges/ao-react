@@ -133,7 +133,7 @@ export default class AoResourcePanel extends React.Component<Props, State> {
         return (
           <div className="option">
             <AoPaper color="blue" />
-            Unnamed resource
+            Loading <span className="spinner" />
           </div>
         )
       }
