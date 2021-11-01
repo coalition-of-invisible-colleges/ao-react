@@ -285,7 +285,7 @@ export default function applyRouter(app) {
   })
 
   app.get('/meme/:memeHash', (req, res) => {
-    console.log('download route detected, hash is ', req.params.memeHash)
+    console.log('meme route detected, hash is ', req.params.memeHash)
     const meme = state.serverState.memes.find(meme => {
       return meme.hash === req.params.memeHash
     })
@@ -297,7 +297,7 @@ export default function applyRouter(app) {
     console.log('meme path is ', memePath)
     // res.contentType(memePath)
     res
-      .set('Cache-Control', 'public, max-age=31557600, immutable')
+      .set('Cache-Control', 'public,max-age=31557600,immutable')
       .sendFile(memePath)
   })
 
