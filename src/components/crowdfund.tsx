@@ -155,6 +155,7 @@ export default class AoCrowdfund extends React.Component<Props, State> {
       case 'face before':
       case 'collapsed':
       case 'collapsed-mission':
+      case 'context':
       default:
         if (hasGoal || hasPoints) {
           return (

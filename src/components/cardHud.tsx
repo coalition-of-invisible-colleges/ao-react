@@ -82,6 +82,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							onTogglePriorities={this.props.onTogglePriorities}
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 				break

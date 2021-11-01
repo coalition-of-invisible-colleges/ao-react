@@ -161,9 +161,16 @@ const PageTitleView = observer(() => {
     if (
       currentContextCard.cardItem.name === currentContextCard.cardItem.taskId
     ) {
-      pageTitle = aoStore.memberById.get(
+      const foundMember = aoStore.memberById.get(
         currentContextCard.cardItem.taskId
-      ).name
+      )
+      if (foundMember) {
+        pageTitle = foundMember.name
+      } else {
+        const foundResource = aoStore.resourceById.get(
+          currentContextCard.cardItem.taskId
+        )?.name
+      }
     } else {
       pageTitle = currentContextCard.cardItem.name
     }

@@ -85,5 +85,4 @@ export default function () {
   rentJob.start()
   // deactivateJob.start()
   fundJob.start()
-  fundGuilds()
 }
