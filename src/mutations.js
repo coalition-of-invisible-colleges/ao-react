@@ -1296,11 +1296,11 @@ function tasksMuts(tasks, ev) {
             task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
             task.completed.push(ev.taskId)
           }
-          let alloc = false
+          // let alloc = false
           if (task.allocations && Array.isArray(task.allocations)) {
             task.allocations = _.filter(task.allocations, al => {
               if (al.allocatedId === ev.taskId) {
-                alloc = al.amount
+                bounty += al.amount
                 return false
               }
               return true
