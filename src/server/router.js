@@ -296,7 +296,9 @@ export default function applyRouter(app) {
     const memePath = path.join(config.memes.dir, meme.filename)
     console.log('meme path is ', memePath)
     // res.contentType(memePath)
-    res.set('Cache-Control', 'public, max-age=31557600').sendFile(memePath)
+    res
+      .set('Cache-Control', 'public, max-age=31557600, immutable')
+      .sendFile(memePath)
   })
 
   app.get('/download/:memeHash', (req, res) => {
