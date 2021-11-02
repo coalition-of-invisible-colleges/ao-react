@@ -140,7 +140,6 @@ export default function applyRouter(app) {
         priorityIdList.push(taskItem.priorities[taskItem.priorities.length - 1])
       }
     })
-    console.log('priorityIdList', priorityIdList)
     let priorityTaskItems = []
     state.pubState.tasks.some(taskItem => {
       if (priorityIdList.includes(taskItem.taskId)) {
@@ -151,7 +150,6 @@ export default function applyRouter(app) {
         }
       }
     })
-    console.log('priorityTaskItems', priorityTaskItems)
     // Remove duplicates and combine lists
     stateToSend.tasks = [...stateToSend.tasks, ...priorityTaskItems]
 
@@ -172,7 +170,7 @@ export default function applyRouter(app) {
       let errRes = []
       let foundThisTask
 
-      console.log('AO: server/router.js: fetchTaskByID: ')
+      // console.log('AO: server/router.js: fetchTaskByID: ')
 
       let taskIdList = req.body.taskId
       let taskIdListParameterWasSingleValue = false
@@ -226,10 +224,10 @@ export default function applyRouter(app) {
         })
         foundAllTaskItems = foundAllTaskItems && foundAllPriorityItems
 
-        console.log('AO: server/router.js: fetchTaskByID: ', {
-          taskId: req.body.taskId,
-          result: foundThisTaskList,
-        })
+        // console.log('AO: server/router.js: fetchTaskByID: ', {
+        // taskId: req.body.taskId,
+        // result: foundThisTaskList,
+        // })
         let objectToSend
         if (taskIdListParameterWasSingleValue === true) {
           if (foundThisTaskList.length === 0) {
@@ -261,9 +259,9 @@ export default function applyRouter(app) {
       let errRes = []
       let foundThisTask
 
-      console.log('AO: server/router.js: fetchTaskByName: start: ', {
-        'pubState.tasks': state.pubState.tasks,
-      })
+      // console.log('AO: server/router.js: fetchTaskByName: start: ', {
+      //   'pubState.tasks': state.pubState.tasks,
+      // })
 
       if (validators.isTaskName_sane(req.body.taskName, errRes)) {
         let taskName = req.body.taskName
@@ -276,7 +274,6 @@ export default function applyRouter(app) {
         })
 
         if (foundThisTask) {
-          console.log('\n\n\nfoundTask by name!')
           let foundThisTaskList = [foundThisTask]
 
           // Also return the first priority for each card we are returning, since priorities show up prior to the card in priority mode
@@ -292,7 +289,6 @@ export default function applyRouter(app) {
           })
 
           // console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
-          console.log('\n\nfetchTaskByName items are', foundThisTaskList)
           res.status(200).send({
             foundThisTaskList,
             foundAllTaskItems:
