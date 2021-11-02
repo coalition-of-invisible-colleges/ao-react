@@ -3,6 +3,7 @@ import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
+import api from '../client/api'
 import AoStack from './stack'
 import AoDragZone from './dragZone'
 import AoContextCard from './contextCard'
@@ -38,10 +39,10 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
 
   togglePriors(event) {
     event.stopPropagation()
-    if (aoStore.showPriorityPreview) {
-      aoStore.hidePriors()
+    if (aoStore.member.priorityMode) {
+      api.updateMemberField('priorityMode', false)
     } else {
-      aoStore.showPriors()
+      api.updateMemberField('priorityMode', true)
     }
   }
 
@@ -180,6 +181,8 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           return null
         }
       case 'mini after':
+        const showPrioritiesPrior = aoStore.member.priorityMode
+
         if (delay === undefined) {
           delay = [625, 200]
         }
@@ -189,7 +192,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           )
         }
         let previewCard
-        if (aoStore.showPriorityPreview && card?.priorities?.length >= 1) {
+        if (showPrioritiesPrior && card?.priorities?.length >= 1) {
           const previewTaskId = card.priorities[card.priorities.length - 1]
           previewCard = aoStore.hashMap.get(previewTaskId)
         }
@@ -198,7 +201,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           const placement = this.props.hudStyle === 'badge' ? 'top' : 'bottom'
           return (
             <React.Fragment>
-              {aoStore.showPriorityPreview && previewCard && (
+              {showPrioritiesPrior && previewCard && (
                 <AoDragZone
                   taskId={previewCard.taskd}
                   dragContext={{
@@ -217,7 +220,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                 onClick={this.togglePriors}
                 className={
                   'preview clickable' +
-                  (aoStore.showPriorityPreview ? ' showingPriors' : '')
+                  (showPrioritiesPrior ? ' showingPriors' : '')
                 }>
                 {wrappedPriorityCount}
               </div>

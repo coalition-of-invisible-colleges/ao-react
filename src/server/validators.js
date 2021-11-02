@@ -27,7 +27,8 @@ export default {
       val === 'fob' ||
       val === 'draft' ||
       val === 'tutorial' ||
-      val === 'phone'
+      val === 'phone' ||
+      val == 'priorityMode'
     if (!isField) {
       errRes.push('invalid field')
       return false

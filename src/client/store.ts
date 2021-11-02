@@ -63,7 +63,8 @@ export interface Member {
   info: {}
   timestamp: number
   lastUsed: number
-  muted: Boolean
+  muted: boolean
+  priorityMode: boolean
   fob: string
   potentials: Signature[]
   banned: boolean
@@ -327,7 +328,6 @@ class AoStore {
   @observable memberDeckSize?: number
   @observable mediaPlayHead: { inId: string; taskId: string }
   @observable leftSidebar?: LeftSidebarTab
-  @observable showPriorityPreview?: boolean
   bookmarksTaskId?: string
 
   constructor() {
@@ -623,10 +623,6 @@ class AoStore {
   getFirstPriorityCardForThisTaskId_async(parentTaskId) {
     parentTaskId = parentTaskId.toLowerCase()
     let parentTaskItem = this.hashMap.get(parentTaskId)
-    console.log(
-      'getFirstPriorityCardForThisTaskId_async for parentTask ',
-      parentTaskItem.name
-    )
     if (!parentTaskItem || parentTaskItem.priorities.length < 1) {
       return false
     } else {
@@ -640,7 +636,6 @@ class AoStore {
       if (firstPriorityCard) {
         return true
       } else {
-        console.log('fetching absent priority ', firstPriorityTaskId)
         setImmediate(() => {
           let stateClosure = this.state
           request
@@ -1507,16 +1502,6 @@ class AoStore {
   @action.bound
   closeLeftSidebar() {
     this.leftSidebar = null
-  }
-
-  @action.bound
-  showPriors() {
-    this.showPriorityPreview = true
-  }
-
-  @action.bound
-  hidePriors() {
-    this.showPriorityPreview = false
   }
 }
 const aoStore = new AoStore()
