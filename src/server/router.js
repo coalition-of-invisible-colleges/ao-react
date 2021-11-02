@@ -135,22 +135,22 @@ export default function applyRouter(app) {
 
     // Also include the first priority of every card we are sending
     let priorityTaskItems = []
-    stateToSend.tasks.forEach(taskItem => {
-      if (taskItem?.priorities?.length) {
-        const foundPriority = state.pubState.tasks.find(
-          st =>
-            st.taskId === taskItem.priorities[taskItem.priorities.length - 1]
-        )
-        if (
-          foundPriority &&
-          !stateToSend.tasks.some(
-            taskToSend => taskToSend.taskId === foundPriority.taskId
-          )
-        ) {
-          priorityTaskItems.push(foundPriority)
-        }
-      }
-    })
+    // stateToSend.tasks.forEach(taskItem => {
+    //   if (taskItem?.priorities?.length) {
+    //     const foundPriority = state.pubState.tasks.find(
+    //       st =>
+    //         st.taskId === taskItem.priorities[taskItem.priorities.length - 1]
+    //     )
+    //     if (
+    //       foundPriority &&
+    //       !stateToSend.tasks.some(
+    //         taskToSend => taskToSend.taskId === foundPriority.taskId
+    //       )
+    //     ) {
+    //       priorityTaskItems.push(foundPriority)
+    //     }
+    //   }
+    // })
 
     // Remove duplicates and combine lists
     stateToSend.tasks = [...stateToSend.tasks, ...priorityTaskItems]
