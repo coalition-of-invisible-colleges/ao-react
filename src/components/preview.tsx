@@ -202,19 +202,24 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           return (
             <React.Fragment>
               {showPrioritiesPrior && previewCard && (
-                <AoDragZone
-                  taskId={previewCard.taskd}
-                  dragContext={{
-                    zone: 'priorities',
-                    inId: this.props.taskId,
-                    y: 0,
-                  }}>
-                  <AoContextCard
-                    task={previewCard}
-                    cardStyle="mini"
-                    inId={this.props.taskId}
-                  />
-                </AoDragZone>
+                <span
+                  className={
+                    !card.guild || card.guild.length < 1 ? 'noGuild' : null
+                  }>
+                  <AoDragZone
+                    taskId={previewCard.taskd}
+                    dragContext={{
+                      zone: 'priorities',
+                      inId: this.props.taskId,
+                      y: 0,
+                    }}>
+                    <AoContextCard
+                      task={previewCard}
+                      cardStyle="mini"
+                      inId={this.props.taskId}
+                    />
+                  </AoDragZone>
+                </span>
               )}
               <div
                 onClick={this.togglePriors}

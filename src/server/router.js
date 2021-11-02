@@ -114,22 +114,44 @@ export default function applyRouter(app) {
       }
     })
 
-    let bookmarkTaskItems = []
+    // let bookmarkTaskItems = []
     state.pubState.tasks.forEach(taskItem => {
       if (
         taskItem.parents &&
         taskItem.parents.indexOf(bookmarksTaskId) !== -1
       ) {
         stateToSend.tasks.push(taskItem)
-        bookmarkTaskItems.push(taskItem)
+        // bookmarkTaskItems.push(taskItem)
       }
     })
 
-    let inboxTaskItems = []
+    // let inboxTaskItems = []
     state.pubState.tasks.forEach(taskItem => {
       if (taskItem.passed.some(pass => pass[1] === req.reqOwner)) {
         stateToSend.tasks.push(taskItem)
-        inboxTaskItems.push(taskItem)
+        // inboxTaskItems.push(taskItem)
+      }
+    })
+
+    // Also include the first priority of every card we are sending
+    stateToSend.tasks.forEach(taskItem => {
+      console.log('task is', taskItem.name)
+      if (taskItem?.priorities?.length) {
+        console.log('priorites length is', taskItem.priorities.length)
+        const foundPriority = state.pubState.tasks.find(
+          st =>
+            st.taskId === taskItem.priorities[taskItem.priorities.length - 1]
+        )
+        console.log('foundPriority is', foundPriority)
+        if (
+          foundPriority &&
+          !stateToSend.tasks.some(
+            taskToSend => taskToSend.taskId === foundPriority.taskId
+          )
+        ) {
+          console.log('adding priority', foundPriority.name)
+          stateToSend.tasks.push(foundPriority)
+        }
       }
     })
 
@@ -182,6 +204,28 @@ export default function applyRouter(app) {
           }
         })
 
+        // Also return the first priority for each card we are returning, since priorities show up prior to the card in priority mode
+        let priorityIdList = []
+        foundThisTaskList.forEach(foundTask => {
+          if (foundTask?.priorities?.length) {
+            priorityIdList.push(
+              foundTask.priorities[foundTask.priorities.length - 1]
+            )
+          }
+        })
+        let foundAllPriorityItems = priorityIdList.length <= 0
+        state.pubState.tasks.some(taskItem => {
+          if (priorityIdList.includes(taskItem.taskId)) {
+            foundThisTaskList.push(taskItem) // will add duplicates
+            priorityIdList.splice(priorityIdList.indexOf(taskItem.taskId), 1)
+            if (priorityIdList.length === 0) {
+              foundAllPriorityItems = true
+              return true
+            }
+          }
+        })
+        foundAllTaskItems = foundAllTaskItems && foundAllPriorityItems
+
         console.log('AO: server/router.js: fetchTaskByID: ', {
           taskId: req.body.taskId,
           result: foundThisTaskList,
@@ -217,7 +261,9 @@ export default function applyRouter(app) {
       let errRes = []
       let foundThisTask
 
-      // console.log("AO: server/router.js: fetchTaskByName: start: ", { "pubState.tasks": state.pubState.tasks });
+      console.log('AO: server/router.js: fetchTaskByName: start: ', {
+        'pubState.tasks': state.pubState.tasks,
+      })
 
       if (validators.isTaskName_sane(req.body.taskName, errRes)) {
         let taskName = req.body.taskName
@@ -230,8 +276,27 @@ export default function applyRouter(app) {
         })
 
         if (foundThisTask) {
+          console.log('\n\n\nfoundTask by name!')
+          let foundThisTaskList = [foundThisTask]
+
+          // Also return the first priority for each card we are returning, since priorities show up prior to the card in priority mode
+          const firstPriorityId = foundThisTask?.priorities?.length
+            ? foundThisTask.priorities[foundThisTask.priorities.length - 1]
+            : null
+          let foundPriority
+          state.pubState.tasks.some(taskItem => {
+            if (taskItem.taskId === firstPriorityId) {
+              foundThisTaskList.push(taskItem)
+            }
+          })
+
           // console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
-          res.status(200).send([foundThisTask])
+          console.log('\n\nfetchTaskByName items are', foundThisTaskList)
+          res.status(200).send({
+            foundThisTaskList,
+            foundAllTaskItems:
+              !firstpriorityId || (firstPriorityId && foundPriority),
+          })
         } else {
           // console.log("AO: server/router.js: fetchTaskByName: task not found ", { "req.body": req.body, foundThisTask} )
           errRes.push('task name not found')

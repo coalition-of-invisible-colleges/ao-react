@@ -66,7 +66,7 @@ export async function addMeme(name, path, data = null, taskId = null) {
 	})
 	// console.log('foundMeme is', foundMeme)
 	if (foundMeme) {
-		console.log('returning existing meme')
+		// console.log('returning existing meme: ', foundMeme.memeId)
 		return Promise.resolve(foundMeme.memeId)
 	}
 

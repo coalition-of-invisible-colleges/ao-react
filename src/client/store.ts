@@ -530,18 +530,18 @@ class AoStore {
                 // setImmdiate(() => callback(this.hashMap.get(taskId)))
                 // this works to solve the missing prorities dropdown problem but it ruins performance
                 // if (!prioritiesOnly) {
-                console.log(
-                  'got tasks and about to get first priorities:',
-                  result.body.foundThisTaskList
-                )
-                stateClosure.tasks.forEach(foundTask => {
-                  this.getFirstPriorityCardForThisTaskId_async(foundTask.taskId)
-                  //     this.getAllLinkedCardsForThisTaskId_async(
-                  //       foundTask.taskId,
-                  //       () => {},
-                  //       true
-                  //     )
-                })
+                // console.log(
+                //   'got tasks and about to get first priorities:',
+                //   result.body.foundThisTaskList
+                // )
+                // stateClosure.tasks.forEach(foundTask => {
+                //   this.getFirstPriorityCardForThisTaskId_async(foundTask.taskId)
+                //     this.getAllLinkedCardsForThisTaskId_async(
+                //       foundTask.taskId,
+                //       () => {},
+                //       true
+                //     )
+                // })
                 // }
                 callback(true)
               })
@@ -620,45 +620,44 @@ class AoStore {
     //         )
   }
 
-  getFirstPriorityCardForThisTaskId_async(parentTaskId) {
-    parentTaskId = parentTaskId.toLowerCase()
-    let parentTaskItem = this.hashMap.get(parentTaskId)
-    if (!parentTaskItem || parentTaskItem.priorities.length < 1) {
-      return false
-    } else {
-      const firstPriorityTaskId =
-        parentTaskItem.priorities[parentTaskItem.priorities.length - 1]
-      if (!firstPriorityTaskId) {
-        return false
-      }
-      let firstPriorityCard = this.hashMap.get(firstPriorityTaskId)
+  // getFirstPriorityCardForThisTaskId_async(parentTaskId) {
+  //   parentTaskId = parentTaskId.toLowerCase()
+  //   let parentTaskItem = this.hashMap.get(parentTaskId)
+  //   if (!parentTaskItem || parentTaskItem.priorities.length < 1) {
+  //     return false
+  //   } else {
+  //     const firstPriorityTaskId =
+  //       parentTaskItem.priorities[parentTaskItem.priorities.length - 1]
+  //     if (!firstPriorityTaskId) {
+  //       return false
+  //     }
+  //     let firstPriorityCard = this.hashMap.get(firstPriorityTaskId)
 
-      if (firstPriorityCard) {
-        return true
-      } else {
-        setImmediate(() => {
-          let stateClosure = this.state
-          request
-            .post('/fetchTaskByID')
-            .set('Authorization', stateClosure.token)
-            .send({ taskId: firstPriorityTaskId })
-            .then(result => {
-              runInAction(() => {
-                console.log('found proirity is', result.body)
-                // sometimes multiple overlapping requests for subcads cause
-                // duplicates to be returned from different queries.
-                stateClosure.tasks.filter(
-                  existingTask => existingTask.taskId !== result.body
-                )
-                stateClosure.tasks.push(result.body)
-              })
-            })
-            .catch(error => {})
-        })
-        return false
-      }
-    }
-  }
+  //     if (firstPriorityCard) {
+  //       return true
+  //     } else {
+  //       setImmediate(() => {
+  //         let stateClosure = this.state
+  //         request
+  //           .post('/fetchTaskByID')
+  //           .set('Authorization', stateClosure.token)
+  //           .send({ taskId: firstPriorityTaskId })
+  //           .then(result => {
+  //             runInAction(() => {
+  //               // sometimes multiple overlapping requests for subcads cause
+  //               // duplicates to be returned from different queries.
+  //               stateClosure.tasks.filter(
+  //                 existingTask => existingTask.taskId !== result.body
+  //               )
+  //               stateClosure.tasks.push(result.body)
+  //             })
+  //           })
+  //           .catch(error => {})
+  //       })
+  //       return false
+  //     }
+  //   }
+  // }
 
   @computed get memberById(): Map<string, Member> {
     let hashMap: Map<string, Member> = new Map()
@@ -731,13 +730,13 @@ class AoStore {
   getTaskByName_async(taskName, callback) {
     taskName = taskName.toLowerCase()
     let taskToGet = this.cardByName.get(taskName)
-
+    console.log('entry getTaskByName_async task is', taskToGet)
     if (taskToGet !== undefined) {
       // console.log("AO: client/store.ts: getTaskByName_async: task found in client store: ", { taskName, taskToGet });
       callback(taskToGet)
     } else {
       // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
-
+      console.log('about to fetchTaskByName', taskName)
       let stateClosure = this.state
       request
         .post('/fetchTaskByName')
@@ -746,15 +745,16 @@ class AoStore {
         .then(result => {
           // console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
 
+          console.log('fetchTaskByName result is', result.body)
           runInAction(() => {
-            let taskItem = result.body
+            let taskItems = result.body.foundThisTaskList
             let existingTask = this.cardByName.get(taskName)
             // here we prefer client data, in the other places that use filter we prefer server data
             // since cards are immutable it shouldn't matter too much
             if (existingTask === undefined) {
-              stateClosure.tasks.push(taskItem)
+              stateClosure.tasks.push(taskItems)
             }
-            taskItem = this.hashMap.get(taskItem.taskId)
+            const taskItem = this.hashMap.get(taskItems[0].taskId)
             setImmediate(() => callback(taskItem))
             // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
           })

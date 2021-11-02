@@ -34,40 +34,6 @@ interface RenderProps {
   taskId?: string
 }
 
-// let getCommunityCard =
-//     () =>
-//     {
-//       aoStore.getTaskByName_async
-//       ( "community hub",
-//         (communityCard) =>
-//         {
-//           if (
-//               !communityCard ||
-//               !communityCard.hasOwnProperty('taskId') ||
-//               !communityCard.taskId
-//           ) {
-//               console.log("AO: components/App.tsx: initialising page, creating community hub card on server")
-
-//               api.createCard('community hub', true).then(result => {
-//                   const newTaskId = JSON.parse(result.text).event.taskId
-
-//                   console.log("AO: components/App.tsx: initialising page, community hub card created: ", { newTaskId });
-
-//                   aoStore.setCurrentCard(newTaskId)
-//                   // setHubId(newTaskId)
-//                   // initialStateComplete();
-//               })
-//           } else {
-//               console.log("AO: components/App.tsx: initialising page, community hub card found in client state: ", { "taskId": communityCard.taskId });
-
-//               aoStore.setCurrentCard(communityCard.taskId)
-//               // setHubId(communityCard.taskId)
-//               // initialStateComplete();
-//           }
-//         }
-//       )
-//     }
-
 class ContextStackWatcher {
   contextCardList = aoStore.contextCards
 

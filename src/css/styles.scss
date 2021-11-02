@@ -3649,9 +3649,14 @@ textarea {
 .card.mini .hud.after .dragZone {
   position: absolute;
   top: 1.4em;
-  left: 0;
-  right: 0;
-  bottom: 1.7em;
+  left: 0.25em;
+  right: 0.25em;
+  bottom: 1.71em;
+}
+
+// Make card almost flush with top edge of parent card when no guild title
+.card.mini .hud.after .noGuild .dragZone {
+  top: 0.25em;
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
