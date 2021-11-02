@@ -404,7 +404,10 @@ class AoStore {
     taskId = taskId.toLowerCase()
     let taskToGet = this.hashMap.get(taskId)
     if (taskToGet !== undefined) {
-      // console.log("AO: client/store.ts: getTaskById_async: task found in client store: ", { taskId, taskToGet });
+      console.log(
+        'AO: client/store.ts: getTaskById_async: task found in client store: ',
+        { taskId, taskToGet }
+      )
       callback(taskToGet)
     } else {
       // console.log("AO: client/store.ts: getTaskById_async: fetching task from server", { taskId });
@@ -441,7 +444,10 @@ class AoStore {
   ) {
     let parentTaskItem = this.hashMap.get(parentTaskId)
 
-    // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ", {parentTaskId, parentTaskItem})
+    console.log('AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ', {
+      parentTaskId,
+      parentTaskItem,
+    })
 
     if (!parentTaskItem) {
       // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: parentTask not loaded, ignoring")
@@ -732,7 +738,10 @@ class AoStore {
     let taskToGet = this.cardByName.get(taskName)
     console.log('entry getTaskByName_async task is', taskToGet)
     if (taskToGet !== undefined) {
-      // console.log("AO: client/store.ts: getTaskByName_async: task found in client store: ", { taskName, taskToGet });
+      console.log(
+        'AO: client/store.ts: getTaskByName_async: task found in client store: ',
+        { taskName, taskToGet }
+      )
       callback(taskToGet)
     } else {
       // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
