@@ -327,6 +327,7 @@ class AoStore {
   @observable memberDeckSize?: number
   @observable mediaPlayHead: { inId: string; taskId: string }
   @observable leftSidebar?: LeftSidebarTab
+  @observable showPriorityPreview?: boolean
   bookmarksTaskId?: string
 
   constructor() {
@@ -1460,6 +1461,16 @@ class AoStore {
   @action.bound
   closeLeftSidebar() {
     this.leftSidebar = null
+  }
+
+  @action.bound
+  showPriors() {
+    this.showPriorityPreview = true
+  }
+
+  @action.bound
+  hidePriors() {
+    this.showPriorityPreview = false
   }
 }
 const aoStore = new AoStore()

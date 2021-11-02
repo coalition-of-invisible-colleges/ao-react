@@ -4,6 +4,8 @@ import { observer } from 'mobx-react'
 import aoStore, { Task } from '../client/store'
 import { HudStyle } from './cardHud'
 import AoStack from './stack'
+import AoDragZone from './dragZone'
+import AoContextCard from './contextCard'
 import { prioritizeCard } from '../cardTypes'
 import Tippy from '@tippyjs/react'
 import LazyTippy from './lazyTippy'
@@ -19,6 +21,15 @@ interface PreviewProps {
   projectsShown?: boolean
   onToggleProjects?: (any) => void
   hideSubcardCountOnCollapsed?: boolean
+}
+
+function togglePriors(event) {
+  event.stopPropagation()
+  if (aoStore.showPriorityPreview) {
+    aoStore.hidePriors()
+  } else {
+    aoStore.showPriors()
+  }
 }
 
 @observer
@@ -176,30 +187,40 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
             <div className="label">{this.priorityCount + '!'}</div>
           )
         }
+        let previewCard
+        if (aoStore.showPriorityPreview && card?.priorities?.length >= 1) {
+          const previewTaskId = card.priorities[card.priorities.length - 1]
+          previewCard = aoStore.hashMap.get(previewTaskId)
+        }
+
         if (this.priorityCount >= 1) {
           const placement = this.props.hudStyle === 'badge' ? 'top' : 'bottom'
           return (
-            <div
-              className="preview nopad"
-              onClickCapture={event => {
-                console.log('propagating to', event.currentTarget.parentElement)
-                document.getElementById('card-clickable-' + taskId).click()
-              }}>
-              <LazyTippy
-                interactive={true}
-                maxWidth="none"
-                placement={placement}
-                animation="scale-extreme"
-                delay={delay}
-                theme="translucent"
-                appendTo={() =>
-                  document.getElementById('card-' + taskId).parentElement
-                    .parentElement.parentElement.parentElement
-                }
-                content={this.renderedPriorities}>
+            <React.Fragment>
+              {aoStore.showPriorityPreview && previewCard && (
+                <AoDragZone
+                  taskId={previewCard.taskd}
+                  dragContext={{
+                    zone: 'priorities',
+                    inId: this.props.taskId,
+                    y: 0,
+                  }}>
+                  <AoContextCard
+                    task={previewCard}
+                    cardStyle="mini"
+                    inId={this.props.taskId}
+                  />
+                </AoDragZone>
+              )}
+              <div
+                onClick={togglePriors}
+                className={
+                  'preview clickable' +
+                  (aoStore.showPriorityPreview ? ' showingPriors' : '')
+                }>
                 {wrappedPriorityCount}
-              </LazyTippy>
-            </div>
+              </div>
+            </React.Fragment>
           )
         }
         return <div className="preview">({this.subCardCount})</div>
