@@ -134,26 +134,26 @@ export default function applyRouter(app) {
     })
 
     // Also include the first priority of every card we are sending
+    let priorityTaskItems = []
     stateToSend.tasks.forEach(taskItem => {
-      console.log('task is', taskItem.name)
       if (taskItem?.priorities?.length) {
-        console.log('priorites length is', taskItem.priorities.length)
         const foundPriority = state.pubState.tasks.find(
           st =>
             st.taskId === taskItem.priorities[taskItem.priorities.length - 1]
         )
-        console.log('foundPriority is', foundPriority)
         if (
           foundPriority &&
           !stateToSend.tasks.some(
             taskToSend => taskToSend.taskId === foundPriority.taskId
           )
         ) {
-          console.log('adding priority', foundPriority.name)
-          stateToSend.tasks.push(foundPriority)
+          priorityTaskItems.push(foundPriority)
         }
       }
     })
+
+    // Remove duplicates and combine lists
+    stateToSend.tasks = [...stateToSend.tasks, ...priorityTaskItems]
 
     dataPackageToSendToClient.metaData = { memberDeckSize, bookmarksTaskId }
 
