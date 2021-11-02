@@ -527,20 +527,21 @@ class AoStore {
                     )
                 )
                 stateClosure.tasks.push(...result.body.foundThisTaskList)
-                // setImmediate(() => callback(this.hashMap.get(taskId)));
+                // setImmdiate(() => callback(this.hashMap.get(taskId)))
                 // this works to solve the missing prorities dropdown problem but it ruins performance
                 // if (!prioritiesOnly) {
-                //   console.log(
-                //     'got tasks and about to get priorities:',
-                //     result.body.foundThisTaskList
-                //   )
-                //   stateClosure.tasks.forEach(foundTask => {
-                //     this.getAllLinkedCardsForThisTaskId_async(
-                //       foundTask.taskId,
-                //       () => {},
-                //       true
-                //     )
-                //   })
+                console.log(
+                  'got tasks and about to get first priorities:',
+                  result.body.foundThisTaskList
+                )
+                stateClosure.tasks.forEach(foundTask => {
+                  this.getFirstPriorityCardForThisTaskId_async(foundTask.taskId)
+                  //     this.getAllLinkedCardsForThisTaskId_async(
+                  //       foundTask.taskId,
+                  //       () => {},
+                  //       true
+                  //     )
+                })
                 // }
                 callback(true)
               })
@@ -617,6 +618,51 @@ class AoStore {
     //             callback(false);
     //           }
     //         )
+  }
+
+  getFirstPriorityCardForThisTaskId_async(parentTaskId) {
+    parentTaskId = parentTaskId.toLowerCase()
+    let parentTaskItem = this.hashMap.get(parentTaskId)
+    console.log(
+      'getFirstPriorityCardForThisTaskId_async for parentTask ',
+      parentTaskItem.name
+    )
+    if (!parentTaskItem || parentTaskItem.priorities.length < 1) {
+      return false
+    } else {
+      const firstPriorityTaskId =
+        parentTaskItem.priorities[parentTaskItem.priorities.length - 1]
+      if (!firstPriorityTaskId) {
+        return false
+      }
+      let firstPriorityCard = this.hashMap.get(firstPriorityTaskId)
+
+      if (firstPriorityCard) {
+        return true
+      } else {
+        console.log('fetching absent priority ', firstPriorityTaskId)
+        setImmediate(() => {
+          let stateClosure = this.state
+          request
+            .post('/fetchTaskByID')
+            .set('Authorization', stateClosure.token)
+            .send({ taskId: firstPriorityTaskId })
+            .then(result => {
+              runInAction(() => {
+                console.log('found proirity is', result.body)
+                // sometimes multiple overlapping requests for subcads cause
+                // duplicates to be returned from different queries.
+                stateClosure.tasks.filter(
+                  existingTask => existingTask.taskId !== result.body
+                )
+                stateClosure.tasks.push(result.body)
+              })
+            })
+            .catch(error => {})
+        })
+        return false
+      }
+    }
   }
 
   @computed get memberById(): Map<string, Member> {

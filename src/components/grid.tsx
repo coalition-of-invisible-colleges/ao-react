@@ -281,8 +281,6 @@ const AoGridRowObserver = observer(
     dropToGridSquare: (move: CardPlay) => void
     gridStyle: GridStyle
   }) => {
-    console.log('AoGridRowObserver render()')
-
     let render: JSX.Element[] = []
     for (let i = 0; i < props.width; i++) {
       if (
@@ -302,7 +300,6 @@ const AoGridRowObserver = observer(
         continue
       }
       let tId: string
-      console.log('props.row is', props.row)
       if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
         tId = props.row[i]
       }
@@ -500,7 +497,6 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
-  console.log('PyramidView render()')
   React.useEffect(() => {
     console.log(
       'PyramidView useEffect triggered, renderMeNowPlease is',

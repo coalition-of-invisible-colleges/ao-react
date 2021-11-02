@@ -23,25 +23,26 @@ interface PreviewProps {
   hideSubcardCountOnCollapsed?: boolean
 }
 
-function togglePriors(event) {
-  event.stopPropagation()
-  if (aoStore.showPriorityPreview) {
-    aoStore.hidePriors()
-  } else {
-    aoStore.showPriors()
-  }
-}
-
 @observer
 export default class AoPreview extends React.PureComponent<PreviewProps> {
   constructor(props: PreviewProps) {
     super(props)
     makeObservable(this)
+    this.togglePriors = this.togglePriors.bind(this)
   }
 
   preventDoubleClick(event) {
     event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()
+  }
+
+  togglePriors(event) {
+    event.stopPropagation()
+    if (aoStore.showPriorityPreview) {
+      aoStore.hidePriors()
+    } else {
+      aoStore.showPriors()
+    }
   }
 
   @computed get subCardCount() {
@@ -213,7 +214,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                 </AoDragZone>
               )}
               <div
-                onClick={togglePriors}
+                onClick={this.togglePriors}
                 className={
                   'preview clickable' +
                   (aoStore.showPriorityPreview ? ' showingPriors' : '')
