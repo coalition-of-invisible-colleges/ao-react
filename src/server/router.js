@@ -87,6 +87,7 @@ export default function applyRouter(app) {
         if (key !== 'tasks') {
           stateToSend[key] = state.pubState[key]
         } else {
+          // Include the community hub card itself
           for (let taskItem of value) {
             if (
               taskItem.name === taskItem.taskId ||
@@ -102,6 +103,7 @@ export default function applyRouter(app) {
     }
     dataPackageToSendToClient.stateToSend = stateToSend
 
+    // Include their bookmarks card itself
     let bookmarksTaskId
     state.pubState.tasks.forEach(taskItem => {
       if (taskItem.deck && taskItem.deck.indexOf(reqOwner) !== -1)
@@ -114,22 +116,31 @@ export default function applyRouter(app) {
       }
     })
 
-    // let bookmarkTaskItems = []
+    // Include cards on their bookmarks bar
     state.pubState.tasks.forEach(taskItem => {
       if (
         taskItem.parents &&
         taskItem.parents.indexOf(bookmarksTaskId) !== -1
       ) {
         stateToSend.tasks.push(taskItem)
-        // bookmarkTaskItems.push(taskItem)
       }
     })
 
-    // let inboxTaskItems = []
+    // Include cards passed to them as a gift
     state.pubState.tasks.forEach(taskItem => {
       if (taskItem.passed.some(pass => pass[1] === req.reqOwner)) {
         stateToSend.tasks.push(taskItem)
-        // inboxTaskItems.push(taskItem)
+      }
+    })
+
+    // Include guilds they are holding
+    state.pubState.tasks.forEach(taskItem => {
+      if (
+        taskItem.guild &&
+        taskItem.guild.length >= 1 &&
+        taskItem.deck.includes(reqOwner)
+      ) {
+        stateToSend.tasks.push(taskItem)
       }
     })
 

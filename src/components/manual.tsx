@@ -190,6 +190,12 @@ Guild cards placed in the bookmarks bar will act like folders, and cards dropped
       "The AO allows users of the website frontend to drag-and-drop files onto a grid to upload them. However, if you install the AO on your laptop or on a server, you can add files directly to the AO by putting them in the AO's memes folder. The default location of this folder is ~/.ao/memes/. Simply copy or move files here and restart the AO, and the files will be scanned and a card made for each file. These cards are not held by anyone right now, so you must search for them and grab them to find them. Future updates will also add live scanning and full iTunes-like file organization features, so that your folders of memes on your hard drive can be kept in lockstep with the structure of your cards on the AO.",
     'Snapshot backups':
       'In its database, the AO uses a log of events from the beginning of time to reconstruct the current state of affairs every time it starts up. The AO can also make snapshots of the state of affairs at a particular point in time and load from one of these images when it starts up. Currently, the recommended normal operation of the AO is to set the AO to automatically make these snapshots once per day, and to always load from the most recent snapshot. When a snapshot is created, in theory, all of the events preceding that snapshot could be safely deleted, as the AO will always be able to load from the snapshot. However, this is not yet recommended, because the AO is not yet fully stable, and if you run into any issues with your snapshots, you can always just reconstruct from the beginning of time. Later, we may set it to automatically delete the old events, which will allow the AO to fully forget deleted cards and members. Currently, traces still remain in the database and are accessible to admins (or an attacker).',
+    'Updating ao AO server': `to update the AO:
+cd ao-react
+git pull --rebase
+npm i [if package.js or package-lock.js has changed]
+npm run webpack [if anything on the client such as components have changed]
+sudo systemctl restart ao [if anything on the server has changed]`,
     Security:
       'The AO has not been adequately secured, tested or vetted and is not secure. It is not recommended to use the AO for storing private information. However, the AO has been made with modern web technologies in a fairly standard way, so in theory it should be "secure by default" to most common attacks.',
   },

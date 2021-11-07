@@ -64,7 +64,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'face before':
       case 'collapsed':
       case 'badge':
-      case 'mini before':
+      case 'mini after':
         if (this.isCompleted || this.isGrabbed) {
           return (
             <img

@@ -435,7 +435,7 @@ body {
 
   &.mini.before {
     & > .mission,
-    & > .countdown,
+    // & > .countdown,
     & > .value,
     & > .goal {
       background-color: rgba(0, 0, 0, 0.2);
@@ -445,7 +445,7 @@ body {
       pointer-events: none;
     }
 
-    & > .countdown,
+    // & > .countdown,
     & > .mission {
       float: left;
     }
@@ -467,16 +467,6 @@ body {
       float: right;
     }
 
-    & > .checkbox {
-      float: right;
-      display: inline;
-      width: 1.5em;
-      height: 1.5em;
-      padding-top: 0.175em;
-      padding-right: 0.15em;
-      cursor: pointer;
-    }
-
     & > .tally {
       margin-left: 0.15em;
     }
@@ -490,9 +480,19 @@ body {
     height: 100%;
     width: 100%;
 
+    & > .checkbox {
+      float: right;
+      display: inline;
+      width: 1.5em;
+      height: 1.5em;
+      padding-top: 0.175em;
+      padding-right: 0.15em;
+      cursor: pointer;
+    }
+
     .countdown {
       position: absolute;
-      right: 0;
+      left: 0;
       bottom: 0;
       background-color: rgba(0, 0, 0, 0.2);
       font-size: 0.6em;

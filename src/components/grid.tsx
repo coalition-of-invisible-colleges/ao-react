@@ -39,7 +39,7 @@ interface PyramidViewProps extends GridProps {
 }
 
 async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
-  console.log('dropToGridSquare')
+  console.log('dropToGridSquare move is', move)
   if (!move.from.taskId) {
     return
   }

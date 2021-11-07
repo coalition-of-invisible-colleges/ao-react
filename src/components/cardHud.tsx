@@ -176,7 +176,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					<div className={'hud ' + hudStyle}>
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
@@ -184,6 +183,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 				return (
 					<React.Fragment>
 						<div className={'hud ' + hudStyle}>
+							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoPreview taskId={taskId} hudStyle={hudStyle} />
 							<AoCardMenu taskId={taskId} hudStyle={hudStyle} />

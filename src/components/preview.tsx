@@ -210,7 +210,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                     !card.guild || card.guild.length < 1 ? 'noGuild' : null
                   }>
                   <AoDragZone
-                    taskId={previewCard.taskd}
+                    taskId={previewCard.taskId}
                     dragContext={{
                       zone: 'priorities',
                       inId: this.props.taskId,

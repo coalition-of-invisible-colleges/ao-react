@@ -156,9 +156,10 @@ function removeSensitive(ev) {
     'inboundSecret',
     'outboundSecret',
     'draft',
+    'phone',
   ]
   if (ev.type === 'member-field-updated') {
-    ;['fob', 'secret', 'email'].forEach(str => {
+    ;['fob', 'secret', 'email', 'phone', 'draft'].forEach(str => {
       if (ev.field === str) {
         secretStuff.push('newfield')
       }
