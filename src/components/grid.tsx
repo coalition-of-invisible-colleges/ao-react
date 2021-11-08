@@ -458,7 +458,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
   function dropToGridSquareCaller(move: CardPlay) {
     dropToGridSquare(move, props.dropActsLikeFolder).then(result => {
       console.log('setting renderMeNowPlease to true')
-      setRenderMeNowPlease(true)
+      process.nextTick(() => setRenderMeNowPlease(true))
     })
   }
 
