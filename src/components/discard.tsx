@@ -41,10 +41,12 @@ export default class AoDiscardZone extends React.Component {
 				goUp()
 				break
 			case 'priorities':
-				api.refocusCard(move.from.taskId, move.from.inId).then(() => {
+				if (card.claimed && card.claimed.length >= 1) {
+					api.refocusCard(move.from.taskId, move.from.inId)
+				} else {
 					aoStore.addToDiscardHistory([card])
 					api.discardCardFromCard(move.from.taskId, move.from.inId)
-				})
+				}
 				break
 			case 'grid':
 				api
