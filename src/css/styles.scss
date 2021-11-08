@@ -488,6 +488,11 @@ body {
       padding-top: 0.175em;
       padding-right: 0.15em;
       cursor: pointer;
+
+      &.tiny {
+        width: 1em;
+        height: 1em;
+      }
     }
 
     .countdown {

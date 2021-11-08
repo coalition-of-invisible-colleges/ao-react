@@ -60,24 +60,24 @@ export default class AoGem extends React.Component<{}, State> {
 			taskId = aoStore.memberCard.taskId
 		}
 
-		let card
 		if (taskId) {
-			card = aoStore.hashMap.get(taskId)
-			if (!card) {
-				console.log('missing card')
-			}
-		}
+			aoStore.getTaskById_async(taskId, card => {
+				if (!card) {
+					console.log('missing card')
+				}
 
-		this.setState({ open: false })
-		this.composeRef.current.clear()
+				this.setState({ open: false })
+				this.composeRef.current.clear()
 
-		if (card) {
-			api.findOrCreateCardInCard(name, card.taskId)
-		} else {
-			api.createCard(name).then(res => {
-				const taskId = JSON.parse(res.text).event.taskId
-				goInCard(taskId)
-				this.setState({ redirect: taskId })
+				if (card) {
+					api.findOrCreateCardInCard(name, card.taskId)
+				} else {
+					api.createCard(name).then(res => {
+						const taskId = JSON.parse(res.text).event.taskId
+						goInCard(taskId)
+						this.setState({ redirect: taskId })
+					})
+				}
 			})
 		}
 	}

@@ -48,6 +48,9 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
     const card = aoStore.hashMap.get(taskId)
     if (!card || card.taskId === aoStore.memberCard.taskId) return null
 
+    const showTinyCheckbox =
+      (aoStore.member.priorityMode || aoStore.localPriorityMode) &&
+      card?.priorities?.length >= 1
     const onClick = event => {
       event.stopPropagation()
       event.nativeEvent.stopImmediatePropagation()
@@ -71,7 +74,8 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
               className={
                 'checkbox ' +
                 this.props.hudStyle +
-                (this.isCompleted ? ' checked' : ' unchecked')
+                (this.isCompleted ? ' checked' : ' unchecked') +
+                (showTinyCheckbox ? ' tiny' : '')
               }
               src={this.isCompleted ? Completed : Uncompleted}
               onClick={onClick}

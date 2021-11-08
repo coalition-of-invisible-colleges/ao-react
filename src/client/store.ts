@@ -746,7 +746,6 @@ class AoStore {
       callback(taskToGet)
     } else {
       // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
-      console.log('about to fetchTaskByName', taskName)
       let stateClosure = this.state
       request
         .post('/fetchTaskByName')
@@ -755,14 +754,13 @@ class AoStore {
         .then(result => {
           // console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
 
-          console.log('fetchTaskByName result is', result.body)
           runInAction(() => {
             let taskItems = result.body.foundThisTaskList
             let existingTask = this.cardByName.get(taskName)
             // here we prefer client data, in the other places that use filter we prefer server data
             // since cards are immutable it shouldn't matter too much
             if (existingTask === undefined) {
-              stateClosure.tasks.push(taskItems)
+              stateClosure.tasks.push(...taskItems)
             }
             const taskItem = this.hashMap.get(taskItems[0].taskId)
             setImmediate(() => callback(taskItem))

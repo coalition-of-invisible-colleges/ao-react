@@ -226,36 +226,42 @@ class AoApi {
     color: string = 'blue',
     anonymous?: boolean
   ): Promise<request.Response> {
-    let found = aoStore.cardByName.get(name.toLowerCase())
-    let act
-    if (found) {
-      if (prioritized) {
-        return this.prioritizeCard(found.taskId, inId)
-      } else {
-        act = {
-          type: 'task-sub-tasked',
-          taskId: inId,
-          subTask: found.taskId,
-          memberId: anonymous ? null : aoStore.member.memberId,
+    return new Promise((resolve, reject) => {
+      aoStore.getTaskByName_async(name, found => {
+        console.log('gotTaskByName name was ', name, 'and found is ', found)
+        let act
+        if (found) {
+          if (prioritized) {
+            resolve(this.prioritizeCard(found.taskId, inId))
+          } else {
+            act = {
+              type: 'task-sub-tasked',
+              taskId: inId,
+              subTask: found.taskId,
+              memberId: anonymous ? null : aoStore.member.memberId,
+            }
+          }
+        } else {
+          act = {
+            type: 'task-created',
+            name: name,
+            color: color,
+            deck: anonymous ? [] : [aoStore.member.memberId],
+            inId: inId,
+            prioritized: prioritized,
+          }
         }
-      }
-    } else {
-      act = {
-        type: 'task-created',
-        name: name,
-        color: color,
-        deck: anonymous ? [] : [aoStore.member.memberId],
-        inId: inId,
-        prioritized: prioritized,
-      }
-    }
-    return request
-      .post('/events')
-      .set('Authorization', aoStore.state.token)
-      .send(act)
-      .then(res => {
-        return res
+        resolve(
+          request
+            .post('/events')
+            .set('Authorization', aoStore.state.token)
+            .send(act)
+            .then(res => {
+              return res
+            })
+        )
       })
+    })
   }
 
   async discardCardFromCard(
@@ -1154,54 +1160,60 @@ class AoApi {
     name: string,
     inId: string
   ): Promise<request.Response> {
-    const task: Task = aoStore.cardByName.get(name.toLowerCase())
-    // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
+    return new Promise((resolve, reject) => {
+      aoStore.getTaskByName_async(name, (task: Task) => {
+        console.log('gotTaskByName name was ', name, 'and found is ', task)
+        // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
 
-    if (_.isObject(task)) {
-      const act = {
-        type: 'grid-pin',
-        inId: inId,
-        taskId: task.taskId,
-        x: x,
-        y: y,
-        memberId: aoStore.member.memberId,
-      }
-      return request
-        .post('/events')
-        .set('Authorization', aoStore.state.token)
-        .send(act)
-        .then(res => {
-          return res
-        })
-    } else {
-      const act = {
-        type: 'task-created',
-        name: name,
-        color: 'blue',
-        deck: [aoStore.member.memberId],
-        inId: inId,
-        prioritized: false,
-      }
-      return request
-        .post('/events')
-        .set('Authorization', aoStore.state.token)
-        .send(act)
-        .then(res => {
-          const taskId = JSON.parse(res.text).event.taskId
-          const gridAct = {
+        if (_.isObject(task)) {
+          const act = {
             type: 'grid-pin',
             inId: inId,
-            taskId: taskId,
+            taskId: task.taskId,
             x: x,
             y: y,
             memberId: aoStore.member.memberId,
           }
-          return request
+          request
             .post('/events')
             .set('Authorization', aoStore.state.token)
-            .send(gridAct)
-        })
-    }
+            .send(act)
+            .then(res => {
+              resolve(res)
+            })
+        } else {
+          const act = {
+            type: 'task-created',
+            name: name,
+            color: 'blue',
+            deck: [aoStore.member.memberId],
+            inId: inId,
+            prioritized: false,
+          }
+          request
+            .post('/events')
+            .set('Authorization', aoStore.state.token)
+            .send(act)
+            .then(res => {
+              const taskId = JSON.parse(res.text).event.taskId
+              const gridAct = {
+                type: 'grid-pin',
+                inId: inId,
+                taskId: taskId,
+                x: x,
+                y: y,
+                memberId: aoStore.member.memberId,
+              }
+              resolve(
+                request
+                  .post('/events')
+                  .set('Authorization', aoStore.state.token)
+                  .send(gridAct)
+              )
+            })
+        }
+      })
+    })
   }
 
   async unpinCardFromGrid(

@@ -303,7 +303,7 @@ export default function applyRouter(app) {
           res.status(200).send({
             foundThisTaskList,
             foundAllTaskItems:
-              !firstpriorityId || (firstPriorityId && foundPriority),
+              !firstPriorityId || (firstPriorityId && foundPriority),
           })
         } else {
           // console.log("AO: server/router.js: fetchTaskByName: task not found ", { "req.body": req.body, foundThisTask} )
