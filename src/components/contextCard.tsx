@@ -975,21 +975,21 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div style={{ clear: 'both', height: '1px' }} />
           </div>
         )
-      case 'badge':
-        return (
-          <div
-            id={'card-' + taskId}
-            className={'card badge' + this.applyClassIfCurrentSearchResult}
-            onClick={this.goInCard}
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
-            onMouseOut={this.clearPendingPromise}>
-            <AoPaper taskId={taskId} />
-            <AoMission taskId={taskId} hudStyle="badge" />
-            <AoCardHud taskId={taskId} hudStyle="badge" />
-          </div>
-        )
-        break
+      // case 'badge':
+      // return (
+      //   <div
+      //     id={'card-' + taskId}
+      //     className={'card badge' + this.applyClassIfCurrentSearchResult}
+      //     onClick={this.goInCard}
+      //     onMouseEnter={this.onHover}
+      //     onMouseOver={this.onHover}
+      //     onMouseOut={this.clearPendingPromise}>
+      //     <AoPaper taskId={taskId} />
+      //     <AoMission taskId={taskId} hudStyle="badge" />
+      //     <AoCardHud taskId={taskId} hudStyle="badge" />
+      //   </div>
+      // )
+      // break
       case 'envelope':
         const openGift = () => {
           api.prioritizeCard(taskId, aoStore.memberCard.taskId)
@@ -1031,6 +1031,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           </Tippy>
         )
       case 'mini':
+      case 'badge':
       default:
         let shortened = content
         if (shortened.length > 32) {

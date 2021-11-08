@@ -52,6 +52,18 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
   const cardTo = aoStore.hashMap.get(move.to.taskId)
   const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
 
+  const fromHasGuild = cardFrom && cardFrom.guild && cardFrom.guild.length >= 1
+  const toHasGuild = cardTo && cardTo.guild && cardTo.guild.length >= 1
+  dropActsLikeFolder = toHasGuild && !fromHasGuild
+
+  console.log(
+    'fromHasGuild ',
+    fromHasGuild,
+    'toHasGuild',
+    toHasGuild,
+    'dropActsLikeFolder',
+    dropActsLikeFolder
+  )
   return new Promise((resolve, reject) => {
     switch (move.from.zone) {
       case 'card':
@@ -126,12 +138,7 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
         }
         break
       case 'grid':
-        console.log('dropped card from grid')
-        if (
-          move.to.taskId &&
-          dropActsLikeFolder &&
-          move.from.inId !== move.to.inId
-        ) {
+        if (move.to.taskId && dropActsLikeFolder) {
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -139,12 +146,12 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
               move.from.inId
             )
             .then(() => {
-              api.discardCardFromCard(move.from.taskId, move.from.inId)
+              api
+                .findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+                .then(() => {
+                  resolve
+                })
             })
-            .then(() =>
-              api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
-            )
-            .then(resolve)
         } else if (move.to.taskId) {
           api
             .pinCardToGrid(
@@ -307,6 +314,7 @@ const AoGridRowObserver = observer(
       const card = aoStore.hashMap.get(tId)
       const isPyramid = props.gridStyle === 'pyramid'
 
+      const toHasGuild = card?.guild && card?.guild?.length >= 1
       render.push(
         <AoDropZone
           taskId={tId}
@@ -318,7 +326,7 @@ const AoGridRowObserver = observer(
           zoneStyle="grid"
           pyramidRows={isPyramid}
           key={i + '-' + props.y}
-          dropActsLikeFolder={props.dropActsLikeFolder}>
+          dropActsLikeFolder={toHasGuild}>
           {tId ? (
             <AoDragZone
               taskId={tId}
@@ -328,18 +336,7 @@ const AoGridRowObserver = observer(
                 x: i,
                 y: props.y,
               }}>
-              <AoContextCard
-                task={card}
-                cardStyle={
-                  props.dropActsLikeFolder &&
-                  card &&
-                  card.guild &&
-                  card.guild.length >= 1
-                    ? 'badge'
-                    : 'mini'
-                }
-                inId={props.inId}
-              />
+              <AoContextCard task={card} cardStyle="mini" inId={props.inId} />
             </AoDragZone>
           ) : null}
         </AoDropZone>
@@ -672,7 +669,7 @@ export default function AoGrid(props: GridProps) {
     )
   }
 
-  const gridWidth = props.dropActsLikeFolder ? '5em' : '9em'
+  const gridWidth = props.dropActsLikeFolder ? '7.5em' : '9em'
   console.log('AoGrid render()')
   if (!isPyramid) {
     return (

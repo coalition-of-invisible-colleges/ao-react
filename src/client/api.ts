@@ -233,6 +233,7 @@ class AoApi {
         if (found) {
           if (prioritized) {
             resolve(this.prioritizeCard(found.taskId, inId))
+            return
           } else {
             act = {
               type: 'task-sub-tasked',

@@ -44,8 +44,10 @@ export default class AoDiscardZone extends React.Component {
 				if (card.claimed && card.claimed.length >= 1) {
 					api.refocusCard(move.from.taskId, move.from.inId)
 				} else {
-					aoStore.addToDiscardHistory([card])
-					api.discardCardFromCard(move.from.taskId, move.from.inId)
+					api.refocusCard(move.from.taskId, move.from.inId).then(() => {
+						aoStore.addToDiscardHistory([card])
+						api.discardCardFromCard(move.from.taskId, move.from.inId)
+					})
 				}
 				break
 			case 'grid':
@@ -59,8 +61,10 @@ export default class AoDiscardZone extends React.Component {
 						if (card.claimed && card.claimed.length >= 1) {
 							api.refocusCard(move.from.taskId, move.from.inId)
 						} else {
-							aoStore.addToDiscardHistory([card])
-							api.discardCardFromCard(move.from.taskId, move.from.inId)
+							api.refocusCard(move.from.taskId, move.from.inId).then(() => {
+								aoStore.addToDiscardHistory([card])
+								api.discardCardFromCard(move.from.taskId, move.from.inId)
+							})
 						}
 					})
 				break
