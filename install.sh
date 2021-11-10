@@ -23,16 +23,17 @@
 
 sudo apt install cargo
 
-git clone https://github.com/signalapp/zkgroup.git
-cd zkgroup/ffi/java && make
-# Ignore error messages
-cd ../../target/release
-zip -u ../../../signal-cli-$VERSION/lib/zkgroup-java-*.jar libzkgroup.so
+# # Commenting this out as it's not functional yet
+# git clone https://github.com/signalapp/zkgroup.git
+# cd zkgroup/ffi/java && make
+# # Ignore error messages
+# cd ../../target/release
+# zip -u ../../../signal-cli-$VERSION/lib/zkgroup-java-*.jar libzkgroup.so
 
-git clone https://github.com/signalapp/libsignal-client.git
-cd libsignal-client/java/ && ./build_jni.sh desktop
-cd ../target/release
-zip -u ../../../signal-cli-$VERSION/lib/signal-client-java-*.jar libsignal_jni.so
+# git clone https://github.com/signalapp/libsignal-client.git
+# cd libsignal-client/java/ && ./build_jni.sh desktop
+# cd ../target/release
+# zip -u ../../../signal-cli-$VERSION/lib/signal-client-java-*.jar libsignal_jni.so
 
 #... yeah all that
 
@@ -52,6 +53,22 @@ if [ -f "/etc/debian_version" ]; then
 elif [ -f "/etc/arch-release" ]; then
 	DISTRO="arch"
 	echo Arch- or Manjaro-based OS detected, proceeding with Arch-compatible AO installation.
+elif [ -f "/etc/fedora-release" ]; then
+	DISTRO="fedora"
+	echo Fedora-based OS detected, proceeding with Fedora-compatible AO installation.
+
+    # Defining helper function
+    function install_if_needed() {
+        for package in "$@"
+        do
+            if [ $(which $package) ]; then
+                echo $package already installed
+            else
+                sudo dnf install -y $package
+            fi
+        done
+    }
+
 elif [ $(uname | grep -c "Darwin") -eq 1 ]; then
 	DISTRO="mac"
 	echo MacOS detected, proceeding with Mac-compatible AO installation.
@@ -149,6 +166,24 @@ elif [ "$DISTRO" = "arch" ]; then
 	else
 		sudo pacman -S sqlite
 	fi
+
+# update system and install prereqs (Fedora)
+if [ "$DISTRO" = "fedora" ]; then
+	# update
+    echo "Updating DNF..."
+	sudo dnf update -yqqq 2>/dev/null
+	sudo dnf autoremove -yqqq
+	echo "Update Complete!"
+
+	# upgrade
+    echo "Upgrading..."
+	sudo dnf upgrade -yqqq
+	echo "Upgrade Complete"
+
+	# install basic dependencies
+    install_if_needed curl wget git sqlite3
+fi
+
 elif [ "$DISTRO" = "mac" ]; then
 	# install homebrew
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -304,8 +339,12 @@ if [ "$DISTRO" = "debian" ]; then
 		sudo apt install -y libsodium-dev
 	fi
 
+# install c-lightning prereqs (Fedora)
+elif [ "$DISTRO" = "fedora" ]; then
+    install_if_needed libtool libevent libevent-devel autoconf automake python3 python3-mako 
+
 # install c-lightning prereqs (Arch)
-else
+elif [ "$DISTRO" = "arch" ]; then
 	if [ $(sudo pacman -Qs zlib >/dev/null | grep -c "local/zlib" ) -eq 0 ]; then
 		echo zlib already installed
 	else
@@ -388,6 +427,9 @@ else
 		if [ $(dpkg-query -W -f='${Status}' libssl-dev 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
 			sudo apt install -y libssl-dev
 		fi
+    elif [ "$DISTRO" = "fedora" ]; then
+        install_if_needed fakeroot devscripts libevent openssl openssl-devel
+
 	else
 		if [ $(sudo pacman -Qs build-essential >/dev/null | grep -c "local/build-essential" ) -eq 1 ]; then
 			sudo pacman -S build-essential
@@ -458,7 +500,9 @@ if [ "$DISTRO" = "debian" ]; then
 	else
 		sudo apt install -y borgbackup
 	fi
-else
+elif [ "$DISTRO" = "fedora" ]; then 
+    install_if_needed borgbackup
+else # Assume Arch
 	if [ $(sudo pacman -Qs borg >/dev/null | grep -c "local/borg" ) -eq 0 ]; then
 		echo borg already installed
 	else
@@ -622,7 +666,7 @@ fi
 # cleanup c-lightning install
 cd ~
 if [ "$lightning" = true ]; then
-	rm -rf lightning
+	sudo rm -rf lightning
 fi
 
 # cleanup tor install
@@ -631,3 +675,4 @@ if [ "$tor" = true ]; then
 fi
 
 echo the AO is installed
+

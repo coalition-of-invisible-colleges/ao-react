@@ -92,6 +92,7 @@
     "react-jitsi": "^1.0.4",
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.1.2",
+    "react-scripts": "^4.0.3",
     "react-shepherd": "^3.3.0",
     "react-upload-box": "^1.1.0",
     "regenerator-runtime": "^0.13.3",
