@@ -204,6 +204,7 @@ export default {
           '/download',
           '/fetchTaskByID',
           '/fetchTaskByName',
+          '/search',
         ],
         target: 'http://127.0.0.1:8003',
         // changeOrigin: true,

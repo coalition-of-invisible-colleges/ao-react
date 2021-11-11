@@ -1311,6 +1311,18 @@ class AoApi {
       })
   }
 
+  async search(querystring: string): Promise<request.Response> {
+      const qs = encodeURIComponent(querystring)
+      return request
+      .get('/search/' + qs)
+      .set('Authorization', aoStore.state.token)
+      .then(res => {
+          console.log('search results:', res)
+          return res
+      })
+  }
+
+
   async requestBtcQr(taskId: string): Promise<request.Response> {
     const act = {
       type: 'address-updated',
