@@ -1345,40 +1345,58 @@ class AoStore {
     let foundMembers: Task[] = []
     let searchResults: Task[] = []
 
-    try {
-      let regex = new RegExp(query, 'i')
-      this.state.tasks.forEach(t => {
-        const testName = regex.test(t.name)
-        if (t.guild && (testName || regex.test(t.guild))) {
-          foundGuilds.push(t)
-        } else if (regex.test(t.name)) {
-          if (
-            !foundGuilds.some(g => {
-              return g.guild === t.name
-            })
-          ) {
-            foundCards.push(t)
-          }
+    const result = api.search(query)
+    .then((res) => {
+        console.log('updatedSearch results', res)
+        if (res.body.tasks) {
+            this.searchResults = observable(res.body);
         }
-      })
+    })
 
-      this.state.members.forEach(member => {
-        if (regex.test(member.name)) {
-          let result = this.hashMap.get(member.memberId)
-          result.name = member.name
-          foundMembers.push(result)
-        }
-      })
-      this.searchResults = observable({
-        missions: foundGuilds,
-        members: foundMembers,
-        tasks: foundCards,
-        all: foundGuilds.concat(foundMembers, foundCards),
-        length: foundGuilds.length + foundMembers.length + foundCards.length,
-      })
-    } catch (err) {
-      console.log('regex search terminated in error: ', err)
-    }
+    /* try { */
+    /*   // DEBUG */
+    /*   /1* console.log("HELLO!") *1/ */
+    /*   /1* const tasks = this.state.tasks.map((task) => Object.assign({}, task)) *1/ */
+    /*   /1* console.log(tasks) *1/ */
+    /*   // END DEBUG */
+
+    /*   let regex = new RegExp(query, 'i') */
+
+    /*   this.state.tasks.forEach(t => { */
+    /*     const testName = regex.test(t.name) */
+
+    /*     if (t.guild && (testName || regex.test(t.guild))) { */
+    /*       foundGuilds.push(t) */
+    /*     } else if (regex.test(t.name)) { */
+    /*       if ( */
+    /*         !foundGuilds.some(g => { */
+    /*           return g.guild === t.name */
+    /*         }) */
+    /*       ) { */
+    /*         foundCards.push(t) */
+    /*       } */
+    /*     } */
+    /*   }) */
+
+    /*   this.state.members.forEach(member => { */
+    /*     if (regex.test(member.name)) { */
+    /*       let result = this.hashMap.get(member.memberId) */
+    /*       result.name = member.name */
+    /*       foundMembers.push(result) */
+    /*     } */
+    /*   }) */
+    /*   this.searchResults = observable({ */
+    /*     missions: foundGuilds, */
+    /*     members: foundMembers, */
+    /*     tasks: foundCards, */
+    /*     all: foundGuilds.concat(foundMembers, foundCards), */
+    /*     length: foundGuilds.length + foundMembers.length + foundCards.length, */
+    /*   }) */
+    /*   console.log('results!') */
+    /*   console.log(this.searchResults) */
+    /* } catch (err) { */
+    /*   console.log('regex search terminated in error: ', err) */
+    /* } */
   }
 
   @action.bound

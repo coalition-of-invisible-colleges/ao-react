@@ -388,4 +388,66 @@ export default function applyRouter(app) {
   app.post('/taskhash/:taskId', (req, res) => {
     res.end(crawlerHash(state.serverState.tasks, req.params.taskId))
   })
+
+  app.get('/search/:query', (req, res) => {
+      const search = decodeURIComponent(req.params.query)
+      console.log('searching for ', search)
+
+      let foundCards = []
+      let foundGuilds = []
+      let foundMembers = []
+      let searchResults = []
+      let hashMap = new Map()
+      state.serverState.tasks.forEach(t => {
+          hashMap.set(t.taskId, t)
+      })
+
+      try {
+          // DEBUG
+          /* console.log("HELLO!") */
+          /* const tasks = this.state.tasks.map((task) => Object.assign({}, task)) */
+          /* console.log(tasks) */
+          // END DEBUG
+
+          let regex = new RegExp(search, 'i')
+
+          state.serverState.tasks.forEach(t => {
+              const testName = regex.test(t.name)
+
+              if (t.guild && (testName || regex.test(t.guild))) {
+                  foundGuilds.push(t)
+              } else if (regex.test(t.name)) {
+                  if (
+                      !foundGuilds.some(g => {
+                          return g.guild === t.name
+                      })
+                  ) {
+                      foundCards.push(t)
+                  }
+              }
+          })
+
+          state.serverState.members.forEach(member => {
+              if (regex.test(member.name)) {
+                  let result = hashMap.get(member.memberId)
+                  result.name = member.name
+                  foundMembers.push(result)
+              }
+          })
+          const searchResults = {
+              missions: foundGuilds,
+              members: foundMembers,
+              tasks: foundCards,
+              all: foundGuilds.concat(foundMembers, foundCards),
+              length: foundGuilds.length + foundMembers.length + foundCards.length,
+          }
+          console.log('results!')
+          console.log(searchResults)
+          res.status(200).send(searchResults)
+      } catch (err) {
+          console.log('regex search terminated in error: ', err)
+          res.status(500).send("Something went wrong...")
+      }
+
+  })
 }
