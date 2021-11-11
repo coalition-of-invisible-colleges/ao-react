@@ -1339,64 +1339,12 @@ class AoStore {
       return
     }
 
-    // for 1 letter search only first letter of guild names, 2 letters searches 1st word and also 1st initials of guild titles
-    let foundCards: Task[] = []
-    let foundGuilds: Task[] = []
-    let foundMembers: Task[] = []
-    let searchResults: Task[] = []
-
-    const result = api.search(query)
+    api.search(query)
     .then((res) => {
-        console.log('updatedSearch results', res)
-        if (res.body.tasks) {
+        if (res.ok) {
             this.searchResults = observable(res.body);
         }
     })
-
-    /* try { */
-    /*   // DEBUG */
-    /*   /1* console.log("HELLO!") *1/ */
-    /*   /1* const tasks = this.state.tasks.map((task) => Object.assign({}, task)) *1/ */
-    /*   /1* console.log(tasks) *1/ */
-    /*   // END DEBUG */
-
-    /*   let regex = new RegExp(query, 'i') */
-
-    /*   this.state.tasks.forEach(t => { */
-    /*     const testName = regex.test(t.name) */
-
-    /*     if (t.guild && (testName || regex.test(t.guild))) { */
-    /*       foundGuilds.push(t) */
-    /*     } else if (regex.test(t.name)) { */
-    /*       if ( */
-    /*         !foundGuilds.some(g => { */
-    /*           return g.guild === t.name */
-    /*         }) */
-    /*       ) { */
-    /*         foundCards.push(t) */
-    /*       } */
-    /*     } */
-    /*   }) */
-
-    /*   this.state.members.forEach(member => { */
-    /*     if (regex.test(member.name)) { */
-    /*       let result = this.hashMap.get(member.memberId) */
-    /*       result.name = member.name */
-    /*       foundMembers.push(result) */
-    /*     } */
-    /*   }) */
-    /*   this.searchResults = observable({ */
-    /*     missions: foundGuilds, */
-    /*     members: foundMembers, */
-    /*     tasks: foundCards, */
-    /*     all: foundGuilds.concat(foundMembers, foundCards), */
-    /*     length: foundGuilds.length + foundMembers.length + foundCards.length, */
-    /*   }) */
-    /*   console.log('results!') */
-    /*   console.log(this.searchResults) */
-    /* } catch (err) { */
-    /*   console.log('regex search terminated in error: ', err) */
-    /* } */
   }
 
   @action.bound
