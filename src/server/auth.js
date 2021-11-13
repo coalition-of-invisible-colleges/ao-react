@@ -44,12 +44,10 @@ export function socketAuth(socket, data, callback) {
 
 // This function receives an authentication request and processes it
 export function serverAuth(req, res, next) {
-    console.log('headers', req.headers)
-    console.log('cookies', req.cookies)
+
     // Firstly, it looks through the server's list of members to see if the username
     // matches an active profile, and returns their secret if it does
   const { ownerId, secret } = getIdSecret(req.headers.name)
-  let authorization
   
     // If the user is actively providing a password, use that for authorization.
     // Otherwise, attempt to use an available token in cookies
