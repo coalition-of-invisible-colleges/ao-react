@@ -308,7 +308,7 @@ export default function applyRouter(app) {
         } else {
           // console.log("AO: server/router.js: fetchTaskByName: task not found ", { "req.body": req.body, foundThisTask} )
           errRes.push('task name not found')
-          res.status(400).send({ success: false, errorList: errRes })
+          res.status(204).send({ success: false, errorList: errRes })
         }
       } else {
         // console.log("AO: server/router.js: fetchTaskByName: invalid taskName: ", { "req.body": req.body, foundThisTask } )
