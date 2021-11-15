@@ -397,6 +397,7 @@ class AoStore {
   // }
 
   getTaskById_async(taskId, callbackOriginal) {
+      console.log('calling getTaskById on', taskId)
     let callback = parentTaskItem => {
       this.getAllLinkedCardsForThisTaskId_async(parentTaskItem.taskId, () => {})
       callbackOriginal(parentTaskItem)
@@ -443,6 +444,7 @@ class AoStore {
     callback,
     prioritiesOnly = false
   ) {
+    console.log('calling getLinkedCards on', parentTaskId)
     let parentTaskItem = this.hashMap.get(parentTaskId)
 
     console.log('AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ', {
