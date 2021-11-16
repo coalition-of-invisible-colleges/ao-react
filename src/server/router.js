@@ -403,12 +403,6 @@ export default function applyRouter(app) {
       })
 
       try {
-          // DEBUG
-          /* console.log("HELLO!") */
-          /* const tasks = this.state.tasks.map((task) => Object.assign({}, task)) */
-          /* console.log(tasks) */
-          // END DEBUG
-
           let regex = new RegExp(search, 'i')
 
           state.serverState.tasks.forEach(t => {
@@ -441,8 +435,6 @@ export default function applyRouter(app) {
               all: foundGuilds.concat(foundMembers, foundCards),
               length: foundGuilds.length + foundMembers.length + foundCards.length,
           }
-          console.log('results!')
-          console.log(searchResults)
           res.status(200).send(searchResults)
       } catch (err) {
           console.log('regex search terminated in error: ', err)
