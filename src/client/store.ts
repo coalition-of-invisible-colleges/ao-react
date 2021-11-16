@@ -397,6 +397,7 @@ class AoStore {
   // }
 
   getTaskById_async(taskId, callbackOriginal) {
+    console.log('calling getTaskById on', taskId)
     let callback = parentTaskItem => {
       this.getAllLinkedCardsForThisTaskId_async(parentTaskItem.taskId, () => {})
       callbackOriginal(parentTaskItem)
@@ -443,6 +444,7 @@ class AoStore {
     callback,
     prioritiesOnly = false
   ) {
+    console.log('calling getLinkedCards on', parentTaskId)
     let parentTaskItem = this.hashMap.get(parentTaskId)
 
     console.log('AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ', {
@@ -1339,45 +1341,21 @@ class AoStore {
       return
     }
 
-    // for 1 letter search only first letter of guild names, 2 letters searches 1st word and also 1st initials of guild titles
-    let foundCards: Task[] = []
-    let foundGuilds: Task[] = []
-    let foundMembers: Task[] = []
-    let searchResults: Task[] = []
-
-    try {
-      let regex = new RegExp(query, 'i')
-      this.state.tasks.forEach(t => {
-        const testName = regex.test(t.name)
-        if (t.guild && (testName || regex.test(t.guild))) {
-          foundGuilds.push(t)
-        } else if (regex.test(t.name)) {
-          if (
-            !foundGuilds.some(g => {
-              return g.guild === t.name
-            })
-          ) {
-            foundCards.push(t)
-          }
+    api.search(query)
+    .then((res) => {
+        if (res.ok) {
+            this.searchResults = observable(res.body);
         }
-      })
+    })
+  }
 
-      this.state.members.forEach(member => {
-        if (regex.test(member.name)) {
-          let result = this.hashMap.get(member.memberId)
-          result.name = member.name
-          foundMembers.push(result)
-        }
-      })
-      this.searchResults = observable({
-        missions: foundGuilds,
-        members: foundMembers,
-        tasks: foundCards,
-        all: foundGuilds.concat(foundMembers, foundCards),
-        length: foundGuilds.length + foundMembers.length + foundCards.length,
-      })
-    } catch (err) {
-      console.log('regex search terminated in error: ', err)
+  // Ideally, this should replace the updateSearchResults. When we make a search, we want the server to give the results to the client
+  returnSearchResults = async (query: string) => {
+    if (query.length < 1) {
+      this.searchResults = undefined
+      return null
+    } else {
+        return api.search(query)
     }
   }
 

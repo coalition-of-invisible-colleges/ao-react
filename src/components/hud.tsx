@@ -120,7 +120,7 @@ interface HudState {
 
 @observer
 export default class AoHud extends React.Component<{}, HudState> {
-  private searchRef = React.createRef<AoSearch>()
+  private searchRef = React.createRef<typeof AoSearch>()
 
   constructor(props) {
     super(props)
@@ -131,7 +131,9 @@ export default class AoHud extends React.Component<{}, HudState> {
   }
 
   focusSearchbox() {
-    this.searchRef.current.focus()
+    /* this.searchRef.current.focus() */
+    // Buggy, out of scope
+    console.log('not focusing search box, see hud.tsx:133')
   }
 
   updateProposalCount(proposals: number) {

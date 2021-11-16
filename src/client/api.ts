@@ -2,6 +2,7 @@ import request from 'superagent'
 import uuidV1 from 'uuid/v1'
 import { createHash, hmacHex } from '../crypto'
 import _ from 'lodash'
+import { isObject } from  '../utils'
 import config from '../../configuration'
 import aoStore, { Task, Grid } from './store'
 import { io } from 'socket.io-client'
@@ -1166,7 +1167,7 @@ class AoApi {
         console.log('gotTaskByName name was ', name, 'and found is ', task)
         // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
 
-        if (_.isObject(task)) {
+        if (isObject(task)) {
           const act = {
             type: 'grid-pin',
             inId: inId,
@@ -1308,6 +1309,17 @@ class AoApi {
       .send({})
       .then(res => {
         return res
+      })
+  }
+
+  // This function encodes whatever is passed by the search box as a URIComponent and passes it to a search endpoint, returning the response when supplied
+  async search(querystring: string): Promise<request.Response> {
+      const qs = encodeURIComponent(querystring)
+      return request
+      .get('/search/' + qs)
+      .set('Authorization', aoStore.state.token)
+      .then(res => {
+          return res
       })
   }
 
