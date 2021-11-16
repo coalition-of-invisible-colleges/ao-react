@@ -5,7 +5,7 @@
     "moduleResolution": "node",
     "target": "ES5",
     "sourceMap": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noImplicitReturns": true,
     "strictFunctionTypes": false,
     "allowSyntheticDefaultImports": true,

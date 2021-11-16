@@ -1349,6 +1349,16 @@ class AoStore {
     })
   }
 
+  // Ideally, this should replace the updateSearchResults. When we make a search, we want the server to give the results to the client
+  returnSearchResults = async (query: string) => {
+    if (query.length < 1) {
+      this.searchResults = undefined
+      return null
+    } else {
+        return api.search(query)
+    }
+  }
+
   @action.bound
   addToContext(taskIds: string[], alwaysAddMember = true) {
     if (!this.member) {
