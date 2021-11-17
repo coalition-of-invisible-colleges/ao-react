@@ -1629,9 +1629,12 @@ function tasksMuts(tasks, ev) {
           }
           task.grid.height = ev.height
           task.grid.width = ev.width
+          task.grid.size = ev.size
+          const horizLimit =
+            task.gridStyle === 'pyramid' ? task.grid.height : task.grid.width
           Object.entries(task.grid.rows).forEach(([y, row]) => {
             Object.entries(row).forEach(([x, cell]) => {
-              if (x >= ev.width || y >= ev.height) {
+              if (x >= horizLimit || y >= ev.height) {
                 tasks.forEach(st => {
                   if (st.taskId === cell) {
                     task.subTasks = _.filter(

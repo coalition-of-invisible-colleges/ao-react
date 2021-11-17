@@ -49,6 +49,7 @@ export interface Grid {
   rows: {}
   height: number
   width: number
+  size: number
 }
 
 export interface Member {
@@ -397,6 +398,7 @@ class AoStore {
   // }
 
   getTaskById_async(taskId, callbackOriginal) {
+    console.log('calling getTaskById on', taskId)
     let callback = parentTaskItem => {
       this.getAllLinkedCardsForThisTaskId_async(parentTaskItem.taskId, () => {})
       callbackOriginal(parentTaskItem)
@@ -443,6 +445,7 @@ class AoStore {
     callback,
     prioritiesOnly = false
   ) {
+    console.log('calling getLinkedCards on', parentTaskId)
     let parentTaskItem = this.hashMap.get(parentTaskId)
 
     console.log('AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ', {
@@ -1169,6 +1172,7 @@ class AoStore {
     if (!this.mediaPlayHead.inId || !this.mediaPlayHead.taskId) {
       return null
     }
+
     const card = this.hashMap.get(this.mediaPlayHead.inId)
     if (!card) {
       return null
@@ -1339,12 +1343,21 @@ class AoStore {
       return
     }
 
-    api.search(query)
-    .then((res) => {
-        if (res.ok) {
-            this.searchResults = observable(res.body);
-        }
+    api.search(query).then(res => {
+      if (res.ok) {
+        this.searchResults = observable(res.body)
+      }
     })
+  }
+
+  // Ideally, this should replace the updateSearchResults. When we make a search, we want the server to give the results to the client
+  returnSearchResults = async (query: string) => {
+    if (query.length < 1) {
+      this.searchResults = undefined
+      return null
+    } else {
+      return api.search(query)
+    }
   }
 
   @action.bound

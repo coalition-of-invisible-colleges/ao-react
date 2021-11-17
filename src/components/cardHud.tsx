@@ -236,7 +236,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						)}
 						{noGrid && (
 							<div className="gridMenu action" onClick={this.addGrid}>
-								+grid
+								add pyramid
 							</div>
 						)}
 						<AoInterval taskId={taskId} hudStyle={hudStyle} />

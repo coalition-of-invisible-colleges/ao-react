@@ -883,6 +883,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     taskId={taskId}
                     height={card.grid?.height}
                     width={card.grid?.width}
+                    size={card.grid?.size || 9}
                     gridStyle={card.gridStyle}
                   />
                 )}

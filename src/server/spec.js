@@ -1201,7 +1201,9 @@ router.post('/events', (req, res, next) => {
         Number.isInteger(req.body.height) &&
         req.body.height >= 1 &&
         Number.isInteger(req.body.width) &&
-        req.body.width >= 1
+        req.body.width >= 1 &&
+        Number.isInteger(req.body.size) &&
+        req.body.size >= 1
       ) {
         events.trigger(
           eventType,
@@ -1209,6 +1211,7 @@ router.post('/events', (req, res, next) => {
             taskId: req.body.taskId,
             height: req.body.height,
             width: req.body.width,
+            size: req.body.size,
           },
           resCallback
         )

@@ -23,6 +23,7 @@ interface GridProps {
   dropActsLikeFolder?: boolean
   height: number // Height & width included to trigger refresh when grid is resized
   width: number
+  size: number
 }
 
 interface GridViewProps extends GridProps {
@@ -590,22 +591,60 @@ function AoGridMenu(props: GridMenuProps) {
 
   const isPyramid = props.gridStyle === 'pyramid'
   console.log('AoGridMenu render()')
+
+  function increaseSquareSize() {
+    api.resizeGrid(
+      props.taskId,
+      card.grid.height,
+      card.grid.width,
+      card.grid.size && card.grid.size >= 1 ? card.grid.size + 1 : 10
+    )
+  }
+
+  function decreaseSquareSize() {
+    api.resizeGrid(
+      props.taskId,
+      card.grid.height,
+      card.grid.width,
+      card.grid.size && card.grid.size >= 1 ? card.grid.size - 1 : 8
+    )
+  }
+
   const renderedGridMenu = (
     <div className="gridMenu">
-      <button
-        className={'action' + (isPyramid ? ' selected' : '')}
-        onClick={switchToPyramid}
-        disabled={isPyramid}>
-        <img src={Pyramid} />
-        Pyramid
-      </button>
-      <button
-        className={'action' + (!isPyramid ? ' selected' : '')}
-        onClick={switchToGrid}
-        disabled={!isPyramid}>
-        <img src={GridImg} />
-        Grid
-      </button>
+      <div>
+        <button
+          className={'action' + (isPyramid ? ' selected' : '')}
+          onClick={switchToPyramid}
+          disabled={isPyramid}>
+          <img src={Pyramid} />
+          Pyramid
+        </button>
+        <button
+          className={'action' + (!isPyramid ? ' selected' : '')}
+          onClick={switchToGrid}
+          disabled={!isPyramid}>
+          <img src={GridImg} />
+          Grid
+        </button>
+      </div>
+      <div>
+        square size:
+        <button
+          type="button"
+          onClick={decreaseSquareSize}
+          disabled={card.grid.size <= 1}
+          className="action minus">
+          -
+        </button>
+        <button
+          type="button"
+          onClick={increaseSquareSize}
+          disabled={card.grid.size >= 40}
+          className="action plus">
+          +
+        </button>
+      </div>
     </div>
   )
 
@@ -663,13 +702,14 @@ export default function AoGrid(props: GridProps) {
     return (
       <div className="gridContainer noPad">
         <p onClick={addGrid} className="action">
-          +grid
+          add pyramid
         </p>
       </div>
     )
   }
 
-  const gridWidth = props.dropActsLikeFolder ? '7.5em' : '9em'
+  // const gridWidth = props.dropActsLikeFolder ? '7.5em' : '9em'
+  const gridWidth = grid.size && grid.size >= 1 ? grid.size + 'em' : '9em'
   console.log('AoGrid render()')
   if (!isPyramid) {
     return (

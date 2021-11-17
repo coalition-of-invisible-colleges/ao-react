@@ -41,16 +41,18 @@ export function blankCard(
 		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
 		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
-		gridStyle: 'grid',
+		gridStyle: 'pyramid',
 		allocations: [],
 	}
 	return newCard
 }
 
 export function blankGrid(height = 3, width = 3) {
+	const defaultSquareSizeInEms = 9
 	let newGrid = {
 		height: height,
 		width: width,
+		size: defaultSquareSizeInEms,
 		rows: {},
 	}
 	return newGrid
