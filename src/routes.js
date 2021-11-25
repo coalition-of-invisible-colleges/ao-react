@@ -1,5 +1,5 @@
 import Login from './components/Login'
-import AoMembers from './components/Members'
+import AoMembers from './components/members'
 import AoCard from './components/Card'
 import AoMember from './components/Member'
 
@@ -7,24 +7,24 @@ const routes = [
 	{
 		path: '/login',
 		component: Login,
-		restricted: false
+		restricted: false,
 	},
 	{
 		path: '/members',
 		component: AoMembers,
-		restricted: true
+		restricted: true,
 	},
 	{
 		path: '/task',
 		component: AoCard,
-		restricted: true
+		restricted: true,
 	},
 	{
 		path: '/',
 		exact: true,
 		component: AoMember,
-		restricted: true
-	}
+		restricted: true,
+	},
 	// here: need to add route for grabbing files from server
 ]
 
