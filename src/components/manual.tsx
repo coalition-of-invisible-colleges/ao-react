@@ -237,6 +237,64 @@ sudo systemctl restart ao [if anything on the server has changed]`,
   'Components Guide': 'Describe, visualize and name every component',
 }
 
+/*
+the AO is a website for online and offline communities
+
+it was originally created for a hackerspace in Vancouver to control monthly membership and allow active members to get in the door with an RFID fob and tap to use the soda machine
+
+I added the cards to it so it can also be used as an online community to trade memes
+
+You can drop a file on a grid square to upload the  file onto a new card
+
+you can create a new card by clicking the Compose Card button in the bottom center of the screen
+
+new cards will be created within the card you are currently looking at. you can click a card to go in it and see the cards inside it
+
+cards can be dragged and dropped to move them around. each card has three regions: the priorities, the optional grid or pyramid of cards, and a stack of cards below the grid. cards also have an "accomplishments" section where checked-off cards end up
+
+Q: I can only drag and drop them in a grid, right?
+
+A: you can also drop them to the priorities above or the stack below the grid
+
+cards dropped from within one of those lists to the same list will move to the top (so you can reorder the list)
+
+if you are having trouble finding the drop region, create  a card with the Compose button to see where it is
+
+Q: Can I get a larger grid?
+
+A: yes, use the +/- buttons at the right edge and bottom
+
+Q: How do you delete cards?
+
+A: a card cannot be deleted if at least one person has grabbed the card to their collecton. currently this feature is being reworked and there is no way to drop or delete a card right now.
+
+but you can see your collection by clicking the moon card button to the right of the bookmarks bar
+
+and you can discard cards by dropping them to the background
+
+an update soon will make it easy to go through your old cards and delete or reorganize them. this was a feature before and will be brought back
+
+you can click the menu on a card to change its color and do other things with it. the menu is a bit messy but the features on it are cool
+
+if you paste a youtube or video link on a card and then click card menu—>Cache Media, it will cache it for you. this makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file.
+
+any card can be upgraded to a group aka Mission in its card menu. Missions are listed in the Missions sidebar. a mission can have members join it and have membership rankings/levels controlled by those of higher rank. a mission can have an optional chatroom or dropbox added, and the rankings are used to control dropbox access
+
+if you create a card that matches the text or mission/guild/group title of an existing card, it will place that existing card instead of creating a new card (duplicates not allowed)
+
+there is also a points system. if you check off a card with a funded bounty, you will get the points immediately. the idea is to use this to manage the hackerspace (monthly dues + $3 / soda, all paid in bitcoin) and to pay AO devs  for improvements they make to the AO
+
+so the AO will become an autonomous self-improving system
+
+also, there is a very cool feature with priorities. if a card has prioritized cards within it, the number of them will show on the front, on the grid, with an !
+
+if you click this, it will show the priorities on front (prior to) the cards on the grid that they are within
+
+so you can see what the next task is in a project, or even a subproject
+
+you can drag a card to the area above the grid to drop it to the priorities
+*/
+
 export default function AoManual() {
   const [show, setShow] = React.useState(false)
   const [topic, setTopic] = React.useState('Introduction')
