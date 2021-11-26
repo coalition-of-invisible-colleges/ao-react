@@ -244,7 +244,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         <AoSidebarButton
           sidebarTab="members"
           iconSrc={MemberIcon}
-          tooltipText="Members"
+          tooltipText={gloss('Members')}
           tooltipPlacement="right"
           id="tour-members"
         />
@@ -259,7 +259,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         <AoSidebarButton
           sidebarTab="calendar"
           iconSrc={Timecube}
-          tooltipText="Calendar"
+          tooltipText={gloss('Calendar')}
           badge={renderedCalendarBadge}
           tooltipPlacement="right"
           id="tour-calendar"
@@ -267,14 +267,14 @@ export default class AoHud extends React.Component<{}, HudState> {
         <AoSidebarButton
           sidebarTab="bounties"
           iconSrc={Chest}
-          tooltipText="Bounties"
+          tooltipText={gloss('Bounties')}
           tooltipPlacement="right"
           id="tour-bounties"
         />
         <AoSidebarButton
           sidebarTab="search"
           iconSrc={MagnifyingGlass}
-          tooltipText="Search"
+          tooltipText={gloss('Search')}
           tooltipPlacement="top"
           onShown={this.focusSearchbox}
           id="tour-search"
@@ -282,7 +282,7 @@ export default class AoHud extends React.Component<{}, HudState> {
         <AoSidebarButton
           sidebarTab="manual"
           iconSrc={Manual}
-          tooltipText="Manual"
+          tooltipText={gloss('Manual')}
           tooltipPlacement="right"
           id="tour-manual"
         />

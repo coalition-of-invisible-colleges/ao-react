@@ -1058,7 +1058,7 @@ body {
 
 #leftSidebar {
   position: fixed;
-  height: 100vh;
+  height: calc(100vh - 10em);
   width: 25vw;
   top: 0;
   left: 0;
@@ -1067,6 +1067,7 @@ body {
   padding-left: 0.75em;
   padding-right: 0.5em;
   box-shadow: 7px 7px 7px 1px rgba(21, 21, 21, 0.5);
+  overflow: auto;
 
   &.guilds {
     overflow-y: auto;
@@ -3050,7 +3051,7 @@ pre {
 #hopper {
   position: absolute;
   height: 1.5em;
-  bottom: 6em;
+  top: -2em;
   transform: translateX(-50%);
   // width: min-content;
   transition-property: left;
@@ -3410,23 +3411,74 @@ input[type='text'].error {
   height: 100vh;
 }
 
-// Modal dialog containing the hardcoded (but glossed) AO user manual
-#theManual {
-  background-color: rgba(5, 0, 10, 0.9);
-  border-radius: 1em;
-  height: 86vh;
+#leftSidebar.manual {
   width: -moz-fit-content;
   width: fit-content;
-  // position: fixed;
-  // left: 50%;
-  // transform: translateX(-50%);
-  top: 3vh;
-  text-align: left;
-  border: 0.25em solid rgba(255, 255, 255, 0.14);
-  padding: 1em;
-  font-family: 'Open Sans', 'Arial';
+  overflow: hidden;
+}
 
-  h1,
+// Modal dialog containing the hardcoded (but glossed) AO user manual
+#theManual {
+  height: 100%;
+
+  h1 {
+    font-size: 1.25em;
+  }
+}
+
+// List of topics and the content of a topic in the manual
+.topics,
+.topicContent {
+  font-size: 0.9em;
+  background-color: white;
+  color: black;
+  border-radius: 0.25em;
+  overflow-y: auto;
+  text-align: left;
+  font-family: 'Open Sans', 'Arial';
+}
+
+// List of topics in the manual
+.topics {
+  margin: 0;
+  padding: 0.5em 0;
+  min-width: 22vw;
+  height: calc(100% - 4.25em);
+
+  li {
+    color: black;
+    cursor: pointer;
+    list-style-type: none;
+    line-height: 2.5em;
+    padding-left: 1em;
+    position: relative;
+
+    .triangle {
+      color: black;
+      position: absolute;
+      right: 0.5em;
+      top: 0;
+    }
+
+    &.selected {
+      color: white;
+      background-color: #6c70a0;
+
+      & > .triangle {
+        color: white;
+      }
+    }
+  }
+}
+
+// Content for a topic in the manual
+.topicContent {
+  padding: 1em;
+  margin-left: 0.5em;
+  float: right;
+  width: 26em;
+  height: calc(100% - 5.25em);
+
   h2,
   h3 {
     font-size: 1.35em;
@@ -3436,10 +3488,6 @@ input[type='text'].error {
     width: -moz-fit-content;
     width: fit-content;
     margin-top: 0.5em;
-  }
-
-  h1 {
-    margin-bottom: 0.5em;
   }
 
   h2 {
@@ -3458,75 +3506,29 @@ input[type='text'].error {
     text-indent: 2.5em;
   }
 
-  .browser {
-    display: flex;
-    max-height: calc(100% - 3em);
-    margin-bottom: 1em;
+  li {
+    margin-left: 2em;
+    padding-left: 0.5em;
 
-    .topics,
-    .topicContent {
-      font-size: 0.9em;
-      background-color: white;
-      color: black;
-      border-radius: 0.25em;
-      overflow-y: auto;
+    p {
+      text-indent: 0;
     }
+  }
+}
 
-    .topics {
-      flex-basis: 30%;
-      margin: 0;
-      padding: 0.5em 0;
-      min-width: 22vw;
+.subTopic {
+  padding-left: 2em;
+  background-color: rgba(0, 0, 0, 0.15);
+  max-height: 0;
+  overflow-y: hidden;
+  -webkit-transition: max-height 0.75s linear;
+  -moz-transition: max-height 0.75s linear;
+  -o-transition: max-height 0.75s linear;
+  transition: max-height 0.75s linear;
 
-      li {
-        color: black;
-        cursor: pointer;
-        list-style-type: none;
-        line-height: 2.5em;
-        padding-left: 1em;
-        position: relative;
-
-        .triangle {
-          color: black;
-          position: absolute;
-          right: 0.5em;
-          top: 0;
-        }
-
-        &.selected {
-          color: white;
-          background-color: rgba(0, 0, 0, 0.8);
-
-          & > .triangle {
-            color: white;
-          }
-        }
-      }
-    }
-
-    .topicContent {
-      flex-basis: calc(70% - 2.5em);
-      padding: 1em;
-      min-width: 20em;
-      width: 28vw;
-      max-width: 28em;
-      margin-left: 0.5em;
-    }
-
-    .subTopic {
-      padding-left: 2em;
-      background-color: rgba(0, 0, 0, 0.15);
-      max-height: 0;
-      overflow-y: hidden;
-      -webkit-transition: max-height 0.75s linear;
-      -moz-transition: max-height 0.75s linear;
-      -o-transition: max-height 0.75s linear;
-      transition: max-height 0.75s linear;
-
-      &.show {
-        max-height: 200em;
-      }
-    }
+  &.show {
+    max-height: 200em;
+    border-left: 0.6em solid #6c70a0;
   }
 }
 

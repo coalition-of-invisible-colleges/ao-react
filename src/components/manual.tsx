@@ -7,13 +7,19 @@ import aoStore from '../client/store'
 const topics = {
   Introduction: `Welcome to the AO User Manual! Here you will find a comprehensive guide to all of the AO's functions and many of its possible uses.
 
-The AO (ao-react project) is currently at version 0.7.0.
+The <a href="https://github.com/coalition-of-invisible-colleges/ao-react">ao-react project</a> is currently at version 0.7.0.
 
-This user manual is currently at version 0.7.0
-
-There are currently two bugs in this manual. The manual is customized for the language on each server, and this is done with word replacement. This may lose some capital letters and replace some non-whole-words.`,
+This user manual is currently at version 0.7.1`,
   Overview: {
-    index: `The AO is a free software project and a lived practice of creating open-source software for a peer-to-peer community.`,
+    index: `The AO is a free software project and a lived practice of creating open-source software for a peer-to-peer community.
+
+A.O. stands for "Autonomous Organization". The AO seeks to distribute power informally by teaching new users how to set up and administer an AO server. This is similar to DAOs, but we have dropped the 'D', which stands for "Decentralized", because the AO does not use blockchain technology and is ultimately technology-agnostic.
+
+The AO is not just software. The AO is a distributed, agile, flocking organization made up of everyone who uses the AO software or enacts the liberatory peer-to-peer principles of the AO in their dealings with others.
+
+Each new person who discovers the AO has their own desires, feature requests, and big ideas. The AO is intended to include and smooth out the entire process of bringing in new community members, teaching them how to use the software, and improving the software based on requests from the new community member.
+
+For developers, the AO provides a free and increasingly standards-focused digital space, as well as a suite of task-management tools for improving the AO in collaboration with other AO developers.`,
     "What's it For?": `There are many reasons you might set up an AO server. Here are some of the types of community projects the AO was specifically designed to support:
 
 ### Local Hackerspace
@@ -63,28 +69,36 @@ Send cards to other members on the same server, or sync cards securely over tor.
 ### Independent Content Publishing (planned feature)
 
 For content creators, the AO will make it easy to publish your content publicly or for members-only, and collect donations or required monthly dues from members. Why use YouTube when you can host your own content and provide your viewers a customizable and intimate free or membership experience?`,
-    'Getting Started': `Someone else will need to create an account for you and tell you the URL, username and password so you can log in. Visit the URL and type the username and password and press Enter to log in. There is a bug right now so you will also need to refresh the page after login.`,
+    'Getting Started': `To use the AO, you must have an account.
+
+1. Someone else will need to create an account for you and tell you the URL, username and password so you can log in.
+
+2. Visit the URL and type the username and password and press Enter to log in.
+
+When you first log in, there will be a big, rainbow button that says "**Take Tour**" in the lower left of the page. Click this to take an introductory tour of the AO.
+
+Planned feature: The ability for anyone to create an new account on the AO, without having to be invited.`,
   },
   Cards: {
     index: `The AO stores a deck of cards for each member on a server. You can put text, images, links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over tor.`,
-    'Creating a Card': `There are four ways to create a card:
+    'Creating a Card': `There are two ways to create a card:
 
-1. Click the "+priority" button inside of a card. This button disappear after one priority has been created.
+1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within card you are currently viewing.
 
-2. Click the "+card" button inside a card. This button appears after the first priority has been created. It disappears after a second card has been created.
+2. Click an empty grid square, type something, then press Enter to create the card. This will create a card and place it in that grid square.
 
-3. Click the "+card" button at the top of the bookmarks bar (bottom center). This is always visible and will create a card in card you are curently viewing.
+The card compose box will remember a draft you are writing. Your draft is stored locally in your browser and also saved on the server.
 
-4. Create and send a card in the Inbox. Click "Send Gift / Inbox" on the left edge of the screen, then click "Compose". Compose your card, type the name of the recipient, and click "Give". The card will be created and sent to the recipient.`,
+Planned features: Choose color of card before creating; rich text editing features; ability to create a card already-prioritized; ability to create cards encrypted with the server's private key.`,
     'Viewing your deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
     'Grabbing cards':
-      'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the moon icon on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
-    'Finding cards': `To find a card you are looking for, you can use the search box.
+      'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the Grab icon on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
+    'Searching for cards': `To find a card you are looking for, you can use the search box.
 
-Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
+1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
 
-The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\*" (period asterisk). For more information on regular expressions, search the web for "regular expression guide" or "regular expressoin cheatsheet". If you want to avoid using regular expressions, you must escape certain punctuation marks by preceding them with a backslash. For example, period (.) and asterisk(\*) are special characters, so to search for them, search for "\\." and "\\\*" respectively.`,
+The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, search the web for "regular expression guide" or "regular expressoin cheatsheet". If you want to avoid using regular expressions, you must escape certain punctuation marks by preceding them with a backslash. For example, period (.) and asterisk (\\\*) are special characters, so to search for them, search for "\\\\." and "\\\\\*" respectively.`,
     'Sharing Cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
     'Receiving cards':
       'Your inbox is located just under the Community Hub icon in the top-left corner of the screen. Here, you can view received cards, compose and send new cards, and see changed cards on this server.',
@@ -231,10 +245,22 @@ sudo systemctl restart ao [if anything on the server has changed]`,
 * AO version 1.0, codename "Shrigma", will be complete
 
 * AO version 1.1 will add important convenience features such as the ability for end-users to export their cards for download, sound effects, and better theming.`,
+    'Components Guide': 'Describe, visualize and name every component',
     'How to help':
       'Please contact an existing developer to request an account at ao.coalitionofinvisiblecolleges.org, where ao-react development goals are currently being organized.',
   },
-  'Components Guide': 'Describe, visualize and name every component',
+  Philosophy: {
+    index:
+      'The AO, ultimately, is a collection of principles about how to develop sofware communally and how to talk about cooperation.',
+    'Desert Power':
+      'Desert power is the capability of the autonomous to improve itself. The potential of the potential.',
+    Easiness: `*Go for the low-hanging fruit.*
+
+ Computers and other technology should make our lives easier, not harder. As an end-user I want everything to be free and easy. As a developer, I fix all the easy bugs first and work outward from there, looking for the task that will have the greatest positive impact on the AO's desert power. Efficiency thus becomes a practice of ease and pleasure and not asceticism.`,
+    Unmanageability: `*Take chances, make mistakes, get messy!*
+
+The AO helps its users to become unmanageable, and the AO also eschews top-down models of card management as much as possible, while still providing convenient ways to organize cards. The AO user interface is designed to make interaction with the computer safe and to make it impossible to accidentally delete cards or leak private data.`,
+  },
 }
 
 /*
@@ -354,7 +380,7 @@ export default function AoManual() {
     return (
       <Markdown
         options={{
-          forceBlock: false,
+          forceBlock: true,
         }}>
         {gloss(content)}
       </Markdown>
@@ -383,23 +409,21 @@ export default function AoManual() {
 
   return (
     <div id="theManual">
-      <div className="theX" onClick={hideManual} />
+      {/*<div className="theX" onClick={hideManual} />*/}
       <h1>AO User Manual</h1>
-      <div className="browser">
-        <ul className="topics">{renderedTopics}</ul>
-        <div className="topicContent">
-          {subTopic ? (
-            <h2>{gloss(subTopic)}</h2>
-          ) : (
-            <h2>{toTitleCase(gloss(topic))}</h2>
-          )}
-          {subTopic
-            ? renderContent(topics[topic][subTopic])
-            : topic && typeof topics[topic] === 'string'
-            ? renderContent(topics[topic])
-            : renderContent(topics[topic]['index'])}
-        </div>
+      <div className="topicContent">
+        {subTopic ? (
+          <h2>{gloss(subTopic)}</h2>
+        ) : (
+          <h2>{toTitleCase(gloss(topic))}</h2>
+        )}
+        {subTopic
+          ? renderContent(topics[topic][subTopic])
+          : topic && typeof topics[topic] === 'string'
+          ? renderContent(topics[topic])
+          : renderContent(topics[topic]['index'])}
       </div>
+      <ul className="topics">{renderedTopics}</ul>
     </div>
   )
 }

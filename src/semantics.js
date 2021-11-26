@@ -36,6 +36,17 @@ function pluralize(word) {
 	return plural
 }
 
+function capitalize(word) {
+	if (word.length < 1) {
+		return ''
+	}
+	return word[0].toUpperCase() + word.substring(1)
+}
+
+// Returns the given word or string, with all instances of words in the glossary in configuration.js replaced with their gloss.
+// In a multi-word string, it will correctly distinguish between all-lowercase keywords and those
+// with their first letter capitalized, and replace them correctly. Original hardcoded keywords must be typed (in this codebase)
+// in either all lowercase or with the first letter capitalized to be caught be the word replacement.
 export function gloss(wordOrSentence, plural = false) {
 	let result
 	if (wordOrSentence.indexOf(' ') < 0) {
@@ -67,16 +78,30 @@ export function gloss(wordOrSentence, plural = false) {
 		}
 	} else {
 		result = wordOrSentence
-		Object.entries(serverGlossary).forEach(([keyword, synonym]) => {
-			let pluralKeyword = pluralize(keyword)
-			let pluralSynonym = pluralize(synonym)
 
-			let regexp = new RegExp(pluralKeyword, 'gi')
+		Object.entries(serverGlossary).forEach(([keyword, synonym]) => {
+			// replace lowercase plural version of the keyword
+			const pluralKeyword = pluralize(keyword)
+			const pluralSynonym = pluralize(synonym)
+			let regexp = new RegExp('\\b' + pluralKeyword + '\\b', 'g')
 			result = result.replace(regexp, pluralSynonym)
-			// if (result === firstReplace) {
-			regexp = new RegExp(keyword, 'gi')
+
+			// replace capitalized plural version of the keyword
+			const pluralKeywordUppercase = capitalize(pluralKeyword)
+			const pluralSynonymUppercase = capitalize(pluralSynonym)
+			regexp = new RegExp('\\b' + pluralKeywordUppercase + '\\b', 'g')
+			result = result.replace(regexp, pluralSynonymUppercase)
+
+			// replace lowercase singular version of the keyword
+			regexp = new RegExp('\\b' + keyword + '\\b', 'g')
 			const singularSynonym = Array.isArray(synonym) ? synonym[0] : synonym
 			result = result.replace(regexp, singularSynonym)
+
+			// replace capitalized singular version of the keyword
+			const singularKeywordUppercase = capitalize(keyword)
+			const singularSynonymUppercase = capitalize(singularSynonym)
+			regexp = new RegExp('\\b' + singularKeywordUppercase + '\\b', 'g')
+			result = result.replace(regexp, singularSynonymUppercase)
 		})
 	}
 	return result
