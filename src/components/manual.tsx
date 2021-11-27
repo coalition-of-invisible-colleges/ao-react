@@ -11,7 +11,7 @@ The <a href="https://github.com/coalition-of-invisible-colleges/ao-react">ao-rea
 
 This user manual is currently at version 0.7.1`,
   Overview: {
-    index: `The AO is a free software project and a lived practice of creating open-source software for a peer-to-peer community.
+    index: `The AO is a free software project and a lived practice of creating open-source software for an online-and-offline peer-to-peer community.
 
 A.O. stands for "Autonomous Organization". The AO seeks to distribute power informally by teaching new users how to set up and administer an AO server. This is similar to DAOs, but we have dropped the 'D', which stands for "Decentralized", because the AO does not use blockchain technology and is ultimately technology-agnostic.
 
@@ -24,7 +24,7 @@ For developers, the AO provides a free and increasingly standards-focused digita
 
 ### Local Hackerspace
 
-The AO was originally created to help a local hackerspace manage its membership dues, door security, sidewalk LED art, and bitcoin soda machine.
+The AO was originally created to help a local hackerspace manage its membership dues and to allow active members to use an RFID fob to open the front door. Members can also pay bitcoin or lightning to the AO to activate the bitcoin soda machine, or use the AO to control the sidewalk LED art.
 
 ### Chore Rota
 
@@ -36,7 +36,7 @@ Hardware devices can be connected to the AO over a local network and controlled 
 
 ### Online Image Board
 
-In addition to local communities, the AO is also designed to support online-only communities. Since digital communities are ultimately grounded in the media they exchange, the AO comes with drag-and-drop file sharing and the ability to automatically sync file attachments over tor between two paired AO servers.
+In addition to local communities, the AO is also designed to support online-only communities. Since digital communities are ultimately grounded in the media they exchange, the AO comes with drag-and-drop file sharing and the ability to automatically sync file attachments over tor between two paired AO servers. This makes the AO ideal for trading rare memes.
 
 ### Virtual Rooms
 
@@ -90,6 +90,9 @@ Planned feature: The ability for anyone to create an new account on the AO, with
 The card compose box will remember a draft you are writing. Your draft is stored locally in your browser and also saved on the server.
 
 Planned features: Choose color of card before creating; rich text editing features; ability to create a card already-prioritized; ability to create cards encrypted with the server's private key.`,
+    'Navigating within a card': `Cards can contain other cards within them.
+
+1. Click a card to navigate to it and see what's within it.`,
     'Viewing your deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
     'Grabbing cards':
@@ -108,6 +111,17 @@ You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
 
 Guild cards placed in the bookmarks bar will act like folders, and cards dropped on them will be moved within to that card's priorities. By placing a few different guilds on the bookmarks bar, can use the boomarks bar to quickly sort cards into categories.
   This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).`,
+    'Uploading a file': `You can upload a file to the AO as an attachment to a new card.
+
+1. Add a pyramid or grid to the card, if it doesn't have one.have
+
+2. Drag a file from your desktop and drop it on an empty grid square.grid
+
+3. Wait until the file fully uploads, then it should re-download and appear on a new yellow card.
+
+If the card is blue, something went wrong.
+
+Files are stored by their hash so if you need to re-upload the same file, change it a tiny bit and then it will re-upload properly.`,
     'The Community Hub Card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
@@ -264,17 +278,6 @@ The AO helps its users to become unmanageable, and the AO also eschews top-down 
 }
 
 /*
-the AO is a website for online and offline communities
-
-it was originally created for a hackerspace in Vancouver to control monthly membership and allow active members to get in the door with an RFID fob and tap to use the soda machine
-
-I added the cards to it so it can also be used as an online community to trade memes
-
-You can drop a file on a grid square to upload the  file onto a new card
-
-you can create a new card by clicking the Compose Card button in the bottom center of the screen
-
-new cards will be created within the card you are currently looking at. you can click a card to go in it and see the cards inside it
 
 cards can be dragged and dropped to move them around. each card has three regions: the priorities, the optional grid or pyramid of cards, and a stack of cards below the grid. cards also have an "accomplishments" section where checked-off cards end up
 
