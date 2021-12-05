@@ -350,6 +350,7 @@ export default class AoBird extends React.Component<Props, State> {
     }
 
     let parentCards = []
+    console.log('card', card.name, ' card.parents is', card.parents)
     if (
       card &&
       card.hasOwnProperty('parents') &&
