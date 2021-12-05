@@ -357,7 +357,7 @@ export default class AoBird extends React.Component<Props, State> {
       card.parents.length >= 1
     ) {
       parentCards = card.parents
-        .map(memberId => aoStore.hashMap.get(memberId))
+        .map(taskId => aoStore.hashMap.get(taskId))
         .filter(task => {
           if (!task || !task.hasOwnProperty('taskId')) {
             return false
@@ -371,8 +371,9 @@ export default class AoBird extends React.Component<Props, State> {
           }
           return true
         })
-        .reverse()
+      parentCards.reverse()
     }
+    console.log('parentCards.length is', parentCards.length)
 
     return (
       <LazyTippy
@@ -411,8 +412,8 @@ export default class AoBird extends React.Component<Props, State> {
                     </h3>
                     <AoStack
                       cards={parentCards}
-                      zone={'panel'}
-                      cardStyle={'priority'}
+                      zone="panel"
+                      cardStyle="priority"
                       cardsBeforeFold={3}
                       noPopups={true}
                     />
