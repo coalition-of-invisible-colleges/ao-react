@@ -71,40 +71,42 @@ Send cards to other members on the same server, or sync cards securely over tor.
 For content creators, the AO will make it easy to publish your content publicly or for members-only, and collect donations or required monthly dues from members. Why use YouTube when you can host your own content and provide your viewers a customizable and intimate free or membership experience?`,
     'Getting Started': `To use the AO, you must have an account.
 
-1. Someone else will need to create an account for you and tell you the URL, username and password so you can log in.
+1. Someone else will need to create an account for you and tell you the URL, your username and password so you can log in.
 
 2. Visit the URL and type the username and password and press Enter to log in.
 
 When you first log in, there will be a big, rainbow button that says "**Take Tour**" in the lower left of the page. Click this to take an introductory tour of the AO.
 
+The default username for new AO accounts is the same as the username.
+
 Planned feature: The ability for anyone to create an new account on the AO, without having to be invited.`,
   },
   Cards: {
-    index: `The AO stores a deck of cards for each member on a server. You can put text, images, links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over tor.`,
+    index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over tor.`,
     'Creating a Card': `There are two ways to create a card:
 
-1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within card you are currently viewing.
+1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within the card you are currently viewing.
 
 2. Click an empty grid square, type something, then press Enter to create the card. This will create a card and place it in that grid square.
 
 The card compose box will remember a draft you are writing. Your draft is stored locally in your browser and also saved on the server.
 
 Planned features: Choose color of card before creating; rich text editing features; ability to create a card already-prioritized; ability to create cards encrypted with the server's private key.`,
-    'Navigating within a card': `Cards can contain other cards within them.
+    'Navigating Within a Card': `Cards can contain other cards within them.
 
 1. Click a card to navigate to it and see what's within it.`,
-    'Viewing your deck':
+    'Viewing Your Deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
     'Grabbing cards':
       'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the Grab icon on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
-    'Searching for cards': `To find a card you are looking for, you can use the search box.
+    'Searching for Cards': `To find a card you are looking for, you can use the search box.
 
 1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
 
 The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, search the web for "regular expression guide" or "regular expressoin cheatsheet". If you want to avoid using regular expressions, you must escape certain punctuation marks by preceding them with a backslash. For example, period (.) and asterisk (\\\*) are special characters, so to search for them, search for "\\\\." and "\\\\\*" respectively.`,
     'Sharing Cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
-    'Receiving cards':
-      'Your inbox is located just under the Community Hub icon in the top-left corner of the screen. Here, you can view received cards, compose and send new cards, and see changed cards on this server.',
+    'Receiving cards': `When someone sends you a card, it will appear in a giftbox on your member card. Click it to open the gift and put the card in your member priorities. This will add the card to your deck; discard the card to send it to your archive, where it can be deleted (feature coming soon).
+Planned feature: Ability to open a gift without accepting it yet (was previously possible)`,
     'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen. Use the bookmarks bar to store frequently-used groups or cards, or use it as a clipboard or composition area.
 
 You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
@@ -127,8 +129,39 @@ Files are stored by their hash so if you need to re-upload the same file, change
   'Organizing Cards': {
     index:
       'When you view a card, you can also place other cards within it, and modify the card in various ways.',
-    'Zones within a card':
-      'Priorities, grid, stack below grid, and completed cards / Accomplishments',
+    'Zones within a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below grid, and the accomplishments.the
+
+### Priorities
+
+Prioritized cards appear in a stack just after the content of the card. If this stack has more than one card in it, a number will display below the stack of the number of hidden cards. Click this number to show the other cards in the stack.
+
+To prioritize a card, drag it to the priorities area, or if the card has a boat icon in its top-right corner, click that will prioritize it.
+
+If the list of priorities has more than 6 items in it, a button that says "Refocus" will appear. Click this button to dump all priorities back down to the other stack of cards below.
+
+The number of priorities with an a card displays on the front of the card, followed by an exclamation mark. For example, a card with three priorities will display a small "3!" on its face. Click this number to toggle priority mode. While in priority mode, the first priority of a card will display in front of that card on the grid. This allows you to see your next actions even in nested subprojects.
+
+To re-prioritize a card to the top of the priorities, drag and drop a card onto the priorities stack.
+
+### Pyramid / Grid
+
+After the priorities, an optional grid or pyramid can be added to a card. A grid has squares that other cards can be dragged an dropped on. To add a pyramid to a card, click the card's menu (three dots in lower right of card), then click "Add pyramid".  To change it to a grid, click the small triangualur menu button in the lower right corner of the pyramid, then click Grid in the popup menu that appears. In this menu, you can also increase and decrease the size of the grid squares.the
+
+To resize a pyramid or increase the number of rows a grid has, click the horizontal +/- button below the grid. To increase the number of columns a grid has, click the vertical +/- buttons to the right of the grid. If you use these buttons to shrink a pyramid or grid to one row (or column), a "-grid" button will appear which allows the grid to be removed.
+
+When a grid is shrunk, any cards that no longer fit will be harmlessly dumped to the stack below the grid.
+
+Please break these sections out and combine with grid section below.
+
+### Subcards
+
+Other cards that are not prioritized and not placed on the grid accumulate in the stack below the grid. To move a card to the top of the subcards stack, drag and drop a card onto the stack.the
+
+### Accomplishments
+
+The Accomplishments icon appears in the lower left corner of the card when a card contains at least one completed card. When you discard a card from another card, if that card has at least one checkmark, it is moved to the Accomplishments section instead of being discarded. This allows you to collect accomplishments wthout having to think about it.
+
+Click the Accomplishments icon to show the completed cards within a card. If you want to remove a card from the Accomplishments section, drag it and drop it to the background of the page.`,
     'Moving cards around': 'Use drag-and-drop to move cards around',
     'Discarding cards':
       'You can drop cards onto the black background and they will be discarded from the current card. Discarding will not delete the card, just remove it from its present location. You can drag on the black background itself to grab the most recently-discarded card back (it remembers all the cards you discard locally until you refresh the page).',
@@ -228,8 +261,38 @@ The second time you run the AO install script, it should say "already installed"
   },
   Administration: {
     index: 'For admins',
-    'Connecting hardware resources':
-      'How to connect a hardware peripheral to a Raspberry Pi and write a script that the AO can trigger, and then how to use the AO hardware connect script to connect them.',
+    'Connecting hardware resources': `The AO can connect over a wired LAN or wifi to control the GPIO pins on a raspberry pi. This allows hardware peripherals to be connected to the AO, controlled by members, and restricted with a fee or to active members.
+
+To use a hardware resource with the AO, it must be connected, and a custom control panel GUI must be written for it to display in the Resources panel.
+
+
+To set up the RFID fob:
+
+1. Plug in your RFID reader device
+
+2. Find the name of the hardware by finding where your OS has its hardware devices, and save this info for the init process (type it exactly)
+
+7. Do gpio-export (there are two different numbering systems for the pins)
+
+8 . Set it up to autostart with systemctl
+
+To connect a hardware resource to the AO via a Raspberry Pi:
+
+1. Install an OS on your Raspberry Pi (we suggest Debian).
+
+2. git clone https://github.com/AutonomousOrganization/pi
+
+3. cd pi
+
+4. npm i
+
+5. Create a user on your AO for the hardware resource to use (or use an existing user)
+
+6. npm run init
+
+The AO connect script on the pi will log into the AO as the user and use that access to trigger resource-used events on the server.
+
+GPIO has two modes: BCM and 'board'. For 'board', the order is the physical order of the pins themselves. BCM stands for Board Control Module, and the order is the logical order of the pins.`,
     'Connecting two AOs': "How to connect two AO's p2p over tor",
     'Adding files serverside':
       "The AO allows users of the website frontend to drag-and-drop files onto a grid to upload them. However, if you install the AO on your laptop or on a server, you can add files directly to the AO by putting them in the AO's memes folder. The default location of this folder is ~/.ao/memes/. Simply copy or move files here and restart the AO, and the files will be scanned and a card made for each file. These cards are not held by anyone right now, so you must search for them and grab them to find them. Future updates will also add live scanning and full iTunes-like file organization features, so that your folders of memes on your hard drive can be kept in lockstep with the structure of your cards on the AO.",
@@ -264,8 +327,9 @@ sudo systemctl restart ao [if anything on the server has changed]`,
       'Please contact an existing developer to request an account at ao.coalitionofinvisiblecolleges.org, where ao-react development goals are currently being organized.',
   },
   Philosophy: {
-    index:
-      'The AO, ultimately, is a collection of principles about how to develop sofware communally and how to talk about cooperation.',
+    index: `The AO, ultimately, is a collection of principles about how to develop sofware communally and how to talk about cooperation.
+
+These principles are meant to be modified by the community that uses them, so please take these ideas as evolving and in-discussion. Please propose or make changes to this manual.`,
     'Desert Power':
       'Desert power is the capability of the autonomous to improve itself. The potential of the potential.',
     Easiness: `*Go for the low-hanging fruit.*
@@ -274,10 +338,17 @@ sudo systemctl restart ao [if anything on the server has changed]`,
     Unmanageability: `*Take chances, make mistakes, get messy!*
 
 The AO helps its users to become unmanageable, and the AO also eschews top-down models of card management as much as possible, while still providing convenient ways to organize cards. The AO user interface is designed to make interaction with the computer safe and to make it impossible to accidentally delete cards or leak private data.`,
+    Unscalability: `The AO is not designed to be highly scaelable. Dunbar's number is 150 and large groups are toxic. Instead, the AO is designed to empower individuals and small groups, and make it easy to fork and administer one or several AOs. This increases the number of users capable of administering an AO, whereas a model that places scalability as first priority is designed to handle a large number of inept users on one platform provider's service. This runs contrary to the peer-to-peer and community educational functions of the AO.`,
+    Unmodularity: `The AO is a standards- and consensus-building project amongst the many projects of the free software / open source communities. Often, when projects decide to add a plugins or modules functionality, it is because the devs are unable to agree on what is essential, and/or are attempting to farm additional labor from an alienated plugins dev community.
+
+The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.the
+
+However, the AO will eventually add a modules feature and it will be glorious. Something that will make the AO's modules different from other plugin systems, such as Firefox's Add-ons, will be that AO modules will be able to require dependencies in sequence. All currenty AO modules will be part of one sequence, such that when all modules are activated, the sequence is included and activated within the AO in the same order. That is because choices to include features are hierarchical and also represent living user communities forking or merging.`,
   },
 }
 
 /*
+
 
 cards can be dragged and dropped to move them around. each card has three regions: the priorities, the optional grid or pyramid of cards, and a stack of cards below the grid. cards also have an "accomplishments" section where checked-off cards end up
 
@@ -322,6 +393,8 @@ if you click this, it will show the priorities on front (prior to) the cards on 
 so you can see what the next task is in a project, or even a subproject
 
 you can drag a card to the area above the grid to drop it to the priorities
+
+if you shrink the grid, they just dump
 */
 
 export default function AoManual() {
@@ -398,13 +471,13 @@ export default function AoManual() {
           selectTopic(tpc)
         }}
         className={topic === tpc && !subTopic ? 'selected' : ''}>
-        {toTitleCase(gloss(tpc))}
         {typeof content !== 'string' &&
           (topic === tpc ? (
-            <div className="triangle">&#9664;</div>
-          ) : (
             <div className="triangle">&#9660;</div>
+          ) : (
+            <div className="triangle">&#9664;</div>
           ))}
+        {toTitleCase(gloss(tpc))}
       </li>
       {typeof content !== 'string' && renderSubTopics(tpc, content)}
     </React.Fragment>
@@ -413,7 +486,7 @@ export default function AoManual() {
   return (
     <div id="theManual">
       {/*<div className="theX" onClick={hideManual} />*/}
-      <h1>AO User Manual</h1>
+      <h1>{gloss('AO User Manual')}</h1>
       <div className="topicContent">
         {subTopic ? (
           <h2>{gloss(subTopic)}</h2>

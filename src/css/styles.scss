@@ -12,6 +12,7 @@ body {
   color: white;
   font-size: 1.25em;
   background-color: black;
+  overflow: hidden;
 }
 
 // card: main element
@@ -1080,7 +1081,7 @@ body {
     top: 0;
     height: 100%;
     width: 100%;
-    border-left: 0.2em solid #6c70a0;
+    border-left: 0.28em solid #6c70a0;
     pointer-events: none;
   }
 }
@@ -3463,6 +3464,7 @@ input[type='text'].error {
     &.selected {
       color: white;
       background-color: #6c70a0;
+      cursor: default;
 
       & > .triangle {
         color: white;

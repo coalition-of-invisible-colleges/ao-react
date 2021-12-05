@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
+import AoStack from './stack'
 import Grab from '../assets/images/grab.svg'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
@@ -68,22 +69,58 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'collapsed':
       case 'badge':
       case 'mini after':
+        const memberCards = card.deck
+          .map(memberId => aoStore.hashMap.get(memberId))
+          .filter(memberCard => memberCard !== undefined)
+          .slice()
+          .reverse()
+
         if (this.isCompleted || this.isGrabbed) {
           return (
-            <img
-              className={
-                'checkbox ' +
-                this.props.hudStyle +
-                (this.isCompleted ? ' checked' : ' unchecked') +
-                (showTinyCheckbox ? ' tiny' : '')
+            <Tippy
+              zIndex={4}
+              theme="translucent"
+              content={
+                <span>
+                  <p>Click to grab card to deck</p>
+                  <p>
+                    <small>
+                      Cards in your collection cannot be deleted by other
+                      members.
+                    </small>
+                  </p>
+                  <p>Members holding this card:</p>
+                  <p>
+                    {memberCards.length >= 1 ? (
+                      <AoStack
+                        cards={memberCards}
+                        zone="panel"
+                        cardStyle="member"
+                        cardsBeforeFold={3}
+                        noPopups={true}
+                        className="signatureDecorated"
+                      />
+                    ) : null}
+                  </p>
+                </span>
               }
-              src={this.isCompleted ? Completed : Uncompleted}
-              onClick={onClick}
-              onDoubleClick={event => {
-                event.stopPropagation()
-                event.nativeEvent.stopImmediatePropagation()
-              }}
-            />
+              delay={[625, 200]}
+              placement="left-start">
+              <img
+                className={
+                  'checkbox ' +
+                  this.props.hudStyle +
+                  (this.isCompleted ? ' checked' : ' unchecked') +
+                  (showTinyCheckbox ? ' tiny' : '')
+                }
+                src={this.isCompleted ? Completed : Uncompleted}
+                onClick={onClick}
+                onDoubleClick={event => {
+                  event.stopPropagation()
+                  event.nativeEvent.stopImmediatePropagation()
+                }}
+              />
+            </Tippy>
           )
         } else {
           return (
@@ -98,6 +135,19 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                       Cards in your collection cannot be deleted by other
                       members.
                     </small>
+                  </p>
+                  <p>Members holding this card:</p>
+                  <p>
+                    {memberCards.length >= 1 ? (
+                      <AoStack
+                        cards={memberCards}
+                        zone="panel"
+                        cardStyle="member"
+                        cardsBeforeFold={3}
+                        noPopups={true}
+                        className="signatureDecorated"
+                      />
+                    ) : null}
                   </p>
                 </span>
               }
