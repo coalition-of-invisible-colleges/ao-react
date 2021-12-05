@@ -3,6 +3,7 @@ import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
+import AoStack from './stack'
 import AoBirdAutocomplete from './birdAutocomplete'
 import Bird from '../assets/images/pushpin.svg'
 import Tippy from '@tippyjs/react'
@@ -348,6 +349,31 @@ export default class AoBird extends React.Component<Props, State> {
       }
     }
 
+    let parentCards = []
+    if (
+      card &&
+      card.hasOwnProperty('parents') &&
+      card.parents &&
+      card.parents.length >= 1
+    ) {
+      parentCards = card.parents
+        .map(memberId => aoStore.hashMap.get(memberId))
+        .filter(task => {
+          if (!task || !task.hasOwnProperty('taskId')) {
+            return false
+          }
+
+          if (task.taskId === task.name) {
+            return false
+          }
+          if (task.taskId === aoStore.currentCard) {
+            return false
+          }
+          return true
+        })
+        .reverse()
+    }
+
     return (
       <LazyTippy
         zIndex={4}
@@ -377,6 +403,23 @@ export default class AoBird extends React.Component<Props, State> {
                 <div className="action inline" onClick={this.passCard}>
                   give
                 </div>
+                {parentCards && parentCards.length >= 1 ? (
+                  <React.Fragment>
+                    <h3>
+                      Within {parentCards.length} other card
+                      {parentCards.length >= 2 ? 's' : ''}
+                    </h3>
+                    <AoStack
+                      cards={parentCards}
+                      zone={'panel'}
+                      cardStyle={'priority'}
+                      cardsBeforeFold={3}
+                      noPopups={true}
+                    />
+                  </React.Fragment>
+                ) : (
+                  ''
+                )}
               </React.Fragment>
             )}
             {currentTab === 'sign' && (
