@@ -87,13 +87,12 @@ export default function applyRouter(app) {
         if (key !== 'tasks') {
           stateToSend[key] = state.pubState[key]
         } else {
+          // Include all member cards (name equals taskId)
           // Include the community hub card itself
-          // Include their member card
           for (let taskItem of value) {
             if (
               taskItem.name === taskItem.taskId ||
-              taskItem.name === 'community hub' ||
-              taskItem.name === reqOwner
+              taskItem.name === 'community hub'
             ) {
               stateToSend.tasks.push(taskItem)
             }

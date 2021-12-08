@@ -350,34 +350,34 @@ export default class AoBird extends React.Component<Props, State> {
       }
     }
 
-    // let parentCards = []
-    // console.log('card', card.name, ' card.parents is', card.parents)
-    // if (!this.props.noPopups) {
-    //   if (
-    //     card &&
-    //     card.hasOwnProperty('parents') &&
-    //     card.parents &&
-    //     card.parents.length >= 1
-    //   ) {
-    //     parentCards = card.parents
-    //       .map(taskId => aoStore.hashMap.get(taskId))
-    //       .filter(task => {
-    //         if (!task || !task.hasOwnProperty('taskId')) {
-    //           return false
-    //         }
+    let parentCards = []
+    console.log('card', card.name, ' card.parents is', card.parents)
+    if (!this.props.noPopups) {
+      if (
+        card &&
+        card.hasOwnProperty('parents') &&
+        card.parents &&
+        card.parents.length >= 1
+      ) {
+        parentCards = card.parents
+          .map(taskId => aoStore.hashMap.get(taskId))
+          .filter(task => {
+            if (!task || !task.hasOwnProperty('taskId')) {
+              return false
+            }
 
-    //         if (task.taskId === task.name) {
-    //           return false
-    //         }
-    //         if (task.taskId === aoStore.currentCard) {
-    //           return false
-    //         }
-    //         return true
-    //       })
-    //     parentCards.reverse()
-    //   }
-    //   console.log('parentCards.length is', parentCards.length)
-    // }
+            if (task.taskId === task.name) {
+              return false
+            }
+            if (task.taskId === aoStore.currentCard) {
+              return false
+            }
+            return true
+          })
+        parentCards.reverse()
+      }
+      console.log('parentCards.length is', parentCards.length)
+    }
 
     return (
       <LazyTippy
@@ -408,7 +408,7 @@ export default class AoBird extends React.Component<Props, State> {
                 <div className="action inline" onClick={this.passCard}>
                   give
                 </div>
-                {/*!this.props.noPopups &&
+                {!this.props.noPopups &&
                 parentCards &&
                 parentCards.length >= 1 ? (
                   <React.Fragment>
@@ -426,7 +426,7 @@ export default class AoBird extends React.Component<Props, State> {
                   </React.Fragment>
                 ) : (
                   ''
-                )*/}
+                )}
               </React.Fragment>
             )}
             {currentTab === 'sign' && (
