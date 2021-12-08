@@ -8,7 +8,7 @@ import AoStack from './stack'
 import Grab from '../assets/images/grab.svg'
 import Completed from '../assets/images/completed.svg'
 import Uncompleted from '../assets/images/uncompleted.svg'
-import Tippy from '@tippyjs/react'
+import LazyTippy from './lazyTippy'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 
@@ -77,7 +77,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
 
         if (this.isCompleted || this.isGrabbed) {
           return (
-            <Tippy
+            <LazyTippy
               zIndex={4}
               theme="translucent"
               content={
@@ -120,11 +120,11 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                   event.nativeEvent.stopImmediatePropagation()
                 }}
               />
-            </Tippy>
+            </LazyTippy>
           )
         } else {
           return (
-            <Tippy
+            <LazyTippy
               zIndex={4}
               theme="translucent"
               content={
@@ -162,7 +162,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                   event.nativeEvent.stopImmediatePropagation()
                 }}
               />
-            </Tippy>
+            </LazyTippy>
           )
         }
       default:
