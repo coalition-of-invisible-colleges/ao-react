@@ -163,6 +163,25 @@ export default function applyRouter(app) {
         }
       }
     })
+
+    // Also include everyone holding any of the cards we are sending
+    let holderIdList = []
+    stateToSend.tasks.forEach(taskItem => {
+      if (taskItem?.deck?.length) {
+        holderIdList.push(taskItem.deck)
+      }
+    })
+    let holderTaskItems = []
+    state.pubState.tasks.some(taskItem => {
+      if (holderIdList.includes(taskItem.taskId)) {
+        holderTaskItems.push(taskItem) // will add duplicates
+        holderIdList.splice(holderIdList.indexOf(taskItem.taskId), 1)
+        if (holderIdList.length === 0) {
+          return true
+        }
+      }
+    })
+
     // Remove duplicates and combine lists
     stateToSend.tasks = [...stateToSend.tasks, ...priorityTaskItems]
 
@@ -237,6 +256,26 @@ export default function applyRouter(app) {
         })
         foundAllTaskItems = foundAllTaskItems && foundAllPriorityItems
 
+        // Also return all the member cards of members who are holding this card
+        let holderIdList = []
+        foundThisTaskList.forEach(foundTask => {
+          if (foundTask?.deck?.length) {
+            holderIdList.push(foundTask.deck)
+          }
+        })
+        let foundAllHolderItems = holderIdList.length <= 0
+        state.pubState.tasks.some(taskItem => {
+          if (holderIdList.includes(taskItem.taskId)) {
+            foundThisTaskList.push(taskItem) // will add duplicates
+            holderIdList.splice(holderIdList.indexOf(taskItem.taskId), 1)
+            if (holderIdList.length === 0) {
+              foundAllHolderItems = true
+              return true
+            }
+          }
+        })
+        foundAllTaskItems = foundAllTaskItems && foundAllHolderItems
+
         // console.log('AO: server/router.js: fetchTaskByID: ', {
         // taskId: req.body.taskId,
         // result: foundThisTaskList,
@@ -298,6 +337,23 @@ export default function applyRouter(app) {
             if (taskItem.taskId === firstPriorityId) {
               foundThisTaskList.push(taskItem)
               return true
+            }
+          })
+
+          // Also return all the member cards of members who are holding this card
+          let holderIdList = []
+          if (foundThisTask?.deck?.length) {
+            holderIdList.push(foundTask.deck)
+          }
+          let foundAllHolderItems = holderIdList.length <= 0
+          state.pubState.tasks.some(taskItem => {
+            if (holderIdList.includes(taskItem.taskId)) {
+              foundThisTaskList.push(taskItem) // will add duplicates
+              holderIdList.splice(holderIdList.indexOf(taskItem.taskId), 1)
+              if (holderIdList.length === 0) {
+                foundAllHolderItems = true
+                return true
+              }
             }
           })
 
