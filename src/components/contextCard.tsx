@@ -677,7 +677,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             />
             <div className="content">
               {isGrabbed && card.taskId !== card.name ? (
-                <AoBird taskId={taskId} />
+                <AoBird taskId={taskId} noPopups={this.props.noPopups} />
               ) : (
                 <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
               )}

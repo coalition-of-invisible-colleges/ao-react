@@ -17,6 +17,7 @@ type BirdTab = 'send' | 'link' | 'sign'
 
 interface Props {
   taskId: string
+  noPopups?: boolean
 }
 
 interface State {
@@ -351,30 +352,32 @@ export default class AoBird extends React.Component<Props, State> {
 
     let parentCards = []
     console.log('card', card.name, ' card.parents is', card.parents)
-    if (
-      card &&
-      card.hasOwnProperty('parents') &&
-      card.parents &&
-      card.parents.length >= 1
-    ) {
-      parentCards = card.parents
-        .map(taskId => aoStore.hashMap.get(taskId))
-        .filter(task => {
-          if (!task || !task.hasOwnProperty('taskId')) {
-            return false
-          }
+    if (!this.props.noPopups) {
+      if (
+        card &&
+        card.hasOwnProperty('parents') &&
+        card.parents &&
+        card.parents.length >= 1
+      ) {
+        parentCards = card.parents
+          .map(taskId => aoStore.hashMap.get(taskId))
+          .filter(task => {
+            if (!task || !task.hasOwnProperty('taskId')) {
+              return false
+            }
 
-          if (task.taskId === task.name) {
-            return false
-          }
-          if (task.taskId === aoStore.currentCard) {
-            return false
-          }
-          return true
-        })
-      parentCards.reverse()
+            if (task.taskId === task.name) {
+              return false
+            }
+            if (task.taskId === aoStore.currentCard) {
+              return false
+            }
+            return true
+          })
+        parentCards.reverse()
+      }
+      console.log('parentCards.length is', parentCards.length)
     }
-    console.log('parentCards.length is', parentCards.length)
 
     return (
       <LazyTippy
@@ -405,7 +408,9 @@ export default class AoBird extends React.Component<Props, State> {
                 <div className="action inline" onClick={this.passCard}>
                   give
                 </div>
-                {parentCards && parentCards.length >= 1 ? (
+                {!this.props.noPopups &&
+                parentCards &&
+                parentCards.length >= 1 ? (
                   <React.Fragment>
                     <h3>
                       Within {parentCards.length} other card
