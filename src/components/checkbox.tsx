@@ -69,11 +69,11 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'collapsed':
       case 'badge':
       case 'mini after':
-        const memberCards = card.deck
-          .map(memberId => aoStore.hashMap.get(memberId))
-          .filter(memberCard => memberCard !== undefined)
-          .slice()
-          .reverse()
+        // const memberCards = card.deck
+        //   .map(memberId => aoStore.hashMap.get(memberId))
+        //   .filter(memberCard => memberCard !== undefined)
+        //   .slice()
+        //   .reverse()
 
         if (this.isCompleted || this.isGrabbed) {
           return (
@@ -91,7 +91,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                   </p>
                   <p>Members holding this card:</p>
                   <p>
-                    {memberCards.length >= 1 ? (
+                    {/*memberCards.length >= 1 ? (
                       <AoStack
                         cards={memberCards}
                         zone="panel"
@@ -100,7 +100,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                         noPopups={true}
                         className="signatureDecorated"
                       />
-                    ) : null}
+                    ) : null*/}
                   </p>
                 </span>
               }
