@@ -13,13 +13,13 @@ This user manual is currently at version 0.7.1`,
   Overview: {
     index: `The AO is a free software project and a lived practice of creating open-source software for an online-and-offline peer-to-peer community.
 
-A.O. stands for "Autonomous Organization". The AO seeks to distribute power informally by teaching new users how to set up and administer an AO server. This is similar to DAOs, but we have dropped the 'D', which stands for "Decentralized", because the AO does not use blockchain technology and is ultimately technology-agnostic.
+A.O. stands for "Autonomous Organization". The AO seeks to distribute power informally by teaching new users how to set up and administer an AO server. This is similar to DAOs, but we have dropped the 'D', which stands for "Decentralized", because the AO does not use blockchain technology and is technology-agnostic.
 
 The AO is not just software. The AO is a distributed, agile, flocking organization made up of everyone who uses the AO software or enacts the liberatory peer-to-peer principles of the AO in their dealings with others.
 
-Each new person who discovers the AO has their own desires, feature requests, and big ideas. The AO is intended to include and smooth out the entire process of bringing in new community members, teaching them how to use the software, and improving the software based on requests from the new community member.
+Each new person who discovers the AO has their own desires, feature requests, and big ideas. The AO includes the entire process of bringing in new community members, teaching them how to use the software, and improving the software based on requests from the new community member.
 
-For developers, the AO provides a free and increasingly standards-focused digital space, as well as a suite of task-management tools for improving the AO in collaboration with other AO developers.`,
+For developers, the AO provides a free and standards-focused digital space, as well as a suite of task-management tools for improving the AO in collaboration with other AO developers.`,
     "What's it For?": `There are many reasons you might set up an AO server. Here are some of the types of community projects the AO was specifically designed to support:
 
 ### Local Hackerspace
@@ -28,15 +28,15 @@ The AO was originally created to help a local hackerspace manage its membership 
 
 ### Chore Rota
 
-For a household or a local community center, the AO can be used to help organize chores and other maintenance tasks for the community. The points and bounty system in the AO make it easy to create and distribute either real or made-up local points amongst various projects and goals, and people who complete those tasks can claim the points on them.
+For a household or a local community center, the AO can be used to help organize chores and other maintenance tasks for the community. The points and bounty system in the AO make it easy to assign points amongst various projects and goals, and people who complete those tasks can claim the points on them.
 
 ### Hardware Automation / IOT
 
-Hardware devices can be connected to the AO over a local network and controlled through customizeable panels. Custom scripts for each device can be triggered by the AO to allow virtually any device to be connected and controlled or automated. AO users have created dancing LED sidewalk art installations, security doors, and bitcoin-activated vending machines, with plans for autonomous lockers and other useful devices.
+Rasberry Pis can be connected to the AO over a local network and controlled through customized user interfaces. Custom scripts for each device can be triggered by the AO to allow virtually any device to be connected and controlled or automated. AO users have created dancing LED sidewalk art installations, security doors, and bitcoin-activated vending machines, with plans for autonomous lockers and other useful devices.
 
 ### Online Image Board
 
-In addition to local communities, the AO is also designed to support online-only communities. Since digital communities are ultimately grounded in the media they exchange, the AO comes with drag-and-drop file sharing and the ability to automatically sync file attachments over tor between two paired AO servers. This makes the AO ideal for trading rare memes.
+In addition to local communities, the AO is also designed to support online-only communities. Since digital communities are ultimately grounded in the media they exchange, the AO comes with drag-and-drop file sharing and the ability to automatically sync file attachments over tor between two paired AO servers.
 
 ### Virtual Rooms
 
@@ -48,23 +48,23 @@ For online schools and freelance teachers, the AO makes it easy to organize a gr
 
 ### News Syndication
 
-The AO's peer-to-peer tor synchronization feature makes it trivial to syndicate news through multiple hops across the network. By networking our AO servers together, we can build a powerful decentralized news network.
+The AO's peer-to-peer Tor synchronization feature makes it trivial to syndicate news through multiple hops across the network. By networking our AO servers together, we can build a powerful decentralized news network.
 
 ### Personal Wiki
 
-The cards on the AO are designed to make it easy to capture ideas at any time, and keep these ideas as organized as possible with the minimum number of actions. Cards can be placed inside each other, and one card can appear in multiple locations. Search uses regular expressions to provide powerful and industry-standard access to cards.
+The cards on the AO make it easy to capture ideas at any time, and keep these ideas organized with the minimum number of actions. Cards can be placed inside each other, and one card can appear in multiple locations. Cards use an easy drag-and-drop interface and are searchable.
 
 ### Getting Things Done
 
-The AO has been designed with a powerful productivity workflow that focuses on doing and completing tasks, not endless planning. An exciting feature called the Hopper allows you to hop automatically between your bookmarks every X to Y minutes, optionally sending you a Signal notification. This lets you get a bird's eye view of all your tasks or receive randomized reminders or affirmations throughout your day. The AO has also been designed with David Allen's GTD system in mind.
+The AO has been designed with a powerful productivity workflow that focuses on doing and completing tasks, not endless planning. One exciting feature, the Hopper, allows you to hop automatically between your bookmarks every X to Y minutes, optionally sending you a Signal notification. This lets you get a bird's eye view of all your tasks or receive programmed reminders or affirmations throughout your day. The AO has also been designed with [David Allen's GTD](https://www.43folders.com/2004/09/08/getting-started-with-getting-things-done) system in mind.
 
 ### Political Campaigns
 
-For activists or decentralist politicians, the AO has been designed as the ultimate specialized tool for decentralized community organizers and canvassers-for-the-people. The AO will help you to get a top-level view, recruit, communicate, plan timelines (with grids), build knowledge bases, and track checklists.
+For activists or politicians, the AO has been designed as the ultimate specialized tool for decentralized community organizers and canvassers-for-the-people. The AO will help you to get a top-level view, recruit, communicate, plan timelines, build knowledge bases, and track checklists.
 
 ### Email Replacement (planned feature)
 
-Send cards to other members on the same server, or sync cards securely over tor. Future updates will allow the AO to act as a public (or members-only) website where people can go to send you messages. Also under consideration is transitional full email server integration (incoming emails will arrive as cards—a sender approved list or Captcha will stop spam before it starts).
+Send cards to other members on the same server, or sync cards securely over Tor. Future updates will allow the AO to act as a public (or members-only) website where people can go to send you messages. Also under consideration is transitional full email server integration (incoming emails will arrive as cards—a sender approved list or Captcha will stop spam before it starts).
 
 ### Independent Content Publishing (planned feature)
 
@@ -98,21 +98,20 @@ Planned features: Choose color of card before creating; rich text editing featur
     'Viewing Your Deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
     'Grabbing cards':
-      'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the Grab icon on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
+      'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
     'Searching for Cards': `To find a card you are looking for, you can use the search box.
 
 1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
 
-The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, search the web for "regular expression guide" or "regular expressoin cheatsheet". If you want to avoid using regular expressions, you must escape certain punctuation marks by preceding them with a backslash. For example, period (.) and asterisk (\\\*) are special characters, so to search for them, search for "\\\\." and "\\\\\*" respectively.`,
+The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, try this [quick start tutoral](https://www.regular-expressions.info/quickstart.html) or this [cheat sheet](http://stanford.edu/~wpmarble/webscraping_tutorial/regex_cheatsheet.pdf).`,
     'Sharing Cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
     'Receiving cards': `When someone sends you a card, it will appear in a giftbox on your member card. Click it to open the gift and put the card in your member priorities. This will add the card to your deck; discard the card to send it to your archive, where it can be deleted (feature coming soon).
 Planned feature: Ability to open a gift without accepting it yet (was previously possible)`,
-    'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen. Use the bookmarks bar to store frequently-used groups or cards, or use it as a clipboard or composition area.
+    'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen.
 
 You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
 
-Guild cards placed in the bookmarks bar will act like folders, and cards dropped on them will be moved within to that card's priorities. By placing a few different guilds on the bookmarks bar, can use the boomarks bar to quickly sort cards into categories.
-  This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).`,
+This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).`,
     'Uploading a file': `You can upload a file to the AO as an attachment to a new card.
 
 1. Add a pyramid or grid to the card, if it doesn't have one.have
@@ -123,7 +122,7 @@ Guild cards placed in the bookmarks bar will act like folders, and cards dropped
 
 If the card is blue, something went wrong.
 
-Files are stored by their hash so if you need to re-upload the same file, change it a tiny bit and then it will re-upload properly.`,
+Files are stored by their hash, so if you upload the same file, it will match the existing card (after re-uploading). If an upload is breaking, change the file a tiny bit and then it will re-upload as a different card.`,
     'The Community Hub Card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
@@ -208,25 +207,62 @@ Click the Accomplishments icon to show the completed cards within a card. If you
     index:
       'Click the Members icon on the left edge of the screen to show the Members panel. It contains all of the member cards on this server.',
     'Creating new users': 'Invite them on the member panel',
-    'Monthly memberships':
-      'If your server offers monthly memberships, here is how they work and how to pay them.',
-    'Administering other members':
-      'If you need to clean up old accounts or ban unruly members, here is how the Senpai System works and how to do these things.',
+    'Monthly memberships': `If your server offers monthly memberships, then each user may be either "active" or "inactive".
+
+Active users may use hardware resources such as RFID door control or the bitcoin soda machine. For inactive members, these features will be locked.
+
+On the 1st of each month, membership dues are charged (if set up). The amount is subtracted from your member points (visible on your member card). You can refill your points with bitcoin or lightning (see next section, "Points & Bounties", subsection entitled "Refilling points").
+
+If, on the 1st, you do not have enough points for monthly membership dues, your account will go to 0. Then, there is an eleven day grace period. On the 11th of the same month, if you still don't have the rest of the points, your account will be deactivated and you will be unable to use the door, soda machine, or other hardware resources.
+
+The amount of member dues are set by typing in a total number (e.g., rent), which is split equally amongst all active members. This amount as well as a maximum cap for individual member dues may be set in the Membership tab of Server Controls.`,
+    'Administering other members': `The AO ships with a member moderation system that, under certain conditions, allows members to use certain administrative powers on other members. This system distributes the theoretical minimum amount of administrative power necessary to maintain social cohesion as horizontally as possible, and is known as the SENPAI SYSTEM.
+
+The administrative powers are:
+
+* reset password
+
+* ban
+
+* delete
+
+* reactivate account (= free month of membership)
+
+A "senpai" (senior) may use any of the above admin powers on a "kohai" (junior). One member is senpai to another if both:
+
+* The member is first in the member order, and
+
+* The member has more attack than the other member has defense
+
+The order of members can be viewed in the Members panel by clicking "Order", and by default is the order in which members' accounts were created. However, the Order may also be changed. Any member may promote any member who is below them in the Order, to just ahead of them in the Order. Since whoever you promote may gain the power to delete your account, this minimizes rank changes.If
+
+A member's attack score is equal to their number of vouches. A member's defense score is the higher of two numbers: 1) their attack score, or 2) the highest attack score out of any other member who vouches for them. This means that members may protect other members by vouching for them, taking them under their wing.their
+
+Since both the order and vouch conditions must be met, new members cannot delete senior members even if they become popular, with many vouches. The AO is meant to be set up on multiple servers, so these features are designed to be used by a relatively unified membership (If the community splits, set up a second AO server).
+
+To reactivate another member's account, your account must be active.
+
+The first member in the Order of members has a special power: they may reactivate their own account, giving themselves a free month of membership. This item appears in the main menu.`,
   },
   'Points & Bounties': {
     index: 'The AO includes a simple system of points on each server.',
     'Refilling points':
       'Use bitcoin to refill points (not currently implemented)',
     'Spending points':
-      'How to spend points on things or send them to other people',
+      'Right now the only way to spend points is to click the boat next to a priority. This assigns a point to the priority for each click, from the parent card. Then whoever checks the card first will get those points.',
   },
   Cryptocurrency: {
     index:
       'The AO includes native support for bitcoin (not currently implemented) and several other cryptocurrency-related features.',
     'Lightning connection info':
       "The AO integrates with the bitcoin lightning network. When the AO connects to the server's lightning node, it will display detailed information on connections to and from the server, current balances, etc.",
-    Tickers:
-      'The AO comes with convenient crypto tickers that allow you to ambiently monitor the relative worthlessness of various shitcoins.',
+    Tickers: `Crypto tickers can be added to the right side of the AO to monitor the relative "value" of different cryptocurrencies.the
+
+To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter two abbreviations for two currencies, separated by a slash, and press Enter. For example, enter "BTC / USD" to see the price of BTC in USD. For ERC-20 tokens, use the contract address of the token instead of an abbreviation.the
+
+Crypto tickers appear on the right edge of the page. Click a crypto ticker to modify it, or press enter when it is empty to remove it.remove
+
+Hover over a crypto ticker to see market info for the pair from CoinGecko.`,
   },
   Hardware:
     'To access hardware resources connected to the AO, click the icon in the top-right corner of the screen.',
@@ -254,17 +290,96 @@ Now, you must delete the autogenerated configuration.js file and run the install
 The second time you run the AO install script, it should say "already installed" for everything. If it doesn't, please tell an AO dev so they can update the install script.`,
     'Configuring the AO':
       'How to set up your configuration.js file and .env file. Sane defaults to be provided here.',
-    'Setting up nginx': 'How to do it',
-    'Setting up file hosting': 'How to do it',
-    'Setting up filesharing over tor': 'How to do it',
-    'Setting up Signal Notifications': 'How to do it',
+    'Setting up nginx': `If you are running your AO on your own computer for personal use, you might not need to set up nginx. However, if you want your AO to be accessible from another computer, set up nginx to allow outside connections to be proxied to the AO.the
+
+The AO install script will install nginx, or you can install it yourself.
+
+Create a file for each website you want to host with nginx in /etc/nginx/sites-available/, and then use ln -s <source> <destination> to create a symbolic link to the configuration file in /etc/nginx/sites-enabled/.
+
+Here is an example configuration file from DCTRL:
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+server {
+  server_name ao.dctrl.ca;
+
+        root /home/dctrl/ao-react/dist/;
+
+        location / {
+    index index.html index.htm index.nginx-debian.html;
+    try_files $uri $uri/ =404;
+  }
+ 
+       location ~ ^/(login|task/) {
+                try_files /index.html =404;
+        }                                                                                                                                                        
+
+        location ~ ^/(logout|meme|memes|events|search|session|state|upload|download|fetchTaskByID|fetchTaskByName) {
+    proxy_pass http://127.0.0.1:8003;
+  }
+
+        location /socket.io {
+    proxy_pass http://127.0.0.1:8003;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    proxy_set_header Host $host;
+        }
+
+  listen [::]:443 ssl ipv6only=on; # managed by Certbot
+  listen 443 ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/dctrl.ca/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/dctrl.ca/privkey.pem; # managed by Certbot
+  include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+  if ($host = ao.dctrl.ca) {
+    return 301 https://$host$request_uri;
+  } # managed by Certbot
+  
+  listen 80 default_server;
+  listen [::]:80 default_server;
+  server_name ao.dctrl.ca;
+  return 404; # managed by Certbot
+}`,
+    'Setting up file hosting': `When the AO starts, it scans the ~/.ao/memes folder for files. It hashes each file and checks to see if a card with that hash already exists. If not, it creates it.
+
+When users drop a file on an empty grid square, it will be uploaded to this directory and linked with a new card via the file's hash. The content of the card will be the filename of the uploaded file.
+
+In configuration.js, there are four configuration options related to files:
+
+* dir: The directory of the memes folder to scan, by default ~/.ao/memes
+
+* sshKey: The path to the id_rsa file for the ssh key to use to connect to other AOs for rsync-based filesharing
+
+* sshUsername: The username to use for the ssh key
+
+* videoCacher: The path to to the youtube-dl executable/bin file
+
+For example:
+
+  memes: {
+    dir: '/home/dctrl/.ao/memes', 
+    sshKey: '/home/dctrl/.ao/id_rsa'
+    sshUsername: 'doge',
+    videoCacher: '/usr/bin/youtube-dl',
+},`,
+    'Setting up filesharing over tor': `You must create an SSH key using ssh-keygen (or use an existing key you have) to use the AO's automatic fle attachment synchronzation feature. See the previous section for the configuration options to set with the path to your SSH key.
+
+    You must also use ssh-copy-id or edit the known_hosts file on the other computer in order to give this AO access to the other one via SSH, for copyng files with rsync.`,
+    'Setting up Signal Notifications':
+      'The AO install script will soon install signal-cli automatically, or the AO will include a Signal library that does not need to be compiled separately. Compiling signal-cli yourself is a pain and not recommended, since the pieces must be compiled separately and the broken installation scripts modified by hand.',
   },
   Administration: {
     index: 'For admins',
     'Connecting hardware resources': `The AO can connect over a wired LAN or wifi to control the GPIO pins on a raspberry pi. This allows hardware peripherals to be connected to the AO, controlled by members, and restricted with a fee or to active members.
 
 To use a hardware resource with the AO, it must be connected, and a custom control panel GUI must be written for it to display in the Resources panel.
-
 
 To set up the RFID fob:
 
@@ -315,7 +430,7 @@ sudo systemctl restart ao [if anything on the server has changed]`,
 
 * AO version 0.9.0 will finalize task completion, timeclock, and bounty features.
 
-* AO version 1.0 Alpha will finalize all existing features and freeze the feature set for the 1.0 release.the
+* AO version 1.0 Alpha will finalize all existing features and freeze the feature set for the 1.0 release.
 
 * AO version 1.0 Beta will polish all features and fix all bugs
 
@@ -341,7 +456,7 @@ The AO helps its users to become unmanageable, and the AO also eschews top-down 
     Unscalability: `The AO is not designed to be highly scaelable. Dunbar's number is 150 and large groups are toxic. Instead, the AO is designed to empower individuals and small groups, and make it easy to fork and administer one or several AOs. This increases the number of users capable of administering an AO, whereas a model that places scalability as first priority is designed to handle a large number of inept users on one platform provider's service. This runs contrary to the peer-to-peer and community educational functions of the AO.`,
     Unmodularity: `The AO is a standards- and consensus-building project amongst the many projects of the free software / open source communities. Often, when projects decide to add a plugins or modules functionality, it is because the devs are unable to agree on what is essential, and/or are attempting to farm additional labor from an alienated plugins dev community.
 
-The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.the
+The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.
 
 However, the AO will eventually add a modules feature and it will be glorious. Something that will make the AO's modules different from other plugin systems, such as Firefox's Add-ons, will be that AO modules will be able to require dependencies in sequence. All currenty AO modules will be part of one sequence, such that when all modules are activated, the sequence is included and activated within the AO in the same order. That is because choices to include features are hierarchical and also represent living user communities forking or merging.`,
   },
