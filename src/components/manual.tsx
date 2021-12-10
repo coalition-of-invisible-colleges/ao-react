@@ -127,9 +127,9 @@ You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
 This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).`,
     'Uploading a file': `You can upload a file to the AO as an attachment to a new card.
 
-1. Add a pyramid or grid to the card, if it doesn't have one.have
+1. Add a pyramid or grid to the card, if it doesn't have one.
 
-2. Drag a file from your desktop and drop it on an empty grid square.grid
+2. Drag a file from your desktop and drop it on an empty grid square.
 
 3. Wait until the file fully uploads, then it should re-download and appear on a new yellow card.
 
@@ -141,7 +141,7 @@ Files are stored by their hash, so if you upload the same file, it will match th
   'Organizing Cards': {
     index:
       'When you view a card, you can also place other cards within it, and modify the card in various ways.',
-    'Zones within a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below grid, and the accomplishments.the
+    'Zones within a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below grid, and the accomplishments.
 
 ### Priorities
 
@@ -157,7 +157,7 @@ To re-prioritize a card to the top of the priorities, drag and drop a card onto 
 
 ### Pyramid / Grid
 
-After the priorities, an optional grid or pyramid can be added to a card. A grid has squares that other cards can be dragged an dropped on. To add a pyramid to a card, click the card's menu (three dots in lower right of card), then click "Add pyramid".  To change it to a grid, click the small triangualur menu button in the lower right corner of the pyramid, then click Grid in the popup menu that appears. In this menu, you can also increase and decrease the size of the grid squares.the
+After the priorities, an optional grid or pyramid can be added to a card. A grid has squares that other cards can be dragged an dropped on. To add a pyramid to a card, click the card's menu (three dots in lower right of card), then click "Add pyramid".  To change it to a grid, click the small triangualur menu button in the lower right corner of the pyramid, then click Grid in the popup menu that appears. In this menu, you can also increase and decrease the size of the grid squares.
 
 To resize a pyramid or increase the number of rows a grid has, click the horizontal +/- button below the grid. To increase the number of columns a grid has, click the vertical +/- buttons to the right of the grid. If you use these buttons to shrink a pyramid or grid to one row (or column), a "-grid" button will appear which allows the grid to be removed.
 
@@ -167,7 +167,7 @@ Please break these sections out and combine with grid section below.
 
 ### Subcards
 
-Other cards that are not prioritized and not placed on the grid accumulate in the stack below the grid. To move a card to the top of the subcards stack, drag and drop a card onto the stack.the
+Other cards that are not prioritized and not placed on the grid accumulate in the stack below the grid. To move a card to the top of the subcards stack, drag and drop a card onto the stack.
 
 ### Accomplishments
 
@@ -252,9 +252,9 @@ A "senpai" (senior) may use any of the above admin powers on a "kohai" (junior).
 
 * The member has more attack than the other member has defense
 
-The order of members can be viewed in the Members panel by clicking "Order", and by default is the order in which members' accounts were created. However, the Order may also be changed. Any member may promote any member who is below them in the Order, to just ahead of them in the Order. Since whoever you promote may gain the power to delete your account, this minimizes rank changes.If
+The order of members can be viewed in the Members panel by clicking "Order", and by default is the order in which members' accounts were created. However, the Order may also be changed. Any member may promote any member who is below them in the Order, to just ahead of them in the Order. Since whoever you promote may gain the power to delete your account, this minimizes rank changes.
 
-A member's attack score is equal to their number of vouches. A member's defense score is the higher of two numbers: 1) their attack score, or 2) the highest attack score out of any other member who vouches for them. This means that members may protect other members by vouching for them, taking them under their wing.their
+A member's attack score is equal to their number of vouches. A member's defense score is the higher of two numbers: 1) their attack score, or 2) the highest attack score out of any other member who vouches for them. This means that members may protect other members by vouching for them, taking them under their wing.
 
 Since both the order and vouch conditions must be met, new members cannot delete senior members even if they become popular, with many vouches. The AO is meant to be set up on multiple servers, so these features are designed to be used by a relatively unified membership (If the community splits, set up a second AO server).
 
@@ -274,11 +274,11 @@ The first member in the Order of members has a special power: they may reactivat
       'The AO includes native support for bitcoin (not currently implemented) and several other cryptocurrency-related features.',
     'Lightning connection info':
       "The AO integrates with the bitcoin lightning network. When the AO connects to the server's lightning node, it will display detailed information on connections to and from the server, current balances, etc.",
-    Tickers: `Crypto tickers can be added to the right side of the AO to monitor the relative "value" of different cryptocurrencies.the
+    Tickers: `Crypto tickers can be added to the right side of the AO to monitor the relative "value" of different cryptocurrencies.
 
-To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter two abbreviations for two currencies, separated by a slash, and press Enter. For example, enter "BTC / USD" to see the price of BTC in USD. For ERC-20 tokens, use the contract address of the token instead of an abbreviation.the
+To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter two abbreviations for two currencies, separated by a slash, and press Enter. For example, enter "BTC / USD" to see the price of BTC in USD. For ERC-20 tokens, use the contract address of the token instead of an abbreviation.
 
-Crypto tickers appear on the right edge of the page. Click a crypto ticker to modify it, or press enter when it is empty to remove it.remove
+Crypto tickers appear on the right edge of the page. Click a crypto ticker to modify it, or press enter when it is empty to remove it.
 
 Hover over a crypto ticker to see market info for the pair from CoinGecko.`,
   },
@@ -295,7 +295,7 @@ Hover over a crypto ticker to see market info for the pair from CoinGecko.`,
       'Instructions from scratch for installing the AO on various platforms',
     'Running the install script': `The AO comes with a comprehensive install script, just download and run it and it will do almost everything.
 
-1. Open a terminal (in your home directory).wget
+1. Open a terminal (in your home directory).
 
 2. \`wget https://raw.githubusercontent.com/coalition-of-invisible-colleges/ao-react/master/install.sh\`
 
@@ -314,7 +314,7 @@ Now, you must delete the autogenerated configuration.js file and run the install
 The second time you run the AO install script, it should say "already installed" for everything. If it doesn't, please tell an AO dev so they can update the install script.`,
     'Configuring the AO':
       'How to set up your configuration.js file and .env file. Sane defaults to be provided here.',
-    'Setting up nginx': `If you are running your AO on your own computer for personal use, you might not need to set up nginx. However, if you want your AO to be accessible from another computer, set up nginx to allow outside connections to be proxied to the AO.the
+    'Setting up nginx': `If you are running your AO on your own computer for personal use, you might not need to set up nginx. However, if you want your AO to be accessible from another computer, set up nginx to allow outside connections to be proxied to the AO.
 
 The AO install script will install nginx, or you can install it yourself.
 
@@ -373,7 +373,7 @@ server {
 }`,
     'Setting up file hosting': `When the AO starts, it scans the ~/.ao/memes folder for files. It hashes each file and checks to see if a card with that hash already exists. If not, it creates it.
 
-When users drop a file on an empty grid square, it will be uploaded to this directory and linked with a new card via the file's hash. The content of the card will be the filename of the uploaded file.
+When users drop a file on an empty grid square, it will be uploaded to this directory and linked with a new card via the file's hash. The text of the card will be the filename of the uploaded file.
 
 In configuration.js, there are four configuration options related to files:
 
@@ -470,7 +470,7 @@ sudo systemctl restart ao [if anything on the server has changed]`,
     index: `The AO, ultimately, is a collection of principles about how to develop sofware communally and how to talk about cooperation.
 
 These principles are meant to be modified by the community that uses them, so please take these ideas as evolving and in-discussion. Please propose or make changes to this manual.`,
-    'Desert Power': `Desert power is the capability of the autonomous to improve itself.
+    'Desert Power': `Desert power is the capability of the autonomous to enhance itself.
 
 The AO becomes a self-improving system insofar as we build patterns that enable the AO to improve itself. As users and developers, we can test and dogfood the AO and improve how well it works for planning and developing improvements to the AO itself. In this way, we optimize our own development and communications process by optimizing the AO's ability to self-modify.
 
@@ -505,7 +505,7 @@ However, the AO will eventually add a modules feature and it will be glorious. S
 
 Atomic operations are those that either succeed or fail, with no partial failure states or error modes. Minimalism attempts to reduce design and action to its bare essentials or smallest gesture.
 
-Therefore, atomic minimalism is an approach to improving the AO that attempts to only upgrade the AO from one stable state to a better stable state, without backsliding, introducing new bugs, or losing features.`,
+Therefore, atomic minimalism is an approach to improving the AO that attempts to only upgrade the AO from one stable state to a better stable state, without backsliding, introducing new bugs, or losing features. Moreover, atomic minimalism attempts to make the smallest possible useful change to the AO, rather than making a larger and more complex change to the AO.`,
   },
 }
 
