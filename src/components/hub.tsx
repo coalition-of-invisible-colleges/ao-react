@@ -118,27 +118,38 @@ export default class AoHub extends React.PureComponent<{}, State> {
 
     return (
       <div id="hub">
-        <Tippy
-          zIndex={4}
-          theme="translucent"
-          content={youAreHere ? 'Hide' : 'Community Hub'}
-          placement="right">
-          <div>
-            <AoDropZone
-              taskId={communityCard.taskId}
-              onDrop={this.dropToHub}
-              zoneStyle="panel"
-              dropHoverMessage="drop to send to hub card">
+        <div>
+          <AoDropZone
+            taskId={communityCard.taskId}
+            onDrop={this.dropToHub}
+            zoneStyle="panel"
+            dropHoverMessage="drop to send to hub card">
+            <Tippy
+              zIndex={4}
+              theme="translucent"
+              content={
+                youAreHere ? (
+                  'Hide'
+                ) : (
+                  <React.Fragment>
+                    <p>Community Hub</p>
+                    <p>
+                      <small>Drop cards here to send to hub priorities</small>
+                    </p>
+                  </React.Fragment>
+                )
+              }
+              placement="right">
               <img
                 id="tour-hub"
                 src={Sun}
                 onClick={this.goHub}
                 className={youAreHere ? 'open' : undefined}
               />
-              {hubRenderedBadge}
-            </AoDropZone>
-          </div>
-        </Tippy>
+            </Tippy>
+            {hubRenderedBadge}
+          </AoDropZone>
+        </div>
       </div>
     )
   }

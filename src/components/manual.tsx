@@ -80,7 +80,7 @@ When you first log in, there will be a big, rainbow button that says "**Take Tou
 The default password for new AO accounts is the same as the username.
 
 Planned feature: The ability for anyone to create an new account on the AO, without having to be invited.`,
-    'Parts of the AO': `The page is divided up into a few main parts:
+    'Parts of the screen': `The page is divided up into a few main parts:
 
 * The buttons around the edge of the page open different panels
 
@@ -93,7 +93,7 @@ Planned feature: The ability for anyone to create an new account on the AO, with
   Cards: {
     index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over Tor.
 
-    Each card has a card menu (three dots) allowing you to change the card's color and access other functions of the card.`,
+Each card has a card menu (three dots) allowing you to change the card's color and access other functions of the card.`,
     'Creating a card': `There are two ways to create a card:
 
 1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within the card you are currently viewing.
@@ -136,7 +136,11 @@ This is just a normal grid on a reserved card that is named based on your member
 If the card is blue, something went wrong.
 
 Files are stored by their hash, so if you upload the same file, it will match the existing card (after re-uploading). If an upload is breaking, change the file a tiny bit and then it will re-upload as a different card.`,
-    'The Community Hub card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
+    'The Community Hub card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card.
+
+    Drop any card onto the hub icon (an icon of a sun, by default) to send it to the priorities list of the community hub card. A badge on the hub icon shows the current number of priorities in the hub card.
+
+    Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
     index:
@@ -187,26 +191,30 @@ Click the Accomplishments icon to show the completed cards within a card. If you
     index:
       'The AO contains all the things you need to track todo lists, organize your life, and get tons done!',
     'Checking off tasks': 'Every card has a checkmark you can check',
-    'Prioritizing tasks':
-      'When viewing a full card, you can drag a card within it to the priorities stack to prioritize it. This places it visually above the other cards so you can focus on it first.',
+    'Prioritizing tasks': `When viewing a full card, you can drag a card within it to the priorities stack to prioritize it. This places it visually above the other cards so you can focus on it first.
+
+You can also prioritize a card in the stack of cards below the grid by clicking the boat icon in the top-right of a card.
+
+Cards will also be added to the priorities list when they are dropped within the card.`,
     'Priority mode': `If a card has prioritized cards within it, the number of them will show on the front of the card wherever it appears, with an exclamation mark. For example, a card with two priorities within it will display '2!' on its face.
 
-     If you click this small number, you will enter 'priority mode'. In this mode, the first priority within a card will show up in front of it (on the grid). This will allow you to see priorities "prior to" the card they are within. This is very useful for seeing the next action within a project. If the first priority also has a priority, that will cover the parent priority, making it easy to find the next action even within a nested subproject.`,
+If you click this small number, you will enter 'priority mode'. In this mode, the first priority within a card will show up in front of it (on the grid). This will allow you to see priorities "prior to" the card they are within. This is very useful for seeing the next action within a project. If the first priority also has a priority, that will cover the parent priority, making it easy to find the next action even within a nested subproject.`,
     'Starting tasks':
-      "(Upcoming feature) If you want to completely immerse yourself in the AO's tasking experience, you can press DO IT next to the first priority within a card. This will start the timeclock and display the task at the top center of your screen to remind you that you are still working on it. You can use this feature to optimize your time-management through feedback, or to track work or time spent on different projects.",
-    'The Hopper': 'The hopper allows you to hop between your bookmarks',
+      "If you want to completely immerse yourself in the AO's tasking experience, you can press DO IT next to the first priority within a card. This will start the timeclock and display the task at the top center of your screen to remind you that you are still working on it. You can use this feature to optimize your time-management through feedback, or to track work or time spent on different projects.",
+    'The Hopper':
+      'The hopper is a small boat icon at the upper left of your bookmarks bar that allows you to hop between your bookmarks. Hover on the hopper icon to see the options and start hopping.',
     'Drawing cards':
-      'Not sure what to do next? Press the Escape key to go up one card at at time until you clear all the cards. Behind it you will find up to four draw piles including plus a Doge that randomly chooses from one of the piles below.',
+      'Not sure what to do next? Press the Escape key to go up one card at at time until you clear all the cards. Behind it you will find up to four draw piles plus a Doge that randomly chooses from one of the piles below.',
   },
   Guilds: {
     index: `A guild is a card that has been upgraded into a group. Guilds have various features that help make groups run smoothly.
 
-All missions on a server are listed in the Missions sidebar.`,
-    'Creating Guilds': `Any card can be upgraded to a guild in its card menu.`,
-    'Joining a Guild': `A guild can have members. To join a guild, click the pin in the top-left corner of the guild card, then click the Join tab, then click Sign & Join. The first member to join a guild will start at Level 2, so that they can control the Level 1 members who join afterwards.`,
+All guilds on a server are listed in the Guilds sidebar.`,
+    'Creating guilds': `Any card can be upgraded to a guild in its card menu.`,
+    'Joining a guild': `A guild can have members. To join a guild, click the pin in the top-left corner of the guild card, then click the Join tab, then click Sign & Join. The first member to join a guild will start at Level 2, so that by default they can manage the Level 1 members who join afterwards.`,
     'Joining the video chatroom':
-      'A guild can have a stash added to it by clicking +chatroom in its card menu. The chatroom icon will appear near the top-right corner of the card. Click this button to join the chatroom, which will appear in a panel on the right side of the page. This panel will remain open as you browse other cards. The chatroom contains a secure Jitsi video chat embed—you will be asked for camera and microphone permission. Below the video room, you can also choose a color and type chat messages to create cards of that color in the chat box. These cards will be moved out of the chat box and into the guild that the chatroom belongs to if anyone grabs them.',
-    'Guild Stash':
+      'A guild can have a chatroom added to it by clicking +chatroom in its card menu. The chatroom icon will appear near the top-right corner of the card. Click this button to join the chatroom, which will appear in a panel on the right side of the page. This panel will remain open as you browse other cards. The chatroom contains a secure Jitsi video chat embed—you will be asked for camera and microphone permission. Below the video room, you can also choose a color and type chat messages to create cards of that color in the chat box. These cards will be moved out of the chat box and into the guild that the chatroom belongs to if anyone grabs them.',
+    'Guild stash':
       'A guild can have a stash added to it by clicking +stash in its card menu. The stash icon will appear near the top-left corner of the card. The stash is a dropbox for members who have joined the guild and been accepted. There is one dropbox for each guild membership level within a guild. Members of one level can access the stash of their level and the levels below them.',
   },
   Events: {
