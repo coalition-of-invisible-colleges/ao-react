@@ -9,11 +9,11 @@ const topics = {
 
 The <a href="https://github.com/coalition-of-invisible-colleges/ao-react">ao-react project</a> is currently at version 0.7.0.
 
-This user manual is currently at version 0.8.0`,
+This user manual is currently at version 0.8.2`,
   Overview: {
     index: `The AO is a free software project and a lived practice of creating open-source software for an online-and-offline peer-to-peer community.
 
-A.O. stands for "Autonomous Organization". The AO seeks to distribute power informally by teaching new users how to set up and administer an AO server. This is similar to DAOs, but we have dropped the 'D', which stands for "Decentralized", because the AO does not use blockchain technology and is technology-agnostic.
+AO stands for "Autonomous Organization". The AO seeks to distribute power informally by teaching new users how to set up and administer an AO server. This is similar to DAOs, but we have dropped the 'D', which stands for "Decentralized", because the AO does not use blockchain technology and is technology-agnostic.
 
 The AO is not just software. The AO is a distributed, agile, flocking organization made up of everyone who uses the AO software or enacts the liberatory peer-to-peer principles of the AO in their dealings with others.
 
@@ -36,7 +36,7 @@ Rasberry Pis can be connected to the AO over a local network and controlled thro
 
 ### Online Image Board
 
-In addition to local communities, the AO is also designed to support online-only communities. Since digital communities are ultimately grounded in the media they exchange, the AO comes with drag-and-drop file sharing and the ability to automatically sync file attachments over tor between two paired AO servers.
+In addition to local communities, the AO is also designed to support online-only communities. Since digital communities are ultimately grounded in the media they exchange, the AO comes with drag-and-drop file sharing and the ability to automatically sync file attachments over Tor between two paired AO servers.
 
 ### Virtual Rooms
 
@@ -80,9 +80,20 @@ When you first log in, there will be a big, rainbow button that says "**Take Tou
 The default username for new AO accounts is the same as the username.
 
 Planned feature: The ability for anyone to create an new account on the AO, without having to be invited.`,
+    'Parts of the AO': `The page is divided up into a few main parts:
+
+* The buttons around the edge of the page open different panels
+
+* The current card and context history are at the center of the page
+
+* The bookmarks bar is at the bottom center of the page
+
+The main menu is the three dots menu in the lower right corner of the screen.`,
   },
   Cards: {
-    index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over tor.`,
+    index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over Tor.
+
+    Each card has a card menu (three dots) allowing you to change the card's color and access other functions of the card.`,
     'Creating a Card': `There are two ways to create a card:
 
 1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within the card you are currently viewing.
@@ -90,6 +101,8 @@ Planned feature: The ability for anyone to create an new account on the AO, with
 2. Click an empty grid square, type something, then press Enter to create the card. This will create a card and place it in that grid square.
 
 The card compose box will remember a draft you are writing. Your draft is stored locally in your browser and also saved on the server.
+
+If you type the text of an existing card, that card will be recalled and played instead of creating a duplicate card. It is impossible to create a duplicate card on the AO.
 
 Planned features: Choose color of card before creating; rich text editing features; ability to create a card already-prioritized; ability to create cards encrypted with the server's private key.`,
     'Navigating Within a Card': `Cards can contain other cards within them.
@@ -161,7 +174,8 @@ Other cards that are not prioritized and not placed on the grid accumulate in th
 The Accomplishments icon appears in the lower left corner of the card when a card contains at least one completed card. When you discard a card from another card, if that card has at least one checkmark, it is moved to the Accomplishments section instead of being discarded. This allows you to collect accomplishments wthout having to think about it.
 
 Click the Accomplishments icon to show the completed cards within a card. If you want to remove a card from the Accomplishments section, drag it and drop it to the background of the page.`,
-    'Moving cards around': 'Use drag-and-drop to move cards around',
+    'Moving cards around':
+      'Use drag-and-drop to move cards around. You can drop cards to squares on the grid, or to the priorities stack or subcards stack within a card (above and below the grid, respectively).',
     'Discarding cards':
       'You can drop cards onto the black background and they will be discarded from the current card. Discarding will not delete the card, just remove it from its present location. You can drag on the black background itself to grab the most recently-discarded card back (it remembers all the cards you discard locally until you refresh the page).',
     'Card menu':
@@ -175,6 +189,9 @@ Click the Accomplishments icon to show the completed cards within a card. If you
     'Checking off tasks': 'Every card has a checkmark you can check',
     'Prioritizing tasks':
       'When viewing a full card, you can drag a card within it to the priorities stack to prioritize it. This places it visually above the other cards so you can focus on it first.',
+    'Priority mode': `If a card has prioritized cards within it, the number of them will show on the front of the card wherever it appears, with an exclamation mark. For example, a card with two priorities within it will display '2!' on its face.
+
+     If you click this small number, you will enter 'priority mode'. In this mode, the first priority within a card will show up in front of it (on the grid). This will allow you to see priorities "prior to" the card they are within. This is very useful for seeing the next action within a project. If the first priority also has a priority, that will cover the parent priority, making it easy to find the next action even within a nested subproject.`,
     'Starting tasks':
       "(Upcoming feature) If you want to completely immerse yourself in the AO's tasking experience, you can press DO IT next to the first priority within a card. This will start the timeclock and display the task at the top center of your screen to remind you that you are still working on it. You can use this feature to optimize your time-management through feedback, or to track work or time spent on different projects.",
     'The Hopper': 'The hopper allows you to hop between your bookmarks',
@@ -182,10 +199,11 @@ Click the Accomplishments icon to show the completed cards within a card. If you
       'Not sure what to do next? Press the Escape key to go up one card at at time until you clear all the cards. Behind it you will find up to four draw piles including plus a Doge that randomly chooses from one of the piles below.',
   },
   Guilds: {
-    index:
-      'A guild is a card that has been upgraded into a group. Guilds have various features that help make groups run smoothly.',
-    'Creating Guilds': `How to do it here`,
-    'Joining a Guild': `Here is a paragraph describing how to join a guild. This longer text will eventually run off the screen, causing it to scroll.`,
+    index: `A guild is a card that has been upgraded into a group. Guilds have various features that help make groups run smoothly.
+
+All missions on a server are listed in the Missions sidebar.`,
+    'Creating Guilds': `Any card can be upgraded to a guild in its card menu.`,
+    'Joining a Guild': `A guild can have members. To join a guild, click the pin in the top-left corner of the guild card, then click the Join tab, then click Sign & Join. The first member to join a guild will start at Level 2, so that they can control the Level 1 members who join afterwards.`,
     'Joining the video chatroom':
       'A guild can have a stash added to it by clicking +chatroom in its card menu. The chatroom icon will appear near the top-right corner of the card. Click this button to join the chatroom, which will appear in a panel on the right side of the page. This panel will remain open as you browse other cards. The chatroom contains a secure Jitsi video chat embed—you will be asked for camera and microphone permission. Below the video room, you can also choose a color and type chat messages to create cards of that color in the chat box. These cards will be moved out of the chat box and into the guild that the chatroom belongs to if anyone grabs them.',
     'Guild Stash':
@@ -263,6 +281,12 @@ To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter 
 Crypto tickers appear on the right edge of the page. Click a crypto ticker to modify it, or press enter when it is empty to remove it.remove
 
 Hover over a crypto ticker to see market info for the pair from CoinGecko.`,
+  },
+  Media: {
+    index: 'The AO includes some features specialized for media playback.',
+    'Video caching': `if you paste a YouTube or other website video link on a card and then click card menu—>Cache Media, it will cache it for you. This makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file. This feature relies on youtube-dl, an open-source project.`,
+    Playlists:
+      'When a card with an attachment finishes playing, the next card after it will start playing.',
   },
   Hardware:
     'To access hardware resources connected to the AO, click the icon in the top-right corner of the screen.',
@@ -369,7 +393,7 @@ For example:
     sshUsername: 'doge',
     videoCacher: '/usr/bin/youtube-dl',
 },`,
-    'Setting up filesharing over tor': `You must create an SSH key using ssh-keygen (or use an existing key you have) to use the AO's automatic fle attachment synchronzation feature. See the previous section for the configuration options to set with the path to your SSH key.
+    'Setting up filesharing over Tor': `You must create an SSH key using ssh-keygen (or use an existing key you have) to use the AO's automatic fle attachment synchronzation feature. See the previous section for the configuration options to set with the path to your SSH key.
 
     You must also use ssh-copy-id or edit the known_hosts file on the other computer in order to give this AO access to the other one via SSH, for copyng files with rsync.`,
     'Setting up Signal Notifications':
@@ -408,7 +432,7 @@ To connect a hardware resource to the AO via a Raspberry Pi:
 The AO connect script on the pi will log into the AO as the user and use that access to trigger resource-used events on the server.
 
 GPIO has two modes: BCM and 'board'. For 'board', the order is the physical order of the pins themselves. BCM stands for Board Control Module, and the order is the logical order of the pins.`,
-    'Connecting two AOs': "How to connect two AO's p2p over tor",
+    'Connecting two AOs': "How to connect two AO's p2p over Tor",
     'Adding files serverside':
       "The AO allows users of the website frontend to drag-and-drop files onto a grid to upload them. However, if you install the AO on your laptop or on a server, you can add files directly to the AO by putting them in the AO's memes folder. The default location of this folder is ~/.ao/memes/. Simply copy or move files here and restart the AO, and the files will be scanned and a card made for each file. These cards are not held by anyone right now, so you must search for them and grab them to find them. Future updates will also add live scanning and full iTunes-like file organization features, so that your folders of memes on your hard drive can be kept in lockstep with the structure of your cards on the AO.",
     'Snapshot backups':
@@ -446,8 +470,8 @@ sudo systemctl restart ao [if anything on the server has changed]`,
 
 These principles are meant to be modified by the community that uses them, so please take these ideas as evolving and in-discussion. Please propose or make changes to this manual.`,
     'Desert Power':
-      'Desert power is the capability of the autonomous to improve itself. The potential of the potential.',
-    Easiness: `*Go for the low-hanging fruit.*
+      "Desert power is the capability of the autonomous to improve itself. The AO becomes a self-improving system insofar as we build patterns that enable the AO to improve itself. As users and developers, we can test and dogfood the AO and improve how well it works for planning and developing improvements to the AO itself. In this way, we optimize our own development and communications process by optimizing the AO's ability to self-modify.",
+    Ease: `*Go for the low-hanging fruit.*
 
  Computers and other technology should make our lives easier, not harder. As an end-user I want everything to be free and easy. As a developer, I fix all the easy bugs first and work outward from there, looking for the task that will have the greatest positive impact on the AO's desert power. Efficiency thus becomes a practice of ease and pleasure and not asceticism.`,
     Unmanageability: `*Take chances, make mistakes, get messy!*
@@ -458,59 +482,9 @@ The AO helps its users to become unmanageable, and the AO also eschews top-down 
 
 The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.
 
-However, the AO will eventually add a modules feature and it will be glorious. Something that will make the AO's modules different from other plugin systems, such as Firefox's Add-ons, will be that AO modules will be able to require dependencies in sequence. All currenty AO modules will be part of one sequence, such that when all modules are activated, the sequence is included and activated within the AO in the same order. That is because choices to include features are hierarchical and also represent living user communities forking or merging.`,
+However, the AO will eventually add a modules feature and it will be glorious. Something that will make the AO's modules different from other plugin systems, such as Firefox's Add-ons, will be that AO modules will be able to require dependencies in sequence. All current AO modules will be part of one sequence, such that when all modules are activated, the sequence is included and activated within the AO in the same order. That is because choices to include features are hierarchical and also represent living user communities forking or merging.`,
   },
 }
-
-/*
-
-
-cards can be dragged and dropped to move them around. each card has three regions: the priorities, the optional grid or pyramid of cards, and a stack of cards below the grid. cards also have an "accomplishments" section where checked-off cards end up
-
-Q: I can only drag and drop them in a grid, right?
-
-A: you can also drop them to the priorities above or the stack below the grid
-
-cards dropped from within one of those lists to the same list will move to the top (so you can reorder the list)
-
-if you are having trouble finding the drop region, create  a card with the Compose button to see where it is
-
-Q: Can I get a larger grid?
-
-A: yes, use the +/- buttons at the right edge and bottom
-
-Q: How do you delete cards?
-
-A: a card cannot be deleted if at least one person has grabbed the card to their collecton. currently this feature is being reworked and there is no way to drop or delete a card right now.
-
-but you can see your collection by clicking the moon card button to the right of the bookmarks bar
-
-and you can discard cards by dropping them to the background
-
-an update soon will make it easy to go through your old cards and delete or reorganize them. this was a feature before and will be brought back
-
-you can click the menu on a card to change its color and do other things with it. the menu is a bit messy but the features on it are cool
-
-if you paste a youtube or video link on a card and then click card menu—>Cache Media, it will cache it for you. this makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file.
-
-any card can be upgraded to a group aka Mission in its card menu. Missions are listed in the Missions sidebar. a mission can have members join it and have membership rankings/levels controlled by those of higher rank. a mission can have an optional chatroom or dropbox added, and the rankings are used to control dropbox access
-
-if you create a card that matches the text or mission/guild/group title of an existing card, it will place that existing card instead of creating a new card (duplicates not allowed)
-
-there is also a points system. if you check off a card with a funded bounty, you will get the points immediately. the idea is to use this to manage the hackerspace (monthly dues + $3 / soda, all paid in bitcoin) and to pay AO devs  for improvements they make to the AO
-
-so the AO will become an autonomous self-improving system
-
-also, there is a very cool feature with priorities. if a card has prioritized cards within it, the number of them will show on the front, on the grid, with an !
-
-if you click this, it will show the priorities on front (prior to) the cards on the grid that they are within
-
-so you can see what the next task is in a project, or even a subproject
-
-you can drag a card to the area above the grid to drop it to the priorities
-
-if you shrink the grid, they just dump
-*/
 
 export default function AoManual() {
   const [show, setShow] = React.useState(false)
