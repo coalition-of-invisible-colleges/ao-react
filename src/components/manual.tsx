@@ -88,7 +88,7 @@ Planned feature: The ability for anyone to create an new account on the AO, with
 
 * The bookmarks bar is at the bottom center of the page
 
-The main menu is the three dots menu in the lower right corner of the screen.`,
+* The main menu is the three dots menu in the lower right corner of the screen.`,
   },
   Cards: {
     index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over Tor.
@@ -450,6 +450,7 @@ sudo systemctl restart ao [if anything on the server has changed]`,
     index:
       'If you are a software developer, you can help improve the AO! Some AO developers volunteer, and others opt to claim bounties put up by hackerspaces who want to see the AO improved. Either way, we would realy appreciate your help! You can join us at ao.coalitionofinvisiblecolleges.org.',
     Roadmap: `Here is a roadmap of the next few versions of the AO:
+
 * AO version 0.8.0 will bring back bitcoin and lightning integration.
 
 * AO version 0.9.0 will finalize task completion, timeclock, and bounty features.
@@ -500,9 +501,9 @@ The AO helps its users to become unmanageable, and the AO also eschews top-down 
 The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.
 
 However, the AO will eventually add a modules feature and it will be glorious. Something that will make the AO's modules different from other plugin systems, such as Firefox's Add-ons, will be that AO modules will be able to require dependencies in sequence. All current AO modules will be part of one sequence, such that when all modules are activated, the sequence is included and activated within the AO in the same order. That is because choices to include features are hierarchical and also represent living user communities forking or merging.`,
-    'Minimalist atomicity': `*The steps you take don't have to be big, they just have to take you in the right direction*
+    'Minimalist atomicity': `*The steps you take don't have to be big, they just have to take you in the right direction.*
 
-Atomic operations are those that either succeed or fail, with no partial failure states or error modes. Minimalism attempts to reduce design and action to its bare essentials or smallest gesture.smallest
+Atomic operations are those that either succeed or fail, with no partial failure states or error modes. Minimalism attempts to reduce design and action to its bare essentials or smallest gesture.
 
 Therefore, atomic minimalism is an approach to improving the AO that attempts to only upgrade the AO from one stable state to a better stable state, without backsliding, introducing new bugs, or losing features.`,
   },
@@ -533,14 +534,23 @@ export default function AoManual() {
     }
   }, [])
 
+  function scrollToTop() {
+    const topicContentDiv = document.getElementById('topicContent')
+    if (topicContentDiv) {
+      topicContentDiv.scrollTop = 0
+    }
+  }
+
   function selectTopic(topic) {
     setTopic(topic)
     setSubTopic(null)
+    scrollToTop()
   }
 
   function selectSubTopic(newSubTopic) {
     // console.log('selectSubTopic st is ', newSubTopic)
     setSubTopic(newSubTopic)
+    scrollToTop()
   }
 
   function renderSubTopics(heading, subTopics) {
@@ -606,7 +616,7 @@ export default function AoManual() {
       <div id="theManual">
         {/*<div className="theX" onClick={hideManual} />*/}
         <h1>{gloss('AO User Manual')}</h1>
-        <div className="topicContent">
+        <div id="topicContent">
           {subTopic ? (
             <h2>{gloss(subTopic)}</h2>
           ) : (

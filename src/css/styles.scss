@@ -3458,7 +3458,7 @@ input[type='text'].error {
 
 // List of topics and the content of a topic in the manual
 .topics,
-.topicContent {
+#topicContent {
   font-size: 0.9em;
   background-color: white;
   color: black;
@@ -3507,7 +3507,7 @@ input[type='text'].error {
 }
 
 // Content for a topic in the manual
-.topicContent {
+#topicContent {
   padding: 1em;
   margin-left: 0.5em;
   float: right;
