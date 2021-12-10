@@ -7,6 +7,8 @@ import Sun from '../assets/images/sun.svg'
 import AoContextCard from './contextCard'
 import api from '../client/api'
 import AoPopupPanel from './popupPanel'
+import AoDropZone from './dropZone'
+import { CardPlay } from '../cardTypes'
 import Tippy from '@tippyjs/react'
 import { hideAll as hideAllTippys } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
@@ -23,6 +25,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
     this.state = {}
     // this.addCommunityCard = this.addCommunityCard.bind(this)
     this.goHub = this.goHub.bind(this)
+    this.dropToHub = this.dropToHub.bind(this)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -72,6 +75,34 @@ export default class AoHub extends React.PureComponent<{}, State> {
     })
   }
 
+  async dropToHub(move: CardPlay) {
+    console.log('dropToGridSquare move is', move)
+    if (!move.from.taskId) {
+      return
+    }
+    const cardFrom = aoStore.hashMap.get(move.from.taskId)
+    if (!cardFrom) {
+      return
+    }
+    const nameFrom = cardFrom.name
+
+    const cardTo = aoStore.cardByName.get('community hub')
+    if (!cardTo) {
+      return
+    }
+
+    const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+
+    const fromHasGuild =
+      cardFrom && cardFrom.guild && cardFrom.guild.length >= 1
+    const toHasGuild = cardTo && cardTo.guild && cardTo.guild.length >= 1
+
+    console.log('fromHasGuild ', fromHasGuild, 'toHasGuild', toHasGuild)
+    return new Promise((resolve, reject) => {
+      api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(resolve)
+    })
+  }
+
   render() {
     // if (this.state.redirect) {
     //   return <Redirect to={this.state.redirect} />
@@ -81,6 +112,10 @@ export default class AoHub extends React.PureComponent<{}, State> {
     let youAreHere =
       communityCard && aoStore.currentCard === communityCard.taskId
 
+    const hubRenderedBadge = communityCard?.priorities?.length >= 1 && (
+      <div className="unreadBadge red">{communityCard?.priorities.length}</div>
+    )
+
     return (
       <div id="hub">
         <Tippy
@@ -88,12 +123,21 @@ export default class AoHub extends React.PureComponent<{}, State> {
           theme="translucent"
           content={youAreHere ? 'Hide' : 'Community Hub'}
           placement="right">
-          <img
-            id="tour-hub"
-            src={Sun}
-            onClick={this.goHub}
-            className={youAreHere ? 'open' : undefined}
-          />
+          <div>
+            <AoDropZone
+              taskId={communityCard.taskId}
+              onDrop={this.dropToHub}
+              zoneStyle="panel"
+              dropHoverMessage="drop to send to hub card">
+              <img
+                id="tour-hub"
+                src={Sun}
+                onClick={this.goHub}
+                className={youAreHere ? 'open' : undefined}
+              />
+              {hubRenderedBadge}
+            </AoDropZone>
+          </div>
         </Tippy>
       </div>
     )

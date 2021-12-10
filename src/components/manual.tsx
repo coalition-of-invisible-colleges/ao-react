@@ -77,7 +77,7 @@ For content creators, the AO will make it easy to publish your content publicly 
 
 When you first log in, there will be a big, rainbow button that says "**Take Tour**" in the lower left of the page. Click this to take an introductory tour of the AO.
 
-The default username for new AO accounts is the same as the username.
+The default password for new AO accounts is the same as the username.
 
 Planned feature: The ability for anyone to create an new account on the AO, without having to be invited.`,
     'Parts of the AO': `The page is divided up into a few main parts:
@@ -94,7 +94,7 @@ Planned feature: The ability for anyone to create an new account on the AO, with
     index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over Tor.
 
     Each card has a card menu (three dots) allowing you to change the card's color and access other functions of the card.`,
-    'Creating a Card': `There are two ways to create a card:
+    'Creating a card': `There are two ways to create a card:
 
 1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within the card you are currently viewing.
 
@@ -105,19 +105,19 @@ The card compose box will remember a draft you are writing. Your draft is stored
 If you type the text of an existing card, that card will be recalled and played instead of creating a duplicate card. It is impossible to create a duplicate card on the AO.
 
 Planned features: Choose color of card before creating; rich text editing features; ability to create a card already-prioritized; ability to create cards encrypted with the server's private key.`,
-    'Navigating Within a Card': `Cards can contain other cards within them.
+    'Navigating within a card': `Cards can contain other cards within them.
 
 1. Click a card to navigate to it and see what's within it.`,
-    'Viewing Your Deck':
+    'Viewing your deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
-    'Grabbing cards':
+    'Grabbing a card':
       'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
-    'Searching for Cards': `To find a card you are looking for, you can use the search box.
+    'Searching for cards': `To find a card you are looking for, you can use the search box.
 
 1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
 
 The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, try this [quick start tutoral](https://www.regular-expressions.info/quickstart.html) or this [cheat sheet](http://stanford.edu/~wpmarble/webscraping_tutorial/regex_cheatsheet.pdf).`,
-    'Sharing Cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
+    'Sharing cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
     'Receiving cards': `When someone sends you a card, it will appear in a giftbox on your member card. Click it to open the gift and put the card in your member priorities. This will add the card to your deck; discard the card to send it to your archive, where it can be deleted (feature coming soon).
 Planned feature: Ability to open a gift without accepting it yet (was previously possible)`,
     'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen.
@@ -136,7 +136,7 @@ This is just a normal grid on a reserved card that is named based on your member
 If the card is blue, something went wrong.
 
 Files are stored by their hash, so if you upload the same file, it will match the existing card (after re-uploading). If an upload is breaking, change the file a tiny bit and then it will re-upload as a different card.`,
-    'The Community Hub Card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
+    'The Community Hub card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card. Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
     index:
@@ -276,7 +276,7 @@ The first member in the Order of members has a special power: they may reactivat
       "The AO integrates with the bitcoin lightning network. When the AO connects to the server's lightning node, it will display detailed information on connections to and from the server, current balances, etc.",
     Tickers: `Crypto tickers can be added to the right side of the AO to monitor the relative "value" of different cryptocurrencies.
 
-To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter two abbreviations for two currencies, separated by a slash, and press Enter. For example, enter "BTC / USD" to see the price of BTC in USD. For ERC-20 tokens, use the contract address of the token instead of an abbreviation.
+To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter two abbreviations for two currencies, separated by a slash, and press Enter. For example, enter "BTC / USD" to see the price of BTC in USD. For ERC-20 tokens, use the contract address of the token instead of an abbreviation
 
 Crypto tickers appear on the right edge of the page. Click a crypto ticker to modify it, or press enter when it is empty to remove it.
 
@@ -284,7 +284,9 @@ Hover over a crypto ticker to see market info for the pair from CoinGecko.`,
   },
   Media: {
     index: 'The AO includes some features specialized for media playback.',
-    'Video caching': `if you paste a YouTube or other website video link on a card and then click card menu—>Cache Media, it will cache it for you. This makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file. This feature relies on youtube-dl, an open-source project.`,
+    'Video caching': `If you paste a YouTube or other website video link on a card and then click card menu—>Cache Media, the AO server will cache the video for you as an attachment on the card. This makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file. This feature relies on youtube-dl, an open-source project.
+
+    There is currently no progress bar on video caching, and depending on the size of the video and the AO server's internet connection speed, it may take several minutes or a few hours to cache a video. When the video is done caching, it will display immediately.`,
     Playlists:
       'When a card with an attachment finishes playing, the next card after it will start playing.',
   },

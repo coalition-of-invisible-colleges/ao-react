@@ -12,7 +12,7 @@ body {
   color: white;
   font-size: 1.25em;
   background-color: black;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 // card: main element
@@ -1966,7 +1966,8 @@ img.icon {
 
 // badge used on .actionCircle and on the bird on cards
 .actionCircle .badge,
-.bird > .badge {
+.bird > .badge,
+.unreadBadge {
   position: absolute;
   top: -0.5em;
   left: 75%;
@@ -2390,14 +2391,14 @@ h3 .tipMarker {
 // sun / community hub icon in top left
 #hub {
   z-index: 1;
-  position: relative;
+  // position: absolute;
 
   img {
     position: fixed;
     top: 0;
     left: 0;
     padding: 0.5em 0 0 0.5em;
-    width: 4em;
+    width: 6.5em;
     cursor: pointer;
 
     &:hover {
@@ -2406,7 +2407,11 @@ h3 .tipMarker {
       transform: translate3d(0, 0, 0);
       backface-visibility: hidden;
       perspective: 1000px;
-      width: 6.5em;
+      width: 8.5em;
+
+      & + .unreadBadge {
+        left: 6.4em;
+      }
     }
 
     @keyframes shake {
@@ -2437,8 +2442,41 @@ h3 .tipMarker {
     }
 
     &.open {
-      width: 6.5em;
+      width: 8.5em;
     }
+
+    &.open + .unreadBadge,
+    img:hover + .unreadBadge {
+      left: 6.4em;
+    }
+  }
+
+  .dropZone.panel {
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    // position: absolute;
+
+    .overlay {
+      top: 0;
+      position: absolute;
+      width: 8.5em;
+      height: 8.5em;
+
+      .label {
+        // top: 0;
+        // transform: none;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .unreadBadge {
+    top: 0.7em;
+    left: 5em;
+    font-size: 1.15em;
+    background-color: rgba(255, 10, 10, 0.85);
   }
 }
 
@@ -3001,7 +3039,7 @@ pre {
 
 // a wrapper for the current card
 #tour-current-card {
-  padding-bottom: 8.5em;
+  padding-bottom: 12.5em;
 }
 
 // star / medals / badges / accomplishments button on a card
