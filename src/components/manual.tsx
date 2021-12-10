@@ -9,7 +9,7 @@ const topics = {
 
 The <a href="https://github.com/coalition-of-invisible-colleges/ao-react">ao-react project</a> is currently at version 0.7.0.
 
-This user manual is currently at version 0.7.1`,
+This user manual is currently at version 0.8.0`,
   Overview: {
     index: `The AO is a free software project and a lived practice of creating open-source software for an online-and-offline peer-to-peer community.
 
@@ -590,7 +590,7 @@ export default function AoManual() {
           (topic === tpc ? (
             <div className="triangle">&#9660;</div>
           ) : (
-            <div className="triangle">&#9664;</div>
+            <div className="triangle">&#9654;</div>
           ))}
         {toTitleCase(gloss(tpc))}
       </li>
@@ -599,22 +599,31 @@ export default function AoManual() {
   ))
 
   return (
-    <div id="theManual">
-      {/*<div className="theX" onClick={hideManual} />*/}
-      <h1>{gloss('AO User Manual')}</h1>
-      <div className="topicContent">
-        {subTopic ? (
-          <h2>{gloss(subTopic)}</h2>
-        ) : (
-          <h2>{toTitleCase(gloss(topic))}</h2>
-        )}
-        {subTopic
-          ? renderContent(topics[topic][subTopic])
-          : topic && typeof topics[topic] === 'string'
-          ? renderContent(topics[topic])
-          : renderContent(topics[topic]['index'])}
+    <React.Fragment>
+      <div
+        className="theatre"
+        onClick={() => {
+          event.stopPropagation()
+          aoStore.closeAllCloseables()
+        }}
+      />
+      <div id="theManual">
+        {/*<div className="theX" onClick={hideManual} />*/}
+        <h1>{gloss('AO User Manual')}</h1>
+        <div className="topicContent">
+          {subTopic ? (
+            <h2>{gloss(subTopic)}</h2>
+          ) : (
+            <h2>{toTitleCase(gloss(topic))}</h2>
+          )}
+          {subTopic
+            ? renderContent(topics[topic][subTopic])
+            : topic && typeof topics[topic] === 'string'
+            ? renderContent(topics[topic])
+            : renderContent(topics[topic]['index'])}
+        </div>
+        <ul className="topics">{renderedTopics}</ul>
       </div>
-      <ul className="topics">{renderedTopics}</ul>
-    </div>
+    </React.Fragment>
   )
 }

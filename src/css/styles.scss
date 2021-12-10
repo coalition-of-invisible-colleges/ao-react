@@ -1192,6 +1192,12 @@ body {
 // Manual sidebar buton
 #tour-manual {
   top: calc(45vh + 15em);
+
+  &.open {
+    border-right: 0.2em solid #6c70a0;
+    border-radius: 9999em;
+    border-width: 0.25em;
+  }
 }
 
 // Search sidebar button
@@ -3413,17 +3419,42 @@ input[type='text'].error {
 }
 
 #leftSidebar.manual {
-  width: -moz-fit-content;
-  width: fit-content;
+  // width: -moz-fit-content;
+  // width: fit-content;
   overflow: hidden;
+  // display: none;
+  background: none;
+
+  .leftBorder {
+    display: none;
+  }
+}
+
+.theatre {
+  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 // Modal dialog containing the hardcoded (but glossed) AO user manual
 #theManual {
-  height: 100%;
+  height: calc(100vh - 10em);
+  position: fixed;
+  left: 50%;
+  top: 0.5em;
+  transform: translateX(-50%);
+  width: max-content;
+  background-color: rgba(80, 80, 80, 0.8);
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  border-radius: 0.86em;
 
   h1 {
-    font-size: 1.25em;
+    font-size: 1.2em;
+    font-family: 'Open Sans', 'Arial';
   }
 }
 
@@ -3444,20 +3475,24 @@ input[type='text'].error {
   margin: 0;
   padding: 0.5em 0;
   min-width: 22vw;
-  height: calc(100% - 4.25em);
+  height: calc(100% - 5.25em);
 
   li {
     color: black;
     cursor: pointer;
     list-style-type: none;
     line-height: 2.5em;
-    padding-left: 1em;
+    padding-left: 1.5em;
     position: relative;
 
+    &.subTopic {
+      padding-left: 1em;
+    }
+
     .triangle {
-      color: black;
+      color: dimgrey;
       position: absolute;
-      right: 0.5em;
+      left: 0.25em;
       top: 0;
     }
 
@@ -3479,7 +3514,7 @@ input[type='text'].error {
   margin-left: 0.5em;
   float: right;
   width: 26em;
-  height: calc(100% - 5.25em);
+  height: calc(100% - 6.25em);
 
   h2,
   h3 {
