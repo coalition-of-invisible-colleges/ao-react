@@ -500,6 +500,11 @@ The AO helps its users to become unmanageable, and the AO also eschews top-down 
 The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.
 
 However, the AO will eventually add a modules feature and it will be glorious. Something that will make the AO's modules different from other plugin systems, such as Firefox's Add-ons, will be that AO modules will be able to require dependencies in sequence. All current AO modules will be part of one sequence, such that when all modules are activated, the sequence is included and activated within the AO in the same order. That is because choices to include features are hierarchical and also represent living user communities forking or merging.`,
+    'Minimalist atomicity': `*The steps you take don't have to be big, they just have to take you in the right direction*
+
+Atomic operations are those that either succeed or fail, with no partial failure states or error modes. Minimalism attempts to reduce design and action to its bare essentials or smallest gesture.smallest
+
+Therefore, atomic minimalism is an approach to improving the AO that attempts to only upgrade the AO from one stable state to a better stable state, without backsliding, introducing new bugs, or losing features.`,
   },
 }
 
