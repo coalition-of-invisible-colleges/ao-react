@@ -3419,11 +3419,9 @@ input[type='text'].error {
 }
 
 #leftSidebar.manual {
-  // width: -moz-fit-content;
-  // width: fit-content;
   overflow: hidden;
-  // display: none;
   background: none;
+  box-shadow: none;
 
   .leftBorder {
     display: none;
