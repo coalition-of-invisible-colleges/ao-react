@@ -469,8 +469,25 @@ sudo systemctl restart ao [if anything on the server has changed]`,
     index: `The AO, ultimately, is a collection of principles about how to develop sofware communally and how to talk about cooperation.
 
 These principles are meant to be modified by the community that uses them, so please take these ideas as evolving and in-discussion. Please propose or make changes to this manual.`,
-    'Desert Power':
-      "Desert power is the capability of the autonomous to improve itself. The AO becomes a self-improving system insofar as we build patterns that enable the AO to improve itself. As users and developers, we can test and dogfood the AO and improve how well it works for planning and developing improvements to the AO itself. In this way, we optimize our own development and communications process by optimizing the AO's ability to self-modify.",
+    'Desert Power': `Desert power is the capability of the autonomous to improve itself.
+
+The AO becomes a self-improving system insofar as we build patterns that enable the AO to improve itself. As users and developers, we can test and dogfood the AO and improve how well it works for planning and developing improvements to the AO itself. In this way, we optimize our own development and communications process by optimizing the AO's ability to self-modify.
+
+Here are some things that the AO would have no trouble doing if it were a nomadic war machine:
+
+* Use the AO to install the AO
+
+* Use the AO to get tech support for the AO
+
+* Use the AO to communicate with other AO users
+
+* Use the AO to communicate with other AO users about desired AO upgrades
+
+* Use the AO to make decisions about planned collective actions with other AO users
+
+* Use the AO to plan an upgrade to the AO
+
+* Use the AO to communicate with other devs and run a sprint to upgrade the AO`,
     Ease: `*Go for the low-hanging fruit.*
 
  Computers and other technology should make our lives easier, not harder. As an end-user I want everything to be free and easy. As a developer, I fix all the easy bugs first and work outward from there, looking for the task that will have the greatest positive impact on the AO's desert power. Efficiency thus becomes a practice of ease and pleasure and not asceticism.`,
