@@ -20,7 +20,7 @@ The AO is not just software. The AO is a distributed, agile, flocking organizati
 Each new person who discovers the AO has their own desires, feature requests, and big ideas. The AO includes the entire process of bringing in new community members, teaching them how to use the software, and improving the software based on requests from the new community member.
 
 For developers, the AO provides a free and standards-focused digital space, as well as a suite of task-management tools for improving the AO in collaboration with other AO developers.`,
-    "What's it For?": `There are many reasons you might set up an AO server. Here are some of the types of community projects the AO was specifically designed to support:
+    "What's it for?": `There are many reasons you might set up an AO server. Here are some of the types of community projects the AO was specifically designed to support:
 
 ### Local Hackerspace
 
@@ -32,7 +32,7 @@ For a household or a local community center, the AO can be used to help organize
 
 ### Hardware Automation / IOT
 
-Rasberry Pis can be connected to the AO over a local network and controlled through customized user interfaces. Custom scripts for each device can be triggered by the AO to allow virtually any device to be connected and controlled or automated. AO users have created dancing LED sidewalk art installations, security doors, and bitcoin-activated vending machines, with plans for autonomous lockers and other useful devices.
+Rasberry Pis can be connected to the AO over a local network and controlled through customized user interfaces. Custom scripts for each device can be triggered by the AO to allow virtually any device to be connected and controlled or automated. AO users have created dancing LED sidewalk art installations, security doors, bitcoin-activated vending machines, and habit trackers, with plans for autonomous lockers and other useful devices.
 
 ### Online Image Board
 
@@ -69,7 +69,7 @@ Send cards to other members on the same server, or sync cards securely over Tor.
 ### Independent Content Publishing (planned feature)
 
 For content creators, the AO will make it easy to publish your content publicly or for members-only, and collect donations or required monthly dues from members. Why use YouTube when you can host your own content and provide your viewers a customizable and intimate free or membership experience?`,
-    'Getting Started': `To use the AO, you must have an account.
+    'Getting started': `To use the AO, you must have an account.
 
 1. Someone else will need to create an account for you and tell you the URL, your username and password so you can log in.
 
@@ -79,12 +79,14 @@ When you first log in, there will be a big, rainbow button that says "**Take Tou
 
 The default password for new AO accounts is the same as the username.
 
-Planned feature: The ability for anyone to create an new account on the AO, without having to be invited.`,
+Planned feature: The ability for anyone to create a new account on the AO, without having to be invited.`,
     'Parts of the screen': `The page is divided up into a few main parts:
 
 * The buttons around the edge of the page open different panels
 
-* The current card and context history are at the center of the page
+* The current card is at the center of the page, and the context history is above it
+
+* Your member card is always the top card of the context history
 
 * The bookmarks bar is at the bottom center of the page
 
@@ -111,20 +113,20 @@ Planned features: Choose color of card before creating; rich text editing featur
     'Viewing your deck':
       'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
     'Grabbing a card':
-      'If you see a card you like or someone sends you a card, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
+      'If you see a card you like and want to save, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
     'Searching for cards': `To find a card you are looking for, you can use the search box.
 
 1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
 
 The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, try this [quick start tutoral](https://www.regular-expressions.info/quickstart.html) or this [cheat sheet](http://stanford.edu/~wpmarble/webscraping_tutorial/regex_cheatsheet.pdf).`,
-    'Sharing cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon and type a member name to send this card to another member on this server.`,
+    'Sharing cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon, type a member name, and press Enter to send this card to another member on this server.`,
     'Receiving cards': `When someone sends you a card, it will appear in a giftbox on your member card. Click it to open the gift and put the card in your member priorities. This will add the card to your deck; discard the card to send it to your archive, where it can be deleted (feature coming soon).
 Planned feature: Ability to open a gift without accepting it yet (was previously possible)`,
     'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen.
 
 You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
 
-This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card).`,
+This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card—search it to find your bookmarks card).`,
     'Uploading a file': `You can upload a file to the AO as an attachment to a new card.
 
 1. Add a pyramid or grid to the card, if it doesn't have one.
@@ -138,36 +140,34 @@ If the card is blue, something went wrong.
 Files are stored by their hash, so if you upload the same file, it will match the existing card (after re-uploading). If an upload is breaking, change the file a tiny bit and then it will re-upload as a different card.`,
     'The Community Hub card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card.
 
-    Drop any card onto the hub icon (an icon of a sun, by default) to send it to the priorities list of the community hub card. A badge on the hub icon shows the current number of priorities in the hub card.
+Drop any card onto the hub icon (an icon of a sun, by default) to send it to the priorities list of the community hub card. A badge on the hub icon shows the current number of priorities in the hub card.
 
-    Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
+Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   'Organizing Cards': {
     index:
       'When you view a card, you can also place other cards within it, and modify the card in various ways.',
-    'Zones within a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below grid, and the accomplishments.
+    'Zones within a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below the grid, and the accomplishments.
 
 ### Priorities
 
 Prioritized cards appear in a stack just after the content of the card. If this stack has more than one card in it, a number will display below the stack of the number of hidden cards. Click this number to show the other cards in the stack.
 
-To prioritize a card, drag it to the priorities area, or if the card has a boat icon in its top-right corner, click that will prioritize it.
+To prioritize a card, drag it to the priorities area, or if the card has a boat icon in its top-right corner, clicking that will prioritize it.
 
 If the list of priorities has more than 6 items in it, a button that says "Refocus" will appear. Click this button to dump all priorities back down to the other stack of cards below.
 
-The number of priorities with an a card displays on the front of the card, followed by an exclamation mark. For example, a card with three priorities will display a small "3!" on its face. Click this number to toggle priority mode. While in priority mode, the first priority of a card will display in front of that card on the grid. This allows you to see your next actions even in nested subprojects.
+The number of priorities within a card displays on the front of the card, followed by an exclamation mark. For example, a card with three priorities will display a small "3!" on its face. Click this number to toggle priority mode. While in priority mode, the first priority of a card will display in front of that card on the grid. This allows you to see your next actions even in nested subprojects. (See also Productivity->Priority mode)
 
 To re-prioritize a card to the top of the priorities, drag and drop a card onto the priorities stack.
 
 ### Pyramid / Grid
 
-After the priorities, an optional grid or pyramid can be added to a card. A grid has squares that other cards can be dragged an dropped on. To add a pyramid to a card, click the card's menu (three dots in lower right of card), then click "Add pyramid".  To change it to a grid, click the small triangualur menu button in the lower right corner of the pyramid, then click Grid in the popup menu that appears. In this menu, you can also increase and decrease the size of the grid squares.
+After the priorities, an optional grid or pyramid can be added to a card. A grid has squares that other cards can be dragged and dropped on. To add a pyramid to a card, click the card's menu (three dots in lower right of card), then click "Add pyramid".  To change it to a grid, click the small triangualur menu button in the lower right corner of the pyramid, then click Grid in the popup menu that appears. In this menu, you can also increase and decrease the size of the grid squares.
 
 To resize a pyramid or increase the number of rows a grid has, click the horizontal +/- button below the grid. To increase the number of columns a grid has, click the vertical +/- buttons to the right of the grid. If you use these buttons to shrink a pyramid or grid to one row (or column), a "-grid" button will appear which allows the grid to be removed.
 
 When a grid is shrunk, any cards that no longer fit will be harmlessly dumped to the stack below the grid.
-
-Please break these sections out and combine with grid section below.
 
 ### Subcards
 
@@ -190,7 +190,9 @@ Click the Accomplishments icon to show the completed cards within a card. If you
   Productivity: {
     index:
       'The AO contains all the things you need to track todo lists, organize your life, and get tons done!',
-    'Checking off tasks': 'Every card has a checkmark you can check',
+    'Checking off tasks': `Every card has a checkmark you can check. You must have the card in your deck to see the checkmark.
+
+If a card has a funded bounty on it, you will claim the points when you check it.`,
     'Prioritizing tasks': `When viewing a full card, you can drag a card within it to the priorities stack to prioritize it. This places it visually above the other cards so you can focus on it first.
 
 You can also prioritize a card in the stack of cards below the grid by clicking the boat icon in the top-right of a card.
@@ -199,7 +201,7 @@ Cards will also be added to the priorities list when they are dropped within the
     'Priority mode': `If a card has prioritized cards within it, the number of them will show on the front of the card wherever it appears, with an exclamation mark. For example, a card with two priorities within it will display '2!' on its face.
 
 If you click this small number, you will enter 'priority mode'. In this mode, the first priority within a card will show up in front of it (on the grid). This will allow you to see priorities "prior to" the card they are within. This is very useful for seeing the next action within a project. If the first priority also has a priority, that will cover the parent priority, making it easy to find the next action even within a nested subproject.`,
-    'Starting tasks':
+    'Starting the timeclock':
       "If you want to completely immerse yourself in the AO's tasking experience, you can press DO IT next to the first priority within a card. This will start the timeclock and display the task at the top center of your screen to remind you that you are still working on it. You can use this feature to optimize your time-management through feedback, or to track work or time spent on different projects.",
     'The Hopper':
       'The hopper is a small boat icon at the upper left of your bookmarks bar that allows you to hop between your bookmarks. Hover on the hopper icon to see the options and start hopping.',

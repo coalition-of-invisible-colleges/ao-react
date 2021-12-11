@@ -612,6 +612,45 @@ body {
   }
 }
 
+// members sidebar
+#leftSidebar.members {
+  overflow-x: hidden;
+}
+
+// member-style card for the members list, allows drop to give card to member
+.card.member {
+  width: calc(100% - 3em);
+  min-height: 2.4em;
+
+  .goal {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .coin {
+    position: absolute;
+    top: -1.64em;
+    left: -1em;
+    transform: unset;
+  }
+
+  .hud {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    .barkButton {
+      position: absolute;
+      right: 0.25em;
+      top: unset;
+      bottom: 0.3em;
+    }
+  }
+}
+
 // hide unchecked checkbox on guild and mini card
 .card.badge > .hud .checkbox.unchecked,
 .card.mini > .hud .checkbox.unchecked {
@@ -1354,6 +1393,10 @@ body {
       left: 0;
       bottom: 0.15em;
     }
+  }
+
+  .dropZone {
+    position: relative;
   }
 }
 
@@ -2391,7 +2434,7 @@ h3 .tipMarker {
 // sun / community hub icon in top left
 #hub {
   z-index: 1;
-  // position: absolute;
+  position: relative;
 
   img {
     position: fixed;

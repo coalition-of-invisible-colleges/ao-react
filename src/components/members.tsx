@@ -127,7 +127,7 @@ export default class AoMembers extends React.Component<{}, State> {
             y: i,
           }}
           key={task.taskId}>
-          <AoContextCard task={task} cardStyle="priority" noFindOnPage={true} />
+          <AoContextCard task={task} cardStyle="member" noFindOnPage={true} />
         </AoDragZone>
       )
     })

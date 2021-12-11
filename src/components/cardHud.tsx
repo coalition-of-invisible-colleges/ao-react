@@ -29,6 +29,7 @@ export type HudStyle =
 	| 'face after'
 	| 'collapsed'
 	| 'collapsed-mission'
+	| 'collapsed-member'
 	| 'mini before'
 	| 'mini after'
 	| 'badge'
@@ -119,6 +120,19 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoLilypad taskId={taskId} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+					</div>
+				)
+			case 'collapsed-member':
+				return (
+					<div className="hud">
+						<AoPreview
+							taskId={taskId}
+							hudStyle={hudStyle}
+							prioritiesShown={this.props.prioritiesShown}
+							onTogglePriorities={this.props.onTogglePriorities}
+						/>
+						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
+						{isMember ? <AoBark memberId={taskId} /> : ''}
 					</div>
 				)
 			case 'full before':

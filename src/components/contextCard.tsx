@@ -31,8 +31,15 @@ import AoMemberIcon from './memberIcon'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
-import { goInCard, prioritizeCard, subTaskCard, CardZone } from '../cardTypes'
+import {
+  goInCard,
+  prioritizeCard,
+  subTaskCard,
+  CardZone,
+  CardPlay,
+} from '../cardTypes'
 import AoDragZone from './dragZone'
+import AoDropZone from './dropZone'
 // import AoProposals from './proposals'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -111,6 +118,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.onHover = this.onHover.bind(this)
     this.renderCardContent = this.renderCardContent.bind(this)
     this.clearPendingPromise = this.clearPendingPromise.bind(this)
+    this.dropToCard = this.dropToCard.bind(this)
 
     this.taskHasLoadedAllChildren = false
   }
@@ -459,6 +467,32 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     api.refocusPile(this.props.task.taskId)
   }
 
+  async dropToCard(move: CardPlay) {
+    if (!move.from.taskId) {
+      return
+    }
+    const cardFrom = aoStore.hashMap.get(move.from.taskId)
+    if (!cardFrom) {
+      return
+    }
+    const nameFrom = cardFrom.name
+
+    const cardTo = aoStore.cardByName.get(move.to.taskId)
+    if (!cardTo) {
+      return
+    }
+
+    const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+
+    return new Promise((resolve, reject) => {
+      if (move.to.taskId === nameTo) {
+        api.passCard(move.from.taskId, move.to.taskId)
+      } else {
+        api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(resolve)
+      }
+    })
+  }
+
   async onHover(event) {
     // event.preventDefault()
     // const card = this.props.task
@@ -654,6 +688,49 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           </div>
         )
       case 'member':
+        const isGrabbed1 = card.deck.indexOf(aoStore.member.memberId) >= 0
+        return (
+          <AoDropZone
+            taskId={taskId}
+            onDrop={this.dropToCard}
+            zoneStyle="panel"
+            dropHoverMessage="drop to give card to this member">
+            <div
+              id={'card-' + taskId}
+              className={
+                'card member' +
+                this.applyClassIfCurrentSearchResult +
+                (this.state.showPriorities ? ' padbottom' : '')
+              }
+              onClick={this.goInCard}>
+              <AoPaper taskId={taskId} />
+              <AoCardHud
+                taskId={taskId}
+                hudStyle="collapsed-member"
+                prioritiesShown={this.state.showPriorities}
+                onTogglePriorities={this.togglePriorities}
+              />
+              <div className="content">
+                {isGrabbed1 && card.taskId !== card.name ? (
+                  <AoBird taskId={taskId} noPopups={this.props.noPopups} />
+                ) : (
+                  <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
+                )}
+                {member && <AoMemberIcon memberId={taskId} />}
+                {this.renderCardContent(content)}
+              </div>
+              {this.state.showPriorities ? (
+                <AoStack
+                  inId={taskId}
+                  cards={priorityCards}
+                  cardStyle="priority"
+                  zone="priorities"
+                />
+              ) : null}
+            </div>
+          </AoDropZone>
+        )
+        break
       case 'priority':
         const isGrabbed = card.deck.indexOf(aoStore.member.memberId) >= 0
         return (
