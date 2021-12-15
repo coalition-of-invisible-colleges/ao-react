@@ -1105,8 +1105,8 @@ body {
   left: 0;
   background-color: #333;
   border-left: 4.6em solid #111;
-  padding-left: 0.75em;
-  padding-right: 0.5em;
+  padding-left: 0.25em;
+  padding-right: 0;
   box-shadow: 7px 7px 7px 1px rgba(21, 21, 21, 0.5);
   overflow: auto;
 
@@ -1437,6 +1437,7 @@ body {
     position: absolute;
     top: 0.5em;
     right: 0.25em;
+    font-size: 0.85em;
   }
 
   .addMember {
@@ -2017,6 +2018,7 @@ img.icon {
 .toolbar {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+  font-size: 0.85em;
 
   &:last-child {
     margin-right: 0;
@@ -2029,7 +2031,6 @@ img.icon {
     border-color: #333;
     background-color: #111;
     color: white;
-    font-size: 0.85em;
   }
 }
 
@@ -2208,7 +2209,7 @@ img.icon {
 }
 
 #membersList {
-  max-height: 55vh;
+  max-height: 63.7vh;
 
   & > div:first-child {
     margin-top: 0.5em;

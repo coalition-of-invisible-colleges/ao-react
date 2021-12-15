@@ -156,7 +156,7 @@ export default class AoMembers extends React.Component<{}, State> {
         <div className="toolbar">
           Sort:
           {this.renderSortButton('alphabetical', 'A-Z')}
-          {this.renderSortButton('recents', 'Recents')}
+          {this.renderSortButton('recents', 'Recent')}
           {this.renderSortButton('vouches', 'Vouches')}
           {this.renderSortButton('age', 'Order')}
         </div>
