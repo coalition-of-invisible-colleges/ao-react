@@ -1425,6 +1425,12 @@ body {
     border-color: #333;
     background-color: #111;
     color: white;
+
+    &.selected {
+      border-color: white;
+      border-width: 0.2em;
+      background-color: #222;
+    }
   }
 
   & > .action {
@@ -2024,12 +2030,6 @@ img.icon {
     background-color: #111;
     color: white;
     font-size: 0.85em;
-
-    &.selected {
-      border-color: white;
-      border-width: 0.2em;
-      background-color: #222;
-    }
   }
 }
 
