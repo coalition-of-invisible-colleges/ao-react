@@ -9,7 +9,7 @@ const topics = {
 
 The <a href="https://github.com/coalition-of-invisible-colleges/ao-react">ao-react project</a> is currently at version 0.7.0.
 
-This user manual is currently at version 0.8.2`,
+This user manual is currently at version 0.9.0`,
   Overview: {
     index: `The AO is a free software project and a lived practice of creating open-source software for an online-and-offline peer-to-peer community.
 
@@ -56,7 +56,7 @@ The cards on the AO make it easy to capture ideas at any time, and keep these id
 
 ### Getting Things Done
 
-The AO has been designed with a powerful productivity workflow that focuses on doing and completing tasks, not endless planning. One exciting feature, the Hopper, allows you to hop automatically between your bookmarks every X to Y minutes, optionally sending you a Signal notification. This lets you get a bird's eye view of all your tasks or receive programmed reminders or affirmations throughout your day. The AO has also been designed with [David Allen's GTD](https://www.43folders.com/2004/09/08/getting-started-with-getting-things-done) system in mind.
+The AO has been designed with a powerful productivity workflow that focuses on doing and completing tasks, not endless planning. One exciting feature, the hopper, allows you to hop automatically between your bookmarks every X to Y minutes, optionally sending you a Signal notification. This lets you get a bird's eye view of all your tasks or receive programmed reminders or affirmations throughout your day. The AO has also been designed with [David Allen's GTD](https://www.43folders.com/2004/09/08/getting-started-with-getting-things-done) system in mind.
 
 ### Political Campaigns
 
@@ -96,6 +96,7 @@ Planned feature: The ability for anyone to create a new account on the AO, witho
     index: `The AO stores a deck of cards for each member on a server. You can put plain text, Markdown, HTML, pasted links, or uploaded files on a card. You can send cards to other members on the same server, or synchronize cards and their attachments with another AO server over Tor.
 
 Each card has a card menu (three dots) allowing you to change the card's color and access other functions of the card.`,
+
     'Creating a card': `There are two ways to create a card:
 
 1. Click the Compose button at the top of the bookmarks bar (bottom center), type something, and press Enter to create the card. This will create a card within the card you are currently viewing.
@@ -107,53 +108,23 @@ The card compose box will remember a draft you are writing. Your draft is stored
 If you type the text of an existing card, that card will be recalled and played instead of creating a duplicate card. It is impossible to create a duplicate card on the AO.
 
 Planned features: Choose color of card before creating; rich text editing features; ability to create a card already-prioritized; ability to create cards encrypted with the server's private key.`,
+    'Your deck of cards': `Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.
+
+### Grabbing a card
+
+If you see a card you like and want to save, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.`,
     'Navigating within a card': `Cards can contain other cards within them.
 
 1. Click a card to navigate to it and see what's within it.`,
-    'Viewing your deck':
-      'Each member has a deck of cards on each AO server that they have an account on. You can view and search all of the cards in your deck by clicking the icon to the right of the bookmarks bar, along the bottom edge of the screen.',
-    'Grabbing a card':
-      'If you see a card you like and want to save, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.',
-    'Searching for cards': `To find a card you are looking for, you can use the search box.
-
-1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
-
-The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, try this [quick start tutoral](https://www.regular-expressions.info/quickstart.html) or this [cheat sheet](http://stanford.edu/~wpmarble/webscraping_tutorial/regex_cheatsheet.pdf).`,
-    'Sharing cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon, type a member name, and press Enter to send this card to another member on this server.`,
-    'Receiving cards': `When someone sends you a card, it will appear in a giftbox on your member card. Click it to open the gift and put the card in your member priorities. This will add the card to your deck; discard the card to send it to your archive, where it can be deleted (feature coming soon).
-Planned feature: Ability to open a gift without accepting it yet (was previously possible)`,
-    'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen.
-
-You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
-
-This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card—search it to find your bookmarks card).`,
-    'Uploading a file': `You can upload a file to the AO as an attachment to a new card.
-
-1. Add a pyramid or grid to the card, if it doesn't have one.
-
-2. Drag a file from your desktop and drop it on an empty grid square.
-
-3. Wait until the file fully uploads, then it should re-download and appear on a new yellow card.
-
-If the card is blue, something went wrong.
-
-Files are stored by their hash, so if you upload the same file, it will match the existing card (after re-uploading). If an upload is breaking, change the file a tiny bit and then it will re-upload as a different card.`,
-    'The Community Hub card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card.
-
-Drop any card onto the hub icon (an icon of a sun, by default) to send it to the priorities list of the community hub card. A badge on the hub icon shows the current number of priorities in the hub card.
-
-Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
-  },
-  'Organizing Cards': {
-    index:
-      'When you view a card, you can also place other cards within it, and modify the card in various ways.',
-    'Zones within a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below the grid, and the accomplishments.
+    'Zones of a card': `Each card has four zones where other cards can be placed: the priorities, the pyramid or grid, the stack below the grid, and the accomplishments.
 
 ### Priorities
 
-Prioritized cards appear in a stack just after the content of the card. If this stack has more than one card in it, a number will display below the stack of the number of hidden cards. Click this number to show the other cards in the stack.
+Prioritized cards appear in a stack just after the content of the card, but before any other content, so you can focus on the priorities first.
 
-To prioritize a card, drag it to the priorities area, or if the card has a boat icon in its top-right corner, clicking that will prioritize it.
+If this stack has more than one card in it, a number will display below the stack of the number of hidden cards. Click this number to show the other cards in the stack.
+
+To prioritize a card, drag it to the priorities area, or if the card has a boat icon in its top-right corner, clicking that will prioritize it. Cards will also be added to the priorities list when they are dropped within the card.
 
 If the list of priorities has more than 6 items in it, a button that says "Refocus" will appear. Click this button to dump all priorities back down to the other stack of cards below.
 
@@ -178,14 +149,32 @@ Other cards that are not prioritized and not placed on the grid accumulate in th
 The Accomplishments icon appears in the lower left corner of the card when a card contains at least one completed card. When you discard a card from another card, if that card has at least one checkmark, it is moved to the Accomplishments section instead of being discarded. This allows you to collect accomplishments wthout having to think about it.
 
 Click the Accomplishments icon to show the completed cards within a card. If you want to remove a card from the Accomplishments section, drag it and drop it to the background of the page.`,
-    'Moving cards around':
-      'Use drag-and-drop to move cards around. You can drop cards to squares on the grid, or to the priorities stack or subcards stack within a card (above and below the grid, respectively).',
-    'Discarding cards':
-      'You can drop cards onto the black background and they will be discarded from the current card. Discarding will not delete the card, just remove it from its present location. You can drag on the black background itself to grab the most recently-discarded card back (it remembers all the cards you discard locally until you refresh the page).',
-    'Card menu':
-      'Each card has a card menu, which is three dots in the lower-right corner or on the right edge of the card. Click it to see various options and modifications for the card.',
-    'The Grid':
-      "Each card can have a grid added to it, and other cards can be place in the squares of this grid. The grid can be resized or removed. If the grid is resized, any cards that no longer fit will fall down to the stack below the grid. To add a grid to a card, click the card's card menu and then click '+grid'.",
+    'Moving & discarding cards': `Use drag-and-drop to move cards around. You can drop cards to squares on the grid, or to the priorities stack or subcards stack within a card (above and below the grid, respectively).
+
+### Discarding cards
+
+You can drop cards onto the black background and they will be discarded from the current card. Discarding will not delete the card, just remove it from its present location. You can drag on the black background itself to grab the most recently-discarded card back (it remembers all the cards you discard locally until you refresh the page).`,
+    'Searching for cards': `To find a card you are looking for, you can use the search box.
+
+1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
+
+The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, try this [quick start tutoral](https://www.regular-expressions.info/quickstart.html) or this [cheat sheet](http://stanford.edu/~wpmarble/webscraping_tutorial/regex_cheatsheet.pdf).`,
+    'Sharing & receiving cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon, type a member name, and press Enter to send this card to another member on this server.
+
+### Receiving a card
+
+When someone sends you a card, it will appear in a giftbox on your member card. Click it to open the gift and put the card in your member priorities. This will add the card to your deck; discard the card to send it to your archive, where it can be deleted (feature coming soon).
+Planned feature: Ability to open a gift without accepting it yet (was previously possible)`,
+    'Bookmarking cards': `You can drop cards on your dock aka bookmarks bar at the bottom center edge of the screen.
+
+You can resize the bookmarks bar by clicking the +/- buttons on its right edge.
+
+This is just a normal grid on a reserved card that is named based on your memberId (normally hidden, you can see it in the address bar on your home card—search it to find your bookmarks card).`,
+    'The Community Hub card': `There is a reserved card with the text 'community hub' on each server. Click the icon in the top-left corner of the screen to visit this card.
+
+Drop any card onto the hub icon (an icon of a sun, by default) to send it to the priorities list of the community hub card. A badge on the hub icon shows the current number of priorities in the hub card.
+
+Having one card as a shared starting-place for everyone makes it much easier to start sharing cards, memes, and news in smaller communities. The other way to share stuff within a server is guilds.`,
   },
   Productivity: {
     index:
@@ -193,20 +182,34 @@ Click the Accomplishments icon to show the completed cards within a card. If you
     'Checking off tasks': `Every card has a checkmark you can check. You must have the card in your deck to see the checkmark.
 
 If a card has a funded bounty on it, you will claim the points when you check it.`,
-    'Prioritizing tasks': `When viewing a full card, you can drag a card within it to the priorities stack to prioritize it. This places it visually above the other cards so you can focus on it first.
-
-You can also prioritize a card in the stack of cards below the grid by clicking the boat icon in the top-right of a card.
-
-Cards will also be added to the priorities list when they are dropped within the card.`,
     'Priority mode': `If a card has prioritized cards within it, the number of them will show on the front of the card wherever it appears, with an exclamation mark. For example, a card with two priorities within it will display '2!' on its face.
 
 If you click this small number, you will enter 'priority mode'. In this mode, the first priority within a card will show up in front of it (on the grid). This will allow you to see priorities "prior to" the card they are within. This is very useful for seeing the next action within a project. If the first priority also has a priority, that will cover the parent priority, making it easy to find the next action even within a nested subproject.`,
     'Starting the timeclock':
-      "If you want to completely immerse yourself in the AO's tasking experience, you can press DO IT next to the first priority within a card. This will start the timeclock and display the task at the top center of your screen to remind you that you are still working on it. You can use this feature to optimize your time-management through feedback, or to track work or time spent on different projects.",
-    'The Hopper':
+      'Press DO IT next to the first priority within a card to start the timeclock. The task will display the task at the top center of your screen to remind you that you are still working on it. You can use this feature to optimize your time-management through feedback, or to track work or time spent on different projects.',
+    'The hopper':
       'The hopper is a small boat icon at the upper left of your bookmarks bar that allows you to hop between your bookmarks. Hover on the hopper icon to see the options and start hopping.',
     'Drawing cards':
       'Not sure what to do next? Press the Escape key to go up one card at at time until you clear all the cards. Behind it you will find up to four draw piles plus a Doge that randomly chooses from one of the piles below.',
+  },
+  Media: {
+    index: 'The AO includes some features specialized for media playback.',
+    'Uploading a file': `You can upload a file to the AO as an attachment to a new card.
+
+1. Add a pyramid or grid to the card, if it doesn't have one.
+
+2. Drag a file from your desktop and drop it on an empty grid square.
+
+3. Wait until the file fully uploads, then it should re-download and appear on a new yellow card.
+
+If the card is blue, something went wrong.
+
+Files are stored by their hash, so if you upload the same file, it will match the existing card (after re-uploading). If an upload is breaking, change the file a tiny bit and then it will re-upload as a different card.`,
+    'Video caching': `If you paste a YouTube or other website video link on a card and then click card menu—>Cache Media, the AO server will cache the video for you as an attachment on the card. This makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file. This feature relies on youtube-dl, an open-source project.
+
+There is currently no progress bar on video caching, and depending on the size of the video and the AO server's internet connection speed, it may take several minutes or a few hours to cache a video. When the video is done caching, it will display immediately.`,
+    Playlists:
+      'When a card with an attachment finishes playing, the next card after it will start playing.',
   },
   Guilds: {
     index: `A guild is a card that has been upgraded into a group. Guilds have various features that help make groups run smoothly.
@@ -221,9 +224,23 @@ All guilds on a server are listed in the Guilds sidebar.`,
   },
   Events: {
     index: `The AO includes a calendar that allows you to plan events and schedule reminders, individually or within a guild.`,
-    'Booking an event': `A card can have a time and date attached to it to turn it into an event.`,
+    'Booking an event': `A card can have a time and date attached to it to turn it into an event.
+
+To schedule an event:
+
+1. Create a card or choose an existing card to turn into an event.
+
+2. Click the card's card menu, the three dots in its lower or upper right corner.
+
+3. Click "schedule event", then click the empty text box that says "set date & time".
+
+4. Use the calendar and the scrolling list of times on the right to select a date and time for the event.
+
+5. Click the "Schedule" button.
+
+The event will be scheduled and will appear in the Calendar sidebar.`,
     'Viewing upcoming events':
-      'Click the calendar icon on the left edge of the screen to show upcoming events.',
+      'Click the calendar icon on the left edge of the screen to show upcoming and past events.',
   },
   Account: {
     index: 'You need a member account to log in.',
@@ -234,7 +251,17 @@ All guilds on a server are listed in the Guilds sidebar.`,
   Members: {
     index:
       'Click the Members icon on the left edge of the screen to show the Members panel. It contains all of the member cards on this server.',
-    'Creating new users': 'Invite them on the member panel',
+    'Creating new users': `To invite someone else to this server, you must make an account for them:
+
+1. Click the Members icon on the left edge of the page to open the Members sidebar.
+
+2. Click Invite to show the account creation form.
+
+3. Type a new username for the new member (ask them what username they want).
+
+4. Click "Add Member" or press Enter to create the new member.
+
+The default password for new accounts is the same as their username.`,
     'Monthly memberships': `If your server offers monthly memberships, then each user may be either "active" or "inactive".
 
 Active users may use hardware resources such as RFID door control or the bitcoin soda machine. For inactive members, these features will be locked.
@@ -291,14 +318,6 @@ To add a crypto ticker, click "Add Crypto Ticker" in the main menu. Then, enter 
 Crypto tickers appear on the right edge of the page. Click a crypto ticker to modify it, or press enter when it is empty to remove it.
 
 Hover over a crypto ticker to see market info for the pair from CoinGecko.`,
-  },
-  Media: {
-    index: 'The AO includes some features specialized for media playback.',
-    'Video caching': `If you paste a YouTube or other website video link on a card and then click card menu—>Cache Media, the AO server will cache the video for you as an attachment on the card. This makes it possible to watch the video without visiting the original host website and potentially revealing your identity to them, and also makes it easy to download the full file. This feature relies on youtube-dl, an open-source project.
-
-    There is currently no progress bar on video caching, and depending on the size of the video and the AO server's internet connection speed, it may take several minutes or a few hours to cache a video. When the video is done caching, it will display immediately.`,
-    Playlists:
-      'When a card with an attachment finishes playing, the next card after it will start playing.',
   },
   Hardware:
     'To access hardware resources connected to the AO, click the icon in the top-right corner of the screen.',

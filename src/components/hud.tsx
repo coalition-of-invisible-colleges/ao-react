@@ -121,6 +121,9 @@ interface HudState {
 @observer
 export default class AoHud extends React.Component<{}, HudState> {
   private searchRef = React.createRef<typeof AoSearch>()
+  private counter = 0
+  private dragEnterTarget
+  private lastDragAction = ''
 
   constructor(props) {
     super(props)
@@ -152,33 +155,21 @@ export default class AoHud extends React.Component<{}, HudState> {
       // maybe hub
       // break
       case 'gifts':
-        rendered = <AoGifts />
-        break
+        return <AoGifts />
       case 'members':
-        rendered = <AoMembers />
-        break
+        return <AoMembers />
       case 'guilds':
-        rendered = <AoMissions />
-        break
+        return <AoMissions />
       case 'calendar':
-        rendered = <AoCalendar />
-        break
+        return <AoCalendar />
       case 'bounties':
-        rendered = <AoBounties />
-        break
+        return <AoBounties />
       case 'search':
-        rendered = <AoSearch ref={this.searchRef} />
-        break
+        return <AoSearch ref={this.searchRef} />
       case 'manual':
-        rendered = <AoManual />
-        break
+      default:
+        return <AoManual />
     }
-    return (
-      <div id="leftSidebar" className={aoStore.leftSidebar}>
-        <div className="leftBorder" />
-        {rendered}
-      </div>
-    )
   }
 
   render() {
@@ -223,7 +214,81 @@ export default class AoHud extends React.Component<{}, HudState> {
         </div>
         <AoDoing />
         <AoHub />
-        {this.renderSidebar()}
+        <div
+          id="leftSidebar"
+          className={aoStore.leftSidebar}
+          onDragLeave={ev => {
+            console.log('LEAVE', this.dragEnterTarget)
+            if (ev.target === this.dragEnterTarget) {
+              this.dragEnterTarget = null
+              aoStore.closeLeftSidebar()
+            }
+          }}
+          onDragEnter={ev => {
+            console.log(
+              'ENTER ev.target is',
+              ev.target,
+              ' and this.dragEnterTarget is',
+              this.dragEnterTarget
+            )
+            if (
+              !this.dragEnterTarget ||
+              ev.currentTarget.id === 'leftSidebar' ||
+              ev.currentTarget.id === 'tour-members'
+            ) {
+              this.dragEnterTarget = ev.target
+            }
+          }}>
+          <div className="leftBorder" />
+          {this.renderSidebar()}
+          <AoSidebarButton
+            sidebarTab="members"
+            iconSrc={MemberIcon}
+            tooltipText={gloss('Members')}
+            tooltipPlacement="right"
+            id="tour-members"
+            openOnDragOver={true}
+          />
+          <AoSidebarButton
+            sidebarTab="guilds"
+            iconSrc={Badge}
+            tooltipText={gloss('Guilds')}
+            tooltipPlacement="right"
+            id="tour-missions"
+            buttonClass={guildsButtonClass}
+            openOnDragOver={true}
+          />
+          <AoSidebarButton
+            sidebarTab="calendar"
+            iconSrc={Timecube}
+            tooltipText={gloss('Calendar')}
+            badge={renderedCalendarBadge}
+            tooltipPlacement="right"
+            id="tour-calendar"
+          />
+          <AoSidebarButton
+            sidebarTab="bounties"
+            iconSrc={Chest}
+            tooltipText={gloss('Bounties')}
+            tooltipPlacement="right"
+            id="tour-bounties"
+          />
+          <AoSidebarButton
+            sidebarTab="search"
+            iconSrc={MagnifyingGlass}
+            tooltipText={gloss('Search')}
+            tooltipPlacement="top"
+            onShown={this.focusSearchbox}
+            id="tour-search"
+          />
+          <AoSidebarButton
+            sidebarTab="manual"
+            iconSrc={Manual}
+            tooltipText={gloss('Manual')}
+            tooltipPlacement="right"
+            id="tour-manual"
+          />
+        </div>
         <AoControls />
         <Observer>
           {() => {
@@ -241,51 +306,6 @@ export default class AoHud extends React.Component<{}, HudState> {
           buttonClass={giftsButtonClass}
         />
 */}{' '}
-        <AoSidebarButton
-          sidebarTab="members"
-          iconSrc={MemberIcon}
-          tooltipText={gloss('Members')}
-          tooltipPlacement="right"
-          id="tour-members"
-        />
-        <AoSidebarButton
-          sidebarTab="guilds"
-          iconSrc={Badge}
-          tooltipText={gloss('Guilds')}
-          tooltipPlacement="right"
-          id="tour-missions"
-          buttonClass={guildsButtonClass}
-        />
-        <AoSidebarButton
-          sidebarTab="calendar"
-          iconSrc={Timecube}
-          tooltipText={gloss('Calendar')}
-          badge={renderedCalendarBadge}
-          tooltipPlacement="right"
-          id="tour-calendar"
-        />
-        <AoSidebarButton
-          sidebarTab="bounties"
-          iconSrc={Chest}
-          tooltipText={gloss('Bounties')}
-          tooltipPlacement="right"
-          id="tour-bounties"
-        />
-        <AoSidebarButton
-          sidebarTab="search"
-          iconSrc={MagnifyingGlass}
-          tooltipText={gloss('Search')}
-          tooltipPlacement="top"
-          onShown={this.focusSearchbox}
-          id="tour-search"
-        />
-        <AoSidebarButton
-          sidebarTab="manual"
-          iconSrc={Manual}
-          tooltipText={gloss('Manual')}
-          tooltipPlacement="right"
-          id="tour-manual"
-        />
         <AoTickerHud />
         {/*        <div id="proposals">
             <AoPopupPanel

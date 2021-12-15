@@ -19,6 +19,7 @@ interface PopupPanelProps {
 	badgeColor?: 'green' | 'yellow' | 'red'
 	alsoHideHub?: boolean
 	buttonClass?: string
+	openOnDragOver?: boolean
 }
 
 interface State {
@@ -93,6 +94,15 @@ export default class AoSidebarButton extends React.Component<
 							? 'sidebarButton actionCircle open'
 							: 'sidebarButton actionCircle' +
 							  (this.props.buttonClass ? ' ' + this.props.buttonClass : '')
+					}
+					onDragEnter={
+						this.props.openOnDragOver
+							? () => {
+									if (aoStore.leftSidebar !== this.props.sidebarTab) {
+										aoStore.setLeftSidebar(this.props.sidebarTab)
+									}
+							  }
+							: undefined
 					}>
 					{this.props.iconSrc && (
 						<object type="image/svg+xml" data={this.props.iconSrc} />

@@ -223,7 +223,7 @@ export default class AoCoin extends React.Component<CoinProps> {
       card.parents.length >= 1
     ) {
       parentCards = card.parents
-        .map(memberId => aoStore.hashMap.get(memberId))
+        .map(taskId => aoStore.hashMap.get(taskId))
         .filter(task => {
           if (!task || !task.hasOwnProperty('taskId')) {
             return false
@@ -232,6 +232,7 @@ export default class AoCoin extends React.Component<CoinProps> {
           if (task.taskId === task.name) {
             return false
           }
+
           if (task.taskId === aoStore.currentCard) {
             return false
           }

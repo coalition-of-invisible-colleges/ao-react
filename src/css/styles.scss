@@ -620,7 +620,8 @@ body {
 // member-style card for the members list, allows drop to give card to member
 .card.member {
   width: calc(100% - 3em);
-  min-height: 2.4em;
+  min-height: 2.8em;
+  margin-bottom: 0;
 
   .goal {
     position: absolute;
@@ -1109,6 +1110,21 @@ body {
   box-shadow: 7px 7px 7px 1px rgba(21, 21, 21, 0.5);
   overflow: auto;
 
+  &:not([class]) {
+    background: none;
+    box-shadow: none;
+    border-left: none;
+    pointer-events: none;
+
+    .leftBorder {
+      border-left: none;
+    }
+
+    .sidebarButton {
+      pointer-events: auto;
+    }
+  }
+
   &.guilds {
     overflow-y: auto;
     overflow-x: hidden;
@@ -1397,6 +1413,12 @@ body {
 
   .dropZone {
     position: relative;
+
+    .overlay {
+      border: 0.2em solid #0ff;
+      width: calc(100% - 0.5em);
+      top: -0.2em;
+    }
   }
 }
 

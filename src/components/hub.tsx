@@ -76,7 +76,6 @@ export default class AoHub extends React.PureComponent<{}, State> {
   }
 
   async dropToHub(move: CardPlay) {
-    console.log('dropToGridSquare move is', move)
     if (!move.from.taskId) {
       return
     }

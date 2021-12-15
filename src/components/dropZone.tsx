@@ -88,14 +88,14 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 
 	allowDrop(event) {
 		event.preventDefault()
-		event.stopPropagation()
+		// event.stopPropagation()
 		this.nestedDragCounter++
 		this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
 	}
 
 	continueDrop(event) {
 		event.preventDefault()
-		event.stopPropagation()
+		// event.stopPropagation()
 		if (!this.state.draggedKind) {
 			this.setState({ draggedKind: this.detectDragKind(event.dataTransfer) })
 		}
