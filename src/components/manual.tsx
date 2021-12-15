@@ -159,7 +159,13 @@ You can drop cards onto the black background and they will be discarded from the
 1. Click the Search icon in the button left corner of the page, then type what you are looking for in the search box.
 
 The AO's search uses regular expressions, a powerful way to format your searches. For example, to search for all cards on the server, search for ".\\\*" (period asterisk). For more information on regular expressions, try this [quick start tutoral](https://www.regular-expressions.info/quickstart.html) or this [cheat sheet](http://stanford.edu/~wpmarble/webscraping_tutorial/regex_cheatsheet.pdf).`,
-    'Sharing & receiving cards': `After you grab a card, an icon will appear in the top-left corner of the card. Click this icon, type a member name, and press Enter to send this card to another member on this server.
+    'Sharing & receiving cards': `There are two ways to send a card:
+
+1. Drag the card over the Members icon on the left edge of the page. The member sidebar will open. Drop the card on the member you want to send it to.
+
+2. After you grab a card, an icon will appear in the top-left corner of the card. Click this icon, type a member name, and press Enter to send this card to another member on this server.
+
+You can tell a card was sent by hovering on the pin on the card's top-left corner. The tooltip will display a list of pending card gifts that have not yet been opened. The subscript number on the pin is the number of pending sends.
 
 ### Receiving a card
 
@@ -520,13 +526,18 @@ Here are some things that the AO would have no trouble doing if it were a nomadi
 * Use the AO to plan an upgrade to the AO
 
 * Use the AO to communicate with other devs and run a sprint to upgrade the AO`,
+    Praxis: `Praxis means practice (Greek <a href="https://www.etymonline.com/word/praxis#etymonline_v_18617">etymology</a>). Praxis is about putting things into practice, walking the walk, practicing what you preach. The opposite of praxis is sedentary hypocrisy.
+
+Praxis is also about practicing, over and over. Trying things out for yourself and seeing if they work. Not giving up right away, or maybe ever. 
+
+Nothing will get done if nobody does anything. Praxis is doing the thing instead of just talking about doing the thing.`,
     Ease: `*Go for the low-hanging fruit.*
 
  Computers and other technology should make our lives easier, not harder. As an end-user I want everything to be free and easy. As a developer, I fix all the easy bugs first and work outward from there, looking for the task that will have the greatest positive impact on the AO's desert power. Efficiency thus becomes a practice of ease and pleasure and not asceticism.`,
     Unmanageability: `*Take chances, make mistakes, get messy!*
 
 The AO helps its users to become unmanageable, and the AO also eschews top-down models of card management as much as possible, while still providing convenient ways to organize cards. The AO user interface is designed to make interaction with the computer safe and to make it impossible to accidentally delete cards or leak private data.`,
-    Unscalability: `The AO is not designed to be highly scaelable. Dunbar's number is 150 and large groups are toxic. Instead, the AO is designed to empower individuals and small groups, and make it easy to fork and administer one or several AOs. This increases the number of users capable of administering an AO, whereas a model that places scalability as first priority is designed to handle a large number of inept users on one platform provider's service. This runs contrary to the peer-to-peer and community educational functions of the AO.`,
+    Unscalability: `The AO is not designed to be highly scaleable. Dunbar's number is 150 and large groups are toxic. Instead, the AO is designed to empower individuals and small groups, and make it easy to fork and administer one or several AOs. This increases the number of users capable of administering an AO, whereas a model that places scalability as first priority is designed to handle a large number of inept users on one platform provider's service. This runs contrary to the peer-to-peer and community educational functions of the AO.`,
     Unmodularity: `The AO is a standards- and consensus-building project amongst the many projects of the free software / open source communities. Often, when projects decide to add a plugins or modules functionality, it is because the devs are unable to agree on what is essential, and/or are attempting to farm additional labor from an alienated plugins dev community.
 
 The AO is a project to integrate the many existing and working useful open-source projects into one (or a few) usable end-products that are useful for specific users for specific use-cases. These use-cases are things we're all familiar with, that we all want to do with our computers, such as taking notes, planning a todo list, or sharing a photo album privately with a group of people. There are really not that many of these core features, and they are simple enough that we all want mostly the same functionality.
@@ -538,6 +549,13 @@ Atomic operations are those that either succeed or fail, with no partial failure
 
 Therefore, atomic minimalism is an approach to improving the AO that attempts to only upgrade the AO from one stable state to a better stable state, without backsliding, introducing new bugs, or losing features. Moreover, atomic minimalism attempts to make the smallest possible useful change to the AO, rather than making a larger and more complex change to the AO.`,
   },
+  'Tech Support': `This user manual contains a mostly complete description of the AO's functionality and many of its known bugs. If you need more help, or if something is missing from the manual, please let us know.
+
+You can contact the AO developers by leaving a card on the AO at ao.coalitionofinvisiblecolleges.org. This AO is not yet open-registration but will be soon.
+
+In the meantime, you can make an issue on GitHub at https://github.com/coalition-of-invisible-colleges/ao-react/issues.
+
+Planned features: One-click tech support button that makes a card on the devs' AO via tor. One-click phone support button that automatically calls tech support volunteers over VOIP until one picks up (or uses a smartclock to choose someone who can answer). OpenAO feature for public account registration, so that anyone can join ao.coalitionofinvisiblecolleges.org.`,
 }
 
 export default function AoManual() {
