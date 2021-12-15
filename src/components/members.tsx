@@ -154,6 +154,7 @@ export default class AoMembers extends React.Component<{}, State> {
     return (
       <React.Fragment>
         <div className="toolbar">
+          Sort:
           {this.renderSortButton('alphabetical', 'A-Z')}
           {this.renderSortButton('recents', 'Recents')}
           {this.renderSortButton('vouches', 'Vouches')}
@@ -221,7 +222,6 @@ export default class AoMembers extends React.Component<{}, State> {
     return (
       <div id="members">
         <h2>Members</h2>
-        {this.renderMembersList()}
         <div className="action" onClick={this.toggleNew}>
           {this.state.openNew ? (
             <React.Fragment>Invite &#8963;</React.Fragment>
@@ -241,12 +241,16 @@ export default class AoMembers extends React.Component<{}, State> {
                 size={16}
               />
             </div>
-            <AoTip text="Create a new member account on this AO server. The default password is the same as the username. Please log in and change your password promptly to maintain community security." />
-            <button type="button" onClick={this.addMember} className="action">
+            <button
+              type="button"
+              onClick={this.addMember}
+              className="action addMember">
               Add Member
             </button>
+            <AoTip text="Create a new member account on this AO server. The default password is the same as the username. Please log in and change your password promptly to maintain community security." />
           </div>
         )}
+        {this.renderMembersList()}
       </div>
     )
   }

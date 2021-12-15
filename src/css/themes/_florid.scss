@@ -55,11 +55,6 @@ body.florid {
 		color: black;
 	}
 
-	// switch from dark to light background for action buttons
-	.action {
-		background-color: rgba(255, 255, 255, 0.45);
-	}
-
 	// dark blue background on the sidebar buttons
 	.actionCircle {
 		background-color: rgba(100, 127, 208, 0.4);
@@ -73,6 +68,7 @@ body.florid {
 	// darker action buttons on cards for contrast
 	.card .action {
 		background-color: rgba(63, 63, 63, 0.15);
+		color: black;
 	}
 
 	// light blue highlight on actionCircle on hover
@@ -83,7 +79,6 @@ body.florid {
 	// dark on light for clickable actions
 	.action {
 		border-color: rgba(255, 255, 255, 0.1);
-		color: black;
 		text-shadow: none;
 	}
 
