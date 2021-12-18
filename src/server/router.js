@@ -353,7 +353,7 @@ export default function applyRouter(app) {
           // Also return all the member cards of members who are holding this card
           let holderIdList = []
           if (foundThisTask?.deck?.length) {
-            holderIdList.push(foundTask.deck)
+            holderIdList.push(foundThisTask.deck)
           }
           let foundAllHolderItems = holderIdList.length <= 0
           state.pubState.tasks.some(taskItem => {
