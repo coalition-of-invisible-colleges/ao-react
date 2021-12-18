@@ -288,7 +288,7 @@ export default function applyRouter(app) {
         // result: foundThisTaskList,
         // })
         // Remove duplicates
-        foundThisTaskList.tasks = [...new Set(foundThisTaskList)]
+        foundThisTaskList.tasks = [...new Set(foundThisTaskList.tasks)]
 
         let objectToSend
         if (taskIdListParameterWasSingleValue === true) {
@@ -368,7 +368,7 @@ export default function applyRouter(app) {
           })
 
           // Remove duplicates
-          foundThisTaskList.tasks = [...new Set(foundThisTaskList)]
+          foundThisTaskList.tasks = [...new Set(foundThisTaskList.tasks)]
 
           // console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
           res.status(200).send({
