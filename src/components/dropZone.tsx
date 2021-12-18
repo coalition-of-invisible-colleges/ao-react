@@ -15,7 +15,7 @@ interface DropZoneProps {
 	style?: {}
 	onSelect?: (selection: Coords) => void
 	onDrop?: (move: CardPlay) => void
-	dropActsLikeFolder?: boolean
+	// dropActsLikeFolder?: boolean
 	pyramidRows?: boolean
 	dropHoverMessage?: string
 }
@@ -275,11 +275,11 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 						message = 'drop to prioritize'
 						break
 					case 'grid':
-						if (this.props.dropActsLikeFolder) {
-							message = 'drop within'
-						} else {
-							message = 'drop to swap'
-						}
+						// if (this.props.dropActsLikeFolder) {
+						message = 'drop within'
+						// } else {
+						// message = 'drop to swap'
+						// }
 						break
 					case 'subTasks':
 						message = 'drop here'

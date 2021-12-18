@@ -528,7 +528,7 @@ class AoStore {
               // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  merging fetched tasks", {taskIdsToLoadFromServer, "result.body": result.body});
 
               runInAction(() => {
-                // sometimes multiple overlapping requests for subcads cause
+                // sometimes multiple overlapping requests for subcards cause
                 // duplicates to be returned from different queries.
                 stateClosure.tasks.filter(
                   existingTask =>
@@ -761,6 +761,9 @@ class AoStore {
             let taskItems = result.body.foundThisTaskList
             let existingTask = this.cardByName.get(taskName)
             // here we prefer client data, in the other places that use filter we prefer server data
+            taskItems.filter(
+              t => !stateClosure.tasks.some(t2 => t.taskId === t2.taskId)
+            )
             // since cards are immutable it shouldn't matter too much
             if (existingTask === undefined) {
               stateClosure.tasks.push(...taskItems)

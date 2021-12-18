@@ -182,7 +182,15 @@ export default function applyRouter(app) {
     })
 
     // Remove duplicates and combine lists
-    stateToSend.tasks = [...stateToSend.tasks, ...priorityTaskItems]
+    stateToSend.tasks = [
+      ...new Set([...stateToSend.tasks, ...priorityTaskItems]),
+    ]
+    console.log('sending guilds:')
+    stateToSend.tasks.forEach(task => {
+      if (task.guild && task.guild.length >= 1) {
+        console.log(task.guild)
+      }
+    })
 
     dataPackageToSendToClient.metaData = { memberDeckSize, bookmarksTaskId }
 
@@ -279,6 +287,9 @@ export default function applyRouter(app) {
         // taskId: req.body.taskId,
         // result: foundThisTaskList,
         // })
+        // Remove duplicates
+        foundThisTaskList.tasks = [...new Set(foundThisTaskList)]
+
         let objectToSend
         if (taskIdListParameterWasSingleValue === true) {
           if (foundThisTaskList.length === 0) {

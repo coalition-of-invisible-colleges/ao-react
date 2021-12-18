@@ -18,9 +18,7 @@ import 'tippy.js/themes/translucent.css'
 
 interface GridProps {
   taskId: string
-  grid: Grid
   gridStyle: GridStyle
-  dropActsLikeFolder?: boolean
   height: number // Height & width included to trigger refresh when grid is resized
   width: number
   size: number
@@ -29,17 +27,15 @@ interface GridProps {
 interface GridViewProps extends GridProps {
   taskId: string
   grid: Grid
-  dropActsLikeFolder?: boolean
 }
 
 interface PyramidViewProps extends GridProps {
   taskId: string
   grid: Grid
-  dropActsLikeFolder?: boolean
   gridWidth: string
 }
 
-async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
+async function dropToGridSquare(move: CardPlay) {
   console.log('dropToGridSquare move is', move)
   if (!move.from.taskId) {
     return
@@ -55,7 +51,7 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
 
   const fromHasGuild = cardFrom && cardFrom.guild && cardFrom.guild.length >= 1
   const toHasGuild = cardTo && cardTo.guild && cardTo.guild.length >= 1
-  dropActsLikeFolder = toHasGuild && !fromHasGuild
+  const dropActsLikeFolder = true //toHasGuild && !fromHasGuild
 
   console.log(
     'fromHasGuild ',
@@ -139,7 +135,7 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
         }
         break
       case 'grid':
-        if (move.to.taskId && dropActsLikeFolder) {
+        if (move.to.taskId) {
           api
             .unpinCardFromGrid(
               move.from.coords.x,
@@ -154,6 +150,7 @@ async function dropToGridSquare(move: CardPlay, dropActsLikeFolder) {
                 })
             })
         } else if (move.to.taskId) {
+          // && AltKeyIsPressed
           api
             .pinCardToGrid(
               move.to.coords.x,
@@ -282,13 +279,16 @@ const AoGridRowObserver = observer(
     inId: string
     selected?: Coords
     width: number
-    dropActsLikeFolder: boolean
     onBlur: () => void
     onNewGridCard: (name: string, coords: Coords) => void
     selectGridSquare: (selection: Coords) => void
-    dropToGridSquare: (move: CardPlay) => void
+    dropToGridSquare: (move: CardPlay) => Promise<void>
     gridStyle: GridStyle
   }) => {
+    function dropToGridSquareCaller(move: CardPlay) {
+      return props.dropToGridSquare(move).then(result => {})
+    }
+
     let render: JSX.Element[] = []
     for (let i = 0; i < props.width; i++) {
       if (
@@ -323,11 +323,10 @@ const AoGridRowObserver = observer(
           x={i}
           y={props.y}
           onSelect={props.selectGridSquare}
-          onDrop={props.dropToGridSquare}
+          onDrop={dropToGridSquareCaller}
           zoneStyle="grid"
           pyramidRows={isPyramid}
-          key={i + '-' + props.y}
-          dropActsLikeFolder={toHasGuild}>
+          key={i + '-' + props.y}>
           {tId ? (
             <AoDragZone
               taskId={tId}
@@ -348,98 +347,10 @@ const AoGridRowObserver = observer(
   }
 )
 
-// const AoGridRow: Function = (props: {
-//   row: {}
-//   y: number
-//   inId: string
-//   selected?: Coords
-//   width: number
-//   dropActsLikeFolder: boolean
-//   onBlur: () => void
-//   onNewGridCard: (name: string, coords: Coords) => void
-//   selectGridSquare: (selection: Coords) => void
-//   dropToGridSquare: (move: CardPlay) => void
-// }): JSX.Element => {
-//   console.log('AoGridRow render()')
-
-//   let render: JSX.Element[] = []
-//   for (let i = 0; i < props.width; i++) {
-//     if (
-//       props.selected &&
-//       props.selected.x == i &&
-//       props.selected.y == props.y
-//     ) {
-//       render.push(
-//         <React.Fragment key={i + '-' + props.y}>
-//           <AoCardComposer
-//             onNewCard={props.onNewGridCard}
-//             coords={{ x: i, y: props.y }}
-//             onBlur={props.onBlur}
-//           />
-//         </React.Fragment>
-//       )
-//       continue
-//     }
-//     let tId: string
-//     if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
-//       tId = props.row[i]
-//     }
-
-//     const card = aoStore.hashMap.get(tId)
-//     render.push(
-//       <AoDropZone
-//         taskId={tId}
-//         inId={props.inId}
-//         x={i}
-//         y={props.y}
-//         onSelect={props.selectGridSquare}
-//         onDrop={props.dropToGridSquare}
-//         zoneStyle="grid"
-//         key={i + '-' + props.y}
-//         dropActsLikeFolder={props.dropActsLikeFolder}>
-//         {tId ? (
-//           <AoDragZone
-//             taskId={tId}
-//             dragContext={{
-//               zone: 'grid',
-//               inId: props.inId,
-//               x: i,
-//               y: props.y,
-//             }}>
-//             <AoContextCard
-//               task={card}
-//               cardStyle={
-//                 props.dropActsLikeFolder && card.guild && card.guild.length >= 1
-//                   ? 'badge'
-//                   : 'mini'
-//               }
-//             />
-//           </AoDragZone>
-//         ) : null}
-//       </AoDropZone>
-//     )
-//   }
-
-//   return <>{render}</>
-// }
-
 const GridView: Function = (props: GridViewProps): JSX.Element => {
-  // console.log('AO: components/grid.tsx: GridView component function')
+  console.log('RENDERING AO GRID VIEW')
 
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
-  const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
-  console.log('GridView render()')
-
-  React.useEffect(() => {
-    console.log(
-      'GridView useEffect triggered, renderMeNowPlease is',
-      renderMeNowPlease
-    )
-
-    if (renderMeNowPlease) {
-      setRenderMeNowPlease(false)
-    }
-  }, [renderMeNowPlease])
 
   function selectGridSquare(selection: Coords) {
     setSelected(selection)
@@ -454,10 +365,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
   }
 
   function dropToGridSquareCaller(move: CardPlay) {
-    dropToGridSquare(move, props.dropActsLikeFolder).then(result => {
-      console.log('setting renderMeNowPlease to true')
-      process.nextTick(() => setRenderMeNowPlease(true))
-    })
+    return dropToGridSquare(move).then(result => {})
   }
 
   const render: JSX.Element[] = []
@@ -476,7 +384,6 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
           inId={props.taskId}
           selected={selected}
           width={rowWidth}
-          dropActsLikeFolder={props.dropActsLikeFolder}
           onBlur={onBlur}
           onNewGridCard={newGridCard}
           selectGridSquare={selectGridSquare}
@@ -491,19 +398,7 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
 }
 
 const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
-  // console.log('AO: components/grid.tsx: GridView component function')
-
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
-  const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
-  React.useEffect(() => {
-    console.log(
-      'PyramidView useEffect triggered, renderMeNowPlease is',
-      renderMeNowPlease
-    )
-    if (renderMeNowPlease) {
-      setRenderMeNowPlease(false)
-    }
-  }, [renderMeNowPlease])
 
   function selectGridSquare(selection: Coords) {
     setSelected(selection)
@@ -518,10 +413,7 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
   }
 
   function dropToGridSquareCaller(move: CardPlay) {
-    dropToGridSquare(move, props.dropActsLikeFolder).then(() => {
-      console.log('setting renderMeNowPlease to true')
-      setRenderMeNowPlease(true)
-    })
+    return dropToGridSquare(move).then(() => {})
   }
 
   const render: JSX.Element[] = []
@@ -549,7 +441,6 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
           inId={props.taskId}
           selected={selected}
           width={rowWidth}
-          dropActsLikeFolder={props.dropActsLikeFolder}
           onBlur={onBlur}
           onNewGridCard={newGridCard}
           selectGridSquare={selectGridSquare}
@@ -666,6 +557,7 @@ function AoGridMenu(props: GridMenuProps) {
 
 export default function AoGrid(props: GridProps) {
   const [redirect, setRedirect] = React.useState<string>(undefined)
+  console.log('RENDERING AO GRID')
 
   function addGrid() {
     api.addGridToCard(props.taskId, 3, 3)
@@ -689,7 +581,7 @@ export default function AoGrid(props: GridProps) {
   }
   const isPyramid = props.gridStyle === 'pyramid'
 
-  const grid = props.grid
+  const grid = card.grid
 
   if (
     !grid ||
@@ -723,11 +615,7 @@ export default function AoGrid(props: GridProps) {
             gridTemplateRows:
               'repeat(' + grid.height.toString() + ', ' + gridWidth + ')',
           }}>
-          <GridView
-            taskId={taskId}
-            grid={grid}
-            dropActsLikeFolder={props.dropActsLikeFolder}
-          />
+          <GridView taskId={taskId} grid={grid} />
         </div>
         <AoGridResizer taskId={taskId} gridStyle={props.gridStyle} />
         <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
@@ -740,7 +628,6 @@ export default function AoGrid(props: GridProps) {
           taskId={taskId}
           grid={grid}
           gridStyle={props.gridStyle}
-          dropActsLikeFolder={props.dropActsLikeFolder}
           gridWidth={gridWidth}
         />
         <AoGridResizer taskId={taskId} gridStyle={props.gridStyle} />

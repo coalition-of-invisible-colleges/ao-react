@@ -128,6 +128,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
   executeOnUnmount_list = []
 
+  forceRerender() {
+    this.setState({ renderMeNowPlease: true })
+  }
+
   loadChildTasksAndPossiblyReRender() {
     // console.log('AO: components/contextCard.tsx: loadChildTasksAndReRender: ', {
     //   props: this.props,
@@ -956,7 +960,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <Observer>
                 {() => (
                   <AoGrid
-                    grid={card.grid}
                     taskId={taskId}
                     height={card.grid?.height}
                     width={card.grid?.width}

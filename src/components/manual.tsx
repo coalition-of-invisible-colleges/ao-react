@@ -289,15 +289,17 @@ The administrative powers are:
 
 * reactivate account (= free month of membership)
 
-A "senpai" (senior) may use any of the above admin powers on a "kohai" (junior). One member is senpai to another if both:
+A "senpai" (senior) may use any of the above admin powers on a "kohai" (junior). One member (member A) is senpai to another (member B) if:
 
-* The member is first in the member order, and
+* Member A is first in the member order before member B, AND
 
-* The member has more attack than the other member has defense
+* Member A's attack score is greater than Member B's defense score
 
 The order of members can be viewed in the Members panel by clicking "Order", and by default is the order in which members' accounts were created. However, the Order may also be changed. Any member may promote any member who is below them in the Order, to just ahead of them in the Order. Since whoever you promote may gain the power to delete your account, this minimizes rank changes.
 
 A member's attack score is equal to their number of vouches. A member's defense score is the higher of two numbers: 1) their attack score, or 2) the highest attack score out of any other member who vouches for them. This means that members may protect other members by vouching for them, taking them under their wing.
+
+The admin powers can be accessed in the "bark" menu via an icon that may appear on the right of each member card in the Members sidebar. The icon of a barking doge will be red and face left if the member is your kohai (junior), and will be green and face right if the member is your senpai (senior). If the member is your senpai and the icon is green, no admin menu will be available—they have one for you. If neither condition is met, but the member is below you in the order list, then a doge angel icon will appear instead for the Promote Above function, which can be used regardless of senpai status.
 
 Since both the order and vouch conditions must be met, new members cannot delete senior members even if they become popular, with many vouches. The AO is meant to be set up on multiple servers, so these features are designed to be used by a relatively unified membership (If the community splits, set up a second AO server).
 
@@ -432,7 +434,7 @@ For example:
 },`,
     'Setting up filesharing over Tor': `You must create an SSH key using ssh-keygen (or use an existing key you have) to use the AO's automatic fle attachment synchronzation feature. See the previous section for the configuration options to set with the path to your SSH key.
 
-    You must also use ssh-copy-id or edit the known_hosts file on the other computer in order to give this AO access to the other one via SSH, for copyng files with rsync.`,
+You must also use ssh-copy-id or edit the known_hosts file on the other computer in order to give this AO access to the other one via SSH, for copyng files with rsync.`,
     'Setting up Signal Notifications':
       'The AO install script will soon install signal-cli automatically, or the AO will include a Signal library that does not need to be compiled separately. Compiling signal-cli yourself is a pain and not recommended, since the pieces must be compiled separately and the broken installation scripts modified by hand.',
   },
@@ -531,7 +533,11 @@ Here are some things that the AO would have no trouble doing if it were a nomadi
 Praxis is also about practicing, over and over. Trying things out for yourself and seeing if they work. Not giving up right away, or maybe ever. 
 
 Nothing will get done if nobody does anything. Praxis is doing the thing instead of just talking about doing the thing.`,
-    Ease: `*Go for the low-hanging fruit.*
+    Immediacy: `*Go for the low-hanging fruit.*
+
+Immediate is the opposite of mediated.
+
+### Ease
 
  Computers and other technology should make our lives easier, not harder. As an end-user I want everything to be free and easy. As a developer, I fix all the easy bugs first and work outward from there, looking for the task that will have the greatest positive impact on the AO's desert power. Efficiency thus becomes a practice of ease and pleasure and not asceticism.`,
     Unmanageability: `*Take chances, make mistakes, get messy!*
