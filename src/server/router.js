@@ -367,6 +367,9 @@ export default function applyRouter(app) {
             }
           })
 
+          // Remove duplicates
+          foundThisTaskList.tasks = [...new Set(foundThisTaskList)]
+
           // console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
           res.status(200).send({
             foundThisTaskList,
