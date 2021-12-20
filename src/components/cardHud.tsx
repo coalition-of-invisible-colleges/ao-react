@@ -42,6 +42,7 @@ interface CardHudProps {
 	onTogglePriorities?: (any) => void
 	noPopups?: boolean
 	inId?: string
+	priorPriors?: string[]
 }
 
 interface State {
@@ -81,6 +82,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
+							priorPriors={this.props.priorPriors}
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
@@ -97,6 +99,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
+							priorPriors={this.props.priorPriors}
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
@@ -113,6 +116,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
+							priorPriors={this.props.priorPriors}
 						/>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
@@ -130,6 +134,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
+							priorPriors={this.props.priorPriors}
 						/>
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						{isMember ? <AoBark memberId={taskId} /> : ''}
@@ -177,7 +182,11 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview
+							taskId={taskId}
+							hudStyle={hudStyle}
+							priorPriors={this.props.priorPriors}
+						/>
 						<AoCardMenu
 							taskId={taskId}
 							hudStyle={hudStyle}
@@ -199,7 +208,11 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<div className={'hud ' + hudStyle}>
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-							<AoPreview taskId={taskId} hudStyle={hudStyle} />
+							<AoPreview
+								taskId={taskId}
+								hudStyle={hudStyle}
+								priorPriors={this.props.priorPriors}
+							/>
 							<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 						</div>
 					</React.Fragment>
@@ -208,7 +221,11 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoPreview taskId={taskId} hudStyle={hudStyle} />
+						<AoPreview
+							taskId={taskId}
+							hudStyle={hudStyle}
+							priorPriors={this.props.priorPriors}
+						/>
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>

@@ -76,6 +76,7 @@ interface CardProps {
   noFindOnPage?: boolean
   inId?: string
   padTop?: boolean
+  priorPriors?: string[]
 }
 
 interface State {
@@ -839,7 +840,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           </div>
         )
       case 'full':
-        const grid = card.grid
         return (
           <React.Fragment>
             {this.props.noContextOnFull ? (
@@ -1134,7 +1134,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content, true)}
             </div>
-            <AoCardHud taskId={taskId} hudStyle="mini after" />
+            <AoCardHud
+              taskId={taskId}
+              hudStyle="mini after"
+              priorPriors={this.props.priorPriors}
+            />
           </div>
         )
     }

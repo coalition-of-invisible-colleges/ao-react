@@ -22,6 +22,7 @@ interface PreviewProps {
   projectsShown?: boolean
   onToggleProjects?: (any) => void
   hideSubcardCountOnCollapsed?: boolean
+  priorPriors?: string[]
 }
 
 @observer
@@ -195,9 +196,21 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
           )
         }
         let previewCard
+        let preventRecursiveListOfContextPriors =
+          this.props.priorPriors && this.props.priorPriors.length >= 1
+            ? this.props.priorPriors
+            : []
         if (showPrioritiesPrior && card?.priorities?.length >= 1) {
           const previewTaskId = card.priorities[card.priorities.length - 1]
-          previewCard = aoStore.hashMap.get(previewTaskId)
+          const alreadyPreviewedThisCard =
+            preventRecursiveListOfContextPriors.includes(previewTaskId)
+          if (
+            !alreadyPreviewedThisCard &&
+            preventRecursiveListOfContextPriors.length <= 3
+          ) {
+            previewCard = aoStore.hashMap.get(previewTaskId)
+            preventRecursiveListOfContextPriors.push(previewTaskId)
+          }
         }
 
         if (this.priorityCount >= 1) {
@@ -220,6 +233,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
                       task={previewCard}
                       cardStyle="mini"
                       inId={this.props.taskId}
+                      priorPriors={preventRecursiveListOfContextPriors}
                     />
                   </AoDragZone>
                 </span>
