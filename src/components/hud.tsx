@@ -229,7 +229,10 @@ export default class AoHud extends React.Component<{}, HudState> {
           className={aoStore.leftSidebar}
           onDragLeave={ev => {
             console.log('LEAVE', this.dragEnterTarget)
-            if (ev.target === this.dragEnterTarget) {
+            if (
+              ev.target === this.dragEnterTarget &&
+              !(aoStore.leftSidebar === 'deck' && aoStore.deckTab === 'archive')
+            ) {
               this.dragEnterTarget = null
               aoStore.closeLeftSidebar()
             }
@@ -245,7 +248,7 @@ export default class AoHud extends React.Component<{}, HudState> {
               ev.currentTarget.id === 'leftSidebar' ||
               ev.currentTarget.id === 'tour-members'
             ) {
-              this.dragEnterTarget = ev.currentTarget.id
+              this.dragEnterTarget = ev.target
             }
           }}>
           <div className="leftBorder" />
