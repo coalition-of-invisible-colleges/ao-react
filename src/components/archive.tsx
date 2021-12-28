@@ -11,6 +11,7 @@ import { findOrphans } from '../cardTypes'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
+import DownBoat from '../assets/images/downboat.svg'
 import TrashCan from '../assets/images/trash.svg'
 
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
@@ -67,13 +68,15 @@ export default class AoArchive extends React.Component<{}, State> {
           </Tippy>
         )}
         {task.deck.length >= 2 && (
-          <img
-            src={TrashCan}
-            onClick={event => {
-              api.dropCard(task.taskId)
-            }}
-            className="action downboat"
-          />
+          <Tippy zIndex={4} theme="translucent" content="Drop card">
+            <img
+              src={DownBoat}
+              onClick={event => {
+                api.dropCard(task.taskId)
+              }}
+              className="action downboat"
+            />
+          </Tippy>
         )}
         <AoDragZone
           taskId={task.taskId}
