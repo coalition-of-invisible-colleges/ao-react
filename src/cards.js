@@ -144,7 +144,7 @@ export function removeParent(task, parentId) {
 	}
 
 	let stashItems = []
-	if (task.stash && Object.keys(task.stash) >= 1) {
+	if (task.stash && Object.keys(task.stash).length >= 1) {
 		stashitems = [...Object.values(task.stash)]
 	}
 
@@ -183,7 +183,7 @@ export function removeParentIfNotParent(task, parent) {
 	}
 
 	let stashItems = []
-	if (parent.stash && Object.keys(parent.stash) >= 1) {
+	if (parent.stash && Object.keys(parent.stash).length >= 1) {
 		stashitems = [...Object.values(parent.stash)]
 	}
 
