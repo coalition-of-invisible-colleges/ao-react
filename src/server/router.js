@@ -305,7 +305,7 @@ export default function applyRouter(app) {
         // Also return all parent cards held by this member reachable through a continuous path
         let heldParentTasks = []
         foundThisTaskList.forEach(taskItem => {
-          heldParentTasks.push(
+          heldParentTasks = heldParentTasks.concat(
             allReachableHeldParents(
               state.pubState.tasks,
               taskItem,
@@ -315,7 +315,7 @@ export default function applyRouter(app) {
         })
 
         // Remove duplicates
-        foundThisTaskList.tasks = [
+        foundThisTaskList = [
           ...new Set([...foundThisTaskList, ...heldParentTasks]),
         ]
 
@@ -342,6 +342,89 @@ export default function applyRouter(app) {
       }
     }
   )
+
+  app.post('/fetchDeck', (req, res) => {
+    let errRes = []
+
+    let foundThisTaskList = state.pubState.tasks.filter(taskItem => {
+      return taskItem.deck.includes(req.reqOwner)
+    })
+    // Also return the first priority for each card we are returning, since priorities show up prior to the card in priority mode
+    let priorityIdList = []
+    foundThisTaskList.forEach(foundTask => {
+      if (foundTask?.priorities?.length) {
+        priorityIdList.push(
+          foundTask.priorities[foundTask.priorities.length - 1]
+        )
+      }
+    })
+    let foundAllPriorityItems = priorityIdList.length <= 0
+    state.pubState.tasks.some(taskItem => {
+      if (priorityIdList.includes(taskItem.taskId)) {
+        foundThisTaskList.push(taskItem) // will add duplicates
+        priorityIdList.splice(priorityIdList.indexOf(taskItem.taskId), 1)
+        if (priorityIdList.length === 0) {
+          foundAllPriorityItems = true
+          return true
+        }
+      }
+    })
+    let foundAllTaskItems = foundAllPriorityItems
+    // Also return all the member cards of members who are holding this card
+    let holderIdList = []
+    foundThisTaskList.forEach(foundTask => {
+      if (foundTask?.deck?.length) {
+        holderIdList.push(foundTask.deck)
+      }
+    })
+    let foundAllHolderItems = holderIdList.length <= 0
+    state.pubState.tasks.some(taskItem => {
+      if (holderIdList.includes(taskItem.taskId)) {
+        foundThisTaskList.push(taskItem) // will add duplicates
+        holderIdList.splice(holderIdList.indexOf(taskItem.taskId), 1)
+        if (holderIdList.length === 0) {
+          foundAllHolderItems = true
+          return true
+        }
+      }
+    })
+    foundAllTaskItems = foundAllTaskItems && foundAllHolderItems
+
+    // Remove duplicates
+    foundThisTaskList = [...new Set([...foundThisTaskList])]
+
+    // Remove broken cards
+    let brokenCards = 0
+    foundThisTaskList = foundThisTaskList.filter(taskItem => {
+      if (!Array.isArray(taskItem.passed)) {
+        brokenCards++
+        return false
+      }
+      return true
+    })
+    console.log(
+      'Sending entire deck of',
+      foundThisTaskList.length,
+      'except',
+      brokenCards,
+      'broken cards to member',
+      req.reqOwner
+    )
+
+    let objectToSend
+    if (foundThisTaskList.length === 0) {
+      res.status(400).send({ success: false, errorList: errRes })
+    } else {
+      res.status(200).json({ foundThisTaskList })
+    }
+
+    // }
+    // else
+    // {
+    //   errRes.push("AO: server/router.js: fetchTaskByID: task not found ", { "req.body": req.body, foundThisTask});
+    //   res.status(400).send({ "success": false, "errorList": errRes });
+    // }
+  })
 
   app.post(
     '/fetchTaskByName',
@@ -397,7 +480,7 @@ export default function applyRouter(app) {
           })
 
           // Remove duplicates
-          foundThisTaskList.tasks = [...new Set(foundThisTaskList.tasks)]
+          foundThisTaskList = [...new Set(foundThisTaskList)]
 
           // console.log("AO: server/router.js: fetchTaskByName: task found: ", {"taskName": req.body.taskName, "result": foundThisTask})
           res.status(200).send({
@@ -491,7 +574,7 @@ export default function applyRouter(app) {
 
   app.get('/search/:query', (req, res) => {
     const search = decodeURIComponent(req.params.query)
-    console.log('searching for ', search)
+    console.log('searchiung for ', search)
 
     let foundCards = []
     let foundGuilds = []

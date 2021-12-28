@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
+import { gloss } from '../semantics'
 import Tippy from '@tippyjs/react'
 import { Placement } from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
@@ -18,7 +19,7 @@ export default class AoTip extends React.PureComponent<PopupPanelProps> {
 				zIndex={4}
 				theme="translucent"
 				delay={[475, 200]}
-				content={this.props.text}
+				content={gloss(this.props.text)}
 				placement={this.props.placement ? this.props.placement : 'right'}
 				maxWidth="15em">
 				<span className="tipMarker">&#10067;</span>

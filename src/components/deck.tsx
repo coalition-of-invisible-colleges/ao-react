@@ -6,21 +6,25 @@ import InfiniteScroll from 'react-infinite-scroller'
 import AoContextCard from './contextCard'
 import AoDragZone from './dragZone'
 import AoArchive from './archive'
+import DownloadAll from '../assets/images/downloadCards.svg'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
-type DeckTab = 'all' | 'archive'
+export type DeckTab = 'all' | 'archive'
 
 interface State {
-  tab: DeckTab
   query: string
   sort: SearchSort
   items: number
   hasMore: boolean
   debounce?
+  waiting?: boolean
+  success?: boolean
 }
 
 export const defaultState: State = {
-  tab: 'all',
   query: '',
   sort: 'newest',
   items: 10,
@@ -47,12 +51,15 @@ export default class AoDeck extends React.Component<{}, State> {
     this.renderTabButton = this.renderTabButton.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
     this.renderSearchResults = this.renderSearchResults.bind(this)
+    this.fetchEntireDeck = this.fetchEntireDeck.bind(this)
   }
 
   private searchBox = React.createRef<HTMLInputElement>()
 
   componentDidMount() {
-    this.searchBox.current.select()
+    if (this.searchBox.current) {
+      this.searchBox.current.select()
+    }
     // ;(this.searchBox.current as any).onsearch = this.onSearch
     // ;(this.searchBox.current as any).incremental = true
   }
@@ -260,10 +267,10 @@ export default class AoDeck extends React.Component<{}, State> {
 
   goToTab(event) {
     const tab = event.currentTarget.getAttribute('data-tab')
-    if (this.state.tab === tab) {
+    if (aoStore.deckTab === tab) {
       return
     }
-    this.setState({ tab: tab })
+    aoStore.setDeckTab(tab)
   }
 
   sortBy(event) {
@@ -331,7 +338,7 @@ export default class AoDeck extends React.Component<{}, State> {
         ) : (
           ''
         )}
-        <div id="searchResults" className="results">
+        <div id="deckResults" className="results">
           <div>
             {searchResults.length}{' '}
             {this.state.query.length < minQueryLength
@@ -353,7 +360,7 @@ export default class AoDeck extends React.Component<{}, State> {
   }
 
   renderTabButton(tab: DeckTab, label: string) {
-    if (this.state.tab === tab) {
+    if (aoStore.deckTab === tab) {
       return <p className="action selected">{label}</p>
     } else {
       return (
@@ -376,15 +383,48 @@ export default class AoDeck extends React.Component<{}, State> {
     }
   }
 
+  fetchEntireDeck() {
+    this.setState({ waiting: true })
+    aoStore.fetchEntireDeck_async().then(() => {
+      this.setState({ waiting: false, success: true })
+    })
+  }
+
   render() {
     return (
       <React.Fragment>
         <h2>My Deck</h2>
-        <div className="toolbar">
+        <Tippy
+          zIndex={4}
+          theme="translucent"
+          delay={[625, 200]}
+          content={
+            <span>
+              <p>Download entire deck to browser</p>
+              <p>
+                <small>
+                  This will make the Lost Cards tab and the total number of
+                  cards in your deck display accurately. Lasts until refresh.
+                </small>
+              </p>
+            </span>
+          }>
+          <button
+            className="action"
+            onClick={this.fetchEntireDeck}
+            disabled={this.state.waiting || this.state.success}>
+            {this.state.waiting ? (
+              <div className="spinner" />
+            ) : (
+              <img src={DownloadAll} />
+            )}
+          </button>
+        </Tippy>
+        <div className="toolbar bumpUp">
           {this.renderTabButton('all', 'All')}
           {this.renderTabButton('archive', 'Lost Cards')}
         </div>
-        {this.state.tab === 'all' && (
+        {aoStore.deckTab === 'all' && (
           <React.Fragment>
             <input
               ref={this.searchBox}
@@ -400,7 +440,7 @@ export default class AoDeck extends React.Component<{}, State> {
               : this.renderSearchResults(this.sortedMyCards)}
           </React.Fragment>
         )}
-        {this.state.tab === 'archive' && <AoArchive />}
+        {aoStore.deckTab === 'archive' && <AoArchive />}
       </React.Fragment>
     )
   }

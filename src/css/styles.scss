@@ -1427,22 +1427,50 @@ body {
     }
   }
 
-  & > .action {
-    position: absolute;
-    top: 0.5em;
-    right: 0.25em;
-    font-size: 0.85em;
-  }
-
   .addMember {
     margin-top: 0.5em;
     display: inline-block;
   }
 }
 
+// action button in top right corner of some sidebars
+#members > .action,
+#leftSidebar.deck > .action:first-of-type {
+  position: absolute;
+  top: 0.5em;
+  right: 0.25em;
+  font-size: 0.85em;
+}
+
+// download entire deck button on deck sidebar
+#leftSidebar.deck > .action:first-of-type {
+  width: 2.75em;
+  height: 2.75em;
+  padding-top: 0.225em;
+
+  &:disabled img {
+    opacity: 0.5;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    max-height: unset;
+  }
+
+  .spinner {
+    width: 100%;
+    height: 100%;
+    top: -0.001em;
+    position: relative;
+  }
+}
+
 // small action buttons on sidebar
 #leftSidebar .toolbar .action,
-#leftSidebar > .action {
+#leftSidebar > .action,
+#leftSidebar > div > .action {
   border-color: #333;
   background-color: #111;
   color: white;
@@ -1581,13 +1609,31 @@ body {
 
 // deck sidebar
 #leftSidebar.deck {
+  .toolbar.bumpUp {
+    position: relative;
+    top: -0.5em;
+  }
+
   input[type='text'] {
     width: calc(100% - 4em);
   }
 
+  .floatTip {
+    float: right;
+    position: absolute;
+    top: 3.85em;
+    right: 0.5em;
+  }
+
+  #deckResults {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100% - 10.5em);
+  }
+
   #archive {
-    max-height: 63.4vh;
-    // overflow-x: hidden;
+    max-height: calc(100% - 6.5em);
+    overflow-x: hidden;
     position: relative;
 
     .archiveResult {
@@ -1603,7 +1649,7 @@ body {
       }
 
       & > .dragZone {
-        width: calc(100% - 3.5em);
+        width: calc(100% - 4em);
         position: relative;
         left: 3.5em;
       }

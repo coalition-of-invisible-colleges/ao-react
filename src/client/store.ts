@@ -28,6 +28,8 @@ import request from 'superagent'
 import ContextCard from '../components/Card'
 import api from './api'
 
+import { DeckTab } from '../components/deck'
+
 const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 function setCurrent(state: AoState, b: AoState) {
@@ -331,6 +333,8 @@ class AoStore {
   @observable mediaPlayHead: { inId: string; taskId: string }
   @observable leftSidebar?: LeftSidebarTab
   @observable localPriorityMode?: boolean
+  @observable deckTab: DeckTab = 'all'
+
   bookmarksTaskId?: string
 
   constructor() {
@@ -397,6 +401,33 @@ class AoStore {
   //       )
   //   return bookmarkedCardsData
   // }
+
+  async fetchEntireDeck_async(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let stateClosure = this.state
+      request
+        .post('/fetchDeck')
+        .set('Authorization', stateClosure.token)
+        .send()
+        .then(result => {
+          // console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
+
+          runInAction(() => {
+            let newTasksOnly = result.body.foundThisTaskList.filter(
+              existingTask =>
+                !stateClosure.tasks.some(t => t.taskId === existingTask.taskId)
+            )
+            stateClosure.tasks.push(...newTasksOnly)
+            resolve()
+          })
+          // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
+        })
+        .catch(error => {
+          reject()
+          // console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
+        })
+    })
+  }
 
   getTaskById_async(taskId, callbackOriginal) {
     console.log('calling getTaskById on', taskId)
@@ -531,13 +562,19 @@ class AoStore {
               runInAction(() => {
                 // sometimes multiple overlapping requests for subcards cause
                 // duplicates to be returned from different queries.
-                stateClosure.tasks.filter(
+                const newTasksOnly = result.body.foundThisTaskList.filter(
                   existingTask =>
-                    !result.body.foundThisTaskList.some(
+                    !stateClosure.tasks.some(
                       t => t.taskId === existingTask.taskId
                     )
                 )
-                stateClosure.tasks.push(...result.body.foundThisTaskList)
+                // console.log('newTasksOnly length is', newTasksOnly.length)
+                newTasksOnly.forEach(newTask => {
+                  if (newTask.passed === undefined) {
+                    console.log('check out this shit:', newTask)
+                  }
+                })
+                stateClosure.tasks.push(...newTasksOnly)
                 // setImmdiate(() => callback(this.hashMap.get(taskId)))
                 // this works to solve the missing prorities dropdown problem but it ruins performance
                 // if (!prioritiesOnly) {
@@ -761,7 +798,6 @@ class AoStore {
           runInAction(() => {
             let taskItems = result.body.foundThisTaskList
             let existingTask = this.cardByName.get(taskName)
-            // here we prefer client data, in the other places that use filter we prefer server data
             taskItems.filter(
               t => !stateClosure.tasks.some(t2 => t.taskId === t2.taskId)
             )
@@ -1503,6 +1539,10 @@ class AoStore {
   @action.bound
   hidePriors() {
     this.localPriorityMode = false
+  }
+
+  @action.bound setDeckTab(newDeckTab: DeckTab) {
+    this.deckTab = newDeckTab
   }
 }
 const aoStore = new AoStore()

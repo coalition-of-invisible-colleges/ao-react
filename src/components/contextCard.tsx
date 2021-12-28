@@ -794,7 +794,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             className={
               'card ' +
               card.color +
-              'Card' +
+              'Card ' +
               this.props.cardStyle +
               this.applyClassIfCurrentSearchResult
             }

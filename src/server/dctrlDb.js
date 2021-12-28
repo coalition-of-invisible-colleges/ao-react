@@ -78,6 +78,7 @@ function initializeSqlite(cb) {
       firstMemberId,
     ])
     blankCardEvent.type = 'task-created'
+    blankCardEvent.guild = 'Community Hub'
     insertEvent(blankCardEvent)
     startFeed()
     cb(null, conn)

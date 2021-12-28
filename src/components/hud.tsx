@@ -245,7 +245,7 @@ export default class AoHud extends React.Component<{}, HudState> {
               ev.currentTarget.id === 'leftSidebar' ||
               ev.currentTarget.id === 'tour-members'
             ) {
-              this.dragEnterTarget = ev.target
+              this.dragEnterTarget = ev.currentTarget.id
             }
           }}>
           <div className="leftBorder" />
