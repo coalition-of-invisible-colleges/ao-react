@@ -164,9 +164,7 @@ export default class AoBarkMenu extends React.PureComponent<CardMenuProps> {
             This member is your senpai because they both have more vouches than
             you, and they are first in the members list.
           </div>
-          <div>
-            Senpai can use the following powers on you if 3 of them agree:
-          </div>
+          <div>Any senpai can use the following powers on you:</div>
           <ul>
             <li>Promote you above them in the members list</li>
             <li>Reset your password</li>
