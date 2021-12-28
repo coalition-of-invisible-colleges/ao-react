@@ -1,0 +1,133 @@
+body.arrakis {
+	background-color: #070722;
+}
+
+.arrakis {
+	.red {
+		background-color: #f94e4e;
+	}
+
+	.yellow {
+		background-color: #ffb05b;
+	}
+
+	.green {
+		background-color: #8bb08b;
+	}
+
+	.blue {
+		background-color: #74beff;
+	}
+
+	.purple {
+		background-color: #1d1b26;
+		color: white;
+	}
+
+	.purpleCard .content {
+		color: white;
+	}
+
+	// unset dark card background and change font to black
+	.card {
+		color: #000;
+		background-color: unset;
+	}
+
+	// show colors fully
+	.card .paper .color {
+		opacity: 1;
+	}
+
+	// hide the paper
+	.paper > img {
+		display: none;
+	}
+
+	// background color of grid square
+	.gridContainer > .grid .zone {
+		background: rgba(127, 127, 127, 0.05);
+	}
+
+	// .zone,
+	// .dropZone.grid {
+	// 	color: white;
+	// }
+
+	// text on grid square when about to drop a card
+	.gridContainer > .grid .zone,
+	.gridContainer > .grid .dropZone.grid {
+		color: black;
+	}
+
+	// dark blue background on the sidebar buttons
+	.actionCircle {
+		background-color: rgba(100, 127, 208, 0.4);
+	}
+
+	// darker action circles on cards for contrast
+	.card .actionCircle {
+		background-color: rgba(63, 63, 63, 0.4);
+	}
+
+	// darker action buttons on cards for contrast
+	.card .action {
+		background-color: rgba(63, 63, 63, 0.15);
+		color: black;
+	}
+
+	// light blue highlight on actionCircle on hover
+	.actionCircle:hover {
+		background-color: rgba(154, 154, 255, 0.5);
+	}
+
+	// dark on light for clickable actions
+	.action {
+		border-color: rgba(255, 255, 255, 0.1);
+		text-shadow: none;
+	}
+
+	// switch all svg icons to black
+	svg {
+		filter: brightness(0.001);
+	}
+
+	// change all card menu buttons to black so they are visible, and guild titles
+	.card > .hud .cardMenuButton,
+	.mission.summary {
+		color: black;
+	}
+
+	// change the number on the bird to black
+	.bird .badge.subscript {
+		color: black;
+		font-weight: bold;
+	}
+
+	// turn all the icons on the cards black
+	.content > img.memberIcon,
+	.bird img,
+	img.checkbox,
+	.claimInterval img,
+	#tour-stash > img,
+	img.grab,
+	.lilypad > object,
+	#tour-accomplishments > img,
+	img.badge,
+	.tally > img {
+		filter: brightness(0.001);
+	}
+
+	#hopper img.inPort {
+		opacity: 0.5;
+	}
+
+	img.memberIcon {
+		opacity: 0.7;
+	}
+
+	// accomplishments font color
+	.completed .content {
+		color: white;
+	}
+}
