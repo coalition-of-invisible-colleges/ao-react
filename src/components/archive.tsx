@@ -46,7 +46,7 @@ export default class AoArchive extends React.Component<{}, State> {
   }
 
   @computed get myLostCards() {
-    return findOrphans(5)
+    return findOrphans(6)
   }
 
   renderItems(items) {
