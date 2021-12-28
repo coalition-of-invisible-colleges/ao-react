@@ -1609,6 +1609,8 @@ body {
 
 // deck sidebar
 #leftSidebar.deck {
+  overflow-y: hidden;
+
   .toolbar.bumpUp {
     position: relative;
     top: -0.5em;
