@@ -351,7 +351,6 @@ export default class AoBird extends React.Component<Props, State> {
     }
 
     let parentCards = []
-    console.log('card', card.name, ' card.parents is', card.parents)
     if (!this.props.noPopups) {
       if (
         card &&
@@ -376,7 +375,6 @@ export default class AoBird extends React.Component<Props, State> {
           })
         parentCards.reverse()
       }
-      console.log('parentCards.length is', parentCards.length)
     }
 
     return (

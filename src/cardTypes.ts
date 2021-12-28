@@ -274,10 +274,14 @@ export function allReachableHeldParents(origin: Task): Task[] {
 }
 
 // Returns the specified number of lost cards
-export function findOrphans(count: number) {
+export function findOrphans(count: number = null) {
 	let found = 0
+	let anchorCards: Task[] = [aoStore.memberCard].concat(
+		aoStore.myGuilds,
+		aoStore.myEvents
+	)
 	return aoStore.state.tasks.filter(t => {
-		if (found >= count) {
+		if (count && found >= count) {
 			return false
 		}
 
@@ -312,11 +316,6 @@ export function findOrphans(count: number) {
 		}
 
 		let parents = allReachableHeldParents(t)
-
-		let anchorCards: Task[] = [aoStore.memberCard].concat(
-			aoStore.myGuilds,
-			aoStore.myEvents
-		)
 
 		if (
 			parents.some(st => {

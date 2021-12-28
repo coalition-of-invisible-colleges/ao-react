@@ -1136,7 +1136,7 @@ body {
     left: 0;
     top: 0;
     height: 100%;
-    width: 100%;
+    // width: 100%;
     border-left: 0.28em solid #6c70a0;
     pointer-events: none;
   }
@@ -1259,6 +1259,11 @@ body {
 // Search sidebar button
 #tour-search {
   bottom: 0.5em;
+}
+
+// Deck sidebar button
+#tour-deck {
+  top: calc(45vh - 15em);
 }
 
 // The search box in the sidebar
@@ -1422,18 +1427,6 @@ body {
     }
   }
 
-  .action {
-    border-color: #333;
-    background-color: #111;
-    color: white;
-
-    &.selected {
-      border-color: white;
-      border-width: 0.2em;
-      background-color: #222;
-    }
-  }
-
   & > .action {
     position: absolute;
     top: 0.5em;
@@ -1444,6 +1437,20 @@ body {
   .addMember {
     margin-top: 0.5em;
     display: inline-block;
+  }
+}
+
+// small action buttons on sidebar
+#leftSidebar .toolbar .action,
+#leftSidebar > .action {
+  border-color: #333;
+  background-color: #111;
+  color: white;
+
+  &.selected {
+    border-color: white;
+    border-width: 0.2em;
+    background-color: #222;
   }
 }
 
@@ -1572,25 +1579,35 @@ body {
   }
 }
 
-// deck popup
-#deck {
-  .popupButton.actionCircle {
-    bottom: 0.5em;
-    left: calc(100% + 2.5em);
-    width: 3.5em;
-    height: 3.5em;
+// deck sidebar
+#leftSidebar.deck {
+  input[type='text'] {
+    width: calc(100% - 4em);
   }
 
-  input {
-    margin: 0.5em;
-  }
+  #archive {
+    max-height: 63.4vh;
+    // overflow-x: hidden;
+    position: relative;
 
-  .popupPanel {
-    max-height: 64vh;
-  }
+    .archiveResult {
+      position: relative;
 
-  #searchResults {
-    max-height: 44vh;
+      & > img.action.downboat {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 0.5em;
+        width: 1.25em;
+        height: 1.25em;
+      }
+
+      & > .dragZone {
+        width: calc(100% - 3.5em);
+        position: relative;
+        left: 3.5em;
+      }
+    }
   }
 }
 
@@ -2553,6 +2570,11 @@ h3 .tipMarker {
     img:hover + .unreadBadge {
       left: 6.4em;
     }
+
+    &.sidebarOpen {
+      width: 4.5em;
+      padding-left: 0;
+    }
   }
 
   .dropZone.panel {
@@ -2582,6 +2604,15 @@ h3 .tipMarker {
     font-size: 1.15em;
     background-color: rgba(255, 10, 10, 0.85);
     position: fixed;
+  }
+
+  img.sidebarOpen + .unreadBadge {
+    top: 0.12em;
+    left: 2em;
+  }
+
+  img.sidebarOpen:hover + unreadBadge {
+    left: 2em;
   }
 }
 
@@ -3867,3 +3898,4 @@ textarea {
 @import './themes/isom';
 @import './themes/florid';
 @import './themes/hacker';
+@import './themes/arrakis';

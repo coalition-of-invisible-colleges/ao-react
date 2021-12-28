@@ -142,7 +142,6 @@ export default class AoCalendar extends React.PureComponent {
 
     return (
       <div id="calendar">
-        {' '}
         <h2>Calendar</h2>
         {renderedCalendarList}
       </div>

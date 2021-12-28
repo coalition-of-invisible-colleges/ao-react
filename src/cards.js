@@ -127,6 +127,7 @@ export function addParent(task, parentId) {
 }
 
 // Removes the given taskId from the list of the card's parents
+// This function seems to make no sense
 export function removeParent(task, parentId) {
 	if (!_.has(task, 'parents') || !Array.isArray(task.parents)) {
 		return
@@ -157,6 +158,45 @@ export function removeParent(task, parentId) {
 
 	if (!allSubTasks.some(stId => stId === parentId)) {
 		task.parents = _.filter(task.parents, tId => tId !== parentId)
+	}
+}
+
+// Removes the second card from the first card's list of parents,
+// unless the card is actuall still a parent
+export function removeParentIfNotParent(task, parent) {
+	if (
+		!_.has(task, 'parents') ||
+		!Array.isArray(task.parents) ||
+		task.parents.length < 1
+	) {
+		return
+	}
+	let gridCells = []
+	let gridRows
+	if (parent.grid && parent.rows) {
+		gridRows = Object.entries(parent.rows)
+		gridCells = [
+			...gridRows.map(([index, cells]) => {
+				return Object.values(cells)
+			}),
+		]
+	}
+
+	let stashItems = []
+	if (parent.stash && Object.keys(parent.stash) >= 1) {
+		stashitems = [...Object.values(parent.stash)]
+	}
+
+	const allSubTasks = [
+		...parent.priorities,
+		...parent.subTasks,
+		...gridCells,
+		...parent.completed,
+		...stashItems,
+	]
+
+	if (!allSubTasks.some(stId => stId === task.taskId)) {
+		task.parents = _.filter(task.parents, tId => tId !== parent.taskId)
 	}
 }
 
@@ -381,4 +421,54 @@ export function countCurrentSignatures(signed) {
 	return mostRecentSignaturesOnly(signed).filter(
 		signature => signature.opinion >= 1
 	).length
+}
+
+// DUPLICATED FROM cardsTypes.ts THIS IS THE JAVASCRIPT COPY
+// Crawls through all cards, starting with the given task
+// Return all parents of the card that you are hodling
+export function allReachableHeldParents(tasks, origin, memberId) {
+	if (!origin.hasOwnProperty('taskId')) {
+		return []
+	}
+	let queue = [origin]
+	let reachableCards = []
+
+	let visited = {}
+	visited[origin.taskId] = true
+	let i = 0
+	while (queue.length >= 1) {
+		let task = queue.pop()
+		if (
+			task === undefined ||
+			task.subTasks === undefined ||
+			task.priorities === undefined ||
+			task.completed === undefined
+		) {
+			console.log('Invalid task found during returned cards search, skipping.')
+			continue
+		}
+
+		if (task.deck.indexOf(memberId) < 0 && task.taskId !== memberId) {
+			continue
+		}
+
+		reachableCards.push(task)
+		if (task.hasOwnProperty('parents') && task.parents.length >= 1) {
+			let parents = tasks.filter(taskItem =>
+				task.parents.includes(taskItem.taskId)
+			)
+			parents.forEach(st => {
+				if (!st.hasOwnProperty('taskId')) {
+					console.log('Missing parent found during returned cards search.')
+					return
+				}
+				if (!visited.hasOwnProperty(st.taskId)) {
+					visited[st.taskId] = true
+					queue.push(st)
+				}
+			})
+		}
+	}
+
+	return reachableCards
 }

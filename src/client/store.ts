@@ -314,6 +314,7 @@ export type LeftSidebarTab =
   | 'bounties'
   | 'manual'
   | 'search'
+  | 'deck'
 
 class AoStore {
   @observable state: AoState = defaultState

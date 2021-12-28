@@ -128,7 +128,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
               theme="translucent"
               content={
                 youAreHere ? (
-                  'Hide'
+                  'Hide hub card'
                 ) : (
                   <React.Fragment>
                     <p>Community Hub</p>
@@ -143,7 +143,10 @@ export default class AoHub extends React.PureComponent<{}, State> {
                 id="tour-hub"
                 src={Sun}
                 onClick={this.goHub}
-                className={youAreHere ? 'open' : undefined}
+                className={
+                  (youAreHere ? 'open' : undefined) +
+                  (!!aoStore.leftSidebar ? ' sidebarOpen' : '')
+                }
               />
             </Tippy>
             {hubRenderedBadge}

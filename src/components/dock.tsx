@@ -8,8 +8,7 @@ import AoHopper from './hopper'
 import AoGem from './gem'
 import AoGrid from './grid'
 import AoPopupPanel from './popupPanel'
-import AoDeck from './deck'
-import MoonBag from '../assets/images/moonbag.svg'
+import { gloss } from '../semantics'
 import _ from 'lodash'
 
 interface State {
@@ -19,16 +18,9 @@ interface State {
 
 @observer
 export default class AoDock extends React.Component<{}, State> {
-  private deckSearchRef = React.createRef<AoDeck>()
-
   constructor(props) {
     super(props)
     this.state = {}
-    this.focusDeckSearchbox = this.focusDeckSearchbox.bind(this)
-  }
-
-  focusDeckSearchbox() {
-    this.deckSearchRef.current.focus()
   }
 
   executeOnUnmount_list = []
@@ -89,7 +81,6 @@ export default class AoDock extends React.Component<{}, State> {
     }
     return (
       <div id="dock">
-        <AoHome />
         <AoHopper />
         <AoGem />
         <div id="dock-tour">
@@ -106,17 +97,6 @@ export default class AoDock extends React.Component<{}, State> {
               )
             }}
           </Observer>
-        </div>
-        <div id="deck">
-          <AoPopupPanel
-            iconSrc={MoonBag}
-            tooltipText="My Deck"
-            tooltipPlacement="top"
-            panelPlacement="top-start"
-            onShown={this.focusDeckSearchbox}
-            id="tour-deck">
-            <AoDeck ref={this.deckSearchRef} />
-          </AoPopupPanel>
         </div>
       </div>
     )

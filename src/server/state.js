@@ -135,6 +135,7 @@ function initialize(callback) {
     })
     console.log('Starting monthly backup cron...')
     backupJob.start()
+    backupState()
   })
 }
 

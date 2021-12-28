@@ -20,6 +20,8 @@ import validators from './validators'
 import { fileURLToPath } from 'url'
 import util from 'util'
 
+import { allReachableHeldParents } from '../cards'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -129,7 +131,7 @@ export default function applyRouter(app) {
 
     // Include cards passed to them as a gift
     state.pubState.tasks.forEach(taskItem => {
-      if (taskItem.passed.some(pass => pass[1] === req.reqOwner)) {
+      if (taskItem.passed.some(pass => pass[1] === reqOwner)) {
         stateToSend.tasks.push(taskItem)
       }
     })
@@ -185,10 +187,27 @@ export default function applyRouter(app) {
     stateToSend.tasks = [
       ...new Set([...stateToSend.tasks, ...priorityTaskItems]),
     ]
-    console.log('sending guilds:')
+
+    // Include all parent cards of the cards we are sending using this somewhat slow algorithm
+    let heldParentTasks = []
+    stateToSend.tasks.forEach(taskItem => {
+      heldParentTasks = heldParentTasks.concat(
+        allReachableHeldParents(state.pubState.tasks, taskItem, reqOwner)
+      )
+    })
+    console.log(
+      'heldParentTasks.length is',
+      heldParentTasks.length,
+      ' and stateToSend.tasks.length is',
+      stateToSend.tasks.length
+    )
+
+    // Remove duplicates and combine lists again
+    stateToSend.tasks = [...new Set([...stateToSend.tasks, ...heldParentTasks])]
+    console.log('POST stateToSend.tasks.length is', stateToSend.tasks.length)
+
     stateToSend.tasks.forEach(task => {
       if (task.guild && task.guild.length >= 1) {
-        console.log(task.guild)
       }
     })
 
@@ -283,12 +302,22 @@ export default function applyRouter(app) {
         })
         foundAllTaskItems = foundAllTaskItems && foundAllHolderItems
 
-        // console.log('AO: server/router.js: fetchTaskByID: ', {
-        // taskId: req.body.taskId,
-        // result: foundThisTaskList,
-        // })
+        // Also return all parent cards held by this member reachable through a continuous path
+        let heldParentTasks = []
+        foundThisTaskList.forEach(taskItem => {
+          heldParentTasks.push(
+            allReachableHeldParents(
+              state.pubState.tasks,
+              taskItem,
+              req.reqOwner
+            )
+          )
+        })
+
         // Remove duplicates
-        foundThisTaskList.tasks = [...new Set(foundThisTaskList.tasks)]
+        foundThisTaskList.tasks = [
+          ...new Set([...foundThisTaskList, ...heldParentTasks]),
+        ]
 
         let objectToSend
         if (taskIdListParameterWasSingleValue === true) {

@@ -15,7 +15,7 @@ import {
   grabTask,
   dropTask,
   addParent,
-  removeParent,
+  removeParentIfNotParent,
   filterFromSubpiles,
   clearSeenExcept,
   addSubTask,
@@ -852,13 +852,14 @@ function tasksMuts(tasks, ev) {
       // I think the spec is only run on event creation, not load from database,
       // so make sure the task exists before linking to it from another card
       const toUnstash = getTask(tasks, ev.taskId)
-      if (toUnstash) {
+      const unstashParentCard = getTask(tasks, ev.inId)
+      if (toUnstash && unstashParentCard) {
         grabTask(toUnstash, ev.blame)
 
         tasks.forEach(task => {
           if (task.taskId === ev.inId) {
             unstashTask(task, ev.taskId, ev.level)
-            removeParent(task, ev.inId)
+            removeParentIfNotParent(task, unstashParentCard)
           }
         })
       }
@@ -1179,6 +1180,7 @@ function tasksMuts(tasks, ev) {
 
       break
     case 'task-de-sub-tasked':
+      const deSubTaskParent = getTask(tasks, ev.taskId)
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           clearPassesTo(task, ev.memberId)
@@ -1186,12 +1188,13 @@ function tasksMuts(tasks, ev) {
           task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
         }
         if (task.taskId === ev.subTask) {
-          removeParent(task, ev.taskId)
+          removeParentIfNotParent(task, deSubTaskParent)
         }
       })
       break
     case 'task-emptied':
       let updateParents = []
+      const emptiedParent = getTask(tasks, ev.taskId)
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           updateParents = [...task.priorities, ...task.subTasks]
@@ -1201,7 +1204,7 @@ function tasksMuts(tasks, ev) {
       })
       tasks.forEach(task => {
         if (updateParents.indexOf(task.taskId) >= 0) {
-          removeParent(task, ev.taskId)
+          removeParentIfNotParent(task, emptiedParent)
         }
       })
       break
@@ -1700,6 +1703,7 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'grid-unpin':
+      const unpinParent = getTask(tasks, ev.inId)
       tasks.some((task, i) => {
         if (task.taskId == ev.inId) {
           if (!_.has(task, 'grid.rows.' + ev.y + '.' + ev.x)) {

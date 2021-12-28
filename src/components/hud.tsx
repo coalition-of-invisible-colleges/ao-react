@@ -35,11 +35,13 @@ import Chest from '../assets/images/chest.svg'
 import Manual from '../assets/images/manual.svg'
 import MemberIcon from '../assets/images/heartnet.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
+import MoonBag from '../assets/images/moonbag.svg'
 import Scroll from '../assets/images/scroll.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import { gloss } from '../semantics'
 import config from '../../configuration'
+import AoDeck from './deck'
 
 interface State {
   theme: number
@@ -121,6 +123,7 @@ interface HudState {
 @observer
 export default class AoHud extends React.Component<{}, HudState> {
   private searchRef = React.createRef<typeof AoSearch>()
+  private deckSearchRef = React.createRef<AoDeck>()
   private counter = 0
   private dragEnterTarget
   private lastDragAction = ''
@@ -131,12 +134,17 @@ export default class AoHud extends React.Component<{}, HudState> {
     this.focusSearchbox = this.focusSearchbox.bind(this)
     this.updateProposalCount = this.updateProposalCount.bind(this)
     this.renderSidebar = this.renderSidebar.bind(this)
+    this.focusDeckSearchbox = this.focusDeckSearchbox.bind(this)
   }
 
   focusSearchbox() {
     /* this.searchRef.current.focus() */
     // Buggy, out of scope
     console.log('not focusing search box, see hud.tsx:133')
+  }
+
+  focusDeckSearchbox() {
+    // this.deckSearchRef.current.focus()
   }
 
   updateProposalCount(proposals: number) {
@@ -166,6 +174,8 @@ export default class AoHud extends React.Component<{}, HudState> {
         return <AoBounties />
       case 'search':
         return <AoSearch ref={this.searchRef} />
+      case 'deck':
+        return <AoDeck ref={this.deckSearchRef} />
       case 'manual':
       default:
         return <AoManual />
@@ -232,7 +242,6 @@ export default class AoHud extends React.Component<{}, HudState> {
               this.dragEnterTarget
             )
             if (
-              !this.dragEnterTarget ||
               ev.currentTarget.id === 'leftSidebar' ||
               ev.currentTarget.id === 'tour-members'
             ) {
@@ -241,6 +250,14 @@ export default class AoHud extends React.Component<{}, HudState> {
           }}>
           <div className="leftBorder" />
           {this.renderSidebar()}
+          <AoSidebarButton
+            sidebarTab="deck"
+            iconSrc={MoonBag}
+            tooltipText={gloss('My Deck')}
+            tooltipPlacement="right"
+            id="tour-deck"
+          />
+          {/*{onShown={this.focusDeckSearchbox}}*/}
           <AoSidebarButton
             sidebarTab="members"
             iconSrc={MemberIcon}

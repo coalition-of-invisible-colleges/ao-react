@@ -5,10 +5,13 @@ import aoStore, { Task, emptySearchResults } from '../client/store'
 import InfiniteScroll from 'react-infinite-scroller'
 import AoContextCard from './contextCard'
 import AoDragZone from './dragZone'
+import AoArchive from './archive'
 
 type SearchSort = 'alphabetical' | 'hodls' | 'oldest' | 'newest'
+type DeckTab = 'all' | 'archive'
 
 interface State {
+  tab: DeckTab
   query: string
   sort: SearchSort
   items: number
@@ -17,6 +20,7 @@ interface State {
 }
 
 export const defaultState: State = {
+  tab: 'all',
   query: '',
   sort: 'newest',
   items: 10,
@@ -37,8 +41,10 @@ export default class AoDeck extends React.Component<{}, State> {
     this.onKeyDown = this.onKeyDown.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.scrollMore = this.scrollMore.bind(this)
+    this.goToTab = this.goToTab.bind(this)
     this.sortBy = this.sortBy.bind(this)
     this.renderItems = this.renderItems.bind(this)
+    this.renderTabButton = this.renderTabButton.bind(this)
     this.renderSortButton = this.renderSortButton.bind(this)
     this.renderSearchResults = this.renderSearchResults.bind(this)
   }
@@ -252,6 +258,14 @@ export default class AoDeck extends React.Component<{}, State> {
     })
   }
 
+  goToTab(event) {
+    const tab = event.currentTarget.getAttribute('data-tab')
+    if (this.state.tab === tab) {
+      return
+    }
+    this.setState({ tab: tab })
+  }
+
   sortBy(event) {
     const sort = event.currentTarget.getAttribute('data-sort')
     if (this.state.sort === sort) {
@@ -308,6 +322,7 @@ export default class AoDeck extends React.Component<{}, State> {
       <React.Fragment>
         {searchResults.length >= 2 ? (
           <div className="toolbar">
+            Sort:
             {this.renderSortButton('newest', 'Newest')}
             {this.renderSortButton('alphabetical', 'A-Z')}
             {this.renderSortButton('hodls', 'Hodls')}
@@ -319,10 +334,11 @@ export default class AoDeck extends React.Component<{}, State> {
         <div id="searchResults" className="results">
           <div>
             {searchResults.length}{' '}
-            {searchResults.length === 1 &&
-            this.state.query.length >= minQueryLength
-              ? 'search result'
-              : 'cards in deck'}
+            {this.state.query.length < minQueryLength
+              ? searchResults.length >= 1
+                ? 'cards in deck'
+                : 'card in deck'
+              : 'found in deck'}
           </div>
           <InfiniteScroll
             loadMore={this.scrollMore}
@@ -334,6 +350,18 @@ export default class AoDeck extends React.Component<{}, State> {
         </div>
       </React.Fragment>
     )
+  }
+
+  renderTabButton(tab: DeckTab, label: string) {
+    if (this.state.tab === tab) {
+      return <p className="action selected">{label}</p>
+    } else {
+      return (
+        <p onClick={this.goToTab} data-tab={tab} className="action">
+          {label}
+        </p>
+      )
+    }
   }
 
   renderSortButton(sort: SearchSort, label: string) {
@@ -351,19 +379,28 @@ export default class AoDeck extends React.Component<{}, State> {
   render() {
     return (
       <React.Fragment>
-        <input
-          ref={this.searchBox}
-          type="deck"
-          onChange={this.onChange}
-          onKeyDown={this.onKeyDown}
-          value={this.state.query}
-          size={36}
-          placeholder="search my cards"
-          autoFocus
-        />
-        {this.state.query?.length >= minQueryLength
-          ? this.renderSearchResults(this.sortedResults.all)
-          : this.renderSearchResults(this.sortedMyCards)}
+        <h2>My Deck</h2>
+        <div className="toolbar">
+          {this.renderTabButton('all', 'All')}
+          {this.renderTabButton('archive', 'Lost Cards')}
+        </div>
+        {this.state.tab === 'all' && (
+          <React.Fragment>
+            <input
+              ref={this.searchBox}
+              type="text"
+              onChange={this.onChange}
+              onKeyDown={this.onKeyDown}
+              value={this.state.query}
+              placeholder="search my cards"
+              autoFocus
+            />
+            {this.state.query?.length >= minQueryLength
+              ? this.renderSearchResults(this.sortedResults.all)
+              : this.renderSearchResults(this.sortedMyCards)}
+          </React.Fragment>
+        )}
+        {this.state.tab === 'archive' && <AoArchive />}
       </React.Fragment>
     )
   }

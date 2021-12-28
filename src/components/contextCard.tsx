@@ -677,7 +677,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       case 'context':
         return (
           <div
-            className={'card context' + this.applyClassIfCurrentSearchResult}
+            className={
+              'card context ' +
+              card.color +
+              'Card' +
+              this.applyClassIfCurrentSearchResult
+            }
             id={'card-' + taskId}
             onClick={this.goInCard}
             onMouseEnter={this.onHover}
@@ -703,7 +708,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div
               id={'card-' + taskId}
               className={
-                'card member' +
+                'card member ' +
+                card.color +
+                'Card' +
                 this.applyClassIfCurrentSearchResult +
                 (this.state.showPriorities ? ' padbottom' : '')
               }
@@ -742,7 +749,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           <div
             id={'card-' + taskId}
             className={
-              'card priority' +
+              'card priority ' +
+              card.color +
+              'Card' +
               this.applyClassIfCurrentSearchResult +
               (this.state.showPriorities ? ' padbottom' : '')
             }
@@ -784,6 +793,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             id={'card-' + taskId}
             className={
               'card ' +
+              card.color +
+              'Card' +
               this.props.cardStyle +
               this.applyClassIfCurrentSearchResult
             }
@@ -867,7 +878,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             )}
             <div
               id={'card-' + taskId}
-              className={'card full' + this.applyClassIfCurrentSearchResult}
+              className={
+                'card full ' +
+                card.color +
+                'Card' +
+                this.applyClassIfCurrentSearchResult
+              }
               onDrop={e => {
                 e.preventDefault()
                 e.stopPropagation()
@@ -1000,7 +1016,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         return (
           <div
             id={'card-' + taskId}
-            className={'card checkmark' + this.applyClassIfCurrentSearchResult}
+            className={
+              'card checkmark ' +
+              card.color +
+              'Card' +
+              this.applyClassIfCurrentSearchResult
+            }
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
@@ -1014,7 +1035,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         return (
           <div
             className={
-              'card mission' +
+              'card mission ' +
+              card.color +
+              'Card' +
               (this.state.showPriorities ? ' padbottom' : '') +
               this.applyClassIfCurrentSearchResult
             }
@@ -1102,7 +1125,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             placement="left-start">
             <div
               id={'card-' + taskId}
-              className={'card envelope' + this.applyClassIfCurrentSearchResult}
+              className={
+                'card envelope ' +
+                card.color +
+                'Card' +
+                this.applyClassIfCurrentSearchResult
+              }
               onMouseEnter={this.onHover}
               onMouseOver={this.onHover}
               onMouseOut={this.clearPendingPromise}>
@@ -1122,7 +1150,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         return (
           <div
             id={'card-' + taskId}
-            className={'card mini' + this.applyClassIfCurrentSearchResult}
+            className={
+              'card mini ' +
+              card.color +
+              'Card' +
+              this.applyClassIfCurrentSearchResult
+            }
             onClick={this.goInCard}
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
