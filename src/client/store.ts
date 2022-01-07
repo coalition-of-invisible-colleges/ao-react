@@ -291,7 +291,11 @@ const defaultState: AoState = observable({
   },
 })
 
+const PAGE_LENGTH = 2
+
 export interface SearchResults {
+  query: string
+  page: number
   missions: Task[]
   members: Task[]
   tasks: Task[]
@@ -1396,7 +1400,13 @@ class AoStore {
       this.searchResults = undefined
       return null
     } else {
-      return api.search(query)
+        if (this.searchResults.query === query) {
+            this.searchResults.page += 1
+        } else {
+            this.searchResults.query = query
+            this.searchResults.page = 0
+        }
+        return api.search(query, PAGE_LENGTH, this.searchResults.page*PAGE_LENGTH)
     }
   }
 
