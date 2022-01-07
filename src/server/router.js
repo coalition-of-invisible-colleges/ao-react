@@ -574,13 +574,16 @@ export default function applyRouter(app) {
 
   app.get('/search/:query', (req, res) => {
     const search = decodeURIComponent(req.params.query)
-    console.log('searchiung for ', search)
+    const { take, skip } = req.query
 
     let foundCards = []
     let foundGuilds = []
     let foundMembers = []
     let searchResults = []
     let hashMap = new Map()
+
+    let skipcount = 0
+
     state.serverState.tasks.forEach(t => {
       hashMap.set(t.taskId, t)
     })
@@ -588,20 +591,33 @@ export default function applyRouter(app) {
     try {
       let regex = new RegExp(search, 'i')
 
-      state.serverState.tasks.forEach(t => {
+      state.serverState.tasks.every(t => {
         const testName = regex.test(t.name)
 
         if (t.guild && (testName || regex.test(t.guild))) {
-          foundGuilds.push(t)
+            if (skipcount < skip) {
+                skipcount += 1
+            } else {
+                foundGuilds.push(t)
+            }
         } else if (regex.test(t.name)) {
           if (
             !foundGuilds.some(g => {
               return g.guild === t.name
             })
           ) {
-            foundCards.push(t)
+              if (skipcount < skip) {
+                  skipcount += 1
+              } else {
+                  foundCards.push(t)
+              }
           }
         }
+          if ((foundGuilds.length + foundCards.length) >= take) {
+              return false
+          } else {
+              return true
+          }
       })
 
       state.serverState.members.forEach(member => {
