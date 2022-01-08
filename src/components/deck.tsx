@@ -133,18 +133,19 @@ export default class AoDeck extends React.Component<{}, State> {
       return card.deck.indexOf(aoStore.member.memberId) >= 0
     }
 
-    if (!aoStore.searchResults) {
+    if (!aoStore.deckSearchResults) {
       return emptySearchResults
     }
 
-    Object.entries(aoStore.searchResults).forEach(resultCategory => {
-      const [categoryName, searchResults] = resultCategory
+    Object.entries(aoStore.deckSearchResults).forEach(resultCategory => {
+      const [categoryName, deckSearchResults] = resultCategory
       if (categoryName === 'all' || categoryName === 'length') {
         return
       }
-      filteredResults[categoryName] = aoStore.searchResults[
+      const validCategory = (aoStore.deckSearchResults[categoryName])
+      filteredResults[categoryName] = validCategory ? aoStore.deckSearchResults[
         categoryName
-      ].filter(task => isGrabbed(task.taskId))
+      ].filter(task => isGrabbed(task.taskId)) : undefined
       console.log('filteredResults is ', filteredResults)
     })
 
@@ -152,6 +153,7 @@ export default class AoDeck extends React.Component<{}, State> {
       filteredResults.members,
       filteredResults.tasks
     )
+
     filteredResults.length = filteredResults.all.length
     console.log('filteredResults is ', filteredResults)
 

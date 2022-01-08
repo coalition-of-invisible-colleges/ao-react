@@ -1315,10 +1315,11 @@ class AoApi {
   }
 
   // This function encodes whatever is passed by the search box as a URIComponent and passes it to a search endpoint, returning the response when supplied
-  async search(querystring: string): Promise<request.Response> {
+  async search(querystring: string, take: number = 10, skip: number = 0): Promise<request.Response> {
     const qs = encodeURIComponent(querystring)
+    const params = `?take=${take}&skip=${skip}`
     return request
-      .get('/search/' + qs)
+      .get('/search/' + qs + params)
       .set('Authorization', aoStore.state.token)
       .then(res => {
         return res

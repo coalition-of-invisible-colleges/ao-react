@@ -52,8 +52,7 @@ const AoSearch = observer((props) => {
     }
 
     const makeSearchQuery = async (query: string) => {
-        const response = await aoStore.returnSearchResults(query)
-        const results = response.body
+        const results = await aoStore.returnSearchResults(query)
 
         let sorted = emptySearchResults
 
@@ -177,20 +176,26 @@ const AoSearch = observer((props) => {
                     <br/> 
                 )}
                 <div id="searchResults" className="results">
-                <div>
-                    {results.length}{' '}
-                    {results.length === 1
-                    ? 'search result'
-                    : 'search results'}
-                </div>
-                    <InfiniteScroll
-                        loadMore={scrollMore}
-                        useWindow={false}
-                        hasMore={hasMore}
-                        loader={<h4>Loading...</h4>}
-                    >
-                        {renderEntries(results.all.slice(0, items))}
-                    </InfiniteScroll>
+                {
+                /* <div> */
+                /*     {results.length}{' '} */
+                /*     {results.length === 1 */
+                /*     ? 'search result' */
+                /*     : 'search results'} */
+                /* </div> */
+                }
+                    {
+                    /* <InfiniteScroll */
+                    /*     loadMore={submitSearch} */
+                    /*     useWindow={false} */
+                    /*     hasMore={sortedResults.length > 0} */
+                    /*     loader={<h4>Loading...</h4>} */
+                    /* > */
+                    /*     {renderEntries(results.all.slice(0, items))} */
+                    /* </InfiniteScroll> */
+                    }
+                    {renderEntries(results.all.slice(0, items))}
+                    <div className="action" onClick={submitSearch}>More!</div>
                 </div>
             </>
         )

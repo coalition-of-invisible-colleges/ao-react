@@ -291,7 +291,11 @@ const defaultState: AoState = observable({
   },
 })
 
+const PAGE_LENGTH = 10
+
 export interface SearchResults {
+  query: string
+  page: number
   missions: Task[]
   members: Task[]
   tasks: Task[]
@@ -321,6 +325,7 @@ export type LeftSidebarTab =
 class AoStore {
   @observable state: AoState = defaultState
   @observable searchResults?: SearchResults
+  @observable deckSearchResults?: SearchResults
   @observable context: string[] = []
   @observable currentCard: string
   @observable discard: Task[] = []
@@ -1379,13 +1384,13 @@ class AoStore {
   @action.bound
   updateSearchResults(query: string) {
     if (query.length < 1) {
-      this.searchResults = undefined
+      this.deckSearchResults = undefined
       return
     }
 
     api.search(query).then(res => {
       if (res.ok) {
-        this.searchResults = observable(res.body)
+        this.deckSearchResults = observable(res.body)
       }
     })
   }
@@ -1396,7 +1401,14 @@ class AoStore {
       this.searchResults = undefined
       return null
     } else {
-      return api.search(query)
+        if (this.searchResults?.query === query) {
+            this.searchResults.page += 1
+        } else {
+            this.searchResults = { query, page: 0, ...emptySearchResults }
+        }
+        const res = await api.search(query, PAGE_LENGTH, this.searchResults.page*PAGE_LENGTH)
+        this.searchResults = { query, page: this.searchResults.page, ...res.body }
+        return this.searchResults
     }
   }
 
