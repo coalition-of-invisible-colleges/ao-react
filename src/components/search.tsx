@@ -193,7 +193,7 @@ const AoSearch = observer((props) => {
                     /* </InfiniteScroll> */
                     }
                     {renderEntries(results.all.slice(0, items))}
-                    <button onClick={submitSearch}>More!</button>
+                    <button class="action" onClick={submitSearch}>More!</button>
                 </div>
             </>
         )
