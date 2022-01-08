@@ -105,7 +105,7 @@ export default class AoArchive extends React.Component<{}, State> {
         </div>
         <div id="archive" className="results">
           {this.myLostCards.length >= 1 ? (
-            this.renderItems(this.myLostCards)
+            this.renderItems(this.myLostCards.slice(0, 5))
           ) : (
             <p>No lost cards. Try "download entire deck".</p>
           )}

@@ -554,6 +554,19 @@ However, the AO will eventually add a modules feature and it will be glorious. S
 Atomic operations are those that either succeed or fail, with no partial failure states or error modes. Minimalism attempts to reduce design and action to its bare essentials or smallest gesture.
 
 Therefore, atomic minimalism is an approach to improving the AO that attempts to only upgrade the AO from one stable state to a better stable state, without backsliding, introducing new bugs, or losing features. Moreover, atomic minimalism attempts to make the smallest possible useful change to the AO, rather than making a larger and more complex change to the AO.`,
+    Progress: `The AO is a collaborative project to integrate the most useful open-source software in an accessible way. For the project to develop and become a greater success over time requires:
+
+1. Not backsliding on features: Not losing features and fixing broken features promptly; not letting new features break, replace, or make redundant existing features.
+
+2. Polishing existing features: Fixing bugs with existing features before moving on to new features; continually using the software ourselves and making tweaks.
+
+3. Integrating existing features together: Improving consistency in how features interact functionally, conceptually, and visually and behaviorally in the GUI. Integrating existing features more tightly or inventing a new useful way two features can interact.
+
+4. Adding new features: After fixing bugs, polishing, and integrating existing features as much as possible, add, debug, polish, integrate, and polish the integration of one new feature.
+
+5. Reformatting conceptually: As features are integrated, new paradigms and new ways to combine and conceptualize features together will become apparent. These new concepts will be necessary if the AO is tightly integrated, but if the AO is not well-integrated at the time then adding big new ideas is likely a mistake based on the existing messy concepts. First tighten up the UX logic, then paradigm shift.
+
+The more care and shine is given to existing features and their integration, the more advanced the AO will become as a project overall. Once a certain critical mass of core features is integrated and polished, the AO will be widely adopted.`,
   },
   'Tech Support': `This user manual contains a mostly complete description of the AO's functionality and many of its known bugs. If you need more help, or if something is missing from the manual, please let us know.
 

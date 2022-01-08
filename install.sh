@@ -21,7 +21,7 @@
 # sudo tar xf signal-cli-0.9.1.tar.gz -C /opt
 # sudo ln -sf /opt/signal-cli-0.9.1/bin/signal-cli /usr/local/bin/
 
-sudo apt install cargo
+#sudo apt install cargo
 
 # # Commenting this out as it's not functional yet
 # git clone https://github.com/signalapp/zkgroup.git

@@ -647,9 +647,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     let content = card.name
 
     if (taskId === content) {
+      console.log('card taskId is equal to content and taskId is', taskId)
       member = aoStore.memberById.get(taskId)
       if (member) {
         content = member.name
+        console.log('Card was a member and the member name is', member.name)
       } else {
         const resource = aoStore.resourceById.get(taskId)
         if (resource) {
