@@ -112,7 +112,19 @@ Planned features: Choose color of card before creating; rich text editing featur
 
 ### Grabbing a card
 
-If you see a card you like and want to save, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.`,
+If you see a card you like and want to save, you can grab it and add it to your deck by clicking the Grab icon (by default, an icon of hand grabbing a card) on the card. Cards in your deck cannot be deleted by other members—cards that are held by nobody may be cleaned up every 5-10 minutes.
+
+### Finding lost cards
+
+While moving and discarding cards on the AO, sometimes cards get lost or misplaced. Click the Lost Cards tab in Deck sidebar to see your lost cards. It shows five lost cards at a time; drag cards out to sort them and see more lost cards.
+
+The guild cards in your deck are the root categories into which cards are sorted. A card in your deck is considered lost if it cannot be found in one of your guilds, or in a card within those guilds (you must also be holdng all the cards in between).
+
+Your deck can be thought of like a deck of a ship, with your guilds making up the different functional compartments of the ship. Any cards that fall overboard as flotsom are considered "lost cards" and sink down to the lost cards archive.
+
+Your options for how to handle a lost card so it is no longer in the lost cards list: Sort it into a guild or card within a guild card in your deck; upgrade the card or its parent card to a guild; grab its parent card (e.g., if it's a guild you aren't holding); drop or delete the card.
+
+Sometimes, cards lower on the lost cards list are within cards higher on the list, and so when you sort the first card, the card inside will also no longer be lost.`,
     'Navigating within a card': `Cards can contain other cards within them.
 
 1. Click a card to navigate to it and see what's within it.`,
