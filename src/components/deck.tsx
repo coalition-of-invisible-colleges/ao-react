@@ -142,9 +142,10 @@ export default class AoDeck extends React.Component<{}, State> {
       if (categoryName === 'all' || categoryName === 'length') {
         return
       }
-      filteredResults[categoryName] = aoStore.searchResults[
+      const validCategory = (aoStore.searchResults[categoryName])
+      filteredResults[categoryName] = validCategory ? aoStore.searchResults[
         categoryName
-      ].filter(task => isGrabbed(task.taskId))
+      ].filter(task => isGrabbed(task.taskId)) : undefined
       console.log('filteredResults is ', filteredResults)
     })
 
@@ -152,6 +153,7 @@ export default class AoDeck extends React.Component<{}, State> {
       filteredResults.members,
       filteredResults.tasks
     )
+
     filteredResults.length = filteredResults.all.length
     console.log('filteredResults is ', filteredResults)
 

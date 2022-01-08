@@ -1400,13 +1400,18 @@ class AoStore {
       this.searchResults = undefined
       return null
     } else {
-        if (this.searchResults.query === query) {
+        if (this.searchResults?.query === query) {
+            console.log('same query, updating page to')
             this.searchResults.page += 1
+            console.log(this.searchResults.page)
         } else {
-            this.searchResults.query = query
-            this.searchResults.page = 0
+            this.searchResults = { query, page: 0, ...emptySearchResults }
         }
-        return api.search(query, PAGE_LENGTH, this.searchResults.page*PAGE_LENGTH)
+        const res = await api.search(query, PAGE_LENGTH, this.searchResults.page*PAGE_LENGTH)
+        this.searchResults = { query, page: this.searchResults.page, ...res.body }
+        console.log('searchResults!', this.searchResults)
+        console.log('searchResults page!', this.searchResults.page)
+        return this.searchResults
     }
   }
 
