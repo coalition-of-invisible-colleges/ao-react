@@ -325,6 +325,7 @@ export type LeftSidebarTab =
 class AoStore {
   @observable state: AoState = defaultState
   @observable searchResults?: SearchResults
+  @observable deckSearchResults?: SearchResults
   @observable context: string[] = []
   @observable currentCard: string
   @observable discard: Task[] = []
@@ -1383,13 +1384,13 @@ class AoStore {
   @action.bound
   updateSearchResults(query: string) {
     if (query.length < 1) {
-      this.searchResults = undefined
+      this.deckSearchResults = undefined
       return
     }
 
     api.search(query).then(res => {
       if (res.ok) {
-        this.searchResults = observable(res.body)
+        this.deckSearchResults = observable(res.body)
       }
     })
   }
