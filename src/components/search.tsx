@@ -176,12 +176,14 @@ const AoSearch = observer((props) => {
                     <br/> 
                 )}
                 <div id="searchResults" className="results">
-                <div>
-                    {results.length}{' '}
-                    {results.length === 1
-                    ? 'search result'
-                    : 'search results'}
-                </div>
+                {
+                /* <div> */
+                /*     {results.length}{' '} */
+                /*     {results.length === 1 */
+                /*     ? 'search result' */
+                /*     : 'search results'} */
+                /* </div> */
+                }
                     {
                     /* <InfiniteScroll */
                     /*     loadMore={submitSearch} */
@@ -193,7 +195,7 @@ const AoSearch = observer((props) => {
                     /* </InfiniteScroll> */
                     }
                     {renderEntries(results.all.slice(0, items))}
-                    <button class="action" onClick={submitSearch}>More!</button>
+                    <div className="action" onClick={submitSearch}>More!</div>
                 </div>
             </>
         )
