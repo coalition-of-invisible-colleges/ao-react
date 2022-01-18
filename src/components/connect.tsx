@@ -93,8 +93,8 @@ export default class AoConnect extends React.PureComponent<{}, State> {
           Name this AO: <AoServerName />
         </div>
         <p>
-          {config.hasOwnProperty('tor') && config.tor.hasOwnProperty('hostname')
-            ? 'Tor address: ' + config.tor.hostname
+	{ aoStore?.state?.cash?.address
+            ? 'Tor address: ' + aoStore.state.cash.address
             : 'Tor not set up.'}
         </p>
         {/*{<p>Secret: {aoStore.state.loader.token}</p>}*/}

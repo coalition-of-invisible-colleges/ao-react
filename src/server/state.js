@@ -101,9 +101,6 @@ function applyEvent(state, ev) {
 
 function initialize(callback) {
     torControl((err, onion) => {
-        console.log('onion!', 'http://' + onion)
-        serverState.cash.address = onion
-        pubState.cash.address = onion
         recover((err, backup) => {
             let ts = 0
             if (backup.length > 0) {
@@ -140,6 +137,11 @@ function initialize(callback) {
             console.log('Starting monthly backup cron...')
             backupJob.start()
         })
+
+	// We're applying the onion from torControl directly to the state after backup is applied. Kind of hacky, but it works
+        console.log('onion!', 'http://' + onion)
+        serverState.cash.address = onion
+        pubState.cash.address = onion
     })
 }
 

@@ -623,8 +623,12 @@ export default function applyRouter(app) {
       state.serverState.members.forEach(member => {
         if (regex.test(member.name)) {
           let result = hashMap.get(member.memberId)
-          result.name = member.name
-          foundMembers.push(result)
+
+          // This was introduced as a response to cross-AO cards breaking search
+          if (result) {
+          	result.name = member.name
+          	foundMembers.push(result)
+	  }
         }
       })
       const searchResults = {
