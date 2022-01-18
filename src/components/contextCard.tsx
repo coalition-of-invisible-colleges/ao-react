@@ -691,7 +691,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}
             style={this.props.inlineStyle ? this.props.inlineStyle : null}>
-            <AoPaper taskId={taskId} />
+            <AoPaper taskId={taskId} color={card.color} />
             <AoCardHud taskId={taskId} hudStyle="context" />
             <div className="content">
               {member && <AoMemberIcon memberId={taskId} />}
