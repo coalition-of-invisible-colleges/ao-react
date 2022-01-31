@@ -481,7 +481,7 @@ body {
     position: absolute;
     right: 0;
     bottom: 0;
-    pointer-events: auto;
+    pointer-events: none;
     height: 100%;
     width: 100%;
 
@@ -493,6 +493,7 @@ body {
       padding-top: 0.175em;
       padding-right: 0.15em;
       cursor: pointer;
+      pointer-events: auto;
 
       &.tiny {
         width: 1em;
@@ -509,6 +510,7 @@ body {
       padding: 0.25em;
       margin: 0 1em 0 0;
       width: max-content;
+      pointer-events: auto;
     }
 
     & > .preview {
@@ -538,6 +540,7 @@ body {
       bottom: 0;
       font-size: 1.15em;
       padding: 0.5em 0.25em 0.15em 0.5em;
+      pointer-events: auto;
     }
   }
 }
@@ -3002,7 +3005,12 @@ pre {
   position: relative;
   margin: 0 auto;
   max-width: 28em;
+  cursor: pointer;
 
+  &.crosshair {
+  	cursor: crosshair;
+  }
+  
   a {
     text-shadow: 0 0 1em #fff, 0 0 0.5em #fff;
     overflow-wrap: break-word;
@@ -3027,6 +3035,13 @@ pre {
     margin-top: 0.5em;
   }
 }
+
+.clippy {
+	height: 1.25em;
+	margin-left: 0.5em;
+	position: relative;
+	top: 0.15em;
+} 
 
 // chatroom-style main stack of subTasks under the grid in each card
 .chatStack {
@@ -4006,6 +4021,7 @@ svg.dataVisCanvas {
 	pointer-events: none;
 }
 
+// Upcoming event notification cards in the top right corner of the screen
 .eventReminders {
 	position: fixed;
 	top: 1em;
