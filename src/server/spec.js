@@ -3,7 +3,7 @@ import v1 from 'uuid'
 import state from './state.js'
 import { buildResCallback } from './utils.js'
 import validators from './validators.js'
-import { blankCard, blankGrid } from '../cards.js'
+import { blankCard, blankGrid, getTask } from '../cards.js'
 import events from './events.js'
 import { postEvent } from './connector.js'
 import { newAddress, createInvoice } from './lightning.js'
@@ -106,7 +106,7 @@ router.post('/events', (req, res, next) => {
             secret: req.body.secret, //
           },
           subscriptionResponse => {
-            if (!subscriptionResponse.lastInsertRowid) {
+            if (!subscriptionResponse || !subscriptionResponse.lastInsertRowid) {
               return res.status(200).send(['ao-connect failed'])
             }
             console.log('subscribe success, attempt ao connect')
@@ -123,6 +123,7 @@ router.post('/events', (req, res, next) => {
       } else sendErrorStatus()
       break
     case 'ao-inbound-connected':
+      console.log("\n\nao-inbound-connected")
       if (
         validators.isNotes(req.body.address, errRes) &&
         validators.isNotes(req.body.secret, errRes)
@@ -147,6 +148,11 @@ router.post('/events', (req, res, next) => {
       if (secret) {
         postEvent(req.body.address, secret, req.body.ev, connectorRes => {
           console.log('ao relay response', { connectorRes })
+          if (err){
+              res.status(400).send(err)
+          } else {
+              res.status(201).send(connectorRes)
+          }
         })
       } else {
         console.log('no connection for ', req.body.address)
@@ -846,6 +852,25 @@ router.post('/events', (req, res, next) => {
         })
       } else sendErrorStatus()
       break
+    case 'member-reminded':
+      if (
+        validators.isMemberId(req.body.fromMemberId, errRes) &&
+        validators.isMemberId(req.body.toMemberId, errRes)
+      ) {
+        console.log("About to remind member")
+        let fromMemberName = 'unknown member'
+        state.serverState.members.forEach(member => {
+          if (member.memberId === req.body.fromMemberId) {
+            fromMemberName = member.name
+          }
+        })
+
+        const memberCard = getTask(state.serverState.tasks, req.body.toMemberId)
+        const giftCount = memberCard.giftCount || 0
+        const notificationMessage = `You have ${giftCount} gifts waiting for you on the AO -${fromMemberName}`
+        sendNotification(req.body.toMemberId, notificationMessage)
+      } else sendErrorStatus()
+      break
     case 'task-grabbed':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&
@@ -1099,9 +1124,13 @@ router.post('/events', (req, res, next) => {
     case 'tasks-received':
       if (true) {
         // TODO
+        let safeTasks = req.body.tasks.map(t => { // hard question
+          t.deck = []
+          return t
+        })
         events.trigger(
           eventType,
-          { tasks: req.body.tasks, blame: req.body.blame },
+          { tasks: safeTasks, blame: req.body.blame },
           resCallback
         )
       } else sendErrorStatus()

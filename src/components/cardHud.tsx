@@ -19,6 +19,7 @@ import AoTally from './tally'
 import AoLilypad from './lilypad'
 import AoStash from './stash'
 import AoFund from './fund'
+import AoReminder from './reminder'
 import config from '../../configuration'
 
 export type HudStyle =
@@ -129,13 +130,14 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'collapsed-member':
 				return (
 					<div className="hud">
-						<AoPreview
+						{/*<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
 							priorPriors={this.props.priorPriors}
-						/>
+						/>*/}
+						<AoReminder memberCard={card} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						{isMember ? <AoBark memberId={taskId} /> : ''}
 					</div>

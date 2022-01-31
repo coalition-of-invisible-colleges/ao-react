@@ -100,6 +100,7 @@ function applyEvent(state, ev) {
 }
 
 function initialize(callback) {
+    console.log("About to try connecting to tor")
     torControl((err, onion) => {
         recover((err, backup) => {
             let ts = 0

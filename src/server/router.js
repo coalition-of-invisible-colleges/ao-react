@@ -40,10 +40,10 @@ export default function applyRouter(app) {
   app.get('/public/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/public/favicon.ico'))
   })
-  // app.get('/*', (req, res) => {
-  //   console.log('any route detected')
-  //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
-  // })
+  app.get('/*', (req, res) => {
+     console.log('any route detected')
+    res.sendFile(path.join(__dirname, '../../dist/index.html'))
+  })
   app.use(bodyParser.json({ limit: '1000mb' }))
   app.use(cookieParser())
   app.use(

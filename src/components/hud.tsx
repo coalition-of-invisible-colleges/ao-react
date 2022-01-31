@@ -7,7 +7,6 @@ import AoDoing from './doing'
 import AoHub from './hub'
 import AoControls from './controls'
 import AoDock from './dock'
-import AoGifts from './gifts'
 import AoMissions from './missions'
 import AoMembers from './members'
 import AoCalendar from './calendar'
@@ -162,8 +161,6 @@ export default class AoHud extends React.Component<{}, HudState> {
       // case 'hub':
       // maybe hub
       // break
-      case 'gifts':
-        return <AoGifts />
       case 'members':
         return <AoMembers />
       case 'guilds':
@@ -316,16 +313,6 @@ export default class AoHud extends React.Component<{}, HudState> {
           }}
         </Observer>
         {aoStore.member?.tutorial || <AoTour />}
-        {/*        <AoSidebarButton
-          sidebarTab="gifts"
-          iconSrc={Bird}
-          tooltipText={aoStore.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
-          badge={giftsRenderedBadge}
-          tooltipPlacement="right"
-          id="tour-gifts"
-          buttonClass={giftsButtonClass}
-        />
-*/}{' '}
         <AoTickerHud />
         {/*        <div id="proposals">
             <AoPopupPanel

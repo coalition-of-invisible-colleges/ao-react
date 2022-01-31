@@ -253,16 +253,16 @@ fi
 NODEVERSION=`nvm current`
 
 # install node
-if [ $(echo $NODEVERSION | grep -c "15\.") -eq 1 ]; then
+if [ $(echo $NODEVERSION | grep -c "16\.") -eq 1 ]; then
 	echo node $NODEVERSION already installed
 else
-	nvm install stable
-	nvm use stable
-	nvm alias default stable
+	nvm install 16 #stable
+	nvm use 16 #stable
+	nvm alias default 16 #default stable
 fi
 
 # install npm
-if [ $(npm --v  2>/dev/null | grep -c "7\.") -eq 1 ]; then
+if [ $(npm --v  2>/dev/null | grep -c "8\.") -eq 1 ]; then
 	NPMVERSION=`npm -v`
 	echo npm v$NPMVERSION already installed
 else
@@ -404,7 +404,7 @@ fi
 # bitcoin: download a hosted copy of the current bitcoin executable for pi
 
 # install tor
-if [ $(tor --version  2>/dev/null | grep -c "0\.4\.4\.6") -eq 1 ]; then
+if [ $(tor --version  2>/dev/null | grep -c "0\.4\.") -eq 1 ]; then
 	echo tor v0.4.4.6 already installed
 else
 	if [ "$DISTRO" = "debian" ]; then
@@ -430,63 +430,66 @@ else
     elif [ "$DISTRO" = "fedora" ]; then
         install_if_needed fakeroot devscripts libevent openssl openssl-devel
 
-	else
-		if [ $(sudo pacman -Qs build-essential >/dev/null | grep -c "local/build-essential" ) -eq 1 ]; then
-			sudo pacman -S build-essential
-		fi
+	elif [ "$DISTRO" = "arch" ]; then
+		# if [ $(sudo pacman -Qs build-essential >/dev/null | grep -c "local/build-essential" ) -eq 1 ]; then
+		# 	sudo pacman -S build-essential
+		# fi
 
-		if [ $(sudo pacman -Qs fakeroot >/dev/null | grep -c "local/fakeroot" ) -eq 1 ]; then
-			sudo pacman -S fakeroot
-		fi
-
-		if [ $(sudo pacman -Qs devscripts >/dev/null | grep -c "local/devscripts" ) -eq 1 ]; then
-			sudo pacman -S devscripts
-		fi
-
-		if [ $(sudo pacman -Qs libevent >/dev/null | grep -c "local/libevent" ) -eq 1 ]; then
-			sudo pacman -S libevent
-		fi
-
-		if [ $(sudo pacman -Qs libssl >/dev/null | grep -c "local/libssl" ) -eq 1 ]; then
-			sudo pacman -S libssl
-		fi
+		# if [ $(sudo pacman -Qs fakeroot >/dev/null | grep -c "local/fakeroot" ) -eq 1 ]; then
+		# 	sudo pacman -S fakeroot
+		# fi
+ 
+		# if [ $(sudo pacman -Qs devscripts >/dev/null | grep -c "local/devscripts" ) -eq 1 ]; then
+		# 	sudo pacman -S devscripts
+		# fi
+ 
+		# if [ $(sudo pacman -Qs libevent >/dev/null | grep -c "local/libevent" ) -eq 1 ]; then
+		# 	sudo pacman -S libevent
+		# fi
+ 
+		# if [ $(sudo pacman -Qs libssl >/dev/null | grep -c "local/libssl" ) -eq 1 ]; then
+		# 	sudo pacman -S libssl
+		# fi
+		sudo pacman -S tor
 	fi
 
-	cd ~
-	wget https://dist.torproject.org/tor-0.4.4.6.tar.gz
-	tor=true
-	tar xf tor-0.4.4.6.tar.gz
-	cd tor-0.4.4.6
-	./configure
-	make
-	sudo make install
+	if [ "$DISTRO" != "arch" ]; then
+		cd ~
+		wget https://dist.torproject.org/tor-0.4.4.6.tar.gz
+		tor=true
+		tar xf tor-0.4.4.6.tar.gz
+		cd tor-0.4.4.6
+		./configure
+		make
+		sudo make install
+	fi
 fi
 
 # configure tor
-TORRCPATH='/usr/local/etc/tor/torrc'
-if [ ! -d "/usr/local/etc/tor" ]; then
-	sudo mkdir -p /usr/local/etc/tor
-fi
+#TORRCPATH='/usr/local/etc/tor/torrc'
+#if [ ! -d "/usr/local/etc/tor" ]; then
+#	sudo mkdir -p /usr/local/etc/tor
+#fi
 
-if [ ! -f $TORRCPATH ]; then
-	wget https://raw.githubusercontent.com/torproject/tor/master/src/config/torrc.sample.in
-	sudo mv torrc.sample.in $TORRCPATH
-fi
+#if [ ! -f $TORRCPATH ]; then
+#	wget https://raw.githubusercontent.com/torproject/tor/master/src/config/torrc.sample.in
+#	sudo mv torrc.sample.in $TORRCPATH
+#fi
 
-if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ]; then
-	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
-fi
+#if [ $(cat $TORRCPATH | grep -c "HiddenServiceDir /var/lib/tor/ao") -eq 0 ]; then
+#	echo "HiddenServiceDir /var/lib/tor/ao" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
+#fi
 
-if [ $(cat $TORRCPATH | grep -c "HiddenServicePort 80 127\.0\.0\.1:8003") -eq 0 ]; then
-	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
-fi
+#if [ $(cat $TORRCPATH | grep -c "HiddenServicePort 80 127\.0\.0\.1:8003") -eq 0 ]; then
+#	echo "HiddenServicePort 80 127.0.0.1:8003" | sudo tee -a $TORRCPATH 1>/dev/null 2>&1
+#fi
 
-if [ ! -d "/var/lib/tor/ao" ]; then
-	sudo mkdir -p /var/lib/tor/ao
-fi
+#if [ ! -d "/var/lib/tor/ao" ]; then
+#	sudo mkdir -p /var/lib/tor/ao
+#fi
 
-sudo chown -R $USER:$USER /var/lib/tor
-sudo chmod -R 700 /var/lib/tor
+#sudo chown -R $USER:$USER /var/lib/tor
+#sudo chmod -R 700 /var/lib/tor
 
 # get ao tor hostname for configuration.js
 if [ -f "/var/lib/tor/ao/hostname" ]; then
@@ -577,53 +580,53 @@ else
 fi
 
 # set up tor to autostart as a daemon via systemd
-if [ -f "/etc/systemd/system/tor.service" ]; then
-	echo tor systemd startup file already exists
-else
-	TORUNIT="[Unit]
-Description=Anonymizing overlay network for TCP (multi-instance-master)
-After=network.target
-
-[Service]
-User=$USER
-Group=$USER
-Type=simple
-#Type=forking
-PrivateTmp=yes
-PermissionsStartOnly=true
-
-ExecStartPre=-/bin/mkdir /var/run/tor
-ExecStartPre=/bin/cp $TORRCPATH /var/run/tor
-ExecStartPre=/bin/chmod a-wx,go-rwx /var/run/tor/torrc
-ExecStartPre=/bin/chown -R $USER:$USER /var/run/tor
-
-ExecStart=/usr/local/bin/tor -f $TORRCPATH
-ExecReload=/bin/kill -HUP $MAINPID
-
-#LimitNPROC = 2
-#DeviceAllow = /dev/null rw
-#DeviceAllow = /dev/urandom r
-#DeviceAllow = /dev/random r
-#InaccessibleDirectories = /
-#ReadOnlyDirectories = /etc /usr
-#ReadWriteDirectories = /var/lib/tor /var/log/tor
-
-#PIDFile=/var/run/tor/tor.pid
-KillSignal=SIGINT
-LimitNOFILE=8192
-PrivateDevices=yes
-
-#Type=oneshot
-#RemainAfterExit=yes
-#ExecStart=/bin/true
-#ExecReload=/bin/true
-
-[Install]
-WantedBy=multi-user.target"
-	echo "$TORUNIT" | sudo tee /etc/systemd/system/tor.service 1>/dev/null 2>&1
-	sudo systemctl daemon-reload
-	echo tor systemd startup file created
-fi
+#if [ -f "/etc/systemd/system/tor.service" ]; then
+#	echo tor systemd startup file already exists
+# else
+# 	TORUNIT="[Unit]
+# Description=Anonymizing overlay network for TCP (multi-instance-master)
+# After=network.target
+# 
+# [Service]
+# User=$USER
+# Group=$USER
+# Type=simple
+# #Type=forking
+# PrivateTmp=yes
+# PermissionsStartOnly=true
+# 
+# ExecStartPre=-/bin/mkdir /var/run/tor
+# ExecStartPre=/bin/cp $TORRCPATH /var/run/tor
+# ExecStartPre=/bin/chmod a-wx,go-rwx /var/run/tor/torrc
+# ExecStartPre=/bin/chown -R $USER:$USER /var/run/tor
+# 
+# ExecStart=/usr/local/bin/tor -f $TORRCPATH
+# ExecReload=/bin/kill -HUP $MAINPID
+# 
+# #LimitNPROC = 2
+# #DeviceAllow = /dev/null rw
+# #DeviceAllow = /dev/urandom r
+# #DeviceAllow = /dev/random r
+# #InaccessibleDirectories = /
+# #ReadOnlyDirectories = /etc /usr
+# #ReadWriteDirectories = /var/lib/tor /var/log/tor
+# 
+# #PIDFile=/var/run/tor/tor.pid
+# KillSignal=SIGINT
+# LimitNOFILE=8192
+# PrivateDevices=yes
+# 
+# #Type=oneshot
+# #RemainAfterExit=yes
+# #ExecStart=/bin/true
+# #ExecReload=/bin/true
+# 
+# [Install]
+# WantedBy=multi-user.target"
+# 	echo "$TORUNIT" | sudo tee /etc/systemd/system/tor.service 1>/dev/null 2>&1
+# 	sudo systemctl daemon-reload
+# 	echo tor systemd startup file created
+# fi
 
 # set up AO to autostart as a daemon via systemd
 if [ -f "/etc/systemd/system/ao.service" ]; then

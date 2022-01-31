@@ -5,7 +5,8 @@
   "repository": "github.com/AutonomousOrganization",
   "license": "GPL-3.0",
   "scripts": {
-    "dev": "NODE_OPTIONS=--max-old-space-size=8192 webpack serve --mode production --hot --progress --port 3000 --open",
+    "prod": "NODE_ENV=production NODE_OPTIONS=--max-old-space-size=8192 webpack --mode=production --progress --color && npm run server",
+    "dev": "NODE_ENV=development  PORT= NODE_OPTIONS=--max-old-space-size=8192 webpack serve --mode development --hot --progress --port 3000",
     "devMoreRam": " --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --progress --port 8003 --open",
     "webpack": "NODE_OPTIONS=--max-old-space-size=8192 webpack --mode=production --progress --color",
     "start": "run-p dev server",
@@ -55,6 +56,7 @@
     "core-js": "^3.2.1",
     "cron": "^1.7.2",
     "crypto-es": "^1.2.7",
+    "d3": "^7.3.0",
     "data-uri-to-buffer": "^3.0.1",
     "dotenv": "^10.0.0",
     "dotenv-webpack": "^7.0.3",

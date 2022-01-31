@@ -92,18 +92,36 @@ export function seeTask(task, memberId) {
 
 // Clears any pending passes to the specified memberId from the task
 // This is done whenever a member accepts a pass or grabs or handles a card
-export function clearPassesTo(task, memberId, alsoClearFrom = false) {
+export function clearPassesTo(tasks, task, memberId, alsoClearFrom = false) {
+  const lengthBefore = task.passed.length
 	task.passed = _.filter(
 		task.passed,
 		d => d[1] !== memberId || (alsoClearFrom ? d[0] !== memberId : false)
 	)
+	if(lengthBefore != task.passed.length) {
+		const memberCard = getTask(tasks, memberId)
+	  changeGiftCount(memberCard, task.passed.length - lengthBefore)
+	}
+}
+
+// Takes a member card and increases or decreases its .giftCount property, adding it if necessary
+export function changeGiftCount(memberCard, amount) {
+  if(!memberCard.hasOwnProperty('giftCount')) {
+    memberCard.giftCount = 0
+  }
+  
+  memberCard.giftCount += amount
+  
+  if(memberCard.giftCount < 0) {
+    memberCard.giftCount = 0
+  }
 }
 
 // Grabs a task, adding it to the member's deck
 // The associated pending pass on the card, if any, will be removed
 // You cannot grab your own member card
-export function grabTask(task, memberId) {
-	clearPassesTo(task, memberId)
+export function grabTask(tasks, task, memberId) {
+	clearPassesTo(tasks, task, memberId)
 	if (memberId && task.deck.indexOf(memberId) === -1) {
 		if (task.taskId !== memberId) {
 			task.deck.push(memberId)

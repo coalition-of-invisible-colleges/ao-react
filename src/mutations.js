@@ -12,6 +12,7 @@ import {
   taskExists,
   seeTask,
   clearPassesTo,
+  changeGiftCount,
   grabTask,
   dropTask,
   addParent,
@@ -32,13 +33,13 @@ import {
 
 function aoMuts(aos, ev) {
   switch (ev.type) {
-    case 'ao-linked':
-      aos.forEach((ao, i) => {
-        if (ao.address === ev.address) {
-          ao.links.push(ev.taskId)
-        }
-      })
-      break
+    //case 'ao-linked':
+    //  aos.forEach((ao, i) => {
+    //    if (ao.address === ev.address) {
+    //      ao.links.push(ev.taskId)
+    //    }
+    //  })
+    //  break
     case 'ao-inbound-connected':
       let inAddressConnect = aos.some(a => {
         if (a.address === ev.address) {
@@ -53,7 +54,6 @@ function aoMuts(aos, ev) {
           outboundSecret: false,
           inboundSecret: ev.secret,
           lastContact: Date.now(),
-          links: [],
         }
         aos.push(newEv)
       }
@@ -72,7 +72,6 @@ function aoMuts(aos, ev) {
           outboundSecret: ev.secret,
           inboundSecret: false,
           lastContact: Date.now(),
-          links: [],
         }
         aos.push(newEv)
       }
@@ -522,7 +521,7 @@ function tasksMuts(tasks, ev) {
           t.completed.filter(st => st !== ev.memberId)
           t.claimed = t.claimed.filter(st => st !== ev.memberId)
           t.deck = t.deck.filter(st => st !== ev.memberId)
-          clearPassesTo(t, ev.memberId, true)
+          clearPassesTo(tasks, t, ev.memberId, true)
           if (_.has(t, 'grid.rows')) {
             Object.entries(t.grid.rows).forEach(([y, row]) => {
               Object.entries(row).forEach(([x, cell]) => {
@@ -587,6 +586,8 @@ function tasksMuts(tasks, ev) {
             })
           ) {
             task.passed.push(pass)
+            const recipient = getTask(tasks, ev.toMemberId)
+            changeGiftCount(recipient, 1)
           }
         }
       })
@@ -604,7 +605,7 @@ function tasksMuts(tasks, ev) {
               }
             })
           }
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {
               task.deck.push(ev.memberId)
@@ -728,7 +729,7 @@ function tasksMuts(tasks, ev) {
     case 'task-signed':
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             task.deck.push(ev.memberId)
           }
@@ -838,7 +839,7 @@ function tasksMuts(tasks, ev) {
       // so make sure the task exists before linking to it from another card
       const toStash = getTask(tasks, ev.taskId)
       if (toStash) {
-        grabTask(toStash, ev.blame)
+        grabTask(tasks, toStash, ev.blame)
         addParent(toStash, ev.inId)
 
         tasks.forEach(task => {
@@ -854,7 +855,7 @@ function tasksMuts(tasks, ev) {
       const toUnstash = getTask(tasks, ev.taskId)
       const unstashParentCard = getTask(tasks, ev.inId)
       if (toUnstash && unstashParentCard) {
-        grabTask(toUnstash, ev.blame)
+        grabTask(tasks, toUnstash, ev.blame)
 
         tasks.forEach(task => {
           if (task.taskId === ev.inId) {
@@ -870,7 +871,7 @@ function tasksMuts(tasks, ev) {
       }
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
           let crawler = [ev.taskId]
           let history = []
           let newCards = []
@@ -906,7 +907,7 @@ function tasksMuts(tasks, ev) {
                 subTask.deck.indexOf(ev.memberId) === -1 &&
                 ev.taskId !== ev.memberId
               ) {
-                clearPassesTo(subTask, ev.memberId)
+                clearPassesTo(tasks, subTask, ev.memberId)
                 subTask.deck.push(ev.memberId)
               }
               newCards = newCards
@@ -923,7 +924,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           task.deck = _.filter(task.deck, d => d !== ev.memberId)
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
         }
       })
       break
@@ -933,7 +934,7 @@ function tasksMuts(tasks, ev) {
       }
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
           let crawler = [ev.taskId]
           let history = []
           let newCards = []
@@ -966,7 +967,7 @@ function tasksMuts(tasks, ev) {
                 subTask.deck.indexOf(ev.memberId) >= 0 &&
                 ev.taskId !== ev.memberId
               ) {
-                clearPassesTo(subTask, ev.memberId)
+                clearPassesTo(tasks, subTask, ev.memberId)
                 dropTask(subTask, ev.memberId)
               }
               newCards = newCards
@@ -1034,7 +1035,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
           seeTask(task, ev.blame)
-          grabTask(task, ev.blame)
+          grabTask(tasks, task, ev.blame)
           addParent(task, ev.inId)
 
           // Accumulate who's seen this task
@@ -1153,7 +1154,7 @@ function tasksMuts(tasks, ev) {
           taskExistsSubTask = true
           // See the task
           seeTask(task, ev.memberId)
-          grabTask(task, ev.memberId)
+          grabTask(tasks, task, ev.memberId)
           addParent(task, ev.taskId)
 
           if (task.seen && task.seen?.length >= 1) {
@@ -1183,7 +1184,7 @@ function tasksMuts(tasks, ev) {
       const deSubTaskParent = getTask(tasks, ev.taskId)
       tasks.forEach(task => {
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
           task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
           task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
         }
@@ -1311,7 +1312,7 @@ function tasksMuts(tasks, ev) {
           }
         }
         if (task.taskId === ev.taskId) {
-          clearPassesTo(task, ev.memberId)
+          clearPassesTo(tasks, task, ev.memberId)
           if (task.deck.indexOf(ev.memberId) === -1) {
             if (ev.taskId !== ev.memberId && ev.memberId) {
               task.deck.push(ev.memberId)
@@ -1502,13 +1503,13 @@ function tasksMuts(tasks, ev) {
       break
     case 'tasks-received':
       const startLength = tasks.length
-      let changedIndexes = []
+      //let changedIndexes = []
       ev.tasks.forEach(newT => {
         if (
           !tasks.some((cur, i) => {
             if (cur.taskId === newT.taskId) {
               safeMerge(cur, newT)
-              changedIndexes.push(i)
+              //changedIndexes.push(i)
               return true
             }
           })
@@ -1524,12 +1525,12 @@ function tasksMuts(tasks, ev) {
           )
           safeMerge(safeClone, newT)
           tasks.push(safeClone)
-          changedIndexes.push(tasks.length - 1)
+          //changedIndexes.push(tasks.length - 1)
         }
       })
 
       // Loop through the new cards and remove invalid references to cards that don't exist on this server
-      changedIndexes.forEach(tId => {
+      /*changedIndexes.forEach(tId => {
         const t = tasks[tId]
         let beforeLength = t.subTasks.length
         t.subTasks = _.filter(t.subTasks, stId => taskExists(tasks, stId))
@@ -1558,7 +1559,7 @@ function tasksMuts(tasks, ev) {
           })
           t.grid.rows = filteredRows
         }
-      })
+      })*/
       break
     case 'task-visited':
       tasks.forEach(task => {
@@ -1670,7 +1671,7 @@ function tasksMuts(tasks, ev) {
       tasks.forEach((task, i) => {
         if (task.taskId === ev.taskId) {
           seeTask(task, ev.memberId)
-          grabTask(task, ev.memberId)
+          grabTask(tasks, task, ev.memberId)
           addParent(task, ev.inId)
           // Accumulate who's seen this task
           if (task.seen && task.seen?.length >= 1) {
