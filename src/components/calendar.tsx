@@ -6,7 +6,7 @@ import AoPopupPanel from './popupPanel'
 import { formatDistanceToNow } from 'date-fns'
 
 @observer
-export default class AoCalendar extends React.PureComponent {
+export default class AoCalendar extends React.Component {
   render() {
     let {
       now,

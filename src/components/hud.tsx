@@ -26,6 +26,7 @@ import AoManual from './manual'
 import AoSidebarButton from './sidebarButton'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
+import AoEventReminders from './eventReminders'
 import Sun from '../assets/images/sun.svg'
 import Bird from '../assets/images/mailbox.svg'
 import Badge from '../assets/images/bulletin.svg'
@@ -327,6 +328,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           </div>
           */}
         <AoChatroom taskId={aoStore.currentChatroom} />
+        <AoEventReminders />
         {
           //<AoScore prefix={<span>Points: </span>} />
         }

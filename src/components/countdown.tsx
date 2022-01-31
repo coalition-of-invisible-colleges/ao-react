@@ -114,13 +114,12 @@ export default class AoCountdown extends React.Component<
       case 'face before':
       case 'collapsed':
       case 'mini after':
+      default:
         return (
           <div className={'countdown summary ' + this.props.hudStyle}>
             {formatDistanceToNow(card.book.startTs, { addSuffix: true })}
           </div>
         )
-      default:
-        return null
     }
   }
 

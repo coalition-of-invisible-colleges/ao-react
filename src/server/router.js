@@ -182,6 +182,19 @@ export default function applyRouter(app) {
         }
       }
     })
+    
+    // Also include any events in the next three days, whether or not they are holding them
+    const msNow = Date.now()
+    const timeRangeToSend = 1000 * 60 * 60 * 24 * 3
+    state.pubState.tasks.forEach(taskItem => {
+      if (
+        taskItem.book &&
+        taskItem.book.startTs >= 1 &&
+        (msNow - taskItem.book.startTs <= timeRangeToSend)
+      ) {
+        stateToSend.tasks.push(taskItem)
+      }
+    })
 
     // Remove duplicates and combine lists
     stateToSend.tasks = [

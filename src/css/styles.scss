@@ -4006,6 +4006,30 @@ svg.dataVisCanvas {
 	pointer-events: none;
 }
 
+.eventReminders {
+	position: fixed;
+	top: 1em;
+	right: 6em;
+	
+	.card.notification {
+		width: 14em;
+		padding-right: 6em;
+		margin-bottom: 0.5em;
+		
+		.countdown {
+	      position: absolute;
+	      right: 0;
+	      top: 50%;
+	      transform: translateY(-50%);
+	      background-color: rgba(0, 0, 0, 0.2);
+	      font-size: 0.9em;
+	      padding: 0.25em;
+	      margin: 0 0.32em 0 0;
+	      width: max-content;
+	    }
+	}
+}
+
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
 // Change theme names to the name of their file (without the underscore)
 // Run through the theme array (or have a drop down) to apply specific & names themes

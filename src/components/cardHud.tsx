@@ -35,6 +35,7 @@ export type HudStyle =
 	| 'mini after'
 	| 'badge'
 	| 'menu'
+	| 'notification'
 
 interface CardHudProps {
 	taskId: string
@@ -230,6 +231,12 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						/>
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+					</div>
+				)
+			case 'notification':
+			   return (
+					<div className={'hud ' + hudStyle}>
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':

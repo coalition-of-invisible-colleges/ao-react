@@ -57,6 +57,7 @@ export type CardStyle =
   | 'mission'
   | 'member'
   | 'envelope'
+  | 'notification'
 
 export interface DragContext {
   zone: CardZone
@@ -1141,6 +1142,27 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             </div>
           </Tippy>
         )
+      case 'notification':
+        return (
+          <div
+            id={'card-' + taskId}
+            className={
+              'card notification ' +
+              card?.color +
+              'Card' +
+              this.applyClassIfCurrentSearchResult
+            }
+            onClick={this.goInCard}>
+            <AoPaper taskId={taskId} color={card?.color} />
+            <AoCardHud taskId={taskId} hudStyle="notification" />
+            <div className="content">
+              {member && <AoMemberIcon memberId={taskId} />}
+              <AoAttachment taskId={taskId} inId={this.props.inId} />
+              {this.renderCardContent(content, true)}
+            </div>
+          </div>
+        )
+        break
       case 'mini':
       case 'badge':
       default:
