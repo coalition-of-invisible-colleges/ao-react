@@ -412,6 +412,23 @@ class AoApi {
       })
   }
 
+  async remindMember(
+    memberId: string
+  ): Promise<request.Response> {
+    const act = {
+      type: 'member-reminded',
+      toMemberId: memberId,
+      fromMemberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
   async swapCard(
     inId: string,
     taskId1: string,
@@ -1347,6 +1364,14 @@ class AoApi {
 
       runInAction(() => {
         aoStore.state.socketState = 'attemptingAuthentication'
+        const loadedSession = window.localStorage.getItem('session')
+        if(loadedSession) {
+          aoStore.state.session = loadedSession
+        }
+        const loadedToken = window.localStorage.getItem('token')
+        if(loadedToken) {
+          aoStore.state.token = loadedToken
+        }
       })
 
       console.log(
@@ -1393,7 +1418,9 @@ reaction(
   },
   socketState => console.log('AO: client/api.ts: socketState: ' + socketState)
 )
-const socket = io(config.socketUrl ? config.socketUrl : '/', {
+console.log("NODE_ENV is", process.env.NODE_ENV)
+const socketUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:8003' : '/'  
+const socket = io(socketUrl, {
   autoConnect: false,
 })
 const api = new AoApi(socket)

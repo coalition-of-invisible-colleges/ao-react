@@ -19,6 +19,7 @@ import AoTally from './tally'
 import AoLilypad from './lilypad'
 import AoStash from './stash'
 import AoFund from './fund'
+import AoReminder from './reminder'
 import config from '../../configuration'
 
 export type HudStyle =
@@ -34,6 +35,7 @@ export type HudStyle =
 	| 'mini after'
 	| 'badge'
 	| 'menu'
+	| 'notification'
 
 interface CardHudProps {
 	taskId: string
@@ -129,13 +131,14 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'collapsed-member':
 				return (
 					<div className="hud">
-						<AoPreview
+						{/*<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}
 							prioritiesShown={this.props.prioritiesShown}
 							onTogglePriorities={this.props.onTogglePriorities}
 							priorPriors={this.props.priorPriors}
-						/>
+						/>*/}
+						<AoReminder memberCard={card} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						{isMember ? <AoBark memberId={taskId} /> : ''}
 					</div>
@@ -228,6 +231,12 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						/>
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
+					</div>
+				)
+			case 'notification':
+			   return (
+					<div className={'hud ' + hudStyle}>
+						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':

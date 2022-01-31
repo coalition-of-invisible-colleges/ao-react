@@ -114,6 +114,7 @@ export interface Task {
   claimInterval?: number
   signed: Signature[]
   passed: number[]
+  giftCount?: number
   guild: string
   lastClaimed: number
   goal?: number

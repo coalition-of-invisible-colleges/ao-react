@@ -29,6 +29,7 @@ function startDctrlAo() {
   console.log('starting AO database...')
   let dbPath = config.sqlite3.file
   if (PORT !== 8003) {
+    console.log("Port is not set to the default of 8003, using alternate database.")
     dbPath = dbPath.replace('database', PORT)
   }
   startDb(dbPath, (err, conn) => {
@@ -67,7 +68,7 @@ function startDctrlAo() {
 
         // ioServer.listen(PORT)
         const ioServer = new Server(server, {
-          cors: { origin: 'http://127.0.0.1:3000' },
+          cors: { origin: 'http://127.0.0.1:3000' + (process.env.mode === 'production' ? ':' + PORT : '') }
         })
 
         socketProtector(ioServer, {

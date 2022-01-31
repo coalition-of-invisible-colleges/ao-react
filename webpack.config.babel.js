@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const isProduction =
-  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production'
+const buildMode =
+  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production' ? 'production' : 'development'
 const sourcePath = path.join(__dirname, './src')
 const outPath = path.join(__dirname, './dist')
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
@@ -20,15 +20,15 @@ import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
 import Dotenv from 'dotenv-webpack'
 
 export default {
-  mode: isProduction ? 'production' : 'development',
+  mode: buildMode,
   context: __dirname,
   entry: {
     app: './src/index.tsx',
   },
   output: {
     path: outPath,
-    filename: isProduction ? '[id].[contenthash].js' : '[id].[hash].js',
-    chunkFilename: isProduction
+    filename: buildMode === 'production' ? '[id].[contenthash].js' : '[id].[hash].js',
+    chunkFilename: buildMode === 'production'
       ? '[id].[name].[contenthash].js'
       : '[id].[name].[hash].js',
     publicPath: '/',
@@ -150,7 +150,7 @@ export default {
           test: /[\\/]node_modules[\\/]/,
           chunks: 'all',
           priority: -10,
-          filename: isProduction
+          filename: buildMode === 'production'
             ? 'vendor.[contenthash].js'
             : 'vendor.[hash].js',
         },
@@ -180,6 +180,11 @@ export default {
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
     new Dotenv({ path: path.join(__dirname, './.env') }),
+    new webpack.DefinePlugin({
+        'process.env': {
+            'NODE_ENV': `"${buildMode}"`
+        }
+    })
   ],
   devServer: {
     contentBase: path.resolve(__dirname, 'dist'),

@@ -6,6 +6,7 @@ import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
 import { CardPlay, goUp } from '../cardTypes'
 import { hideAll as hideAllTippys } from 'tippy.js'
+import AoDataVis from './dataVis'
 
 @observer
 export default class AoDiscardZone extends React.Component {
@@ -130,6 +131,7 @@ export default class AoDiscardZone extends React.Component {
 						this.props.children
 					)}
 				</AoDropZone>
+        <AoDataVis totalLocalTasks={aoStore.state.tasks.length} />
 			</div>
 		)
 	}

@@ -18,7 +18,7 @@ let rsync
 
 function sync() {
   console.log('sync trig')
-  serverState.ao.forEach(a => {
+  /*serverState.ao.forEach(a => {
     a.links.forEach(l => {
       let crawlered = crawler(serverState.tasks, l)
       let expectedHash = crawlerHash(serverState.tasks, l)
@@ -131,7 +131,7 @@ function sync() {
         false
       )
     })
-  })
+  })*/
 }
 
 function getList(taskIds) {

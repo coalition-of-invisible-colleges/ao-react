@@ -20,7 +20,8 @@ export default class AoBounties extends React.Component {
         return (
           task.hasOwnProperty('boost') &&
           task.boost > 0 &&
-          task.name !== task.taskId
+          task.name !== task.taskId &&
+          (!task.guild || task.guild.length <= 0)
         )
       })
       .sort((a, b) => a.boost - b.boost)

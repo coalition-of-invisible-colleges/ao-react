@@ -44,6 +44,9 @@ async function dropToGridSquare(move: CardPlay) {
   if (!cardFrom) {
     return
   }
+  if(move.from.taskId === move.to.taskId) {
+    return
+  }
   const nameFrom = cardFrom.name
 
   const cardTo = aoStore.hashMap.get(move.to.taskId)
@@ -98,7 +101,7 @@ async function dropToGridSquare(move: CardPlay) {
         }
         break
       case 'priorities':
-        if (move.to.taskId && dropActsLikeFolder) {
+        if (move.to.taskId) {
           api.refocusCard(move.from.taskId, move.from.inId).then(() => {
             api
               .discardCardFromCard(move.from.taskId, move.from.inId)
@@ -124,12 +127,15 @@ async function dropToGridSquare(move: CardPlay) {
           api
             .refocusCard(move.from.taskId, move.from.inId)
             .then(() =>
-              api.pinCardToGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                nameFrom,
-                move.to.inId
-              )
+                        api
+              .discardCardFromCard(move.from.taskId, move.from.inId)
+              .then(() =>
+                api.pinCardToGrid(
+                  move.to.coords.x,
+                  move.to.coords.y,
+                  nameFrom,
+                  move.to.inId
+                ))
             )
             .then(resolve)
         }
@@ -143,11 +149,15 @@ async function dropToGridSquare(move: CardPlay) {
               move.from.inId
             )
             .then(() => {
-              api
-                .findOrCreateCardInCard(nameFrom, move.to.taskId, true)
-                .then(() => {
-                  resolve
-                })
+                        api
+              .discardCardFromCard(move.from.taskId, move.from.inId)
+              .then(() =>
+                api
+                  .findOrCreateCardInCard(nameFrom, move.to.taskId, true)
+                  .then(() => {
+                    resolve
+                  })
+              )
             })
         } else if (move.to.taskId) {
           // && AltKeyIsPressed

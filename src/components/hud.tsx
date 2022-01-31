@@ -7,7 +7,6 @@ import AoDoing from './doing'
 import AoHub from './hub'
 import AoControls from './controls'
 import AoDock from './dock'
-import AoGifts from './gifts'
 import AoMissions from './missions'
 import AoMembers from './members'
 import AoCalendar from './calendar'
@@ -27,6 +26,7 @@ import AoManual from './manual'
 import AoSidebarButton from './sidebarButton'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
+import AoEventReminders from './eventReminders'
 import Sun from '../assets/images/sun.svg'
 import Bird from '../assets/images/mailbox.svg'
 import Badge from '../assets/images/bulletin.svg'
@@ -162,8 +162,6 @@ export default class AoHud extends React.Component<{}, HudState> {
       // case 'hub':
       // maybe hub
       // break
-      case 'gifts':
-        return <AoGifts />
       case 'members':
         return <AoMembers />
       case 'guilds':
@@ -316,16 +314,6 @@ export default class AoHud extends React.Component<{}, HudState> {
           }}
         </Observer>
         {aoStore.member?.tutorial || <AoTour />}
-        {/*        <AoSidebarButton
-          sidebarTab="gifts"
-          iconSrc={Bird}
-          tooltipText={aoStore.myGifts.length < 1 ? 'Send Gift' : 'Gifts'}
-          badge={giftsRenderedBadge}
-          tooltipPlacement="right"
-          id="tour-gifts"
-          buttonClass={giftsButtonClass}
-        />
-*/}{' '}
         <AoTickerHud />
         {/*        <div id="proposals">
             <AoPopupPanel
@@ -340,6 +328,7 @@ export default class AoHud extends React.Component<{}, HudState> {
           </div>
           */}
         <AoChatroom taskId={aoStore.currentChatroom} />
+        <AoEventReminders />
         {
           //<AoScore prefix={<span>Points: </span>} />
         }

@@ -82,10 +82,15 @@ body.florid {
 		text-shadow: none;
 	}
 
-	// switch all svg icons to black
+	// switch all svg icons to black except data visualization dots
 	svg {
 		filter: brightness(0.001);
+		
+		&.dataVisCanvas {
+			filter: brightness(1);
+		}
 	}
+
 
 	// change all card menu buttons to black so they are visible, and guild titles
 	.card > .hud .cardMenuButton,

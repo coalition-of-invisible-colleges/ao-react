@@ -31,6 +31,7 @@ import AoMemberIcon from './memberIcon'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
+import Clipboard from '../assets/images/clipboard.svg'
 import {
   goInCard,
   prioritizeCard,
@@ -57,6 +58,7 @@ export type CardStyle =
   | 'mission'
   | 'member'
   | 'envelope'
+  | 'notification'
 
 export interface DragContext {
   zone: CardZone
@@ -85,6 +87,7 @@ interface State {
   // loadedFromServer: boolean
   confirmedLoadedAllChildren: boolean
   renderMeNowPlease?: boolean
+  showCopied?: boolean
 }
 
 // const AoContextCard =
@@ -117,6 +120,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.goInCard = this.goInCard.bind(this)
     this.refocusAll = this.refocusAll.bind(this)
     this.onHover = this.onHover.bind(this)
+    this.copyCardToClipboard = this.copyCardToClipboard.bind(this)
     this.renderCardContent = this.renderCardContent.bind(this)
     this.clearPendingPromise = this.clearPendingPromise.bind(this)
     this.dropToCard = this.dropToCard.bind(this)
@@ -287,7 +291,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     // }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps?.task?.taskId !== this.props?.task?.taskId) {
+      if(this.state.showCopied) {
+        this.setState({showCopied: false})
+      }
+    }
     this.onPropsTaskChangeFunction()
     this.registerSubCardsReaction()
 
@@ -452,7 +461,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       .then(() => this.setState({ renderMeNowPlease: true }))
   }
 
-  goInCard(event) {
+  goInCard(event = null) {
     const card = this.props.task
     if (!card) {
       console.log('missing card')
@@ -547,6 +556,24 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
     return ''
   }
+  
+  copyCardToClipboard(event, content: string) {
+    event.stopPropagation()
+    if (this.state.showCopied){
+        if(aoStore.currentCard !== this.props.task.taskId) {
+          this.goInCard()
+        }
+        return
+    }
+    navigator.clipboard.writeText(content)
+      .then(() => {
+          this.setState({showCopied: true})
+      })
+      .catch(err => {
+          console.log(err, 'copy attempt failed, printing to console:')
+          console.log(content)
+      })
+ }
 
   renderCardContent(content: string, hideIframes = false) {
     // hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
@@ -563,24 +590,27 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     return (
-      <Markdown
-        options={{
-          forceBlock: false,
-          overrides: {
-            a: {
-              props: {
-                target: '_blank',
+      <div onClick={this.props.cardStyle !== 'context' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
+        <Markdown
+          options={{
+            forceBlock: false,
+            overrides: {
+              a: {
+                props: {
+                  target: '_blank',
+                },
+              },
+              iframe: {
+                props: {
+                  display: hideIframes ? 'inherit' : 'none',
+                },
               },
             },
-            iframe: {
-              props: {
-                display: hideIframes ? 'inherit' : 'none',
-              },
-            },
-          },
-        }}>
-        {memeContent ? memeContent : content}
-      </Markdown>
+          }}>
+          {memeContent ? memeContent : content}
+        </Markdown>
+        {this.props.cardStyle !== 'context' && this.state.showCopied && <img className='clippy' src={Clipboard} />}
+      </div>
     )
   }
 
@@ -669,6 +699,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         .filter(t => t?.deck?.length >= 1)
     }
 
+    const contentClass = "content" + (this.state.showCopied ? ' crosshair' : '')
     const cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
     // console.log('AO: components/contextCard.tsx: render: ', {
     //   taskId,
@@ -681,7 +712,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           <div
             className={
               'card context ' +
-              card.color +
+              card?.color +
               'Card' +
               this.applyClassIfCurrentSearchResult
             }
@@ -691,9 +722,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}
             style={this.props.inlineStyle ? this.props.inlineStyle : null}>
-            <AoPaper taskId={taskId} />
+            <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud taskId={taskId} hudStyle="context" />
-            <div className="content">
+            <div className={contentClass}>
               {member && <AoMemberIcon memberId={taskId} />}
               {this.renderCardContent(content)}
             </div>
@@ -711,20 +742,20 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               id={'card-' + taskId}
               className={
                 'card member ' +
-                card.color +
+                card?.color +
                 'Card' +
                 this.applyClassIfCurrentSearchResult +
                 (this.state.showPriorities ? ' padbottom' : '')
               }
               onClick={this.goInCard}>
-              <AoPaper taskId={taskId} />
+              <AoPaper taskId={taskId} color={card?.color} />
               <AoCardHud
                 taskId={taskId}
                 hudStyle="collapsed-member"
                 prioritiesShown={this.state.showPriorities}
                 onTogglePriorities={this.togglePriorities}
               />
-              <div className="content">
+              <div className={contentClass}>
                 {isGrabbed1 && card.taskId !== card.name ? (
                   <AoBird taskId={taskId} noPopups={this.props.noPopups} />
                 ) : (
@@ -752,7 +783,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             id={'card-' + taskId}
             className={
               'card priority ' +
-              card.color +
+              card?.color +
               'Card' +
               this.applyClassIfCurrentSearchResult +
               (this.state.showPriorities ? ' padbottom' : '')
@@ -761,14 +792,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
-            <AoPaper taskId={taskId} />
+            <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud
               taskId={taskId}
               hudStyle="collapsed"
               prioritiesShown={this.state.showPriorities}
               onTogglePriorities={this.togglePriorities}
             />
-            <div className="content">
+            <div className={contentClass}>
               {isGrabbed && card.taskId !== card.name ? (
                 <AoBird taskId={taskId} noPopups={this.props.noPopups} />
               ) : (
@@ -795,7 +826,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             id={'card-' + taskId}
             className={
               'card ' +
-              card.color +
+              card?.color +
               'Card ' +
               this.props.cardStyle +
               this.applyClassIfCurrentSearchResult
@@ -804,7 +835,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
-            <AoPaper taskId={taskId} />
+            <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud
               taskId={taskId}
               hudStyle="face before"
@@ -882,7 +913,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               id={'card-' + taskId}
               className={
                 'card full ' +
-                card.color +
+                card?.color +
                 'Card' +
                 this.applyClassIfCurrentSearchResult
               }
@@ -903,7 +934,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                         inId: null,
                         y: 0,
                       }}>
-                      <AoPaper taskId={taskId} />
+                      <AoPaper taskId={taskId} color={card?.color} />
                     </AoDragZone>
                   )
                 }}
@@ -1020,7 +1051,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             id={'card-' + taskId}
             className={
               'card checkmark ' +
-              card.color +
+              card?.color +
               'Card' +
               this.applyClassIfCurrentSearchResult
             }
@@ -1028,7 +1059,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
             <AoCheckmark taskId={taskId} onGoIn={this.goInCard} />
-            <div className="content">{this.renderCardContent(content)}</div>
+            <div className={contentClass}>{this.renderCardContent(content)}</div>
           </div>
         )
       case 'mission':
@@ -1038,7 +1069,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           <div
             className={
               'card mission ' +
-              card.color +
+              card?.color +
               'Card' +
               (this.state.showPriorities ? ' padbottom' : '') +
               this.applyClassIfCurrentSearchResult
@@ -1048,9 +1079,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
-            <AoPaper taskId={taskId} />
+            <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud taskId={taskId} hudStyle="collapsed-mission" />
-            <div className="content">
+            <div className={contentClass}>
               <AoMission taskId={taskId} hudStyle="collapsed" />
               <AoPreview
                 taskId={taskId}
@@ -1090,7 +1121,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       //     onMouseEnter={this.onHover}
       //     onMouseOver={this.onHover}
       //     onMouseOut={this.clearPendingPromise}>
-      //     <AoPaper taskId={taskId} />
+      //     <AoPaper taskId={taskId} color={card?.color} />
       //     <AoMission taskId={taskId} hudStyle="badge" />
       //     <AoCardHud taskId={taskId} hudStyle="badge" />
       //   </div>
@@ -1129,18 +1160,39 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               id={'card-' + taskId}
               className={
                 'card envelope ' +
-                card.color +
+                card?.color +
                 'Card' +
                 this.applyClassIfCurrentSearchResult
               }
               onMouseEnter={this.onHover}
               onMouseOver={this.onHover}
               onMouseOut={this.clearPendingPromise}>
-              <AoPaper taskId={taskId} />
+              <AoPaper taskId={taskId} color={card?.color} />
               <img src={Gift} onClick={openGift} />
             </div>
           </Tippy>
         )
+      case 'notification':
+        return (
+          <div
+            id={'card-' + taskId}
+            className={
+              'card notification ' +
+              card?.color +
+              'Card' +
+              this.applyClassIfCurrentSearchResult
+            }
+            onClick={this.goInCard}>
+            <AoPaper taskId={taskId} color={card?.color} />
+            <AoCardHud taskId={taskId} hudStyle="notification" />
+            <div className={contentClass}>
+              {member && <AoMemberIcon memberId={taskId} />}
+              <AoAttachment taskId={taskId} inId={this.props.inId} />
+              {this.renderCardContent(content, true)}
+            </div>
+          </div>
+        )
+        break
       case 'mini':
       case 'badge':
       default:
@@ -1154,7 +1206,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             id={'card-' + taskId}
             className={
               'card mini ' +
-              card.color +
+              card?.color +
               'Card' +
               this.applyClassIfCurrentSearchResult
             }
@@ -1162,9 +1214,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             onMouseEnter={this.onHover}
             onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
-            <AoPaper taskId={taskId} />
+            <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud taskId={taskId} hudStyle="mini before" />
-            <div className="content">
+            <div className={contentClass}>
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content, true)}

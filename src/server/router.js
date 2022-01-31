@@ -40,10 +40,10 @@ export default function applyRouter(app) {
   app.get('/public/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/public/favicon.ico'))
   })
-  // app.get('/*', (req, res) => {
-  //   console.log('any route detected')
-  //   res.sendFile(path.join(__dirname, '../../dist/index.html'))
-  // })
+  app.get('/*', (req, res) => {
+     console.log('any route detected')
+    res.sendFile(path.join(__dirname, '../../dist/index.html'))
+  })
   app.use(bodyParser.json({ limit: '1000mb' }))
   app.use(cookieParser())
   app.use(
@@ -180,6 +180,19 @@ export default function applyRouter(app) {
         if (holderIdList.length === 0) {
           return true
         }
+      }
+    })
+    
+    // Also include any events in the next three days, whether or not they are holding them
+    const msNow = Date.now()
+    const timeRangeToSend = 1000 * 60 * 60 * 24 * 3
+    state.pubState.tasks.forEach(taskItem => {
+      if (
+        taskItem.book &&
+        taskItem.book.startTs >= 1 &&
+        (msNow - taskItem.book.startTs <= timeRangeToSend)
+      ) {
+        stateToSend.tasks.push(taskItem)
       }
     })
 
@@ -623,8 +636,12 @@ export default function applyRouter(app) {
       state.serverState.members.forEach(member => {
         if (regex.test(member.name)) {
           let result = hashMap.get(member.memberId)
-          result.name = member.name
-          foundMembers.push(result)
+
+          // This was introduced as a response to cross-AO cards breaking search
+          if (result) {
+          	result.name = member.name
+          	foundMembers.push(result)
+	  }
         }
       })
       const searchResults = {

@@ -51,6 +51,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
   }
 
   render() {
+    console.log("state is", aoStore.state)
     const list = aoStore.state.ao.map(ao => {
       console.log('AO to render is: ', ao)
       let linkedCards: Task[] = ao.links?.map(tId => aoStore.hashMap.get(tId))
@@ -93,11 +94,11 @@ export default class AoConnect extends React.PureComponent<{}, State> {
           Name this AO: <AoServerName />
         </div>
         <p>
-          {config.hasOwnProperty('tor') && config.tor.hasOwnProperty('hostname')
-            ? 'Tor address: ' + config.tor.hostname
+	{ aoStore?.state?.cash?.address
+            ? 'Tor address: ' + aoStore.state.cash.address
             : 'Tor not set up.'}
         </p>
-        {/*{<p>Secret: {aoStore.state.loader.token}</p>}*/}
+        {<p>Secret: {JSON.stringify(aoStore.state?.loader?.token)}</p>}
         {list.length >= 1 ? (
           <React.Fragment>
             <ul>{list}</ul>

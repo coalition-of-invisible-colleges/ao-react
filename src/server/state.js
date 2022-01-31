@@ -4,7 +4,7 @@ import M from '../mutations.js'
 import config from '../../configuration.js'
 import { formatDistanceToNow } from 'date-fns'
 import cron from 'cron'
-
+import torControl from './torControl.js'
 import cash from '../modules/cash.js'
 import members from '../modules/members.js'
 import tasks from '../modules/tasks.js'
@@ -30,7 +30,7 @@ const serverState = {
   resources: [],
   memes: [],
   cash: {
-    address: config.tor.hostname,
+    address: "",
     alias: 'dctrl',
     currency: 'CAD',
     spot: 0,
@@ -53,7 +53,7 @@ const pubState = {
   resources: [],
   memes: [],
   cash: {
-    address: config.tor.hostname,
+    address: "",
     alias: '',
     currency: 'CAD',
     spot: 0,
@@ -100,42 +100,50 @@ function applyEvent(state, ev) {
 }
 
 function initialize(callback) {
-  recover((err, backup) => {
-    let ts = 0
-    if (backup.length > 0) {
-      ts = backup[0].timestamp
-      console.log(
-        '\nFound',
-        backup.length,
-        'AO snapshot' +
-          (backup.length === 1 ? '' : 's') +
-          ' in the database. Applying' +
-          (backup.length > 1 ? ' the most recent' : '') +
-          ' backup from',
-        formatDistanceToNow(ts, {
-          addSuffix: true,
-        }),
-        '...\n'
-      )
-      applyBackup(backup[0])
-    }
-    console.log('Loaded state from backup. Applying events since backup...')
-    getAll(ts, (err, all) => {
-      if (err) return callback(err)
-      all.forEach((ev, i) => {
-        applyEvent(serverState, Object.assign({}, ev))
-        applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
-        if (i > 0 && i % 10000 === 0) {
-          console.log('applied ', i, '/', all.length, ' events...')
-        }
-      })
-      console.log('applied ', all.length, ' events from the database')
+    console.log("About to try connecting to tor")
+    torControl((err, onion) => {
+        recover((err, backup) => {
+            let ts = 0
+            if (backup.length > 0) {
+                ts = backup[0].timestamp
+                console.log(
+                    '\nFound',
+                    backup.length,
+                    'AO snapshot' +
+                    (backup.length === 1 ? '' : 's') +
+                    ' in the database. Applying' +
+                    (backup.length > 1 ? ' the most recent' : '') +
+                    ' backup from',
+                    formatDistanceToNow(ts, {
+                        addSuffix: true,
+                    }),
+                    '...\n'
+                )
+                applyBackup(backup[0])
+            }
+            console.log('Loaded state from backup. Applying events since backup...')
+            getAll(ts, (err, all) => {
+                if (err) return callback(err)
+                all.forEach((ev, i) => {
+                    applyEvent(serverState, Object.assign({}, ev))
+                    applyEvent(pubState, removeSensitive(Object.assign({}, ev)))
+                    if (i > 0 && i % 10000 === 0) {
+                        console.log('applied ', i, '/', all.length, ' events...')
+                    }
+                })
+                console.log('applied ', all.length, ' events from the database')
 
-      callback(null)
+                callback(null)
+            })
+            console.log('Starting monthly backup cron...')
+            backupJob.start()
+        })
+
+	// We're applying the onion from torControl directly to the state after backup is applied. Kind of hacky, but it works
+        console.log('onion!', 'http://' + onion)
+        serverState.cash.address = onion
+        pubState.cash.address = onion
     })
-    console.log('Starting monthly backup cron...')
-    backupJob.start()
-  })
 }
 
 function backupState() {
