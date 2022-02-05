@@ -69,6 +69,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
       case 'collapsed':
       case 'badge':
       case 'mini after':
+      case 'notification':
         const memberCards = card.deck
           .map(memberId => aoStore.hashMap.get(memberId))
           .filter(memberCard => memberCard !== undefined)

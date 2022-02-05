@@ -236,7 +236,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'notification':
 			   return (
 					<div className={'hud ' + hudStyle}>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+			      <AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':

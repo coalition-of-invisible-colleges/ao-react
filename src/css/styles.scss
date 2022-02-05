@@ -525,6 +525,7 @@ body {
 
       &.clickable {
         cursor: pointer;
+        pointer-events: auto;
       }
 
       &.showingPriors {
@@ -3041,7 +3042,28 @@ pre {
 	margin-left: 0.5em;
 	position: relative;
 	top: 0.15em;
-} 
+}
+
+.connectionString {
+	position: relative;
+	
+	.clippy {
+		cursor: pointer;
+		position: absolute;
+		right: 0;
+		background: white;
+		height: 100%;
+		top: 50%;
+		transform: translateY(-50%);
+		padding: 0 0.25em;
+		
+		&.copied {
+			border: 2pt solid #0808;
+			height: 150%;
+			right: -0.5em;
+		}
+	}
+}
 
 // chatroom-style main stack of subTasks under the grid in each card
 .chatStack {
@@ -4028,21 +4050,37 @@ svg.dataVisCanvas {
 	right: 6em;
 	
 	.card.notification {
-		width: 14em;
-		padding-right: 6em;
+		width: 20em;
+		padding-top: 0.5em;
+		//padding-right: 6em;
+		padding-left: 0.35em;
+		padding-right: 0.25em;
 		margin-bottom: 0.5em;
 		
-		.countdown {
-	      position: absolute;
-	      right: 0;
-	      top: 50%;
-	      transform: translateY(-50%);
-	      background-color: rgba(0, 0, 0, 0.2);
-	      font-size: 0.9em;
-	      padding: 0.25em;
-	      margin: 0 0.32em 0 0;
-	      width: max-content;
-	    }
+		.checkbox {
+			float: left;
+			width: 1.75em;
+			margin-top: 0.162em;
+			margin-left: 0;
+			margin-right: 0.5em;
+			position: relative;
+			top: -0.515em;
+		}
+		
+		.content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.5em;
+			
+			.countdown {
+			  background-color: rgba(0, 0, 0, 0.2);
+			  font-size: 0.9em;
+			  padding: 0.25em;
+			  margin: 0;
+			  white-space: nowrap;
+			}
+		}
 	}
 }
 

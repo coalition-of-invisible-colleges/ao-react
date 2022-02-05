@@ -28,6 +28,7 @@ import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import AoMetric from './metric'
 import AoMemberIcon from './memberIcon'
+import AoCountdown from './countdown'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
@@ -1189,6 +1190,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content, true)}
+  						  <AoCountdown taskId={taskId} hudStyle='notification' />
             </div>
           </div>
         )
