@@ -107,7 +107,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
     })
     
     const connectionString = aoStore?.state?.cash?.address && aoStore.state?.token
-              ? aoStore.state.cash.address + ':' + aoStore.state?.token : false
+              ? aoStore.state.cash.address.trim() + ':' + aoStore.state?.token.trim() : false
     return (
       <div id="connect">
         <h3>
