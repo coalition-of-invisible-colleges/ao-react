@@ -206,6 +206,7 @@ class AoApi {
         : [],
       inId: anonymous ? null : aoStore.memberCard.taskId || null,
       prioritized: false,
+      access: 'default',
     }
     // console.log('AO: client/api.ts: createCard: ', {
     //   act,
@@ -251,6 +252,7 @@ class AoApi {
             deck: anonymous ? [] : [aoStore.member.memberId],
             inId: inId,
             prioritized: prioritized,
+            access: 'default',
           }
         }
         resolve(
@@ -353,6 +355,21 @@ class AoApi {
       type: 'task-dropped',
       taskId: taskId,
       memberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async setCardAccess(taskId: string, access: string): Promise<request.Response> {
+    const act = {
+      type: 'task-access-set',
+      taskId,
+      access
     }
     return request
       .post('/events')
@@ -1210,6 +1227,7 @@ class AoApi {
             deck: [aoStore.member.memberId],
             inId: inId,
             prioritized: false,
+            access: 'default',
           }
           request
             .post('/events')

@@ -105,12 +105,14 @@ export function recover(callback) {
     let all = []
 
     for (const ev of preparedStmts.recover.iterate()) {
-      console.log
+        console.log('recover')
+      console.log(JSON.parse(ev.document));
       all.push(JSON.parse(ev.document))
     }
     callback(null, all)
   } catch (err) {
     console.log('err caught recover ' + err)
+    console.log('you might want to remove this try catch statement for a more detailed error')
   }
 }
 
@@ -119,11 +121,13 @@ export function getAll(timestamp, callback) {
     let all = []
 
     for (const ev of preparedStmts.getAll.iterate(timestamp)) {
+      console.log(JSON.parse(ev.document));
       all.push(JSON.parse(ev.document))
     }
     callback(null, all)
   } catch (err) {
     console.log('err caught getAll ' + err)
+    console.log('you might want to remove this try catch statement for a more detailed error')
   }
 }
 

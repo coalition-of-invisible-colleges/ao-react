@@ -95,6 +95,7 @@ export type GridStyle = 'grid' | 'pyramid'
 export interface Task {
   taskId: string
   color: string
+  access?: string
   deck: string[]
   name: string
   address: string

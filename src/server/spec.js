@@ -621,6 +621,7 @@ router.post('/events', (req, res, next) => {
               hash: hash,
               inId: req.body.inId,
               prioritized: req.body.prioritized,
+              access: 'default',
             },
             resCallback
           )
@@ -639,6 +640,19 @@ router.post('/events', (req, res, next) => {
         )
       } else sendErrorStatus()
       break
+
+    case 'task-access-set':
+      if (
+        validators.isTaskId(req.body.taskId, errRes)
+      ) {
+        events.trigger(
+          eventType,
+          { taskId: req.body.taskId, access: req.body.access },
+          resCallback
+        )
+      } else sendErrorStatus()
+      break
+
     case 'task-seen':
       if (
         validators.isTaskId(req.body.taskId, errRes) &&

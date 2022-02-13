@@ -56,6 +56,28 @@ const ProtectedRoute = ({ component: Comp, path, ...rest }) => {
   )
 }
 
+const SelectivelyProtectedRoute = ({ component: Comp, path, ...rest }) => {
+  let loggedIn = aoStore.state.loggedIn;
+  const taskId = rest.computedMatch.params.taskId;
+  aoStore.getTaskById_async(taskId, (taskItem) => {
+          console.log("this is the card!!!!!");
+          console.log(taskItem.color);
+          console.log(taskItem.access);
+          console.log(taskItem);
+          });
+
+  return (
+    <Route
+      path={path}
+      {...rest}
+      render={props => {
+        aoStore.state.protectedRouteRedirectPath = props.location.pathname
+        return loggedIn ? <Comp {...props} /> : <Redirect to="/login" />
+      }}
+    />
+  )
+}
+
 const ProtectedFragment: React.FunctionComponent = ({ children }) => {
   let loggedIn = aoStore.state.loggedIn
   return loggedIn ? <React.Fragment>{children}</React.Fragment> : null
@@ -203,7 +225,7 @@ const App = () => {
             {
               // this is the primary application route
             }
-            <ProtectedRoute path="/task/:taskId?" component={AoCard} />
+            <SelectivelyProtectedRoute path="/task/:taskId?" component={AoCard} />
             <ProtectedRoute path="/" component={AoCard} />
 
             {

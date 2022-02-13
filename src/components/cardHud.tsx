@@ -49,6 +49,8 @@ interface CardHudProps {
 
 interface State {
 	clicked?: boolean
+    card?: any
+    access?: string
 }
 
 @observer
@@ -56,12 +58,26 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 	constructor(props) {
 		super(props)
 		this.addGrid = this.addGrid.bind(this)
-		this.state = {}
+		this.modifyCardAccess = this.modifyCardAccess.bind(this)
+		const { access } = aoStore.hashMap.get(this.props.taskId)
+		this.state = { access }
 	}
 
 	addGrid() {
 		api.addGridToCard(this.props.taskId, 3, 3)
 	}
+
+	modifyCardAccess() {
+		const card = aoStore.hashMap.get(this.props.taskId)
+        this.setState({ access: card.access })
+        if (this.state.access === "public") {
+            api.setCardAccess(this.props.taskId, 'private');
+        } else if (this.state.access === 'private')  {
+            api.setCardAccess(this.props.taskId, 'default');
+        } else {
+            api.setCardAccess(this.props.taskId, 'public');
+        }
+    }
 
 	render() {
 		const taskId = this.props.taskId
@@ -284,6 +300,9 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						{showCacheButton && cacheButton}
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoFund taskId={taskId} />
+                        <div className="gridMenu action" onClick={this.modifyCardAccess}>
+                         {"Access: " + this.state.access}
+                        </div>
 						<AoPalette taskId={taskId} />
 					</div>
 				)

@@ -14,13 +14,15 @@ export function blankCard(
 	deck = [],
 	parents = [],
 	height = undefined,
-	width = undefined
+	width = undefined,
+    access = 'default'
 ) {
 	const newTaskId = !taskId ? v1() : taskId
 	let newCard = {
 		taskId: newTaskId,
 		color,
 		deck,
+        access,
 		name: typeof name !== 'string' ? 'invalid filename' : name.trim(),
 		address: '',
 		bolt11: '',

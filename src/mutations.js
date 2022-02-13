@@ -552,7 +552,8 @@ function tasksMuts(tasks, ev) {
           ev.color,
           ev.timestamp,
           ev.deck,
-          ev.inId ? [ev.inId] : []
+          ev.inId ? [ev.inId] : [],
+          ev.access
         )
       )
       tasks.forEach(task => {
@@ -1117,6 +1118,16 @@ function tasksMuts(tasks, ev) {
               }
             })
           }
+        }
+      })
+      break
+    case 'task-access-set':
+      tasks.forEach(task => {
+        if (task.taskId === ev.taskId) {
+          task.access = ev.access
+          console.log('UPDATD TASK')
+          console.log('task', task)
+          console.log('ev', ev)
         }
       })
       break

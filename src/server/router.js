@@ -54,6 +54,26 @@ export default function applyRouter(app) {
   )
 
   // app.use('/memes', express.static(config.memes.dir))
+    //
+  app.post(
+    '/fetchPublicTask',
+    (req, res) => {
+      let errRes = []
+
+      const taskId = req.body.taskId
+      if (!validators.isTaskId_sane(taskId, errRes)) {
+          res.status(400).send({ err: "bad taskID" })
+      }
+
+      const foundTask = state.pubState.tasks.find(taskItem => taskItem.taskId === taskId);
+      if (foundTask) {
+          res.status(200).send(foundTask);
+      } else {
+          res.status(400).send({ err: `task ${taskId} not found`, errRes })
+      }
+    }
+  )
+
 
   app.use(serverAuth) // below here requires auth token
 
@@ -641,7 +661,7 @@ export default function applyRouter(app) {
           if (result) {
           	result.name = member.name
           	foundMembers.push(result)
-	  }
+          }
         }
       })
       const searchResults = {
