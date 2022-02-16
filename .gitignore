@@ -24,3 +24,4 @@ npm-debug.log*
 configuration.js
 client-configuration.js
 database.sqlite3
+personal_access_token.git
