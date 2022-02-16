@@ -1336,7 +1336,7 @@ class AoApi {
     const qs = encodeURIComponent(querystring)
     const params = `?take=${take}&skip=${skip}`
     return request
-      .get('/search/' + qs + params)
+      .post('/search/' + qs + params)
       .set('Authorization', aoStore.state.token)
       .then(res => {
         return res

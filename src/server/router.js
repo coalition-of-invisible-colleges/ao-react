@@ -40,10 +40,6 @@ export default function applyRouter(app) {
   app.get('/public/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/public/favicon.ico'))
   })
-  app.get('/*', (req, res) => {
-     console.log('any route detected')
-    res.sendFile(path.join(__dirname, '../../dist/index.html'))
-  })
   app.use(bodyParser.json({ limit: '1000mb' }))
   app.use(cookieParser())
   app.use(
@@ -585,7 +581,7 @@ export default function applyRouter(app) {
     res.end(crawlerHash(state.serverState.tasks, req.params.taskId))
   })
 
-  app.get('/search/:query', (req, res) => {
+  app.post('/search/:query', (req, res) => {
     const search = decodeURIComponent(req.params.query)
     const { take, skip } = req.query
 
@@ -656,5 +652,9 @@ export default function applyRouter(app) {
       console.log('regex search terminated in error: ', err)
       res.status(500).send('Something went wrong...')
     }
+  })
+  app.get('/*', (req, res) => {
+     console.log('any route detected')
+    res.sendFile(path.join(__dirname, '../../dist/index.html'))
   })
 }
