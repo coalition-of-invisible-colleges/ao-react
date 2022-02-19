@@ -30,6 +30,18 @@ import api from './api'
 
 import { DeckTab } from '../components/deck'
 
+import {
+    Task,
+    Grid,
+    GridStyle,
+    Allocation,
+    Signature,
+    Userseen,
+    LabourTime,
+    AvatarLocation,
+    Membership
+} from '../interfaces'
+
 const modules = { cash, members, tasks, resources, memes, sessions, ao }
 
 function setCurrent(state: AoState, b: AoState) {
@@ -45,13 +57,6 @@ function setCurrent(state: AoState, b: AoState) {
   state.session = b.session
   state.token = b.token
   state.loggedIn = b.loggedIn
-}
-
-export interface Grid {
-  rows: {}
-  height: number
-  width: number
-  size: number
 }
 
 export interface Member {
@@ -75,67 +80,6 @@ export interface Member {
   tutorial?: boolean
   p0wned?: boolean
   phone?: string
-}
-
-interface Membership {
-  memberId: string
-  level: number
-}
-
-interface Allocation {
-  type?: string
-  taskId: string
-  allocatedId: string
-  amount: number
-  blame?: string
-}
-
-export type GridStyle = 'grid' | 'pyramid'
-
-export interface Task {
-  taskId: string
-  color: string
-  deck: string[]
-  name: string
-  address: string
-  bolt11: string
-  book: {
-    memberId: string
-    startTs: number
-    endTs: number
-  }
-  boost: number
-  allocations: Allocation[]
-  priorities: string[]
-  subTasks: string[]
-  completed: string[]
-  parents: string[]
-  claimed: string[]
-  claimInterval?: number
-  signed: Signature[]
-  passed: number[]
-  giftCount?: number
-  guild: string
-  lastClaimed: number
-  goal?: number
-  payment_hash: string
-  highlights: number[]
-  seen: Userseen[]
-  // time: Usertime[] // deprecated
-  timelog: LabourTime[]
-  created: number
-  grid?: Grid
-  gridStyle?: GridStyle
-  avatars?: AvatarLocation[]
-  showChatroom?: boolean
-  showStash?: boolean
-  memberships: Membership[]
-  stash: {}
-  loadedFromServer?: boolean
-  aoGridToolDoNotUpdateUI?: boolean
-  unionHours: number
-  unionSkill: number
-  unionHazard: number
 }
 
 export interface Meme {
@@ -165,31 +109,6 @@ export interface ConnectedAo {
   inboundSecret: string
   lastContact: number
   links: string[]
-}
-
-export interface LabourTime {
-  memberId: string
-  taskId: string
-  inId: string
-  start: number
-  stop: number
-}
-
-interface Userseen {
-  memberId: string
-  timestamp: Date
-}
-
-export interface Signature {
-  memberId: string
-  timestamp: Date
-  opinion: number | string
-}
-
-export interface AvatarLocation {
-  memberId: string
-  timestamp: number
-  area: number
 }
 
 interface Output {

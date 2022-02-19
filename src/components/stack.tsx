@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
+import aoStore from '../client/store'
+import { Task } from '../interfaces'
 import AoContextCard, { CardStyle } from './contextCard'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
