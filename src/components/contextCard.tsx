@@ -11,7 +11,8 @@ import {
   runInAction,
 } from 'mobx'
 import { observer, Observer } from 'mobx-react'
-import aoStore, { Task, Member, Resource } from '../client/store'
+import aoStore, { Member, Resource } from '../client/store'
+import { Task } from '../interfaces'
 import api from '../client/api'
 import { delay, cancelablePromise } from '../utils'
 import Markdown from 'markdown-to-jsx'

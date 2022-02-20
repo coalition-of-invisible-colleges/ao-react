@@ -92,7 +92,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                   </p>
                   <p>Members holding this card:</p>
                   <p>
-                    {memberCards.length >= 1 ? (
+                    {memberCards.length >= 1 && (
                       <AoStack
                         cards={memberCards}
                         zone="panel"
@@ -101,7 +101,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
                         noPopups={true}
                         className="signatureDecorated"
                       />
-                    ) : null}
+                    )}
                   </p>
                 </span>
               }

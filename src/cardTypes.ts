@@ -1,5 +1,6 @@
 import api from './client/api'
-import aoStore, { Task, Signature } from './client/store'
+import aoStore from './client/store'
+import { Task, Signature } from './interfaces';
 import { hideAll as hideAllTippys } from 'tippy.js'
 import { blankGrid } from './cards'
 

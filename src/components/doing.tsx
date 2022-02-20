@@ -4,14 +4,8 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import AoMetric from './metric'
 import AoContextCard from './contextCard'
-import {
-  addHours,
-  getMinutes,
-  getHours,
-  getSeconds,
-  getMilliseconds,
-} from 'date-fns'
 import api from '../client/api'
+import { convertToDuration } from '../lib/utils'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
@@ -48,32 +42,6 @@ function randomMotivational() {
   return motivationalPhrases[i]
 }
 
-export const convertToDuration = (secondsAmount: number) => {
-  const normalizeTime = (time: string): string =>
-    time.length === 1 ? `0${time}` : time
-
-  const SECONDS_TO_MILLISECONDS_COEFF = 1000
-  const MINUTES_IN_HOUR = 60
-
-  const milliseconds = secondsAmount * SECONDS_TO_MILLISECONDS_COEFF
-
-  const date = new Date(milliseconds)
-  const timezoneDiff = date.getTimezoneOffset() / MINUTES_IN_HOUR
-  const dateWithoutTimezoneDiff = addHours(date, timezoneDiff)
-
-  const hours = normalizeTime(String(getHours(dateWithoutTimezoneDiff)))
-  const minutes = normalizeTime(String(getMinutes(dateWithoutTimezoneDiff)))
-  const seconds = normalizeTime(String(getSeconds(dateWithoutTimezoneDiff)))
-  const msOutput = normalizeTime(
-    String(getMilliseconds(dateWithoutTimezoneDiff))
-  ).substring(0, 2)
-
-  const hoursOutput = hours !== '00' ? `${hours}:` : ''
-  const minsOutput = minutes !== '00' || hoursOutput !== '' ? `${minutes}:` : ''
-
-  return `${hoursOutput}${minsOutput}${seconds}:${msOutput}`
-}
-
 @observer
 export default class AoDoing extends React.Component<{}, State> {
   private interval
@@ -89,7 +57,7 @@ export default class AoDoing extends React.Component<{}, State> {
   componentDidMount() {
     this.interval = setInterval(
       () => this.setState({ clock: this.renderClock() }),
-      100
+      1000
     )
     this.motivationalInterval = setInterval(
       () => this.setState({ motivational: randomMotivational() }),
@@ -130,8 +98,7 @@ export default class AoDoing extends React.Component<{}, State> {
       return null
     }
 
-    const timeSoFar = (Date.now() - this.mostRecentStartTime) / 1000
-    console.log('timeSoFar is', timeSoFar)
+    const timeSoFar = (Date.now() - this.mostRecentStartTime)
     const prettyTime = convertToDuration(timeSoFar)
 
     return <div className="countupClock">{prettyTime}</div>

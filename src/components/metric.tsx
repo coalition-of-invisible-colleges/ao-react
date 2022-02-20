@@ -1,8 +1,11 @@
 import * as React from 'react'
 import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
-import aoStore, { LabourTime } from '../client/store'
+import aoStore from '../client/store'
+import { LabourTime } from '../interfaces'
 import api from '../client/api'
+import { convertToTimeWorked } from '../lib/utils'
+import { makeTimesheet } from '../lib/taskOperations'
 import { formatDistance } from 'date-fns'
 import Play from '../assets/images/play.svg'
 import Pause from '../assets/images/pause.svg'
@@ -17,6 +20,7 @@ interface Props {
 
 interface State {
   clocked?: string
+  timesheet?: String[]
 }
 
 const ARBITRARY_START = 1633859359993
@@ -26,7 +30,8 @@ export default class AoMetric extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     makeObservable(this)
-    this.state = {}
+    const card = aoStore.hashMap.get(this.props.taskId)
+    this.state = { timesheet: makeTimesheet(card) }
     this.startTimeClock = this.startTimeClock.bind(this)
     this.stopTimeClock = this.stopTimeClock.bind(this)
   }
@@ -40,10 +45,12 @@ export default class AoMetric extends React.Component<Props, State> {
   }
 
   startTimeClock() {
+    const card = aoStore.hashMap.get(this.props.taskId)
     api.startTimeClock(this.props.taskId, this.props.inId)
     if (this.interval) {
       clearInterval(this.interval)
     }
+    // we shouldn't be making the timesheet every second (or running renderTimeClocked)
     this.interval = setInterval(
       () => this.setState({ clocked: this.renderMyTimeClocked() }),
       1000
@@ -110,6 +117,10 @@ export default class AoMetric extends React.Component<Props, State> {
   }
 
   @computed get playPauseTooltip() {
+    const timesheet = this.state.timesheet?.map(line =>
+        <><br/><small>{line}</small></>
+    )
+
     return (
       <div>
         Click to{' '}
@@ -122,9 +133,7 @@ export default class AoMetric extends React.Component<Props, State> {
           </React.Fragment>
         )}
         {this.started && 'pause the clock'}
-        <div>
-          <small>clocked {this.state.clocked}</small>
-        </div>
+        {timesheet}
       </div>
     )
   }
