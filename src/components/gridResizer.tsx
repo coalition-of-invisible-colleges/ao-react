@@ -1,6 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { GridStyle } from '../client/store'
+import aoStore from '../client/store'
+import { GridStyle } from '../interfaces'
 import api from '../client/api'
 
 interface GridResizerProps {

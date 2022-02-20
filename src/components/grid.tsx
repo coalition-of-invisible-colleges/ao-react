@@ -2,7 +2,8 @@ import * as React from 'react'
 import { computed, runInAction, observable } from 'mobx'
 import { observer, Observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
-import aoStore, { Task, Grid, GridStyle } from '../client/store'
+import aoStore from '../client/store'
+import { Task, Grid, GridStyle } from '../interfaces'
 import api from '../client/api'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
@@ -16,6 +17,7 @@ import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
 
+// TODO: Move this to Interfaces
 interface GridProps {
   taskId: string
   gridStyle: GridStyle

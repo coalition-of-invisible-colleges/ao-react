@@ -3855,7 +3855,7 @@ input[type='text'].error {
     font-size: 1.1em;
     margin-left: 0.75em;
     cursor: default;
-    animation: rainbow 0.6283194s linear 0s infinite;
+    animation: rainbow 10s linear 0s infinite;
   }
 
   .metric {
@@ -3875,7 +3875,7 @@ input[type='text'].error {
 
 // Rainbow animated words, used to say "DO IT!" on the timeclock start/stop button
 .DOIT {
-  animation: rainbow 0.6283194s linear 0s infinite;
+  animation: rainbow 10s linear 0s infinite;
   font-weight: bold;
   position: absolute;
   left: -0.2em;

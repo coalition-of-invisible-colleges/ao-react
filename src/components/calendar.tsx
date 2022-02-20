@@ -1,6 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { Task } from '../client/store'
+import aoStore from '../client/store'
+import { Task } from '../interfaces'
 import AoStack from './stack'
 import AoPopupPanel from './popupPanel'
 import { formatDistanceToNow } from 'date-fns'

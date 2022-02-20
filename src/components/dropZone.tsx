@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react'
-import aoStore, { GridStyle } from '../client/store'
+import aoStore from '../client/store'
+import { GridStyle } from '../interfaces'
 import { CardPlay, CardLocation, CardZone, Coords } from '../cardTypes'
 import api from '../client/api'
 import { createHash } from '../crypto'
