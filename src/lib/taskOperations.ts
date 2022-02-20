@@ -9,7 +9,7 @@ export const makeTimesheet = (card: Task): String[] => {
     const totals = {}
     const output = []
 
-    card?.timelog.map(entry => {                                                                                                                                                                                                  
+    card?.timelog?.map(entry => {                                                                                                                                                                                                  
         const { name } = aoStore.memberById.get(entry.memberId)                                                                                                                                                                   
         const timeElapsed = entry.stop 
         ? entry.stop - entry.start 
@@ -36,6 +36,11 @@ export const makeTimesheet = (card: Task): String[] => {
 
     output.push(...entries)
     output.push('---')
+
+    console.log('entries', entries.length)
+    if (entries.length === 0) {
+        output.push("Nobody has done any work on this ticket yet! Click the play button to get started")
+    }
 
     Object.keys(totals).forEach((member) => {
         output.push(`${member}'s work on this task totals ${convertToTimeWorked(totals[member])}`)
