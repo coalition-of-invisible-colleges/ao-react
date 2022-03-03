@@ -4200,15 +4200,20 @@ div.legendAction, legend.clickable {
 #cardDrawer {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: rgba(90, 117, 178, 1);
   border: 3px solid #181c24;
   font-size: 1.5em;
   padding: 1em;
   animation: slideIn 0.35s forwards;
-  
+
   &.slideOut {
     animation: slideOut 0.65s forwards;
+  }
+  
+  &.slideIn {
+    animation: slideIn 0.35s forwards;
   }
 }
 

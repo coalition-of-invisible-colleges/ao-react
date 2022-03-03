@@ -467,7 +467,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       this.setState({ closingDrawerTimeout: newTimer })
       return
     }
-    clearTimeout(this.state.closingDrawerTimeout)
+    if(this.state.closingDrawerTimeout) {
+      clearTimeout(this.state.closingDrawerTimeout)
+      this.setState({ currentTab: newTab, closingDrawerTimeout: null })
+      return
+    }
     this.setState({currentTab: newTab}) 
   }
 
@@ -827,7 +831,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               }}
               onMouseOut={this.clearPendingPromise}>
               { cardDrawerContent &&
-                <div id='cardDrawer' className={this.state.closingDrawerTimeout ? 'slideOut' : undefined} >
+                <div id='cardDrawer' className={this.state.closingDrawerTimeout ? 'slideOut' : 'slideIn' } >
                   {cardDrawerContent}
                 </div>
               }
