@@ -179,6 +179,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoLilypad taskId={taskId} />
+					  { this.props.children }
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)

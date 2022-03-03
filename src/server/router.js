@@ -229,6 +229,10 @@ export default function applyRouter(app) {
 
     res.json(dataPackageToSendToClient)
   })
+  
+  app.post('/members', (req, res) => {
+    res.json(state.pubState.members)
+  })
 
   app.post(
     '/fetchTaskByID',

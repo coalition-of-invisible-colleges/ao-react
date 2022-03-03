@@ -1,7 +1,7 @@
 import React from 'react'
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { CardTab } from '../client/store'
 import AoContextCard from './contextCard'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'

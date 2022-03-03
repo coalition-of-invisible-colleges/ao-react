@@ -852,7 +852,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: min-content;
-  z-index: 1; // So grid resize button show above of main stack drop zone.
+  //z-index: 1; // So grid resize button show above of main stack drop zone.
 
   &.padbottom {
     margin-bottom: 3em;
@@ -1146,6 +1146,19 @@ body {
   }
 }
 
+#rightSidebar {
+  position: fixed;
+  height: calc(100vh - 10em);
+  width: 25vw;
+  top: 0;
+  right: 0;
+  background-color: #333;
+  padding-right: 0;
+  padding-left: 0;
+  box-shadow: -7px 7px 7px 1px rgba(21, 21, 21, 0.5);
+  overflow: auto;
+}
+
 // circlular icon that opens one of the main popups
 .actionCircle {
   background-color: rgba(200, 200, 200, 0.25);
@@ -1288,36 +1301,33 @@ body {
   }
 }
 
-// community hub popup panel
-#controls {
-  .popupButton.actionCircle {
-    top: 0.5em;
-    width: 3.5em;
-    height: 3.5em;
+// server controls popup panel
+#controls.popupButton.actionCircle {
+  position: fixed;
+  top: 0.5em;
+  width: 3.5em;
+  height: 3.5em;
 
-    &.open {
-      img,
-      object {
-        width: 5em;
-        height: 5em;
-        left: -0.75em;
-        top: -0.75em;
-      }
+  &.open {
+    img,
+    object {
+      width: 5em;
+      height: 5em;
+      left: -0.75em;
+      top: -0.75em;
     }
   }
 }
 
-#controls {
-  .popupButton.actionCircle {
-    left: unset;
-    right: 0.5em;
+#controls.popupButton.actionCircle {
+  left: unset;
+  right: 0.5em;
 
-    img,
-    object {
-      position: relative;
-      left: -0.05em;
-      top: -0.2em;
-    }
+  img,
+  object {
+    position: relative;
+    left: -0.05em;
+    top: -0.2em;
   }
 }
 
@@ -1474,7 +1484,8 @@ body {
 // small action buttons on sidebar
 #leftSidebar .toolbar .action,
 #leftSidebar > .action,
-#leftSidebar > div > .action {
+#leftSidebar > div > .action,
+.connectToAo > .action {
   border-color: #333;
   background-color: #111;
   color: white;
@@ -1484,6 +1495,10 @@ body {
     border-width: 0.2em;
     background-color: #222;
   }
+}
+
+#rightSidebar > .toolbar {
+  margin-right: 5em;
 }
 
 // missions popup panel
@@ -3044,27 +3059,6 @@ pre {
 	top: 0.15em;
 }
 
-.connectionString {
-	position: relative;
-	
-	.clippy {
-		cursor: pointer;
-		position: absolute;
-		right: 0;
-		background: white;
-		height: 100%;
-		top: 50%;
-		transform: translateY(-50%);
-		padding: 0 0.25em;
-		
-		&.copied {
-			border: 2pt solid #0808;
-			height: 150%;
-			right: -0.5em;
-		}
-	}
-}
-
 // chatroom-style main stack of subTasks under the grid in each card
 .chatStack {
   overflow-y: auto;
@@ -3086,20 +3080,34 @@ pre {
 // p2p connect panel
 #connect {
   margin-bottom: 1em;
-
-  form {
-    margin-top: 1em;
-
-    .fieldset {
-      text-align: right;
-      position: relative;
-      transform: translateX(-15%);
-      margin-bottom: 0.5em;
-
-      input {
-        margin-left: 1em;
-        margin-bottom: 0.5em;
+  
+  fieldset {
+    margin: 0 0.5em 1em 0.5em;
+    
+    legend {
+        margin-left: auto;
+        margin-right: auto;
+        width: auto;
       }
+  }
+  
+  &>.action {
+    margin-top: 1em;
+  }
+  
+  .connectToAo {
+    margin-top: 1em;
+    position: relative;
+    text-align: center;
+      
+    textarea {
+      resize: none;
+      margin-right: 0;
+      margin-left: 0;
+      width: 100%;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     .tipMarker {
@@ -3124,6 +3132,60 @@ pre {
       min-height: 2.5em;
     }
   }
+}
+
+// Area that displays the tor address and connection secret of this AO with a button to copy to clipboard 
+.connectionString {
+	position: relative;
+	
+	textarea {
+	  width: calc(100% - 4.5em);
+	  margin-left: -2em;
+	  margin-right: 1em;
+	  resize: none;
+	  background: lightGrey;
+	}
+	
+	.clippy {
+		cursor: pointer;
+		position: absolute;
+		right: 0.45em;
+		background: white;
+		height: 1.75em;
+		top: 50%;
+		transform: translateY(-50%);
+		padding: 0.1em 0.3em 0.2em 0.3em;
+		
+		&.copied {
+			border: 2pt solid #0808;
+			height: 2.25em;
+			right: 0.075em;
+		}
+	}
+}
+
+// Read-only textarea containing a tor address for another AO
+.connectedAo {
+  position: relative;
+  
+  label {
+    padding-right: 0.5em;
+  }
+  
+  textarea {
+    background: lightGrey;
+    word-break: break-all;
+    resize: none;
+    margin-left: 0;
+    margin-right: 0;
+    width: max-content;
+    width: -moz-available;
+  }
+}
+
+// Shows the Address: label on the left and the textarea containing the address on the right
+.splitFlex {
+  display: flex;
 }
 
 // about section on the login page
@@ -4082,6 +4144,81 @@ svg.dataVisCanvas {
 			}
 		}
 	}
+}
+
+// Clickable legend title when it is closed, also the clickable legend title in the fieldset after it's open
+div.legendAction, legend.clickable {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Tabs along the edge of a card
+.cardTabs {
+  position: absolute;
+  right: 0;
+  top: 3em;
+  
+  .cardTab {
+    background-color: rgba(100, 127, 208, 0.72);
+    border: 3px solid #282c34;
+    border-right: none;
+    border-top-left-radius: 40%;
+    border-bottom-left-radius: 40%;
+    margin-top: 1em;
+    height: 5em;
+    width: 4em;
+    position: relative;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: rgba(100, 127, 208, 0.9);
+      border-color: #181c24;
+    }
+    
+    &.selected {
+      background-color: rgba(90, 117, 178, 1);
+      border-color: #181c24;
+    }
+    
+    object {
+      height: 3em;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      cursor: pointer;
+    }
+    
+  }
+}
+
+// Draw that slides out on the right side of a card to show the contents of the current tab
+#cardDrawer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: rgba(90, 117, 178, 1);
+  border: 3px solid #181c24;
+  font-size: 1.5em;
+  padding: 1em;
+  animation: slideIn 0.35s forwards;
+  
+  &.slideOut {
+    animation: slideOut 0.65s forwards;
+  }
+}
+
+@keyframes slideIn {
+    100% { left: 100%; }
+}
+
+@keyframes slideOut {
+    0% { left: 100% }
+    100% { left: 0; }
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

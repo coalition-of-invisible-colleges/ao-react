@@ -104,6 +104,7 @@ export interface Ticker {
 }
 
 export interface ConnectedAo {
+  name?: string
   address: string
   outboundSecret: false | string
   inboundSecret: string
@@ -242,6 +243,17 @@ export type LeftSidebarTab =
   | 'search'
   | 'deck'
 
+export type RightSidebarTab =
+  | 'resources'
+  | 'p2p'
+  | 'crypto'
+  | 'membership'
+  
+export type CardTab = 
+  | 'priorities'
+  | 'timecube'
+  | 'lightning'
+  
 class AoStore {
   @observable state: AoState = defaultState
   @observable searchResults?: SearchResults
@@ -257,6 +269,8 @@ class AoStore {
   @observable memberDeckSize?: number
   @observable mediaPlayHead: { inId: string; taskId: string }
   @observable leftSidebar?: LeftSidebarTab
+  @observable rightSidebar?: RightSidebarTab
+  @observable cardTab?: CardTab
   @observable localPriorityMode?: boolean
   @observable deckTab: DeckTab = 'all'
 
@@ -1438,6 +1452,7 @@ class AoStore {
   closeAllCloseables() {
     this.guiCloseables.forEach(callback => callback())
     this.closeLeftSidebar()
+    this.closeRightSidebar()
   }
 
   @action.bound dab() {
@@ -1462,7 +1477,27 @@ class AoStore {
   closeLeftSidebar() {
     this.leftSidebar = null
   }
+  
+  @action.bound
+  setRightSidebar(tab) {
+    this.rightSidebar = tab
+  }
 
+  @action.bound
+  closeRightSidebar() {
+    this.rightSidebar = null
+  }
+
+  @action.bound
+  setCardTab(tab) {
+    this.cardTab = tab
+  }
+
+  @action.bound
+  closeCardDrawer() {
+    this.cardTab = null
+  }
+  
   @action.bound
   showPriors() {
     this.localPriorityMode = true
