@@ -1392,6 +1392,7 @@ class AoStore {
 
   @action.bound
   setCurrentCard(taskId: string) {
+    console.log("setCurrentCard", taskId)
     this.removeFromContext(taskId)
     this.currentCard = taskId
   }

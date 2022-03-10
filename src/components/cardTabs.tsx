@@ -1,35 +1,33 @@
 import * as React from 'react'
-import { observer } from 'mobx-react'
-import aoStore from '../client/store'
-import Timecube from '../assets/images/timecube.svg'
-import Chest from '../assets/images/chest.svg'
-import Lilypad from '../assets/images/chatroom.svg'
-import Checkbox from '../assets/images/completed.svg'
-import Stash from '../assets/images/stash.svg'
+import AoDropZoneSimple from './dropZoneSimple'
+import { CardLocation } from '../cardTypes'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/themes/translucent.css'
-
+  
 interface Props {
-  onTabShown: (tab: CardTab, wasClosed: boolean) => void
+  tabs: CardTab[]
+  onTabShown: (tab: CardTabId, wasClosed: boolean) => void
   onTabClosed?: () => void
 }
 
-export type CardTab = 
+export type CardTabId = 
   | 'priorities'
   | 'timecube'
   | 'lightning'
   
+export interface CardTab {
+  id: CardTabId
+  icon: string
+  tooltip: string
+  content?: JSX.Element
+	onDrop?: (from: CardLocation) => void
+}
+  
 export default function AoCardTabs(props: Props) {
-  const tabs = [
-    ['priorities', Checkbox, 'Priorities'],
-    ['timecube', Timecube, 'Calendar'],
-    ['lightning', Chest, 'Points']
-  ]
+  let [currentTab, setCurrentTab] = React.useState<CardTabId>()
   
-  let [currentTab, setCurrentTab] = React.useState<CardTab>()
-  
-  function showTab(tab: CardTab) {
+  function showTab(tab: CardTabId) {
     const wasClosed = currentTab === null
     setCurrentTab(tab)
     props.onTabShown(tab, wasClosed)
@@ -40,23 +38,26 @@ export default function AoCardTabs(props: Props) {
     props.onTabClosed()
   }
   
-  function renderTab(tab: CardTab, icon, tooltip: string) {
+  const renderedTabs = props.tabs.map(cardTab => {
+    const tab: CardTabId = cardTab.id
+    const icon = cardTab.icon
+    const tooltip = cardTab.tooltip
+    const content = cardTab.content
+    const onDrop = cardTab.onDrop
+    const renderedTab = <div className={"cardTab" + (tab === currentTab ? ' selected' : '')} onClick={tab === currentTab ? closeTab : () => showTab(tab) }>
+        {content && <div className='tabSummary'>{content}</div>}
+        <object type="image/svg+xml" data={icon} />
+      </div>
     return <Tippy
       zIndex={4}
       theme="translucent"
       content={tooltip}
       delay={[625, 200]}
       placement='left'>
-        <div className={"cardTab" + (tab === currentTab ? ' selected' : '')} onClick={tab === currentTab ? closeTab : () => showTab(tab) }>
-          <object type="image/svg+xml" data={icon} />
-        </div>
+        <React.Fragment>
+          {onDrop ? <AoDropZoneSimple onDrop={onDrop} dropHoverMessage='Drop to prioritize'>{renderedTab}</AoDropZoneSimple> : renderedTab}
+        </React.Fragment>
       </Tippy>
-  }
-  
-  const renderedTabs = tabs.map(tabInfo => {
-    let [tab, icon, tooltip] = tabInfo
-    let castedTab: CardTab = tab as CardTab
-    return renderTab(castedTab, icon, tooltip)
   })
   
   return <div className="cardTabs">

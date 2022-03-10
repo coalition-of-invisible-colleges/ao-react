@@ -35,16 +35,23 @@ import BlankBadge from '../assets/images/badge_blank.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
 import Clipboard from '../assets/images/clipboard.svg'
+import Timecube from '../assets/images/timecube.svg'
+import Chest from '../assets/images/chest.svg'
+import Lilypad from '../assets/images/chatroom.svg'
+import Checkbox from '../assets/images/completed.svg'
+import Stash from '../assets/images/stash.svg'
 import {
   goInCard,
   prioritizeCard,
   subTaskCard,
   CardZone,
   CardPlay,
+  CardLocation
 } from '../cardTypes'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
-import AoCardTabs, { CardTab } from './cardTabs'
+import AoDropZoneSimple from './dropZoneSimple'
+import AoCardTabs, { CardTab, CardTabId } from './cardTabs'
 // import AoProposals from './proposals'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -63,6 +70,7 @@ export type CardStyle =
   | 'member'
   | 'envelope'
   | 'notification'
+  | 'index'
 
 export interface DragContext {
   zone: CardZone
@@ -83,6 +91,7 @@ interface CardProps {
   inId?: string
   padTop?: boolean
   priorPriors?: string[]
+  isCurrentCard?: boolean
 }
 
 interface State {
@@ -92,7 +101,7 @@ interface State {
   confirmedLoadedAllChildren: boolean
   renderMeNowPlease?: boolean
   showCopied?: boolean
-  currentTab?: CardTab
+  currentTab?: CardTabId
   closingDrawerTimeout?
 }
 
@@ -298,8 +307,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     return toReturn
   }
 
-  get projectCards() {
-    if (this.props.cardStyle !== 'mission') {
+  @computed get projectCards() {
+    if (this.props.cardStyle !== 'mission' && this.props.cardStyle !== 'index') {
       return undefined
     }
     let debuggingOutput = []
@@ -355,6 +364,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   }
 
   toggleProjects(event) {
+  console.log("toggleProjects")
     event.nativeEvent.stopImmediatePropagation()
     if (!this.state.showProjects) {
       this.setState({ showProjects: true, showPriorities: false })
@@ -475,7 +485,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.setState({currentTab: newTab}) 
   }
 
-  renderCardContent(content: string, hideIframes = false) {
+  renderCardContent(content: string, hideIframes = false, alternateOnClick = null) {
+    console.log("content is", content, "and alternateOnClick is ", alternateOnClick)
     // hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
     const meme = aoStore.memeById.get(this.props.task.taskId)
     let memeContent
@@ -490,7 +501,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     return (
-      <div onClick={this.props.cardStyle !== 'context' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
+      <div onClick={alternateOnClick ? alternateOnClick : this.props.cardStyle !== 'context' && this.props.cardStyle !== 'index' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
         <Markdown
           options={{
             forceBlock: false,
@@ -509,7 +520,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           }}>
           {memeContent ? memeContent : content}
         </Markdown>
-        {this.props.cardStyle !== 'context' && this.state.showCopied && <img className='clippy' src={Clipboard} />}
+        {alternateOnClick ? null : this.props.cardStyle !== 'context' && this.props.cardStyle !== 'index' && this.state.showCopied && <img className='clippy' src={Clipboard} />}
       </div>
     )
   }
@@ -606,11 +617,34 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     //   cardStyle,
     // })
     
+    const onDropToPrioritiesTab = (from: CardLocation) => {
+      if(from.zone === 'grid') {
+        api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId).then(() =>  api.prioritizeCard(from.taskId, taskId))
+        return
+      }
+      api.prioritizeCard(from.taskId, taskId)
+    }
+    
     let cardDrawerContent
     switch(this.state.currentTab) {
       case 'priorities':
         //cardDrawerContent = <AoCardPriorities tasks={priorityCards} />
-        cardDrawerContent = <div>Priorities tab coming soon!</div>
+        cardDrawerContent = <AoDropZoneSimple onDrop={onDropToPrioritiesTab} dropHoverMessage='Drop to prioritize'>
+          <h2>Priorities</h2>
+            {priorityCards && priorityCards.length >= 1 ? <AoStack
+              inId={taskId}
+              cards={priorityCards}
+              showAdd={false}
+              hideAddWhenCards={true}
+              addButtonText="+priority"
+              cardStyle="priority"
+              onNewCard={this.newPriority}
+              noDrop={true}
+              zone="priorities"
+              decorators={this.renderedUpboats}
+              alwaysShowAll={true}
+            /> : <p>No priorities. Drop card here to prioritize.</p>}
+          </AoDropZoneSimple>
         break
       case 'timecube':
         cardDrawerContent = <AoCountdown taskId={taskId} hudStyle='menu' />
@@ -792,6 +826,35 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           </div>
         )
       case 'full':
+        const bonus = card.boost || 0
+        const hasPoints = bonus > 0
+        const pointsSummary = hasPoints ? <div>{bonus} pt{bonus >= 2 ? 's' : ''}</div> : null
+    
+        const goal = card.hasOwnProperty('goal') && card.goal >= 0 ? card.goal : 0
+        const hasGoal = goal > 0
+        const goalSummary = hasGoal ? <div>{goal} goal</div> : null
+        
+        const tabs: CardTab[] = [
+            {
+              id: 'priorities',
+              icon: Checkbox,
+              tooltip: 'Priorities',
+              content: priorityCards && priorityCards.length >= 1 ? <React.Fragment>{priorityCards.length} task{priorityCards.length >= 2 ? 's' : ''}</React.Fragment> : null,
+              onDrop: onDropToPrioritiesTab
+            },
+            {
+              id: 'timecube',
+              icon: Timecube,
+              tooltip: 'Calendar',
+              content: <React.Fragment>3 events</React.Fragment>
+            },
+            {
+              id: 'lightning',
+              icon: Chest,
+              tooltip: 'Points',
+              content: (hasPoints || hasGoal) ? <React.Fragment>{pointsSummary}{goalSummary}</React.Fragment> : null
+            },
+          ]
         return (
           <React.Fragment>
             {this.props.noContextOnFull ? (
@@ -831,7 +894,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               }}
               onMouseOut={this.clearPendingPromise}>
               { cardDrawerContent &&
-                <div id='cardDrawer' className={this.state.closingDrawerTimeout ? 'slideOut' : 'slideIn' } >
+                <div id='cardDrawer' className={this.state.closingDrawerTimeout ? 'slideOut' : 'slideIn' + (this.state.currentTab ? ' ' + this.state.currentTab : '')} >
                   {cardDrawerContent}
                 </div>
               }
@@ -874,7 +937,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   )
                 }}
               </Observer>
-              <Observer>
+              {/*<Observer>
                 {() => {
                   return (
                     <AoStack
@@ -891,7 +954,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     />
                   )
                 }}
-              </Observer>
+              </Observer>*/}
               <Observer>
                 {() => {
                   if (priorityCards && priorityCards.length > 6) {
@@ -941,7 +1004,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <Observer>
                 {() => {
                   return <AoCardHud taskId={taskId} hudStyle="full after">
-                    <AoCardTabs onTabShown={this.onSwitchTab} onTabClosed={this.onSwitchTab} />
+                    <AoCardTabs tabs={tabs} onTabShown={this.onSwitchTab} onTabClosed={this.onSwitchTab} />
                   </AoCardHud>
                 }}
               </Observer>
@@ -1011,6 +1074,39 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div style={{ clear: 'both', height: '1px' }} />
           </div>
         )
+      case 'index':
+        const indexCards = this.projectCards
+        if(indexCards?.length && indexCards.length >= 1) {
+          content = card.guild + ' (' + indexCards.length + ')'
+        }
+        console.log("projectCards is", indexCards, "and showProjects is", this.state.showProjects)
+        const youAreHere = this.props.isCurrentCard
+        return  <div>
+              <div className={'indexLink' + (youAreHere ? ' youAreHere' : '') + (card.color ? ' ' + card.color + 'Text' : '') +
+              this.applyClassIfCurrentSearchResult }>
+                {indexCards && indexCards.length >= 1 ? (this.state.showProjects ? (
+                  <span className="triangle" onClick={this.toggleProjects}>&#9660;</span>
+                ) : (
+                  <span className="triangle"  onClick={this.toggleProjects}>&#9654;</span> )) : (  <span className="triangle nohover">&#8226;</span> )}
+                  <AoDropZone
+                    taskId={taskId}
+                    onDrop={this.dropToCard}
+                    zoneStyle="panel"
+                    dropHoverMessage="drop to categorize here">
+                      {this.renderCardContent(content, true, !youAreHere ? this.goInCard : undefined)}
+                  </AoDropZone>
+              </div>
+              {this.state.showProjects ? (
+                <AoStack
+                  inId={taskId}
+                  cards={indexCards}
+                  cardStyle={cardStyle}
+                  alwaysShowAll={true}
+                  zone="panel"
+                  noDrop={true}
+                />
+              ) : null}
+            </div>
       case 'envelope':
         const openGift = () => {
           api.prioritizeCard(taskId, aoStore.memberCard.taskId)

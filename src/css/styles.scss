@@ -58,6 +58,31 @@ body {
   background-color: black;
 }
 
+// red card text
+.redText {
+  color: #912c3e;
+}
+
+// yellow card
+.yellowText {
+  color: #9e8600;
+}
+
+// green card
+.greenText {
+  color: #276b16;
+}
+
+// blue card
+.blueText {
+  color: #1c4eb0;
+}
+
+// purple card
+.purpleText {
+  color: #8642a9;
+}
+
 // card hud that overlays information and buttons on a card (cardHud.tsx)
 .card > .hud {
   .cardMenuButton {
@@ -1966,8 +1991,9 @@ body {
       margin-top: 0.375em;
       margin-bottom: 0.375em;
       max-width: 70%;
-      position: relative;
-      left: calc(50% + 1.5em);
+      //position: relative;
+      //left: calc(50% + 1.5em);
+      margin-left: 4em;
     }
   }
   textarea {
@@ -4168,10 +4194,11 @@ div.legendAction, legend.clickable {
     border-top-left-radius: 40%;
     border-bottom-left-radius: 40%;
     margin-top: 1em;
-    height: 5em;
-    width: 4em;
+    //height: 5em;
+    width: 5em;
     position: relative;
     cursor: pointer;
+    text-align: center;
   
     &:hover {
       background-color: rgba(100, 127, 208, 0.9);
@@ -4184,15 +4211,27 @@ div.legendAction, legend.clickable {
     }
     
     object {
-      height: 3em;
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
+      margin-top: 0.45em;
+      margin-bottom: 0.3em;
+      width: 3em;
+      //top: 50%;
+      //transform: translateY(-50%);
       pointer-events: none;
       cursor: pointer;
+      position: relative;
+      right: -0.25em;
     }
     
+    .tabSummary {
+      font-size: 0.8em;
+      text-align: center;
+      margin-right: -0.7em;
+      margin-top: 0.32em;
+    }
+  }
+  
+  .dropZone {
+    position: relative;
   }
 }
 
@@ -4200,12 +4239,13 @@ div.legendAction, legend.clickable {
 #cardDrawer {
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0.5em;
+  //transform: translateY(-50%);
   background-color: rgba(90, 117, 178, 1);
   border: 3px solid #181c24;
-  font-size: 1.5em;
-  padding: 1em;
+  border-left: none;
+  //font-size: 1.5em;
+  padding: 1em 1em 1em 2.5em;
   animation: slideIn 0.35s forwards;
 
   &.slideOut {
@@ -4215,15 +4255,82 @@ div.legendAction, legend.clickable {
   &.slideIn {
     animation: slideIn 0.35s forwards;
   }
+  
+  &.priorities {
+    padding-right: 3em;
+  }
 }
 
+// Show animation for #cardDrawer
 @keyframes slideIn {
     100% { left: 100%; }
 }
 
+// Hide animation for #cardDrawer
 @keyframes slideOut {
     0% { left: 100% }
     100% { left: 0; }
+}
+
+// Index list in the sidebar
+.index {
+  font-size: 1.15em;
+  text-align: left;
+  padding: 0.5em 0.5em 0.5em 0;
+  margin: 1em 0.5em 0.5em 0.5em;
+  background-color: white;
+  position: relative;
+  
+  &>.stack > .dragZone > div > .indexLink > .dropZone {
+    font-weight: bold;
+  }
+  
+  .stack {
+    position: relative;
+    padding-left: 0.5em;
+  }
+}
+
+// Index-style card
+.indexLink {
+  cursor: pointer;
+  margin-top: 0.25em;
+  margin-left: 1.5em;
+  position: relative;
+  
+  &>div:hover {
+    text-decoration: underline;
+  }
+  
+  &.youAreHere {
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: default;
+  }
+  
+  .triangle {
+    //flex-basis: 1.5em;
+    height: 1.5em;
+    width: 1.5em;
+    min-width: 1.5em;
+    text-align: center;
+    position: absolute;
+    left: -1.5em;
+    
+    &:hover {
+      background-color: rgba(100, 127, 208, 0.5);
+      border-radius: 50%;
+    }
+    
+    &.nohover {
+      cursor: default;
+      
+      &:hover {
+        background-color: unset;
+        border-radius: unset;
+      }
+    }
+  }
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
