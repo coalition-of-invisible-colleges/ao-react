@@ -19,7 +19,7 @@ import link from './link.js'
 import cleanup from './cleanup.js'
 import todo from './todo.js'
 import { scanMemes } from './files.js'
-import lightning from './lightning.js'
+import { recordEveryInvoice, watchOnChain } from './lightning.js'
 
 const app = express()
 applyRouter(app)
@@ -43,8 +43,8 @@ function startDctrlAo() {
       todo()
       cleanup()
       if (config.clightning.enable) {
-        lightning.recordEveryInvoice(state.serverState.cash.pay_index)
-        lightning.watchOnChain()
+        recordEveryInvoice(state.serverState.cash.pay_index)
+        watchOnChain()
       }
       const serverReactions = changeFeed
         .onValue(ev => {

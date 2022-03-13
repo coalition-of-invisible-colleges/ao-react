@@ -98,6 +98,8 @@ lightningRouter.post('/lightning/peer', (req, res) => {
 })
 
 lightningRouter.post('/bitcoin/transaction', (req, res) => {
+	console.log('debuggin')
+	console.log('req.body', req.body)
   bitClient
     .getMempoolEntry(req.body.txid)
     .then(memPool => {
@@ -179,29 +181,29 @@ function checkFunds() {
 }
 
 function getInfo() {
-  return client
-    .getinfo()
-    .then(mainInfo => {
-      bitClient.getBlockStats(mainInfo.blockheight).then(blockfo => {
-        mainInfo.blockfo = blockfo
-        client
-          .listfunds()
-          .then(result => {
-            mainInfo.channels = result.channels
-            mainInfo.outputs = result.outputs
-            getMempool().then(mempool => {
-              mainInfo.mempool = mempool
-              try {
-                allEvents.getNodeInfo(mainInfo)
-              } catch (err) {
-                console.log('getNodeInfo error:  ', err)
-              }
-            })
-          })
-          .catch(console.log)
-      })
-    })
-    .catch(console.log)
+	return client
+		.getinfo()
+		.then(mainInfo => {
+			bitClient.getBlockStats(mainInfo.blockheight).then(blockfo => {
+				mainInfo.blockfo = blockfo
+				client
+					.listfunds()
+					.then(result => {
+						mainInfo.channels = result.channels
+						mainInfo.outputs = result.outputs
+						getMempool().then(mempool => {
+							mainInfo.mempool = mempool
+							try {
+								allEvents.getNodeInfo(mainInfo)
+							} catch (err) {
+								console.log('getNodeInfo error:  ', err)
+							}
+						})
+					})
+			})
+				.catch(console.log)
+		})
+		.catch(console.log)
 }
 
 export function recordEveryInvoice(start) {
