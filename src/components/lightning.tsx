@@ -38,9 +38,8 @@ export default function AoLightning() {
   ) {
     return (
       <React.Fragment>
-        <h3>Lightning Status</h3>
-        <p>Install clightning to enable crypto features.</p>
-        <p>Info: {JSON.stringify(aoStore.state.cash?.info)}</p>
+        <h3>Lightning Status: Not Connected</h3>
+        <p>state.cash.info is empty or does not contain blockheight</p>
       </React.Fragment>
     )
   }
@@ -250,28 +249,28 @@ export default function AoLightning() {
   })
 
     if (fetchedTxn === undefined) {
-	    return (
-			    <>
-			    <h3>Lightning Status: { aoStore.state.cash.info ? "Active" : "Inactive"}</h3>
-			    {sats > 0 && sats !== Infinity
-			    ? '0.01 ' +
-			    aoStore.state.cash.currency +
-			    ' ~ ' +
-			    (sats / 100).toFixed(0) + ' sats'
-			    : '1.0 BTC = 100,000,000 sats'}
-			    <br/>
-			    {aoStore.state.cash.info.mempool && (
-					    <button onClick={sampler}>
-					    Double Click Me To Open Lightning Controls
-					    </button>
-					    )}
-			    </>
-		   )}
+        return (
+                <>
+                <h3>Lightning Status: { aoStore.state.cash.info ? "Active" : "Inactive"}</h3>
+                {sats > 0 && sats !== Infinity
+                ? '0.01 ' +
+                aoStore.state.cash.currency +
+                ' ~ ' +
+                (sats / 100).toFixed(0) + ' sats'
+                : '1.0 BTC = 100,000,000 sats'}
+                <br/>
+                {aoStore.state.cash.info.mempool && (
+                        <button onClick={sampler}>
+                        Double Click Me To Open Lightning Controls
+                        </button>
+                        )}
+                </>
+               )}
 
 
-  const renderedOutPs = filteredOut().map(outp => (
-    <div>{outp.value && outp.scriptPubKey.addresses}</div>
-  ))
+    const renderedOutPs = filteredOut().map(outp => (
+                <div>{outp.value && outp.scriptPubKey.addresses}</div>
+                ))
 
   return (
     <React.Fragment>
