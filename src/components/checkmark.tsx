@@ -52,8 +52,8 @@ export default class AoCheckmark extends React.PureComponent<CheckmarkProps> {
         width="12.96459mm"
         height="12.96459mm"
         version="1.1"
-        className={'checkmarkImage ' + this.cardColor}
-        onDoubleClick={this.props.onGoIn}>
+        className='checkmarkImage'
+        onClick={this.props.onGoIn}>
         <g transform="translate(178.70974,-158.92981)">
           <path
             style={{ fillOpacity: 1, strokeWidth: 0.26458335 }}

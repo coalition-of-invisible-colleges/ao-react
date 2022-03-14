@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { HudStyle } from './cardHud'
-import AoPrice from './price'
 import Chest from '../assets/images/chest.svg'
 
 interface Props {
@@ -149,7 +148,6 @@ export default class AoCrowdfund extends React.Component<Props, State> {
               <img src={Chest} />
               {hasGoal ? 'Goal: ' + goal : 'set crowdfund goal'}
             </div>
-            {hasGoal && <AoPrice taskId={this.props.taskId} />}
           </div>
         )
       case 'face before':

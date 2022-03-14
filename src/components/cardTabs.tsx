@@ -11,16 +11,17 @@ interface Props {
   onTabClosed?: () => void
 }
 
-export type CardTabId = 
-  | 'priorities'
-  | 'timecube'
-  | 'lightning'
-  
+export enum CardTabId {
+  priorities = 1,
+  timecube,
+  lightning,
+}
+
 export interface CardTab {
   id: CardTabId
   icon: string
   tooltip: string
-  content?: JSX.Element
+  content?: JSX.Element | Array<JSX.Element>
 	onDrop?: (from: CardLocation) => void
 }
   
@@ -37,16 +38,24 @@ export default function AoCardTabs(props: Props) {
     setCurrentTab(null);
     props.onTabClosed()
   }
-  
-  const renderedTabs = props.tabs.map(cardTab => {
+
+  const renderedTabs = props.tabs.map((cardTab, i) => {
     const tab: CardTabId = cardTab.id
     const icon = cardTab.icon
     const tooltip = cardTab.tooltip
-    const content = cardTab.content
+    let content = cardTab.content
+    let contentAfter
+    if(Array.isArray(content)) {
+      contentAfter = content[1]
+      content = content[0]
+    }
     const onDrop = cardTab.onDrop
-    const renderedTab = <div className={"cardTab" + (tab === currentTab ? ' selected' : '')} onClick={tab === currentTab ? closeTab : () => showTab(tab) }>
+    const renderedTab =
+      <div className={"cardTab" + (tab === currentTab ? ' selected' : '')}
+          onClick={tab === currentTab ? closeTab : () => showTab(tab) }>
         {content && <div className='tabSummary'>{content}</div>}
         <object type="image/svg+xml" data={icon} />
+        {contentAfter && <div className='tabSummary'>{contentAfter}</div>}
       </div>
     return <Tippy
       zIndex={4}
@@ -54,9 +63,9 @@ export default function AoCardTabs(props: Props) {
       content={tooltip}
       delay={[625, 200]}
       placement='left'>
-        <React.Fragment>
+        <div>
           {onDrop ? <AoDropZoneSimple onDrop={onDrop} dropHoverMessage='Drop to prioritize'>{renderedTab}</AoDropZoneSimple> : renderedTab}
-        </React.Fragment>
+        </div>
       </Tippy>
   })
   

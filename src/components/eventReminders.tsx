@@ -35,7 +35,7 @@ export default function AoEventReminders() {
   })
   
   impendingEvents.sort((taskA, taskB) => taskA.book.startTs - taskB.book.startTs)
-  const renderedEvents = impendingEvents.map(task => <AoContextCard task={task} cardStyle='notification' />)
+  const renderedEvents = impendingEvents.map((task, i) => <AoContextCard task={task} cardStyle='notification' key={i} />)
   
   return <div className="eventReminders">
           {renderedEvents}

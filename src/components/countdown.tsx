@@ -126,8 +126,12 @@ export default class AoCountdown extends React.Component<
   render() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return null
+    
+    if(this.props.hudStyle === 'badge' && card.book.startTs) {
+      return this.renderCountdown()
+    }
 
-    if (this.state.editing) {
+    if (this.state.editing || this.props.hudStyle === 'menu') {
       return (
         <div className="countdown">
           <RenderDatePicker
@@ -137,19 +141,6 @@ export default class AoCountdown extends React.Component<
           <button type="button" onClick={this.bookResource}>
             Schedule
           </button>
-        </div>
-      )
-    }
-
-    if (this.props.hudStyle === 'menu') {
-      return (
-        <div
-          onClick={this.startEditing}
-          className={'countdown action ' + this.props.hudStyle}>
-          <img src={Timecube} />
-          {card.book.startTs
-            ? format(card.book.startTs, 'MMMM d, yyyy @ h:mm a')
-            : 'schedule event'}
         </div>
       )
     }

@@ -2252,38 +2252,42 @@ img.icon {
 
   .dragZone {
     // display: inline;
+  }
+}
 
-    .card.checkmark {
-      background: unset;
-      // display: block;
-      margin: 0;
-      padding: 0 0.25em;
-      transform: unset;
-      left: unset;
-      line-height: 2em;
-
-      .content {
-        display: inline-block;
-        margin: 0 1em 0 0;
-
-        span {
-          float: right;
-        }
-      }
-
-      img {
-        width: 1.5em;
-      }
-    }
+// Completed-style card that displays in the completed section
+.card.checkmark {
+  background: unset;
+  margin: 0.5em 0;
+  padding: 0 0.25em;
+  transform: unset;
+  left: unset;
+  //line-height: 2em;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  //justify-content: space-between;
+  text-align: left;
+  gap: 0.5em;
+  vertical-align: center;
+  
+  svg {
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  
+  .content {
+    min-height: 2.5em;
+    margin: 0 1em 0 0.5em;
+    display: flex;
+    align-items: center;
   }
 }
 
 // attempt to change the color of a hardcoded SVG, failed and currently unused
 .checkmarkImage {
+  width: 2em;
   height: 2em;
-  fill: white;
-  // margin-top: 0.75em;
-  outline: none;
 }
 
 // ghost image when dragging and dropping, shown as the drag image.
@@ -3107,16 +3111,6 @@ pre {
 #connect {
   margin-bottom: 1em;
   
-  fieldset {
-    margin: 0 0.5em 1em 0.5em;
-    
-    legend {
-        margin-left: auto;
-        margin-right: auto;
-        width: auto;
-      }
-  }
-  
   &>.action {
     margin-top: 1em;
   }
@@ -3656,6 +3650,7 @@ input[type='text'].error {
     transform: translateX(-50%);
     margin-top: 1em;
     margin-bottom: 1em;
+    font-size: 0.9em;
 
     button.action {
       margin: 0;
@@ -4172,6 +4167,17 @@ svg.dataVisCanvas {
 	}
 }
 
+// Outline around a collection of form elements, used in AoHiddenFieldset
+fieldset {
+  margin: 0 0.5em 1em 0.5em;
+  
+  legend {
+      margin-left: auto;
+      margin-right: auto;
+      width: auto;
+    }
+}
+  
 // Clickable legend title when it is closed, also the clickable legend title in the fieldset after it's open
 div.legendAction, legend.clickable {
   cursor: pointer;
@@ -4199,6 +4205,7 @@ div.legendAction, legend.clickable {
     position: relative;
     cursor: pointer;
     text-align: center;
+    user-select: none;
   
     &:hover {
       background-color: rgba(100, 127, 208, 0.9);
@@ -4210,7 +4217,7 @@ div.legendAction, legend.clickable {
       border-color: #181c24;
     }
     
-    object {
+    & > object {
       margin-top: 0.45em;
       margin-bottom: 0.3em;
       width: 3em;
@@ -4227,6 +4234,18 @@ div.legendAction, legend.clickable {
       text-align: center;
       margin-right: -0.7em;
       margin-top: 0.32em;
+      
+      div.fitContent {
+        width: fit-content;
+        margin: -0.45em auto 0.625em auto;
+      }
+      
+      object {
+        height: 1.5em;
+        margin: 0;
+        position: relative;
+        top: 0.25em;
+      }
     }
   }
   
@@ -4242,11 +4261,14 @@ div.legendAction, legend.clickable {
   top: 0.5em;
   //transform: translateY(-50%);
   background-color: rgba(90, 117, 178, 1);
-  border: 3px solid #181c24;
+  border: 3px solid #181c2455;
+  border-top-right-radius: 2em;
+  border-bottom-right-radius: 2em;
   border-left: none;
   //font-size: 1.5em;
-  padding: 1em 1em 1em 2.5em;
+  padding: 0 1em 1em 2.5em;
   animation: slideIn 0.35s forwards;
+  
 
   &.slideOut {
     animation: slideOut 0.65s forwards;
@@ -4258,6 +4280,14 @@ div.legendAction, legend.clickable {
   
   &.priorities {
     padding-right: 3em;
+    
+    .stack {
+      margin-top: 2em;
+    }
+  }
+  
+  &.lightning {
+    width: max-content;
   }
 }
 
@@ -4330,6 +4360,56 @@ div.legendAction, legend.clickable {
         border-radius: unset;
       }
     }
+  }
+}
+
+// Fieldset around the options to set a recurring task automatic uncheck in the priorities tab
+.intervalFieldset {
+  margin-top: 1.25em;
+  margin-bottom: 0.25em;
+  
+  .claimInterval {
+    width: max-content;
+  }
+}
+
+// Make the clipboard wrapper around content inline so the member icon displays on the same line as the member name
+.content > .clipboardWrapper {
+  display: inline-block;
+}
+
+// Tab / button to switch to toggle viewing checked-off / completed / accomplished cards
+.prioritiesTab {
+  position: absolute;
+  top: 0.5em;
+  right: 0.75em;
+  cursor: pointer;
+  padding: 0 1.25em 0.5em 1.25em;
+  border-radius: 5em;
+  color: white;
+  background-color: #4441;
+  box-shadow: inset 0px -1px 1px rgba(0,0,0,0.5), inset 0px 1px 1px rgba(255,255,255,0.4);
+  font-weight: bold;
+  font-size: 1.25em;
+
+  &:hover {
+    background-color: rgba(86, 86, 150, 0.3);
+  }
+  
+  &.selected {
+    background-color: #4444;
+    box-shadow: inset 0px -1px 1px rgba(255,255,255,0.4), inset 0px 1px 1px rgba(0,0,0,0.5);
+    
+    &:hover {
+      background-color: rgba(70, 66, 125, 0.3);
+    }
+  }
+  
+  object {
+    height: 2em;
+    position: relative;
+    top: 0.5em;
+    pointer-events: none;
   }
 }
 
