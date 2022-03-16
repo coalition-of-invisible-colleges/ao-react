@@ -9,11 +9,15 @@ import AoStack from './stack'
 import { CardPlay } from '../cardTypes'
 import config from '../../configuration'
 import { formatDistanceToNow } from 'date-fns'
+import Clipboard from '../assets/images/clipboard.svg'
 
 interface State {
   open?: boolean
   address?: string
   secret?: string
+  showCopied?: boolean
+  timer?
+  error?: string
 }
 
 @observer
@@ -23,9 +27,9 @@ export default class AoConnect extends React.PureComponent<{}, State> {
     this.state = {}
     this.toggleOpen = this.toggleOpen.bind(this)
     this.onChangeAddress = this.onChangeAddress.bind(this)
-    this.onChangeSecret = this.onChangeSecret.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
     this.newConnection = this.newConnection.bind(this)
+    this.copyConnectionStringToClipboard = this.copyConnectionStringToClipboard.bind(this)
   }
 
   toggleOpen() {
@@ -33,11 +37,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
   }
 
   onChangeAddress(event) {
-    this.setState({ address: event.target.value })
-  }
-
-  onChangeSecret(event) {
-    this.setState({ secret: event.target.value })
+    this.setState({ address: event.target.value  })
   }
 
   onKeyDown(event) {
@@ -48,7 +48,29 @@ export default class AoConnect extends React.PureComponent<{}, State> {
   }
 
   newConnection(event) {
-    api.connectToAo(this.state.address, this.state.secret)
+    const [address, secret] = this.state.address.split(':')
+    console.log("address and secret are", {address, secret})
+    if(!address || !secret) {
+      this.setState({error: 'Invalid address or secret'})
+      return
+    }
+    api.connectToAo(address, secret)
+  }
+
+  copyConnectionStringToClipboard(event, content: string | false) {
+    event.stopPropagation()
+    if(!content) {
+      return
+    }
+    navigator.clipboard.writeText(content)
+      .then(async () => {
+          this.setState({showCopied: true})
+          this.setState({timer: await setTimeout(() => this.setState({ showCopied: false }), 1000 ) })
+      })
+      .catch(err => {
+          console.log(err, 'copy attempt failed, printing to console:')
+          console.log(content)
+      })
   }
 
   render() {
@@ -67,12 +89,16 @@ export default class AoConnect extends React.PureComponent<{}, State> {
       })
 
       return (
-        <li key={ao.address}>
-          Address: {ao.address}
+        <fieldset key={ao.address} className='connectedAo'>
+          <legend>{ao?.name || ao.address.slice(0, 12)}...</legend>
+          Last seen {formattedLastContact}
+          <br />
+          <div className="splitFlex">
+            <label>Address:</label>
+            <textarea readOnly={true} value={ao.address} className='torAddress' />
+          </div>
           <br />
           Direction: Unknown {/* !ao.outboundSecret ? 'Inbound' : 'Outbound' */}
-          <br />
-          Last seen {formattedLastContact}
           <br />
           Linked cards:{' '}
           <AoStack
@@ -81,72 +107,62 @@ export default class AoConnect extends React.PureComponent<{}, State> {
             onDrop={linkCard}
             alwaysShowAll={true}
           />
-        </li>
+        </fieldset>
       )
     })
-
+    
+    const connectionString = aoStore?.state?.cash?.address && aoStore.state?.token
+              ? aoStore.state.cash.address.trim() + ':' + aoStore.state?.token.trim() : false
     return (
       <div id="connect">
         <h3>
-          Connect AOs{' '}
-          <AoTip text="Connect AOs peer-to-peer securely over tor." />
+          Connect AOs
         </h3>
-        <div>
-          Name this AO: <AoServerName />
-        </div>
-        <p>
-	{ aoStore?.state?.cash?.address
-            ? 'Tor address: ' + aoStore.state.cash.address
-            : 'Tor not set up.'}
-        </p>
-        {<p>Secret: {JSON.stringify(aoStore.state?.loader?.token)}</p>}
-        {list.length >= 1 ? (
-          <React.Fragment>
-            <ul>{list}</ul>
-          </React.Fragment>
-        ) : (
-          <p>No AOs connected.</p>
-        )}
-        {/*        <div className="action" onClick={this.toggleOpen}>
-          {this.state.open ? (
-            <React.Fragment>Connect to AO &#8963;</React.Fragment>
-          ) : (
-            <React.Fragment>Connect to AO &#8964;</React.Fragment>
-          )}
-        </div>
-*/}
-        {this.state.open && (
-          <form>
-            <div className="fieldset">
-              <div>
-                <label>Tor address:</label>
-                <input
-                  type="text"
-                  value={this.state.address}
-                  onChange={this.onChangeAddress}
-                  onKeyDown={this.onKeyDown}
-                  size={32}
-                />
-              </div>
-              <div>
-                <label>Secret:</label>
-                <input
-                  type="text"
-                  value={this.state.secret}
-                  onChange={this.onChangeSecret}
-                  onKeyDown={this.onKeyDown}
-                  size={32}
-                />
-              </div>
+        <fieldset>
+          <legend>This AO</legend>
+          <div>
+            Name: <AoServerName />
+          </div>
+          <div>Connection string: 
+            <div className='connectionString'>
+              <textarea readOnly={true} value={
+      	       connectionString ? connectionString
+                  : 'Tor not set up.'
+              } />
+              <img className={'clippy' + (this.state.showCopied ? ' copied' : '')} src={Clipboard} onClick={(event) => this.copyConnectionStringToClipboard(event, connectionString)} />
             </div>
-            <button
-              type="button"
-              onClick={this.newConnection}
-              className="action">
-              Connect
-            </button>
-            <AoTip text="Connect to another AO by entering the other AO's tor address (hostname) and secret." />
-          </form>
+          </div>
+        </fieldset>
+        {this.state.open ? (
+          <fieldset>
+            <legend className="clickable" onClick={this.toggleOpen}>Connect to AO &#8963;</legend>
+              <form className="connectToAo">
+                <div>
+                  <div>
+                    <label htmlFor="connectToAo">Connection string:</label>
+                    <textarea
+                      value={this.state.address}
+                      onChange={this.onChangeAddress}
+                      onKeyDown={this.onKeyDown}
+                      name="connectToAo"
+                      placeholder="Paste other AO's connection string to link p2p over Tor"
+                    />
+                  </div>
+                  {this.state.error && <p className="error">{this.state.error}</p>}
+                </div>
+                <button
+                  type="button"
+                  onClick={this.newConnection}
+                  disabled={!this.state.address || this.state.address.length <= 0}
+                  className="action">
+                  Connect
+                </button>
+              </form>
+          </fieldset>
+        ) : <div className="legendAction action" onClick={this.toggleOpen}>Connect to AO &#8964;</div>}
+        <h3>Connected AOs</h3>
+        {list.length >= 1 ? list : (
+          <p>No AOs connected.</p>
         )}
       </div>
     )

@@ -1,19 +1,27 @@
 import webpack from 'webpack'
 import path from 'path'
 // variables
-import { fileURLToPath } from 'url'
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+import {
+  fileURLToPath
+} from 'url'
+const __filename = fileURLToPath(
+  import.meta.url )
+const __dirname = path.dirname( __filename )
 
 const buildMode =
-  process.argv.indexOf('-p') >= 0 || process.env.NODE_ENV === 'production' ? 'production' : 'development'
-const sourcePath = path.join(__dirname, './src')
-const outPath = path.join(__dirname, './dist')
-import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
+  process.argv.indexOf( '-p' ) >= 0 || process.env.NODE_ENV === 'production' ?
+  'production' : 'development'
+const sourcePath = path.join( __dirname, './src' )
+const outPath = path.join( __dirname, './dist' )
+import {
+  WebpackManifestPlugin
+} from 'webpack-manifest-plugin'
 // plugins
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 // var MiniCssExtractPlugin from mini-css-extract-plugin'
-import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import {
+  CleanWebpackPlugin
+} from 'clean-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
 //const ESLintPlugin from eslint-webpack-plugin'
@@ -27,27 +35,26 @@ export default {
   },
   output: {
     path: outPath,
-    filename: buildMode === 'production' ? '[id].[contenthash].js' : '[id].[hash].js',
-    chunkFilename: buildMode === 'production'
-      ? '[id].[name].[contenthash].js'
-      : '[id].[name].[hash].js',
+    filename: buildMode === 'production' ? '[id].[contenthash].js' :
+      '[id].[hash].js',
+    chunkFilename: buildMode === 'production' ?
+      '[id].[name].[contenthash].js' : '[id].[name].[hash].js',
     publicPath: '/',
   },
   target: 'web',
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: [ '.js', '.jsx', '.ts', '.tsx' ],
     // Fix webpack's default behavior to not load packages with jsnext:main module
     // (jsnext:main directs not usually distributable es6 format, but es6 sources)
-    mainFields: ['module', 'browser', 'main'],
+    mainFields: [ 'module', 'browser', 'main' ],
     alias: {
       'react-dom': '@hot-loader/react-dom',
     },
   },
   module: {
-    rules: [
-      {
+    rules: [ {
         test: /\.(j|t)s(x)?$/,
-        include: [path.resolve(__dirname, 'src')],
+        include: [ path.resolve( __dirname, 'src' ) ],
         use: {
           loader: 'babel-loader',
           options: {
@@ -55,26 +62,33 @@ export default {
             babelrc: false,
             presets: [
               [
-                '@babel/preset-env',
-                { targets: { browsers: 'last 2 versions' } }, // or whatever your project requires
+                '@babel/preset-env', {
+                  targets: {
+                    browsers: 'last 2 versions'
+                  }
+                }, // or whatever your project requires
               ],
               '@babel/preset-typescript',
               '@babel/preset-react',
             ],
             plugins: [
               // plugin-proposal-decorators is only needed if you're using experimental decorators in TypeScript
-              ['@babel/plugin-proposal-decorators', { legacy: true }],
-              ['@babel/plugin-proposal-class-properties', { loose: false }],
-              ['react-hot-loader/babel', { safetyNet: false }],
+              [ '@babel/plugin-proposal-decorators', {
+                legacy: true
+              } ],
+              [ '@babel/plugin-proposal-class-properties', {
+                loose: false
+              } ],
+              [ 'react-hot-loader/babel', {
+                safetyNet: false
+              } ],
             ],
           },
         },
-      },
-      {
+      }, {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      {
+        use: [ 'style-loader', 'css-loader' ],
+      }, {
         test: /\.s[ac]ss$/i,
         use: [
           // Creates `style` nodes from JS strings
@@ -121,18 +135,22 @@ export default {
       //   ]
       // },
       // static assets
-      { test: /\.html$/i, loader: 'html-loader', options: { esModule: false } },
-      { test: /\.(a?png|jpe?g)$/, use: 'url-loader?limit=10000000' },
       {
+        test: /\.html$/i,
+        loader: 'html-loader',
+        options: {
+          esModule: false
+        }
+      }, {
+        test: /\.(a?png|jpe?g)$/,
+        use: 'url-loader?limit=10000000'
+      }, {
         test: /\.svg/,
-        use: [
-          {
-            loader: 'svg-url-loader',
-            options: {},
-          },
-        ],
-      },
-      {
+        use: [ {
+          loader: 'svg-url-loader',
+          options: {},
+        }, ],
+      }, {
         test: /\.(gif|bmp|mp3|mp4|ogg|wav|eot|ttf|woff|woff2)$/,
         use: 'file-loader',
       },
@@ -150,9 +168,8 @@ export default {
           test: /[\\/]node_modules[\\/]/,
           chunks: 'all',
           priority: -10,
-          filename: buildMode === 'production'
-            ? 'vendor.[contenthash].js'
-            : 'vendor.[hash].js',
+          filename: buildMode === 'production' ?
+            'vendor.[contenthash].js' : 'vendor.[hash].js',
         },
       },
     },
@@ -160,10 +177,10 @@ export default {
     moduleIds: 'named',
   },
   plugins: [
-    new webpack.EnvironmentPlugin({
-      NODE_ENV: 'production', // use 'development' unless process.env.NODE_ENV is defined
+    new webpack.EnvironmentPlugin( {
+      NODE_ENV: `"${buildMode}"`,
       DEBUG: false,
-    }),
+    } ),
     new CleanWebpackPlugin(),
     // new MiniCssExtractPlugin({
     //   filename: isProduction ? '[contenthash].css' : '[hash].css',
@@ -171,34 +188,35 @@ export default {
     // }),
     new ForkTsCheckerWebpackPlugin(),
     //new webpack.NamedModulesPlugin(),
-    new HtmlWebpackPlugin({
+    new HtmlWebpackPlugin( {
       template: 'src/assets/index.html',
-    }),
-    new WebpackManifestPlugin({
+    } ),
+    new WebpackManifestPlugin( {
       fileName: 'public/manifest.json',
-    }),
+    } ),
     new NodePolyfillPlugin(),
     //new ESLintPlugin()
-    new Dotenv({ path: path.join(__dirname, './.env') }),
-    new webpack.DefinePlugin({
-        'process.env': {
-            'NODE_ENV': `"${buildMode}"`
-        }
-    })
+    new Dotenv( {
+      path: path.join( __dirname, './.env' )
+    } ),
+    new webpack.DefinePlugin( {
+      'process.env': {
+        'NODE_ENV': `"${buildMode}"`
+      }
+    } )
   ],
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist'),
+    contentBase: path.resolve( __dirname, 'dist' ),
     disableHostCheck: true,
     hot: true,
     inline: true,
     host: '127.0.0.1',
     // public: '127.0.0.1:3000',
-    allowedHosts: ['127.0.0.1'],
+    allowedHosts: [ '127.0.0.1' ],
     historyApiFallback: {
       disableDotRule: true,
     },
-    proxy: [
-      {
+    proxy: [ {
         context: [
           '/logout',
           '/state',

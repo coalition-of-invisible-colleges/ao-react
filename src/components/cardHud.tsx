@@ -150,11 +150,8 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						{taskId === aoStore.memberCard.taskId && <AoGifts />}
 						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
-							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
-							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
-							<AoInterval taskId={taskId} hudStyle={hudStyle} />
 							<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						</div>
 					</React.Fragment>
@@ -164,7 +161,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					<React.Fragment>
 						<AoBird taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
-							<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 							{this.props.inId ? (
@@ -179,6 +175,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 				return (
 					<div className={'hud ' + hudStyle}>
 						<AoLilypad taskId={taskId} />
+					  { this.props.children }
 						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
@@ -236,7 +233,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'notification':
 			   return (
 					<div className={'hud ' + hudStyle}>
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
+			      <AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'menu':
@@ -279,11 +276,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 								add pyramid
 							</div>
 						)}
-						<AoInterval taskId={taskId} hudStyle={hudStyle} />
-						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						{showCacheButton && cacheButton}
-						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
-						<AoFund taskId={taskId} />
 						<AoPalette taskId={taskId} />
 					</div>
 				)

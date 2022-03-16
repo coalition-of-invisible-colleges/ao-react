@@ -28,6 +28,7 @@ interface StackProps {
   decorators?: {}
   className?: string
   doNotReverseList?: boolean
+  noDrop?: boolean
 }
 
 interface StackState {
@@ -184,6 +185,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
                   : {}
               }
               inId={this.props.inId}
+              isCurrentCard={aoStore.currentCard === task.taskId}
             />,
             task.taskId
           )}
@@ -211,6 +213,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
                 noPopups={this.props.noPopups}
                 noFindOnPage={this.props.noFindOnPage}
                 inId={this.props.inId}
+                isCurrentCard={aoStore.currentCard === task.taskId}
               />,
               task.taskId
             )}
@@ -269,7 +272,20 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           (this.props.className ? ' ' + this.props.className : '') +
           (this.state.showAll ? ' open' : '')
         }>
-        <AoDropZone
+        {this.props.noDrop ? <React.Fragment>
+            {this.props.noFirstCard ? (
+                <>
+                  {showButton}
+                  {list}
+                </>
+              ) : (
+                <>
+                  {list}
+                  {showButton}
+                </>
+              )}
+            </React.Fragment>
+          : <AoDropZone
           inId={this.props.inId}
           y={0}
           onDrop={this.props.onDrop}
@@ -286,7 +302,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
               {showButton}
             </>
           )}
-        </AoDropZone>
+        </AoDropZone>}
       </div>
     )
   }

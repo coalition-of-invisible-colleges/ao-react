@@ -1,11 +1,10 @@
 import * as React from 'react'
 import { Redirect } from 'react-router-dom'
 import { observer, Observer } from 'mobx-react'
-import aoStore from '../client/store'
+import aoStore, { RightSidebarTab } from '../client/store'
 import api from '../client/api'
 import AoDoing from './doing'
 import AoHub from './hub'
-import AoControls from './controls'
 import AoDock from './dock'
 import AoMissions from './missions'
 import AoMembers from './members'
@@ -27,6 +26,10 @@ import AoSidebarButton from './sidebarButton'
 import AoChatroom from './chatroom'
 import AoStatus from './status'
 import AoEventReminders from './eventReminders'
+import AoResources from './resources'
+import AoConnect from './connect'
+import AoLightning from './lightning'
+import AoRent from './rent'
 import Sun from '../assets/images/sun.svg'
 import Bird from '../assets/images/mailbox.svg'
 import Badge from '../assets/images/bulletin.svg'
@@ -37,6 +40,11 @@ import MemberIcon from '../assets/images/heartnet.svg'
 import MagnifyingGlass from '../assets/images/search.svg'
 import MoonBag from '../assets/images/moonbag.svg'
 import Scroll from '../assets/images/scroll.svg'
+import Bull from '../assets/images/bull.svg'
+import Dolphins from '../assets/images/fobtap.svg'
+import RedBoat from '../assets/images/nodes.svg'
+import LightningBolt from '../assets/images/lightning.svg'
+import GoldenDoge from '../assets/images/goldendoge.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
 import { gloss } from '../semantics'
@@ -133,7 +141,9 @@ export default class AoHud extends React.Component<{}, HudState> {
     this.state = {}
     this.focusSearchbox = this.focusSearchbox.bind(this)
     this.updateProposalCount = this.updateProposalCount.bind(this)
-    this.renderSidebar = this.renderSidebar.bind(this)
+    this.renderLeftSidebar = this.renderLeftSidebar.bind(this)
+    this.toggleRightSidebar = this.toggleRightSidebar.bind(this)
+    this.renderRightSidebar = this.renderRightSidebar.bind(this)
     this.focusDeckSearchbox = this.focusDeckSearchbox.bind(this)
   }
 
@@ -151,17 +161,12 @@ export default class AoHud extends React.Component<{}, HudState> {
     this.setState({ proposals })
   }
 
-  renderSidebar() {
+  renderLeftSidebar() {
     if (!aoStore.leftSidebar) {
       return null
     }
 
-    let rendered
-
     switch (aoStore.leftSidebar) {
-      // case 'hub':
-      // maybe hub
-      // break
       case 'members':
         return <AoMembers />
       case 'guilds':
@@ -179,10 +184,75 @@ export default class AoHud extends React.Component<{}, HudState> {
         return <AoManual />
     }
   }
+  
+  toggleRightSidebar() {
+    if (aoStore.rightSidebar) {
+      aoStore.closeRightSidebar()
+      return
+    }
+    aoStore.setRightSidebar('resources')
+  } 
+  
+  renderRightSidebar() {
+    if (!aoStore.rightSidebar) {
+      return null
+    }
+  
+    let rendered
+    
+    function goToPage(event) {
+      const page = event.currentTarget.getAttribute('data-page')
+      if (aoStore.rightSidebar === page) {
+        return
+      }
+      aoStore.setRightSidebar(page)
+    }
+  
+    function renderPageButton(page: RightSidebarTab, label: string, imgSrc?: string) {
+      if (aoStore.rightSidebar === page) {
+        return (
+          <p className="action selected">
+            {imgSrc && <img src={imgSrc} />}
+            {label}
+          </p>
+        )
+      } else {
+        return (
+          <p onClick={goToPage} data-page={page} className="action">
+            {imgSrc && <img src={imgSrc} />}
+            {label}
+          </p>
+        )
+      }
+    }
+  
+    switch (aoStore.rightSidebar) {
+      case 'p2p':
+        rendered = <AoConnect />
+        break
+      case 'crypto':
+        rendered = <AoLightning />
+        break
+      case 'membership':
+        rendered = <AoRent />
+        break
+      case 'resources':
+      default:
+        rendered = <AoResources />
+    }
+    
+    return <React.Fragment>
+      <div className="toolbar">
+        {renderPageButton('resources', 'Hardware', Dolphins)}
+        {renderPageButton('p2p', 'AO p2p', RedBoat)}
+        {renderPageButton('crypto', 'Crypto', LightningBolt)}
+        {renderPageButton('membership', 'Membership', GoldenDoge)}
+      </div>
+      {rendered}
+    </React.Fragment>
+  }
 
   render() {
-    console.log('hud render')
-
     let { now, today, tomorrow, overdue } = aoStore.eventsAsAgenda
     const eventCount =
       now.length + today.length + tomorrow.length + overdue.length
@@ -250,7 +320,7 @@ export default class AoHud extends React.Component<{}, HudState> {
             }
           }}>
           <div className="leftBorder" />
-          {this.renderSidebar()}
+          {this.renderLeftSidebar()}
           <AoSidebarButton
             sidebarTab="deck"
             iconSrc={MoonBag}
@@ -307,7 +377,6 @@ export default class AoHud extends React.Component<{}, HudState> {
             id="tour-manual"
           />
         </div>
-        <AoControls />
         <Observer>
           {() => {
             return <AoDock />
@@ -329,6 +398,29 @@ export default class AoHud extends React.Component<{}, HudState> {
           */}
         <AoChatroom taskId={aoStore.currentChatroom} />
         <AoEventReminders />
+        {aoStore.rightSidebar && 
+          <div
+            id="rightSidebar"
+            className={aoStore.rightSidebar}>
+            {this.renderRightSidebar()}
+          </div>
+        }
+        <Tippy
+					zIndex={4}
+					theme="translucent"
+					content='Server Controls'
+					placement='left'>
+					<div
+					 id="controls"
+						className={
+							!!aoStore.rightSidebar
+								? 'popupButton actionCircle open'
+								: 'popupButton actionCircle'
+						}
+						onClick={this.toggleRightSidebar}>
+						<object type="image/svg+xml" data={Bull} />
+					</div>
+				</Tippy>
         {
           //<AoScore prefix={<span>Points: </span>} />
         }

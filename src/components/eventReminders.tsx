@@ -6,14 +6,38 @@ import AoContextCard from './contextCard'
 const timeRange = 1000 * 60 * 60 * 24 * 3
 
 export default function AoEventReminders() {
+  const now = Date.now()
+  
+  const impendingEvents = aoStore.state.tasks.filter(task => {
 
-const now = Date.now()
+    if(!task.deck.includes(aoStore.member.memberId)) {
 
-const impendingEvents = aoStore.state.tasks.filter(task => task.deck.includes(aoStore.member.memberId) && task.book && task.book.startTs >= 1 && (task.book.startTs - now <= timeRange) && task.claimed.indexOf(aoStore.member.memberId) === -1)
-impendingEvents.sort((taskA, taskB) => taskA.book.startTs - taskB.book.startTs)
-const renderedEvents = impendingEvents.map(task => <AoContextCard task={task} cardStyle='notification' />)
+      return false
+    }
+    
+    if(!task.book || !task.book.hasOwnProperty('startTs') || task.book.startTs < 1) {
 
-return <div className="eventReminders">
-        {renderedEvents}
-      </div>
+      return false
+    }
+    
+    const msUntilEvent = task.book.startTs - now
+    if(msUntilEvent > timeRange) {
+
+      return false
+    }
+    
+    if(msUntilEvent < 0 && task.claimed.indexOf(aoStore.member.memberId) >= 0) {
+
+      return false
+    }
+    
+    return true
+  })
+  
+  impendingEvents.sort((taskA, taskB) => taskA.book.startTs - taskB.book.startTs)
+  const renderedEvents = impendingEvents.map((task, i) => <AoContextCard task={task} cardStyle='notification' key={i} />)
+  
+  return <div className="eventReminders">
+          {renderedEvents}
+        </div>
 }

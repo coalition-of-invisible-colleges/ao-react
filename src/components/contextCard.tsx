@@ -19,7 +19,6 @@ import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
 import AoGrid from './grid'
 import AoStack from './stack'
-import AoCompleted from './completed'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
 import AoAttachment from './attachment'
@@ -29,19 +28,34 @@ import AoPreview from './preview'
 import AoCheckmark from './checkmark'
 import AoMetric from './metric'
 import AoMemberIcon from './memberIcon'
+import AoCountdown from './countdown'
+import AoHiddenFieldset from './hiddenFieldset'
+import AoInterval from './interval'
+import AoCrowdfund from './crowdfund'
+import AoPrice from './price'
+import AoFund from './fund'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
 import Clipboard from '../assets/images/clipboard.svg'
+import Timecube from '../assets/images/timecube.svg'
+import Chest from '../assets/images/chest.svg'
+import Lilypad from '../assets/images/chatroom.svg'
+import Checkbox from '../assets/images/completed.svg'
+import Star from '../assets/images/star.svg'
+import Stash from '../assets/images/stash.svg'
 import {
   goInCard,
   prioritizeCard,
   subTaskCard,
   CardZone,
   CardPlay,
+  CardLocation
 } from '../cardTypes'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
+import AoDropZoneSimple from './dropZoneSimple'
+import AoCardTabs, { CardTab, CardTabId } from './cardTabs'
 // import AoProposals from './proposals'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -60,6 +74,7 @@ export type CardStyle =
   | 'member'
   | 'envelope'
   | 'notification'
+  | 'index'
 
 export interface DragContext {
   zone: CardZone
@@ -80,15 +95,20 @@ interface CardProps {
   inId?: string
   padTop?: boolean
   priorPriors?: string[]
+  isCurrentCard?: boolean
 }
+
 
 interface State {
   showPriorities?: boolean
+  showCompleted?: boolean
   showProjects?: boolean
   // loadedFromServer: boolean
   confirmedLoadedAllChildren: boolean
   renderMeNowPlease?: boolean
   showCopied?: boolean
+  currentTab?: CardTabId
+  closingDrawerTimeout?
 }
 
 // const AoContextCard =
@@ -120,8 +140,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.newSubTask = this.newSubTask.bind(this)
     this.goInCard = this.goInCard.bind(this)
     this.refocusAll = this.refocusAll.bind(this)
-    this.onHover = this.onHover.bind(this)
     this.copyCardToClipboard = this.copyCardToClipboard.bind(this)
+    this.onSwitchTab = this.onSwitchTab.bind(this)
     this.renderCardContent = this.renderCardContent.bind(this)
     this.clearPendingPromise = this.clearPendingPromise.bind(this)
     this.dropToCard = this.dropToCard.bind(this)
@@ -220,27 +240,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           toReturn.push(
             this.props.task && this.props.task.aoGridToolDoNotUpdateUI
           )
-
-          // }
-          // console.log(
-          //   'AO: components/contextCard.tsx: projectCardsReaction: testPhase',
-          //   {
-          //     taskName: this.taskName,
-          //     task: this.props.task,
-          //     taskHasLoadedAllChildren: this.taskHasLoadedAllChildren,
-          //     aoGridToolDoNotUpdateUI:
-          //       this.props.task && this.props.task.aoGridToolDoNotUpdateUI,
-          //     toReturn,
-          //   }
-          // )
         }
         return toReturn
       },
       projectCards => {
-        // console.log(
-        //   'AO: components/contextCard.tsx: projectCardsReaction: actionPhase',
-        //   { taskName: this.taskName }
-        // )
         if (
           this.taskHasLoadedAllChildren === true &&
           this.props.task.aoGridToolDoNotUpdateUI !== true
@@ -253,43 +256,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   }
 
   componentDidMount() {
-    //console.log("AO: components/contextCard.tsx: componentDidMount: ", {"props": this.props, "state": this.state})
-
     this.onPropsTaskChangeFunction()
     this.registerSubCardsReaction()
-
-    // this code will try to load all the subcards of this card using local client and server async
-    //   if all the cards are already on the client, it will finish synchronously, discarding the
-    //   response of the async callback
-    // if (! this.props.task) return
-
-    // if (this.state.confirmedLoadedAllChildren === false)
-    // {
-    //   let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async
-    //       ( this.props.task.taskId,
-    //         (stateRequiresUpdate) =>
-    //         {
-    //           console.log("AO: components/contextCard.tsx: componentDidMount: running callback after loading all child cards", {stateRequiresUpdate})
-    //           if (stateRequiresUpdate === true)
-    //           { this.setState({confirmedLoadedAllChildren: true})
-    //           }
-    //         }
-    //       )
-    //   if (currentLoadedState !== false)
-    //   {
-    //     this.setState({confirmedLoadedAllChildren: true})
-    //   }
-    // }
-
-    // this.loadChildTasksAndReRender(true)
-
-    // here we want to track the subCards and rerender when they change
-    // if (this.props.cardStyle === "full")
-    // {
-    // let unMountReactionFunction =
-
-    // this.executeOnUnmount_list.push(unMountReactionFunction)
-    // }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -300,30 +268,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
     this.onPropsTaskChangeFunction()
     this.registerSubCardsReaction()
-
-    // this.childComponentsLastUpdated = Date.now()
-
-    //console.log("AO: components/contextCard.tsx: componentDidUpdate", {"props": this.props, "state": this.state, prevProps})
-
-    // if (this.props.task && prevProps.task && this.props.task.taskId === prevProps.task.taskId)
-    // {
-    //   // do nothing
-    // }
-    // else
-    // {
-    //   // re-render card
-    //   // this.loadChildTasksAndReRender(true)
-
-    // }
   }
 
   componentWillUnmount() {
-    //console.log("AO: components/contextCard.tsx: componentWillUnmount", {"props": this.props, "state": this.state})
-
     this.clearPendingPromise()
     if (this.subCardsReaction) this.subCardsReaction()
-
-    // this.executeOnUnmount_list.forEach ( fn => fn() );
   }
 
   pendingPromise = undefined
@@ -352,31 +301,20 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       })
     })
 
-    // allSubCards.forEach(tId => {
-    //     let subCard = aoStore.hashMap.get(tId)
-    //     debuggingOutput.push({tId, subCard})
-    //     if (subCard) {
-    //        toReturn.push(subCard.taskId)
-    //     }
-    // })
-
     if (card.grid && card.grid.rows) {
       Object.entries(card.grid.rows).forEach(([y, row]) => {
         Object.entries(row).forEach(([x, cell]) => {
-          // let gridCard = aoStore.hashMap.get(cell)
           debuggingOutput.push({ y, x, cell })
           toReturn.push(y + ':' + x + ':' + cell)
         })
       })
     }
 
-    //console.log("AO: components/contextCard.tsx: allSubCardItems complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, toReturn, debuggingOutput})
-
     return toReturn
   }
 
-  get projectCards() {
-    if (this.props.cardStyle !== 'mission') {
+  @computed get projectCards() {
+    if (this.props.cardStyle !== 'mission' && this.props.cardStyle !== 'index') {
       return undefined
     }
     let debuggingOutput = []
@@ -418,8 +356,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       })
     }
 
-    //console.log("AO: components/contextCard.tsx: projectCards complete", {"taskName": this.taskName, allSubCards, "grid":card.grid, projectCards, debuggingOutput})
-
     return projectCards
   }
 
@@ -433,6 +369,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
   }
 
+  showProjects() {
+    this.setState({ showProjects: true })
+  }
+  
   toggleProjects(event) {
     event.nativeEvent.stopImmediatePropagation()
     if (!this.state.showProjects) {
@@ -468,14 +408,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       console.log('missing card')
       return
     }
-    // if (this.props.cardStyle !== "context") aoStore.addToContext([aoStore.currentCard])
     let thisCardIsRenderedInTheContextStack = this.props.cardStyle === 'context'
     goInCard(
       card.taskId,
       thisCardIsRenderedInTheContextStack,
       !thisCardIsRenderedInTheContextStack
     )
-    // aoStore.setGlobalRedirect(card.taskId)
   }
 
   refocusAll() {
@@ -506,40 +444,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(resolve)
       }
     })
-  }
-
-  async onHover(event) {
-    // event.preventDefault()
-    // const card = this.props.task
-    // if (
-    //   card.seen &&
-    //   card.seen.some(s => s.memberId === aoStore.member.memberId)
-    // ) {
-    //   return
-    // }
-    // if (this.pendingPromise !== undefined) {
-    //   return
-    // }
-    // this.pendingPromise = cancelablePromise(delay(2000))
-    // return this.pendingPromise.promise
-    //   .then(() => {
-    //     if (
-    //       !card.seen ||
-    //       (card.seen &&
-    //         !card.seen.some(s => s.memberId === aoStore.member.memberId))
-    //     ) {
-    //       api.markSeen(this.props.task.taskId)
-    //     }
-    //     this.clearPendingPromise()
-    //   })
-    //   .catch(errorInfo => {
-    //     // rethrow the error if the promise wasn't
-    //     // rejected because of a cancelation
-    //     this.clearPendingPromise()
-    //     if (!errorInfo.isCanceled) {
-    //       throw errorInfo.error
-    //     }
-    //   })
   }
 
   @computed get applyClassIfCurrentSearchResult() {
@@ -575,8 +479,23 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           console.log(content)
       })
  }
+ 
+  onSwitchTab(newTab?) {
+    if(!newTab) {
+      const newTimer = setTimeout(() => this.setState({ closingDrawerTimeout: null, currentTab: null }), 650)
+      this.setState({ closingDrawerTimeout: newTimer })
+      return
+    }
+    if(this.state.closingDrawerTimeout) {
+      clearTimeout(this.state.closingDrawerTimeout)
+      this.setState({ currentTab: newTab, closingDrawerTimeout: null })
+      return
+    }
+    this.setState({currentTab: newTab}) 
+  }
 
-  renderCardContent(content: string, hideIframes = false) {
+  renderCardContent(content: string, hideIframes = false, alternateOnClick = null) {
+    console.log("content is", content, "and alternateOnClick is ", alternateOnClick)
     // hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
     const meme = aoStore.memeById.get(this.props.task.taskId)
     let memeContent
@@ -591,7 +510,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     return (
-      <div onClick={this.props.cardStyle !== 'context' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
+      <div className='clipboardWrapper' onClick={alternateOnClick ? alternateOnClick : this.props.cardStyle !== 'context' && this.props.cardStyle !== 'index' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
         <Markdown
           options={{
             forceBlock: false,
@@ -610,7 +529,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           }}>
           {memeContent ? memeContent : content}
         </Markdown>
-        {this.props.cardStyle !== 'context' && this.state.showCopied && <img className='clippy' src={Clipboard} />}
+        {alternateOnClick ? null : this.props.cardStyle !== 'context' && this.props.cardStyle !== 'index' && this.state.showCopied && <img className='clippy' src={Clipboard} />}
       </div>
     )
   }
@@ -624,6 +543,21 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
     return null
   }
+  
+	@computed get completedCards() {
+		const card = this.props.task
+
+		if (!card || !card.completed || card.completed.length < 1) {
+			return null
+		}
+
+		let completedCards: Task[] = card.completed
+			.map(tId => aoStore.hashMap.get(tId))
+			.filter(t => t?.deck?.length >= 1)
+		completedCards.reverse()
+
+		return completedCards
+	}
 
   @computed get renderedUpboats() {
     const card = this.props.task
@@ -719,8 +653,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             }
             id={'card-' + taskId}
             onClick={this.goInCard}
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}
             style={this.props.inlineStyle ? this.props.inlineStyle : null}>
             <AoPaper taskId={taskId} color={card?.color} />
@@ -790,8 +722,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               (this.state.showPriorities ? ' padbottom' : '')
             }
             onClick={this.goInCard}
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
             <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud
@@ -833,8 +763,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               this.applyClassIfCurrentSearchResult
             }
             onClick={this.goInCard}
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
             <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud
@@ -885,6 +813,113 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           </div>
         )
       case 'full':
+        const onDropToPrioritiesTab = (from: CardLocation) => {
+          if(from.zone === 'grid') {
+            api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId).then(() =>  api.prioritizeCard(from.taskId, taskId))
+            return
+          }
+          api.prioritizeCard(from.taskId, taskId)
+        }
+        
+        const completedCards = this.completedCards
+        const showCompleted = () => this.setState({ showCompleted: true })
+        const hideCompleted = () => this.setState({ showCompleted: false})
+        const prioritiesSummary = priorityCards?.length >= 1 ? <div>{priorityCards.length} task{priorityCards.length >= 2 ? 's' : ''}</div> : null
+        const recurrenceSummary = card?.claimInterval > 0 ? <div>{card.claimInterval} hrs</div> : null
+        const completedSummary = completedCards?.length >= 1 ? <div className='fitContent'>{completedCards.length} <object type="image/svg+xml" data={Star} /></div> : null
+        
+        const countdownSummary = <AoCountdown taskId={taskId} hudStyle='badge' />
+        const bonus = card.boost || 0
+        const hasPoints = bonus > 0
+        const pointsSummary = hasPoints ? <div>{bonus} pt{bonus >= 2 ? 's' : ''}</div> : null
+    
+        const goal = card.hasOwnProperty('goal') && card.goal >= 0 ? card.goal : 0
+        const hasGoal = goal > 0
+        const goalSummary = hasGoal ? <div>{goal} goal</div> : null
+        
+        const tabs: CardTab[] = [
+            {
+              id: CardTabId.priorities,
+              icon: Checkbox,
+              tooltip: 'Priorities',
+              content: [(prioritiesSummary || recurrenceSummary) ? <React.Fragment>{prioritiesSummary}{recurrenceSummary}</React.Fragment> : null, completedSummary],
+              onDrop: onDropToPrioritiesTab
+            },
+            {
+              id: CardTabId.timecube,
+              icon: Timecube,
+              tooltip: 'Calendar',
+              content: countdownSummary
+            },
+            {
+              id: CardTabId.lightning,
+              icon: Chest,
+              tooltip: 'Points',
+              content: (pointsSummary || goalSummary) ? <React.Fragment>{pointsSummary}{goalSummary}</React.Fragment> : null
+            },
+          ]
+        
+
+        let cardDrawerContent
+        switch(this.state.currentTab) {
+          case CardTabId.priorities:
+            cardDrawerContent = 
+              <React.Fragment>
+                {completedCards && completedCards.length >=1 &&
+                  <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards.length} <object type="image/svg+xml" data={Star} /></div>
+                }
+                {!this.state.showCompleted ? 
+                  <AoDropZoneSimple onDrop={onDropToPrioritiesTab} dropHoverMessage='Drop to prioritize'>
+                    <h2>Priorities</h2>
+                    {priorityCards && priorityCards.length >= 1 ? <AoStack
+                      inId={taskId}
+                      cards={priorityCards}
+                      showAdd={false}
+                      hideAddWhenCards={true}
+                      cardStyle="priority"
+                      onNewCard={this.newPriority}
+                      noDrop={true}
+                      zone="priorities"
+                      decorators={this.renderedUpboats}
+                      alwaysShowAll={true}
+                    /> : <p>No priorities. Drop card here to prioritize.</p>}
+                    <AoHiddenFieldset heading={recurrenceSummary ? 'Repeats every ' + card.claimInterval + ' hours' : 'Repeat'} className="intervalFieldset">
+                      <AoInterval taskId={taskId} hudStyle='menu' />
+                    </AoHiddenFieldset>
+                  </AoDropZoneSimple> :
+                  <React.Fragment>
+                    <h2>Accomplished</h2>
+                    {completedCards && completedCards.length >= 1 ? <AoStack
+                      inId={taskId}
+                      cards={completedCards}
+                      showAdd={false}
+                      hideAddWhenCards={true}
+                      cardStyle="checkmark"
+                      noDrop={true}
+                      zone="completed"
+                      alwaysShowAll={true}
+                    /> : <p>No accomplishments here. Check off a card and discard it to move it here.</p>}
+                  </React.Fragment>
+                }
+              </React.Fragment>
+            break
+          case CardTabId.timecube:
+            cardDrawerContent = <React.Fragment>
+              <h2>Calendar</h2>
+              <AoCountdown taskId={taskId} hudStyle='menu' />
+            </React.Fragment>
+            break
+          case CardTabId.lightning:
+            cardDrawerContent = <React.Fragment>
+              <AoFund taskId={taskId} />
+              <AoCrowdfund taskId={taskId} hudStyle='menu' />
+              <AoHiddenFieldset heading='Autopricer'>
+                <AoPrice taskId={taskId} />
+              </AoHiddenFieldset>
+            </React.Fragment>
+            break
+        }
+        
         return (
           <React.Fragment>
             {this.props.noContextOnFull ? (
@@ -922,9 +957,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                 e.preventDefault()
                 e.stopPropagation()
               }}
-              onMouseEnter={this.onHover}
-              onMouseOver={this.onHover}
               onMouseOut={this.clearPendingPromise}>
+              { cardDrawerContent &&
+                <div id='cardDrawer'
+                  className={(this.state.closingDrawerTimeout ? 'slideOut' : 'slideIn') + (this.state.currentTab ? ' ' + CardTabId[this.state.currentTab] : '')}
+                  style={{top: 3.8 + ((this.state.currentTab as number - 1) * 5.4) + 'em'}}>
+                  {cardDrawerContent}
+                </div>
+              }
               <Observer>
                 {() => {
                   return (
@@ -957,24 +997,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                           : '')
                       }>
                       <AoMission taskId={taskId} hudStyle="full before" />
-                      {member && <AoMemberIcon memberId={taskId} />}
                       <AoAttachment taskId={taskId} inId={this.props.inId} />
+                      {member && <AoMemberIcon memberId={taskId} />}
                       {this.renderCardContent(content)}
                     </div>
                   )
                 }}
               </Observer>
-              {/*              <Observer>
-                {() => {
-                  if (card.guild) {
-                    return <AoProposals filterByGuildId={taskId} />
-                  } else {
-                    return <div />
-                  }
-                }}
-              </Observer>
-*/}{' '}
-              <Observer>
+              {/*<Observer>
                 {() => {
                   return (
                     <AoStack
@@ -991,7 +1021,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     />
                   )
                 }}
-              </Observer>
+              </Observer>*/}
               <Observer>
                 {() => {
                   if (priorityCards && priorityCards.length > 6) {
@@ -1035,12 +1065,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               </Observer>
               <Observer>
                 {() => {
-                  return <AoCompleted taskId={taskId} />
-                }}
-              </Observer>
-              <Observer>
-                {() => {
-                  return <AoCardHud taskId={taskId} hudStyle="full after" />
+                  return <AoCardHud taskId={taskId} hudStyle="full after">
+                    <AoCardTabs tabs={tabs} onTabShown={this.onSwitchTab} onTabClosed={this.onSwitchTab} />
+                  </AoCardHud>
                 }}
               </Observer>
             </div>
@@ -1056,10 +1083,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               'Card' +
               this.applyClassIfCurrentSearchResult
             }
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
-            <AoCheckmark taskId={taskId} onGoIn={this.goInCard} />
+            <AoCheckmark color={card.color} onGoIn={this.goInCard} />
             <div className={contentClass}>{this.renderCardContent(content)}</div>
           </div>
         )
@@ -1077,8 +1102,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             }
             id={'card-' + taskId}
             onClick={this.goInCard}
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
             <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud taskId={taskId} hudStyle="collapsed-mission" />
@@ -1113,21 +1136,39 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div style={{ clear: 'both', height: '1px' }} />
           </div>
         )
-      // case 'badge':
-      // return (
-      //   <div
-      //     id={'card-' + taskId}
-      //     className={'card badge' + this.applyClassIfCurrentSearchResult}
-      //     onClick={this.goInCard}
-      //     onMouseEnter={this.onHover}
-      //     onMouseOver={this.onHover}
-      //     onMouseOut={this.clearPendingPromise}>
-      //     <AoPaper taskId={taskId} color={card?.color} />
-      //     <AoMission taskId={taskId} hudStyle="badge" />
-      //     <AoCardHud taskId={taskId} hudStyle="badge" />
-      //   </div>
-      // )
-      // break
+      case 'index':
+        const indexCards = this.projectCards
+        if(indexCards?.length && indexCards.length >= 1) {
+          content = card.guild + ' (' + indexCards.length + ')'
+        }
+        console.log("projectCards is", indexCards, "and showProjects is", this.state.showProjects)
+        const youAreHere = this.props.isCurrentCard
+        return  <div>
+              <div className={'indexLink' + (youAreHere ? ' youAreHere' : '') + (card.color ? ' ' + card.color + 'Text' : '') +
+              this.applyClassIfCurrentSearchResult }>
+                {indexCards && indexCards.length >= 1 ? (this.state.showProjects ? (
+                  <span className="triangle" onClick={this.toggleProjects}>&#9660;</span>
+                ) : (
+                  <span className="triangle"  onClick={this.toggleProjects}>&#9654;</span> )) : (  <span className="triangle nohover">&#8226;</span> )}
+                  <AoDropZone
+                    taskId={taskId}
+                    onDrop={this.dropToCard}
+                    zoneStyle="panel"
+                    dropHoverMessage="drop to categorize here">
+                      {this.renderCardContent(content, true, !youAreHere ? this.goInCard : undefined)}
+                  </AoDropZone>
+              </div>
+              {this.state.showProjects ? (
+                <AoStack
+                  inId={taskId}
+                  cards={indexCards}
+                  cardStyle={cardStyle}
+                  alwaysShowAll={true}
+                  zone="panel"
+                  noDrop={true}
+                />
+              ) : null}
+            </div>
       case 'envelope':
         const openGift = () => {
           api.prioritizeCard(taskId, aoStore.memberCard.taskId)
@@ -1165,8 +1206,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                 'Card' +
                 this.applyClassIfCurrentSearchResult
               }
-              onMouseEnter={this.onHover}
-              onMouseOver={this.onHover}
               onMouseOut={this.clearPendingPromise}>
               <AoPaper taskId={taskId} color={card?.color} />
               <img src={Gift} onClick={openGift} />
@@ -1190,6 +1229,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content, true)}
+  						  <AoCountdown taskId={taskId} hudStyle='notification' />
             </div>
           </div>
         )
@@ -1212,8 +1252,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               this.applyClassIfCurrentSearchResult
             }
             onClick={this.goInCard}
-            onMouseEnter={this.onHover}
-            onMouseOver={this.onHover}
             onMouseOut={this.clearPendingPromise}>
             <AoPaper taskId={taskId} color={card?.color} />
             <AoCardHud taskId={taskId} hudStyle="mini before" />
