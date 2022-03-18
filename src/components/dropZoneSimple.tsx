@@ -115,8 +115,6 @@ export default class AoDropZoneSimple extends React.Component<Props, State> {
 	}
 
 	render() {
-	  console.log("dropZoneSimple children are", this.props.children)
-
 		if (this.props.children) {
 			let message = this.props.dropHoverMessage || 'drop to place'
 			return (

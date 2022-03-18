@@ -15,6 +15,8 @@ export enum CardTabId {
   priorities = 1,
   timecube,
   lightning,
+  stash,
+  menu
 }
 
 export interface CardTab {
@@ -51,7 +53,7 @@ export default function AoCardTabs(props: Props) {
     }
     const onDrop = cardTab.onDrop
     const renderedTab =
-      <div className={"cardTab" + (tab === currentTab ? ' selected' : '')}
+      <div className={"cardTab" + (tab === currentTab ? ' selected' : '') + ' ' + CardTabId[tab].toString() + 'TabButton'}
           onClick={tab === currentTab ? closeTab : () => showTab(tab) }>
         {content && <div className='tabSummary'>{content}</div>}
         <object type="image/svg+xml" data={icon} />

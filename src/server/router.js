@@ -160,6 +160,23 @@ export default function applyRouter(app) {
         }
       }
     })
+    
+    // Also include all the cards stashed in the cards we are sending Todo: only send cards they have high enough level to see
+		stateToSend.tasks.forEach(taskItem => {
+			if (taskItem.stash) {
+				Object.entries(taskItem.stash).forEach(
+					(levelAndTaskIds) => {
+						let [level, tIds] = levelAndTaskIds
+						tIds.forEach(tId => {
+ 						  const foundTask = state.pubState.tasks.find(t => t.taskId === tId)
+ 						  if(foundTask) {
+ 						    stateToSend.tasks.push(foundTask)
+ 						  }
+						})
+					}
+				)
+			}
+		})
 
     // Also include everyone holding any of the cards we are sending
     let holderIdList = []
@@ -326,10 +343,28 @@ export default function applyRouter(app) {
             )
           )
         })
+        
+        // Also return all stashed cards within this card Todo: Only send cards the member has access to
+        let stashedTasks = []
+    		foundThisTaskList.forEach(taskItem => {
+      		if (taskItem.stash) {
+      			Object.entries(taskItem.stash).forEach(
+      				(levelAndTaskIds) => {
+      				  let [level, tIds] = levelAndTaskIds
+    						tIds.forEach(tId => {
+     						  const foundTask = state.pubState.tasks.find(t => t.taskId === tId)
+     						  if(foundTask) {
+     						    stashedTasks.push(foundTask)
+     						  }
+    						})
+      				}
+      			)
+      		}
+				})
 
-        // Remove duplicates
+        // Remove duplicates and combine tasks into one list
         foundThisTaskList = [
-          ...new Set([...foundThisTaskList, ...heldParentTasks]),
+          ...new Set([...foundThisTaskList, ...heldParentTasks, ...stashedTasks]),
         ]
 
         let objectToSend

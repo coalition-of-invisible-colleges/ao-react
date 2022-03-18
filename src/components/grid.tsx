@@ -8,14 +8,8 @@ import api from '../client/api'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
 import { CardPlay, Coords, goUp } from '../cardTypes'
-import AoGridResizer from './gridResizer'
 import AoContextCard from './contextCard'
 import AoCardComposer from './cardComposer'
-import GridImg from '../assets/images/grid.svg'
-import Pyramid from '../assets/images/pyramid.svg'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
-import 'tippy.js/themes/translucent.css'
 
 // TODO: Move this to Interfaces
 interface GridProps {
@@ -466,107 +460,6 @@ const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
   return <>{render}</>
 }
 
-interface GridMenuProps {
-  taskId: string
-  gridStyle: GridStyle
-}
-
-function AoGridMenu(props: GridMenuProps) {
-  const card = aoStore.hashMap.get(props.taskId)
-  if (
-    !card ||
-    !card.grid ||
-    card.grid.height <= 1 ||
-    (card.gridStyle !== 'pyramid' && card.grid.width <= 1)
-  ) {
-    return null
-  }
-
-  const switchToPyramid = event => {
-    event.stopPropagation()
-    api.setCardProperty(props.taskId, 'gridStyle', 'pyramid')
-  }
-
-  const switchToGrid = event => {
-    event.stopPropagation()
-    api.setCardProperty(props.taskId, 'gridStyle', 'grid')
-  }
-
-  const isPyramid = props.gridStyle === 'pyramid'
-  console.log('AoGridMenu render()')
-
-  function increaseSquareSize() {
-    api.resizeGrid(
-      props.taskId,
-      card.grid.height,
-      card.grid.width,
-      card.grid.size && card.grid.size >= 1 ? card.grid.size + 1 : 10
-    )
-  }
-
-  function decreaseSquareSize() {
-    api.resizeGrid(
-      props.taskId,
-      card.grid.height,
-      card.grid.width,
-      card.grid.size && card.grid.size >= 1 ? card.grid.size - 1 : 8
-    )
-  }
-
-  const renderedGridMenu = (
-    <div className="gridMenu">
-      <div>
-        <button
-          className={'action' + (isPyramid ? ' selected' : '')}
-          onClick={switchToPyramid}
-          disabled={isPyramid}>
-          <img src={Pyramid} />
-          Pyramid
-        </button>
-        <button
-          className={'action' + (!isPyramid ? ' selected' : '')}
-          onClick={switchToGrid}
-          disabled={!isPyramid}>
-          <img src={GridImg} />
-          Grid
-        </button>
-      </div>
-      <div>
-        square size:
-        <button
-          type="button"
-          onClick={decreaseSquareSize}
-          disabled={card.grid.size <= 1}
-          className="action minus">
-          -
-        </button>
-        <button
-          type="button"
-          onClick={increaseSquareSize}
-          disabled={card.grid.size >= 40}
-          className="action plus">
-          +
-        </button>
-      </div>
-    </div>
-  )
-
-  return (
-    <div className="gridMenuButton">
-      <Tippy
-        zIndex={5}
-        content={renderedGridMenu}
-        interactive={true}
-        trigger="click"
-        placement="top-end"
-        appendTo={document.getElementById('root')}
-        theme="translucent">
-        <button className="action">&#9662;</button>
-      </Tippy>
-    </div>
-  )
-}
-
 export default function AoGrid(props: GridProps) {
   const [redirect, setRedirect] = React.useState<string>(undefined)
   console.log('RENDERING AO GRID')
@@ -629,8 +522,6 @@ export default function AoGrid(props: GridProps) {
           }}>
           <GridView taskId={taskId} grid={grid} />
         </div>
-        <AoGridResizer taskId={taskId} gridStyle={props.gridStyle} />
-        <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
       </div>
     )
   } else {
@@ -642,8 +533,6 @@ export default function AoGrid(props: GridProps) {
           gridStyle={props.gridStyle}
           gridWidth={gridWidth}
         />
-        <AoGridResizer taskId={taskId} gridStyle={props.gridStyle} />
-        <AoGridMenu taskId={taskId} gridStyle={props.gridStyle} />
       </div>
     )
   }

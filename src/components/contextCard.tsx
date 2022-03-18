@@ -34,6 +34,8 @@ import AoInterval from './interval'
 import AoCrowdfund from './crowdfund'
 import AoPrice from './price'
 import AoFund from './fund'
+import AoStash from './stash'
+import AoGridResizer from './gridResizer'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
@@ -44,6 +46,7 @@ import Lilypad from '../assets/images/chatroom.svg'
 import Checkbox from '../assets/images/completed.svg'
 import Star from '../assets/images/star.svg'
 import Stash from '../assets/images/stash.svg'
+import Controls from '../assets/images/controls.svg'
 import {
   goInCard,
   prioritizeCard,
@@ -495,7 +498,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
   }
 
   renderCardContent(content: string, hideIframes = false, alternateOnClick = null) {
-    console.log("content is", content, "and alternateOnClick is ", alternateOnClick)
     // hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
     const meme = aoStore.memeById.get(this.props.task.taskId)
     let memeContent
@@ -612,11 +614,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     let content = card.name
 
     if (taskId === content) {
-      console.log('card taskId is equal to content and taskId is', taskId)
       member = aoStore.memberById.get(taskId)
       if (member) {
         content = member.name
-        console.log('Card was a member and the member name is', member.name)
       } else {
         const resource = aoStore.resourceById.get(taskId)
         if (resource) {
@@ -837,6 +837,18 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const hasGoal = goal > 0
         const goalSummary = hasGoal ? <div>{goal} goal</div> : null
         
+        let totalStashedCards = 0
+				if (card.stash) {
+					Object.entries<[number, string[]]>(card.stash).forEach(
+						([level, tIds]) => {
+							//if (myLevel >= parseInt(level, 10)) {
+								totalStashedCards += tIds.length
+							//}
+						}
+					)
+				}
+				const stashSummary = totalStashedCards > 0 ? <div>{totalStashedCards} stashed</div> : null
+				
         const tabs: CardTab[] = [
             {
               id: CardTabId.priorities,
@@ -859,7 +871,54 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             },
           ]
         
-
+        let onDropToStashTab
+        if(card.showStash) {
+          onDropToStashTab = (from: CardLocation) => {
+        		if (!from.taskId) {
+        			return
+        		}
+        		const cardFrom = aoStore.hashMap.get(from.taskId)
+        		if (!cardFrom) {
+        			return
+        		}
+        		const nameFrom = cardFrom.name
+        
+        		const cardTo = card
+        		const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+        
+        		let numLevel: number = 1
+        		if (typeof numLevel === 'string') {
+        			numLevel = parseInt(numLevel, 10)
+        		}
+        		switch (from.zone) {
+        			case 'discard':
+        				aoStore.popDiscardHistory()
+        			case 'card':
+        			case 'priorities':
+        			case 'grid':
+        			case 'subTasks':
+        			case 'completed':
+        			case 'context':
+        			case 'panel':
+        			default:
+        				api.stashCard(from.taskId, from.inId, numLevel)
+        		}
+        	}
+          tabs.push({
+            id: CardTabId.stash,
+            icon: Stash,
+            tooltip: 'Stash',
+            content: stashSummary,
+            onDrop: onDropToStashTab
+          })
+        }
+        
+        tabs.push({
+          id: CardTabId.menu,
+          icon: Controls,
+          tooltip: 'Card Controls',
+        })
+        
         let cardDrawerContent
         switch(this.state.currentTab) {
           case CardTabId.priorities:
@@ -918,6 +977,19 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               </AoHiddenFieldset>
             </React.Fragment>
             break
+          case CardTabId.stash:
+            cardDrawerContent = <React.Fragment>
+              <AoDropZoneSimple onDrop={onDropToStashTab} dropHoverMessage='Drop to stash'>
+                <AoStash taskId={taskId} hudStyle='full before' />
+              </AoDropZoneSimple>
+            </React.Fragment>
+            break
+          case CardTabId.menu:
+            cardDrawerContent = <React.Fragment>
+              <AoCardHud taskId={taskId} hudStyle='menu' />
+              <AoGridResizer taskId={taskId} gridStyle={card.gridStyle} />
+            </React.Fragment>
+            break
         }
         
         return (
@@ -961,7 +1033,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               { cardDrawerContent &&
                 <div id='cardDrawer'
                   className={(this.state.closingDrawerTimeout ? 'slideOut' : 'slideIn') + (this.state.currentTab ? ' ' + CardTabId[this.state.currentTab] : '')}
-                  style={{top: 3.8 + ((this.state.currentTab as number - 1) * 5.4) + 'em'}}>
+                  style={this.state.currentTab !== CardTabId.menu ? {top: 3.8 + ((this.state.currentTab as number - 1) * 5.4) + 'em'} : undefined}>
                   {cardDrawerContent}
                 </div>
               }

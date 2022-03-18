@@ -148,7 +148,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					<React.Fragment>
 						<AoBird taskId={taskId} />
 						{taskId === aoStore.memberCard.taskId && <AoGifts />}
-						<AoStash taskId={taskId} hudStyle={hudStyle} />
 						<div className={'hud ' + hudStyle}>
 							<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
@@ -176,7 +175,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					<div className={'hud ' + hudStyle}>
 						<AoLilypad taskId={taskId} />
 					  { this.props.children }
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'face after':
@@ -264,7 +262,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 
 				return (
 					<div className="hud menu" onClick={event => event.stopPropagation()}>
-						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						{card.guild && card.guild.length >= 1 && (
 							<React.Fragment>
 								<AoLilypad taskId={taskId} hudStyle={hudStyle} />

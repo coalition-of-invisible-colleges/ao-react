@@ -157,12 +157,12 @@ export default class AoStash extends React.Component<Props, State> {
 			} else {
 				if (enabled) {
 					return (
-						<button
+						<div
 							onClick={this.goToTab}
 							data-page={tab}
 							className="action inline">
 							{label}
-						</button>
+						</div>
 					)
 				} else {
 					return (
@@ -172,12 +172,12 @@ export default class AoStash extends React.Component<Props, State> {
 								'cards'
 							)} in here.`}
 							placement="bottom">
-							<button
+							<div
 								onClick={this.goToTab}
 								data-page={tab}
 								className="action inline">
 								{label}
-							</button>
+							</div>
 						</Tippy>
 					)
 				}
@@ -199,16 +199,10 @@ export default class AoStash extends React.Component<Props, State> {
 		}
 
 		return (
-			<AoDropZone onDrop={this.dropToStash} zoneStyle="stash">
-				<AoPopupPanel
-					iconSrc={Stash}
-					tooltipText={`Drop to ${glossLevel(this.state.tab)} stash`}
-					panelPlacement="right-start"
-					id="tour-stash"
-					badge={renderedBadge}
-					badgeColor="red">
 					<React.Fragment>
-						{renderedTabs}
+					  <div className="flexTabs">
+						  {renderedTabs}
+					  </div>
 						{this.guildMemberLevel >= this.state.tab ? (
 							<React.Fragment>
 								<h4>
@@ -220,8 +214,9 @@ export default class AoStash extends React.Component<Props, State> {
 								<AoStack
 									inId={taskId}
 									cards={stashedCards}
+									showAdd={false}
 									cardStyle="priority"
-									onDrop={onDropFactory}
+									noDrop={true}
 									alwaysShowAll={true}
 									descriptor={{
 										singular: 'stashed card',
@@ -237,8 +232,6 @@ export default class AoStash extends React.Component<Props, State> {
 							)}, but you can drop cards here (drop on stash icon with this tab selected).`}</p>
 						)}
 					</React.Fragment>
-				</AoPopupPanel>
-			</AoDropZone>
 		)
 	}
 }
