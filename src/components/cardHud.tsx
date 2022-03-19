@@ -11,7 +11,6 @@ import AoCrowdfund from './crowdfund'
 import AoInterval from './interval'
 import AoCountdown from './countdown'
 import AoTimeClock from './timeclock'
-import AoCardMenu from './cardMenu'
 import AoPreview from './preview'
 import AoMission from './mission'
 import AoBark from './bark'
@@ -20,6 +19,8 @@ import AoLilypad from './lilypad'
 import AoStash from './stash'
 import AoFund from './fund'
 import AoReminder from './reminder'
+import AoHiddenFieldset from './hiddenFieldset'
+import { gloss } from '../semantics'
 import config from '../../configuration'
 
 export type HudStyle =
@@ -55,12 +56,7 @@ interface State {
 export default class CardHud extends React.Component<CardHudProps, State> {
 	constructor(props) {
 		super(props)
-		this.addGrid = this.addGrid.bind(this)
 		this.state = {}
-	}
-
-	addGrid() {
-		api.addGridToCard(this.props.taskId, 3, 3)
 	}
 
 	render() {
@@ -107,7 +103,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'collapsed-mission':
@@ -125,7 +120,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
 						<AoLilypad taskId={taskId} />
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'collapsed-member':
@@ -185,11 +179,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							hudStyle={hudStyle}
 							priorPriors={this.props.priorPriors}
 						/>
-						<AoCardMenu
-							taskId={taskId}
-							hudStyle={hudStyle}
-							noPopups={this.props.noPopups}
-						/>
 					</div>
 				)
 			case 'mini before':
@@ -211,7 +200,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 								hudStyle={hudStyle}
 								priorPriors={this.props.priorPriors}
 							/>
-							<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 						</div>
 					</React.Fragment>
 				)
@@ -225,7 +213,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							priorPriors={this.props.priorPriors}
 						/>
 						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
-						<AoCardMenu taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'notification':
@@ -235,14 +222,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 					</div>
 				)
 			case 'menu':
-				const grid = card.grid
-				const noGrid =
-					!grid ||
-					(grid.hasOwnProperty('height') && grid.height < 1) ||
-					(grid.hasOwnProperty('width') && grid.width < 1) ||
-					!grid.hasOwnProperty('height') ||
-					!grid.hasOwnProperty('width')
-
 				const mediaUrlDetected = true
 				const cacheButton = (
 					<button
@@ -262,19 +241,22 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 
 				return (
 					<div className="hud menu" onClick={event => event.stopPropagation()}>
+						<fieldset>
+						  <legend>Color</legend>
+						  <AoPalette taskId={taskId} />
+						</fieldset>
 						{card.guild && card.guild.length >= 1 && (
-							<React.Fragment>
+							<AoHiddenFieldset heading={gloss('Guild') + ' Options'}>
 								<AoLilypad taskId={taskId} hudStyle={hudStyle} />
 								<AoStash taskId={taskId} hudStyle={hudStyle} />
-							</React.Fragment>
+							</AoHiddenFieldset>
 						)}
-						{noGrid && (
-							<div className="gridMenu action" onClick={this.addGrid}>
-								add pyramid
-							</div>
-						)}
-						{showCacheButton && cacheButton}
-						<AoPalette taskId={taskId} />
+						{showCacheButton && 
+						  <fieldset>
+						    <legend>Media</legend>
+						    {cacheButton}
+						  </fieldset>
+						}
 					</div>
 				)
 		}

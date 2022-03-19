@@ -3368,7 +3368,7 @@ pre {
 }
 
 // stash/dropbox on a card
-.stash {
+/*.stash {
   position: absolute;
   left: 0.5em;
   top: 5em;
@@ -3382,7 +3382,7 @@ pre {
     margin-top: 4em;
     max-width: 25em;
   }
-}
+}*/
 
 // the text box to create a new crypto ticker in the main menu
 #mainMenu .ticker textarea {
@@ -4165,7 +4165,15 @@ fieldset {
       margin-left: auto;
       margin-right: auto;
       width: auto;
-    }
+  }
+  
+  .menu {
+    margin-top: 0.5em;
+  }
+  
+  .menu:first-of-type {
+    margin-top: 0;
+  }
 }
   
 // Clickable legend title when it is closed, also the clickable legend title in the fieldset after it's open
@@ -4376,9 +4384,10 @@ div.legendAction, legend.clickable {
 
 // Tab / button to switch to toggle viewing checked-off / completed / accomplished cards
 .prioritiesTab {
-  position: absolute;
-  top: 0.5em;
-  right: 0.75em;
+  //position: absolute;
+  //top: 0.5em;
+  //right: 0.75em;
+  width: max-content;
   cursor: pointer;
   padding: 0 1.25em 0.5em 1.25em;
   border-radius: 5em;
@@ -4420,6 +4429,17 @@ div.legendAction, legend.clickable {
   }
 }
 
+// Centered and spread-out flex wrapper for putting a button next to a heading
+.spreadCenteredFlex {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  gap: 1em;
+  width: max-content;
+}
+
 // The card menu tab button itself
 .cardTab.menuTabButton {
   position: absolute;
@@ -4447,7 +4467,6 @@ div.legendAction, legend.clickable {
   padding: 0 0.75em;
   display: flex;
   align-items: center;
-  
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

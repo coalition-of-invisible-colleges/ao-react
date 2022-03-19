@@ -4,7 +4,7 @@ interface Props {
 	heading: string
 	startOpen?: boolean
 	className?: string
-	children?: React.ReactElement<any, any>
+	children?: React.ReactElement<any, any> | React.ReactElement<any, any>[]
 }
 
 export default function AoHiddenFieldset(props: Props) {

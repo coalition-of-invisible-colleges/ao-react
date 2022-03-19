@@ -919,17 +919,20 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           tooltip: 'Card Controls',
         })
         
+        const renderedCompletedTab = completedCards && completedCards.length >=1 ?
+          <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards.length} <object type="image/svg+xml" data={Star} /></div> : null
+                
         let cardDrawerContent
         switch(this.state.currentTab) {
           case CardTabId.priorities:
             cardDrawerContent = 
               <React.Fragment>
-                {completedCards && completedCards.length >=1 &&
-                  <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards.length} <object type="image/svg+xml" data={Star} /></div>
-                }
                 {!this.state.showCompleted ? 
                   <AoDropZoneSimple onDrop={onDropToPrioritiesTab} dropHoverMessage='Drop to prioritize'>
-                    <h2>Priorities</h2>
+                    <div className='spreadCenteredFlex'>
+                      <h2>Priorities</h2>
+                      {renderedCompletedTab}
+                    </div>
                     {priorityCards && priorityCards.length >= 1 ? <AoStack
                       inId={taskId}
                       cards={priorityCards}
@@ -947,7 +950,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     </AoHiddenFieldset>
                   </AoDropZoneSimple> :
                   <React.Fragment>
-                    <h2>Accomplished</h2>
+                    <div className='spreadCenteredFlex'>
+                      <h2>Accomplished</h2>
+                      {renderedCompletedTab}
+                    </div>
                     {completedCards && completedCards.length >= 1 ? <AoStack
                       inId={taskId}
                       cards={completedCards}

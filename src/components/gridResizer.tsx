@@ -2,6 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import { GridStyle } from '../interfaces'
+import AoHiddenFieldset from './hiddenFieldset'
 import api from '../client/api'
 import GridImg from '../assets/images/grid.svg'
 import Pyramid from '../assets/images/pyramid.svg'
@@ -110,6 +111,7 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
     this.decreaseRows = this.decreaseRows.bind(this)
     this.increaseColumns = this.increaseColumns.bind(this)
     this.decreaseColumns = this.decreaseColumns.bind(this)
+    this.addGrid = this.addGrid.bind(this)
     this.removeGrid = this.removeGrid.bind(this)
   }
 
@@ -132,6 +134,10 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
     const card = aoStore.hashMap.get(this.props.taskId)
     api.resizeGrid(this.props.taskId, card.grid.height, card.grid.width - 1)
   }
+  
+  addGrid() {
+		api.addGridToCard(this.props.taskId, 3, 3)
+	}
 
   removeGrid() {
     api.removeGridFromCard(this.props.taskId)
@@ -143,12 +149,26 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
     if (!card || !card.grid) {
       return null
     }
+    
+    const grid = card.grid
 
+		const noGrid =
+			!grid ||
+			(grid.hasOwnProperty('height') && grid.height < 1) ||
+			(grid.hasOwnProperty('width') && grid.width < 1) ||
+			!grid.hasOwnProperty('height') ||
+			!grid.hasOwnProperty('width')
+			
     const isPyramid = card.gridStyle === 'pyramid'
 
     return (
-      <div className="gridControls">
-        <AoGridMenu taskId={this.props.taskId} gridStyle={this.props.gridStyle} />
+      <AoHiddenFieldset heading='Grid'>
+				{noGrid && (
+					<div className="gridMenu action" onClick={this.addGrid}>
+						add pyramid
+					</div>
+				)}
+  		  <AoGridMenu taskId={this.props.taskId} gridStyle={this.props.gridStyle} />
         {!isPyramid &&
           <React.Fragment>
           <span>columns:</span>
@@ -193,7 +213,7 @@ export default class AoGridResizer extends React.Component<GridResizerProps> {
             </button>
           )}
         </div>
-      </div>
+      </AoHiddenFieldset>
     )
   }
 }
