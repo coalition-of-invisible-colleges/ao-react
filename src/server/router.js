@@ -179,7 +179,7 @@ export default function applyRouter(app) {
 		})
 
     // Also include everyone holding any of the cards we are sending
-    let holderIdList = []
+    /*let holderIdList = []
     stateToSend.tasks.forEach(taskItem => {
       if (taskItem?.deck?.length) {
         holderIdList.push(taskItem.deck)
@@ -193,6 +193,13 @@ export default function applyRouter(app) {
         if (holderIdList.length === 0) {
           return true
         }
+      }
+    })*/
+    
+    // Also include all member cards
+    state.pubState.tasks.forEach(taskItem => {
+      if (taskItem.taskId === taskItem.name) {
+        stateToSend.tasks.push(taskItem) // will add duplicates
       }
     })
     
