@@ -2,7 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
-import Jitsi from 'react-jitsi'
+import { JitsiMeeting } from '@jitsi/react-sdk'
 import config from '../../configuration'
 import Chatbox from './chatbox'
 import { goInCard } from '../cardTypes'
@@ -137,17 +137,22 @@ export default class AoChatroom extends React.Component<Props, State> {
             ×
           </div>
         </div>
-        <Jitsi
-          domain={config?.jitsi?.domain || 'meet.dctrl.ca'}
-          roomName={card.guild.substring(0, 60)}
-          displayName={aoStore.member.name}
-          containerStyle={{
+        {/*containerStyle={{
             width: 'calc((100vw - 39em)/2)',
             height: 'calc(((100vw - 39em)/2)*4/6)',
           }}
           loadingComponent={() => (
             <div className="loading">Loading video room…</div>
-          )}
+          )}*/}
+        <JitsiMeeting
+          domain={config?.jitsi?.domain || 'meet.dctrl.space'}
+          roomName={card.guild.substring(0, 60)}
+          configOverwrite={{ prejoinConfig: {enabled: false }, logoImageUrl: "" }}
+          interfaceConfigOverwrite={{DEFAULT_LOGO_URL: null}}
+          userInfo = {{
+              displayName: aoStore.member.name,
+              email: null
+          }}
         />
         <Chatbox taskId={this.props.taskId} />
       </div>

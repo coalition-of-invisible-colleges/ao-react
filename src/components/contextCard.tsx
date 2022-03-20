@@ -1219,7 +1219,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if(indexCards?.length && indexCards.length >= 1) {
           content = card.guild + ' (' + indexCards.length + ')'
         }
-        console.log("projectCards is", indexCards, "and showProjects is", this.state.showProjects)
         const youAreHere = this.props.isCurrentCard
         return  <div>
               <div className={'indexLink' + (youAreHere ? ' youAreHere' : '') + (card.color ? ' ' + card.color + 'Text' : '') +

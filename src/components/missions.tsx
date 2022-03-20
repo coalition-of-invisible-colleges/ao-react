@@ -122,9 +122,6 @@ export default class AoMissions extends React.Component<{}, State> {
       missions = aoStore.topLevelMissions
     }
 
-    console.log('missions is ')
-    missions.forEach(mission => console.log(mission.guild))
-
     if (this.state.sort === 'recents') {
       missions.sort((a, b) => {
         return a.lastClaimed - b.lastClaimed
