@@ -20,7 +20,7 @@ import AoStash from './stash'
 import AoFund from './fund'
 import AoReminder from './reminder'
 import AoHiddenFieldset from './hiddenFieldset'
-import { gloss } from '../semantics'
+import { gloss, capitalize } from '../semantics'
 import config from '../../configuration'
 
 export type HudStyle =
@@ -242,7 +242,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 				return (
 					<div className="hud menu" onClick={event => event.stopPropagation()}>
 						<fieldset>
-						  <legend>Color</legend>
+						  <legend>{capitalize(card.color)} Card</legend>
 						  <AoPalette taskId={taskId} />
 						</fieldset>
 						{card.guild && card.guild.length >= 1 && (

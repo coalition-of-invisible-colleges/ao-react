@@ -136,6 +136,9 @@ body {
 .card.full {
   box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
   cursor: default;
+  padding-right: 5em;
+  padding-left: 5em;
+  min-height: 23.4em;
 }
 
 // priority card within a full card
@@ -1949,33 +1952,21 @@ body {
   }
 }
 
-// the small triangle menu to the right of the grid
-.gridMenuButton {
-  color: black;
-  position: absolute;
-  left: calc(100% - 0.3em);
-  top: 100%;
-  margin-top: 0.21em;
-
-  button {
-    padding: 0 0.55em;
-  }
-}
-
 // the content of the grid menu itself
 .gridMenu {
-  // img {
-  //   height: 1.5em;
-  // }
-
-  .action {
-    display: inline-block;
-    margin: 0 0.5em;
+  .action img, img.action {
+    max-height: 3em;
+    margin: 0 0.25em;
   }
 
   .action.selected {
     background-color: rgba(127, 255, 255, 0.5);
     border-radius: 0.5em;
+  }
+  
+  &>button.action {
+    font-size: 0.8em;
+    margin: 0.5em auto 0.25em auto;
   }
 }
 
@@ -2727,7 +2718,7 @@ img.ascend {
 // add margin to items on menu
 .menu {
   .action {
-    margin: 0.5em auto;
+    margin: 0.25em;
   }
 }
 
@@ -2857,7 +2848,7 @@ img.ascend {
     background: grey;
     display: inline-block;
     position: relative;
-    margin: 0.75em 1em 2em 1em;
+    margin: 0.75em 1em 0.7em 1em;
     cursor: pointer;
 
     .paper {
@@ -3206,6 +3197,14 @@ pre {
 // Shows the Address: label on the left and the textarea containing the address on the right
 .splitFlex {
   display: flex;
+}
+
+.centerFlex {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 0.75em;
 }
 
 // about section on the login page
@@ -4174,6 +4173,10 @@ fieldset {
   .menu:first-of-type {
     margin-top: 0;
   }
+  
+  .action {
+    color: white;
+  }
 }
   
 // Clickable legend title when it is closed, also the clickable legend title in the fieldset after it's open
@@ -4194,6 +4197,7 @@ div.legendAction, legend.clickable {
   
   .cardTab {
     background-color: rgba(100, 127, 208, 0.72);
+    color: white;
     border: 3px solid #282c34;
     border-right: none;
     border-top-left-radius: 40%;
@@ -4214,6 +4218,10 @@ div.legendAction, legend.clickable {
     &.selected {
       background-color: rgba(90, 117, 178, 1);
       border-color: #181c24;
+    }
+    
+    &.ghostly {
+      opacity: 0.4;
     }
     
     & > object {
@@ -4287,11 +4295,19 @@ div.legendAction, legend.clickable {
   
   &.lightning {
     width: max-content;
+    
+    .legendAction, fieldset {
+      margin-top: 1em;
+    }
   }
   
   &.menu {
     top: unset;
     bottom: 0.5em;
+  }
+  
+  .card.checkmark {
+    color: white;
   }
 }
 
@@ -4437,7 +4453,12 @@ div.legendAction, legend.clickable {
   align-items: center;
   align-content: center;
   gap: 1em;
-  width: max-content;
+  width: calc(100% + 2em);
+  
+  h2 {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 // The card menu tab button itself
@@ -4454,12 +4475,19 @@ div.legendAction, legend.clickable {
   justify-content: flex-start;
   align-items: center;
   
+  img:first-child, span:first-child {
+    flex-basis: 33%;
+    height: 3em;
+    width: 3em;
+  }
+  
   .action {
     margin-left: 0.5em;
     margin-right: 0.5em;
   }
 }
 
+// Plus and minus buttons for resizing the grid in the card menu
 .action.minus, .action.plus {
   font-size: 1.25em;
   font-weight: bold;
@@ -4467,6 +4495,33 @@ div.legendAction, legend.clickable {
   padding: 0 0.75em;
   display: flex;
   align-items: center;
+}
+
+// Subtasks zone of the card containing five piles
+.fivePiles {
+  display: flex;
+  flex-direction: column;
+  
+  &>div {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1.5em;
+    min-height: 3em;
+    
+    &>.stack {
+      flex-basis: 33%;
+      
+      .dropZone.subTasks {
+        min-height: unset;
+        height: 100%;
+      }
+    }
+  }
+}
+
+// Placeholder to drop cards on when there are no cards in the five piles
+.emptyPiles {
+  height: 5em;
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

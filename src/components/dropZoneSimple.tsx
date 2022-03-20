@@ -10,6 +10,7 @@ import { ReactUpload } from 'react-upload-box'
 interface Props {
 	onDrop: (from: CardLocation) => void
 	dropHoverMessage?: string
+	className?: string
 }
 
 export interface State {
@@ -115,11 +116,11 @@ export default class AoDropZoneSimple extends React.Component<Props, State> {
 	}
 
 	render() {
-		if (this.props.children) {
+		if (this.props.children || this.props.className) {
 			let message = this.props.dropHoverMessage || 'drop to place'
 			return (
 				<div
-					className='dropZone'
+					className={'dropZone' + (this.props.className ? ' ' + this.props.className : '')}
 					onDragEnter={this.allowDrop}
 					onDragOver={this.continueDrop}
 					onDragLeave={this.hideDrop}
@@ -137,7 +138,7 @@ export default class AoDropZoneSimple extends React.Component<Props, State> {
 		} else {
 			return (
 				<div
-					className="discard"
+					className='discard' 
 					onDragEnter={this.allowDrop}
 					onDragOver={this.continueDrop}
 					onDragLeave={this.hideDrop}

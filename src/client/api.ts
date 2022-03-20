@@ -1102,7 +1102,7 @@ class AoApi {
     taskId: string,
     newHeight: number,
     newWidth: number,
-    newSize = 9
+    newSize: number
   ): Promise<request.Response> {
     const act = {
       type: 'grid-resized',

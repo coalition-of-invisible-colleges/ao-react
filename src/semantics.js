@@ -36,7 +36,7 @@ function pluralize(word) {
 	return plural
 }
 
-function capitalize(word) {
+export function capitalize(word) {
 	if (word.length < 1) {
 		return ''
 	}

@@ -5,215 +5,185 @@ import { GridStyle } from '../interfaces'
 import AoHiddenFieldset from './hiddenFieldset'
 import api from '../client/api'
 import GridImg from '../assets/images/grid.svg'
-import Pyramid from '../assets/images/pyramid.svg'
-import Tippy from '@tippyjs/react'
-import 'tippy.js/dist/tippy.css'
-import 'tippy.js/themes/translucent.css'
+import PyramidImg from '../assets/images/pyramid.svg'
+import RowImg from '../assets/images/row.svg'
+import ColumnImg from '../assets/images/column.svg'
+import SquareSize from '../assets/images/square.svg'
 
-interface GridMenuProps {
+interface Props {
   taskId: string
   gridStyle: GridStyle
+  hasGrid?: boolean
+  gridHeight?: number
+  gridWidth?: number
 }
 
-function AoGridMenu(props: GridMenuProps) {
-  const card = aoStore.hashMap.get(props.taskId)
-  if (
-    !card ||
-    !card.grid ||
-    card.grid.height <= 1 ||
-    (card.gridStyle !== 'pyramid' && card.grid.width <= 1)
-  ) {
+export default function AoGridResizer(props: Props) {
+  const taskId = props.taskId
+  const card = aoStore.hashMap.get(taskId)
+  if (!card) {
     return null
   }
 
+  const grid = card.grid
+  
   const switchToPyramid = event => {
     event.stopPropagation()
-    api.setCardProperty(props.taskId, 'gridStyle', 'pyramid')
+    return api.setCardProperty(props.taskId, 'gridStyle', 'pyramid')
   }
 
   const switchToGrid = event => {
     event.stopPropagation()
-    api.setCardProperty(props.taskId, 'gridStyle', 'grid')
-  }
-
-  const isPyramid = props.gridStyle === 'pyramid'
-  console.log('AoGridMenu render()')
-
-  function increaseSquareSize() {
-    api.resizeGrid(
-      props.taskId,
-      card.grid.height,
-      card.grid.width,
-      card.grid.size && card.grid.size >= 1 ? card.grid.size + 1 : 10
-    )
-  }
-
-  function decreaseSquareSize() {
-    api.resizeGrid(
-      props.taskId,
-      card.grid.height,
-      card.grid.width,
-      card.grid.size && card.grid.size >= 1 ? card.grid.size - 1 : 8
-    )
-  }
-
-  const renderedGridMenu = (
-    <div className="gridMenu">
-      <div>
-        <button
-          className={'action' + (isPyramid ? ' selected' : '')}
-          onClick={switchToPyramid}
-          disabled={isPyramid}>
-          <img src={Pyramid} />
-          Pyramid
-        </button>
-        <button
-          className={'action' + (!isPyramid ? ' selected' : '')}
-          onClick={switchToGrid}
-          disabled={!isPyramid}>
-          <img src={GridImg} />
-          Grid
-        </button>
-      </div>
-      <div className='oneLineSetting'>
-        <span>squares:</span>
-        <button
-          type="button"
-          onClick={decreaseSquareSize}
-          disabled={card.grid.size <= 1}
-          className="action minus">
-          -
-        </button>
-        <button
-          type="button"
-          onClick={increaseSquareSize}
-          disabled={card.grid.size >= 40}
-          className="action plus">
-          +
-        </button>
-      </div>
-    </div>
-  )
-
-  return renderedGridMenu
-}
-
-interface GridResizerProps {
-  taskId: string
-  gridStyle: GridStyle
-}
-
-@observer
-export default class AoGridResizer extends React.Component<GridResizerProps> {
-  constructor(props) {
-    super(props)
-    this.increaseRows = this.increaseRows.bind(this)
-    this.decreaseRows = this.decreaseRows.bind(this)
-    this.increaseColumns = this.increaseColumns.bind(this)
-    this.decreaseColumns = this.decreaseColumns.bind(this)
-    this.addGrid = this.addGrid.bind(this)
-    this.removeGrid = this.removeGrid.bind(this)
-  }
-
-  increaseRows() {
-    const card = aoStore.hashMap.get(this.props.taskId)
-    api.resizeGrid(this.props.taskId, card.grid.height + 1, card.grid.width)
-  }
-
-  decreaseRows() {
-    const card = aoStore.hashMap.get(this.props.taskId)
-    api.resizeGrid(this.props.taskId, card.grid.height - 1, card.grid.width)
-  }
-
-  increaseColumns() {
-    const card = aoStore.hashMap.get(this.props.taskId)
-    api.resizeGrid(this.props.taskId, card.grid.height, card.grid.width + 1)
-  }
-
-  decreaseColumns() {
-    const card = aoStore.hashMap.get(this.props.taskId)
-    api.resizeGrid(this.props.taskId, card.grid.height, card.grid.width - 1)
+    return api.setCardProperty(props.taskId, 'gridStyle', 'grid')
   }
   
-  addGrid() {
-		api.addGridToCard(this.props.taskId, 3, 3)
+  const addPyramid = (event) => {
+		switchToPyramid(event).then(() => api.addGridToCard(taskId, 3, 3))
 	}
-
-  removeGrid() {
-    api.removeGridFromCard(this.props.taskId)
+	
+	const addGrid = (event) => {
+		switchToGrid(event).then(() => api.addGridToCard(taskId, 3, 3))
+	}
+	
+  if(!grid) {
+    return <AoHiddenFieldset heading='Grid' startOpen={false} className='gridMenu'>
+      <div className='centerFlex'>
+        <img src={PyramidImg} className="gridMenu action" onClick={addPyramid} />
+        <img src={GridImg} className="gridMenu action" onClick={addGrid} />
+      </div>
+		</AoHiddenFieldset>
   }
 
-  render() {
-    const card = aoStore.hashMap.get(this.props.taskId)
+  const increaseRows = () => {
+    const card = aoStore.hashMap.get(taskId)
+    api.resizeGrid(taskId, grid.height + 1, grid.width, grid.size)
+  }
 
-    if (!card || !card.grid) {
-      return null
-    }
-    
-    const grid = card.grid
+  const decreaseRows = () => {
+    const card = aoStore.hashMap.get(taskId)
+    api.resizeGrid(taskId, grid.height - 1, grid.width, grid.size)
+  }
 
-		const noGrid =
+  const increaseColumns = () => {
+    const card = aoStore.hashMap.get(taskId)
+    api.resizeGrid(taskId, grid.height, grid.width + 1, grid.size)
+  }
+
+  const decreaseColumns = () => {
+    const card = aoStore.hashMap.get(taskId)
+    api.resizeGrid(taskId, grid.height, grid.width - 1, grid.size)
+  }
+
+  const removeGrid = () => {
+    api.removeGridFromCard(taskId)
+  }
+  
+  const noGrid =
 			!grid ||
 			(grid.hasOwnProperty('height') && grid.height < 1) ||
 			(grid.hasOwnProperty('width') && grid.width < 1) ||
 			!grid.hasOwnProperty('height') ||
 			!grid.hasOwnProperty('width')
 			
-    const isPyramid = card.gridStyle === 'pyramid'
+  const isPyramid = props.gridStyle === 'pyramid'
 
-    return (
-      <AoHiddenFieldset heading='Grid'>
-				{noGrid && (
-					<div className="gridMenu action" onClick={this.addGrid}>
-						add pyramid
-					</div>
-				)}
-  		  <AoGridMenu taskId={this.props.taskId} gridStyle={this.props.gridStyle} />
-        {!isPyramid &&
-          <React.Fragment>
-          <span>columns:</span>
+  const increaseSquareSize = () => {
+    api.resizeGrid(
+      props.taskId,
+      grid.height,
+      grid.width,
+      grid.size && grid.size >= 1 ? grid.size + 1 : 10
+    )
+  }
+
+  const decreaseSquareSize = () => {
+    api.resizeGrid(
+      props.taskId,
+      grid.height,
+      grid.width,
+      grid.size && grid.size >= 1 ? grid.size - 1 : 8
+    )
+  }
+  
+  const epithet = isPyramid ? grid.height + '-row Pyramid' : grid.width + '×' + grid.height + ' ' + 'Grid' 
+
+  return (
+      <AoHiddenFieldset heading={epithet} startOpen={true} className='gridMenu'>
+        <div className="centerFlex">
           <button
-            type="button"
-            onClick={this.decreaseColumns}
-            disabled={card.grid.width <= 1}
-            className="action minus">
-            -
+            className={'action' + (isPyramid ? ' selected' : '')}
+            onClick={switchToPyramid}
+            disabled={isPyramid}>
+            <img src={PyramidImg} />
           </button>
           <button
-            type="button"
-            onClick={this.increaseColumns}
-            disabled={card.grid.width >= 100}
-            className="action plus">
-            +
+            className={'action' + (!isPyramid ? ' selected' : '')}
+            onClick={switchToGrid}
+            disabled={!isPyramid}>
+            <img src={GridImg} />
           </button>
-          </React.Fragment>
+        </div>
+         {!isPyramid &&
+          <div className="oneLineSetting">
+            <img src={ColumnImg} />
+            <button
+              type="button"
+              onClick={decreaseColumns}
+              disabled={card.grid.width <= 1}
+              className="action minus">
+              -
+            </button>
+            <button
+              type="button"
+              onClick={increaseColumns}
+              disabled={card.grid.width >= 100}
+              className="action plus">
+              +
+            </button>
+          </div>
         }
         <div className="oneLineSetting">
-          <span>rows:</span>
+          <img src={RowImg} />
           <button
             type="button"
-            onClick={this.decreaseRows}
+            onClick={decreaseRows}
             disabled={card.grid.height <= 1}
             className="action minus">
             -
           </button>
           <button
             type="button"
-            onClick={this.increaseRows}
+            onClick={increaseRows}
             disabled={card.grid.height >= 100}
             className="action plus">
             +
           </button>
-          {(card.grid.width <= 1 || card.grid.height <= 1) && (
+        </div>
+        <div className='oneLineSetting'>
+          <img src={SquareSize} />
+          <button
+            type="button"
+            onClick={decreaseSquareSize}
+            disabled={grid.size <= 1}
+            className="action minus">
+            -
+          </button>
+          <button
+            type="button"
+            onClick={increaseSquareSize}
+            disabled={grid.size >= 40}
+            className="action plus">
+            +
+          </button>
+        </div>
+        {(grid.width <= 1 || grid.height <= 1) && (
             <button
               type="button"
-              onClick={this.removeGrid}
+              onClick={removeGrid}
               className="action remove">
-              -grid
+              Remove {isPyramid ? 'Pyramid' : 'Grid'}
             </button>
           )}
-        </div>
       </AoHiddenFieldset>
     )
-  }
 }

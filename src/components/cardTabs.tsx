@@ -45,6 +45,7 @@ export default function AoCardTabs(props: Props) {
     const tab: CardTabId = cardTab.id
     const icon = cardTab.icon
     const tooltip = cardTab.tooltip
+    let showGhostly = !cardTab.content && tab !== CardTabId.menu
     let content = cardTab.content
     let contentAfter
     if(Array.isArray(content)) {
@@ -53,7 +54,7 @@ export default function AoCardTabs(props: Props) {
     }
     const onDrop = cardTab.onDrop
     const renderedTab =
-      <div className={"cardTab" + (tab === currentTab ? ' selected' : '') + ' ' + CardTabId[tab].toString() + 'TabButton'}
+      <div className={"cardTab" + (tab === currentTab ? ' selected' : '') + ' ' + CardTabId[tab].toString() + 'TabButton' + (showGhostly ? ' ghostly' : '')}
           onClick={tab === currentTab ? closeTab : () => showTab(tab) }>
         {content && <div className='tabSummary'>{content}</div>}
         <object type="image/svg+xml" data={icon} />

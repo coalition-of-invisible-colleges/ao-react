@@ -487,12 +487,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     if(!newTab) {
       const newTimer = setTimeout(() => this.setState({ closingDrawerTimeout: null, currentTab: null }), 650)
       this.setState({ closingDrawerTimeout: newTimer })
+      aoStore.unregisterCloseable(() => this.onSwitchTab)
       return
     }
     if(this.state.closingDrawerTimeout) {
       clearTimeout(this.state.closingDrawerTimeout)
-      this.setState({ currentTab: newTab, closingDrawerTimeout: null })
-      return
+      aoStore.registerCloseable(this.onSwitchTab)
+      this.setState({closingDrawerTimeout: null}) 
     }
     this.setState({currentTab: newTab}) 
   }
@@ -627,6 +628,33 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
     let priorityCards: Task[] = this.priorityCards
 
+    const renderColorStack = (allCards: Task[], color: string) => {
+      if(!allCards) {
+        return null
+      }
+      const colorCards = allCards.filter(st => st.color === color)
+      const changeCardColor = (move: CardPlay) => {
+        api.colorCard(
+          move.from.taskId,
+          color
+        ).then(() => subTaskCard(move)) // move card to top of pile
+      }
+      const renderedColorStack = <AoStack
+        inId={taskId}
+        cards={colorCards}
+        showAdd={false}
+        cardStyle="face"
+        onDrop={changeCardColor}
+        zone="subTasks"
+      />
+      return renderedColorStack
+    }
+    let renderedRedPile
+    let renderedYellowPile
+    let renderedGreenPile
+    let renderedPurplePile
+    let renderedBluePile
+     
     let subTaskCards: Task[]
     if (card.subTasks && card.subTasks.length >= 1) {
       subTaskCards = card.subTasks
@@ -821,6 +849,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           api.prioritizeCard(from.taskId, taskId)
         }
         
+        const unpinCard = (from: CardLocation) => {
+          api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId)
+        }
+        
         const completedCards = this.completedCards
         const showCompleted = () => this.setState({ showCompleted: true })
         const hideCompleted = () => this.setState({ showCompleted: false})
@@ -828,7 +860,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const recurrenceSummary = card?.claimInterval > 0 ? <div>{card.claimInterval} hrs</div> : null
         const completedSummary = completedCards?.length >= 1 ? <div className='fitContent'>{completedCards.length} <object type="image/svg+xml" data={Star} /></div> : null
         
-        const countdownSummary = <AoCountdown taskId={taskId} hudStyle='badge' />
+        const countdownSummary = card.book && card.book.startTs >= 1 ? <AoCountdown taskId={taskId} hudStyle='badge' /> : null
         const bonus = card.boost || 0
         const hasPoints = bonus > 0
         const pointsSummary = hasPoints ? <div>{bonus} pt{bonus >= 2 ? 's' : ''}</div> : null
@@ -919,8 +951,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           tooltip: 'Card Controls',
         })
         
-        const renderedCompletedTab = completedCards && completedCards.length >=1 ?
-          <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards.length} <object type="image/svg+xml" data={Star} /></div> : null
+        const renderedCompletedTab = (completedCards && completedCards.length >=1) || this.state.showCompleted ?
+          <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards && completedCards.length >= 1 ? completedCards.length : 0} <object type="image/svg+xml" data={Star} /></div> : null
                 
         let cardDrawerContent
         switch(this.state.currentTab) {
@@ -993,7 +1025,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           case CardTabId.menu:
             cardDrawerContent = <React.Fragment>
               <AoCardHud taskId={taskId} hudStyle='menu' />
-              <AoGridResizer taskId={taskId} gridStyle={card.gridStyle} />
+              <Observer>
+              {() => <AoGridResizer taskId={taskId} gridStyle={card.gridStyle} hasGrid={!!card.grid} gridHeight={card.grid?.height} gridWidth={card.grid?.width}/>}
+              </Observer>
             </React.Fragment>
             break
         }
@@ -1128,6 +1162,32 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               </Observer>
               <Observer>
                 {() => {
+                  return <div className='fivePiles'>
+                    {subTaskCards && subTaskCards.length >= 1 ?
+                      <React.Fragment>
+                        <div>
+                         <Observer>
+                          {() => renderColorStack(subTaskCards, 'red')}
+                         </Observer>
+                         <Observer>
+                          {() => renderColorStack(subTaskCards, 'green')}
+                         </Observer>
+                         <Observer>
+                          {() => renderColorStack(subTaskCards, 'blue')}
+                         </Observer>
+                        </div>
+                        <div>
+                        <Observer>
+                          {() => renderColorStack(subTaskCards, 'yellow')}
+                         </Observer>
+                         <Observer>
+                          {() => renderColorStack(subTaskCards, 'purple')}
+                         </Observer>
+                        </div>
+                      </React.Fragment> :
+                      <AoDropZoneSimple onDrop={unpinCard} dropHoverMessage='drop to place here' className='emptyPiles' /> 
+                    }
+                  </div>
                   return (
                     <AoStack
                       inId={taskId}

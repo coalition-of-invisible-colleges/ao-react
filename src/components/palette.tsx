@@ -30,11 +30,6 @@ export default class AoPalette extends React.PureComponent<
 
   onClick(event) {
     const { card, setRedirect } = this.context
-    console.log('event.target is ', event.currentTarget)
-    console.log(
-      'getAttribute is ',
-      event.currentTarget.getAttribute('data-color')
-    )
     api.colorCard(
       this.props.taskId,
       event.currentTarget.getAttribute('data-color')
@@ -51,13 +46,13 @@ export default class AoPalette extends React.PureComponent<
         <div
           onClick={this.onClick}
           data-color={colorName}
-          className={'swatch'}
+          className='swatch'
           key={i}>
           <div
             className={card.color === colorName ? 'border selected' : 'border'}>
             <AoPaper taskId={taskId} color={colorName} />
           </div>
-          <div className={'label'}>{colorName}</div>
+          {/*<div className='label'>{colorName}</div>*/}
         </div>
       )
     )
