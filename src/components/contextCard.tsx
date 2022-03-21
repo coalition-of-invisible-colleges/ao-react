@@ -978,7 +978,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const leftDrawerContent = this.state.leftDrawerOpen ?
           <React.Fragment>
             <fieldset>
-              <legend>{card.taskId === card.name ? card.taskId === aoStore.member.memberId ? 'Your Vouchces' : 'Vouch' : 'Collect'}</legend>
+              <legend>{card.taskId === card.name ? card.taskId === aoStore.member.memberId ? 'Your Vouches' : 'Vouch' : 'Collect'}</legend>
               <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
             </fieldset>
             <AoBird taskId={taskId} noPopups={this.props.noPopups} />
