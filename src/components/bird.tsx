@@ -5,6 +5,7 @@ import aoStore from '../client/store'
 import api from '../client/api'
 import AoStack from './stack'
 import AoBirdAutocomplete from './birdAutocomplete'
+import AoHiddenFieldset from './hiddenFieldset'
 import Bird from '../assets/images/pushpin.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -88,7 +89,7 @@ export default class AoBird extends React.Component<Props, State> {
     })
 
     return (
-      <div className="infoTooltip">
+      <React.Fragment>
         {this.memberRequests?.length > 0 && (
           <p>
             {this.memberRequests.length} member request
@@ -98,8 +99,7 @@ export default class AoBird extends React.Component<Props, State> {
         )}
         {renderedPasses.length > 0 && <h4>Pending Passes</h4>}
         {renderedPasses}
-        <p>Click to give card</p>
-      </div>
+      </React.Fragment>
     )
   }
 
@@ -376,58 +376,53 @@ export default class AoBird extends React.Component<Props, State> {
         parentCards.reverse()
       }
     }
-
+/*
+<div className="bird" onClick={event => event.stopPropagation()}>
+            <img src={Bird} />
+            {this.memberRequests && this.memberRequests?.length >= 1 && (
+              <div className="badge red">{this.memberRequests.length}</div>
+            )}
+            {this.pendingPasses >= 1 && (
+              <div className={'badge subscript'}>{this.pendingPasses}</div>
+            )}
+          </div>*/
     return (
-      <LazyTippy
-        zIndex={4}
-        trigger="click"
-        onShown={this.focus}
-        hideOnClick="toggle"
-        theme="translucent"
-        maxWidth="none"
-        content={
           <React.Fragment>
-            <div
-              className="toolbar"
-              onClick={event => {
-                event.stopPropagation()
-              }}>
-              {this.renderTabButton('send', 'Send')}
-              {isGuild &&
-                this.renderTabButton('sign', isGuild ? 'Join' : 'Sign')}
-              {/*{this.renderTabButton('link', 'Link')}*/}
-            </div>
-            {currentTab === 'send' && (
-              <React.Fragment>
-                <AoBirdAutocomplete
+            <fieldset>
+              <legend>Give</legend>
+              <AoBirdAutocomplete
                   taskId={this.props.taskId}
                   onChange={this.onChange}
                 />
                 <div className="action inline" onClick={this.passCard}>
                   give
                 </div>
+              {this.renderPassList}
+            </fieldset>
+            <AoHiddenFieldset heading={'Within ' + parentCards?.length || '0'}>
+              <React.Fragment>
                 {!this.props.noPopups &&
-                parentCards &&
-                parentCards.length >= 1 ? (
-                  <React.Fragment>
-                    <h3>
-                      Within {parentCards.length} other card
-                      {parentCards.length >= 2 ? 's' : ''}
-                    </h3>
-                    <AoStack
-                      cards={parentCards}
-                      zone="panel"
-                      cardStyle="priority"
-                      cardsBeforeFold={3}
-                      noPopups={true}
-                    />
-                  </React.Fragment>
-                ) : (
-                  ''
-                )}
+                  parentCards &&
+                  parentCards.length >= 1 ? (
+                    <React.Fragment>
+                      <h3>
+                        Within {parentCards.length} other card
+                        {parentCards.length >= 2 ? 's' : ''}
+                      </h3>
+                      <AoStack
+                        cards={parentCards}
+                        zone="panel"
+                        cardStyle="priority"
+                        cardsBeforeFold={3}
+                        noPopups={true}
+                      />
+                    </React.Fragment>
+                  ) : (
+                    'Not within any other cards'
+                  )}
               </React.Fragment>
-            )}
-            {currentTab === 'sign' && (
+            </AoHiddenFieldset>
+            <AoHiddenFieldset heading='Join / Sign'>
               <React.Fragment>
                 {level > 0 && (
                   <p>
@@ -460,24 +455,13 @@ export default class AoBird extends React.Component<Props, State> {
                     </div>
                   </React.Fragment>
                 )}
-                {!isGuild && !signed && (
-                  <React.Fragment>
-                    Click to sign this {gloss('card')}.
-                    <div className="action" onClick={this.signCard}>
-                      sign {gloss('card')}
-                      {isGuild && (
-                        <React.Fragment> &amp; apply to join</React.Fragment>
-                      )}
-                    </div>
-                  </React.Fragment>
-                )}
                 {(isMember || (signed && !isGuild)) && (
                   <React.Fragment>
                     {isGuild
                       ? `Click to leave this ${gloss('guild')}.`
                       : `Click to unsign this ${gloss('card')}.`}
                     <div className="action" onClick={this.unsignCard}>
-                      unsign {gloss('card')} &amp; leave {gloss('guild')}
+                      unsign {gloss('card')}{(card.guild && card.guild.length >= 1 ? '&amp; leave ' + gloss('guild') : '')}
                     </div>
                   </React.Fragment>
                 )}
@@ -494,29 +478,8 @@ export default class AoBird extends React.Component<Props, State> {
                   </React.Fragment>
                 )}
               </React.Fragment>
-            )}
+            </AoHiddenFieldset>
           </React.Fragment>
-        }
-        placement="right-start"
-        interactive={true}
-        appendTo={document.getElementById('root')}>
-        <Tippy
-          zIndex={4}
-          theme="translucent"
-          content={this.renderPassList}
-          delay={[625, 200]}
-          placement="right-start">
-          <div className="bird" onClick={event => event.stopPropagation()}>
-            <img src={Bird} />
-            {this.memberRequests && this.memberRequests?.length >= 1 && (
-              <div className="badge red">{this.memberRequests.length}</div>
-            )}
-            {this.pendingPasses >= 1 && (
-              <div className={'badge subscript'}>{this.pendingPasses}</div>
-            )}
-          </div>
-        </Tippy>
-      </LazyTippy>
     )
   }
 }

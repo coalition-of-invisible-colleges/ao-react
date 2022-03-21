@@ -140,7 +140,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'full before':
 				return (
 					<React.Fragment>
-						<AoBird taskId={taskId} />
 						{taskId === aoStore.memberCard.taskId && <AoGifts />}
 						<div className={'hud ' + hudStyle}>
 							<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
@@ -152,7 +151,6 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'face before':
 				return (
 					<React.Fragment>
-						<AoBird taskId={taskId} />
 						<div className={'hud ' + hudStyle}>
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
 							<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />

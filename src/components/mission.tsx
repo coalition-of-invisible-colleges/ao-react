@@ -105,7 +105,7 @@ export default class AoMission extends React.PureComponent<
             autoFocus
           />
           <button type="button" onClick={this.saveMission}>
-            Title Mission
+            Title {gloss('Guild')}
           </button>
         </div>
       )
@@ -141,7 +141,7 @@ export default class AoMission extends React.PureComponent<
           <div className="mission menu">
             <div onClick={this.startEditing} className="action">
               <img className="badge" src={Badge} />
-              {card.guild ? card.guild : 'upgrade to ' + gloss('guild')}
+              {card.guild ? card.guild : gloss('Add Project to Index')}
             </div>
           </div>
         )

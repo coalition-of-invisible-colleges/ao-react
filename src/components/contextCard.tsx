@@ -43,10 +43,12 @@ import Clipboard from '../assets/images/clipboard.svg'
 import Timecube from '../assets/images/timecube.svg'
 import Chest from '../assets/images/chest.svg'
 import Lilypad from '../assets/images/chatroom.svg'
-import Checkbox from '../assets/images/completed.svg'
+import Checkmark from '../assets/images/completed.svg'
+import Checkbox from '../assets/images/uncompleted.svg'
 import Star from '../assets/images/star.svg'
 import Stash from '../assets/images/stash.svg'
 import Controls from '../assets/images/controls.svg'
+import HeartNet from '../assets/images/heartnet.svg'
 import {
   goInCard,
   prioritizeCard,
@@ -58,7 +60,7 @@ import {
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
 import AoDropZoneSimple from './dropZoneSimple'
-import AoCardTabs, { CardTab, CardTabId } from './cardTabs'
+import AoCardTabs, { AoCardTab, CardTab, CardTabId } from './cardTabs'
 // import AoProposals from './proposals'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -110,8 +112,10 @@ interface State {
   confirmedLoadedAllChildren: boolean
   renderMeNowPlease?: boolean
   showCopied?: boolean
+  leftDrawerOpen?: boolean
+  closingLeftDrawerTimeout?
   currentTab?: CardTabId
-  closingDrawerTimeout?
+  closingRightDrawerTimeout?
 }
 
 // const AoContextCard =
@@ -484,18 +488,18 @@ export default class AoContextCard extends React.Component<CardProps, State> {
  }
  
   onSwitchTab(newTab?) {
-    if(!newTab) {
-      const newTimer = setTimeout(() => this.setState({ closingDrawerTimeout: null, currentTab: null }), 650)
-      this.setState({ closingDrawerTimeout: newTimer })
-      aoStore.unregisterCloseable(() => this.onSwitchTab)
+    if(newTab === undefined) {
+      const newTimer = setTimeout(() => this.setState({ closingRightDrawerTimeout: null, currentTab: null }), 650)
+      this.setState({ closingRightDrawerTimeout: newTimer })
+      aoStore.unregisterCloseable(this.onSwitchTab)
       return
     }
-    if(this.state.closingDrawerTimeout) {
-      clearTimeout(this.state.closingDrawerTimeout)
-      aoStore.registerCloseable(this.onSwitchTab)
-      this.setState({closingDrawerTimeout: null}) 
+    if(this.state.closingRightDrawerTimeout) {
+      clearTimeout(this.state.closingRightDrawerTimeout)
+      this.setState({closingRightDrawerTimeout: null}) 
     }
-    this.setState({currentTab: newTab}) 
+    this.setState({currentTab: newTab})
+    aoStore.registerCloseable(this.onSwitchTab)
   }
 
   renderCardContent(content: string, hideIframes = false, alternateOnClick = null) {
@@ -759,11 +763,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               onTogglePriorities={this.togglePriorities}
             />
             <div className={contentClass}>
-              {isGrabbed && card.taskId !== card.name ? (
-                <AoBird taskId={taskId} noPopups={this.props.noPopups} />
-              ) : (
-                <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
-              )}
+              <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content)}
@@ -856,7 +856,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const completedCards = this.completedCards
         const showCompleted = () => this.setState({ showCompleted: true })
         const hideCompleted = () => this.setState({ showCompleted: false})
-        const prioritiesSummary = priorityCards?.length >= 1 ? <div>{priorityCards.length} task{priorityCards.length >= 2 ? 's' : ''}</div> : null
+        const prioritiesSummary = priorityCards?.length >= 1 ? <div>{priorityCards.length} todo{priorityCards.length >= 2 ? 's' : ''}</div> : null
         const recurrenceSummary = card?.claimInterval > 0 ? <div>{card.claimInterval} hrs</div> : null
         const completedSummary = completedCards?.length >= 1 ? <div className='fitContent'>{completedCards.length} <object type="image/svg+xml" data={Star} /></div> : null
         
@@ -884,7 +884,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const tabs: CardTab[] = [
             {
               id: CardTabId.priorities,
-              icon: Checkbox,
+              icon: priorityCards?.length >= 1 ? Checkbox : Checkmark,
               tooltip: 'Priorities',
               content: [(prioritiesSummary || recurrenceSummary) ? <React.Fragment>{prioritiesSummary}{recurrenceSummary}</React.Fragment> : null, completedSummary],
               onDrop: onDropToPrioritiesTab
@@ -954,10 +954,46 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const renderedCompletedTab = (completedCards && completedCards.length >=1) || this.state.showCompleted ?
           <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards && completedCards.length >= 1 ? completedCards.length : 0} <object type="image/svg+xml" data={Star} /></div> : null
                 
-        let cardDrawerContent
+        const toggleLeftDrawer = (eventOrOpen) => {
+        console.log("eventOrOpen is", eventOrOpen)
+          if(eventOrOpen === undefined) {
+            if(this.state.leftDrawerOpen && !this.state.closingLeftDrawerTimeout) {
+              const newTimer = setTimeout(() => this.setState({ closingLeftDrawerTimeout: null, leftDrawerOpen: false }), 650)
+              this.setState({ closingLeftDrawerTimeout: newTimer })
+              aoStore.unregisterCloseable(toggleLeftDrawer)
+            }
+          } else if(this.state.closingLeftDrawerTimeout) {
+            clearTimeout(this.state.closingLeftDrawerTimeout)
+            aoStore.registerCloseable(toggleLeftDrawer)
+            this.setState({closingLeftDrawerTimeout: null, leftDrawerOpen: true}) 
+          } else if(this.state.leftDrawerOpen) {
+            const newTimer = setTimeout(() => this.setState({ closingLeftDrawerTimeout: null, leftDrawerOpen: false }), 650)
+            this.setState({ closingLeftDrawerTimeout: newTimer })
+            aoStore.unregisterCloseable(toggleLeftDrawer)
+          } else {
+            this.setState({leftDrawerOpen: true})
+            aoStore.registerCloseable(toggleLeftDrawer)
+          }
+        }
+        const leftDrawerContent = this.state.leftDrawerOpen ?
+          <React.Fragment>
+            <fieldset>
+              <legend>{card.taskId === card.name ? card.taskId === aoStore.member.memberId ? 'Your Vouchces' : 'Vouch' : 'Collect'}</legend>
+              <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
+            </fieldset>
+            <AoBird taskId={taskId} noPopups={this.props.noPopups} />
+            <fieldset>
+              <legend>Tag & Relate</legend>
+            </fieldset>
+            <fieldset>
+              <legend>Index</legend>
+              <AoMission taskId={taskId} hudStyle="menu" />
+            </fieldset>
+          </React.Fragment> : null
+        let rightDrawerContent
         switch(this.state.currentTab) {
           case CardTabId.priorities:
-            cardDrawerContent = 
+            rightDrawerContent = 
               <React.Fragment>
                 {!this.state.showCompleted ? 
                   <AoDropZoneSimple onDrop={onDropToPrioritiesTab} dropHoverMessage='Drop to prioritize'>
@@ -1001,13 +1037,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               </React.Fragment>
             break
           case CardTabId.timecube:
-            cardDrawerContent = <React.Fragment>
+            rightDrawerContent = <React.Fragment>
               <h2>Calendar</h2>
               <AoCountdown taskId={taskId} hudStyle='menu' />
             </React.Fragment>
             break
           case CardTabId.lightning:
-            cardDrawerContent = <React.Fragment>
+            rightDrawerContent = <React.Fragment>
               <AoFund taskId={taskId} />
               <AoCrowdfund taskId={taskId} hudStyle='menu' />
               <AoHiddenFieldset heading='Autopricer'>
@@ -1016,14 +1052,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             </React.Fragment>
             break
           case CardTabId.stash:
-            cardDrawerContent = <React.Fragment>
+            rightDrawerContent = <React.Fragment>
               <AoDropZoneSimple onDrop={onDropToStashTab} dropHoverMessage='Drop to stash'>
                 <AoStash taskId={taskId} hudStyle='full before' />
               </AoDropZoneSimple>
             </React.Fragment>
             break
           case CardTabId.menu:
-            cardDrawerContent = <React.Fragment>
+            rightDrawerContent = <React.Fragment>
               <AoCardHud taskId={taskId} hudStyle='menu' />
               <Observer>
               {() => <AoGridResizer taskId={taskId} gridStyle={card.gridStyle} hasGrid={!!card.grid} gridHeight={card.grid?.height} gridWidth={card.grid?.width}/>}
@@ -1070,11 +1106,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                 e.stopPropagation()
               }}
               onMouseOut={this.clearPendingPromise}>
-              { cardDrawerContent &&
-                <div id='cardDrawer'
-                  className={(this.state.closingDrawerTimeout ? 'slideOut' : 'slideIn') + (this.state.currentTab ? ' ' + CardTabId[this.state.currentTab] : '')}
+              { leftDrawerContent &&
+                <div id='leftCardDrawer'
+                  className={'cardDrawer ' + (this.state.closingLeftDrawerTimeout ? 'slideOut' : 'slideIn')}>
+                  {leftDrawerContent}
+                </div>
+              }
+              { rightDrawerContent &&
+                <div id='rightCardDrawer'
+                  className={'cardDrawer ' + (this.state.closingRightDrawerTimeout ? 'slideOut' : 'slideIn') + (this.state.currentTab ? ' ' + CardTabId[this.state.currentTab] : '')}
                   style={this.state.currentTab !== CardTabId.menu ? {top: 3.8 + ((this.state.currentTab as number - 1) * 5.4) + 'em'} : undefined}>
-                  {cardDrawerContent}
+                  {rightDrawerContent}
                 </div>
               }
               <Observer>
@@ -1095,6 +1137,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <Observer>
                 {() => <AoCardHud taskId={taskId} hudStyle="full before" />}
               </Observer>
+              <AoCardTab onClick={toggleLeftDrawer} icon={HeartNet} tooltip='Connections' edge='left' isSelected={this.state.leftDrawerOpen} />
               <Observer>
                 {() => {
                   return (
@@ -1281,12 +1324,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         }
         const youAreHere = this.props.isCurrentCard
         return  <div>
-              <div className={'indexLink' + (youAreHere ? ' youAreHere' : '') + (card.color ? ' ' + card.color + 'Text' : '') +
+              <div className={'indexLink' + (youAreHere ? ' youAreHere' : '') +
               this.applyClassIfCurrentSearchResult }>
                 {indexCards && indexCards.length >= 1 ? (this.state.showProjects ? (
-                  <span className="triangle" onClick={this.toggleProjects}>&#9660;</span>
+                  <span onClick={this.toggleProjects} className={'triangle' + (card.color ? ' ' + card.color + 'Text' : '')}>&#9660;</span>
                 ) : (
-                  <span className="triangle"  onClick={this.toggleProjects}>&#9654;</span> )) : (  <span className="triangle nohover">&#8226;</span> )}
+                  <span onClick={this.toggleProjects} className={'triangle' + (card.color ? ' ' + card.color + 'Text' : '')}>&#9654;</span> )) : (  <span className={'triangle nohover' + (card.color ? ' ' + card.color + 'Text' : '')}>&#8226;</span> )}
                   <AoDropZone
                     taskId={taskId}
                     onDrop={this.dropToCard}
@@ -1308,7 +1351,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             </div>
       case 'envelope':
         const openGift = () => {
-          api.prioritizeCard(taskId, aoStore.memberCard.taskId)
+          api.findOrCreateCardInCard(card.name, aoStore.memberCard.taskId)
         }
 
         const fromMemberId = card.passed.find(

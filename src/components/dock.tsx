@@ -9,6 +9,8 @@ import AoHopper from './hopper'
 import AoGem from './gem'
 import AoGrid from './grid'
 import AoPopupPanel from './popupPanel'
+import AoDropZoneSimple from './dropZoneSimple'
+import { CardLocation } from '../cardTypes'
 import { gloss } from '../semantics'
 import _ from 'lodash'
 
@@ -76,9 +78,29 @@ export default class AoDock extends React.Component<{}, State> {
     }
     const hasBookmarksCard =
       card && _.has(card, 'grid.rows') && card?.grid?.height >= 1
-
+    
     if (!hasBookmarksCard) {
       return null
+    }
+    
+    const expandDock = () => {
+      const grid = card.grid
+      const newWidth = grid.width + 1
+      return api.resizeGrid(this.state.bookmarksTaskId, grid.height, newWidth, grid.size)
+    }
+    
+    const onDropToDock = (from: CardLocation) => {
+      const cardFrom = aoStore.hashMap.get(from.taskId)
+      if(!cardFrom) {
+        return
+      }
+      const grid = card.grid
+      const newWidth = grid.width + 1
+      api.resizeGrid(this.state.bookmarksTaskId, grid.height, newWidth, grid.size).then(() => {
+        api.pinCardToGrid(newWidth - 1, 0, cardFrom.name, card.taskId).then(() => {
+          this.setState({renderMeNowPlease: true})
+        })
+      })
     }
     return (
       <div id="dock">
@@ -98,6 +120,9 @@ export default class AoDock extends React.Component<{}, State> {
               )
             }}
           </Observer>
+          <AoDropZoneSimple onDrop={onDropToDock} dropHoverMessage="bookmark on dock" className='dockDropZone'>
+            <div onClick={expandDock} className="action">+</div>
+          </AoDropZoneSimple>
         </div>
       </div>
     )

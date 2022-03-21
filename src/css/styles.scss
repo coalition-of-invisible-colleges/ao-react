@@ -1161,6 +1161,7 @@ body {
   &.guilds {
     overflow-y: auto;
     overflow-x: hidden;
+    background: FloralWhite;
   }
 
   .leftBorder {
@@ -1701,6 +1702,27 @@ body {
         width: calc(100% - 4em);
         position: relative;
         left: 3.5em;
+      }
+    }
+  }
+}
+
+// Guilds /groups index sidebar
+#leftSidebar.guilds {
+  #missions {
+    &> h2 {
+      color: black;
+    }
+    
+    .toolbar {
+      .action {
+        background: #222b;
+        
+        &.selected {
+          background: rgba(127, 255, 255, 0.5);
+          color: black;        
+          border: solid black 0.2em;
+        }
       }
     }
   }
@@ -2407,6 +2429,34 @@ img.icon {
 
   .grid {
     max-width: 65vw;
+  }
+  
+  .dockDropZone {
+    position: absolute;
+    background: #aaffff07;
+    margin: 0.5em;
+    top: 0;
+    left: 100%;
+    width: 8em;
+    height: 8em;
+    border-radius: 1em;
+    
+    &>.action {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      border: none;
+      
+      &:hover {
+        background: #aaffff17;
+        text-decoration: none;
+      }
+    }
   }
 }
 
@@ -4195,65 +4245,11 @@ div.legendAction, legend.clickable {
   right: 0;
   height: calc(100% - 3em);
   
-  .cardTab {
-    background-color: rgba(100, 127, 208, 0.72);
-    color: white;
-    border: 3px solid #282c34;
-    border-right: none;
-    border-top-left-radius: 40%;
-    border-bottom-left-radius: 40%;
-    margin-top: 1em;
-    //height: 5em;
-    width: 5em;
-    position: relative;
-    cursor: pointer;
-    text-align: center;
-    user-select: none;
-  
-    &:hover {
-      background-color: rgba(100, 127, 208, 0.9);
-      border-color: #181c24;
-    }
-    
-    &.selected {
-      background-color: rgba(90, 117, 178, 1);
-      border-color: #181c24;
-    }
-    
-    &.ghostly {
-      opacity: 0.4;
-    }
-    
-    & > object {
-      margin-top: 0.45em;
-      margin-bottom: 0.3em;
-      width: 3em;
-      //top: 50%;
-      //transform: translateY(-50%);
-      pointer-events: none;
-      cursor: pointer;
-      position: relative;
-      right: -0.25em;
-    }
-    
-    .tabSummary {
-      font-size: 0.8em;
-      text-align: center;
-      margin-right: -0.7em;
-      margin-top: 0.32em;
-      
-      div.fitContent {
-        width: fit-content;
-        margin: -0.45em auto 0.625em auto;
-      }
-      
-      object {
-        height: 1.5em;
-        margin: 0;
-        position: relative;
-        top: 0.25em;
-      }
-    }
+  &>div:last-child {
+    position: absolute;
+    bottom: 0.5em;
+    right: 0;
+    margin-top: 0;
   }
   
   .dropZone {
@@ -4261,28 +4257,158 @@ div.legendAction, legend.clickable {
   }
 }
 
-// Draw that slides out on the right side of a card to show the contents of the current tab
-#cardDrawer {
+// A single tab meant to go along the edge of a card
+.cardTab {
+  background-color: rgba(100, 127, 208, 0.72);
+  color: white;
+  border: 3px solid #282c34;
+  border-right: none;
+  border-top-left-radius: 40%;
+  border-bottom-left-radius: 40%;
+  margin-top: 1em;
+  //height: 5em;
+  width: 5em;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+
+  &:hover {
+    background-color: rgba(100, 127, 208, 0.9);
+    border-color: #181c24;
+  }
+  
+  &.selected {
+    background-color: rgba(90, 117, 178, 1);
+    border-color: #181c24;
+  }
+  
+  &.ghostly {
+    opacity: 0.4;
+    
+    &.selected {
+      opacity: 1;
+    }
+  }
+  
+  & > object {
+    margin-top: 0.45em;
+    margin-bottom: 0.3em;
+    width: 3em;
+    //top: 50%;
+    //transform: translateY(-50%);
+    pointer-events: none;
+    cursor: pointer;
+    position: relative;
+    right: -0.25em;
+  }
+  
+  .tabSummary {
+    font-size: 0.8em;
+    text-align: center;
+    margin-right: -0.7em;
+    margin-top: 0.32em;
+    
+    div.fitContent {
+      width: fit-content;
+      margin: -0.45em auto 0.625em auto;
+    }
+    
+    object {
+      height: 1.5em;
+      margin: 0;
+      position: relative;
+      top: 0.25em;
+    }
+  }
+}
+
+// A card tab on the left edge of the card instead of the right
+// Only one tab on this side so it's in the top left corner
+.leftEdge {
+  width: min-content;
   position: absolute;
   left: 0;
-  top: 0.5em;
-  //transform: translateY(-50%);
+  top: 3.75em;
+  
+  &>.cardTab {
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+    border-top-right-radius: 40%;
+    border-bottom-right-radius: 40%;
+    border-right: 3px solid #282c34;
+    border-left: none;
+
+    margin-top: 0;
+    width: 4em;
+    padding-right: 0.5em;
+  }
+}
+
+// Draw that slides out on the right side of a card to show the contents of the current tab
+.cardDrawer {
+  position: absolute;
   background-color: rgba(90, 117, 178, 1);
   border: 3px solid #181c2455;
-  border-top-right-radius: 2em;
-  border-bottom-right-radius: 2em;
-  border-left: none;
-  //font-size: 1.5em;
-  padding: 0 1em 1em 2.5em;
-  animation: slideIn 0.35s forwards;
-  color: white;  
+  color: white;
+  
+  &.lightning {
+    width: max-content;
+    
+    .legendAction, fieldset {
+      margin-top: 1em;
+    }
+  }
+  
+  .card.checkmark {
+    color: white;
+  }
+}
+
+#leftCardDrawer {
+  right: 0;
+  top: 0.5em;
+  border-top-left-radius: 2em;
+  border-bottom-left-radius: 2em;
+  border-right: none;
+  padding: 0 1em 2.5em 1em;
+  min-width: 18em;
+  animation: slideInLeft 0.35s forwards;
 
   &.slideOut {
-    animation: slideOut 0.65s forwards;
+    animation: slideOutLeft 0.65s forwards;
   }
   
   &.slideIn {
-    animation: slideIn 0.35s forwards;
+    animation: slideInLeft 0.35s forwards;
+  }
+  
+  .mission.menu {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .legendAction {
+    margin-bottom: 1em;
+  }
+}
+
+#rightCardDrawer {
+  left: 0;
+  top: 0.5em;
+  border-top-right-radius: 2em;
+  border-bottom-right-radius: 2em;
+  border-left: none;
+  padding: 0 1em 1em 2.5em;
+  
+  animation: slideInRight 0.35s forwards;
+
+  &.slideOut {
+    animation: slideOutRight 0.65s forwards;
+  }
+  
+  &.slideIn {
+    animation: slideInRight 0.35s forwards;
   }
   
   &.priorities {
@@ -4293,31 +4419,30 @@ div.legendAction, legend.clickable {
     }
   }
   
-  &.lightning {
-    width: max-content;
-    
-    .legendAction, fieldset {
-      margin-top: 1em;
-    }
-  }
-  
   &.menu {
     top: unset;
     bottom: 0.5em;
   }
-  
-  .card.checkmark {
-    color: white;
-  }
 }
 
-// Show animation for #cardDrawer
-@keyframes slideIn {
+// Show animation for #leftCardDrawer
+@keyframes slideInLeft {
+    100% { right: 100%; }
+}
+
+// Hide animation for #leftCardDrawer
+@keyframes slideOutLeft {
+    0% { right: 100% }
+    100% { right: 0; }
+}
+
+// Show animation for #rightCardDrawer
+@keyframes slideInRight {
     100% { left: 100%; }
 }
 
-// Hide animation for #cardDrawer
-@keyframes slideOut {
+// Hide animation for #rightCardDrawer
+@keyframes slideOutRight {
     0% { left: 100% }
     100% { left: 0; }
 }
@@ -4328,7 +4453,6 @@ div.legendAction, legend.clickable {
   text-align: left;
   padding: 0.5em 0.5em 0.5em 0;
   margin: 1em 0.5em 0.5em 0.5em;
-  background-color: white;
   position: relative;
   
   &>.stack > .dragZone > div > .indexLink > .dropZone {
@@ -4347,6 +4471,7 @@ div.legendAction, legend.clickable {
   margin-top: 0.25em;
   margin-left: 1.5em;
   position: relative;
+  color: black;
   
   &>div:hover {
     text-decoration: underline;
@@ -4461,13 +4586,6 @@ div.legendAction, legend.clickable {
   }
 }
 
-// The card menu tab button itself
-.cardTab.menuTabButton {
-  position: absolute;
-  bottom: 0.5em;
-  right: 0;
-}
-
 // Prevent wrapping
 .oneLineSetting {
   display: flex;
@@ -4501,6 +4619,7 @@ div.legendAction, legend.clickable {
 .fivePiles {
   display: flex;
   flex-direction: column;
+  min-width: 54em;
   
   &>div {
     display: flex;

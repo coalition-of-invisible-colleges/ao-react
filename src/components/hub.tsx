@@ -98,7 +98,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
 
     console.log('fromHasGuild ', fromHasGuild, 'toHasGuild', toHasGuild)
     return new Promise((resolve, reject) => {
-      api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(resolve)
+      api.findOrCreateCardInCard(nameFrom, move.to.taskId).then(resolve)
     })
   }
 
@@ -111,8 +111,8 @@ export default class AoHub extends React.PureComponent<{}, State> {
     let youAreHere =
       communityCard && aoStore.currentCard === communityCard.taskId
 
-    const hubRenderedBadge = communityCard?.priorities?.length >= 1 && (
-      <div className="unreadBadge red">{communityCard?.priorities.length}</div>
+    const hubRenderedBadge = (communityCard?.subTasks?.length >= 1 || communityCard?.priorities?.length >= 1) && (
+      <div className="unreadBadge red">{communityCard?.subTasks.length + communityCard?.priorities?.length}</div>
     )
 
     return (
@@ -133,7 +133,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
                   <React.Fragment>
                     <p>Community Hub</p>
                     <p>
-                      <small>Drop cards here to send to hub priorities</small>
+                      <small>Drop cards here to send to hub card</small>
                     </p>
                   </React.Fragment>
                 )

@@ -30,7 +30,7 @@ export default class AoMissions extends React.Component<{}, State> {
         aoStore.myMissions.length !== aoStore.topLevelMissions.length
           ? 'mine'
           : 'all',
-      sort: 'recents',
+      sort: 'alphabetical',
       loaded: false,
     }
     this.filterBy = this.filterBy.bind(this)
