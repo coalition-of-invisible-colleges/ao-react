@@ -411,7 +411,16 @@ export function safeMerge(cardA, cardZ) {
 			}
 		}
 	}
-	cardA.passed = [...new Set(cardA.passed.concat(filterNull(cardZ.passed)))]
+	cardA.passed = [...new Set([...cardA.passed, ...filterNull(cardZ.passed)])]
+	// Remove duplicate passes
+	let passesNoDuplicates = []
+	cardA.passed.forEach(pass => {
+	  if(!passesNoDuplicates.some(pass2 => pass[0] === pass2[0] && pass[1] === pass2[1])) {
+	    passesNoDuplicates.push(pass)
+	  }
+	})
+	cardA.passed = passesNoDuplicates
+
 	// XXX only add in merge for now
 	// XXX bolt11 / address need to clearly indicate origin ao
 	// XXX book should be a list?

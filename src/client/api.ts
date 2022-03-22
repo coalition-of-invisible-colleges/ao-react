@@ -97,7 +97,23 @@ class AoApi {
         return res
       })
   }
-
+  
+  async deleteAoConnection(
+    address: string,
+  ): Promise<request.Response> {
+    const act = {
+      type: 'ao-disconnected',
+      address: address,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+  
   async linkCardOnAo(
     taskId: string,
     address: string
@@ -106,6 +122,24 @@ class AoApi {
       type: 'ao-linked',
       address: address,
       taskId: taskId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+
+  async relayEventToOtherAo(
+    address: string,
+    event: object
+  ): Promise<request.Response> {
+    const act = {
+      type: 'ao-relay',
+      address: address,
+      ev: event,
     }
     return request
       .post('/events')

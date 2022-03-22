@@ -87,7 +87,7 @@ router.post( '/events', ( req, res, next ) => {
     case 'ao-disconnected':
       if ( validators.isAddress( req.body.address, errRes ) ) {
         events.trigger( eventType, {
-          address: req.body.address
+          address: req.body.address.trim()
         }, resCallback )
       } else sendErrorStatus()
       break
@@ -124,10 +124,9 @@ router.post( '/events', ( req, res, next ) => {
         validators.isNotes( req.body.address, errRes ) &&
         validators.isNotes( req.body.secret, errRes )
       ) {
-        console.log( "About to try connecting to AO at address", req.body
-          .address, "with secret", req.body.secret )
+        console.log( "About to try connecting to AO at address", req.body.address, "with secret", req.body.secret )
         postEvent(
-          req.body.address,
+          req.body.address.trim(),
           req.body.secret, {
             type: 'ao-inbound-connected',
             address: state.serverState.cash.address,
@@ -135,14 +134,14 @@ router.post( '/events', ( req, res, next ) => {
           },
           subscriptionResponse => {
             if ( !subscriptionResponse || !subscriptionResponse
-              .lastInsertRowid ) {
+              ?.result?.lastInsertRowid ) {
               return res.status( 200 )
                 .send( [ 'ao-connect failed' ] )
             }
-            console.log( 'subscribe success, attempt ao connect' )
+            console.log( 'Connected and subscribed to AO at', req.body.address, ', creating outbound connection event' )
             events.trigger(
               eventType, {
-                address: req.body.address,
+                address: req.body.address.trim(),
                 secret: req.body.secret,
               },
               resCallback
@@ -152,14 +151,13 @@ router.post( '/events', ( req, res, next ) => {
       } else sendErrorStatus()
       break
     case 'ao-inbound-connected':
-      console.log( "\n\nao-inbound-connected" )
       if (
         validators.isNotes( req.body.address, errRes ) &&
         validators.isNotes( req.body.secret, errRes )
       ) {
         events.trigger(
           eventType, {
-            address: req.body.address,
+            address: req.body.address.trim(),
             secret: req.body.secret,
           },
           resCallback
@@ -169,12 +167,14 @@ router.post( '/events', ( req, res, next ) => {
     case 'ao-relay':
       let secret
       state.serverState.ao.forEach( a => {
+        console.log("trying to match to", a.address)
         if ( a.address == req.body.address ) {
+          console.log('found matching AO! secret is', a.outboundSecret)
           secret = a.outboundSecret
         }
       } )
       if ( secret ) {
-        postEvent( req.body.address, secret, req.body.ev, connectorRes => {
+        postEvent( req.body.address, secret, req.body.ev, (connectorRes, err) => {
           console.log( 'ao relay response', {
             connectorRes
           } )
@@ -879,7 +879,7 @@ router.post( '/events', ( req, res, next ) => {
     case 'task-passed':
       if (
         validators.isTaskId( req.body.taskId, errRes ) &&
-        validators.isMemberId( req.body.fromMemberId, errRes ) &&
+        (validators.isMemberId( req.body.fromMemberId, errRes ) || validators.isNotes(req.body.fromMemberId) ) &&
         validators.isMemberId( req.body.toMemberId, errRes )
       ) {
         events.trigger(
@@ -1185,8 +1185,9 @@ router.post( '/events', ( req, res, next ) => {
         }, resCallback )
       } else sendErrorStatus()
     case 'tasks-received':
-      if ( true ) {
-        // TODO
+      console.log("tasks-received body is", req.body)
+      if ( !req.body.to || validators.isMemberName(req.body.to)) {
+        // TODO more validation
         let safeTasks = req.body.tasks.map( t => { // hard question
           t.deck = []
           return t
@@ -1194,10 +1195,27 @@ router.post( '/events', ( req, res, next ) => {
         events.trigger(
           eventType, {
             tasks: safeTasks,
+            to: req.body.to,
             blame: req.body.blame
           },
-          resCallback
         )
+        console.log("triggered event, about to check to: field is", req.body.to)
+        if(req.body.to && req.body.to.length >= 1) {
+          console.log("about to do pass")
+          const foundMember = state.serverState.members.find(member => member.name === req.body.to)
+          const foundMemberId = foundMember ? foundMember.memberId : null
+          if(foundMemberId) {
+            console.log("found memberId!") 
+            events.trigger(
+              'task-passed', {
+                taskId: safeTasks[0].taskId,
+                fromMemberId: req.body.blame,
+                toMemberId: foundMemberId,
+              },
+              resCallback
+            )
+          }  
+        }
       } else sendErrorStatus()
       break
     case 'task-visited':

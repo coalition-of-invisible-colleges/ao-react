@@ -13,6 +13,7 @@ import 'tippy.js/themes/translucent.css'
 import LazyTippy from './lazyTippy'
 import AoMemberIcon from './memberIcon'
 import { gloss, glossLevel } from '../semantics'
+import { crawler } from '../calculations'
 
 type BirdTab = 'send' | 'link' | 'sign'
 
@@ -23,15 +24,21 @@ interface Props {
 
 interface State {
   memberId?: string
+  memberName?: string
   tab: BirdTab
+  selectedServer?: string
+  error?: string
+  includeCrawlerCards: boolean
 }
+
+const THIS_SERVER = "on this AO"
 
 @observer
 export default class AoBird extends React.Component<Props, State> {
   constructor(props) {
     super(props)
     makeObservable(this)
-    this.state = { tab: 'send' }
+    this.state = { tab: 'send', includeCrawlerCards: true }
     this.onChange = this.onChange.bind(this)
     this.passCard = this.passCard.bind(this)
     this.focus = this.focus.bind(this)
@@ -49,9 +56,31 @@ export default class AoBird extends React.Component<Props, State> {
 
   passCard(event) {
     event.stopPropagation()
-    console.log('passCard!')
-    if (this.state.memberId !== undefined) {
+    if (aoStore.member.memberId === undefined) {
+      console.log("No memberId available, something is broken, cannot send card")
+      return
+    }
+    if(!this.state.selectedServer || this.state.selectedServer === THIS_SERVER) {
       api.passCard(this.props.taskId, this.state.memberId)
+    } else {
+       let tasks = []
+        if (aoStore.currentCard === aoStore.member.memberId) {
+            tasks = aoStore.state.tasks.filter(t => t.deck.indexOf(aoStore.member.memberId) > -1)
+        } else if(this.state.includeCrawlerCards) {
+            let taskList = crawler(aoStore.state.tasks, aoStore.currentCard)
+            tasks = aoStore.state.tasks.filter(t => taskList.indexOf(t.taskId) > -1)
+        } else {
+          tasks = [aoStore.hashMap.get(aoStore.currentCard)]
+        }
+        const eventToSend = {
+          type: 'tasks-received',
+          to: this.state.memberName,
+          tasks
+        }
+        api.relayEventToOtherAo(this.state.selectedServer, eventToSend).then(() => {
+          this.setState({error: 'Sent!'})
+        })
+        this.setState({error: "Sending..."})
     }
   }
 
@@ -71,11 +100,15 @@ export default class AoBird extends React.Component<Props, State> {
     if (!card) {
       return null
     }
-
     const renderedPasses = card.passed.map(pass => {
       const fromId = pass[0]
-      const fromMember = aoStore.memberById.get(fromId)
-      const fromName = fromMember ? fromMember.name : 'deleted member'
+      let fromName
+      if(fromId.includes('.onion')) {
+        fromName = fromId
+      } else {
+        const fromMember = aoStore.memberById.get(fromId)
+        fromName = fromMember ? fromMember.name : 'deleted member'
+      }
       const toId = pass[1]
       const toMember = aoStore.memberById.get(toId)
       const toName = toMember ? toMember.name : 'deleted member'
@@ -90,13 +123,6 @@ export default class AoBird extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        {this.memberRequests?.length > 0 && (
-          <p>
-            {this.memberRequests.length} member request
-            {this.memberRequests.length > 1 ? 's ' : ' '}
-            waiting
-          </p>
-        )}
         {renderedPasses.length > 0 && <h4>Pending Passes</h4>}
         {renderedPasses}
       </React.Fragment>
@@ -386,17 +412,49 @@ export default class AoBird extends React.Component<Props, State> {
               <div className={'badge subscript'}>{this.pendingPasses}</div>
             )}
           </div>*/
+    const connectedAos = aoStore.state.ao.filter(ao => {
+            const msSinceLastContact = Date.now() - ao.lastContact
+            const msFiveDays = 1000 * 60 * 60 * 24 * 5
+            return msSinceLastContact <= msFiveDays
+        })
+    
+    const onChangeAoSelect = (event) => {
+      this.setState({selectedServer: event.target.value })
+    } 
+    
+    const renderedAoList = connectedAos && connectedAos.length >= 1 ?
+      <select onChange={onChangeAoSelect}>
+        <option>{THIS_SERVER}</option>
+        {connectedAos.map(ao => {
+            return <option>{ao.address}</option>
+        })}
+      </select> : null
+    
+    const onChangeText = (event) => {
+      this.setState({memberName: event.target.value})
+    }
+    
+    const setIncludeCrawlerCards = (event) => {
+      this.setState({includeCrawlerCards: event.target.checked})
+    }
+    
+    const thisServerIsSelected = !this.state.selectedServer || this.state.selectedServer === THIS_SERVER
     return (
           <React.Fragment>
             <fieldset>
-              <legend>Give</legend>
-              <AoBirdAutocomplete
+              <legend>{!thisServerIsSelected ? aoStore.currentCard === aoStore.member.memberId ? 'Migrate' : this.state.includeCrawlerCards ? 'Send Cards' : 'Send Card' : 'Give'}</legend>
+              {thisServerIsSelected ? <AoBirdAutocomplete
                   taskId={this.props.taskId}
                   onChange={this.onChange}
-                />
-                <div className="action inline" onClick={this.passCard}>
-                  give
-                </div>
+                /> :
+                <input type='text' onChange={onChangeText} placeholder='type member name exactly' />
+              }
+              <div className="action inline" onClick={this.passCard}>
+                {thisServerIsSelected ? 'Give' : 'Send'}
+              </div>
+              {!thisServerIsSelected && <div><input type='checkbox' onChange={setIncludeCrawlerCards} checked={this.state.includeCrawlerCards} /> also send all cards within this card</div>}
+              {!!renderedAoList && <div className='normalFlex'><div className='specialAt'>@</div>{renderedAoList}</div>}
+              {this.state.error && <div className={this.state.error.includes('Success') ? 'greenText' : 'redText'}>{this.state.error}</div>}
               {this.renderPassList}
             </fieldset>
             <AoHiddenFieldset heading={'Within ' + parentCards?.length || '0'}>
@@ -464,6 +522,13 @@ export default class AoBird extends React.Component<Props, State> {
                       unsign {gloss('card')}{(card.guild && card.guild.length >= 1 ? '&amp; leave ' + gloss('guild') : '')}
                     </div>
                   </React.Fragment>
+                )}
+                {this.memberRequests?.length >= 1 && (
+                  <p>
+                    {this.memberRequests.length} member request
+                    {this.memberRequests.length > 1 ? 's ' : ' '}
+                    waiting
+                  </p>
                 )}
                 {isGuild && isMember && this.memberRequests?.length >= 1 && (
                   <React.Fragment>

@@ -21,7 +21,7 @@ interface State {
 }
 
 @observer
-export default class AoConnect extends React.PureComponent<{}, State> {
+export default class AoConnect extends React.Component<{}, State> {
   constructor(props) {
     super(props)
     this.state = {}
@@ -54,7 +54,12 @@ export default class AoConnect extends React.PureComponent<{}, State> {
       this.setState({error: 'Invalid address or secret'})
       return
     }
-    api.connectToAo(address, secret)
+    api.connectToAo(address, secret).then(response => {
+      console.log("response is", response)
+      if(response.text.includes('ao-connect failed')) {
+        this.setState({error: "Connection attempt failed on the server"})
+      }
+    })
   }
 
   copyConnectionStringToClipboard(event, content: string | false) {
@@ -87,6 +92,13 @@ export default class AoConnect extends React.PureComponent<{}, State> {
       const formattedLastContact = formatDistanceToNow(ao.lastContact, {
         addSuffix: true,
       })
+      
+      const deleteConnection = (event) => {
+        const warningMessage = 'If you delete this connection, you will have to get the connection string again from the other AO in order to reconnect. Are you sure you want to delete it?'
+        if(window.confirm(warningMessage)) {
+          api.deleteAoConnection(ao.address)
+        }
+      }
 
       return (
         <fieldset key={ao.address} className='connectedAo'>
@@ -107,6 +119,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
             onDrop={linkCard}
             alwaysShowAll={true}
           />
+          <button onClick={deleteConnection} className='action'>Delete...</button>
         </fieldset>
       )
     })
@@ -148,7 +161,7 @@ export default class AoConnect extends React.PureComponent<{}, State> {
                       placeholder="Paste other AO's connection string to link p2p over Tor"
                     />
                   </div>
-                  {this.state.error && <p className="error">{this.state.error}</p>}
+                  {this.state.error && <p className="error redText">{this.state.error}</p>}
                 </div>
                 <button
                   type="button"

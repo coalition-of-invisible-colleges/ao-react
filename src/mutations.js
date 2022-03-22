@@ -68,7 +68,7 @@ function aoMuts(aos, ev) {
       })
       if (!outAddressConnect) {
         let newEv = {
-          address: ev.address,
+          address: ev.address.trim(),
           outboundSecret: ev.secret,
           inboundSecret: false,
           lastContact: Date.now(),
@@ -78,7 +78,7 @@ function aoMuts(aos, ev) {
       break
     case 'ao-disconnected':
       aos.forEach((ao, i) => {
-        if (ao.address === ev.address) {
+        if (ao.address.trim() === ev.address.trim()) {
           aos.splice(i, 1)
         }
       })

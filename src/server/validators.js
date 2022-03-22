@@ -74,7 +74,7 @@ export default {
       }
     })
 
-    if (!result || !result2) {
+    if (!result) {
       errRes.push('invalid member')
     }
     return result

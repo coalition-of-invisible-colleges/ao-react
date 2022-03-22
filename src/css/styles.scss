@@ -4391,6 +4391,16 @@ div.legendAction, legend.clickable {
   .legendAction {
     margin-bottom: 1em;
   }
+  
+  .specialAt {
+    font-size: 2em;
+    font-weight: bold;
+    margin-right: 0.25em;  
+  }
+  
+  select {
+    margin-top: 0.5em;
+  }
 }
 
 #rightCardDrawer {
@@ -4568,6 +4578,11 @@ div.legendAction, legend.clickable {
     margin-left: 0.5em;
     margin-right: 0.5em;
   }
+}
+
+// Default flex for adding to stuff
+.normalFlex {
+  display: flex;
 }
 
 // Centered and spread-out flex wrapper for putting a button next to a heading

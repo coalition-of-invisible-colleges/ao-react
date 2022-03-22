@@ -955,7 +955,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           <div className={'prioritiesTab' + (this.state.showCompleted ? ' selected' : '')} onClick={this.state.showCompleted ? hideCompleted : showCompleted}>{completedCards && completedCards.length >= 1 ? completedCards.length : 0} <object type="image/svg+xml" data={Star} /></div> : null
                 
         const toggleLeftDrawer = (eventOrOpen) => {
-        console.log("eventOrOpen is", eventOrOpen)
           if(eventOrOpen === undefined) {
             if(this.state.leftDrawerOpen && !this.state.closingLeftDrawerTimeout) {
               const newTimer = setTimeout(() => this.setState({ closingLeftDrawerTimeout: null, leftDrawerOpen: false }), 650)
@@ -1357,10 +1356,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const fromMemberId = card.passed.find(
           pass => (pass[1] = aoStore.member.memberId)
         )[0]
-        const fromMemberName = aoStore.state.members.find(
-          member => member.memberId === fromMemberId
-        ).name
-
+        let fromMemberName
+        if(fromMemberId.includes('.onion')) {
+          fromMemberName = fromMemberId
+        } else {
+          aoStore.state.members.find(
+            member => member.memberId === fromMemberId
+          ).name
+        }
+        
         return (
           <Tippy
             zIndex={4}
