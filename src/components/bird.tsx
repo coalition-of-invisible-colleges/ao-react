@@ -439,10 +439,11 @@ export default class AoBird extends React.Component<Props, State> {
     }
     
     const thisServerIsSelected = !this.state.selectedServer || this.state.selectedServer === THIS_SERVER
+    const sendLabel = !thisServerIsSelected ? aoStore.currentCard === aoStore.member.memberId ? 'Migrate' : this.state.includeCrawlerCards ? 'Send Cards' : 'Send Card' : 'Give'
     return (
           <React.Fragment>
             <fieldset>
-              <legend>{!thisServerIsSelected ? aoStore.currentCard === aoStore.member.memberId ? 'Migrate' : this.state.includeCrawlerCards ? 'Send Cards' : 'Send Card' : 'Give'}</legend>
+              <legend>{sendLabel}</legend>
               {thisServerIsSelected ? <AoBirdAutocomplete
                   taskId={this.props.taskId}
                   onChange={this.onChange}
@@ -452,7 +453,8 @@ export default class AoBird extends React.Component<Props, State> {
               <div className="action inline" onClick={this.passCard}>
                 {thisServerIsSelected ? 'Give' : 'Send'}
               </div>
-              {!thisServerIsSelected && <div><input type='checkbox' onChange={setIncludeCrawlerCards} checked={this.state.includeCrawlerCards} /> also send all cards within this card</div>}
+              {(!thisServerIsSelected && aoStore.currentCard !== aoStore.member.memberId) && <div><input type='checkbox' onChange={setIncludeCrawlerCards} checked={this.state.includeCrawlerCards} /> also send all cards within this card</div>}
+              {sendLabel === 'Migrate' && <div>Send your entire deck to another server</div>}
               {!!renderedAoList && <div className='normalFlex'><div className='specialAt'>@</div>{renderedAoList}</div>}
               {this.state.error && <div className={this.state.error.includes('Success') ? 'greenText' : 'redText'}>{this.state.error}</div>}
               {this.renderPassList}
