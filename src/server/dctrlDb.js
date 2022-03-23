@@ -163,7 +163,7 @@ export function insertEvent(ev, callback) {
     err = actualErr
   }
   if (callback) {
-    callback(err, { event: ev, result })
+    callback(err, result)
   }
 }
 

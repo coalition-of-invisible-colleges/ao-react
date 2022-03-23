@@ -133,8 +133,7 @@ router.post( '/events', ( req, res, next ) => {
             secret: req.body.secret, //
           },
           subscriptionResponse => {
-            if ( !subscriptionResponse || !subscriptionResponse
-              ?.result?.lastInsertRowid ) {
+            if ( !subscriptionResponse || !subscriptionResponse?.lastInsertRowid ) {
               return res.status( 200 )
                 .send( [ 'ao-connect failed' ] )
             }
