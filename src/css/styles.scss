@@ -4370,10 +4370,14 @@ div.legendAction, legend.clickable {
   z-index: 1;
   
   &>.cardTab {
-    transform: rotate(-90deg);
+    transform-origin: top right;
+    transform:  translateX(-100%) rotate(-90deg) ;
     position: absolute;
-    top: 1em;
-    left: -1em;
+    left: 1em;
+    top: -1em;
+    //top: 0;
+    //top: 10em;
+    //left: 9.5em;
     
     border-top-left-radius: 40%;
     border-bottom-left-radius: 40%;
