@@ -416,13 +416,7 @@ class AoStore {
     callback,
     prioritiesOnly = false
   ) {
-    console.log('calling getLinkedCards on', parentTaskId)
     let parentTaskItem = this.hashMap.get(parentTaskId)
-
-    console.log('AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: ', {
-      parentTaskId,
-      parentTaskItem,
-    })
 
     if (!parentTaskItem) {
       // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async: parentTask not loaded, ignoring")

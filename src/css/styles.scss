@@ -136,9 +136,10 @@ body {
 .card.full {
   box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
   cursor: default;
-  padding-right: 5em;
-  padding-left: 5em;
+  padding-right: 0;
+  padding-left: 0;
   min-height: 23.4em;
+  display: flex;
 }
 
 // priority card within a full card
@@ -877,8 +878,8 @@ body {
 // grid
 .gridContainer {
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  //left: 50%;
+  //transform: translateX(-50%);
   width: min-content;
   //z-index: 1; // So grid resize button show above of main stack drop zone.
 
@@ -948,8 +949,8 @@ body {
 
 // gridContainer inside the main card on the page
 .card.full .gridContainer {
-  margin-bottom: 2.5em;
-  margin-top: 0.5em;
+  margin-bottom: 4.5em;
+  margin-top: 1.5em;
 
   &.noPad {
     margin-bottom: 0;
@@ -3091,7 +3092,7 @@ pre {
 .content {
   position: relative;
   margin: 0 auto;
-  max-width: 28em;
+  //max-width: 28em;
   cursor: pointer;
 
   &.crosshair {
@@ -4240,16 +4241,18 @@ div.legendAction, legend.clickable {
 
 // Tabs along the edge of a card
 .cardTabs {
-  position: absolute;
-  top: 3em;
-  right: 0;
-  height: calc(100% - 3em);
+  //position: absolute;
+  margin-top: 3em;
+  margin-left: 0.5em;
+  //right: 0;
+  //height: calc(100% - 3em);
   
   &>div:last-child {
-    position: absolute;
-    bottom: 0.5em;
-    right: 0;
-    margin-top: 0;
+    //position: absolute;
+    //bottom: 0.5em;
+    //right: 0;
+    //margin-top: 0;
+    align-self: flex-end;
   }
   
   .dropZone {
@@ -4327,9 +4330,9 @@ div.legendAction, legend.clickable {
 // Only one tab on this side so it's in the top left corner
 .leftEdge {
   width: min-content;
-  position: absolute;
-  left: 0;
-  top: 3.75em;
+  //position: absolute;
+  //left: 0;
+  margin-top: 3.25em;
   
   &>.cardTab {
     border-top-left-radius: unset;
@@ -4345,13 +4348,47 @@ div.legendAction, legend.clickable {
   }
 }
 
+.bottomEdge {
+  position: absolute;
+  bottom: -1px;
+  //top: unset;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  .cardTab {
+    border-bottom-left-radius: unset;
+    border-top-right-radius: 40%;
+    border-right: 3px solid #282c34;
+    border-bottom: none;
+  
+    margin-top: 0;
+    width: 4em;
+    padding-left: 1em;
+    padding-right: 1em;
+    width: max-content;
+    
+    .tabSummary {
+      display: inline-block;
+      font-size: 2em;
+      float: left;
+      margin-right: 0.25em;
+      //float: right;
+    }
+    
+    object {
+      display: inline-block;
+    }
+  } 
+}
+
 // Draw that slides out on the right side of a card to show the contents of the current tab
 .cardDrawer {
   position: absolute;
   background-color: rgba(90, 117, 178, 1);
   border: 3px solid #181c2455;
   color: white;
-  
+  opacity: 0;
+
   &.lightning {
     width: max-content;
     
@@ -4435,26 +4472,60 @@ div.legendAction, legend.clickable {
   }
 }
 
+#bottomCardDrawer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-top-left-radius: 0.8em;
+  border-top-right-radius: 0.8em;
+  border-bottom-left-radius: 2em;
+  border-bottom-right-radius: 2em;
+  border-top: none;
+  padding: 1.125em 1.5em 1.05em 1.75em;
+  
+  animation: slideInBottom 0.35s forwards;
+
+  &.slideOut {
+    animation: slideOutBottom 0.65s forwards;
+  }
+  
+  &.slideIn {
+    animation: slideInBottom 0.35s forwards;
+  }
+}
+
 // Show animation for #leftCardDrawer
 @keyframes slideInLeft {
-    100% { right: 100%; }
+    100% { right: 100%; opacity: 1}
 }
 
 // Hide animation for #leftCardDrawer
 @keyframes slideOutLeft {
-    0% { right: 100% }
-    100% { right: 0; }
+    0% { right: 100%; opacity: 1; }
+    100% { right: 0; opacity: 0; }
 }
 
 // Show animation for #rightCardDrawer
 @keyframes slideInRight {
-    100% { left: 100%; }
+    100% { left: 100%; opacity: 1; }
 }
 
 // Hide animation for #rightCardDrawer
 @keyframes slideOutRight {
-    0% { left: 100% }
-    100% { left: 0; }
+    0% { left: 100%; opacity: 1; }
+    100% { left: 0; opacity: 0; }
+}
+
+// Show animation for #bottomCardDrawer
+@keyframes slideInBottom {
+    100% { top: 100%; opacity: 1; }
+}
+
+// Hide animation for #bottomCardDrawer
+@keyframes slideOutBottom {
+    0% { top: 100%; opacity: 1; }
+    100% { top: 0; opacity: 0; }
 }
 
 // Index list in the sidebar
@@ -4634,7 +4705,7 @@ div.legendAction, legend.clickable {
 .fivePiles {
   display: flex;
   flex-direction: column;
-  min-width: 54em;
+  //min-width: 54em;
   
   &>div {
     display: flex;
@@ -4644,6 +4715,7 @@ div.legendAction, legend.clickable {
     
     &>.stack {
       flex-basis: 33%;
+      min-width: 15em;
       
       .dropZone.subTasks {
         min-height: unset;
@@ -4655,7 +4727,14 @@ div.legendAction, legend.clickable {
 
 // Placeholder to drop cards on when there are no cards in the five piles
 .emptyPiles {
-  height: 5em;
+  height: 12em;
+  width: 10em;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff7;
+  line-height: 1.86em;
+  padding: 0 2em;
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

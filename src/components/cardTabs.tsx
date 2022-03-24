@@ -32,6 +32,7 @@ export interface CardTab {
   content?: JSX.Element | Array<JSX.Element>
   onClick?: (event) => void
 	onDrop?: (from: CardLocation) => void
+	dropHoverMessage?: string
 	isSelected?: boolean
 	edge?: CardEdge
 }
@@ -64,9 +65,9 @@ export function AoCardTab(props: CardTab) {
     theme="translucent"
     content={tooltip}
     delay={[625, 200]}
-    placement={props.edge === 'left' ? 'right' : 'left'}>
+    placement={props.edge === 'left' ? 'right' : props.edge === 'right' ? 'left' : 'top'}>
       <div className={props.edge ? ' ' + props.edge + 'Edge' : ''}>
-        {onDrop ? <AoDropZoneSimple onDrop={onDrop} dropHoverMessage='Drop to prioritize'>{renderedTab}</AoDropZoneSimple> : renderedTab}
+        {onDrop ? <AoDropZoneSimple onDrop={onDrop} dropHoverMessage={props.dropHoverMessage}>{renderedTab}</AoDropZoneSimple> : renderedTab}
       </div>
     </Tippy>
 }

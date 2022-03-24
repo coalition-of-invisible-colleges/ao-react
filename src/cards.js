@@ -60,13 +60,20 @@ export function blankGrid(height = 3, width = 3) {
 
 // Returns the task with the given taskId from the given list of tasks, or null
 export function getTask(tasks, taskId) {
-	let result = null
-	tasks.some(task => {
+	return tasks.find(task => {
 		if (task.taskId === taskId) {
-			result = task
+			return task
 		}
 	})
-	return result
+}
+
+// Returns the first task that exactly matches the given value of the given property
+export function getTaskBy(tasks, value, property) {
+	return tasks.find(task => {
+		if (task[property] === value) {
+			return task
+		}
+	})
 }
 
 // Returns true if the given taskId matches an existing task/card in the state/database
@@ -81,13 +88,8 @@ export function seeTask(task, memberId) {
 	if (!task.seen) {
 		task.seen = []
 	}
-	if (
-		!task.seen.some(t => {
-			return t.memberId === memberId
-		})
-	) {
-		task.seen.push({ memberId: memberId, timestamp: Date.now() })
-	}
+	task.seen = task.seen.filter(seenObject => seenObject.memberId !== memberId)
+	task.seen.push({ memberId: memberId, timestamp: Date.now() })
 }
 
 // Clears any pending passes to the specified memberId from the task
@@ -226,11 +228,9 @@ export function filterFromSubpiles(task, taskId) {
 		task?.subTask?.length || null,
 		task?.completed?.length || null,
 	]
-
-	task.priorities = _.filter(task.priorities, stId => stId !== taskId)
-	task.subTasks = _.filter(task.subTasks, stId => stId !== taskId)
-	task.completed = _.filter(task.completed, stId => stId !== taskId)
-
+	discardPriority(task, taskId)
+	discardSubTask(task, taskId)
+  discardCompletedTask(task, taskId)
 	if (
 		(start[0] !== null && start[0] - task?.priorities?.length > 0) ||
 		(start[1] !== null && start[1] - task?.subTasks?.length > 0) ||
@@ -253,16 +253,186 @@ export function clearSeenExcept(task, exceptionMemberIds = []) {
 
 // Re-adds the given taskId to the given card's subTasks (moving it to the end)
 // This will move it to the top/front of the list of cards in the GUI
+// Precondition: The subtask referred to by subTaskId exists (otherwise it will create a broken card link / missing reference)
 export function addSubTask(task, subTaskId) {
-	task.subTasks = _.filter(task.subTasks, tId => tId !== subTaskId)
+  if(!task) {
+    console.log("Attempting to add a subtask to a missing task, this should never happen")
+    return
+  }
+	discardSubTask(task, subTaskId)
+	/*if(!task.subTasks) {
+	  task.subTasks = []
+	}*/
 	task.subTasks.push(subTaskId)
+}
+
+// Removes the given discardTaskId from the given task's subtasks
+export function discardSubTask(task, discardTaskId) {
+  if(!task || !discardTaskId || !task.subTasks || task.subTasks.length <= 0) return
+  task.subTasks = task.subTasks.filter(stId => stId !== discardTaskId)
+}
+
+// Removes the given discardTaskId from the given task's completed tasks list
+export function discardCompletedTask(task, discardTaskId) {
+  if(!task || !discardTaskId || !task.completed || task.completed.length <= 0) return
+  task.completed = _.filter(task.completed, stId => stId !== discardTaskId)
+}
+
+// Adds a completed task to the completed list in a card or moves it to the top of the list 
+function addCompletedTask(task, completedTaskId) {
+	discardCompletedTask(task, completedTaskId)
+	task.completed.push(completedTaskId)
+}
+
+// Adds the subTask to the given new parent task and adds the parent as a parent to the new subTask
+export function putTaskInTask(subTask, inTask) {
+  addSubTask(inTask, subTask.taskId)
+  addParent(subTask, inTask.taskId)
 }
 
 // Re-adds the given taskId to the given card's priorities (moving it to the end)
 // This will move it to the top/front of the list of cards in the GUI
 export function addPriority(task, taskId) {
-	task.priorities = _.filter(task.subTasks, tId => tId !== taskId)
+	task.priorities = _.filter(task.priorities, tId => tId !== taskId)
 	task.priorities.push(taskId)
+}
+
+// Removes the given discardTaskId from the given task's subtasks
+export function discardPriority(task, discardTaskId) {
+  if(!task || !discardTaskId || !task.priorities || task.priorities.length <= 0) return
+  task.priorities = _.filter(task.priorities, stId => stId !== discardTaskId)
+}
+
+// Unpins the card from the given coordinates in a card and returns its taskId
+export function unpinTaskFromTask(task, coords) {
+  task.pins.some((pin, i) => {
+    const { pinId, y, x } = pin
+    if(y == coords.y && x == coords.x) {
+      return task.pins.splice(i, 1)[0]
+    }
+  })
+}
+
+// Precondition: The spec should validate whether this is a legal move based upon the current gridStyle of the card
+// In other words, this function does not check if the coordinates are off the side of the pinboard
+// Unlike the functions to add subtasks, this function does NOT attempt to filter the pinboard before adding a card,
+// so duplicates will occur unless you unpin first from the origin coords
+// However, it WILL check where the card is going to be placed, and if a card is already there, that card will drop into .subTasks
+export function pinTaskToTask(task, taskId, coords) {
+  // If there is already something pinned there, drop it into subTasks
+  const previousPinnedTaskId = unpinTaskFromTask(task, coords)
+  if(previousPinnedTaskId) {
+    addSubTask(task, previousPinnedTaskId)
+  }
+  task.pins.push({taskId, y: coords.y, x: coords.x})
+}
+
+export function putTaskInTaskZone(task, inTask, toLocation) {
+  switch(toLocation.zone) {
+    case 'priorities':
+      // Move the card to the .priorities
+      //filterFromSubpiles(inTask, task.taskId)
+      addPriority(inTask, task.taskId)
+      addParent(task, inTask.taskId)
+      break
+    case 'grid':
+      // Move the card to the .pins using coordinates in the current gridStyle, or fail if not possible
+      // If there isn't a grid on this card, add a grid large enough for the new coordinates to fit on
+      if(!task.grid) {
+        task.grid = blankGrid(Math.max(toLocation.coords.y, 3), Math.max(toLocation.coords.x, 3))
+      }
+      pinTaskToTask(inTask, task.taskId, toLocation.coords)
+      break
+    case 'completed':
+      // Move the card to the .completed
+      addCompletedTask(inTask, task.taskId)
+      break
+    case 'discard':
+      // Remove the card from its inId, or save in .completed if it's 
+      // Could replace task-de-sub-tasked
+      filterFromSubpiles(inTask, task.taskId)
+      break
+    case 'context':
+    case 'panel':
+      // These don't do anything on the server, it's a zone only on the client
+      break
+    case 'gifts':
+      // Deprecated?
+      break
+    case 'stash':
+      // the .level on the toLocation.level tells what stash level to put the card in
+      // Rethink this
+      break
+    case 'card':
+    case 'subTasks':
+    default:
+      // Move the card to the .subTasks (replaces task-sub-tasked)
+      putTaskInTask(task, inTask)
+      addParent(task, inTask.taskId)
+      break
+  }
+}
+
+// Removes the specified discardTaskId from the specified zone of the given task
+// If zone argument is 'card' or empty, tries to discard from priorities, subTasks, and completed (but not grid)
+export function discardTaskFromZone(task, fromLocation) {
+  switch(fromLocation.zone) {
+    case 'grid':
+    case 'pyramid':
+      unpinTaskFromTask(theCard, task, fromLocation)
+      return
+    case 'priorities':
+      discardPriority(task, fromLocation.taskId)
+      return
+    case 'completed':
+      discardCompletedTask(task, fromLocation.taskId)
+      return
+    case 'subTasks':
+      discardSubTask(task, fromLocation.taskId)
+      return
+    case 'card':
+    default:
+      discardSubTask(task, fromLocation.taskId)
+      discardPriority(task, fromLocation.taskId)
+      discardCompletedTask(task, fromLocation.taskId)
+  }
+}
+
+export function atomicCardPlay(tasks, fromLocation, toLocation, memberId) {
+  const theCard = getTask(tasks, fromLocation.taskId)
+  if (!theCard) {
+    console.log("Missing card in card play, nothing to move")
+    return
+  }
+  
+  const theCardMovedTo = getTask(tasks, toLocation.inId)
+  if(!theCardMovedTo && !['discard', 'context', 'panel'].includes(toLocation.zone)) {
+    console.log("Attempting to move a card to a missing card, this should never happen")
+    return
+  }
+  
+  // You cannot play a card without having seen it
+  seeTask(theCard, memberId)
+  
+  // You cannot play a card without first grabbing it
+  grabTask(tasks, theCard, memberId)
+  
+  // Remove the card from wherever it was moved from
+  const theCardMovedFrom = getTask(tasks, fromLocation.inId)
+  if(theCardMovedFrom) {
+    discardTaskFromZone(theCardMovedFrom, fromLocation)
+    if(fromLocation.inId !== toLocation.inId) {
+      removeParentIfNotParent(theCard, theCardMovedFrom)
+    }
+    
+    // Save the card to the completed cards if it has at least one checkmark
+    if(toLocation.zone === 'discard' && theCard.claimed && theCard.claimed.length >= 1) {
+      addCompletedTask(theCardMovedFrom, fromLocation.taskId)
+    }
+  }
+  
+  // Move card to wherever it was moved to
+  putTaskInTaskZone(theCard, theCardMovedTo, toLocation)
 }
 
 // Adds the given taskId to the given card's stash of the specified level

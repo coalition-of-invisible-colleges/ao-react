@@ -9,6 +9,7 @@ import {
   blankCard,
   blankGrid,
   getTask,
+  atomicCardPlay,
   taskExists,
   seeTask,
   clearPassesTo,
@@ -20,6 +21,7 @@ import {
   filterFromSubpiles,
   clearSeenExcept,
   addSubTask,
+  putTaskInTask,
   addPriority,
   stashTask,
   unstashTask,
@@ -921,12 +923,13 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-dropped':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.deck = _.filter(task.deck, d => d !== ev.memberId)
-          clearPassesTo(tasks, task, ev.memberId)
-        }
-      })
+      const taskToDrop = getTask(tasks, ev.taskId)
+      if(!taskToDrop) {
+        console.log("Attempt to drop missing task, this should never happen")
+        break
+      }
+      taskToDrop.deck = taskToDrop.deck.filter(d => d !== ev.memberId)
+      clearPassesTo(tasks, taskToDrop, ev.memberId)
       break
     case 'pile-dropped':
       if (!ev.memberId) {
@@ -1030,53 +1033,10 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
-    case 'task-prioritized':
-      let whosSeenPriority = [ev.memberId]
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          seeTask(task, ev.blame)
-          grabTask(tasks, task, ev.blame)
-          addParent(task, ev.inId)
-
-          // Accumulate who's seen this task
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeenPriority = [...whosSeenPriority, ...task.seen]
-          }
-        }
-      })
-      tasks.forEach(task => {
-        if (task.taskId === ev.inId) {
-          // Remove task and track if removed
-          let alreadyHere = filterFromSubpiles(task, ev.taskId)
-
-          if (_.has(task, 'grid,rows')) {
-            Object.values(task.grid.rows).forEach(row => {
-              const cells = Object.values(row)
-              if (cells.includes(ev.taskId)) {
-                alreadyHere = true
-              }
-            })
-          }
-          // if (ev.position) {
-          //   task.priorities = task.priorities.splice(ev.position, 0, ev.taskId)
-          // } else {
-          // console.log('task-prioritized position is ', ev.position)
-          task.priorities.push(ev.taskId)
-          // }
-
-          if (!alreadyHere) {
-            clearSeenExcept(task, whosSeenPriority)
-          }
-        }
-      })
-      break
     case 'pile-prioritized':
-      tasks.forEach(task => {
-        if (task.taskId === ev.inId) {
-          task.priorities = task.priorities.concat(task.subTasks)
-          task.subTasks = []
-        }
-      })
+      const taskToPrioritizeAllWithin = getTask(tasks, ev.inId)
+      taskToPrioritizeAllWithin.priorities = task.priorities.concat(taskToPrioritizeAllWithin.subTasks)
+      taskToPrioritizeAllWithin.subTasks = []
       break
     case 'task-refocused':
       let claimed
@@ -1144,65 +1104,27 @@ function tasksMuts(tasks, ev) {
         }
       })
       break
+    case 'task-played':
+      // New atomic way of placing cards and moving them around
+      // Replaces task-sub-tasked, task-de-sub-tasked, task-prioritized, grid-pin, and grid-unpin
+      atomicCardPlay(tasks, ev.from, ev.to, ev.memberId)
+      break
     case 'task-sub-tasked':
-      // I think the spec is only run on event creation, not load from database,
-      // so make sure the task exists before linking to it from another card
-      let taskExistsSubTask = false
-      let whosSeen = [ev.memberId]
-      tasks.forEach(task => {
-        if (task.taskId === ev.subTask) {
-          taskExistsSubTask = true
-          // See the task
-          seeTask(task, ev.memberId)
-          grabTask(tasks, task, ev.memberId)
-          addParent(task, ev.taskId)
-
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeen = [...whosSeen, ...task.seen]
-          }
-
-          // check if alreadyHere and do not clearSeenExcept if so
-        }
-        if (task.taskId === ev.taskId) {
-          clearSeenExcept(task, whosSeen)
-        }
-      })
-      if (taskExistsSubTask) {
-        tasks.forEach(task => {
-          if (task.taskId === ev.taskId) {
-            addSubTask(task, ev.subTask)
-          }
-        })
-      } /*else { */
-      // console.log(
-      //   'A task with references to subTasks that are missing was found in an event in the database. This should have been filtered before storing.'
-      // )
-      // }
-
+      atomicCardPlay(tasks, { taskId: ev.subTask}, { taskId: ev.subTask, inId: ev.taskId, zone: 'subTasks'}, ev.memberId)
       break
     case 'task-de-sub-tasked':
-      const deSubTaskParent = getTask(tasks, ev.taskId)
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          clearPassesTo(tasks, task, ev.memberId)
-          task.subTasks = _.filter(task.subTasks, tId => tId !== ev.subTask)
-          task.completed = _.filter(task.completed, tId => tId !== ev.subTask)
-        }
-        if (task.taskId === ev.subTask) {
-          removeParentIfNotParent(task, deSubTaskParent)
-        }
-      })
+      atomicCardPlay(tasks, { taskId: ev.subTask, inId: ev.taskId, zone: 'subtasks'}, { taskId: ev.subTask, zone: 'discard'}, ev.memberId)
+      break
+    case 'task-prioritized':
+      atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'card' }, { taskId: ev.taskId, inId: ev.inId, zone: 'priorities'}, ev.memberId)
       break
     case 'task-emptied':
       let updateParents = []
       const emptiedParent = getTask(tasks, ev.taskId)
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          updateParents = [...task.priorities, ...task.subTasks]
-          task.priorities = []
-          task.subTasks = []
-        }
-      })
+      const taskToEmpty = getTask(tasks, ev.taskId)
+      updateParents = [...taskToEmpty.priorities, ...taskToEmpty.subTasks]
+      taskToEmpty.priorities = []
+      taskToEmpty.subTasks = []
       tasks.forEach(task => {
         if (updateParents.indexOf(task.taskId) >= 0) {
           removeParentIfNotParent(task, emptiedParent)
@@ -1210,18 +1132,12 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-guilded':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.guild = ev.guild
-        }
-      })
+      const taskToGuild = getTask(tasks, ev.taskId)
+      taskToGuild.guild = ev.guild
       break
     case 'task-property-set':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task[ev.property] = ev.value
-        }
-      })
+      const taskToSetProperty = getTask(tasks, ev.taskId)
+      taskToSetProperty[ev.property] = ev.value
       // Maybe this should be a separate mutation? Reaction only for setting grid to pyramid
       if (ev.property === 'gridStyle' && ev.value === 'pyramid') {
         tasks.forEach((task, i) => {
@@ -1262,14 +1178,13 @@ function tasksMuts(tasks, ev) {
 
       break
     case 'task-colored':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.color = ev.color
-        }
-        if (ev.inId && task.taskId === ev.inId) {
-          addSubTask(task, ev.taskId)
-        }
-      })
+      const taskToColor = getTask(tasks, ev.taskId)
+      taskToColor.color = ev.color
+      
+      if(ev.inId) {
+        const colorInTask = getTask(tasks, ev.inId)
+        addSubTask(colorInTask, ev.taskId)
+      }
       break
     case 'task-claimed':
       let paid = parseFloat(ev.paid) > 0 ? parseFloat(ev.paid) : 0
@@ -1331,116 +1246,92 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-unclaimed':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.claimed = task.claimed.filter(mId => mId !== ev.memberId)
-          if (task.claimed.length < 1) {
-            tasks.forEach(p => {
-              if (
-                p.priorities.indexOf(ev.taskId) === -1 &&
-                p.completed.indexOf(ev.taskId) > -1
-              ) {
-                p.completed = p.completed.filter(taskId => taskId !== ev.taskId)
-                addSubTask(task, ev.taskId)
-              }
-            })
+      const taskToClaim = getTask(tasks, ev.taskId)
+      taskToClaim.claimed = taskToClaim.claimed.filter(mId => mId !== ev.memberId)
+      if (taskToClaim.claimed.length < 1) {
+        tasks.forEach(p => {
+          if (
+            p.priorities.indexOf(ev.taskId) === -1 &&
+            p.completed.indexOf(ev.taskId) > -1
+          ) {
+            p.completed = p.completed.filter(taskId => taskId !== ev.taskId)
+            addSubTask(taskToClaim, ev.taskId)
           }
-        }
-      })
+        })
+      }
       break
     case 'task-reset': // unused
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.claimed = []
-          task.lastkClaimed = ev.timestamp
-        }
-      })
+      const taskToReset = getTask(tasks, ev.taskId)
+      taskToReset.claimed = []
+      taskToReset.lastkClaimed = ev.timestamp
       break
     case 'task-boosted':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          let amount = parseFloat(ev.amount)
-          let boost = parseFloat(task.boost)
-          if (amount > 0) {
-            task.boost = amount + boost
-            task.address = ''
-          }
-        }
-      })
+      const taskToBoost = getTask(tasks, ev.taskId)
+      let amount = parseFloat(ev.amount)
+      let boost = parseFloat(taskToBoost.boost)
+      if (amount > 0) {
+        taskToBoost.boost = amount + boost
+        taskToBoost.address = ''
+      }
       break
     case 'task-boosted-lightning':
-      tasks.forEach(task => {
-        if (task.payment_hash === ev.payment_hash) {
-          let amount = parseFloat(ev.amount)
-          let boost = parseFloat(task.boost)
-          if (amount > 0) {
-            task.boost = amount + boost
-            task.bolt11 = ''
-            task.payment_hash = ''
-          }
-        }
-      })
+      const taskToBoostLightning = getTaskBy(tasks, ev.payment_hash, 'payment_hash')
+      let amountToBoost = parseFloat(ev.amount)
+      let boostLightning = parseFloat(taskToBoostLightning.boost)
+      if (amountToBoost > 0) {
+        taskToBoostLightning.boost = amountToBoost + boostLightning
+        taskToBoostLightning.bolt11 = ''
+        taskToBoostLightning.payment_hash = ''
+      }
       break
     case 'task-allocated':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          if (task.boost >= 1) {
-            task.boost--
-            if (
-              !task.hasOwnProperty('allocations') ||
-              !Array.isArray(task.allocations)
-            ) {
-              task.allocations = []
-            }
-            let alreadyPointed = task.allocations.some(als => {
-              if (als.allocatedId === ev.allocatedId) {
-                als.amount += 1
-                return true
-              }
-            })
-            if (!alreadyPointed) {
-              if (!ev.amount || !Number.isInteger(ev.amount) || ev.amount < 1) {
-                ev.amount = 1
-              }
-              task.allocations.push(ev)
-            }
-          }
-          let reprioritized = _.filter(
-            task.priorities,
-            d => d !== ev.allocatedId
-          )
-          reprioritized.push(ev.allocatedId)
-          task.priorities = reprioritized
+      const taskToAllocate = getTask(tasks, ev.taskId)
+      if (taskToAllocate.boost >= 1) {
+        taskToAllocate.boost--
+        if (
+          !taskToAllocate.hasOwnProperty('allocations') ||
+          !Array.isArray(taskToAllocate.allocations)
+        ) {
+          taskToAllocate.allocations = []
         }
-      })
+        let alreadyPointed = taskToAllocate.allocations.some(als => {
+          if (als.allocatedId === ev.allocatedId) {
+            als.amount += 1
+            return true
+          }
+        })
+        if (!alreadyPointed) {
+          if (!ev.amount || !Number.isInteger(ev.amount) || ev.amount < 1) {
+            ev.amount = 1
+          }
+          taskToAllocate.allocations.push(ev)
+        }
+      }
+      let reprioritized = _.filter(
+        taskToAllocate.priorities,
+        d => d !== ev.allocatedId
+      )
+      reprioritized.push(ev.allocatedId)
+      taskToAllocate.priorities = reprioritized
       break
     case 'resource-booked':
-      tasks.forEach(task => {
-        if (task.taskId === ev.resourceId) {
-          task.book = ev
-        }
-      })
+      const taskToBook = getTask(tasks, ev.resourceId)
+      taskToBook.book = ev
       break
     case 'resource-used':
-      tasks.forEach(task => {
-        let charged = parseFloat(ev.charged)
-        if (charged > 0) {
-          if (task.taskId === ev.memberId) {
-            task.boost -= charged
-          }
-          if (task.taskId === ev.resourceId) {
-            task.boost += charged
-          }
-        }
-      })
+      const charged = parseFloat(ev.charged)
+      if (charged > 0) {
+        const memberCard = getTask(tasks, ev.memberId)
+        memberCard.boost -= charged
+        
+        const resourceCard = getTask(tasks, ev.resourceId)
+        resourceCard.boost += charged
+      }
       break
     case 'invoice-created':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          task.payment_hash = ev.payment_hash
-          task.bolt11 = ev.bolt11
-        }
-      })
+      const taskToCreateInvoice = getTask(tasks, ev.taskId)
+      taskToCreateInvoice.payment_hash = ev.payment_hash
+      taskToCreateInvoice.bolt11 = ev.bolt11
       break
     case 'task-swapped':
       let task
@@ -1562,35 +1453,31 @@ function tasksMuts(tasks, ev) {
       })*/
       break
     case 'task-visited':
+      // Remove the avatar from everywhere else
       tasks.forEach(task => {
         if (task.hasOwnProperty('avatars')) {
-          task.avatars = _.filter(
-            task.avatars,
+          task.avatars = task.avatars.filter(
             avatarLocation => avatarLocation.memberId !== ev.memberId
           )
         }
-        if (task.taskId === ev.taskId) {
-          if (!task.hasOwnProperty('avatars')) {
-            task.avatars = []
-          }
-          task.avatars.push({
-            memberId: ev.memberId,
-            timestamp: ev.timestamp,
-            area: ev.area,
-          })
-          task.lastClaimed = ev.timestamp
-        }
       })
+      const taskToPlaceAvatar = getTask(tasks, ev.taskId)
+      if (!taskToPlaceAvatar.hasOwnProperty('avatars')) {
+        taskToPlaceAvatar.avatars = []
+      }
+      taskToPlaceAvatar.avatars.push({
+        memberId: ev.memberId,
+        timestamp: ev.timestamp,
+        area: ev.area,
+      })
+      taskToPlaceAvatar.lastClaimed = ev.timestamp
       break
     case 'member-charged':
-      tasks.forEach(task => {
-        if (task.taskId === ev.memberId) {
-          task.boost -= parseFloat(ev.charged)
-          if (task.boost < 0) {
-            task.boost = 0
-          }
-        }
-      })
+      const memberCardToCharge = getTask(tasks, ev.memberId)
+      memberCardToCharge.boost -= parseFloat(ev.charged)
+      if (memberCardToCharge.boost < 0) {
+        memberCardToCharge.boost = 0
+      }
       break
     case 'grid-created':
       tasks.push(
@@ -1606,11 +1493,7 @@ function tasksMuts(tasks, ev) {
       )
       break
     case 'grid-added':
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          task.grid = blankGrid(ev.height, ev.width)
-        }
-      })
+      getTask(tasks, ev.taskId).grid = blankGrid(ev.height, ev.width) 
       break
     case 'grid-removed':
       tasks.forEach((task, i) => {

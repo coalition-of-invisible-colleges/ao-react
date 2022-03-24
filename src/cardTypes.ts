@@ -23,7 +23,7 @@ export interface Coords {
 
 export interface CardLocation {
 	taskId: string
-	inId: string
+	inId?: string
 	zone: CardZone
 	level?: number
 	coords: Coords

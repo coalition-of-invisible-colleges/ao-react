@@ -49,6 +49,7 @@ import Star from '../assets/images/star.svg'
 import Stash from '../assets/images/stash.svg'
 import Controls from '../assets/images/controls.svg'
 import HeartNet from '../assets/images/heartnet.svg'
+import FivePiles from '../assets/images/fivepiles.svg'
 import {
   goInCard,
   prioritizeCard,
@@ -113,9 +114,11 @@ interface State {
   renderMeNowPlease?: boolean
   showCopied?: boolean
   leftDrawerOpen?: boolean
-  closingLeftDrawerTimeout?
+  bottomDrawerOpen?: boolean
   currentTab?: CardTabId
   closingRightDrawerTimeout?
+  closingLeftDrawerTimeout?
+  closingBottomDrawerTimeout?
 }
 
 // const AoContextCard =
@@ -849,6 +852,18 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           api.prioritizeCard(from.taskId, taskId)
         }
         
+        const onDropToSubTasksTab = (from: CardLocation) => {
+          const card = aoStore.hashMap.get(from.taskId)
+          if(!card) {
+            return
+          }
+          if(from.zone === 'grid') {
+            api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId).then(() =>  api.findOrCreateCardInCard(card.name, taskId))
+            return
+          }
+          api.findOrCreateCardInCard(card.name, taskId)
+        }
+        
         const unpinCard = (from: CardLocation) => {
           api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId)
         }
@@ -887,7 +902,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               icon: priorityCards?.length >= 1 ? Checkbox : Checkmark,
               tooltip: 'Priorities',
               content: [(prioritiesSummary || recurrenceSummary) ? <React.Fragment>{prioritiesSummary}{recurrenceSummary}</React.Fragment> : null, completedSummary],
-              onDrop: onDropToPrioritiesTab
+              onDrop: onDropToPrioritiesTab,
+              dropHoverMessage: 'Drop to prioritize'
             },
             {
               id: CardTabId.timecube,
@@ -974,6 +990,26 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             aoStore.registerCloseable(toggleLeftDrawer)
           }
         }
+        const toggleBottomDrawer = (eventOrOpen) => {
+          if(eventOrOpen === undefined) {
+            if(this.state.bottomDrawerOpen && !this.state.closingBottomDrawerTimeout) {
+              const newTimer = setTimeout(() => this.setState({ closingBottomDrawerTimeout: null, bottomDrawerOpen: false }), 650)
+              this.setState({ closingBottomDrawerTimeout: newTimer })
+              aoStore.unregisterCloseable(toggleBottomDrawer)
+            }
+          } else if(this.state.closingBottomDrawerTimeout) {
+            clearTimeout(this.state.closingBottomDrawerTimeout)
+            aoStore.registerCloseable(toggleBottomDrawer)
+            this.setState({closingBottomDrawerTimeout: null, bottomDrawerOpen: true}) 
+          } else if(this.state.bottomDrawerOpen) {
+            const newTimer = setTimeout(() => this.setState({ closingBottomDrawerTimeout: null, bottomDrawerOpen: false }), 650)
+            this.setState({ closingBottomDrawerTimeout: newTimer })
+            aoStore.unregisterCloseable(toggleBottomDrawer)
+          } else {
+            this.setState({bottomDrawerOpen: true})
+            aoStore.registerCloseable(toggleBottomDrawer)
+          }
+        }
         const leftDrawerContent = this.state.leftDrawerOpen ?
           <React.Fragment>
             <fieldset>
@@ -1000,6 +1036,21 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       <h2>Priorities</h2>
                       {renderedCompletedTab}
                     </div>
+                    <Observer>
+                      {() => {
+                        if (priorityCards && priorityCards.length > 6) {
+                          return (
+                            <div className="refocusAll">
+                              <button className="action" onClick={this.refocusAll}>
+                                refocus
+                              </button>
+                            </div>
+                          )
+                        } else {
+                          return <div />
+                        }
+                      }}
+                    </Observer>
                     {priorityCards && priorityCards.length >= 1 ? <AoStack
                       inId={taskId}
                       cards={priorityCards}
@@ -1066,6 +1117,48 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             </React.Fragment>
             break
         }
+        const bottomDrawerContent = this.state.bottomDrawerOpen ?
+          <Observer>
+            {() => {
+              return <div id='bottomCardDrawer' className={'fivePiles cardDrawer ' + (this.state.closingBottomDrawerTimeout ? 'slideOut' : 'slideIn')}>
+                {subTaskCards && subTaskCards.length >= 1 ?
+                  <React.Fragment>
+                    <div>
+                     <Observer>
+                      {() => renderColorStack(subTaskCards, 'red')}
+                     </Observer>
+                     <Observer>
+                      {() => renderColorStack(subTaskCards, 'green')}
+                     </Observer>
+                     <Observer>
+                      {() => renderColorStack(subTaskCards, 'blue')}
+                     </Observer>
+                    </div>
+                    <div>
+                    <Observer>
+                      {() => renderColorStack(subTaskCards, 'yellow')}
+                     </Observer>
+                     <Observer>
+                      {() => renderColorStack(subTaskCards, 'purple')}
+                     </Observer>
+                    </div>
+                  </React.Fragment> :
+                  <AoDropZoneSimple onDrop={onDropToSubTasksTab} dropHoverMessage='drop to place here' className='emptyPiles'>No cards here. Drop cards here to play.</AoDropZoneSimple> 
+                }
+              </div>
+              return (
+                <AoStack
+                  inId={taskId}
+                  cards={subTaskCards}
+                  showAdd={false}
+                  cardStyle="face"
+                  onNewCard={this.newSubTask}
+                  onDrop={subTaskCard}
+                  zone="subTasks"
+                />
+              )
+            }}
+          </Observer> : null
         
         return (
           <React.Fragment>
@@ -1118,6 +1211,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   {rightDrawerContent}
                 </div>
               }
+              {bottomDrawerContent}
               <Observer>
                 {() => {
                   return (
@@ -1154,6 +1248,17 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       <AoAttachment taskId={taskId} inId={this.props.inId} />
                       {member && <AoMemberIcon memberId={taskId} />}
                       {this.renderCardContent(content)}
+                      <Observer>
+                        {() => (
+                          <AoGrid
+                            taskId={taskId}
+                            height={card.grid?.height}
+                            width={card.grid?.width}
+                            size={card.grid?.size || 9}
+                            gridStyle={card.gridStyle}
+                          />
+                        )}
+                      </Observer>
                     </div>
                   )
                 }}
@@ -1178,78 +1283,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               </Observer>*/}
               <Observer>
                 {() => {
-                  if (priorityCards && priorityCards.length > 6) {
-                    return (
-                      <div className="refocusAll">
-                        <button className="action" onClick={this.refocusAll}>
-                          refocus
-                        </button>
-                      </div>
-                    )
-                  } else {
-                    return <div />
-                  }
-                }}
-              </Observer>
-              <Observer>
-                {() => (
-                  <AoGrid
-                    taskId={taskId}
-                    height={card.grid?.height}
-                    width={card.grid?.width}
-                    size={card.grid?.size || 9}
-                    gridStyle={card.gridStyle}
-                  />
-                )}
-              </Observer>
-              <Observer>
-                {() => {
-                  return <div className='fivePiles'>
-                    {subTaskCards && subTaskCards.length >= 1 ?
-                      <React.Fragment>
-                        <div>
-                         <Observer>
-                          {() => renderColorStack(subTaskCards, 'red')}
-                         </Observer>
-                         <Observer>
-                          {() => renderColorStack(subTaskCards, 'green')}
-                         </Observer>
-                         <Observer>
-                          {() => renderColorStack(subTaskCards, 'blue')}
-                         </Observer>
-                        </div>
-                        <div>
-                        <Observer>
-                          {() => renderColorStack(subTaskCards, 'yellow')}
-                         </Observer>
-                         <Observer>
-                          {() => renderColorStack(subTaskCards, 'purple')}
-                         </Observer>
-                        </div>
-                      </React.Fragment> :
-                      <AoDropZoneSimple onDrop={unpinCard} dropHoverMessage='drop to place here' className='emptyPiles' /> 
-                    }
-                  </div>
-                  return (
-                    <AoStack
-                      inId={taskId}
-                      cards={subTaskCards}
-                      showAdd={false}
-                      cardStyle="face"
-                      onNewCard={this.newSubTask}
-                      onDrop={subTaskCard}
-                      zone="subTasks"
-                    />
-                  )
-                }}
-              </Observer>
-              <Observer>
-                {() => {
                   return <AoCardHud taskId={taskId} hudStyle="full after">
                     <AoCardTabs tabs={tabs} onTabShown={this.onSwitchTab} onTabClosed={this.onSwitchTab} />
                   </AoCardHud>
                 }}
               </Observer>
+              <AoCardTab icon={FivePiles} onClick={toggleBottomDrawer} onDrop={onDropToSubTasksTab} dropHoverMessage='Play card within this card' tooltip='Cards within this card' edge='bottom' isSelected={this.state.bottomDrawerOpen}
+                content={card.subTasks && card.subTasks.length >= 1 ? <div>{card.subTasks.length}</div> : null}
+              />
             </div>
           </React.Fragment>
         )
