@@ -172,6 +172,14 @@ body {
   min-height: 3em;
 }
 
+.card.full > .content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-basis: 100%;
+  padding-bottom: 6em;
+}
+
 // upper half of the card hud on a full- or face-style card
 .card > .hud.full.before,
 .card > .hud.face.before {
@@ -4244,14 +4252,17 @@ div.legendAction, legend.clickable {
   //position: absolute;
   margin-top: 3em;
   margin-left: 0.5em;
+  margin-bottom: 5.5em;
   //right: 0;
   //height: calc(100% - 3em);
+  //display: flex;
+  //flex-direction: column;
   
   &>div:last-child {
-    //position: absolute;
-    //bottom: 0.5em;
-    //right: 0;
-    //margin-top: 0;
+    position: absolute;
+    bottom: 0.5em;
+    right: 0;
+    margin-top: 0;
     align-self: flex-end;
   }
   
@@ -4329,7 +4340,7 @@ div.legendAction, legend.clickable {
 // A card tab on the left edge of the card instead of the right
 // Only one tab on this side so it's in the top left corner
 .leftEdge {
-  width: min-content;
+  width: 5.5em;
   //position: absolute;
   //left: 0;
   margin-top: 3.25em;
@@ -4343,8 +4354,20 @@ div.legendAction, legend.clickable {
     border-left: none;
 
     margin-top: 0;
-    width: 4em;
+    width: max-content;
+    padding-top: 0.25em;
     padding-right: 0.5em;
+    padding-bottom: 0.5em;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    
+    .tabSummary {
+      order: 1;
+      margin-right: 0.1em;
+      font-size: 1.25em;
+      font-weight: bold;
+    }
   }
 }
 
@@ -4483,6 +4506,7 @@ div.legendAction, legend.clickable {
   border-bottom-right-radius: 2em;
   border-top: none;
   padding: 1.125em 1.5em 1.05em 1.75em;
+  margin-bottom: 9em;
   
   animation: slideInBottom 0.35s forwards;
 

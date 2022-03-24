@@ -1110,7 +1110,7 @@ function tasksMuts(tasks, ev) {
       atomicCardPlay(tasks, ev.from, ev.to, ev.memberId)
       break
     case 'task-sub-tasked':
-      atomicCardPlay(tasks, { taskId: ev.subTask}, { taskId: ev.subTask, inId: ev.taskId, zone: 'subTasks'}, ev.memberId)
+      atomicCardPlay(tasks, { taskId: ev.subTask }, { taskId: ev.subTask, inId: ev.taskId, zone: 'subTasks'}, ev.memberId)
       break
     case 'task-de-sub-tasked':
       atomicCardPlay(tasks, { taskId: ev.subTask, inId: ev.taskId, zone: 'subtasks'}, { taskId: ev.subTask, zone: 'discard'}, ev.memberId)

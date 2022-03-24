@@ -37,6 +37,7 @@ import AoFund from './fund'
 import AoStash from './stash'
 import AoGridResizer from './gridResizer'
 import BlankBadge from '../assets/images/badge_blank.svg'
+import Badge from '../assets/images/bulletin.svg'
 import Gift from '../assets/images/gift.svg'
 import Boat from '../assets/images/boat.svg'
 import Clipboard from '../assets/images/clipboard.svg'
@@ -1230,7 +1231,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <Observer>
                 {() => <AoCardHud taskId={taskId} hudStyle="full before" />}
               </Observer>
-              <AoCardTab onClick={toggleLeftDrawer} icon={HeartNet} tooltip='Connections' edge='left' isSelected={this.state.leftDrawerOpen} />
+              <AoCardTab onClick={toggleLeftDrawer} icon={card.guild && card.guild.length >= 1 ? Badge : HeartNet} tooltip='Connections' edge='left' isSelected={this.state.leftDrawerOpen} content={card.guild && card.guild.length >= 1 ? <div>{card.guild}</div> : null} />
               <Observer>
                 {() => {
                   return (
@@ -1244,7 +1245,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                           ? ' padBefore'
                           : '')
                       }>
-                      <AoMission taskId={taskId} hudStyle="full before" />
                       <AoAttachment taskId={taskId} inId={this.props.inId} />
                       {member && <AoMemberIcon memberId={taskId} />}
                       {this.renderCardContent(content)}
