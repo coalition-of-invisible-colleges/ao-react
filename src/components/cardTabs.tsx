@@ -65,7 +65,7 @@ export function AoCardTab(props: CardTab) {
     theme="translucent"
     content={tooltip}
     delay={[625, 200]}
-    placement={props.edge === 'left' ? 'right' : props.edge === 'right' ? 'left' : 'top'}>
+    placement={props.edge === 'left' ? 'top' : props.edge === 'right' ? 'left' : 'top'}>
       <div className={props.edge ? ' ' + props.edge + 'Edge' : ''}>
         {onDrop ? <AoDropZoneSimple onDrop={onDrop} dropHoverMessage={props.dropHoverMessage}>{renderedTab}</AoDropZoneSimple> : renderedTab}
       </div>

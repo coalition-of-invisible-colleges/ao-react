@@ -17,6 +17,7 @@ import _ from 'lodash'
 interface State {
   bookmarksTaskId?: string
   renderMeNowPlease?: boolean
+  firstClick?: boolean
 }
 
 @observer
@@ -64,7 +65,7 @@ export default class AoDock extends React.Component<{}, State> {
     )
     this.executeOnUnmount_list.push(unMountReactionFunction)
   }
-
+  
   componentWillUnmount() {
     // this.executeOnUnmount_list.forEach ( fn => fn() );
   }
@@ -84,6 +85,10 @@ export default class AoDock extends React.Component<{}, State> {
     }
     
     const expandDock = () => {
+      if(!this.state.firstClick) {
+        this.setState({firstClick: true})
+        return null
+      }
       const grid = card.grid
       const newWidth = grid.width + 1
       return api.resizeGrid(this.state.bookmarksTaskId, grid.height, newWidth, grid.size)
@@ -102,12 +107,14 @@ export default class AoDock extends React.Component<{}, State> {
         })
       })
     }
+    
+    const gridHasContents = card.grid && card.grid.height >= 1 && (card.grid.width > 1 || (card?.grid.rows.hasOwnProperty('0') && card.grid.rows[0][0]))
     return (
       <div id="dock">
         <AoHopper />
         <AoGem />
         <div id="dock-tour">
-          <Observer>
+          {(gridHasContents || this.state.firstClick) && <Observer>
             {() => {
               return (
                 <AoGrid
@@ -119,7 +126,7 @@ export default class AoDock extends React.Component<{}, State> {
                 />
               )
             }}
-          </Observer>
+          </Observer>}
           <AoDropZoneSimple onDrop={onDropToDock} dropHoverMessage="bookmark on dock" className='dockDropZone'>
             <div onClick={expandDock} className="action">+</div>
           </AoDropZoneSimple>

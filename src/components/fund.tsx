@@ -41,7 +41,7 @@ export default class AoFund extends React.Component<Props, State> {
     if (card.address) {
       return (
         <div className="fund menu">
-          Send mainnet BTC here to fund this card:
+          <div>Send mainnet BTC here to fund this card:</div>
           <QRCode value={card.address} />
         </div>
       )

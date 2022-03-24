@@ -2,7 +2,8 @@
 html {
   width: 100%;
   height: 100%;
-  font-family: monospace;
+  font-family: 'Open Sans', monospace;
+  font-size: 0.74em;
 }
 
 // main body of HTML document
@@ -13,6 +14,7 @@ body {
   font-size: 1.25em;
   background-color: black;
   overflow-x: hidden;
+  padding-bottom: 26.5em;
 }
 
 // card: main element
@@ -137,7 +139,7 @@ body {
   box-shadow: -7px -7px 7px 1px rgba(21, 21, 21, 0.5);
   cursor: default;
   padding-right: 0;
-  padding-left: 0;
+  padding-left: 2em;
   min-height: 23.4em;
   display: flex;
 }
@@ -177,7 +179,6 @@ body {
   flex-direction: column;
   justify-content: center;
   flex-basis: 100%;
-  padding-bottom: 6em;
 }
 
 // upper half of the card hud on a full- or face-style card
@@ -746,6 +747,19 @@ body {
   }
 }
 
+// QR code element for refilling points on card
+.fund.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1em;
+  
+  &>div:first-child {
+    max-width: 12em;
+    margin-bottom: 1em;
+  }
+}
+
 // checkbox on a card
 .card .checkbox {
   height: 2.25em;
@@ -890,6 +904,7 @@ body {
   //transform: translateX(-50%);
   width: min-content;
   //z-index: 1; // So grid resize button show above of main stack drop zone.
+  margin-bottom: 2em;
 
   &.padbottom {
     margin-bottom: 3em;
@@ -957,9 +972,8 @@ body {
 
 // gridContainer inside the main card on the page
 .card.full .gridContainer {
-  margin-bottom: 4.5em;
-  margin-top: 1.5em;
-
+  margin: 1.5em auto 1.5em auto;
+  
   &.noPad {
     margin-bottom: 0;
   }
@@ -1826,7 +1840,7 @@ body {
 #tickers {
   position: fixed;
   top: 50vh;
-  right: 1em;
+  right: 0.5em;
   transform: translateY(-50%);
 
   .ticker {
@@ -2427,17 +2441,18 @@ img.icon {
 // the dock at the bottom of the screen
 #dock {
   position: fixed;
-  bottom: 0;
-  left: 50%;
+  bottom: 9em;
+  left: calc(50% - 4.5em);
   transform: translateX(-50%);
 
   .resizer {
     width: min-content;
     margin-top: -5.75em;
   }
-
-  .grid {
+  
+  .gridContainer > .grid {
     max-width: 65vw;
+    margin-bottom: -9em;
   }
   
   .dockDropZone {
@@ -3061,7 +3076,7 @@ pre {
   width: min-content;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(50%);
 
   .action {
     margin-bottom: 0;
@@ -4251,12 +4266,16 @@ div.legendAction, legend.clickable {
 .cardTabs {
   //position: absolute;
   margin-top: 3em;
-  margin-left: 0.5em;
+  margin-left: 0;
   margin-bottom: 5.5em;
   //right: 0;
   //height: calc(100% - 3em);
   //display: flex;
   //flex-direction: column;
+  
+  &>div {
+    width: 2em;
+  }
   
   &>div:last-child {
     position: absolute;
@@ -4271,14 +4290,19 @@ div.legendAction, legend.clickable {
   }
 }
 
+// Card tabs on the right edge
+.hud.full.after > .cardTabs .cardTab {
+  border-top-right-radius: 40%;
+  border-bottom-right-radius: 40%;
+  border-left: none;
+  left: 100%;
+}
+
 // A single tab meant to go along the edge of a card
 .cardTab {
   background-color: rgba(100, 127, 208, 0.72);
   color: white;
   border: 3px solid #282c34;
-  border-right: none;
-  border-top-left-radius: 40%;
-  border-bottom-left-radius: 40%;
   margin-top: 1em;
   //height: 5em;
   width: 5em;
@@ -4340,20 +4364,21 @@ div.legendAction, legend.clickable {
 // A card tab on the left edge of the card instead of the right
 // Only one tab on this side so it's in the top left corner
 .leftEdge {
-  width: 5.5em;
   //position: absolute;
   //left: 0;
-  margin-top: 3.25em;
+  height: min-content;
+  z-index: 1;
   
   &>.cardTab {
-    border-top-left-radius: unset;
-    border-bottom-left-radius: unset;
-    border-top-right-radius: 40%;
-    border-bottom-right-radius: 40%;
-    border-right: 3px solid #282c34;
-    border-left: none;
+    transform: rotate(-90deg);
+    position: absolute;
+    top: 1em;
+    left: -1em;
+    
+    border-top-left-radius: 40%;
+    border-bottom-left-radius: 40%;
+    border-right: none;
 
-    margin-top: 0;
     width: max-content;
     padding-top: 0.25em;
     padding-right: 0.5em;
@@ -4368,24 +4393,26 @@ div.legendAction, legend.clickable {
       font-size: 1.25em;
       font-weight: bold;
     }
+    
+    object {
+      transform: rotate(90deg);
+    }
   }
 }
 
 .bottomEdge {
-  position: absolute;
-  bottom: -1px;
+  //position: absolute;
   //top: unset;
+  position: absolute;
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   
   .cardTab {
-    border-bottom-left-radius: unset;
-    border-top-right-radius: 40%;
-    border-right: 3px solid #282c34;
-    border-bottom: none;
-  
+    border-bottom-right-radius: 40%;
+    border-bottom-left-radius: 40%;
+    border-top: none;
     margin-top: 0;
-    width: 4em;
     padding-left: 1em;
     padding-right: 1em;
     width: max-content;
@@ -4411,6 +4438,9 @@ div.legendAction, legend.clickable {
   border: 3px solid #181c2455;
   color: white;
   opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &.lightning {
     width: max-content;
@@ -4469,7 +4499,7 @@ div.legendAction, legend.clickable {
   border-top-right-radius: 2em;
   border-bottom-right-radius: 2em;
   border-left: none;
-  padding: 0 1em 1em 2.5em;
+  padding: 0 1em 1em 5.5em;
   
   animation: slideInRight 0.35s forwards;
 
@@ -4506,7 +4536,7 @@ div.legendAction, legend.clickable {
   border-bottom-right-radius: 2em;
   border-top: none;
   padding: 1.125em 1.5em 1.05em 1.75em;
-  margin-bottom: 9em;
+  width: calc(100vw - 15em);
   
   animation: slideInBottom 0.35s forwards;
 
