@@ -2,7 +2,7 @@ import api from './client/api'
 import aoStore from './client/store'
 import { Task, Signature } from './interfaces';
 import { hideAll as hideAllTippys } from 'tippy.js'
-import { blankGrid } from './cards'
+import { blankPinboard } from './cards'
 
 export type CardZone =
 	| 'card'
@@ -69,8 +69,7 @@ export function blankCard(
 		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
 		pins: [],
-		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
-		gridStyle: 'grid',
+		pinboard: height >= 1 && width >= 1 ? blankPinboard(height, width) : false,
 		allocations: [],
 	}
 	return newCard
@@ -136,46 +135,8 @@ export function prioritizeCard(move: CardPlay) {
   console.log("about to prioritize card. move is", move)
   api.playCard(move.from, move.to)
   
-	switch (move.from.zone) {
-		case 'card':
-			//api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
-			break
-		case 'priorities':
-			/*if (move.from.inId === move.to.inId) {
-				
-			} else {
-				api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
-			}
-			break*/
-		case 'grid':
-			/*if (move.from.inId === move.to.inId) {
-				api
-					.unpinCardFromGrid(
-						move.from.coords.x,
-						move.from.coords.y,
-						move.from.inId
-					)
-					.then(result => {
-						api.prioritizeCard(move.from.taskId, move.to.inId)
-					})
-			} else {
-				api.prioritizeCard(move.from.taskId, move.to.inId)
-			}
-			break*/
-		case 'completed':
-		case 'completed':
-			//api.prioritizeCard(move.from.taskId, move.to.inId)
-			break
-		case 'discard':
-			aoStore.popDiscardHistory()
-		case 'subTasks':
-		case 'context':
-		case 'gifts':
-		case 'panel':
-			//api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
-			break
-		default:
-			break
+	if(move.from.zone ==='discard') {
+		aoStore.popDiscardHistory()
 	}
 }
 
@@ -336,6 +297,10 @@ export function findOrphans(count: number = null) {
 }
 
 export function findFirstCardInCard(card: Task) {
+  if(!card) {
+    console.log("Missing card for findFirstCardInCard")
+    return
+  }
 	if (card.priorities && card.priorities.length >= 1) {
 		const nextCard = aoStore.hashMap.get(
 			card.priorities[card.priorities.length - 1]
@@ -360,7 +325,8 @@ export function findFirstCardInCard(card: Task) {
 	}
 
 	let nextCard
-	if (card.grid && card.grid.rows) {
+	/* todo: redo this pin style
+	if (card.pins && card.grid.rows) {
 		Object.entries(card.grid.rows)
 			.sort(sortRows)
 			.some(([y, row]) => {
@@ -375,6 +341,7 @@ export function findFirstCardInCard(card: Task) {
 					})
 			})
 	}
+	*/
 	if (nextCard) {
 		return nextCard
 	}

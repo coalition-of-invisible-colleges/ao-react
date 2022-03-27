@@ -1,5 +1,5 @@
 export type Color = 'red' | 'yellow' | 'green' | 'purple' | 'blue' | 'black'
-export type GridStyle = 'grid' | 'pyramid' | 'rune'
+export type PinboardStyle = 'grid' | 'pyramid' | 'rune'
 
 export interface Task {
     taskId: string              // ao-react: Random UUID | ao-3: CRC-32 hash of the content
@@ -18,9 +18,8 @@ export interface Task {
     priorities: string[]        // *Array of taskIds of cards prioritized within this card
     subTasks: string[]          // *Array of taskIds of cards within this card
     completed: string[]         // *Array of taskIds of checked-off completed cards within this cards. Cards saved here when discarded with any checkmarks on them.
-    gridStyle?: GridStyle       // Current layout/spread for the card's pinboard. Switching it dumps cards that don't fit the new layout into .subTasks
-    grid?: Grid                 // *Grid object, will be replaced by new more flexible canvas-style pinboard indexing paradigm
-    pins?: Pin[]                 // *New way of doing the Grid, Pyramid, and upcoming Rune layouts for the card
+    pinboard?: Pinboard         // *Pinboard object containing pinboard properties
+    pins?: Pin[]                // *New way of doing the Grid, Pyramid, and upcoming Rune layouts for the card
     parents: string[]           // *List of this cards parents, ought to be kept updated by mutations.
     claimed: string[]           // 
     claimInterval?: number      // Automatic uncheck timer in milliseconds
@@ -49,16 +48,17 @@ export interface Task {
     // There are four main zones within a card: the priorities, the optional pinboard (grid/pyramid), the subTasks (main pile), and completed cards
 }
 
-export interface Grid { // Old way of doing grid, will be replaced by Pinboard
+/*export interface Grid { // Old way of doing grid, will be replaced by Pinboard
     rows: {}
     height: number
     width: number
     size: number
-}
+}*/
 
 // Defines the dimensions and other properties of a spread or layout of cards.
 // Could be expanded or inherited from to create new types of spreads such as a freeform canvas or non-euclidian pinboard.
 export interface Pinboard {
+  spread: PinboardStyle
   height: number
   width?: number
   size: number                  // Size of squares, roughly in ems

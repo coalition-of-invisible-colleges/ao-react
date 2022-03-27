@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
-import { GridStyle } from '../interfaces'
+import { PinboardStyle } from '../interfaces'
 import AoHiddenFieldset from './hiddenFieldset'
 import api from '../client/api'
 import GridImg from '../assets/images/grid.svg'
@@ -12,7 +12,7 @@ import SquareSize from '../assets/images/square.svg'
 
 interface Props {
   taskId: string
-  gridStyle: GridStyle
+  gridStyle: PinboardStyle
   hasGrid?: boolean
   gridHeight?: number
   gridWidth?: number
@@ -25,16 +25,16 @@ export default function AoGridResizer(props: Props) {
     return null
   }
 
-  const grid = card.grid
+  const pinboard = card.pinboard
   
   const switchToPyramid = event => {
     event.stopPropagation()
-    return api.setCardProperty(props.taskId, 'gridStyle', 'pyramid')
+    return api.setCardProperty(props.taskId, 'pinboard.spread', 'pyramid')
   }
 
   const switchToGrid = event => {
     event.stopPropagation()
-    return api.setCardProperty(props.taskId, 'gridStyle', 'grid')
+    return api.setCardProperty(props.taskId, 'pinboard.spread', 'grid')
   }
   
   const addPyramid = (event) => {
@@ -45,7 +45,7 @@ export default function AoGridResizer(props: Props) {
 		switchToGrid(event).then(() => api.addGridToCard(taskId, 3, 3))
 	}
 	
-  if(!grid) {
+  if(!pinboard) {
     return <AoHiddenFieldset heading='Grid' startOpen={false} className='gridMenu'>
       <div className='centerFlex'>
         <img src={PyramidImg} className="gridMenu action" onClick={addPyramid} />
@@ -56,22 +56,22 @@ export default function AoGridResizer(props: Props) {
 
   const increaseRows = () => {
     const card = aoStore.hashMap.get(taskId)
-    api.resizeGrid(taskId, grid.height + 1, grid.width, grid.size)
+    api.resizeGrid(taskId, pinboard.height + 1, pinboard.width, pinboard.size)
   }
 
   const decreaseRows = () => {
     const card = aoStore.hashMap.get(taskId)
-    api.resizeGrid(taskId, grid.height - 1, grid.width, grid.size)
+    api.resizeGrid(taskId, pinboard.height - 1, pinboard.width, pinboard.size)
   }
 
   const increaseColumns = () => {
     const card = aoStore.hashMap.get(taskId)
-    api.resizeGrid(taskId, grid.height, grid.width + 1, grid.size)
+    api.resizeGrid(taskId, pinboard.height, pinboard.width + 1, pinboard.size)
   }
 
   const decreaseColumns = () => {
     const card = aoStore.hashMap.get(taskId)
-    api.resizeGrid(taskId, grid.height, grid.width - 1, grid.size)
+    api.resizeGrid(taskId, pinboard.height, pinboard.width - 1, pinboard.size)
   }
 
   const removeGrid = () => {
@@ -79,33 +79,33 @@ export default function AoGridResizer(props: Props) {
   }
   
   const noGrid =
-			!grid ||
-			(grid.hasOwnProperty('height') && grid.height < 1) ||
-			(grid.hasOwnProperty('width') && grid.width < 1) ||
-			!grid.hasOwnProperty('height') ||
-			!grid.hasOwnProperty('width')
+			!pinboard ||
+			(pinboard.hasOwnProperty('height') && pinboard.height < 1) ||
+			(pinboard.hasOwnProperty('width') && pinboard.width < 1) ||
+			!pinboard.hasOwnProperty('height') ||
+			!pinboard.hasOwnProperty('width')
 			
   const isPyramid = props.gridStyle === 'pyramid'
 
   const increaseSquareSize = () => {
     api.resizeGrid(
       props.taskId,
-      grid.height,
-      grid.width,
-      grid.size && grid.size >= 1 ? grid.size + 1 : 10
+      pinboard.height,
+      pinboard.width,
+      pinboard.size && pinboard.size >= 1 ? pinboard.size + 1 : 10
     )
   }
 
   const decreaseSquareSize = () => {
     api.resizeGrid(
       props.taskId,
-      grid.height,
-      grid.width,
-      grid.size && grid.size >= 1 ? grid.size - 1 : 8
+      pinboard.height,
+      pinboard.width,
+      pinboard.size && pinboard.size >= 1 ? pinboard.size - 1 : 8
     )
   }
   
-  const epithet = isPyramid ? grid.height + '-row Pyramid' : grid.width + '×' + grid.height + ' ' + 'Grid' 
+  const epithet = isPyramid ? pinboard.height + '-row Pyramid' : pinboard.width + '×' + pinboard.height + ' ' + 'Grid' 
 
   return (
       <AoHiddenFieldset heading={epithet} startOpen={true} className='gridMenu'>
@@ -129,14 +129,14 @@ export default function AoGridResizer(props: Props) {
             <button
               type="button"
               onClick={decreaseColumns}
-              disabled={card.grid.width <= 1}
+              disabled={card.pinboard.width <= 1}
               className="action minus">
               -
             </button>
             <button
               type="button"
               onClick={increaseColumns}
-              disabled={card.grid.width >= 100}
+              disabled={card.pinboard.width >= 100}
               className="action plus">
               +
             </button>
@@ -147,14 +147,14 @@ export default function AoGridResizer(props: Props) {
           <button
             type="button"
             onClick={decreaseRows}
-            disabled={card.grid.height <= 1}
+            disabled={card.pinboard.height <= 1}
             className="action minus">
             -
           </button>
           <button
             type="button"
             onClick={increaseRows}
-            disabled={card.grid.height >= 100}
+            disabled={card.pinboard.height >= 100}
             className="action plus">
             +
           </button>
@@ -164,19 +164,19 @@ export default function AoGridResizer(props: Props) {
           <button
             type="button"
             onClick={decreaseSquareSize}
-            disabled={grid.size <= 1}
+            disabled={pinboard.size <= 1}
             className="action minus">
             -
           </button>
           <button
             type="button"
             onClick={increaseSquareSize}
-            disabled={grid.size >= 40}
+            disabled={pinboard.size >= 40}
             className="action plus">
             +
           </button>
         </div>
-        {(grid.width <= 1 || grid.height <= 1) && (
+        {(pinboard.width <= 1 || pinboard.height <= 1) && (
             <button
               type="button"
               onClick={removeGrid}

@@ -237,7 +237,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if (!this.props.task || this.props.cardStyle !== 'full') {
           // do nothing
         } else {
-          this.props.task &&
+          /*this.props.task &&
             this.props.task.priorities &&
             this.props.task.priorities.length
           this.props.task &&
@@ -246,8 +246,8 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           this.props.task &&
             this.props.task.completed &&
             this.props.task.completed.length
-          this.props.task && this.props.task.grid && this.props.task.grid.rows
-          this.props.task && this.props.task.aoGridToolDoNotUpdateUI
+          this.props.task && this.props.task.pins && this.props.task.pins
+          this.props.task && this.props.task.aoGridToolDoNotUpdateUI*/
 
           toReturn = this.allSubCardItems
           toReturn.push(
@@ -307,21 +307,14 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     let allSubCards = []
 
     let subCardArrayList = [card.priorities, card.subTasks, card.completed]
+    
+    subCardArrayList.push(card.pins.map(pin => pin.taskId))
 
     subCardArrayList.forEach((subCardArray, index) => {
       subCardArray.forEach(cardItem => {
         toReturn.push(index + ':' + cardItem)
       })
     })
-
-    if (card.grid && card.grid.rows) {
-      Object.entries(card.grid.rows).forEach(([y, row]) => {
-        Object.entries(row).forEach(([x, cell]) => {
-          debuggingOutput.push({ y, x, cell })
-          toReturn.push(y + ':' + x + ':' + cell)
-        })
-      })
-    }
 
     return toReturn
   }
@@ -352,20 +345,19 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       }
     })
 
-    if (card.grid && card.grid.rows) {
-      Object.entries(card.grid.rows).forEach(([y, row]) => {
-        Object.entries(row).forEach(([x, cell]) => {
-          let gridCard = aoStore.hashMap.get(cell)
-          debuggingOutput.push({ y, x, cell, gridCard })
-          if (
-            gridCard &&
-            gridCard.guild &&
-            gridCard.guild.length >= 1 &&
-            gridCard.deck.length >= 1
-          ) {
-            projectCards.push(gridCard)
-          }
-        })
+    if (card.pins && card.pins.length >= 1) {
+      card.pins.forEach(pin => {
+        const {taskId, y, x} = pin
+        let gridCard = aoStore.hashMap.get(taskId)
+        debuggingOutput.push({ y, x, taskId, gridCard })
+        if (
+          gridCard &&
+          gridCard.guild &&
+          gridCard.guild.length >= 1 &&
+          gridCard.deck.length >= 1
+        ) {
+          projectCards.push(gridCard)
+        }
       })
     }
 
@@ -624,7 +616,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         </div>
       )
     }
-
     const taskId = card.taskId
     let member
     let content = card.name
@@ -1170,7 +1161,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             rightDrawerContent = <React.Fragment>
               <AoCardHud taskId={taskId} hudStyle='menu' />
               <Observer>
-              {() => <AoGridResizer taskId={taskId} gridStyle={card.gridStyle} hasGrid={!!card.grid} gridHeight={card.grid?.height} gridWidth={card.grid?.width}/>}
+              {() => <AoGridResizer taskId={taskId} gridStyle={card?.pinboard?.spread} hasGrid={!!card.pinboard} gridHeight={card.pinboard?.height} gridWidth={card.pinboard?.width}/>}
               </Observer>
             </React.Fragment>
             break
@@ -1229,8 +1220,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   marginTop: this.props.padTop ? '4em' : 'inherit',
                 }}>
                 <Observer>
-                  {() => {
-                    return (
+                  { () =>
                       <AoStack
                         cards={aoStore.contextCards}
                         cardStyle="context"
@@ -1238,8 +1228,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                         zone="context"
                         doNotReverseList={true}
                       />
-                    )
-                  }}
+                  }
                 </Observer>
               </div>
             )}
@@ -1296,9 +1285,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       className={
                         'content' +
                         (card.priorities.length < 1 &&
-                        (!card.grid ||
-                          (card.grid && card.grid.height < 1) ||
-                          card.grid.width < 1)
+                        (!card.pinboard ||
+                          (card.pinboard && card.pinboard.height < 1) ||
+                          card.pinboard.width < 1)
                           ? ' padBefore'
                           : '')
                       }>
@@ -1306,18 +1295,21 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       {member && <AoMemberIcon memberId={taskId} />}
                       {this.renderCardContent(content)}
                       <Observer>
-                        {() => (
-                          <AoPinboard
+                        {() => {
+                          if(!card || !card.pins || !card.pinboard || !card.pinboard.hasOwnProperty('height') || !(card.pinboard.height >= 1)) {
+                            return null
+                          }
+                          return <AoPinboard
                             pins={card.pins}
-                            height={card.grid?.height}
-                            width={card.grid?.width}
-                            size={card.grid?.size || 9}
-                            gridStyle={card.gridStyle}
+                            height={card.pinboard.height}
+                            width={card.pinboard.width}
+                            size={card.pinboard.size || 9}
+                            spread={card.pinboard.spread}
                             onDropToSquare={onDropToPinboard}
                             onNewCard={onNewPinboardCard}
                             inId={taskId}
                           />
-                        )}
+                        } }
                       </Observer>
                     </div>
                   )
@@ -1419,8 +1411,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         )
       case 'index':
         const indexCards = this.projectCards
+        content = card.guild
         if(indexCards?.length && indexCards.length >= 1) {
-          content = card.guild + ' (' + indexCards.length + ')'
+          content += ' (' + indexCards.length + ')'
         }
         const youAreHere = this.props.isCurrentCard
         return  <div>

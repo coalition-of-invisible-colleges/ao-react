@@ -55,14 +55,14 @@ export default class AoDiscardZone extends React.Component<Props> {
             return
           }
 					if(possibleBookmarksCard.name === aoStore.member.memberId + '-bookmarks') {
-						if(possibleBookmarksCard.hasOwnProperty('pins') && possibleBookmarksCard?.grid?.height >= 1) {
+						if(possibleBookmarksCard.hasOwnProperty('pins') && possibleBookmarksCard?.pinboard?.height >= 1) {
 							let lastIndexWithCard = 0
 							possibleBookmarksCard.pins.forEach(pin => { 
 								if(pin.taskId && pin.y === 0 && pin.x && pin.x >= 0) {
 									lastIndexWithCard = Math.max(lastIndexWithCard, pin.x)
 								}
 							})
-							api.resizeGrid(from.inId, possibleBookmarksCard.grid.height, lastIndexWithCard + 1, possibleBookmarksCard.grid.size)
+							api.resizeGrid(from.inId, possibleBookmarksCard.pinboard.height, lastIndexWithCard + 1, possibleBookmarksCard.pinboard.size)
 						}
 					}
         }

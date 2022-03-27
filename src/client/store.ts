@@ -24,7 +24,6 @@ import ao from '../modules/ao.js'
 
 import request from 'superagent'
 
-import ContextCard from '../components/Card'
 import api from './api'
 
 import { DeckTab } from '../components/deck'
@@ -32,8 +31,8 @@ import { DeckTab } from '../components/deck'
 import {
     Task,
     Color,
-    Grid,
-    GridStyle,
+    Pinboard,
+    PinboardStyle,
     Allocation,
     Signature,
     Userseen,
@@ -282,11 +281,10 @@ class AoStore {
 
   @computed get member(): Member {
     let currentSession = window.localStorage.getItem('session')
-    console.log('current session is: ', currentSession)
     let loggedInMember: Member
     this.state.sessions.forEach(session => {
       if (currentSession === session.session) {
-        console.log('found existing session')
+        console.log('found previous login session in browser:', currentSession)
         const memberId = session.ownerId
         this.state.members.forEach(m => {
           if (m.memberId === memberId) {
@@ -342,7 +340,6 @@ class AoStore {
   }
 
   getTaskById_async(taskId, callbackOriginal) {
-    console.log('calling getTaskById on', taskId)
     let callback = parentTaskItem => {
       this.getAllLinkedCardsForThisTaskId_async(parentTaskItem.taskId, () => {})
       callbackOriginal(parentTaskItem)
@@ -351,10 +348,7 @@ class AoStore {
     taskId = taskId.toLowerCase()
     let taskToGet = this.hashMap.get(taskId)
     if (taskToGet !== undefined) {
-      console.log(
-        'AO: client/store.ts: getTaskById_async: task found in client store: ',
-        { taskId, taskToGet }
-      )
+      //console.log('AO: client/store.ts: getTaskById_async: task found in client store: ', { taskId, taskToGet } )
       callback(taskToGet)
     } else {
       // console.log("AO: client/store.ts: getTaskById_async: fetching task from server", { taskId });
@@ -423,6 +417,9 @@ class AoStore {
       let taskItemsOnClient = []
       let taskIdsToLoadFromServer = []
       allSubCardsSet.forEach(taskId => {
+        if(!taskId) {
+          return
+        }
         let taskItem = this.hashMap.get(taskId)
 
         if (!taskItem) {
@@ -548,12 +545,8 @@ class AoStore {
   getTaskByName_async(taskName, callback) {
     taskName = taskName.toLowerCase()
     let taskToGet = this.cardByName.get(taskName)
-    console.log('entry getTaskByName_async task is', taskToGet)
     if (taskToGet !== undefined) {
-      console.log(
-        'AO: client/store.ts: getTaskByName_async: task found in client store: ',
-        { taskName, taskToGet }
-      )
+      //console.log('AO: client/store.ts: getTaskByName_async: task found in client store: ', { taskName, taskToGet })
       callback(taskToGet)
     } else {
       // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
@@ -854,7 +847,6 @@ class AoStore {
     projectCards = projectCards.concat(
       ...missions.map(task => aoStore.subGuildsByGuild.get(task.taskId))
     )
-
     missions = missions.filter(task => {
       return !projectCards.includes(task)
     })
@@ -1146,7 +1138,8 @@ class AoStore {
   }
 
   @action.bound
-  addToContext(taskIds: string[], alwaysAddMember = true) {
+  addToContext(taskIds: string[], alwaysAddMember = true) { 
+    console.log("addToContext")
     if (!this.member) {
       return
     }
@@ -1187,7 +1180,6 @@ class AoStore {
 
   @action.bound
   setCurrentCard(taskId: string) {
-    console.log("setCurrentCard", taskId)
     this.removeFromContext(taskId)
     this.currentCard = taskId
   }

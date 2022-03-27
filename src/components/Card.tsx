@@ -158,10 +158,8 @@ export default function AoCard(props) {
     )
   } else if (props.match.params && props.match.params.taskId) {
     let targetTaskId = props.match.params.taskId
-    console.log('@: components/Card.tsx: rendering task: ', { targetTaskId })
-
     aoStore.getTaskById_async(targetTaskId, () => {
-      console.log('@: components/Card.tsx: task loaded from server: ', {
+      console.log('task loaded from server: ', {
         targetTaskId,
         clientSideData: aoStore.hashMap.get(targetTaskId),
       })

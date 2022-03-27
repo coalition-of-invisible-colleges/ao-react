@@ -24,7 +24,7 @@ export default class AoBoat extends React.PureComponent<Props> {
     event.stopPropagation()
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) {
-      return
+      return null
     }
 
     const fromLocation: CardLocation = { 
@@ -41,8 +41,7 @@ export default class AoBoat extends React.PureComponent<Props> {
   }
 
   render() {
-    return (
-      <Tippy
+    return (<Tippy
         zIndex={4}
         theme="translucent"
         content="Prioritize card"
@@ -51,7 +50,6 @@ export default class AoBoat extends React.PureComponent<Props> {
         <div className="boat" onClick={this.upboat}>
           <img src={Boat} />
         </div>
-      </Tippy>
-    )
+      </Tippy>);
   }
 }

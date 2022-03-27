@@ -18,17 +18,7 @@ export function crawler(tasks, taskId) {
           history.push(t)
           let subTask = tasks.filter(pst => pst.taskId === t)[0]
           if (subTask) {
-            let gridCells = []
-            if (
-              subTask?.grid?.rows &&
-              Object.keys(subTask.grid.rows).length >= 1
-            ) {
-              const rowsArray = Object.values(subTask.grid.rows).forEach(
-                row => {
-                  gridCells = gridCells.concat(Object.values(row))
-                }
-              )
-            }
+            let gridCells = subTask.pins.map(pin => pin.taskId)
             newCards = newCards
               .concat(subTask.subTasks)
               .concat(subTask.priorities)

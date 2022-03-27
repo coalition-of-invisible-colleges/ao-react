@@ -101,8 +101,8 @@ function createStatements() {
 }
 
 export function recover(callback) {
+  let all = []
   try {
-    let all = []
 
     for (const ev of preparedStmts.recover.iterate()) {
       console.log
@@ -110,20 +110,19 @@ export function recover(callback) {
     }
     callback(null, all)
   } catch (err) {
-    console.log('err caught recover ' + err)
+    console.log('dctrlDb recover error: ', err, 'for event', all[all.length - 1])
   }
 }
 
 export function getAll(timestamp, callback) {
+  let all = []
   try {
-    let all = []
-
     for (const ev of preparedStmts.getAll.iterate(timestamp)) {
       all.push(JSON.parse(ev.document))
     }
     callback(null, all)
   } catch (err) {
-    console.log('err caught getAll ' + err)
+    console.log('dctrlDb getAll error: ', err, 'for event', all[all.length - 1])
   }
 }
 

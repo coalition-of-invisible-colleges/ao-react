@@ -54,17 +54,9 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return null
 
-    let gridCardCount = 0
-    if (card.grid) {
-      Object.keys(card.grid.rows).forEach(i => {
-        Object.keys(card.grid.rows[i]).forEach(cell => {
-          gridCardCount++
-        })
-      })
-    }
     const subCardCount =
       card.priorities.length +
-      gridCardCount +
+      card.pins.length +
       card.subTasks.length +
       card.completed.length
     return subCardCount

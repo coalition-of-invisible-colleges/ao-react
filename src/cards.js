@@ -41,20 +41,19 @@ export function blankCard(
 		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
 		pins: [],
-		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
-		gridStyle: 'pyramid',
+		pinboard: height >= 1 && width >= 1 ? blankPinboard(height, width) : false,
 		allocations: [],
 	}
 	return newCard
 }
 
-export function blankGrid(height = 3, width = 3) {
-	const defaultSquareSizeInEms = 9
-	let newGrid = {
+const defaultSquareSizeInEms = 9
+export function blankPinboard(height = 3, width = 3, spread = 'pyramid') {
+	const newGrid = {
+	  spread: spread,
 		height: height,
 		width: width,
 		size: defaultSquareSizeInEms,
-		rows: {},
 	}
 	return newGrid
 }
@@ -154,14 +153,8 @@ export function removeParent(task, parentId) {
 		return
 	}
 	let gridCells = []
-	let gridRows
-	if (task.grid && task.rows) {
-		gridRows = Object.entries(task.rows)
-		gridCells = [
-			...gridRows.map(([index, cells]) => {
-				return Object.values(cells)
-			}),
-		]
+	if (task.pins && task.pins.length >= 1) {
+		gridCells = task.pins.map(pin => pin.taskId)
 	}
 
 	let stashItems = []
@@ -193,14 +186,8 @@ export function removeParentIfNotParent(task, parent) {
 		return
 	}
 	let gridCells = []
-	let gridRows
-	if (parent.grid && parent.rows) {
-		gridRows = Object.entries(parent.rows)
-		gridCells = [
-			...gridRows.map(([index, cells]) => {
-				return Object.values(cells)
-			}),
-		]
+	if (parent.pins && parent.pins.length >= 1) {
+		gridCells = parent.pins.map((pin) => pin.taskId)
 	}
 
 	let stashItems = []
@@ -268,15 +255,15 @@ export function addSubTask(task, subTaskId) {
 }
 
 // Removes the given discardTaskId from the given task's subtasks
-export function discardSubTask(task, discardTaskId) {
+function discardSubTask(task, discardTaskId) {
   if(!task || !discardTaskId || !task.subTasks || task.subTasks.length <= 0) return
   task.subTasks = task.subTasks.filter(stId => stId !== discardTaskId)
 }
 
 // Removes the given discardTaskId from the given task's completed tasks list
-export function discardCompletedTask(task, discardTaskId) {
+function discardCompletedTask(task, discardTaskId) {
   if(!task || !discardTaskId || !task.completed || task.completed.length <= 0) return
-  task.completed = _.filter(task.completed, stId => stId !== discardTaskId)
+  task.completed = task.completed.filter(stId => stId !== discardTaskId)
 }
 
 // Adds a completed task to the completed list in a card or moves it to the top of the list 
@@ -294,18 +281,34 @@ export function putTaskInTask(subTask, inTask) {
 // Re-adds the given taskId to the given card's priorities (moving it to the end)
 // This will move it to the top/front of the list of cards in the GUI
 export function addPriority(task, taskId) {
-	task.priorities = _.filter(task.priorities, tId => tId !== taskId)
+	discardPriority(task, taskId)
 	task.priorities.push(taskId)
 }
 
 // Removes the given discardTaskId from the given task's subtasks
-export function discardPriority(task, discardTaskId) {
+function discardPriority(task, discardTaskId) {
   if(!task || !discardTaskId || !task.priorities || task.priorities.length <= 0) return
-  task.priorities = _.filter(task.priorities, stId => stId !== discardTaskId)
+  task.priorities = task.priorities.filter(stId => stId !== discardTaskId)
+}
+
+export function unpinTasksOutOfBounds(task) {
+  if(!task.pins || task.pins.length <= 0) {
+    return
+  }
+  const num = task.pins.length
+  const horizLimit = task.pinboard.spread === 'pyramid' ? task.pinboard.height : task.pinboard.width
+  task.pins.forEach(pin => {
+    const {taskId, y, x} = pin
+    if (x >= horizLimit || y >= task.pinboard.height) {
+      unpinTaskFromTask(task, { y: y, x: x})
+      addSubTask(task, taskId)
+    }
+  })
+  //console.log("upinned", num - task.pins.length, 'tasks')
 }
 
 // Unpins the card from the given coordinates in a card and returns its taskId
-export function unpinTaskFromTask(task, coords) {
+function unpinTaskFromTask(task, coords) {
   let result
   if(!task.pins || task.pins.length <= 0) {
     return null
@@ -324,7 +327,16 @@ export function unpinTaskFromTask(task, coords) {
 // Unlike the functions to add subtasks, this function does NOT attempt to filter the pinboard before adding a card,
 // so duplicates will occur unless you unpin first from the origin coords
 // However, it WILL check where the card is going to be placed, and if a card is already there, that card will drop into .subTasks
-export function pinTaskToTask(task, taskId, coords) {
+function pinTaskToTask(task, taskId, coords) {
+  if(!task.hasOwnProperty('pins') || !Array.isArray(task.pins)) {
+    task.pins = []
+  }
+  
+  // If this taskId is already at this location, do nothing
+  if(task.pins.some(pin => pin.taskId === taskId && pin.y === coords.y && pin.x === coords.x)) {
+    return
+  }
+
   // If there is already something pinned there, drop it into subTasks
   const previousPinnedTaskId = unpinTaskFromTask(task, coords)?.taskId
   
@@ -332,14 +344,10 @@ export function pinTaskToTask(task, taskId, coords) {
     addSubTask(task, previousPinnedTaskId)
   }
   
-  if(!task.hasOwnProperty('pins') || !Array.isArray(task.pins)) {
-    task.pins = []
-  }
-  
   task.pins.push({taskId, y: coords.y, x: coords.x})
 }
 
-export function putTaskInTaskZone(task, inTask, toLocation) {
+function putTaskInTaskZone(task, inTask, toLocation) {
   switch(toLocation.zone) {
     case 'priorities':
       // Move the card to the .priorities
@@ -350,10 +358,11 @@ export function putTaskInTaskZone(task, inTask, toLocation) {
     case 'grid':
       // Move the card to the .pins using coordinates in the current gridStyle, or fail if not possible
       // If there isn't a grid on this card, add a grid large enough for the new coordinates to fit on
-      if(!task.grid) {
-        task.grid = blankGrid(Math.max(toLocation.coords.y, 3), Math.max(toLocation.coords.x, 3))
+      if(!inTask.pinboard) {
+        inTask.pinboard = blankPinboard(Math.max(toLocation.coords.y, 3), Math.max(toLocation.coords.x, 3))
       }
       pinTaskToTask(inTask, task.taskId, toLocation.coords)
+      addParent(task, inTask.taskId)
       break
     case 'completed':
       // Move the card to the .completed
@@ -419,41 +428,44 @@ export function discardTaskFromZone(task, fromLocation) {
 // so it is possible to play a different card than was unplayed in one move (i.e., swap out a card)
 // Right now the card being played must exist; card creation and modification is separate since it includes color etc.
 export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId) {
-  const taskId = fromLocation?.taskId || toLocation.taskId
-  const theCard = getTask(tasks, fromLocation?.taskId || toLocation.taskId)
-  if (!theCard) {
-    console.log("Missing card in card play, nothing to move")
+  const taskId = fromLocation && fromLocation.taskId ? fromLocation.taskId : toLocation.taskId
+  const theCard = getTask(tasks, taskId)
+  if (!theCard && fromLocation?.zone !== 'grid') {
     return
   }
-  
   const theCardMovedTo = getTask(tasks, toLocation.inId)
   if(!theCardMovedTo && !['discard', 'context', 'panel'].includes(toLocation.zone)) {
-    console.log("Attempting to move a card to a missing card, this should never happen")
+    console.log("Attempting to move a card to a missing card, this should never happen. Missing card:", toLocation.inId)
     return
   }
   
-  // You cannot play a card without having seen it
-  seeTask(theCard, memberId)
-  
-  // You cannot play a card without first grabbing it
-  grabTask(tasks, theCard, memberId)
+  if(theCard && memberId) { // memberId should be required, but temporarily for debugging
+    // You cannot play a card without having seen it
+    seeTask(theCard, memberId)
+    
+    // You cannot play a card without first grabbing it
+    grabTask(tasks, theCard, memberId)
+  }
   
   // Remove the card from wherever it was moved from
-  const theCardMovedFrom = getTask(tasks, fromLocation?.inId)
+  const fromInId = fromLocation?.inId
+  const theCardMovedFrom = getTask(tasks, fromInId)
   if(theCardMovedFrom) {
     discardTaskFromZone(theCardMovedFrom, fromLocation)
-    if(fromLocation.inId !== toLocation.inId) {
-      removeParentIfNotParent(theCard, theCardMovedFrom)
-    }
+    //if(fromLocation.inId !== toLocation.inId) {
+    //  removeParentIfNotParent(theCard, theCardMovedFrom)
+    //}
     
     // Save the card to the completed cards if it has at least one checkmark
-    if(toLocation.zone === 'discard' && theCard.claimed && theCard.claimed.length >= 1) {
+    if(toLocation.zone === 'discard' && theCard && theCard.claimed && theCard.claimed.length >= 1) {
       addCompletedTask(theCardMovedFrom, taskId)
     }
   }
-
+  
   // Move card to wherever it was moved to
-  putTaskInTaskZone(theCard, theCardMovedTo, toLocation)
+  if(theCard) {
+    putTaskInTaskZone(theCard, theCardMovedTo, toLocation)
+  }
 }
 
 // Adds the given taskId to the given card's stash of the specified level
@@ -571,13 +583,16 @@ export function safeMerge(cardA, cardZ) {
 	cardA.completed = [
 		...new Set(cardA.completed.concat(filterNull(cardZ.completed))),
 	]
-	if (cardZ.grid && cardZ.grid.height >= 1 && cardZ.grid.width >= 1) {
-		if (!cardA.grid) {
-			cardA.grid = { rows: {}, height: 1, width: 1 }
+	if (cardZ.pinboard && cardZ.pinboard.height >= 1 && cardZ.pinboard.width >= 1) {
+		if (!cardA.pinboard) {
+			cardA.pinboard = blankPinboard()
 		}
+		cardA.pinboard.height = Math.max(cardA.pinboard.height, cardZ.pinboard.height)
+		cardA.pinboard.width = Math.max(cardA.pinboard.width, cardZ.pinboard.width)
+	}
 
-		cardA.grid.height = Math.max(cardA.grid.height, cardZ.grid.height)
-		cardA.grid.width = Math.max(cardA.grid.width, cardZ.grid.width)
+	/*todo: do this in a pins way
+		
 		if (_.has(cardZ, 'grid.rows')) {
 			Object.entries(cardZ.grid.rows).forEach(([x, row]) => {
 				const filteredRow = {}
@@ -602,6 +617,7 @@ export function safeMerge(cardA, cardZ) {
 			}
 		}
 	}
+  */
 	cardA.passed = [...new Set([...cardA.passed, ...filterNull(cardZ.passed)])]
 	// Remove duplicate passes
 	let passesNoDuplicates = []

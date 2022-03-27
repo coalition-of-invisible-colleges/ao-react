@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { isObject } from '../utils'
 import config from '../../configuration'
 import aoStore from './store'
-import { Task, Grid, Color } from '../interfaces'
+import { Task, Color } from '../interfaces'
 import { io } from 'socket.io-client'
 
 import { runInAction, reaction } from 'mobx'
@@ -1205,7 +1205,7 @@ class AoApi {
       taskId: taskId,
       height: newHeight,
       width: newWidth,
-      size: newSize,
+      size: newSize || 9,
     }
     return request
       .post('/events')

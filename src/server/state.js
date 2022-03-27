@@ -139,7 +139,7 @@ function initialize(callback) {
             backupJob.start()
         })
 
-	// We're applying the onion from torControl directly to the state after backup is applied. Kind of hacky, but it works
+        // We're applying the onion from torControl directly to the state after backup is applied. Kind of hacky, but it works
         console.log('onion!', 'http://' + onion)
         serverState.cash.address = onion
         pubState.cash.address = onion

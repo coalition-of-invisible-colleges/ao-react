@@ -7,9 +7,11 @@ import _ from 'lodash'
 import { createHash } from './crypto.js'
 import {
   blankCard,
-  blankGrid,
+  blankPinboard,
   getTask,
   atomicCardPlay,
+  unpinTasksOutOfBounds,
+  discardTaskFromZone,
   taskExists,
   seeTask,
   clearPassesTo,
@@ -281,11 +283,11 @@ function membersMuts(members, ev) {
             opinion: ev.type,
           }
 
-          addPotential(member, newSig)
+          //addPotential(member, newSig)
 
-          if (testPotential(member, 'member-purged')) {
+          //if (testPotential(member, 'member-purged')) {
             members.splice(i, 1)
-          }
+          //}
         }
       }
 
@@ -455,8 +457,41 @@ function sessionsMuts(sessions, ev) {
   }
 }
 
+let missingTaskIds = []
 function tasksMuts(tasks, ev) {
-  // try {
+  let theTask
+  let inTask
+  let memberTask
+  
+  const theTaskId = ev.taskId || ev.subTask || ev.resourceId
+  if(theTaskId) {
+    theTask = getTask(tasks, theTaskId)
+    if(!theTask && ev.type !== 'task-created' && ev.type !== 'grid-created' && ev.type !== 'resource-created' && ev.type !== 'meme-added') {
+      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
+      console.log(ev.type + ': missing task for taskId', theTaskId, '(' + missingTaskIds.length + ')')
+      return
+    }
+  }
+  
+  if(ev.inId) {
+    inTask = getTask(tasks, ev.inId)
+    if(!inTask && ev.type !== 'task-created') {
+      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
+      console.log(ev.type + ': missing task for inId', ev.inId, '(' + missingTaskIds.length + ')')
+      return
+    }
+  }
+  
+  const memberTaskId = ev.memberId || ev.blame
+  if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
+    memberTask = getTask(tasks, memberTaskId)
+    if(!memberTask && ev.type !== 'member-created') {
+      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
+      console.log(ev.type + ': missing task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
+      return
+    }
+  }
+  
   switch (ev.type) {
     case 'highlighted':
       tasks.forEach(task => {
@@ -524,15 +559,11 @@ function tasksMuts(tasks, ev) {
           t.claimed = t.claimed.filter(st => st !== ev.memberId)
           t.deck = t.deck.filter(st => st !== ev.memberId)
           clearPassesTo(tasks, t, ev.memberId, true)
-          if (_.has(t, 'grid.rows')) {
-            Object.entries(t.grid.rows).forEach(([y, row]) => {
-              Object.entries(row).forEach(([x, cell]) => {
-                if (cell === ev.memberId) {
-                  delete tasks[j].grid.rows[y][x]
-                }
-              })
-              if (row.length === 0) {
-                delete tasks[j].grid.rows[y]
+          if (t.pins && t.pins.length >= 1) {
+            t.pins.forEach((pin, i) => {
+              const cell = pin.taskId
+              if (cell === ev.memberId) {
+                tasks[j].pins.spice(i, 1)
               }
             })
           }
@@ -557,16 +588,15 @@ function tasksMuts(tasks, ev) {
           ev.inId ? [ev.inId] : []
         )
       )
-      tasks.forEach(task => {
-        if (ev.inId && task.taskId === ev.inId) {
-          if (ev.prioritized) {
-            addPriority(task, ev.taskId)
-          } else {
-            addSubTask(task, ev.taskId)
-          }
-          clearSeenExcept(task, ev.deck.length >= 1 ? [ev.deck[0]] : undefined) // The very font of novelty
+      if(inTask) {
+        if (ev.prioritized) {
+          addPriority(inTask, ev.taskId)
+        } else {
+          addSubTask(inTask, ev.taskId)
         }
-      })
+        addParent(inTask, ev.inId)
+        clearSeenExcept(inTask, ev.deck.length >= 1 ? [ev.deck[0]] : undefined) // The very font of novelty
+      }
       break
     case 'address-updated':
       tasks.forEach(t => {
@@ -576,23 +606,21 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-passed':
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          let pass = [ev.fromMemberId, ev.toMemberId]
+      let pass = [ev.fromMemberId, ev.toMemberId]
 
-          if (
-            !task.passed.some(p => {
-              if (p[0] === pass[0] && p[1] === pass[1]) {
-                return true
-              }
-            })
-          ) {
-            task.passed.push(pass)
-            const recipient = getTask(tasks, ev.toMemberId)
-            changeGiftCount(recipient, 1)
+      if (
+        !theTask.passed.some(p => {
+          if (p[0] === pass[0] && p[1] === pass[1]) {
+            return true
           }
+        })
+      ) {
+        theTask.passed.push(pass)
+        const recipient = getTask(tasks, ev.toMemberId)
+        if(recipient) {
+          changeGiftCount(recipient, 1)
         }
-      })
+      }
       break
     case 'task-grabbed':
       // First make sure they have a valid member card to grab with,
@@ -923,13 +951,8 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-dropped':
-      const taskToDrop = getTask(tasks, ev.taskId)
-      if(!taskToDrop) {
-        console.log("Attempt to drop missing task, this should never happen")
-        break
-      }
-      taskToDrop.deck = taskToDrop.deck.filter(d => d !== ev.memberId)
-      clearPassesTo(tasks, taskToDrop, ev.memberId)
+      theTask.deck = theTask.deck.filter(d => d !== ev.memberId)
+      clearPassesTo(tasks, theTask, ev.memberId)
       break
     case 'pile-dropped':
       if (!ev.memberId) {
@@ -994,18 +1017,7 @@ function tasksMuts(tasks, ev) {
         t.subTasks = t.subTasks.filter(st => st !== ev.taskId)
         t.priorities = t.priorities.filter(st => st !== ev.taskId)
         t.completed = _.filter(t.completed, st => st !== ev.taskId)
-        if (_.has(t, 'grid.rows')) {
-          Object.entries(t.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              if (cell === ev.taskId) {
-                delete tasks[i].grid.rows[y][x]
-              }
-            })
-            if (row.length === 0) {
-              delete tasks[i].grid.rows[y]
-            }
-          })
-        }
+        t.pins = _.filter(t.pins, pin => pin.taskId !== ev.taskId)
       })
       break
     case 'tasks-removed':
@@ -1018,55 +1030,17 @@ function tasksMuts(tasks, ev) {
       tasks.forEach((t, i) => {
         t.subTasks = t.subTasks.filter(st => !ev.taskIds.includes(st))
         t.priorities = t.priorities.filter(st => !ev.taskIds.includes(st))
-        t.completed = _.filter(t.completed, st => !ev.taskIds.includes(st))
-        if (_.has(t, 'grid.rows')) {
-          Object.entries(t.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              if (ev.taskIds.includes(cell)) {
-                delete tasks[i].grid.rows[y][x]
-              }
-            })
-            if (row.length === 0) {
-              delete tasks[i].grid.rows[y]
-            }
-          })
-        }
+        t.completed = t.completed.filter(st => !ev.taskIds.includes(st))
+        t.pins = t.pins && Array.isArray(t.pins) ? t.pins.filter(pin => !ev.taskIds.includes(pin.taskId)) : []
       })
       break
     case 'pile-prioritized':
-      const taskToPrioritizeAllWithin = getTask(tasks, ev.inId)
-      taskToPrioritizeAllWithin.priorities = task.priorities.concat(taskToPrioritizeAllWithin.subTasks)
-      taskToPrioritizeAllWithin.subTasks = []
+      inTask.priorities = inTask.priorities.concat(inTask.subTasks)
+      inTask.subTasks = []
       break
     case 'task-refocused':
-      let claimed
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          claimed = task.claimed
-        }
-      })
-      tasks.forEach(task => {
-        if (task.taskId === ev.inId) {
-          task.priorities = _.filter(
-            task.priorities,
-            taskId => taskId !== ev.taskId
-          )
-          task.subTasks = _.filter(
-            task.subTasks,
-            taskId => taskId !== ev.taskId
-          )
-          if (claimed && claimed.length >= 1) {
-            if (
-              !task.completed.some(tId => {
-                return tId === ev.taskId
-              })
-            ) {
-              task.completed.push(ev.taskId)
-            }
-          } else if (claimed !== undefined) {
-            task.subTasks.push(ev.taskId)
-          }
-
+      atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'priorities'}, { taskId: ev.taskId, inId: ev.inId, zone: 'subTasks'})
+      /*
           if (task.allocations && Array.isArray(task.allocations)) {
             task.allocations = _.filter(task.allocations, al => {
               if (al.allocatedId !== ev.taskId) {
@@ -1077,8 +1051,7 @@ function tasksMuts(tasks, ev) {
               }
             })
           }
-        }
-      })
+      */
       break
     case 'pile-refocused':
       tasks.forEach(task => {
@@ -1105,8 +1078,6 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-played':
-      // New atomic way of placing cards and moving them around
-      // Replaces task-sub-tasked, task-de-sub-tasked, task-prioritized, grid-pin, and grid-unpin
       atomicCardPlay(tasks, ev.from, ev.to, ev.memberId)
       break
     case 'task-sub-tasked':
@@ -1118,13 +1089,25 @@ function tasksMuts(tasks, ev) {
     case 'task-prioritized':
       atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'card' }, { taskId: ev.taskId, inId: ev.inId, zone: 'priorities'}, ev.memberId)
       break
+    case 'grid-pin':
+      if(typeof ev.y === 'string') {
+        ev.y = parseInt(ev.y)
+      }
+      if(typeof ev.x === 'string') {
+        ev.x = parseInt(ev.x)
+      }
+      atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'subTasks'}, { taskId: ev.taskId, inId: ev.inId, zone: 'grid', coords: { y: parseInt(ev.y), x: parseInt(ev.x) } }, ev?.memberId, ev)
+      break
+    case 'grid-unpin':
+      //console.log("event type is", ev.type)
+      atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'grid', coords: { y: parseInt(ev.y), x: parseInt(ev.x) } }, { taskId: ev.taskId, inId: ev.inId, zone: 'subTasks', coords: { y: 0 } }, ev.memberId)
+      break
     case 'task-emptied':
       let updateParents = []
       const emptiedParent = getTask(tasks, ev.taskId)
-      const taskToEmpty = getTask(tasks, ev.taskId)
-      updateParents = [...taskToEmpty.priorities, ...taskToEmpty.subTasks]
-      taskToEmpty.priorities = []
-      taskToEmpty.subTasks = []
+      updateParents = [...theTask.priorities, ...theTask.subTasks]
+      theTask.priorities = []
+      theTask.subTasks = []
       tasks.forEach(task => {
         if (updateParents.indexOf(task.taskId) >= 0) {
           removeParentIfNotParent(task, emptiedParent)
@@ -1132,18 +1115,26 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-guilded':
-      const taskToGuild = getTask(tasks, ev.taskId)
-      taskToGuild.guild = ev.guild
+      theTask.guild = ev.guild
       break
     case 'task-property-set':
-      const taskToSetProperty = getTask(tasks, ev.taskId)
-      taskToSetProperty[ev.property] = ev.value
-      // Maybe this should be a separate mutation? Reaction only for setting grid to pyramid
-      if (ev.property === 'gridStyle' && ev.value === 'pyramid') {
+      let properties = ev.property.split('.')
+      
+      if(properties?.length >= 2) {
+        if(!theTask.hasOwnProperty(properties[0]) || typeof theTask[properties[0]] != 'object') {
+          theTask[properties[0]] = {}
+        }
+        theTask[properties[0]][properties[1]] = ev.value
+      } else {
+        theTask[ev.property] = ev.value
+      }
+      // todo: do this in a function in a better way
+      // todo: maybe combine color mutation with this one
+      /*if (ev.property === 'gridStyle' && ev.value === 'pyramid') {
         tasks.forEach((task, i) => {
           if (task.taskId === ev.taskId) {
             if (!task.grid) {
-              task.grid = blankGrid(ev.height, ev.width)
+              task.grid = blankPinboard(ev.height, ev.width)
             }
             Object.entries(task.grid.rows).forEach(([y, row]) => {
               Object.entries(row).forEach(([x, cell]) => {
@@ -1174,16 +1165,14 @@ function tasksMuts(tasks, ev) {
             })
           }
         })
-      }
+      }*/
 
       break
     case 'task-colored':
-      const taskToColor = getTask(tasks, ev.taskId)
-      taskToColor.color = ev.color
+      theTask.color = ev.color
       
       if(ev.inId) {
-        const colorInTask = getTask(tasks, ev.inId)
-        addSubTask(colorInTask, ev.taskId)
+        addSubTask(inTask, ev.taskId)
       }
       break
     case 'task-claimed':
@@ -1246,32 +1235,29 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-unclaimed':
-      const taskToClaim = getTask(tasks, ev.taskId)
-      taskToClaim.claimed = taskToClaim.claimed.filter(mId => mId !== ev.memberId)
-      if (taskToClaim.claimed.length < 1) {
+      theTask.claimed = theTask.claimed.filter(mId => mId !== ev.memberId)
+      if (theTask.claimed.length < 1) {
         tasks.forEach(p => {
           if (
             p.priorities.indexOf(ev.taskId) === -1 &&
             p.completed.indexOf(ev.taskId) > -1
           ) {
             p.completed = p.completed.filter(taskId => taskId !== ev.taskId)
-            addSubTask(taskToClaim, ev.taskId)
+            addSubTask(theTask, ev.taskId)
           }
         })
       }
       break
     case 'task-reset': // unused
-      const taskToReset = getTask(tasks, ev.taskId)
-      taskToReset.claimed = []
-      taskToReset.lastkClaimed = ev.timestamp
+      theTask.claimed = []
+      theTask.lastClaimed = ev.timestamp
       break
     case 'task-boosted':
-      const taskToBoost = getTask(tasks, ev.taskId)
       let amount = parseFloat(ev.amount)
-      let boost = parseFloat(taskToBoost.boost)
+      let boost = parseFloat(theTask.boost)
       if (amount > 0) {
-        taskToBoost.boost = amount + boost
-        taskToBoost.address = ''
+        theTask.boost = amount + boost
+        theTask.address = ''
       }
       break
     case 'task-boosted-lightning':
@@ -1285,16 +1271,15 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'task-allocated':
-      const taskToAllocate = getTask(tasks, ev.taskId)
-      if (taskToAllocate.boost >= 1) {
-        taskToAllocate.boost--
+      if (theTask.boost >= 1) {
+        theTask.boost--
         if (
-          !taskToAllocate.hasOwnProperty('allocations') ||
-          !Array.isArray(taskToAllocate.allocations)
+          !theTask.hasOwnProperty('allocations') ||
+          !Array.isArray(theTask.allocations)
         ) {
-          taskToAllocate.allocations = []
+          theTask.allocations = []
         }
-        let alreadyPointed = taskToAllocate.allocations.some(als => {
+        let alreadyPointed = theTask.allocations.some(als => {
           if (als.allocatedId === ev.allocatedId) {
             als.amount += 1
             return true
@@ -1304,19 +1289,18 @@ function tasksMuts(tasks, ev) {
           if (!ev.amount || !Number.isInteger(ev.amount) || ev.amount < 1) {
             ev.amount = 1
           }
-          taskToAllocate.allocations.push(ev)
+          theTask.allocations.push(ev)
         }
       }
       let reprioritized = _.filter(
-        taskToAllocate.priorities,
+        theTask.priorities,
         d => d !== ev.allocatedId
       )
       reprioritized.push(ev.allocatedId)
-      taskToAllocate.priorities = reprioritized
+      theTask.priorities = reprioritized
       break
     case 'resource-booked':
-      const taskToBook = getTask(tasks, ev.resourceId)
-      taskToBook.book = ev
+      theTask.book = ev
       break
     case 'resource-used':
       const charged = parseFloat(ev.charged)
@@ -1329,9 +1313,8 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'invoice-created':
-      const taskToCreateInvoice = getTask(tasks, ev.taskId)
-      taskToCreateInvoice.payment_hash = ev.payment_hash
-      taskToCreateInvoice.bolt11 = ev.bolt11
+      theTask.payment_hash = ev.payment_hash
+      theTask.bolt11 = ev.bolt11
       break
     case 'task-swapped':
       let task
@@ -1461,22 +1444,20 @@ function tasksMuts(tasks, ev) {
           )
         }
       })
-      const taskToPlaceAvatar = getTask(tasks, ev.taskId)
-      if (!taskToPlaceAvatar.hasOwnProperty('avatars')) {
-        taskToPlaceAvatar.avatars = []
+      if (!theTask.hasOwnProperty('avatars')) {
+        theTask.avatars = []
       }
-      taskToPlaceAvatar.avatars.push({
+      theTask.avatars.push({
         memberId: ev.memberId,
         timestamp: ev.timestamp,
         area: ev.area,
       })
-      taskToPlaceAvatar.lastClaimed = ev.timestamp
+      theTask.lastClaimed = ev.timestamp
       break
     case 'member-charged':
-      const memberCardToCharge = getTask(tasks, ev.memberId)
-      memberCardToCharge.boost -= parseFloat(ev.charged)
-      if (memberCardToCharge.boost < 0) {
-        memberCardToCharge.boost = 0
+      memberTask.boost -= parseFloat(ev.charged)
+      if (memberTask.boost < 0) {
+        memberTask.boost = 0
       }
       break
     case 'grid-created':
@@ -1493,137 +1474,22 @@ function tasksMuts(tasks, ev) {
       )
       break
     case 'grid-added':
-      getTask(tasks, ev.taskId).grid = blankGrid(ev.height, ev.width) 
+      theTask.pinboard = blankPinboard(ev.height, ev.width)
       break
     case 'grid-removed':
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          Object.entries(task.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              task.subTasks = _.filter(task.subTasks, taskId => taskId !== cell)
-              task.subTasks.unshift(cell)
-            })
-          })
-          task.grid = false
-        }
-      })
+      theTask.pins = []
+      theTask.pinboard = false
       break
     case 'grid-resized':
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          if (!task.grid) {
-            task.grid = blankGrid(ev.height, ev.width)
-          }
-          task.grid.height = ev.height
-          task.grid.width = ev.width
-          task.grid.size = ev.size
-          const horizLimit =
-            task.gridStyle === 'pyramid' ? task.grid.height : task.grid.width
-          Object.entries(task.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              if (x >= horizLimit || y >= ev.height) {
-                tasks.forEach(st => {
-                  if (st.taskId === cell) {
-                    task.subTasks = _.filter(
-                      task.subTasks,
-                      taskId => taskId !== cell
-                    )
-                    task.completed = _.filter(
-                      task.completed,
-                      taskId => taskId !== cell
-                    )
-                    if (st.claimed && st.claimed.length >= 1) {
-                      task.completed.push(cell)
-                    } else {
-                      task.subTasks.unshift(cell)
-                    }
-                  }
-                })
-                delete tasks[i].grid.rows[y][x]
-              }
-            })
-            if (row.length === 0) {
-              delete tasks[i].grid.rows[y]
-            }
-          })
-        }
-      })
-      break
-    case 'grid-pin':
-      let whosSeenGrid = [ev.memberId]
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.taskId) {
-          seeTask(task, ev.memberId)
-          grabTask(tasks, task, ev.memberId)
-          addParent(task, ev.inId)
-          // Accumulate who's seen this task
-          if (task.seen && task.seen?.length >= 1) {
-            whosSeenGrid = [...whosSeenGrid, ...task.seen]
-          }
-        }
-      })
-      tasks.forEach((task, i) => {
-        if (task.taskId === ev.inId) {
-          if (!task.grid) {
-            task.grid = blankGrid()
-          }
-          if (!_.has(task, 'grid.rows') || Array.isArray(task.grid.rows)) {
-            tasks[i].grid.rows = {}
-          }
-          if (!_.has(task, 'grid.rows.' + ev.y)) {
-            tasks[i].grid.rows[ev.y] = {}
-          }
-          tasks[i].grid.rows[ev.y][ev.x] = ev.taskId
-          let alreadyHereGrid = false
-          const stLengthBefore = task.subTasks.length
-          task.subTasks = task.subTasks.filter(st => st !== ev.taskId)
-          if (task.subTasks.length - stLengthBefore > 0) {
-            alreadyHereGrid = true
-          }
-          if (!alreadyHereGrid) {
-            clearSeenExcept(task, whosSeenGrid)
-          }
-        }
-      })
-      break
-    case 'grid-unpin':
-      const unpinParent = getTask(tasks, ev.inId)
-      tasks.some((task, i) => {
-        if (task.taskId == ev.inId) {
-          if (!_.has(task, 'grid.rows.' + ev.y + '.' + ev.x)) {
-            return false
-          }
-          if (!tasks[i].grid.rows[ev.y]) {
-            console.log('\n\nSOMETHING VERY WEIRD')
-            return false
-          }
-          let gridTaskId = tasks[i].grid.rows[ev.y][ev.x]
-          delete tasks[i].grid.rows[ev.y][ev.x]
-          if (Object.keys(task.grid.rows[ev.y]).length == 0) {
-            delete tasks[i].grid.rows[ev.y]
-          }
-          if (tasks.some(t => t.taskId === gridTaskId)) {
-            task.subTasks = task.subTasks.filter(st => st !== gridTaskId)
-            task.subTasks.unshift(gridTaskId)
-          }
-          return true
-        }
-      })
+      if (!theTask.pinboard) {
+        theTask.pinboard = blankPinboard(ev.height, ev.width)
+      }
+      theTask.pinboard.height = ev.height
+      theTask.pinboard.width = ev.width
+      theTask.pinboard.size = ev.size || 9
+      unpinTasksOutOfBounds(theTask)
       break
   }
-  // } catch (err) {
-  //   console.log('\n\n\nMUTATIONS ERROR:', err)
-  // }
-}
-
-function applyEvent(state, ev) {
-  cashMuts(state.cash, ev)
-  membersMuts(state.members, ev)
-  resourcesMuts(state.resources, ev)
-  memesMuts(state.memes, ev)
-  sessionsMuts(state.sessions, ev)
-  tasksMuts(state.tasks, ev)
-  aoMuts(state.ao, ev)
 }
 
 export default {
@@ -1634,6 +1500,5 @@ export default {
   memesMuts,
   sessionsMuts,
   tasksMuts,
-  applyEvent,
   POTENTIALS_TO_EXECUTE,
 }

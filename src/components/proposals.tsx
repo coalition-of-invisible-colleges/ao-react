@@ -1,4 +1,4 @@
-import * as React from 'react'
+/*import * as React from 'react'
 import { computed, makeObservable } from 'mobx'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
@@ -170,7 +170,7 @@ export default class AoProposals extends React.Component<Props> {
             }}
             noFirstCard={true}
           />
-*/}{' '}
+}{' '}
         </div>
       </div>
     )
@@ -203,3 +203,4 @@ export default class AoProposals extends React.Component<Props> {
     )
   }
 }
+*/

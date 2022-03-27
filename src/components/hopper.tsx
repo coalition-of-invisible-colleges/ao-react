@@ -75,12 +75,12 @@ export default function AoHopper(props: {}): JSX.Element {
 		const dockCardName = aoStore.member.memberId + '-bookmarks'
 		let myBookmarks = aoStore.cardByName.get(dockCardName)
 
-		if (!myBookmarks || !_.has(myBookmarks, 'grid.rows.0')) {
+		if (!myBookmarks || !myBookmarks.hasOwnProperty('pins')) {
 			console.log('No bookmarks, cannot hop')
 			return []
 		}
 
-		return Object.values(myBookmarks.grid.rows[0])
+		return myBookmarks.pins.map(pin => pin.taskId)
 	}
 
 	function getFirstUncheckedBookmark() {

@@ -67,7 +67,7 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   componentWillUnmount() {
     aoStore.unregisterCloseable(this.hide)
   }
-
+  
   selectStackZone(selection: Coords) {
     this.setState({ selected: selection })
   }
@@ -109,14 +109,10 @@ export default class AoStack extends React.Component<StackProps, StackState> {
   }
 
   render = () => {
-    // console.log('AO: components/stack.tsx: AoStack: render() =>', {
-    //   props: this.props,
-    // })
-
     // either make a reversed list of cards, or the empty list
     const cardsToRender =
       this.props.cards && this.props.cards.length >= 1
-        ? this.props.cards.slice().filter(t => {
+        ? this.props.cards.filter(t => {
             if (!t) {
               console.log(
                 'Missing card detected. card is ',
@@ -236,11 +232,6 @@ export default class AoStack extends React.Component<StackProps, StackState> {
           : this.props.descriptor.singular
       renderedDescriptor = renderedDescriptor + ' '
     }
-
-    // console.log('AO: components/stack.tsx: render: ', {
-    //   props: this.props,
-    //   state: this.state,
-    // })
 
     let showButton = (
       <>

@@ -916,7 +916,6 @@ body {
     .zone,
     .dropZone.grid {
       position: relative;
-      //background: rgba(255, 255, 255, 0.075);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -953,6 +952,10 @@ body {
         left: unset;
         transform: unset;
       }
+    }
+    
+    .dropZone.grid {
+      background: rgba(255, 255, 255, 0.075);
     }
 
     .cardComposer,

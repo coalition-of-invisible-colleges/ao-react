@@ -18,7 +18,7 @@ var margin = {
 
 function drawVis() {
       document.getElementById("minimap").innerHTML = "";
-      console.log('drawing from ', aoStore.state.tasks.length, aoStore.member.memberId)
+      //console.log('drawing from ', aoStore.state.tasks.length, aoStore.member.memberId)
       var nodesX = aoStore.state.tasks
         .filter(t => t.deck.indexOf(aoStore.member.memberId) > -1)
         .map((t) => {
@@ -59,7 +59,7 @@ function drawVis() {
         nodes: nodesX,
         links: linksX
       }
-      console.log(data.nodes.length, 'nodes &', data.links.length, 'links')
+      //console.log(data.nodes.length, 'nodes &', data.links.length, 'links')
       var svg = d3.select("#minimap")
         .append("svg")
         .attr("width", width + margin.left + margin.right)

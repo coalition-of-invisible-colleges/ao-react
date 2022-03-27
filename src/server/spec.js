@@ -7,7 +7,6 @@ import {
 import validators from './validators.js'
 import {
   blankCard,
-  blankGrid,
   getTask
 } from '../cards.js'
 import events from './events.js'
@@ -401,6 +400,7 @@ router.post( '/events', ( req, res, next ) => {
                 .length - 1 ]
             }
 
+            /*todo: do this in a pins way
             if ( !firstPriorityId && task.grid && task.grid.rows ) {
               const rows = Object.values( task.grid.rows )
               if ( rows && rows.length && rows.length >= 1 ) {
@@ -409,7 +409,7 @@ router.post( '/events', ( req, res, next ) => {
                   firstPriorityId = cells[ 0 ]
                 }
               }
-            }
+            }*/
 
             if (
               !firstPriorityId &&

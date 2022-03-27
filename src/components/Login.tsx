@@ -14,31 +14,22 @@ const Login: React.FunctionComponent<{}> = () => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [socketState, setSocketState] = useState(false)
 
-  // console.log(
-  //   'AO: components/Login.tsx: socketState: inFunctionComponent ' +
-  //     aoStore.state.socketState
-  // )
   reaction(
     () => {
       return aoStore.state.socketState
     },
     socketState => {
       setSocketState(socketState === 'authenticationSuccess')
-      // console.log(
-      //   'AO: components/Login.tsx: socketState: inReaction' + socketState
-      // )
     }
   )
 
   let timer
 
   React.useEffect(() => {
-    console.log('error effect')
     if (error.length >= 1) {
       if (timer) {
         clearTimeout(timer)
       }
-      console.log('setting timer')
       timer = setTimeout(() => setError(''), 2200)
     }
     return () => clearTimeout(timer)
@@ -68,9 +59,6 @@ const Login: React.FunctionComponent<{}> = () => {
     }
   }
 
-  // if (aoStore.state.socketState === undefined) {
-  //   return <div id="loading">Loading...</div>
-  // }
   return (
     <div id="login">
       {!loggedIn && (

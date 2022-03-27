@@ -7,7 +7,7 @@ import api from '../client/api'
 import AoHome from './home'
 import AoHopper from './hopper'
 import AoGem from './gem'
-import AoGrid from './grid'
+import AoPinboard from './grid'
 import AoPopupPanel from './popupPanel'
 import AoDropZoneSimple from './dropZoneSimple'
 import { CardLocation, CardPlay } from '../cardTypes'
@@ -78,7 +78,7 @@ export default class AoDock extends React.Component<{}, State> {
       return null
     }
     const hasBookmarksCard =
-      card && _.has(card, 'grid.rows') && card?.grid?.height >= 1
+      card && card.hasOwnProperty('pins') && card?.pinboard?.height >= 1
     
     if (!hasBookmarksCard) {
       return null
@@ -89,9 +89,9 @@ export default class AoDock extends React.Component<{}, State> {
         this.setState({firstClick: true})
         return null
       }
-      const grid = card.grid
-      const newWidth = grid.width + 1
-      return api.resizeGrid(this.state.bookmarksTaskId, grid.height, newWidth, grid.size)
+      const pinboard = card.pinboard
+      const newWidth = pinboard.width + 1
+      return api.resizeGrid(this.state.bookmarksTaskId, pinboard.height, newWidth, pinboard.size)
     }
     
     const onDropToDock = (from: CardLocation) => {
@@ -99,9 +99,9 @@ export default class AoDock extends React.Component<{}, State> {
       if(!cardFrom) {
         return
       }
-      const grid = card.grid
-      const newWidth = grid.width + 1
-      api.resizeGrid(this.state.bookmarksTaskId, grid.height, newWidth, grid.size).then(() => {
+      const pinboard = card.pinboard
+      const newWidth = pinboard.width + 1
+      api.resizeGrid(this.state.bookmarksTaskId, pinboard.height, newWidth, pinboard.size).then(() => {
         const toLocation: CardLocation = {
           taskId: cardFrom.taskId,
           inId: card.taskId,
@@ -126,7 +126,7 @@ export default class AoDock extends React.Component<{}, State> {
         })
     }
     
-    const gridHasContents = card.grid && card.grid.height >= 1 && (card.grid.width > 1 || (card?.grid.rows.hasOwnProperty('0') && card.grid.rows[0][0]))
+    const gridHasContents = card.pinboard && card.pinboard.height >= 1 && (card.pinboard.width > 1 || (card.pins && Array.isArray(card.pins)))
     return (
       <div id="dock">
         <AoHopper />
@@ -135,12 +135,12 @@ export default class AoDock extends React.Component<{}, State> {
           {(gridHasContents || this.state.firstClick) && <Observer>
             {() => {
               return (
-                <AoGrid
+                <AoPinboard
                   pins={card.pins}
-                  height={card.grid.height}
-                  width={card.grid.width}
-                  size={card.grid?.size || 9}
-                  gridStyle="grid"
+                  height={card.pinboard.height}
+                  width={card.pinboard.width}
+                  size={card.pinboard?.size || 9}
+                  spread="grid"
                   onDropToSquare={onDropToDockSquare}
                   onNewCard={onNewDockCard}
                   inId={this.state.bookmarksTaskId}
