@@ -682,6 +682,23 @@ router.post( '/events', ( req, res, next ) => {
         }
       } else sendErrorStatus()
       break
+    case 'task-played':
+      if(
+          (!req.body.from || validators.isTaskId(req.body.from.taskId)) &&
+          validators.isNotes(req.body.to.zone) &&
+          validators.isMemberId(req.body.memberId)
+          //validators.isTaskId(req.body.to.inId)
+        ) {
+          events.trigger(
+            eventType, {
+              from: req.body.from,
+              to: req.body.to,
+              memberId: req.body.memberId
+            },
+            resCallback
+          )
+        } else sendErrorStatus()
+      break
     case 'task-guilded':
       if (
         validators.isTaskId( req.body.taskId, errRes ) &&

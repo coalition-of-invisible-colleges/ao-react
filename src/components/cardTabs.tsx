@@ -97,7 +97,7 @@ export default function AoCardTabs(props: Props) {
   const renderedTabs = props.tabs.map((cardTab, i) => {
     const tab = cardTab.id
     const isSelected = cardTab.isSelected || tab === currentTab
-    return <AoCardTab id={cardTab.id} icon={cardTab.icon} tooltip={cardTab.tooltip} content={cardTab.content} onDrop={cardTab.onDrop} isSelected={isSelected} onClick={() => toggleTab(tab)}/>
+    return <AoCardTab id={cardTab.id} icon={cardTab.icon} tooltip={cardTab.tooltip} content={cardTab.content} onDrop={cardTab.onDrop} isSelected={isSelected} onClick={() => toggleTab(tab)} key={i} />
   })
   
   return <div className="cardTabs">

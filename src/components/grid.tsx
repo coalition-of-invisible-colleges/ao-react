@@ -1,291 +1,38 @@
 import * as React from 'react'
 import { computed, runInAction, observable } from 'mobx'
 import { observer, Observer } from 'mobx-react'
+import request from 'superagent'
 import { Redirect } from 'react-router-dom'
 import aoStore from '../client/store'
-import { Task, Grid, GridStyle } from '../interfaces'
-import api from '../client/api'
+import { Task, Grid, GridStyle, Pinboard, Pin } from '../interfaces'
 import AoDragZone from './dragZone'
-import AoDropZone from './dropZone'
-import { CardPlay, Coords, goUp } from '../cardTypes'
+import AoDropZoneSimple from './dropZoneSimple'
+import { CardPlay, CardLocation, Coords, goUp } from '../cardTypes'
 import AoContextCard from './contextCard'
 import AoCardComposer from './cardComposer'
 
 // TODO: Move this to Interfaces
-interface GridProps {
-  taskId: string
+interface PinboardProps extends Pinboard {
+  pins: Pin[]
+  inId?: string // For from.inId of cards dragged out of this grid, maybe can be eliminated
   gridStyle: GridStyle
-  height: number // Height & width included to trigger refresh when grid is resized
-  width: number
-  size: number
-}
-
-interface GridViewProps extends GridProps {
-  taskId: string
-  grid: Grid
-}
-
-interface PyramidViewProps extends GridProps {
-  taskId: string
-  grid: Grid
-  gridWidth: string
-}
-
-async function dropToGridSquare(move: CardPlay) {
-  if (!move.from.taskId) {
-    return
-  }
-  const cardFrom = aoStore.hashMap.get(move.from.taskId)
-  if (!cardFrom) {
-    return
-  }
-  if(move.from.taskId === move.to.taskId) {
-    return
-  }
-  const nameFrom = cardFrom.name
-
-  const cardTo = aoStore.hashMap.get(move.to.taskId)
-  const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
-
-  const fromHasGuild = cardFrom && cardFrom.guild && cardFrom.guild.length >= 1
-  const toHasGuild = cardTo && cardTo.guild && cardTo.guild.length >= 1
-  const dropActsLikeFolder = true //toHasGuild && !fromHasGuild
-
-  return new Promise((resolve, reject) => {
-    switch (move.from.zone) {
-      case 'card':
-        if (
-          move.to.taskId &&
-          dropActsLikeFolder &&
-          move.from.inId !== move.to.inId
-        ) {
-          api
-            .findOrCreateCardInCard(nameFrom, move.to.taskId, true)
-            .then(goUp)
-            .then(resolve)
-        } else if (move.to.taskId) {
-          api
-            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-            .then(() =>
-              api
-                .pinCardToGrid(
-                  move.to.coords.x,
-                  move.to.coords.y,
-                  nameFrom,
-                  move.to.inId
-                )
-                .then(resolve)
-            )
-        } else {
-          api
-            .pinCardToGrid(
-              move.to.coords.x,
-              move.to.coords.y,
-              nameFrom,
-              move.to.inId
-            )
-            .then(resolve)
-        }
-        break
-      case 'priorities':
-        if (move.to.taskId) {
-          api.refocusCard(move.from.taskId, move.from.inId).then(() => {
-            api
-              .discardCardFromCard(move.from.taskId, move.from.inId)
-              .then(() =>
-                api.findOrCreateCardInCard(nameFrom, move.to.taskId, true)
-              )
-              .then(resolve)
-          })
-        } else if (move.to.taskId) {
-          api
-            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-            .then(() => api.refocusCard(move.from.taskId, move.from.inId))
-            .then(() =>
-              api.pinCardToGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                nameFrom,
-                move.to.inId
-              )
-            )
-            .then(resolve)
-        } else {
-          api
-            .refocusCard(move.from.taskId, move.from.inId)
-            .then(() =>
-                        api
-              .discardCardFromCard(move.from.taskId, move.from.inId)
-              .then(() =>
-                api.pinCardToGrid(
-                  move.to.coords.x,
-                  move.to.coords.y,
-                  nameFrom,
-                  move.to.inId
-                ))
-            )
-            .then(resolve)
-        }
-        break
-      case 'grid':
-        if (move.to.taskId) {
-          api
-            .unpinCardFromGrid(
-              move.from.coords.x,
-              move.from.coords.y,
-              move.from.inId
-            )
-            .then(() => {
-                        api
-              .discardCardFromCard(move.from.taskId, move.from.inId)
-              .then(() =>
-                api
-                  .findOrCreateCardInCard(nameFrom, move.to.taskId, true)
-                  .then(() => {
-                    resolve
-                  })
-              )
-            })
-        } else if (move.to.taskId) {
-          // && AltKeyIsPressed
-          api
-            .pinCardToGrid(
-              move.to.coords.x,
-              move.to.coords.y,
-              nameFrom,
-              move.to.inId
-            )
-            .then(() =>
-              api
-                .pinCardToGrid(
-                  move.from.coords.x,
-                  move.from.coords.y,
-                  nameTo,
-                  move.from.inId
-                )
-                .then(resolve)
-            )
-        } else {
-          let movingCardWithinThisTaskGridTaskItem = aoStore.hashMap.get(
-            move.from.inId
-          )
-          runInAction(
-            () =>
-              (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                true)
-          )
-          api
-            .unpinCardFromGrid(
-              move.from.coords.x,
-              move.from.coords.y,
-              move.from.inId
-            )
-            .then(() => {
-              api
-                .pinCardToGrid(
-                  move.to.coords.x,
-                  move.to.coords.y,
-                  nameFrom,
-                  move.to.inId
-                )
-                .then(() => {
-                  runInAction(
-                    () =>
-                      (movingCardWithinThisTaskGridTaskItem.aoGridToolDoNotUpdateUI =
-                        false)
-                  )
-                })
-                .then(resolve)
-            })
-        }
-        break
-      case 'subTasks':
-        api.discardCardFromCard(move.from.taskId, move.from.inId).then(() => {
-          if (move.to.taskId && dropActsLikeFolder) {
-            api.findOrCreateCardInCard(nameFrom, move.to.taskId, false)
-          } else if (move.to.taskId) {
-            api
-              .unpinCardFromGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                move.to.inId
-              )
-              .then(() =>
-                api.pinCardToGrid(
-                  move.to.coords.x,
-                  move.to.coords.y,
-                  nameFrom,
-                  move.to.inId
-                )
-              )
-              .then(resolve)
-          } else {
-            api
-              .pinCardToGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                nameFrom,
-                move.to.inId
-              )
-              .then(resolve)
-          }
-        })
-        break
-      case 'discard':
-        aoStore.popDiscardHistory()
-        resolve(null)
-      case 'completed':
-      case 'context':
-      case 'panel':
-      default:
-        if (move.to.taskId && dropActsLikeFolder) {
-          api
-            .findOrCreateCardInCard(nameFrom, move.to.taskId, false)
-            .then(resolve)
-        } else if (move.to.taskId) {
-          api
-            .unpinCardFromGrid(move.to.coords.x, move.to.coords.y, move.to.inId)
-            .then(() =>
-              api.pinCardToGrid(
-                move.to.coords.x,
-                move.to.coords.y,
-                nameFrom,
-                move.to.inId
-              )
-            )
-            .then(resolve)
-        } else {
-          api
-            .pinCardToGrid(
-              move.to.coords.x,
-              move.to.coords.y,
-              nameFrom,
-              move.to.inId
-            )
-            .then(resolve)
-        }
-        break
-    }
-  })
+  onDropToSquare: (from: CardLocation, to?: CardLocation) => Promise<request.Response>
+  onNewCard: (name: string, coords?: Coords, callbackToClear?: () => void) => Promise<request.Response>
 }
 
 const AoGridRowObserver = observer(
   (props: {
-    row: {}
+    pins: Pin[]
     y: number
-    inId: string
     selected?: Coords
     width: number
     onBlur: () => void
-    onNewGridCard: (name: string, coords: Coords) => void
+    onNewGridCard: (name: string, coords: Coords, callbackToClear: () => void) => void
     selectGridSquare: (selection: Coords) => void
-    dropToGridSquare: (move: CardPlay) => Promise<void>
-    gridStyle: GridStyle
+    onDropToSquare: (from: CardLocation, to: CardLocation) => Promise<request.Response>
+    gridStyle: GridStyle,
+    inId: string
   }) => {
-    function dropToGridSquareCaller(move: CardPlay) {
-      return props.dropToGridSquare(move).then(result => {})
-    }
-
     let render: JSX.Element[] = []
     for (let i = 0; i < props.width; i++) {
       if (
@@ -305,24 +52,40 @@ const AoGridRowObserver = observer(
         continue
       }
       let tId: string
-      if (props.row && props.row[i] && typeof (props.row[i] === 'string')) {
-        tId = props.row[i]
+      
+      if(props.pins && props.pins.length >= 1) {
+        props.pins.forEach(pin => {
+          if(pin.x === i && pin.y === props.y) {
+            tId = pin.taskId
+          }
+        })
       }
-
+      
       const card = aoStore.hashMap.get(tId)
       const isPyramid = props.gridStyle === 'pyramid'
 
       const toHasGuild = card?.guild && card?.guild?.length >= 1
+      
+      const onDropToSquareCaller = (from: CardLocation) => {
+        const to: CardLocation = {
+          taskId: tId,
+          inId: props.inId,
+          zone: 'grid',
+          coords: { x: i, y: props.y },
+        }
+        props.onDropToSquare(from, to)
+      }
+      
+      const onClickCaller = () => {
+        props.selectGridSquare({y: props.y, x: i})
+      }
+      
       render.push(
-        <AoDropZone
-          taskId={tId}
-          inId={props.inId}
-          x={i}
-          y={props.y}
-          onSelect={props.selectGridSquare}
-          onDrop={dropToGridSquareCaller}
-          zoneStyle="grid"
-          pyramidRows={isPyramid}
+        <AoDropZoneSimple
+          onDrop={onDropToSquareCaller}
+          onClick={onClickCaller}
+          dropHoverMessage='drop to place'
+          className='grid'
           key={i + '-' + props.y}>
           {tId ? (
             <AoDragZone
@@ -333,10 +96,10 @@ const AoGridRowObserver = observer(
                 x: i,
                 y: props.y,
               }}>
-              <AoContextCard task={card} cardStyle="mini" inId={props.inId} />
+              <AoContextCard task={card} cardStyle="mini" /*inId={props.inId}*/ />
             </AoDragZone>
           ) : null}
-        </AoDropZone>
+        </AoDropZoneSimple>
       )
     }
 
@@ -344,7 +107,17 @@ const AoGridRowObserver = observer(
   }
 )
 
-const GridView: Function = (props: GridViewProps): JSX.Element => {
+export default function AoPinboard(props: PinboardProps) {
+  const pins = props.pins
+  if (
+    !props.height || props.height < 1 ||
+    !props.width || props.width < 1 ||
+    !props.gridStyle 
+  ) {
+    return null
+  }
+  const squareWidth = props.size && props.size >= 1 ? props.size + 'em' : '9em'
+  
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
   
@@ -360,172 +133,100 @@ const GridView: Function = (props: GridViewProps): JSX.Element => {
     selectGridSquare(undefined)
   }
 
-  function newGridCard(name: string, coords: Coords) {
-    api.pinCardToGrid(coords.x, coords.y, name, props.taskId).then(() => setRenderMeNowPlease(true))
-  }
-
-  function dropToGridSquareCaller(move: CardPlay) {
-    return dropToGridSquare(move).then(result => setRenderMeNowPlease(true))
+  function newPinboardCard(name: string, coords: Coords, callbackToClear) {
+    props.onNewCard(name, coords, callbackToClear).then(() => setRenderMeNowPlease(true))
+    //api.playCard(coords.x, coords.y, name, props.taskId).then(() => setRenderMeNowPlease(true))
   }
 
   const render: JSX.Element[] = []
-  const taskId = props.taskId
-  const grid = props.grid
-  const rows = grid.rows
 
-  for (let j = 0; j < grid.height; j++) {
-    const currentRow = rows[j]
-    const rowWidth = grid.width
-    render.push(
-      <React.Fragment key={j}>
-        <AoGridRowObserver
-          row={currentRow}
-          y={j}
-          inId={props.taskId}
-          selected={selected}
-          width={rowWidth}
-          onBlur={onBlur}
-          onNewGridCard={newGridCard}
-          selectGridSquare={selectGridSquare}
-          dropToGridSquare={dropToGridSquareCaller}
-          key={j}
-          gridStyle="grid"
-        />
-      </React.Fragment>
-    )
-  }
-  return <>{render}</>
-}
-
-const PyramidView: Function = (props: PyramidViewProps): JSX.Element => {
-  const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
-
-  function selectGridSquare(selection: Coords) {
-    setSelected(selection)
-  }
-
-  function onBlur() {
-    selectGridSquare(undefined)
-  }
-
-  function newGridCard(name: string, coords: Coords) {
-    api.pinCardToGrid(coords.x, coords.y, name, props.taskId)
-  }
-
-  function dropToGridSquareCaller(move: CardPlay) {
-    return dropToGridSquare(move).then(() => {})
-  }
-
-  const render: JSX.Element[] = []
-  const taskId = props.taskId
-  const grid = props.grid
-  const rows = grid.rows
-  const isPyramid = props.gridStyle === 'pyramid'
-
-  for (let j = 0; j < grid.height; j++) {
-    const currentRow = rows[j]
-    const rowWidth = j + 1
-    render.push(
-      <div
-        key={j}
-        className="grid pyramidRow"
-        style={{
-          display: 'grid',
-          gridTemplateColumns:
-            'repeat(' + rowWidth.toString() + ', ' + props.gridWidth + ')',
-          gridTemplateRows: props.gridWidth,
-        }}>
-        <AoGridRowObserver
-          row={currentRow}
-          y={j}
-          inId={props.taskId}
-          selected={selected}
-          width={rowWidth}
-          onBlur={onBlur}
-          onNewGridCard={newGridCard}
-          selectGridSquare={selectGridSquare}
-          dropToGridSquare={dropToGridSquareCaller}
-          key={j}
-          gridStyle="pyramid"
-        />
-      </div>
-    )
-  }
-  return <>{render}</>
-}
-
-export default function AoGrid(props: GridProps) {
-  const [redirect, setRedirect] = React.useState<string>(undefined)
-
-  function addGrid() {
-    api.addGridToCard(props.taskId, 3, 3)
-  }
-
-  React.useEffect(() => {
-    if (redirect !== undefined) {
-      setRedirect(undefined)
-    }
-  }, [redirect])
-
-  if (redirect !== undefined) {
-    return <Redirect to={redirect} />
-  }
-
-  const taskId = props.taskId
-  const card = aoStore.hashMap.get(taskId)
-
-  if (!card) {
-    return null
-  }
-  const isPyramid = props.gridStyle === 'pyramid'
-
-  const grid = card.grid
-
-  if (
-    !grid ||
-    (grid.hasOwnProperty('height') && grid.height < 1) ||
-    (grid.hasOwnProperty('width') && grid.width < 1) ||
-    !grid.hasOwnProperty('height') ||
-    !grid.hasOwnProperty('width')
-  ) {
-    return null
-    return (
-      <div className="gridContainer noPad">
-        <p onClick={addGrid} className="action">
-          add pyramid
-        </p>
-      </div>
-    )
-  }
-
-  // const gridWidth = props.dropActsLikeFolder ? '7.5em' : '9em'
-  const gridWidth = grid.size && grid.size >= 1 ? grid.size + 'em' : '9em'
-  if (!isPyramid) {
-    return (
-      <div className={'gridContainer'/* + (grid.width <= 2 ? ' padbottom' : '')*/}>
-        <div
-          className="grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns:
-              'repeat(' + grid.width.toString() + ', ' + gridWidth + ')',
-            gridTemplateRows:
-              'repeat(' + grid.height.toString() + ', ' + gridWidth + ')',
-          }}>
-          <GridView taskId={taskId} grid={grid} />
+  switch(props.gridStyle) {
+    case 'grid':
+      for (let j = 0; j < props.height; j++) {
+        const rowPins = pins?.filter(pin => pin.y === j)
+        const dropToSquareCaller = (from: CardLocation, to: CardLocation) => {
+          to.coords.y = j
+          return props.onDropToSquare(from, to).then(result => {
+            setRenderMeNowPlease(true)
+            return result
+          })
+        }
+        render.push(
+          <React.Fragment key={j}>
+            <AoGridRowObserver
+              pins={rowPins}
+              y={j}
+              selected={selected}
+              width={props.width}
+              onBlur={onBlur}
+              onNewGridCard={newPinboardCard}
+              selectGridSquare={selectGridSquare}
+              onDropToSquare={dropToSquareCaller}
+              key={j}
+              gridStyle="grid"
+              inId={props.inId}
+            />
+          </React.Fragment>
+        )
+      }
+      return (
+        <div className='gridContainer'>
+          <div
+            className="grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                'repeat(' + props.width.toString() + ', ' + squareWidth + ')',
+              gridTemplateRows:
+                'repeat(' + props.height.toString() + ', ' + squareWidth + ')',
+            }}>
+            {render}
+          </div>
         </div>
-      </div>
-    )
-  } else {
-    return (
-      <div className={'gridContainer'/* + (grid.width <= 2 ? ' padbottom' : '')*/}>
-        <PyramidView
-          taskId={taskId}
-          grid={grid}
-          gridStyle={props.gridStyle}
-          gridWidth={gridWidth}
-        />
-      </div>
-    )
+      )
+    case 'pyramid':
+      for (let j = 0; j < props.height; j++) {
+        const rowPins = pins?.filter(pin => pin.y === j)
+        const rowWidth = j + 1
+        const dropToSquareCaller = (from: CardLocation, to: CardLocation) => {
+          to.coords.y = j
+          return props.onDropToSquare(from, to).then(result => {
+            setRenderMeNowPlease(true)
+            return result
+          })
+        }
+        render.push(
+          <div
+            key={j}
+            className="grid pyramidRow"
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                'repeat(' + rowWidth.toString() + ', ' + squareWidth + ')',
+              gridTemplateRows: squareWidth,
+            }}>
+            <AoGridRowObserver
+              pins={rowPins}
+              y={j}
+              selected={selected}
+              width={rowWidth}
+              onBlur={onBlur}
+              onNewGridCard={newPinboardCard}
+              onDropToSquare={dropToSquareCaller}
+              selectGridSquare={selectGridSquare}
+              key={j}
+              gridStyle="pyramid"
+              inId={props.inId}
+            />
+          </div>
+        )
+      }
+      return (
+        <div className='gridContainer'>
+          {render}
+        </div>
+      )
+    case 'rune':
+      return <div className='gridContainer'>rune view coming soon</div>
   }
 }

@@ -1,5 +1,5 @@
 export type Color = 'red' | 'yellow' | 'green' | 'purple' | 'blue' | 'black'
-export type GridStyle = 'grid' | 'pyramid'
+export type GridStyle = 'grid' | 'pyramid' | 'rune'
 
 export interface Task {
     taskId: string              // ao-react: Random UUID | ao-3: CRC-32 hash of the content
@@ -20,7 +20,7 @@ export interface Task {
     completed: string[]         // *Array of taskIds of checked-off completed cards within this cards. Cards saved here when discarded with any checkmarks on them.
     gridStyle?: GridStyle       // Current layout/spread for the card's pinboard. Switching it dumps cards that don't fit the new layout into .subTasks
     grid?: Grid                 // *Grid object, will be replaced by new more flexible canvas-style pinboard indexing paradigm
-    pins: Pin[]                 // *New way of doing the Grid, Pyramid, and upcoming Rune layouts for the card
+    pins?: Pin[]                 // *New way of doing the Grid, Pyramid, and upcoming Rune layouts for the card
     parents: string[]           // *List of this cards parents, ought to be kept updated by mutations.
     claimed: string[]           // 
     claimInterval?: number      // Automatic uncheck timer in milliseconds

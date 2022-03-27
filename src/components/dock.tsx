@@ -10,7 +10,7 @@ import AoGem from './gem'
 import AoGrid from './grid'
 import AoPopupPanel from './popupPanel'
 import AoDropZoneSimple from './dropZoneSimple'
-import { CardLocation } from '../cardTypes'
+import { CardLocation, CardPlay } from '../cardTypes'
 import { gloss } from '../semantics'
 import _ from 'lodash'
 
@@ -102,10 +102,28 @@ export default class AoDock extends React.Component<{}, State> {
       const grid = card.grid
       const newWidth = grid.width + 1
       api.resizeGrid(this.state.bookmarksTaskId, grid.height, newWidth, grid.size).then(() => {
-        api.pinCardToGrid(newWidth - 1, 0, cardFrom.name, card.taskId).then(() => {
+        const toLocation: CardLocation = {
+          taskId: cardFrom.taskId,
+          inId: card.taskId,
+          zone: 'grid',
+          coords: { y: 0, x: newWidth - 1}
+        }
+        api.playCard(from, toLocation).then(() => {
           this.setState({renderMeNowPlease: true})
         })
       })
+    }
+    
+    const onDropToDockSquare = (from: CardLocation, to: CardLocation) => {
+      return api.playCard(from, to)
+    }
+    
+    const onNewDockCard = (name, coords) => {
+      return api.createAndPlayCard(name, 'blue', false, {
+          inId: this.state.bookmarksTaskId,
+          zone: 'grid',
+          coords: coords
+        })
     }
     
     const gridHasContents = card.grid && card.grid.height >= 1 && (card.grid.width > 1 || (card?.grid.rows.hasOwnProperty('0') && card.grid.rows[0][0]))
@@ -118,11 +136,14 @@ export default class AoDock extends React.Component<{}, State> {
             {() => {
               return (
                 <AoGrid
-                  taskId={this.state.bookmarksTaskId}
+                  pins={card.pins}
                   height={card.grid.height}
                   width={card.grid.width}
                   size={card.grid?.size || 9}
                   gridStyle="grid"
+                  onDropToSquare={onDropToDockSquare}
+                  onNewCard={onNewDockCard}
+                  inId={this.state.bookmarksTaskId}
                 />
               )
             }}

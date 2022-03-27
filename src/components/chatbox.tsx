@@ -9,6 +9,7 @@ import AoStack from './stack'
 import AoPaper from './paper'
 import AoMemberIcon from './memberIcon'
 import AoCardComposer from './cardComposer'
+import { Color } from '../interfaces'
 
 interface Props {
   taskId: string
@@ -17,7 +18,7 @@ interface Props {
 interface State {
   page: number
   text: string
-  color: string
+  color: Color
 }
 
 export const defaultState: State = {
@@ -53,7 +54,10 @@ export default class AoChatbox extends React.Component<Props, State> {
       console.log('Missing card in chatbox')
     }
 
-    api.findOrCreateCardInCard(shit, card.taskId, false, this.state.color, true)
+    api.createAndPlayCard(shit, this.state.color, true, {
+        inId: this.props.taskId,
+        zone: 'subTasks',
+      })
     this.setState({ text: '' })
   }
 

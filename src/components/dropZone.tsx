@@ -148,13 +148,20 @@ export default class AoDropZone extends React.Component<DropZoneProps, State> {
 									res,
 									'. About to pin card'
 								)
+								const fromLocation: CardLocation = {
+								  taskId: newTaskId,
+								  zone: 'panel'
+								}
+								const toLocation: CardLocation = {
+								  taskId: newTaskId,
+								  inId: this.props.inId,
+								  coords: { y: this.props.y, x: this.props.x},
+								  zone: 'grid'
+								}
 								// todo: allow uploads on stacks as well
 								// todo: if there are multiple uploads, make one card and put all the files inside on more cards
-								api.pinCardToGrid(
-									this.props.x,
-									this.props.y,
-									lastUploadedName,
-									this.props.inId
+								api.playCard(
+									fromLocation, toLocation
 								)
 							}
 						})

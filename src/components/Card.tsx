@@ -125,7 +125,11 @@ const PageTitleView = observer(() => {
   )
 })
 
-const ContextCardView = observer(() => {
+interface ContextCardViewProps {
+  renderMeNowPlease: number  
+} 
+
+const ContextCardView = observer((props: ContextCardViewProps) => {
   if (currentContextCard.cardItem === null) {
     return <AoDrawPile />
   } else {
@@ -139,11 +143,9 @@ const ContextCardView = observer(() => {
   }
 })
 
-interface CardState {
-  nextRender?: boolean
-}
-
 export default function AoCard(props) {
+  const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(0)
+  
   let history = useHistory()
   currentContextCard.history = history
 
@@ -170,11 +172,13 @@ export default function AoCard(props) {
   return (
     <Tour steps={steps} tourOptions={tourOptions}>
       <div id="tour-current-card">
-        {<AoDiscardZone />}
+        <AoDiscardZone onDiscard={() => {
+          setRenderMeNowPlease(renderMeNowPlease + 1)} 
+          }/>
         {
           <div>
             <PageTitleView />
-            <ContextCardView />
+            <ContextCardView renderMeNowPlease={renderMeNowPlease} />
           </div>
         }
         {<AoHud />}

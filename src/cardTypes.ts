@@ -22,11 +22,11 @@ export interface Coords {
 }
 
 export interface CardLocation {
-	taskId: string
+	taskId?: string // Optional because sometimes a CardLocation is used to described a location where a card will be played/placed
 	inId?: string
 	zone: CardZone
 	level?: number
-	coords: Coords
+	coords?: Coords
 }
 
 export interface CardPlay {
@@ -68,6 +68,7 @@ export function blankCard(
 		highlights: [],
 		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
+		pins: [],
 		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
 		gridStyle: 'grid',
 		allocations: [],
@@ -132,20 +133,22 @@ export function prioritizeCard(move: CardPlay) {
 		return
 	}
 	const nameFrom = aoStore.hashMap.get(move.from.taskId).name
-
+  console.log("about to prioritize card. move is", move)
+  api.playCard(move.from, move.to)
+  
 	switch (move.from.zone) {
 		case 'card':
-			api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
+			//api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
 			break
 		case 'priorities':
-			if (move.from.inId === move.to.inId) {
-				api.prioritizeCard(move.from.taskId, move.from.inId)
+			/*if (move.from.inId === move.to.inId) {
+				
 			} else {
 				api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
 			}
-			break
+			break*/
 		case 'grid':
-			if (move.from.inId === move.to.inId) {
+			/*if (move.from.inId === move.to.inId) {
 				api
 					.unpinCardFromGrid(
 						move.from.coords.x,
@@ -158,10 +161,10 @@ export function prioritizeCard(move: CardPlay) {
 			} else {
 				api.prioritizeCard(move.from.taskId, move.to.inId)
 			}
-			break
+			break*/
 		case 'completed':
 		case 'completed':
-			api.prioritizeCard(move.from.taskId, move.to.inId)
+			//api.prioritizeCard(move.from.taskId, move.to.inId)
 			break
 		case 'discard':
 			aoStore.popDiscardHistory()
@@ -169,7 +172,7 @@ export function prioritizeCard(move: CardPlay) {
 		case 'context':
 		case 'gifts':
 		case 'panel':
-			api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
+			//api.findOrCreateCardInCard(nameFrom, move.to.inId, true)
 			break
 		default:
 			break
@@ -181,22 +184,24 @@ export function subTaskCard(move: CardPlay) {
 		return
 	}
 	const nameFrom = aoStore.hashMap.get(move.from.taskId).name
-
+  console.log("about to subTask card, move is", move)
+  api.playCard(move.from, move.to)
+  
 	switch (move.from.zone) {
 		case 'card':
-			api.findOrCreateCardInCard(nameFrom, move.to.inId)
+			//api.findOrCreateCardInCard(nameFrom, move.to.inId)
 			break
 		case 'priorities':
-			if (move.from.inId) {
+			/*if (move.from.inId) {
 				api
 					.refocusCard(move.from.taskId, move.from.inId)
 					.then(() => api.findOrCreateCardInCard(nameFrom, move.to.inId))
 			} else {
 				api.findOrCreateCardInCard(nameFrom, move.to.inId)
-			}
+			}*/
 			break
 		case 'grid':
-			api
+			/*api
 				.unpinCardFromGrid(
 					move.from.coords.x,
 					move.from.coords.y,
@@ -204,7 +209,7 @@ export function subTaskCard(move: CardPlay) {
 				)
 				.then(res => {
 					api.findOrCreateCardInCard(nameFrom, move.to.inId)
-				})
+				})*/
 			break
 		case 'discard':
 			aoStore.popDiscardHistory()
@@ -212,7 +217,7 @@ export function subTaskCard(move: CardPlay) {
 		case 'subTasks':
 		case 'context':
 		case 'panel':
-			api.findOrCreateCardInCard(nameFrom, move.to.inId)
+			/*api.findOrCreateCardInCard(nameFrom, move.to.inId)*/
 			break
 		default:
 			break

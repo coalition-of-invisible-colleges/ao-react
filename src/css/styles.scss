@@ -175,10 +175,12 @@ body {
 }
 
 .card.full > .content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-basis: 100%;
+  //display: flex;
+  //flex-direction: column;
+  //justify-content: center;
+  //flex-basis: 100%;
+  position: relative;
+  //transform: translateY(35%);
 }
 
 // upper half of the card hud on a full- or face-style card
@@ -519,7 +521,6 @@ body {
     position: absolute;
     right: 0;
     bottom: 0;
-    pointer-events: none;
     height: 100%;
     width: 100%;
 
@@ -904,7 +905,6 @@ body {
   //transform: translateX(-50%);
   width: min-content;
   //z-index: 1; // So grid resize button show above of main stack drop zone.
-  margin-bottom: 2em;
 
   &.padbottom {
     margin-bottom: 3em;
@@ -916,12 +916,13 @@ body {
     .zone,
     .dropZone.grid {
       position: relative;
-      background: rgba(255, 255, 255, 0.075);
+      //background: rgba(255, 255, 255, 0.075);
       display: flex;
       justify-content: center;
       align-items: center;
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: white;
+      cursor: text;
 
       &.empty {
         cursor: text;
@@ -965,15 +966,15 @@ body {
       left: 50%;
       transform: translateX(-50%) translateY(-50%);
       // background-color: rgba(0, 0, 0, 0.01);
-      background-color: white;
+      //background-color: white;
     }
   }
 }
 
 // gridContainer inside the main card on the page
 .card.full .gridContainer {
-  margin: 1.5em auto 1.5em auto;
-  
+  margin: 1.5em auto 2em auto;
+
   &.noPad {
     margin-bottom: 0;
   }
@@ -1913,10 +1914,20 @@ body {
   width: 100vw;
   height: 100vh;
   min-height: 97vh;
+  
   > .dragZone {
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+  
+  .overlay > .label {
+    position: fixed;
+    transform: tranlateX(-50%);
+    font-size: 5em;
+    bottom: 2em;
+    left: 2.15em;
+    top: unset;
   }
 }
 
@@ -3116,7 +3127,6 @@ pre {
   position: relative;
   margin: 0 auto;
   //max-width: 28em;
-  cursor: pointer;
 
   &.crosshair {
   	cursor: crosshair;
@@ -4319,6 +4329,7 @@ div.legendAction, legend.clickable {
   &.selected {
     background-color: rgba(90, 117, 178, 1);
     border-color: #181c24;
+    width: 6em;
   }
   
   &.ghostly {
@@ -4375,9 +4386,6 @@ div.legendAction, legend.clickable {
     position: absolute;
     left: 1em;
     top: -1em;
-    //top: 0;
-    //top: 10em;
-    //left: 9.5em;
     
     border-top-left-radius: 40%;
     border-bottom-left-radius: 40%;
@@ -4660,6 +4668,7 @@ div.legendAction, legend.clickable {
 // Make the clipboard wrapper around content inline so the member icon displays on the same line as the member name
 .content > .clipboardWrapper {
   display: inline-block;
+  cursor: pointer;
 }
 
 // Tab / button to switch to toggle viewing checked-off / completed / accomplished cards

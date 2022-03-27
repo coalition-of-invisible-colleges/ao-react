@@ -9,9 +9,8 @@ const mutations = {
       delete tasks[i]
     })
     tasks.length = 0
-    current.tasks.forEach(task => {
+    current.tasks.forEach((task, index) => {
       tasks.push(task)
-      // _.assign(tasks[index].grid, task.grid) // does not solve the +grid not rerendering glitch... or does it?
     })
   },
   applyEvent: M.tasksMuts

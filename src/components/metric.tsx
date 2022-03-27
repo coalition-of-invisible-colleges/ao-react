@@ -64,7 +64,7 @@ export default class AoMetric extends React.Component<Props, State> {
           aoStore.memberCard.priorities.length - 1
         ] !== this.props.taskId)
     ) {
-      api.prioritizeCard(this.props.taskId, aoStore.memberCard.taskId)
+      api.playCard(null, { taskId: this.props.taskId, inId: aoStore.memberCard.taskId, zone: 'priorities' })
     }
   }
 

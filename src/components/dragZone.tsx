@@ -8,7 +8,7 @@ import { DragContext } from './contextCard'
 interface DragZoneProps {
 	taskId: string
 	dragContext?: DragContext
-	onDropSuccess?: () => void
+	onDropSuccess?: () => void // wish there was a way to get this to work, would simplify rerenders on dragging out
 }
 
 @observer

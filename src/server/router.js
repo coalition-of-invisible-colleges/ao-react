@@ -65,9 +65,6 @@ export default function applyRouter(app) {
   })
 
   app.post('/state', (req, res) => {
-    // console.log(req);
-    // console.log("AO: server/router.js: app post /state", {"req": util.inspect(req)} )
-
     debugger
 
     let useReducedState = true
@@ -80,8 +77,6 @@ export default function applyRouter(app) {
     if (useReducedState === true) {
       stateToSend = { tasks: [] }
       for (let [key, value] of Object.entries(state.pubState)) {
-        // console.log({[key]: value} )
-
         if (key !== 'tasks') {
           stateToSend[key] = state.pubState[key]
         } else {
@@ -104,22 +99,21 @@ export default function applyRouter(app) {
 
     // Include their bookmarks card itself
     let bookmarksTaskId
+    let pins = []
     state.pubState.tasks.forEach(taskItem => {
       if (taskItem.deck && taskItem.deck.indexOf(reqOwner) !== -1)
         memberDeckSize++
-
       if (taskItem.name === reqOwner + '-bookmarks') {
         bookmarksTaskId = taskItem.taskId
-        console.log('bookmarksTaskId is', bookmarksTaskId)
         stateToSend.tasks.push(taskItem)
+        pins = taskItem.pins
       }
     })
 
     // Include cards on their bookmarks bar
     state.pubState.tasks.forEach(taskItem => {
       if (
-        taskItem.parents &&
-        taskItem.parents.indexOf(bookmarksTaskId) !== -1
+        pins.some(pin => taskItem.taskId === pin.taskId)
       ) {
         stateToSend.tasks.push(taskItem)
       }
@@ -277,7 +271,7 @@ export default function applyRouter(app) {
       let allTaskIdsAreSane = true
       taskIdList.some(taskId => {
         if (!validators.isTaskId_sane(taskId, errRes)) {
-          console.log('Not all requested task IDs are sane')
+          console.log('Not all requested task IDs are sane.')
           allTaskIdsAreSane = false
           return true
         }

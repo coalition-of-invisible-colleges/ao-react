@@ -98,7 +98,7 @@ export default class AoHub extends React.PureComponent<{}, State> {
 
     console.log('fromHasGuild ', fromHasGuild, 'toHasGuild', toHasGuild)
     return new Promise((resolve, reject) => {
-      api.findOrCreateCardInCard(nameFrom, move.to.taskId).then(resolve)
+      api.playCard(move.from, move.to).then(resolve)
     })
   }
 

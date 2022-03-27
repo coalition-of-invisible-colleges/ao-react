@@ -55,12 +55,11 @@ export default class AoShitposts extends React.PureComponent<{}, State> {
       return
     }
 
-    api.findOrCreateCardInCard(
+    api.createAndPlayCard(
       this.state.text,
-      shitpostCard.taskId,
-      false,
       this.state.color,
-      true
+      true,
+      { inId: shitpostCard.taskId, zone: 'priorities' }
     )
     this.setState({ text: '' })
   }

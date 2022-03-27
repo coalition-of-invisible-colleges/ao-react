@@ -47,9 +47,8 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 			if (!move.from.taskId) {
 				return
 			}
-			const nameFrom = aoStore.hashMap.get(move.from.taskId).name
-
-			switch (move.from.zone) {
+      api.playCard(move.from, move.to)
+			/*switch (move.from.zone) {
 				case 'card':
 					// maybe this doesn't make sense, it's supposed to be for the whole card
 					break
@@ -71,7 +70,7 @@ export default class AoCompleted extends React.PureComponent<CompletedProps> {
 					break
 				default:
 					break
-			}
+			}*/
 		}
 
 		if (!card) {

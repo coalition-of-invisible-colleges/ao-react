@@ -40,6 +40,7 @@ export function blankCard(
 		highlights: [],
 		seen: deck.length >= 1 ? [{ memberId: deck[0], created }] : [],
 		time: [],
+		pins: [],
 		grid: height >= 1 && width >= 1 ? blankGrid(height, width) : false,
 		gridStyle: 'pyramid',
 		allocations: [],
@@ -305,12 +306,17 @@ export function discardPriority(task, discardTaskId) {
 
 // Unpins the card from the given coordinates in a card and returns its taskId
 export function unpinTaskFromTask(task, coords) {
+  let result
+  if(!task.pins || task.pins.length <= 0) {
+    return null
+  }
   task.pins.some((pin, i) => {
     const { pinId, y, x } = pin
     if(y == coords.y && x == coords.x) {
-      return task.pins.splice(i, 1)[0]
+      result = task.pins.splice(i, 1)[0]
     }
   })
+  return result
 }
 
 // Precondition: The spec should validate whether this is a legal move based upon the current gridStyle of the card
@@ -320,10 +326,16 @@ export function unpinTaskFromTask(task, coords) {
 // However, it WILL check where the card is going to be placed, and if a card is already there, that card will drop into .subTasks
 export function pinTaskToTask(task, taskId, coords) {
   // If there is already something pinned there, drop it into subTasks
-  const previousPinnedTaskId = unpinTaskFromTask(task, coords)
+  const previousPinnedTaskId = unpinTaskFromTask(task, coords)?.taskId
+  
   if(previousPinnedTaskId) {
     addSubTask(task, previousPinnedTaskId)
   }
+  
+  if(!task.hasOwnProperty('pins') || !Array.isArray(task.pins)) {
+    task.pins = []
+  }
+  
   task.pins.push({taskId, y: coords.y, x: coords.x})
 }
 
@@ -379,7 +391,7 @@ export function discardTaskFromZone(task, fromLocation) {
   switch(fromLocation.zone) {
     case 'grid':
     case 'pyramid':
-      unpinTaskFromTask(theCard, task, fromLocation)
+      unpinTaskFromTask(task, fromLocation.coords)
       return
     case 'priorities':
       discardPriority(task, fromLocation.taskId)
@@ -398,8 +410,17 @@ export function discardTaskFromZone(task, fromLocation) {
   }
 }
 
-export function atomicCardPlay(tasks, fromLocation, toLocation, memberId) {
-  const theCard = getTask(tasks, fromLocation.taskId)
+// Moves a card from one location to another location.
+// fromLocation defines the card to be unplayed from somewhere, and toLocation defines a card to be placed somewhere.
+// fromLocation and toLocation are CardLocation objects defining a taskId in a location.
+// The fromLocation is an optional CardLocation that, if provided, requires a taskId and zone at minimum
+// If null, no card wil be unplayed.
+// fromLocation.taskId and toLocation.taskId can be different,
+// so it is possible to play a different card than was unplayed in one move (i.e., swap out a card)
+// Right now the card being played must exist; card creation and modification is separate since it includes color etc.
+export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId) {
+  const taskId = fromLocation?.taskId || toLocation.taskId
+  const theCard = getTask(tasks, fromLocation?.taskId || toLocation.taskId)
   if (!theCard) {
     console.log("Missing card in card play, nothing to move")
     return
@@ -418,7 +439,7 @@ export function atomicCardPlay(tasks, fromLocation, toLocation, memberId) {
   grabTask(tasks, theCard, memberId)
   
   // Remove the card from wherever it was moved from
-  const theCardMovedFrom = getTask(tasks, fromLocation.inId)
+  const theCardMovedFrom = getTask(tasks, fromLocation?.inId)
   if(theCardMovedFrom) {
     discardTaskFromZone(theCardMovedFrom, fromLocation)
     if(fromLocation.inId !== toLocation.inId) {
@@ -427,10 +448,10 @@ export function atomicCardPlay(tasks, fromLocation, toLocation, memberId) {
     
     // Save the card to the completed cards if it has at least one checkmark
     if(toLocation.zone === 'discard' && theCard.claimed && theCard.claimed.length >= 1) {
-      addCompletedTask(theCardMovedFrom, fromLocation.taskId)
+      addCompletedTask(theCardMovedFrom, taskId)
     }
   }
-  
+
   // Move card to wherever it was moved to
   putTaskInTaskZone(theCard, theCardMovedTo, toLocation)
 }

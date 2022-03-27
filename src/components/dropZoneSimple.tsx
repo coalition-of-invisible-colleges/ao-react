@@ -9,6 +9,7 @@ import { ReactUpload } from 'react-upload-box'
 
 interface Props {
 	onDrop: (from: CardLocation) => void
+	onClick?: (event) => void
 	dropHoverMessage?: string
 	className?: string
 }
@@ -116,34 +117,24 @@ export default class AoDropZoneSimple extends React.Component<Props, State> {
 	}
 
 	render() {
-		if (this.props.children || this.props.className) {
-			let message = this.props.dropHoverMessage || 'drop to place'
-			return (
-				<div
-					className={'dropZone' + (this.props.className ? ' ' + this.props.className : '')}
-					onDragEnter={this.allowDrop}
-					onDragOver={this.continueDrop}
-					onDragLeave={this.hideDrop}
-					onDrop={this.drop}>
-					{this.props.children}
-					{this.state.draggedKind === 'card' ? (
-						<div className="overlay">
-							<div className="label">{message}</div>
-						</div>
-					) : (
-						''
-					)}
-				</div>
-			)
-		} else {
-			return (
-				<div
-					className='discard' 
-					onDragEnter={this.allowDrop}
-					onDragOver={this.continueDrop}
-					onDragLeave={this.hideDrop}
-					onDrop={this.drop} />
-			)
-		}
+		let message = this.props.dropHoverMessage || 'drop to place'
+		return (
+			<div
+				className={'dropZone' + (this.props.className ? ' ' + this.props.className : '')}
+				onDragEnter={this.allowDrop}
+				onDragOver={this.continueDrop}
+				onDragLeave={this.hideDrop}
+				onDrop={this.drop}
+				onClick={this.props.onClick}>
+				{!!this.props.children && this.props.children}
+				{this.state.draggedKind === 'card' ? (
+					<div className="overlay">
+						<div className="label">{message}</div>
+					</div>
+				) : (
+					''
+				)}
+			</div>
+		)
 	}
 }

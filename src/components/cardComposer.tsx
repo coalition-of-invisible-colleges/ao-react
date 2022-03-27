@@ -3,9 +3,10 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import { Coords } from '../cardTypes'
+import { Color } from '../interfaces'
 
 interface Props {
-	onNewCard: (string, coords?) => void
+	onNewCard: (string, coords?, callbackToClear?: () => void) => void
 	onChange?: (newName: string) => void
 	onBlur?: (event) => void
 	coords?: Coords
@@ -26,7 +27,7 @@ export default class AoCardComposer extends React.Component<Props, State> {
 		super(props)
 
 		// console.log('AO: components/cardComposer.tsx: constructor: ', { props })
-		this.state = {}
+		this.state = { }
 		this.focus = this.focus.bind(this)
 		this.uploadDraft = this.uploadDraft.bind(this)
 		this.clear = this.clear.bind(this)
@@ -61,6 +62,30 @@ export default class AoCardComposer extends React.Component<Props, State> {
 	public clear() {
 		aoStore.clearDraft()
 		api.updateMemberField('draft', null)
+		let nextColor
+		switch(aoStore.currentColor) {
+		  case 'red':
+		    nextColor = 'green'
+		    break
+		  case 'green':
+		    nextColor = 'blue'
+		    break
+		  case 'blue':
+		    nextColor = 'yellow'
+		    break
+		  case 'yellow':
+		    nextColor = 'purple'
+		    break
+		  case 'purple':
+		    nextColor = 'red'
+		    break
+		  case 'black':
+		    nextColor = 'black'
+		    break
+		  default:
+		    nextColor = 'blue'
+		}
+		aoStore.setCurrentColor(nextColor)
 	}
 
 	onBlur(event) {
@@ -84,8 +109,7 @@ export default class AoCardComposer extends React.Component<Props, State> {
 				return
 			}
 
-			this.props.onNewCard(trimmed, this.props.coords)
-			this.clear()
+			this.props.onNewCard(trimmed, this.props.coords, this.clear)
 			this.onBlur(event)
 		} else if (event.key === 'Escape') {
 			event.stopPropagation()
@@ -117,7 +141,7 @@ export default class AoCardComposer extends React.Component<Props, State> {
 				<textarea
 					autoFocus
 					onBlur={this.onBlur}
-					className="zone"
+					className={"zone " + aoStore.currentColor} 
 					onChange={this.onChange}
 					onKeyDown={this.onKeyDown}
 					value={aoStore.draft}

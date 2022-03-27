@@ -11,13 +11,14 @@ import {
   runInAction,
 } from 'mobx'
 import { observer, Observer } from 'mobx-react'
+import request from 'superagent'
 import aoStore, { Member, Resource } from '../client/store'
 import { Task } from '../interfaces'
 import api from '../client/api'
 import { delay, cancelablePromise } from '../utils'
 import Markdown from 'markdown-to-jsx'
 import AoPaper from './paper'
-import AoGrid from './grid'
+import AoPinboard from './grid'
 import AoStack from './stack'
 import AoCardHud from './cardHud'
 import AoMission from './mission'
@@ -57,7 +58,8 @@ import {
   subTaskCard,
   CardZone,
   CardPlay,
-  CardLocation
+  CardLocation,
+  Coords
 } from '../cardTypes'
 import AoDragZone from './dragZone'
 import AoDropZone from './dropZone'
@@ -398,9 +400,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     if (!card) {
       console.log('missing card')
     }
-    api
-      .findOrCreateCardInCard(name, card.taskId, true)
-      .then(() => this.setState({ renderMeNowPlease: true }))
+    const toLocation: CardLocation = {
+      inId: card.taskId,
+      zone: 'priorities'
+    }
+    api.createAndPlayCard(name, 'blue', false, toLocation).then(() => this.setState({ renderMeNowPlease: true }))
   }
 
   newSubTask(name: string) {
@@ -408,8 +412,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     if (!card) {
       console.log('missing card')
     }
-    api
-      .findOrCreateCardInCard(name, card.taskId)
+    const toLocation: CardLocation = {
+      inId: card.taskId,
+      zone: 'priorities'
+    }
+    api.createAndPlayCard(name, 'blue', false, toLocation)
       .then(() => this.setState({ renderMeNowPlease: true }))
   }
 
@@ -452,7 +459,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       if (move.to.taskId === nameTo) {
         api.passCard(move.from.taskId, move.to.taskId)
       } else {
-        api.findOrCreateCardInCard(nameFrom, move.to.taskId, true).then(resolve)
+        api.playCard(move.from, move.to).then(resolve)
       }
     })
   }
@@ -846,11 +853,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         )
       case 'full':
         const onDropToPrioritiesTab = (from: CardLocation) => {
-          if(from.zone === 'grid') {
-            api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId).then(() =>  api.prioritizeCard(from.taskId, taskId))
-            return
-          }
-          api.prioritizeCard(from.taskId, taskId)
+          api.playCard(from, { taskId: from.taskId, inId: taskId, zone: 'priorities' })
         }
         
         const onDropToSubTasksTab = (from: CardLocation) => {
@@ -858,16 +861,70 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           if(!card) {
             return
           }
-          if(from.zone === 'grid') {
-            api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId).then(() =>  api.findOrCreateCardInCard(card.name, taskId))
-            return
+          const toLocation: CardLocation = {
+            taskId: from.taskId,
+            inId: taskId,
+            zone: 'subTasks'
           }
-          api.findOrCreateCardInCard(card.name, taskId)
+          api.playCard(from, toLocation)
         }
         
-        const unpinCard = (from: CardLocation) => {
-          api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId)
+        const onDropToPinboard = async (from: CardLocation, to: CardLocation): Promise<request.Response> => {
+          if (!from.taskId) {
+            return null
+          }
+          
+          const cardFrom = aoStore.hashMap.get(from.taskId)
+          if (!cardFrom) {
+            return null
+          }
+          
+          // For a grid move, if the taskId is already in the from and to then there is nothing to do
+          if(from.taskId === to.taskId) {
+            return null
+          }
+          
+          const cardTo = aoStore.hashMap.get(to.taskId)
+          if (cardTo) {
+            to.inId = cardTo.taskId
+            to.coords.x = null
+            to.coords.y = 0
+            to.zone = 'subTasks'
+          } else {
+            to.taskId = from.taskId
+            to.inId = taskId || from.inId
+          } // could implement Ctrl-Drag to copy instead of move here
+        
+          return new Promise((resolve, reject) => {
+            api.playCard(from, to).then((res) => {
+              if(from.zone === 'discard') {
+                aoStore.popDiscardHistory()
+              }
+              resolve(res)
+            })
+          })
         }
+        
+        const onNewPinboardCard = async (name: string, coords: Coords, callbackToClear: () => void): Promise<request.Response> => {
+          return new Promise((resolve, reject) => {
+            let moveTo: CardLocation = {
+              taskId: null,
+              inId: taskId,
+              zone: 'grid',
+              coords: coords
+            }
+            const promise = api.createAndPlayCard(name, aoStore.currentColor, false, moveTo).then((res) => {
+              callbackToClear()
+              this.setState({ renderMeNowPlease: true })
+              return res
+            })
+            resolve(promise)
+          })
+        }
+        
+        /*const unpinCard = (from: CardLocation) => {
+          api.unpinCardFromGrid(from.coords.x, from.coords.y, from.inId)
+        }*/
         
         const completedCards = this.completedCards
         const showCompleted = () => this.setState({ showCompleted: true })
@@ -1250,12 +1307,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       {this.renderCardContent(content)}
                       <Observer>
                         {() => (
-                          <AoGrid
-                            taskId={taskId}
+                          <AoPinboard
+                            pins={card.pins}
                             height={card.grid?.height}
                             width={card.grid?.width}
                             size={card.grid?.size || 9}
                             gridStyle={card.gridStyle}
+                            onDropToSquare={onDropToPinboard}
+                            onNewCard={onNewPinboardCard}
+                            inId={taskId}
                           />
                         )}
                       </Observer>
@@ -1391,7 +1451,15 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             </div>
       case 'envelope':
         const openGift = () => {
-          api.findOrCreateCardInCard(card.name, aoStore.memberCard.taskId)
+          const fromLocation: CardLocation = {
+            taskId: taskId,
+            zone: 'panel'
+          }
+          const toLocation: CardLocation = {
+            taskId: taskId,
+            inId: aoStore.memberCard.taskId,
+            zone: 'subTasks'
+          }
         }
 
         const fromMemberId = card.passed.find(

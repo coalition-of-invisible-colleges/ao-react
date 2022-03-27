@@ -11,7 +11,6 @@ import {
 } from 'mobx'
 import _ from 'lodash'
 import M from '../mutations'
-// import modules from '../modules/index.js'
 import { cadToSats } from '../calculations'
 import { blankCard } from '../cards.js'
 import AoStack from '../components/stack'
@@ -32,6 +31,7 @@ import { DeckTab } from '../components/deck'
 
 import {
     Task,
+    Color,
     Grid,
     GridStyle,
     Allocation,
@@ -116,7 +116,6 @@ interface Output {
   value: number
 }
 
-// same as LightningChannel?
 interface Channel {
   channel_sat: number
   channel_total_sat: number
@@ -273,6 +272,7 @@ class AoStore {
   @observable cardTab?: CardTab
   @observable localPriorityMode?: boolean
   @observable deckTab: DeckTab = 'all'
+  @observable currentColor: Color = 'blue'
 
   bookmarksTaskId?: string
 
@@ -303,16 +303,8 @@ class AoStore {
       return null
     }
 
-    // let memberCard = _.merge(
-    //   blankCard('', '', ''),
     return this.hashMap.get(this.member.memberId)
-    // )
-    // return memberCard
   }
-
-  // getMemberCard_async(callback) {
-
-  // }
 
   @computed get hashMap(): Map<string, Task> {
     let hashMap: Map<string, Task> = new Map()
@@ -322,24 +314,6 @@ class AoStore {
 
     return hashMap
   }
-
-  // @computed get bookmarksTaskCard() {
-  //   console.log("AO: client/store.ts: bookmarksCard computing")
-  //   let bookmarksTaskId = aoStore.bookmarksTaskId
-  //   let card = this.hashMap.get(bookmarksTaskId)
-  //   let bookmarkedCardsData = []
-  //   card.grid.rows.forEach
-  //       ( (row, y) =>
-  //         {
-  //           row.forEach
-  //               ( (cell, x) =>
-  //                 { bookmarkedCardsData.push({y, x, cell})
-  //                 }
-  //               )
-  //         }
-  //       )
-  //   return bookmarkedCardsData
-  // }
 
   async fetchEntireDeck_async(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -363,7 +337,6 @@ class AoStore {
         })
         .catch(error => {
           reject()
-          // console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
         })
     })
   }
@@ -439,11 +412,9 @@ class AoStore {
             parentTaskItem.completed
           )
         )
-        if (parentTaskItem.grid && parentTaskItem.grid.rows) {
-          Object.entries(parentTaskItem.grid.rows).forEach(([y, row]) => {
-            Object.entries(row).forEach(([x, cell]) => {
-              allSubCardsSet.add(cell)
-            })
+        if (parentTaskItem.pins && parentTaskItem.pins.length >= 1) {
+          parentTaskItem.pins.forEach((pin) => {
+            allSubCardsSet.add(pin.taskId)
           })
         }
       }
@@ -468,22 +439,6 @@ class AoStore {
         return taskItemsOnClient
       } else {
         setImmediate(() => {
-          // let counter = taskIdsToLoadFromServer.length
-          // let decrementCounter =
-          //     () =>
-          //     { counter--;
-          //       if (counter === 0)
-          //       {
-          //         callback(true)
-          //       }
-          //     }
-          // taskIdsToLoadFromServer.forEach
-          //     ( (taskId) =>
-          //       {
-          //         this.getTaskById_async(taskId, decrementCounter)
-          //       }
-          //     )
-
           let stateClosure = this.state
           request
             .post('/fetchTaskByID')
@@ -508,138 +463,20 @@ class AoStore {
                   }
                 })
                 stateClosure.tasks.push(...newTasksOnly)
-                // setImmdiate(() => callback(this.hashMap.get(taskId)))
-                // this works to solve the missing prorities dropdown problem but it ruins performance
-                // if (!prioritiesOnly) {
-                // console.log(
-                //   'got tasks and about to get first priorities:',
-                //   result.body.foundThisTaskList
-                // )
-                // stateClosure.tasks.forEach(foundTask => {
-                //   this.getFirstPriorityCardForThisTaskId_async(foundTask.taskId)
-                //     this.getAllLinkedCardsForThisTaskId_async(
-                //       foundTask.taskId,
-                //       () => {},
-                //       true
-                //     )
-                // })
-                // }
+                
                 callback(true)
               })
-              // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
             })
             .catch(error => {
-              // console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  error fetching task list", {taskIdsToLoadFromServer, error});
-
+              console.log("AO: client/store.ts: getAllLinkedCardsForThisTaskId_async:  error fetching task list", {taskIdsToLoadFromServer, error});
               callback(false)
             })
         })
         return false
       }
-
-      // getSearchResultsForQuery_async(query, callback) {
-      // }
-
-      // allSubCards.forEach(tId => {
-      //     let subCard = aoStore.hashMap.get(tId)
-      //     if (subCard) {
-      //         if (
-      //             subCard.guild &&
-      //             subCard.guild.length >= 1 &&
-      //             subCard.deck.length >= 1
-      //         ) {
-      //             projectCards.push(subCard)
-      //         }
-      //     }
-      // })
-
-      // if (card.grid && card.grid.rows) {
-      //     Object.entries(card.grid.rows).forEach(([y, row]) => {
-      //         Object.entries(row).forEach(([x, cell]) => {
-      //             let gridCard = aoStore.hashMap.get(cell)
-      //             if (
-      //                 gridCard &&
-      //                 gridCard.guild &&
-      //                 gridCard.guild.length >= 1 &&
-      //                 gridCard.deck.length >= 1
-      //             ) {
-      //                 projectCards.push(gridCard)
-      //             }
-      //         })
-      //     })
-      // }
-
-      // return projectCards
     }
-
-    // let stateClosure = this.state;
-    // request
-    //     .post('/fetchTaskByID')
-    //     .set('Authorization', stateClosure.token)
-    //     .send( {taskId} )
-    //     .then
-    //         ( (result) =>
-    //           {
-    //             console.log("AO: client/store.ts: getTaskById_async: merging fetched task", {taskId, "result.body": result.body});
-
-    //             runInAction
-    //                 ( () =>
-    //                   { stateClosure.tasks.push(result.body)
-    //                     setImmediate(() => callback(this.hashMap.get(taskId)));
-    //                   }
-    //                 );
-    //             // setTimeout( () => this.hashMap.get(taskId).name = "Woo Hoo", 2000 )
-    //           }
-    //         )
-    //     .catch
-    //         ( ( error ) =>
-    //           {
-    //             console.log("AO: client/store.ts: getTaskById_async: error fetching task", {taskId, error});
-
-    //             callback(false);
-    //           }
-    //         )
   }
-
-  // getFirstPriorityCardForThisTaskId_async(parentTaskId) {
-  //   parentTaskId = parentTaskId.toLowerCase()
-  //   let parentTaskItem = this.hashMap.get(parentTaskId)
-  //   if (!parentTaskItem || parentTaskItem.priorities.length < 1) {
-  //     return false
-  //   } else {
-  //     const firstPriorityTaskId =
-  //       parentTaskItem.priorities[parentTaskItem.priorities.length - 1]
-  //     if (!firstPriorityTaskId) {
-  //       return false
-  //     }
-  //     let firstPriorityCard = this.hashMap.get(firstPriorityTaskId)
-
-  //     if (firstPriorityCard) {
-  //       return true
-  //     } else {
-  //       setImmediate(() => {
-  //         let stateClosure = this.state
-  //         request
-  //           .post('/fetchTaskByID')
-  //           .set('Authorization', stateClosure.token)
-  //           .send({ taskId: firstPriorityTaskId })
-  //           .then(result => {
-  //             runInAction(() => {
-  //               // sometimes multiple overlapping requests for subcads cause
-  //               // duplicates to be returned from different queries.
-  //               stateClosure.tasks.filter(
-  //                 existingTask => existingTask.taskId !== result.body
-  //               )
-  //               stateClosure.tasks.push(result.body)
-  //             })
-  //           })
-  //           .catch(error => {})
-  //       })
-  //       return false
-  //     }
-  //   }
-  // }
-
+  
   @computed get memberById(): Map<string, Member> {
     let hashMap: Map<string, Member> = new Map()
     this.state.members.forEach(m => {
@@ -752,38 +589,15 @@ class AoStore {
   }
 
   getCommunityHubCardId(callback): void {
-    // console.log("AO: client/store.ts: getCommunityHubCardId")
 
     this.getTaskByName_async('community hub', communityHubCard => {
       if (!communityHubCard) {
         callback(null)
-        // console.log("AO: client/store.ts: creating community hub card on server")
-
-        // api.createCard('community hub', true).then(result => {
-        //   const newTaskId = JSON.parse(result.text).event.taskId
-
-        //   // console.log("AO: client/store.ts: community hub card created on server: ", { newTaskId });
-
-        //   // aoStore.setCurrentCard(newTaskId)
-        //   callback(newTaskId)
-        //   // setHubId(newTaskId)
-        //   // initialStateComplete();
-        // })
       } else {
-        // console.log("AO: client/store.ts: community hub card found in client state: ", { "taskId": communityHubCard.taskId });
-
         callback(communityHubCard.taskId)
-
-        // aoStore.setCurrentCard(communityCard.taskId)
-        // setHubId(communityCard.taskId)
-        // initialStateComplete();
       }
     })
   }
-
-  // @computed get communityHubTaskItem(): Task {
-  //   return this.cardByName.get("community hub");
-  // }
 
   @computed get memeById(): Map<string, Meme> {
     let hashMap: Map<string, Meme> = new Map()
@@ -798,10 +612,6 @@ class AoStore {
     this.context.forEach(tId => {
       cards.push(this.hashMap.get(tId))
     })
-    // cards.reverse()
-
-    // throw new Error("Insane bullshit error");
-
     return cards
   }
 
@@ -909,14 +719,13 @@ class AoStore {
         }
       })
 
-      if (card.grid && card.grid.rows) {
-        Object.entries(card.grid.rows).forEach(([y, row]) => {
-          Object.entries(row).forEach(([x, cell]) => {
-            let gridCard = aoStore.hashMap.get(cell)
-            if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
-              projectCards.push(gridCard)
-            }
-          })
+      if (card.pins && card.pins.length >= 1) {
+        card.pins.forEach((pin) => {
+          const {taskId, y, x} = pin
+          let gridCard = aoStore.hashMap.get(taskId)
+          if (gridCard && gridCard.guild && gridCard.guild.length >= 1) {
+            projectCards.push(gridCard)
+          }
         })
       }
       subGuildsByGuild.set(card.taskId, projectCards)
@@ -1184,26 +993,25 @@ class AoStore {
           gridX = -1
         }
         let result
+        // todo: pins must be sorted by X and Y so that "next meme" is really next
         if (
-          card.grid &&
-          card.grid.hasOwnProperty('rows') &&
-          Object.keys('card.grid.rows').length >= 1
+          card.pins &&
+          card.pins.length >= 1
         ) {
-          Object.entries(card.grid.rows).forEach(([y, row]) => {
+          card.pins.forEach((pin) => {
+            const cell = pin.taskId
+            const y = pin.y
+            const x = pin.x
             if (!result && parseInt(y, 10) >= gridY) {
-              Object.entries(row).forEach(([x, cell]) => {
-                if (
-                  !result &&
-                  ((parseInt(y, 10) === gridY && parseInt(x, 10) > gridX) ||
-                    parseInt(y, 10) > gridY) &&
-                  cell
-                ) {
-                  const meme = this.memeById.get(cell)
-                  if (meme) {
-                    result = meme.memeId
-                  }
+              if (
+                ((parseInt(y, 10) === gridY && parseInt(x, 10) > gridX) ||
+                  parseInt(y, 10) > gridY) && cell
+              ) {
+                const meme = this.memeById.get(cell)
+                if (meme) {
+                  result = meme.memeId
                 }
-              })
+              }
             }
           })
         }
@@ -1245,27 +1053,24 @@ class AoStore {
     }
     let result
     if (
-      card.grid &&
-      card.grid.hasOwnProperty('rows') &&
-      Object.keys('card.grid.rows').length >= 1
+      card.pins &&
+      card.pins.length >= 1
     ) {
-      Object.entries(card.grid.rows).forEach(([y, row]) => {
+      card.pins.forEach((pin) => {
+        const cell = pin.taskId
+        const y = pin.y
+        const x = pin.x
         if (result) {
           return
         }
-        Object.entries(row).forEach(([x, cell]) => {
-          if (result) {
-            return
-          }
-          if (cell === this.mediaPlayHead.taskId) {
-            result = findNextMemeInCard(
-              card,
-              'grid',
-              parseInt(y, 10),
-              parseInt(x, 10)
-            )
-          }
-        })
+        if (cell === this.mediaPlayHead.taskId) {
+          result = findNextMemeInCard(
+            card,
+            'grid',
+            y,
+            x
+          )
+        }
       })
     }
     if (result) {
@@ -1362,13 +1167,9 @@ class AoStore {
 
   @action.bound
   removeFromContext(taskId: string) {
-    // console.log('AO: client/store.ts: removeFromContext: ', { taskId })
     this.context = this.context.slice().filter(tId => {
       return tId !== taskId
     })
-    // console.log('AO: client/store.ts: removeFromContext: result', {
-    // context: this.context,
-    // })
   }
 
   @action.bound
@@ -1505,6 +1306,11 @@ class AoStore {
 
   @action.bound setDeckTab(newDeckTab: DeckTab) {
     this.deckTab = newDeckTab
+  }
+  
+  @action.bound
+  setCurrentColor(newColor: Color) {
+    this.currentColor = newColor
   }
 }
 const aoStore = new AoStore()

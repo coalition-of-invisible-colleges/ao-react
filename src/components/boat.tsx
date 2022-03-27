@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
+import { CardLocation } from '../cardTypes'
 import Boat from '../assets/images/boat.svg'
 import Tippy from '@tippyjs/react'
 import 'tippy.js/dist/tippy.css'
@@ -26,11 +27,17 @@ export default class AoBoat extends React.PureComponent<Props> {
       return
     }
 
-    if (!card.deck.find(tId => tId === this.props.taskId)) {
-      api.grabCard(this.props.taskId).then(res => {})
+    const fromLocation: CardLocation = { 
+      taskId: this.props.taskId,
+      inId: this.props.inId,
+      zone: 'subTasks' // todo: make into callback or pass correct fromLocation down
     }
-
-    api.prioritizeCard(this.props.taskId, this.props.inId)
+    const toLocation: CardLocation = {
+      taskId: this.props.taskId,
+      inId: this.props.inId,
+      zone: 'priorities',
+    }
+    api.playCard(fromLocation, toLocation)
   }
 
   render() {

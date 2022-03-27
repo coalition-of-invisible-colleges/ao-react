@@ -46,6 +46,8 @@ const defaultTickerState: TickerState = {
   exchangeRate: undefined,
 }
 
+const logError = (error) => { console.log("Ticker error, probably failure to get ticker data:", error) }
+
 @observer
 export class AoTicker extends React.Component<TickerProps, TickerState> {
   private infoRef
@@ -113,13 +115,13 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
     } else if (isAddress(ticker.to)) {
       const symbolData = await CoinGeckoClient.coins.fetchCoinContractInfo(
         ticker.to
-      )
+      ).catch(logError)
       const symbol = symbolData.data.symbol
 
       const toBtcExchangeData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.to,
         vs_currencies: ['btc', 'usd', 'cad', 'eth'],
-      })
+      }).catch(logError)
       toBtcExchange = 1 / Object.values(toBtcExchangeData.data)[0]['btc']
       this.setState({ toSymbol: symbol })
     }
@@ -153,7 +155,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
     } else if (isAddress(ticker.from)) {
       const symbolData = await CoinGeckoClient.coins.fetchCoinContractInfo(
         ticker.from
-      )
+      ).catch(logError)
 
       const symbol = symbolData.data.symbol
       const coinId = symbolData.data.id
@@ -161,7 +163,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
       const priceData = await CoinGeckoClient.simple.fetchTokenPrice({
         contract_addresses: ticker.from,
         vs_currencies: 'btc',
-      })
+      }).catch(logError)
 
       const price = 1 / Object.values(priceData.data)[0]['btc']
       let exchangeRate = toBtcExchange / price
@@ -193,7 +195,7 @@ export class AoTicker extends React.Component<TickerProps, TickerState> {
     const priceData = await CoinGeckoClient.simple.fetchTokenPrice({
       contract_addresses: trimmed,
       vs_currencies: ['btc', 'usd', 'cad', 'eth'],
-    })
+    }).catch(logError)
 
     const price = Object.values(priceData.data)[0]['btc']
 

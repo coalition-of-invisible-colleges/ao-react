@@ -1,11 +1,12 @@
 import request from 'superagent'
 import uuidV1 from 'uuid/v1'
 import { createHash, hmacHex } from '../crypto'
+import { CardLocation } from '../cardTypes'
 import _ from 'lodash'
 import { isObject } from '../utils'
 import config from '../../configuration'
 import aoStore from './store'
-import { Task, Grid } from '../interfaces'
+import { Task, Grid, Color } from '../interfaces'
 import { io } from 'socket.io-client'
 
 import { runInAction, reaction } from 'mobx'
@@ -254,8 +255,69 @@ class AoApi {
         return res
       })
   }
+  
+  async createCardIfDoesNotExist(
+    name: string,
+    color?: Color,
+    anonymous?: boolean
+  ): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+      aoStore.getTaskByName_async(name, (task: Task) => {
+        if (isObject(task)) {
+          resolve(true)
+        } else {
+          const act = {
+            type: 'task-created',
+            name: name,
+            color: color || 'blue',
+            deck: [aoStore.member.memberId],
+            inId: null,
+            prioritized: false,
+          }
+          request
+            .post('/events')
+            .set('Authorization', aoStore.state.token)
+            .send(act)
+            .then((res) => {
+              const newTask: Task = JSON.parse(res.text).event
+              resolve(true)
+            })
+        }
+      })
+    })
+  }
 
-  async findOrCreateCardInCard(
+  async playCard(
+    from: CardLocation = null,
+    to: CardLocation
+  ): Promise<request.Response> {
+    const act = {
+      type: 'task-played',
+      from: from,
+      to: to,
+      memberId: aoStore.member.memberId,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
+  
+  async createAndPlayCard(name, color, anonymous, to: CardLocation): Promise<request.Response>  {
+    return new Promise((resolve, reject) => {
+      this.createCardIfDoesNotExist(name, color, anonymous).then(success => {
+        aoStore.getTaskByName_async(name, found => {
+          to.taskId = found.taskId
+          resolve(this.playCard(null, to))
+        })
+      })
+    })
+  }
+  
+  /*async findOrCreateCardInCard(
     name: string,
     inId: string,
     prioritized: boolean = false,
@@ -299,7 +361,7 @@ class AoApi {
         )
       })
     })
-  }
+  }*/
 
   async discardCardFromCard(
     taskId: string,
@@ -506,7 +568,7 @@ class AoApi {
       })
   }
 
-  async prioritizeCard(
+  /*async prioritizeCard(
     taskId: string,
     inId: string,
     position: number = 0
@@ -525,7 +587,7 @@ class AoApi {
       .then(res => {
         return res
       })
-  }
+  }*/
 
   async prioritizePile(inId: string): Promise<request.Response> {
     const act = {
@@ -1210,7 +1272,7 @@ class AoApi {
       })
   }
 
-  async pinCardToGrid(
+  /*async pinCardToGrid(
     x: number,
     y: number,
     name: string,
@@ -1222,21 +1284,13 @@ class AoApi {
         // console.log("AO: client/api.ts: pinCardToGrid: ", {x, y, name, inId, task})
 
         if (isObject(task)) {
-          const act = {
-            type: 'grid-pin',
-            inId: inId,
+          const fromLocation
+          const toLocation: CardLocation = {
             taskId: task.taskId,
-            x: x,
-            y: y,
-            memberId: aoStore.member.memberId,
+            inId: inId,
+            coords: { y, x }
           }
-          request
-            .post('/events')
-            .set('Authorization', aoStore.state.token)
-            .send(act)
-            .then(res => {
-              resolve(res)
-            })
+          playCard()
         } else {
           const act = {
             type: 'task-created',
@@ -1270,9 +1324,9 @@ class AoApi {
         }
       })
     })
-  }
+  }*/
 
-  async unpinCardFromGrid(
+  /*async unpinCardFromGrid(
     x: number,
     y: number,
     inId: string
@@ -1290,7 +1344,7 @@ class AoApi {
       .then(res => {
         return res
       })
-  }
+  }*/
 
   async fetchMeme(memeHash: string, progressCallback): Promise<Blob> {
     return request
