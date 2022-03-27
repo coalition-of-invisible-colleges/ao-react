@@ -1161,7 +1161,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             rightDrawerContent = <React.Fragment>
               <AoCardHud taskId={taskId} hudStyle='menu' />
               <Observer>
-              {() => <AoGridResizer taskId={taskId} gridStyle={card?.pinboard?.spread} hasGrid={!!card.pinboard} gridHeight={card.pinboard?.height} gridWidth={card.pinboard?.width}/>}
+              {() => <AoGridResizer taskId={taskId} spread={card.pinboard && card.pinboard.spread || null} hasGrid={!!card.pinboard} gridHeight={card.pinboard?.height} gridWidth={card.pinboard?.width}/>}
               </Observer>
             </React.Fragment>
             break

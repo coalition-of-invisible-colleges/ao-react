@@ -12,7 +12,7 @@ import SquareSize from '../assets/images/square.svg'
 
 interface Props {
   taskId: string
-  gridStyle: PinboardStyle
+  spread: PinboardStyle
   hasGrid?: boolean
   gridHeight?: number
   gridWidth?: number
@@ -85,7 +85,7 @@ export default function AoGridResizer(props: Props) {
 			!pinboard.hasOwnProperty('height') ||
 			!pinboard.hasOwnProperty('width')
 			
-  const isPyramid = props.gridStyle === 'pyramid'
+  const isPyramid = props.spread === 'pyramid'
 
   const increaseSquareSize = () => {
     api.resizeGrid(

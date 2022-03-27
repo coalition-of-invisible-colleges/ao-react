@@ -119,13 +119,13 @@ export default function AoPinboard(props: PinboardProps) {
   const squareWidth = props.size && props.size >= 1 ? props.size + 'em' : '9em'
   
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
-  //const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
+  const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
   
-  /*React.useEffect(() => {
+  React.useEffect(() => {
     if(renderMeNowPlease) {
       setRenderMeNowPlease(false)
     }
-  }, [renderMeNowPlease])*/
+  }, [renderMeNowPlease])
   
   function selectGridSquare(selection: Coords) {
     setSelected(selection)
@@ -136,8 +136,7 @@ export default function AoPinboard(props: PinboardProps) {
   }
 
   function newPinboardCard(name: string, coords: Coords, callbackToClear) {
-    props.onNewCard(name, coords, callbackToClear)//.then(() => setRenderMeNowPlease(true))
-    //api.playCard(coords.x, coords.y, name, props.taskId).then(() => setRenderMeNowPlease(true))
+    props.onNewCard(name, coords, callbackToClear).then(() => setRenderMeNowPlease(true))
   }
 
   const render: JSX.Element[] = []
@@ -149,7 +148,7 @@ export default function AoPinboard(props: PinboardProps) {
         const dropToSquareCaller = (from: CardLocation, to: CardLocation) => {
           to.coords.y = j
           return props.onDropToSquare(from, to).then(result => {
-            //setRenderMeNowPlease(true)
+            setRenderMeNowPlease(true)
             return result
           })
         }
@@ -193,7 +192,7 @@ export default function AoPinboard(props: PinboardProps) {
         const dropToSquareCaller = (from: CardLocation, to: CardLocation) => {
           to.coords.y = j
           return props.onDropToSquare(from, to).then(result => {
-            //setRenderMeNowPlease(true)
+            setRenderMeNowPlease(true)
             return result
           })
         }
