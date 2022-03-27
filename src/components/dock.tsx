@@ -126,7 +126,7 @@ export default class AoDock extends React.Component<{}, State> {
         })
     }
     
-    const gridHasContents = card.pinboard && card.pinboard.height >= 1 && (card.pinboard.width > 1 || (card.pins && Array.isArray(card.pins)))
+    const gridHasContents = card.pinboard && card.pinboard.height >= 1 && (card.pinboard.width > 1 || (card.pins && card.pins.length >= 1))
     return (
       <div id="dock">
         <AoHopper />

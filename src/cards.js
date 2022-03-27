@@ -452,12 +452,12 @@ export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId)
   const theCardMovedFrom = getTask(tasks, fromInId)
   if(theCardMovedFrom) {
     discardTaskFromZone(theCardMovedFrom, fromLocation)
-    //if(fromLocation.inId !== toLocation.inId) {
-    //  removeParentIfNotParent(theCard, theCardMovedFrom)
-    //}
+    if(fromLocation.inId !== toLocation.inId) {
+      removeParentIfNotParent(theCard, theCardMovedFrom)
+    }
     
     // Save the card to the completed cards if it has at least one checkmark
-    if(toLocation.zone === 'discard' && theCard && theCard.claimed && theCard.claimed.length >= 1) {
+    if(fromLocation.zone != 'completed' && toLocation.zone === 'discard' && theCard && theCard.claimed && theCard.claimed.length >= 1) {
       addCompletedTask(theCardMovedFrom, taskId)
     }
   }
