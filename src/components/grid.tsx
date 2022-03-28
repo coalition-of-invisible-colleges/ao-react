@@ -229,8 +229,8 @@ export default function AoPinboard(props: PinboardProps) {
     case 'rune':
       const rowPins = pins?.filter(pin => pin.y === 0).sort((b, a) => b.x - a.x)
       console.log("squareWidth is", squareWidth)
-      const moreSquareWidth = props.width < 5 ? props.size - 2 + 'em' : props.width >= 16 ? props.width + (props.size / 2) + 9 + 'em' : props.width * 2 + (props.size / 2) + 'em'
-      const runeSize = (Math.pow(3.14159, 1.07) * (props.width + (props.size))) + -16 + 'em'
+      const moreSquareWidth = props.width < 4 ? props.size - 2 + 'em' : props.width * 2 + (props.size / 2) - 3 + 'em'
+      const runeSize = (Math.pow(3.14159, 1.2) * (props.width + (props.size * 0.9))) - 20 + 'em'
       for (let i = 0; i < props.width; i++) {
         let tId
         if(props.pins && props.pins.length >= 1) {

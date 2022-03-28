@@ -1059,6 +1059,10 @@ body {
       height: 100%;
       cursor: text;
       border-radius: 50%;
+      
+      .overlay {
+        border-radius: 50%;
+      }
     }
     
     .cardComposer {
