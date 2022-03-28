@@ -22,6 +22,9 @@ import AoReminder from './reminder'
 import AoHiddenFieldset from './hiddenFieldset'
 import { gloss, capitalize } from '../semantics'
 import config from '../../configuration'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 export type HudStyle =
 	| 'context'
@@ -51,6 +54,29 @@ interface CardHudProps {
 interface State {
 	clicked?: boolean
 }
+/* 
+              <span>
+                <p>Click to discard card</p>
+                <p><small>Discarded cards are stored in the discard history until refresh. Drag the page background to recall discarded cards.</small></p>
+                <p>
+                  <small>
+                    Discarded cards remain in your deck if you have grabbed or moved them.
+                  </small>
+                </p>
+              </span>
+            */
+
+const AoDownBoat = (props: { onClick: (event) => void}) => {
+  console.log("onClick is", props.onClick)
+  return <Tippy
+            zIndex={4}
+            theme="translucent"
+            content='discard'
+            delay={[625, 200]}
+            placement="top-end">
+            <div className='downboat' onClick={props.onClick} />
+          </Tippy>
+}
 
 @observer
 export default class CardHud extends React.Component<CardHudProps, State> {
@@ -67,8 +93,35 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 
 		const hudStyle = this.props.hudStyle
 
-		// let cardHudIdentifierFunction =
-
+    const discardCardFromZone = (zone) => {
+      if(!this.props.inId) {
+        return
+      }
+      api.playCard({
+        taskId: this.props.taskId,
+        inId: this.props.inId,
+        zone: zone
+      },
+      {
+        taskId: this.props.taskId,
+        zone: 'discard'
+      })
+    }
+    
+    const discardCardFromSubTasks = (event) => {
+      event.stopPropagation()
+      discardCardFromZone('subTasks')
+      aoStore.addToDiscardHistory([card])
+    }
+    
+    const discardCardFromPriorities = (event) => {
+      discardCardFromZone('priorities')
+    }
+    
+    const discardCardFromCompleted = (event) => {
+      discardCardFromZone('completed')
+    }
+    
 		switch (hudStyle) {
 			case 'context':
 				return (
@@ -172,6 +225,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'face after':
 				return (
 					<div className={'hud ' + hudStyle}>
+					  <AoDownBoat onClick={discardCardFromSubTasks} />
 						<AoPreview
 							taskId={taskId}
 							hudStyle={hudStyle}

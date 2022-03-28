@@ -426,7 +426,7 @@ export default class AoBird extends React.Component<Props, State> {
       <select onChange={onChangeAoSelect}>
         <option>{THIS_SERVER}</option>
         {connectedAos.map(ao => {
-            return <option>{ao.address}</option>
+            return <option>{ao.address.slice(0, 12)}...</option>
         })}
       </select> : null
     

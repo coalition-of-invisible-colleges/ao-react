@@ -44,7 +44,7 @@ export default class AoBoat extends React.PureComponent<Props> {
     return (<Tippy
         zIndex={4}
         theme="translucent"
-        content="Prioritize card"
+        content="prioritize"
         delay={[625, 200]}
         placement="left-start">
         <div className="boat" onClick={this.upboat}>

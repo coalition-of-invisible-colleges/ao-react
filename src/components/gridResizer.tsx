@@ -6,6 +6,7 @@ import AoHiddenFieldset from './hiddenFieldset'
 import api from '../client/api'
 import GridImg from '../assets/images/grid.svg'
 import PyramidImg from '../assets/images/pyramid.svg'
+import RuneImg from '../assets/images/rune.svg'
 import RowImg from '../assets/images/row.svg'
 import ColumnImg from '../assets/images/column.svg'
 import SquareSize from '../assets/images/square.svg'
@@ -37,6 +38,11 @@ export default function AoGridResizer(props: Props) {
     return api.setCardProperty(props.taskId, 'pinboard.spread', 'grid')
   }
   
+  const switchToRune = event => {
+    event.stopPropagation()
+    return api.setCardProperty(props.taskId, 'pinboard.spread', 'rune')
+  }
+  
   const addPyramid = (event) => {
 		switchToPyramid(event).then(() => api.addGridToCard(taskId, 3, 3))
 	}
@@ -45,11 +51,16 @@ export default function AoGridResizer(props: Props) {
 		switchToGrid(event).then(() => api.addGridToCard(taskId, 3, 3))
 	}
 	
+	const addRune = (event) => {
+		switchToRune(event).then(() => api.addGridToCard(taskId, 3, 3))
+	}
+	
   if(!pinboard) {
     return <AoHiddenFieldset heading='Grid' startOpen={false} className='gridMenu'>
       <div className='centerFlex'>
         <img src={PyramidImg} className="gridMenu action" onClick={addPyramid} />
         <img src={GridImg} className="gridMenu action" onClick={addGrid} />
+        <img src={RuneImg} className="gridMenu action" onClick={addRune} />
       </div>
 		</AoHiddenFieldset>
   }
@@ -86,6 +97,8 @@ export default function AoGridResizer(props: Props) {
 			!pinboard.hasOwnProperty('width')
 			
   const isPyramid = props.spread === 'pyramid'
+  const isGrid = props.spread === 'grid'
+  const isRune = props.spread === 'rune'
 
   const increaseSquareSize = () => {
     api.resizeGrid(
@@ -105,8 +118,9 @@ export default function AoGridResizer(props: Props) {
     )
   }
   
-  const epithet = isPyramid ? pinboard.height + '-row Pyramid' : pinboard.width + '×' + pinboard.height + ' ' + 'Grid' 
-
+  const theWord = isPyramid ? 'Pyramid' : isGrid ? 'Grid' : 'Rune'
+  const epithet = isPyramid ? pinboard.height + '-row ' + theWord : isRune ? pinboard.width + '-' + theWord : pinboard.width + '×' + pinboard.height + ' ' + theWord
+  
   return (
       <AoHiddenFieldset heading={epithet} startOpen={true} className='gridMenu'>
         <div className="centerFlex">
@@ -117,13 +131,19 @@ export default function AoGridResizer(props: Props) {
             <img src={PyramidImg} />
           </button>
           <button
-            className={'action' + (!isPyramid ? ' selected' : '')}
+            className={'action' + (isGrid ? ' selected' : '')}
             onClick={switchToGrid}
-            disabled={!isPyramid}>
+            disabled={isGrid}>
             <img src={GridImg} />
           </button>
+          <button
+            className={'action' + (isRune ? ' selected' : '')}
+            onClick={switchToRune}
+            disabled={isRune}>
+            <img src={RuneImg} />
+          </button>
         </div>
-         {!isPyramid &&
+         {(isGrid || isRune) &&
           <div className="oneLineSetting">
             <img src={ColumnImg} />
             <button
@@ -142,23 +162,25 @@ export default function AoGridResizer(props: Props) {
             </button>
           </div>
         }
-        <div className="oneLineSetting">
-          <img src={RowImg} />
-          <button
-            type="button"
-            onClick={decreaseRows}
-            disabled={card.pinboard.height <= 1}
-            className="action minus">
-            -
-          </button>
-          <button
-            type="button"
-            onClick={increaseRows}
-            disabled={card.pinboard.height >= 100}
-            className="action plus">
-            +
-          </button>
-        </div>
+        {(isPyramid || isGrid) && 
+          <div className="oneLineSetting">
+            <img src={RowImg} />
+            <button
+              type="button"
+              onClick={decreaseRows}
+              disabled={card.pinboard.height <= 1}
+              className="action minus">
+              -
+            </button>
+            <button
+              type="button"
+              onClick={increaseRows}
+              disabled={card.pinboard.height >= 100}
+              className="action plus">
+              +
+            </button>
+          </div>
+        }
         <div className='oneLineSetting'>
           <img src={SquareSize} />
           <button
@@ -181,7 +203,7 @@ export default function AoGridResizer(props: Props) {
               type="button"
               onClick={removeGrid}
               className="action remove">
-              Remove {isPyramid ? 'Pyramid' : 'Grid'}
+              Remove {theWord}
             </button>
           )}
       </AoHiddenFieldset>

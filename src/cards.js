@@ -427,6 +427,7 @@ export function discardTaskFromZone(task, fromLocation) {
 // fromLocation.taskId and toLocation.taskId can be different,
 // so it is possible to play a different card than was unplayed in one move (i.e., swap out a card)
 // Right now the card being played must exist; card creation and modification is separate since it includes color etc.
+// Maybe toLocation should be option also, simplifying discards and further decomposing a play.
 export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId) {
   const taskId = fromLocation && fromLocation.taskId ? fromLocation.taskId : toLocation.taskId
   const theCard = getTask(tasks, taskId)

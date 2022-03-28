@@ -64,8 +64,6 @@ const AoGridRowObserver = observer(
       const card = aoStore.hashMap.get(tId)
       const isPyramid = props.spread === 'pyramid'
 
-      const toHasGuild = card?.guild && card?.guild?.length >= 1
-      
       const onDropToSquareCaller = (from: CardLocation) => {
         const to: CardLocation = {
           taskId: tId,
@@ -116,7 +114,8 @@ export default function AoPinboard(props: PinboardProps) {
   ) {
     return null
   }
-  const squareWidth = props.size && props.size >= 1 ? props.size + 'em' : '9em'
+  const safeSize = props.size && props.size >= 1 ? props.size : 9
+  const squareWidth = safeSize + 'em'
   
   const [selected, setSelected]: [Coords, (Coords) => void] = React.useState()
   const [renderMeNowPlease, setRenderMeNowPlease] = React.useState(false)
@@ -228,6 +227,93 @@ export default function AoPinboard(props: PinboardProps) {
         </div>
       )
     case 'rune':
-      return <div className='gridContainer'>rune view coming soon</div>
+      const rowPins = pins?.filter(pin => pin.y === 0).sort((b, a) => b.x - a.x)
+      const moreSquareWidth = props.width > 3 ? (Math.pow(3.14159, 2) * Math.sqrt(props.width)) + 'em' : squareWidth
+      const widthMultiplier = props.width == 2 ? 2.2 : props.width <= 4 ? 1.4 : props.width < 8 ? 1.1 : 0.9 
+      const runeSize = (Math.pow(3.14159, 2) * props.width * widthMultiplier) + 'em'
+      for (let i = 0; i < props.width; i++) {
+        let tId
+        if(props.pins && props.pins.length >= 1) {
+          props.pins.forEach(pin => {
+            if(pin.x === i && pin.y === 0) {
+              tId = pin.taskId
+            }
+          })
+        }
+        
+        const onClickCaller = () => {
+          selectGridSquare({y: 0, x: i})
+        }
+        
+        const dropToSquareCaller = (from: CardLocation) => {
+          const to: CardLocation = {
+            taskId: tId,
+            inId: props.inId,
+            zone: 'grid',
+            coords: { x: i, y: 0 },
+          }
+          to.coords.y = 0
+          return props.onDropToSquare(from, to).then(result => {
+            setRenderMeNowPlease(true)
+            return result
+          })
+        }
+          
+        const card = aoStore.hashMap.get(tId)
+        
+        const angle = 360 / props.width
+        let rot = angle * i
+        if(props.width === 3) {
+          rot += 90
+        }
+        if(props.width === 5) {
+          rot += 54.4
+        }
+        const inlineStyle = props.width >= 2 ? { transform: 'rotate(' + rot + 'deg) translate(' + moreSquareWidth + ') rotate(-' + rot + 'deg) translateY(-50%) translateX(-50%)', height: squareWidth, width: squareWidth } : null
+          
+        if (
+          selected &&
+          selected.x == i &&
+          selected.y == 0
+        ) {
+          render.push(
+            <div className='runeItem' style={inlineStyle} key={i}>
+              <AoCardComposer
+                onNewCard={newPinboardCard}
+                coords={{ x: i, y: 0 }}
+                onBlur={onBlur}
+              />
+            </div>
+          )
+        } else {
+          render.push(
+            <div className='runeItem' style={inlineStyle}>
+              <AoDropZoneSimple
+                onDrop={dropToSquareCaller}
+                onClick={onClickCaller}
+                dropHoverMessage='drop to place'
+                className='rune'
+                key={i}>
+                {tId ? (
+                  <AoDragZone
+                    taskId={tId}
+                    dragContext={{
+                      zone: 'grid',
+                      inId: props.inId,
+                      x: i,
+                      y: 0,
+                    }}>
+                    <AoContextCard task={card} cardStyle="mini" /*inId={props.inId}*/ />
+                  </AoDragZone>
+                ) : null}
+              </AoDropZoneSimple>
+            </div>
+          )
+        }
+      }
+      
+      return <div className='gridContainer rune' style={{ height: runeSize, width: runeSize}}>
+        {render}
+      </div>
   }
 }

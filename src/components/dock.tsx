@@ -118,12 +118,12 @@ export default class AoDock extends React.Component<{}, State> {
       return api.playCard(from, to)
     }
     
-    const onNewDockCard = (name, coords) => {
+    const onNewDockCard = (name, coords, callbackToClear) => {
       return api.createAndPlayCard(name, 'blue', false, {
           inId: this.state.bookmarksTaskId,
           zone: 'grid',
           coords: coords
-        })
+        }).then(callbackToClear)
     }
     
     const gridHasContents = card.pinboard && card.pinboard.height >= 1 && (card.pinboard.width > 1 || (card.pins && card.pins.length >= 1))

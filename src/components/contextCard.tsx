@@ -839,6 +839,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               taskId={taskId}
               hudStyle="face after"
               noPopups={this.props.noPopups}
+              inId={this.props.inId}
             />
           </div>
         )
