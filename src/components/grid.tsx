@@ -228,9 +228,9 @@ export default function AoPinboard(props: PinboardProps) {
       )
     case 'rune':
       const rowPins = pins?.filter(pin => pin.y === 0).sort((b, a) => b.x - a.x)
-      const moreSquareWidth = props.width > 3 ? (Math.pow(3.14159, 2) * Math.sqrt(props.width)) + 'em' : squareWidth
-      const widthMultiplier = props.width == 2 ? 2.2 : props.width <= 4 ? 1.4 : props.width < 8 ? 1.1 : 0.9 
-      const runeSize = (Math.pow(3.14159, 2) * props.width * widthMultiplier) + 'em'
+      console.log("squareWidth is", squareWidth)
+      const moreSquareWidth = props.width < 5 ? props.size - 2 + 'em' : props.width >= 16 ? props.width + (props.size / 2) + 9 + 'em' : props.width * 2 + (props.size / 2) + 'em'
+      const runeSize = (Math.pow(3.14159, 1.07) * (props.width + (props.size))) + -16 + 'em'
       for (let i = 0; i < props.width; i++) {
         let tId
         if(props.pins && props.pins.length >= 1) {
@@ -263,13 +263,32 @@ export default function AoPinboard(props: PinboardProps) {
         
         const angle = 360 / props.width
         let rot = angle * i
+        
+        // Rotate the wheel back so slot 0 is at 1 o'clock
+        rot -= 60
+        
+        // A two-rune is rotated so that slot 0 is on the left
+        if(props.width === 2) {
+          rot -= 120
+        }
+        
+        // A four-rune is rotated to be a cross (grid covers 2x2)
+        if(props.width === 4) {
+          rot -= 30
+        }
+        
+        // A three-rune is rotated to appear as an inverted triangle (pyramid covers triangle)
         if(props.width === 3) {
-          rot += 90
+          rot += 30
         }
+        
+        // A five-rune is rotated to appear as an inverted triangle pentagram
         if(props.width === 5) {
-          rot += 54.4
+          rot += 6.6
         }
-        const inlineStyle = props.width >= 2 ? { transform: 'rotate(' + rot + 'deg) translate(' + moreSquareWidth + ') rotate(-' + rot + 'deg) translateY(-50%) translateX(-50%)', height: squareWidth, width: squareWidth } : null
+        
+        // Rotate the item itself, move it outwards (along the rotated axis), then rotate it back, then center it
+        const inlineStyle = props.width >= 2 ? { transform: 'rotate(' + rot + 'deg) translate(' + moreSquareWidth + ') rotate(' + (-rot) + 'deg) translateY(-50%) translateX(-50%)', height: squareWidth, width: squareWidth } : null
           
         if (
           selected &&
@@ -303,7 +322,7 @@ export default function AoPinboard(props: PinboardProps) {
                       x: i,
                       y: 0,
                     }}>
-                    <AoContextCard task={card} cardStyle="mini" /*inId={props.inId}*/ />
+                    <AoContextCard task={card} cardStyle="mini" />
                   </AoDragZone>
                 ) : null}
               </AoDropZoneSimple>
