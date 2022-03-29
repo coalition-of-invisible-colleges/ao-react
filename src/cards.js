@@ -248,9 +248,6 @@ export function addSubTask(task, subTaskId) {
     return
   }
 	discardSubTask(task, subTaskId)
-	/*if(!task.subTasks) {
-	  task.subTasks = []
-	}*/
 	task.subTasks.push(subTaskId)
 }
 
@@ -291,20 +288,25 @@ function discardPriority(task, discardTaskId) {
   task.priorities = task.priorities.filter(stId => stId !== discardTaskId)
 }
 
-export function unpinTasksOutOfBounds(task) {
-  if(!task.pins || task.pins.length <= 0) {
+export function unpinTasksOutOfBounds(tasks, task) {
+  if(!tasks || !task || !task.pins || task.pins.length <= 0) {
     return
   }
-  const num = task.pins.length
-  const horizLimit = task.pinboard.spread === 'pyramid' ? task.pinboard.height : task.pinboard.width
-  task.pins.forEach(pin => {
+  const vertLimit = task.pinboard.spread === 'rune' ? 1 : task.pinboard.height
+  for(let i = task.pins.length - 1; i >= 0; i--) {
+    const pin = task.pins[i]
     const {taskId, y, x} = pin
-    if (x >= horizLimit || y >= task.pinboard.height) {
+    const horizLimit = task.pinboard.spread === 'pyramid' ? y + 1 : task.pinboard.width
+    if (x >= horizLimit || y >= vertLimit) {
+      const theSubTask = getTask(tasks, taskId)
       unpinTaskFromTask(task, { y: y, x: x})
-      addSubTask(task, taskId)
+      if(theSubTask) {
+        putTaskInTask(theSubTask, task)
+      } else {
+        console.log("A missing card was removed from the pinboard:", taskId)
+      }
     }
-  })
-  //console.log("upinned", num - task.pins.length, 'tasks')
+  }
 }
 
 // Unpins the card from the given coordinates in a card and returns its taskId
@@ -389,7 +391,6 @@ function putTaskInTaskZone(task, inTask, toLocation) {
     default:
       // Move the card to the .subTasks (replaces task-sub-tasked)
       putTaskInTask(task, inTask)
-      addParent(task, inTask.taskId)
       break
   }
 }
@@ -399,7 +400,6 @@ function putTaskInTaskZone(task, inTask, toLocation) {
 export function discardTaskFromZone(task, fromLocation) {
   switch(fromLocation.zone) {
     case 'grid':
-    case 'pyramid':
       unpinTaskFromTask(task, fromLocation.coords)
       return
     case 'priorities':
@@ -411,11 +411,6 @@ export function discardTaskFromZone(task, fromLocation) {
     case 'subTasks':
       discardSubTask(task, fromLocation.taskId)
       return
-    case 'card':
-    default:
-      discardSubTask(task, fromLocation.taskId)
-      discardPriority(task, fromLocation.taskId)
-      discardCompletedTask(task, fromLocation.taskId)
   }
 }
 
@@ -434,6 +429,7 @@ export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId)
   if (!theCard && fromLocation?.zone !== 'grid') {
     return
   }
+  
   const theCardMovedTo = getTask(tasks, toLocation.inId)
   if(!theCardMovedTo && !['discard', 'context', 'panel'].includes(toLocation.zone)) {
     console.log("Attempting to move a card to a missing card, this should never happen. Missing card:", toLocation.inId)
@@ -456,13 +452,13 @@ export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId)
     if(fromLocation.inId !== toLocation.inId) {
       removeParentIfNotParent(theCard, theCardMovedFrom)
     }
-    
+
     // Save the card to the completed cards if it has at least one checkmark
     if(fromLocation.zone != 'completed' && toLocation.zone === 'discard' && theCard && theCard.claimed && theCard.claimed.length >= 1) {
       addCompletedTask(theCardMovedFrom, taskId)
     }
   }
-  
+
   // Move card to wherever it was moved to
   if(theCard) {
     putTaskInTaskZone(theCard, theCardMovedTo, toLocation)

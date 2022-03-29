@@ -543,20 +543,21 @@ class AoStore {
   }
 
   getTaskByName_async(taskName, callback) {
+    console.log("getTaskByName_async")
     taskName = taskName.toLowerCase()
     let taskToGet = this.cardByName.get(taskName)
     if (taskToGet !== undefined) {
-      //console.log('AO: client/store.ts: getTaskByName_async: task found in client store: ', { taskName, taskToGet })
+      console.log('AO: client/store.ts: getTaskByName_async: task found in client store: ', { taskName, taskToGet })
       callback(taskToGet)
     } else {
-      // console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
+       console.log("AO: client/store.ts: getTaskByName_async: fetching task from server", { taskName });
       let stateClosure = this.state
       request
         .post('/fetchTaskByName')
         .set('Authorization', stateClosure.token)
         .send({ taskName })
         .then(result => {
-          // console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result.body});
+           console.log("AO: client/store.ts: getTaskByName_async: merging fetched task", {taskName, "result": result});
 
           runInAction(() => {
             let taskItems = result.body.foundThisTaskList
@@ -574,7 +575,7 @@ class AoStore {
           })
         })
         .catch(error => {
-          // console.log("AO: client/store.ts: getTaskByName_async: error fetching task", {taskName, error});
+           console.log("AO: client/store.ts: getTaskByName_async: error fetching task", {taskName, error});
 
           callback(false)
         })

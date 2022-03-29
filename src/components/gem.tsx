@@ -73,10 +73,11 @@ export default class AoGem extends React.Component<{}, State> {
 				if (card) {
 					api.createAndPlayCard(name.trim(), 'blue', false, { inId: card.taskId, zone: 'subTasks' })
 				} else {
-					api.createCard(name).then(res => {
-						const taskId = JSON.parse(res.text).event.taskId
-						goInCard(taskId)
-						this.setState({ redirect: taskId })
+					api.createCardIfDoesNotExist(name).then(newTask => {
+					  if(newTask) {
+  						goInCard(newTask.taskId)
+  						this.setState({ redirect: newTask.taskId })
+						}
 					})
 				}
 			})

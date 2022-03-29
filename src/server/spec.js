@@ -1303,11 +1303,13 @@ router.post( '/events', ( req, res, next ) => {
       if (
         validators.isTaskId( req.body.taskId ) &&
         Number.isInteger( req.body.height, errRes ) &&
-        Number.isInteger( req.body.width )
+        Number.isInteger( req.body.width ) &&
+        (!req.body.spread || ['grid', 'pyramid', 'rune'].includes(req.body.spread))
       ) {
         events.trigger(
           eventType, {
             taskId: req.body.taskId,
+            spread: req.body.spread,
             height: req.body.height,
             width: req.body.width,
           },

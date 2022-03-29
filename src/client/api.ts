@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { isObject } from '../utils'
 import config from '../../configuration'
 import aoStore from './store'
-import { Task, Color } from '../interfaces'
+import { Task, Color, PinboardStyle } from '../interfaces'
 import { io } from 'socket.io-client'
 
 import { runInAction, reaction } from 'mobx'
@@ -260,11 +260,12 @@ class AoApi {
     name: string,
     color?: Color,
     anonymous?: boolean
-  ): Promise<boolean> {
+  ): Promise<Task> {
   return new Promise((resolve, reject) => {
       aoStore.getTaskByName_async(name, (task: Task) => {
         if (isObject(task)) {
-          resolve(true)
+          console.log("task exists!")
+          resolve(task)
         } else {
           const act = {
             type: 'task-created',
@@ -279,8 +280,9 @@ class AoApi {
             .set('Authorization', aoStore.state.token)
             .send(act)
             .then((res) => {
-              const newTask: Task = JSON.parse(res.text).event
-              resolve(true)
+              aoStore.getTaskByName_async(name, (task: Task) => {
+                resolve(task)
+              })
             })
         }
       })
@@ -1241,11 +1243,13 @@ class AoApi {
   async addGridToCard(
     taskId: string,
     height: number,
-    width: number
+    width: number,
+    spread: PinboardStyle = 'pyramid'
   ): Promise<request.Response> {
     const act = {
       type: 'grid-added',
       taskId: taskId,
+      spread: spread,
       height: height,
       width: width,
     }

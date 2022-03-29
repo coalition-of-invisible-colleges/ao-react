@@ -204,7 +204,7 @@ export default function applyRouter(app) {
       if (
         taskItem.book &&
         taskItem.book.startTs >= 1 &&
-        (msNow - taskItem.book.startTs <= timeRangeToSend)
+        (taskItem.book.startTs <= msNow + timeRangeToSend)
       ) {
         stateToSend.tasks.push(taskItem)
       }
@@ -235,6 +235,9 @@ export default function applyRouter(app) {
 
     stateToSend.tasks.forEach(task => {
       if (task.guild && task.guild.length >= 1) {
+      }
+      if(task.taskId === 'f34b22d0-e50b-11ea-91fb-07e05a02ef02') {
+        console.log("about to send special task. subTasks is", task.subTasks)
       }
     })
 
@@ -482,15 +485,13 @@ export default function applyRouter(app) {
       let errRes = []
       let foundThisTask
 
-      // console.log('AO: server/router.js: fetchTaskByName: start: ', {
-      //   'pubState.tasks': state.pubState.tasks,
-      // })
-
+       console.log('AO: server/router.js: fetchTaskByName: start: ')
+      const trimmedTaskName = req.body.taskName.trim().toLowerCase()
       if (validators.isTaskName_sane(req.body.taskName, errRes)) {
         let taskName = req.body.taskName
         state.pubState.tasks.some(taskItem => {
-          // console.log("AO: server/router.js: fetchTaskByName: iterative search: ", { "taskName": req.body.taskName, taskItem });
-          if (taskItem.name === req.body.taskName) {
+          if (taskItem.name.toLowerCase() === trimmedTaskName) {
+           console.log("AO: server/router.js: fetchTaskByName: iterative search: ", { "taskName": req.body.taskName, taskItem });
             foundThisTask = taskItem
             return true
           }
@@ -538,7 +539,7 @@ export default function applyRouter(app) {
               !firstPriorityId || (firstPriorityId && foundPriority),
           })
         } else {
-          // console.log("AO: server/router.js: fetchTaskByName: task not found ", { "req.body": req.body, foundThisTask} )
+          console.log("AO: server/router.js: fetchTaskByName: task not found ", { "req.body": req.body, foundThisTask} )
           errRes.push('task name not found')
           res.status(204).send({ success: false, errorList: errRes })
         }

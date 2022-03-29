@@ -112,7 +112,6 @@ interface State {
   showPriorities?: boolean
   showCompleted?: boolean
   showProjects?: boolean
-  // loadedFromServer: boolean
   confirmedLoadedAllChildren: boolean
   renderMeNowPlease?: boolean
   showCopied?: boolean
@@ -124,18 +123,39 @@ interface State {
   closingBottomDrawerTimeout?
 }
 
-// const AoContextCard =
-//     (props) =>
-//     {
-//       console.log("AO: components/AoContextCard: ", {props});
+export async function onDropToPinboard(from: CardLocation, to: CardLocation): Promise<request.Response> {
+  if (!from.taskId) {
+    return null
+  }
+  
+  const cardFrom = aoStore.hashMap.get(from.taskId)
+  if (!cardFrom) {
+    return null
+  }
+  
+  // For a grid move, if the taskId is already in the from and to then there is nothing to do
+  if(from.taskId === to.taskId) {
+    return null
+  }
+  
+  const cardTo = aoStore.hashMap.get(to.taskId)
+  if (cardTo) {
+    to.inId = cardTo.taskId
+    to.taskId = cardFrom.taskId
+  } else {
+    to.taskId = from.taskId
+  } // could implement Ctrl-Drag to copy instead of move here
 
-//       let card = aoStore.hashMap.get(props.taskId);
-
-//       return <Helmet><title>{card.loadedFromServer?card.name:"loading..."}</title></Helmet>
-//     };
-
-// export default observable(AoContextCard);
-
+  return new Promise((resolve, reject) => {
+    api.playCard(from, to).then((res) => {
+      if(from.zone === 'discard') {
+        aoStore.popDiscardHistory()
+      }
+      resolve(res)
+    })
+  })
+}
+        
 export default class AoContextCard extends React.Component<CardProps, State> {
   constructor(props) {
     super(props)
@@ -171,17 +191,10 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.setState({ renderMeNowPlease: true })
   }
 
+  // this code will try to load all the subcards of this card using local client and server async
+  //   if all the cards are already on the client, it will finish synchronously, discarding the
+  //   response of the async callback
   loadChildTasksAndPossiblyReRender() {
-    // console.log('AO: components/contextCard.tsx: loadChildTasksAndReRender: ', {
-    //   props: this.props,
-    //   state: this.state,
-    // })
-
-    // if (forceReload === true) this.setState({"confirmedLoadedAllChildren":false})
-
-    // this code will try to load all the subcards of this card using local client and server async
-    //   if all the cards are already on the client, it will finish synchronously, discarding the
-    //   response of the async callback
     if (!this.props.task) return
     if (this.props.cardStyle !== 'full') return
 
@@ -190,20 +203,13 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     let currentLoadedState = aoStore.getAllLinkedCardsForThisTaskId_async(
       this.props.task.taskId,
       stateRequiresUpdate => {
-        // console.log(
-        //   'AO: components/contextCard.tsx: loadChildTasksAndReRender: running callback after loading all child cards',
-        //   { stateRequiresUpdate }
-        // )
-
         if (stateRequiresUpdate === true) {
-          // this.childComponentsLastUpdated = Date.now()
           this.taskHasLoadedAllChildren = true
           this.setState({ renderMeNowPlease: true })
         }
       }
     )
     if (currentLoadedState !== false) {
-      // this.setState({confirmedLoadedAllChildren: true})
       this.taskHasLoadedAllChildren = true
     }
   }
@@ -237,18 +243,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if (!this.props.task || this.props.cardStyle !== 'full') {
           // do nothing
         } else {
-          /*this.props.task &&
-            this.props.task.priorities &&
-            this.props.task.priorities.length
-          this.props.task &&
-            this.props.task.subTasks &&
-            this.props.task.subTasks.length
-          this.props.task &&
-            this.props.task.completed &&
-            this.props.task.completed.length
-          this.props.task && this.props.task.pins && this.props.task.pins
-          this.props.task && this.props.task.aoGridToolDoNotUpdateUI*/
-
           toReturn = this.allSubCardItems
           toReturn.push(
             this.props.task && this.props.task.aoGridToolDoNotUpdateUI
@@ -485,8 +479,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           this.setState({showCopied: true})
       })
       .catch(err => {
-          console.log(err, 'copy attempt failed, printing to console:')
-          console.log(content)
+          console.log(err, 'copy attempt failed, printing to console:', content)
       })
  }
  
@@ -505,7 +498,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     aoStore.registerCloseable(this.onSwitchTab)
   }
 
-  renderCardContent(content: string, hideIframes = false, alternateOnClick = null) {
+  renderCardContent(content: string, className: string = null, hideIframes = false, alternateOnClick = null) {
     // hideIframes doesn't  work. it's supposed to hide YouTube embeds in the mini card.
     const meme = aoStore.memeById.get(this.props.task.taskId)
     let memeContent
@@ -520,7 +513,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     }
 
     return (
-      <div className='clipboardWrapper' onClick={alternateOnClick ? alternateOnClick : this.props.cardStyle !== 'context' && this.props.cardStyle !== 'index' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
+      <div className={'clipboardWrapper' + (className ? ' ' + className : '')} onClick={alternateOnClick ? alternateOnClick : this.props.cardStyle !== 'context' && this.props.cardStyle !== 'index' ? (event) => this.copyCardToClipboard(event, content) : undefined}>
         <Markdown
           options={{
             forceBlock: false,
@@ -670,10 +663,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
 
     const contentClass = "content" + (this.state.showCopied ? ' crosshair' : '')
     const cardStyle = this.props.cardStyle ? this.props.cardStyle : 'face'
-    // console.log('AO: components/contextCard.tsx: render: ', {
-    //   taskId,
-    //   cardStyle,
-    // })
 
     switch (cardStyle) {
       case 'context':
@@ -861,42 +850,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           api.playCard(from, toLocation)
         }
         
-        const onDropToPinboard = async (from: CardLocation, to: CardLocation): Promise<request.Response> => {
-          if (!from.taskId) {
-            return null
-          }
-          
-          const cardFrom = aoStore.hashMap.get(from.taskId)
-          if (!cardFrom) {
-            return null
-          }
-          
-          // For a grid move, if the taskId is already in the from and to then there is nothing to do
-          if(from.taskId === to.taskId) {
-            return null
-          }
-          
-          const cardTo = aoStore.hashMap.get(to.taskId)
-          if (cardTo) {
-            to.inId = cardTo.taskId
-            to.coords.x = null
-            to.coords.y = 0
-            to.zone = 'subTasks'
-          } else {
-            to.taskId = from.taskId
-            to.inId = taskId || from.inId
-          } // could implement Ctrl-Drag to copy instead of move here
-        
-          return new Promise((resolve, reject) => {
-            api.playCard(from, to).then((res) => {
-              if(from.zone === 'discard') {
-                aoStore.popDiscardHistory()
-              }
-              resolve(res)
-            })
-          })
-        }
-        
         const onNewPinboardCard = async (name: string, coords: Coords, callbackToClear: () => void): Promise<request.Response> => {
           return new Promise((resolve, reject) => {
             let moveTo: CardLocation = {
@@ -953,7 +906,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               tooltip: 'Priorities',
               content: [(prioritiesSummary || recurrenceSummary) ? <React.Fragment>{prioritiesSummary}{recurrenceSummary}</React.Fragment> : null, completedSummary],
               onDrop: onDropToPrioritiesTab,
-              dropHoverMessage: 'Drop to prioritize'
+              dropHoverMessage: 'drop to prioritize'
             },
             {
               id: CardTabId.timecube,
@@ -1263,22 +1216,22 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               <Observer>
                 {() => {
                   return (
-                    <AoDragZone
-                      taskId={taskId}
-                      dragContext={{
-                        zone: 'card',
-                        inId: null,
-                        y: 0,
-                      }}>
-                      <AoPaper taskId={taskId} color={card?.color} />
-                    </AoDragZone>
+                    <AoPaper taskId={taskId} color={card?.color} />
                   )
                 }}
               </Observer>
               <Observer>
                 {() => <AoCardHud taskId={taskId} hudStyle="full before" />}
               </Observer>
-              <AoCardTab onClick={toggleLeftDrawer} icon={card.guild && card.guild.length >= 1 ? Badge : HeartNet} tooltip='Connections' edge='left' isSelected={this.state.leftDrawerOpen} content={card.guild && card.guild.length >= 1 ? <div>{card.guild}</div> : null} />
+              <AoDragZone
+                taskId={taskId}
+                dragContext={{
+                  zone: 'card',
+                  inId: null,
+                  y: 0,
+                }}>
+                <AoCardTab onClick={toggleLeftDrawer} icon={card.guild && card.guild.length >= 1 ? Badge : HeartNet} tooltip='Connections' edge='left' isSelected={this.state.leftDrawerOpen} content={card.guild && card.guild.length >= 1 ? <div>{card.guild}</div> : null} />
+              </AoDragZone>
               <Observer>
                 {() => {
                   return (
@@ -1294,7 +1247,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                       }>
                       <AoAttachment taskId={taskId} inId={this.props.inId} />
                       {member && <AoMemberIcon memberId={taskId} />}
-                      {this.renderCardContent(content)}
+                      {this.renderCardContent(content, (card.pinboard && card.pinboard.spread === 'rune' && card.pinboard.width >= 5 ? 'verticalCenter' : null))}
                       <Observer>
                         {() => {
                           if(!card || !card.pins || !card.pinboard || !card.pinboard.hasOwnProperty('height') || !(card.pinboard.height >= 1)) {
@@ -1429,7 +1382,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                     onDrop={this.dropToCard}
                     zoneStyle="panel"
                     dropHoverMessage="drop to categorize here">
-                      {this.renderCardContent(content, true, !youAreHere ? this.goInCard : undefined)}
+                      {this.renderCardContent(content, null, true, !youAreHere ? this.goInCard : undefined)}
                   </AoDropZone>
               </div>
               {this.state.showProjects ? (
@@ -1515,7 +1468,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div className={contentClass}>
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
-              {this.renderCardContent(content, true)}
+              {this.renderCardContent(content, null, true)}
   						  <AoCountdown taskId={taskId} hudStyle='notification' />
             </div>
           </div>
@@ -1545,7 +1498,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             <div className={contentClass}>
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
-              {this.renderCardContent(content, true)}
+              {this.renderCardContent(content, null, true)}
             </div>
             <AoCardHud
               taskId={taskId}

@@ -29,34 +29,37 @@ export default function AoGridResizer(props: Props) {
   const pinboard = card.pinboard
   
   const switchToPyramid = event => {
-    event.stopPropagation()
+    if(event) event.stopPropagation()
     return api.setCardProperty(props.taskId, 'pinboard.spread', 'pyramid')
   }
 
   const switchToGrid = event => {
-    event.stopPropagation()
+    if(event) event.stopPropagation()
     return api.setCardProperty(props.taskId, 'pinboard.spread', 'grid')
   }
   
   const switchToRune = event => {
-    event.stopPropagation()
+    if(event) event.stopPropagation()
     return api.setCardProperty(props.taskId, 'pinboard.spread', 'rune')
   }
   
   const addPyramid = (event) => {
-		switchToPyramid(event).then(() => api.addGridToCard(taskId, 3, 3))
+    event.stopPropagation()
+		api.addGridToCard(taskId, 3, 3)
 	}
 	
 	const addGrid = (event) => {
-		switchToGrid(event).then(() => api.addGridToCard(taskId, 3, 3))
+	  event.stopPropagation()
+		api.addGridToCard(taskId, 3, 3, 'grid')
 	}
 	
 	const addRune = (event) => {
-		switchToRune(event).then(() => api.addGridToCard(taskId, 3, 3))
+	  event.stopPropagation()
+		api.addGridToCard(taskId, 3, 3, 'rune')
 	}
 	
   if(!pinboard) {
-    return <AoHiddenFieldset heading='Grid' startOpen={false} className='gridMenu'>
+    return <AoHiddenFieldset heading='Pinboard' startOpen={false} className='gridMenu'>
       <div className='centerFlex'>
         <img src={PyramidImg} className="gridMenu action" onClick={addPyramid} />
         <img src={GridImg} className="gridMenu action" onClick={addGrid} />

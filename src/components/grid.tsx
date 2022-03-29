@@ -14,7 +14,7 @@ import AoCardComposer from './cardComposer'
 // TODO: Move this to Interfaces
 interface PinboardProps extends Pinboard {
   pins: Pin[]
-  inId?: string // For from.inId of cards dragged out of this grid, maybe can be eliminated
+  inId: string // For from.inId of cards dragged out of this grid, maybe can be eliminated
   spread: PinboardStyle
   onDropToSquare: (from: CardLocation, to?: CardLocation) => Promise<request.Response>
   onNewCard: (name: string, coords?: Coords, callbackToClear?: () => void) => Promise<request.Response>
@@ -65,6 +65,7 @@ const AoGridRowObserver = observer(
       const isPyramid = props.spread === 'pyramid'
 
       const onDropToSquareCaller = (from: CardLocation) => {
+        console.log("onDropToSquareCaller inId is", props.inId)
         const to: CardLocation = {
           taskId: tId,
           inId: props.inId,
@@ -129,6 +130,21 @@ export default function AoPinboard(props: PinboardProps) {
   function selectGridSquare(selection: Coords) {
     setSelected(selection)
   }
+  
+  function unselectGridSquare() {
+    setSelected(null)
+  }
+  
+  React.useEffect(() => {
+    aoStore.registerCloseable(unselectGridSquare)
+    return () => {
+      aoStore.unregisterCloseable(unselectGridSquare)
+    }
+  }, [])
+  
+  React.useEffect(() => {
+    unselectGridSquare()
+  }, [props.inId]) // bit of a hack, would be better to call a function from above on navigate
 
   function onBlur() {
     selectGridSquare(undefined)
@@ -189,6 +205,7 @@ export default function AoPinboard(props: PinboardProps) {
         const rowPins = pins?.filter(pin => pin.y === j)
         const rowWidth = j + 1
         const dropToSquareCaller = (from: CardLocation, to: CardLocation) => {
+          console.log("dropToSquareCaller Pyramid to is", to)
           to.coords.y = j
           return props.onDropToSquare(from, to).then(result => {
             setRenderMeNowPlease(true)
@@ -228,7 +245,6 @@ export default function AoPinboard(props: PinboardProps) {
       )
     case 'rune':
       const rowPins = pins?.filter(pin => pin.y === 0).sort((b, a) => b.x - a.x)
-      console.log("squareWidth is", squareWidth)
       const moreSquareWidth = props.width < 4 ? props.size - 2 + 'em' : props.width * 2 + (props.size / 2) - 3 + 'em'
       const runeSize = (Math.pow(3.14159, 1.2) * (props.width + (props.size * 0.9))) - 20 + 'em'
       for (let i = 0; i < props.width; i++) {
@@ -250,9 +266,8 @@ export default function AoPinboard(props: PinboardProps) {
             taskId: tId,
             inId: props.inId,
             zone: 'grid',
-            coords: { x: i, y: 0 },
+            coords: { x: i, y: 0 }
           }
-          to.coords.y = 0
           return props.onDropToSquare(from, to).then(result => {
             setRenderMeNowPlease(true)
             return result

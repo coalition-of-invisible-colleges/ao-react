@@ -137,6 +137,7 @@ function initialize(callback) {
             })
             console.log('Starting monthly backup cron...')
             backupJob.start()
+            //backupState() // Uncomment to back up now
         })
 
         // We're applying the onion from torControl directly to the state after backup is applied. Kind of hacky, but it works

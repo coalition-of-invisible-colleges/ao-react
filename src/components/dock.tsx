@@ -3,6 +3,7 @@ import { computed, comparer, reaction, observable } from 'mobx'
 import { observer, Observer } from 'mobx-react'
 import aoStore from '../client/store'
 import { Task } from '../interfaces'
+import { onDropToPinboard } from './contextCard'
 import api from '../client/api'
 import AoHome from './home'
 import AoHopper from './hopper'
@@ -114,16 +115,16 @@ export default class AoDock extends React.Component<{}, State> {
       })
     }
     
-    const onDropToDockSquare = (from: CardLocation, to: CardLocation) => {
-      return api.playCard(from, to)
-    }
-    
     const onNewDockCard = (name, coords, callbackToClear) => {
       return api.createAndPlayCard(name, 'blue', false, {
           inId: this.state.bookmarksTaskId,
           zone: 'grid',
           coords: coords
         }).then(callbackToClear)
+    }
+    
+    const onDropToPinboardCaller = (from, to) => {
+      onDropToPinboard(from, to).then(() => this.setState({ renderMeNowPlease: true}))
     }
     
     const gridHasContents = card.pinboard && card.pinboard.height >= 1 && (card.pinboard.width > 1 || (card.pins && card.pins.length >= 1))
@@ -141,7 +142,7 @@ export default class AoDock extends React.Component<{}, State> {
                   width={card.pinboard.width}
                   size={card.pinboard?.size || 9}
                   spread="grid"
-                  onDropToSquare={onDropToDockSquare}
+                  onDropToSquare={onDropToPinboard}
                   onNewCard={onNewDockCard}
                   inId={this.state.bookmarksTaskId}
                 />

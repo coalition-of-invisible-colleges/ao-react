@@ -9,6 +9,7 @@ import {
   blankCard,
   blankPinboard,
   getTask,
+  getTaskBy,
   atomicCardPlay,
   unpinTasksOutOfBounds,
   discardTaskFromZone,
@@ -463,7 +464,8 @@ function tasksMuts(tasks, ev) {
   let inTask
   let memberTask
   
-  const theTaskId = ev.taskId || ev.subTask || ev.resourceId
+  // Most tasks have a taskId and memberId, and many have an inId, so pull these out in a standard way
+  const theTaskId = ev.taskId || ev.subTask || ev.resourceId || ev?.from?.taskId || ev?.to?.taskId
   if(theTaskId) {
     theTask = getTask(tasks, theTaskId)
     if(!theTask && ev.type !== 'task-created' && ev.type !== 'grid-created' && ev.type !== 'resource-created' && ev.type !== 'meme-added') {
@@ -578,6 +580,10 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'task-created':
+      if(getTaskBy(tasks, ev.name, 'name')) {
+        console.log("Attempted to create a duplicate task, ignored at mutation level.")
+        break
+      }
       tasks.push(
         blankCard(
           ev.taskId,
@@ -1096,7 +1102,7 @@ function tasksMuts(tasks, ev) {
       if(typeof ev.x === 'string') {
         ev.x = parseInt(ev.x)
       }
-      atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'subTasks'}, { taskId: ev.taskId, inId: ev.inId, zone: 'grid', coords: { y: parseInt(ev.y), x: parseInt(ev.x) } }, ev?.memberId, ev)
+      atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'subTasks'}, { taskId: ev.taskId, inId: ev.inId, zone: 'grid', coords: { y: parseInt(ev.y), x: parseInt(ev.x) } }, ev?.memberId)
       break
     case 'grid-unpin':
       //console.log("event type is", ev.type)
@@ -1128,45 +1134,9 @@ function tasksMuts(tasks, ev) {
       } else {
         theTask[ev.property] = ev.value
       }
-      // todo: do this in a function in a better way
-      // todo: maybe combine color mutation with this one
-      /*if (ev.property === 'gridStyle' && ev.value === 'pyramid') {
-        tasks.forEach((task, i) => {
-          if (task.taskId === ev.taskId) {
-            if (!task.grid) {
-              task.grid = blankPinboard(ev.height, ev.width)
-            }
-            Object.entries(task.grid.rows).forEach(([y, row]) => {
-              Object.entries(row).forEach(([x, cell]) => {
-                if (x >= y + 1 || y >= ev.height) {
-                  tasks.forEach(st => {
-                    if (st.taskId === cell) {
-                      task.subTasks = _.filter(
-                        task.subTasks,
-                        taskId => taskId !== cell
-                      )
-                      task.completed = _.filter(
-                        task.completed,
-                        taskId => taskId !== cell
-                      )
-                      if (st.claimed && st.claimed.length >= 1) {
-                        task.completed.push(cell)
-                      } else {
-                        task.subTasks.unshift(cell)
-                      }
-                    }
-                  })
-                  delete tasks[i].grid.rows[y][x]
-                }
-              })
-              if (row.length === 0) {
-                delete tasks[i].grid.rows[y]
-              }
-            })
-          }
-        })
-      }*/
-
+      if(ev.property === 'pinboard.spread') {
+        unpinTasksOutOfBounds(tasks, theTask)
+      }
       break
     case 'task-colored':
       theTask.color = ev.color
@@ -1243,7 +1213,7 @@ function tasksMuts(tasks, ev) {
             p.completed.indexOf(ev.taskId) > -1
           ) {
             p.completed = p.completed.filter(taskId => taskId !== ev.taskId)
-            addSubTask(theTask, ev.taskId)
+            addSubTask(p, ev.taskId)
           }
         })
       }
@@ -1474,7 +1444,7 @@ function tasksMuts(tasks, ev) {
       )
       break
     case 'grid-added':
-      theTask.pinboard = blankPinboard(ev.height, ev.width)
+      theTask.pinboard = blankPinboard(ev.height, ev.width, ev.spread)
       break
     case 'grid-removed':
       theTask.pins = []
@@ -1487,7 +1457,7 @@ function tasksMuts(tasks, ev) {
       theTask.pinboard.height = ev.height
       theTask.pinboard.width = ev.width
       theTask.pinboard.size = ev.size || 9
-      unpinTasksOutOfBounds(theTask)
+      unpinTasksOutOfBounds(tasks, theTask)
       break
   }
 }
