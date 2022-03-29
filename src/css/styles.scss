@@ -2082,6 +2082,8 @@ body {
 
 // the content of the grid menu itself
 .gridMenu {
+  padding-bottom: 0.25em;
+  
   .action img, img.action {
     max-height: 3em;
     margin: 0 0.25em;
@@ -2492,6 +2494,8 @@ img.icon {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.4);
@@ -4303,7 +4307,7 @@ svg.dataVisCanvas {
 			.countdown {
 			  background-color: rgba(0, 0, 0, 0.2);
 			  font-size: 0.9em;
-			  padding: 0.25em;
+			  padding: 0.25em 0.8em;
 			  margin: 0;
 			  white-space: nowrap;
 			}
@@ -4343,6 +4347,11 @@ div.legendAction, legend.clickable {
   }
 }
 
+div.legendAction {
+  margin-top: 1.25em;
+  margin-bottom: 1em;
+}
+
 // Tabs along the edge of a card
 .cardTabs {
   //position: absolute;
@@ -4368,6 +4377,11 @@ div.legendAction, legend.clickable {
   
   .dropZone {
     position: relative;
+    
+    .overlay {
+      left: 100%;
+      width: max-content;  
+    }
   }
 }
 
@@ -4452,12 +4466,12 @@ div.legendAction, legend.clickable {
   z-index: 1;
   
   &>.cardTab {
+    z-index: 1;
     transform-origin: top right;
     transform:  translateX(-100%) rotate(-90deg) ;
     position: absolute;
     left: 1em;
     top: -1em;
-    
     border-top-left-radius: 40%;
     border-bottom-left-radius: 40%;
     border-right: none;
@@ -4498,18 +4512,16 @@ div.legendAction, legend.clickable {
     margin-top: 0;
     padding-left: 1em;
     padding-right: 1em;
+    padding-bottom: 0.25em;
+    min-width: 9em;
     width: max-content;
+    display: flex;
+    justify-content: center;
     
     .tabSummary {
-      display: inline-block;
       font-size: 2em;
-      float: left;
       margin-right: 0.25em;
       //float: right;
-    }
-    
-    object {
-      display: inline-block;
     }
   } 
 }
@@ -4741,6 +4753,13 @@ div.legendAction, legend.clickable {
 .content > .clipboardWrapper {
   display: inline-block;
   cursor: pointer;
+  
+  &.verticalCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+  }
 }
 
 // Tab / button to switch to toggle viewing checked-off / completed / accomplished cards
@@ -4817,6 +4836,7 @@ div.legendAction, legend.clickable {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
+  margin-bottom: 0.5em;
   
   img:first-child, span:first-child {
     flex-basis: 33%;
