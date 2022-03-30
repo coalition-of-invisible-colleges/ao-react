@@ -1121,6 +1121,10 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-guilded':
+      if(!theTask) {
+        console.log("Missing task for task-guilded)
+        break
+      }
       theTask.guild = ev.guild
       break
     case 'task-property-set':
