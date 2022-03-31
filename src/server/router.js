@@ -67,35 +67,45 @@ export default function applyRouter(app) {
   app.post('/state', (req, res) => {
     debugger
 
-    let useReducedState = true
-    let dataPackageToSendToClient = {}
-    let stateToSend
-
     let reqOwner = req.reqOwner
-    let memberDeckSize = 0
+    
+    let stateToSend
+    stateToSend = { tasks: [] }
+    
+    let dataPackageToSendToClient = {}
+    dataPackageToSendToClient.stateToSend = stateToSend
 
-    if (useReducedState === true) {
-      stateToSend = { tasks: [] }
-      for (let [key, value] of Object.entries(state.pubState)) {
-        if (key !== 'tasks') {
-          stateToSend[key] = state.pubState[key]
-        } else {
-          // Include all member cards (name equals taskId)
-          // Include the community hub card itself
-          for (let taskItem of value) {
-            if (
-              taskItem.name === taskItem.taskId ||
-              taskItem.name === 'community hub'
-            ) {
-              stateToSend.tasks.push(taskItem)
-            }
+    let memberDeckSize = 0
+    
+    // Check that the member has an existing member card
+    let foundMemberCard = false
+    console.log("reqOwner is:", reqOwner)
+    state.pubState.tasks.forEach(taskItem => {
+      if(taskItem.taskId.trim().toLowerCase() === reqOwner.trim().toLowerCase()) {
+        console.log("found member card for reqOwner:", taskItem)
+        foundMemberCard = true
+      }
+    })
+    if(!foundMemberCard) {
+      console.log("Missing member card for reqOwner:", reqOwner)
+    }
+    
+    // Include all member cards (name equals taskId)
+    // Include the community hub card itself
+    for (let [key, value] of Object.entries(state.pubState)) {
+      if (key !== 'tasks') {
+        stateToSend[key] = state.pubState[key]
+      } else {
+        for (let taskItem of value) {
+          if (
+            taskItem.name === taskItem.taskId ||
+            taskItem.name === 'community hub'
+          ) {
+            stateToSend.tasks.push(taskItem)
           }
         }
       }
-    } else {
-      stateToSend = state.pubState
     }
-    dataPackageToSendToClient.stateToSend = stateToSend
 
     // Include their bookmarks card itself
     let bookmarksTaskId
@@ -190,14 +200,7 @@ export default function applyRouter(app) {
       }
     })*/
     
-    // Also include all member cards
-    state.pubState.tasks.forEach(taskItem => {
-      if (taskItem.taskId === taskItem.name) {
-        stateToSend.tasks.push(taskItem) // will add duplicates
-      }
-    })
-    
-    // Also include any events in the next three days, whether or not they are holding them
+    // Also include any events before the next three days (including past events), whether or not they are holding them
     const msNow = Date.now()
     const timeRangeToSend = 1000 * 60 * 60 * 24 * 3
     state.pubState.tasks.forEach(taskItem => {
@@ -222,32 +225,13 @@ export default function applyRouter(app) {
         allReachableHeldParents(state.pubState.tasks, taskItem, reqOwner)
       )
     })
-    console.log(
-      'heldParentTasks.length is',
-      heldParentTasks.length,
-      ' and stateToSend.tasks.length is',
-      stateToSend.tasks.length
-    )
 
     // Remove duplicates and combine lists again
     stateToSend.tasks = [...new Set([...stateToSend.tasks, ...heldParentTasks])]
-    console.log('POST stateToSend.tasks.length is', stateToSend.tasks.length)
-
-    stateToSend.tasks.forEach(task => {
-      if (task.guild && task.guild.length >= 1) {
-      }
-      if(task.taskId === 'f34b22d0-e50b-11ea-91fb-07e05a02ef02') {
-        console.log("about to send special task. subTasks is", task.subTasks)
-      }
-    })
 
     dataPackageToSendToClient.metaData = { memberDeckSize, bookmarksTaskId }
-
-    // console.log(util.inspect(req))
-
-    // let reqOwner = req.reqOwner;
-    // let deckSize = 0
-
+    
+    console.log('POST stateToSend.tasks.length is', stateToSend.tasks.length)
     res.json(dataPackageToSendToClient)
   })
   
