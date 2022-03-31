@@ -58,8 +58,21 @@ export function blankPinboard(height = 3, width = 3, spread = 'pyramid') {
 	return newGrid
 }
 
+let dupesGlossary = {}
+// Adds a synonym taskId for another taskId to the duplicates glossary
+export function registerDuplicateTaskId(originalTaskId, duplicateTaskId) {
+  if(!dupesGlossary[originalTaskId]) {
+    dupesGlossary[originalTaskId] = [ duplicateTaskId ]
+    return
+  }
+  if(duplicateTaskId && !dupesGlossary[originalTaskId].includes(duplicateTaskId)) {
+    dupesGlossary[originalTaskId].push(duplicateTaskId)
+  }
+}
+
 // Returns the task with the given taskId from the given list of tasks, or null
-export function getTask(tasks, taskId, dupesGlossary = {}) {
+// Uses the duplicates glossary to return synonymous tasks that were created by junk task-created events
+export function getTask(tasks, taskId) {
 	return tasks.find(task => {
 		if (task.taskId === taskId) {
 			return task
