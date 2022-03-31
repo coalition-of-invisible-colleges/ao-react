@@ -459,6 +459,7 @@ function sessionsMuts(sessions, ev) {
 }
 
 let missingTaskIds = []
+let dupesGlossary = {}
 let previousXEvents = []
 const numEventsToSave = 1
 function tasksMuts(tasks, ev) {
@@ -593,8 +594,15 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'task-created':
-      if(getTaskBy(tasks, ev.name, 'name')) {
+      const foundExistingTask = getTaskBy(tasks, ev.name, 'name')
+      if(foundExistingTask?.taskId) {
         console.log("Attempted to create a duplicate task, ignored at mutation level. name:", ev.name)
+        if(!dupesGlossary[foundExistingTask.taskId]) {
+          dupesGlossary[foundExistingTask.taskId] = []
+        }
+        if(ev.taskId && !dupesGlossary[foundExistingTask.taskId].includes(ev.taskId)) {
+          dupesGlossary[foundExistingTask.taskId].push(ev.taskId)
+        }
         break
       }
       tasks.push(

@@ -59,11 +59,24 @@ export function blankPinboard(height = 3, width = 3, spread = 'pyramid') {
 }
 
 // Returns the task with the given taskId from the given list of tasks, or null
-export function getTask(tasks, taskId) {
+export function getTask(tasks, taskId, dupesGlossary = null) {
 	return tasks.find(task => {
 		if (task.taskId === taskId) {
 			return task
 		}
+		// Look up duplicate tasks in the duplicates glossary to politely overlook duplicate task-created mutations
+		let foundGlossaryTask
+		if(dupesGlossary && Array.isArray(dupesGlossary)) {
+  		Object.entries(dupesGlossary).some(([originalTaskId, duplicateTaskIds]) => {
+  		  if(duplicateTaskIds.includes(taskId)) {
+  		    foundGlossaryTask = task
+  		    return true
+  		  }
+  		})
+  		if(foundGlossaryTask) {
+  		  return foundGlossaryTask
+  		}
+    }
 	})
 }
 
@@ -432,7 +445,7 @@ export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId)
   
   const theCardMovedTo = getTask(tasks, toLocation.inId)
   if(!theCardMovedTo && !['discard', 'context', 'panel'].includes(toLocation.zone)) {
-    console.log("Attempting to move a card to a missing card, this should never happen. Missing card:", toLocation.inId)
+    console.log("Attempting to move a card to a missing card, this should never happen. Missing card:", toLocation.inId, "and zone:", toLocation.zone)
     return
   }
   
