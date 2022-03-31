@@ -499,8 +499,8 @@ function tasksMuts(tasks, ev) {
   if(ev.inId) {
     inTask = getTask(tasks, ev.inId)
     if(!inTask && ev.type !== 'task-created') {
-      if(!missingTaskIds.includes(inId)) {
-        missingTaskIds.push(inId)
+      if(!missingTaskIds.includes(ev.inId)) {
+        missingTaskIds.push(ev.inId)
         console.log(ev.type + ': first missing task event for inId', ev.inId, '(' + missingTaskIds.length + ') ev:', ev)
       }
       return // continuing may crash, but returning may cause further inconsistencies going forward
