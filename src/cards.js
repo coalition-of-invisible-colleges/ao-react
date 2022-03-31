@@ -63,6 +63,7 @@ let dupesGlossary = {}
 export function registerDuplicateTaskId(originalTaskId, duplicateTaskId) {
   if(!dupesGlossary[duplicateTaskId]) {
     dupesGlossary[duplicateTaskId] = originalTaskId
+    console.log(Object.keys(dupesGlossary).length, "cards with duplicates")
   }
 }
 
@@ -73,7 +74,7 @@ export function getTask(tasks, taskId) {
   let loops = 0
   while(dupesGlossary[taskId] && loops < 4) {
     taskId = dupesGlossary[taskId]
-    console.log("Looked up duplicate task:", taskId, " (", Object.keys(dupesGlossary).length, " duplicated)")
+    //console.log("Looked up duplicate task:", taskId, " (", Object.keys(dupesGlossary).length, " duplicated)")
     loops++
   }
   if(loops >= 4) {
