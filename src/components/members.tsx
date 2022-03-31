@@ -181,7 +181,13 @@ export default class AoMembers extends React.Component<{}, State> {
   }
 
   @computed get sortedMemberCards() {
-    const members = aoStore.state.members.slice()
+    const members = aoStore.state.members.slice().filter(member => !!member.memberId)
+    members.forEach(member => {
+      if(!member.name) {
+        member.name = 'missing member'
+      }
+    })
+    
     let memberCards: Task[] = []
 
     if (this.state.sort === 'recents') {
@@ -190,7 +196,7 @@ export default class AoMembers extends React.Component<{}, State> {
       })
     } else if (this.state.sort === 'alphabetical') {
       members.sort((a, b) => {
-        return b.name ? b.name.localeCompare(a.name, 'en', { sensitivity: 'base' }) : 0
+        return b.name.localeCompare(a.name, 'en', { sensitivity: 'base' })
       })
     }
 
