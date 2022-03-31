@@ -101,6 +101,9 @@ export default function applyRouter(app) {
             taskItem.name === taskItem.taskId ||
             taskItem.name === 'community hub'
           ) {
+            if(taskItem.name === reqOwner) {
+              console.log('Adding member card for reqOwner', reqOwner)
+            }
             stateToSend.tasks.push(taskItem)
           }
         }
