@@ -461,7 +461,7 @@ function sessionsMuts(sessions, ev) {
 let missingTaskIds = []
 let dupesGlossary = {}
 let previousXEvents = []
-const numEventsToSave = 1
+const numEventsToSave = 0
 function tasksMuts(tasks, ev) {
   let theTask
   let inTask
