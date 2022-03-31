@@ -1262,6 +1262,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                             onDropToSquare={onDropToPinboard}
                             onNewCard={onNewPinboardCard}
                             inId={taskId}
+                            isPinboardResizing={aoStore.isPinboardResizing}
                           />
                         } }
                       </Observer>
@@ -1416,9 +1417,11 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if(fromMemberId.includes('.onion')) {
           fromMemberName = fromMemberId
         } else {
-          aoStore.state.members.find(
-            member => member.memberId === fromMemberId
-          ).name
+          if(aoStore.state.members && Array.isArray(aoStore.state.members)) {
+            fromMemberName = aoStore.state.members.find(
+              member => member.memberId === fromMemberId
+            ).name
+          }
         }
         
         return (

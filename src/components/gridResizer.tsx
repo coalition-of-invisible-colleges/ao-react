@@ -20,6 +20,14 @@ interface Props {
 }
 
 export default function AoGridResizer(props: Props) {
+  React.useEffect(() => {
+    return () => {
+      if(aoStore.isPinboardResizing) {
+        clearTimeout(aoStore.isPinboardResizing)
+      }
+    }
+  }, [])
+  
   const taskId = props.taskId
   const card = aoStore.hashMap.get(taskId)
   if (!card) {
@@ -67,23 +75,36 @@ export default function AoGridResizer(props: Props) {
       </div>
 		</AoHiddenFieldset>
   }
-
+  
+  const triggerResizeAnimation = () => {
+    if(aoStore.isPinboardResizing) {
+       clearTimeout(aoStore.isPinboardResizing)
+    }
+    aoStore.setIsPinboardResizing(
+      setTimeout(() => { aoStore.setIsPinboardResizing(null) }, 550)
+    )
+  }
+  
   const increaseRows = () => {
+    triggerResizeAnimation()
     const card = aoStore.hashMap.get(taskId)
     api.resizeGrid(taskId, pinboard.height + 1, pinboard.width, pinboard.size)
   }
 
   const decreaseRows = () => {
+    triggerResizeAnimation()
     const card = aoStore.hashMap.get(taskId)
     api.resizeGrid(taskId, pinboard.height - 1, pinboard.width, pinboard.size)
   }
 
   const increaseColumns = () => {
+    triggerResizeAnimation()
     const card = aoStore.hashMap.get(taskId)
     api.resizeGrid(taskId, pinboard.height, pinboard.width + 1, pinboard.size)
   }
 
   const decreaseColumns = () => {
+    triggerResizeAnimation()
     const card = aoStore.hashMap.get(taskId)
     api.resizeGrid(taskId, pinboard.height, pinboard.width - 1, pinboard.size)
   }

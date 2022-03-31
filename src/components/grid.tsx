@@ -18,6 +18,7 @@ interface PinboardProps extends Pinboard {
   spread: PinboardStyle
   onDropToSquare: (from: CardLocation, to?: CardLocation) => Promise<request.Response>
   onNewCard: (name: string, coords?: Coords, callbackToClear?: () => void) => Promise<request.Response>
+  isPinboardResizing: number
 }
 
 const AoGridRowObserver = observer(
@@ -155,7 +156,9 @@ export default function AoPinboard(props: PinboardProps) {
   }
 
   const render: JSX.Element[] = []
-
+  
+  const gridContainerClass = 'gridContainer' + (props.isPinboardResizing ? ' resizing' : '') 
+  
   switch(props.spread) {
     case 'grid':
       for (let j = 0; j < props.height; j++) {
@@ -186,7 +189,7 @@ export default function AoPinboard(props: PinboardProps) {
         )
       }
       return (
-        <div className='gridContainer'>
+        <div className={gridContainerClass}>
           <div
             className="grid"
             style={{
@@ -239,7 +242,7 @@ export default function AoPinboard(props: PinboardProps) {
         )
       }
       return (
-        <div className='gridContainer'>
+        <div className={gridContainerClass}>
           {render}
         </div>
       )
@@ -346,7 +349,7 @@ export default function AoPinboard(props: PinboardProps) {
         }
       }
       
-      return <div className='gridContainer rune' style={{ height: runeSize, width: runeSize}}>
+      return <div className={gridContainerClass + ' rune'} style={{ height: runeSize, width: runeSize}}>
         {render}
       </div>
   }

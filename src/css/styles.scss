@@ -905,6 +905,9 @@ body {
   //transform: translateX(-50%);
   width: min-content;
   //z-index: 1; // So grid resize button show above of main stack drop zone.
+  &.resizing {
+    transition: height 0.5s, width 0.5s;
+  }
 
   &.padbottom {
     margin-bottom: 3em;
