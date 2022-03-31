@@ -53,7 +53,31 @@ class AoApi {
           // )
 
           let dataPackageToSendToClient = res.body
-
+          // Get the memberId
+          let memberId
+          dataPackageToSendToClient.stateToSend.sessions.forEach(sessionItem => {
+            if (session === sessionItem.session) {
+              memberId = sessionItem.ownerId
+            }
+          })
+        
+          // See if we got our member card
+          let foundMemberCard
+          if(!memberId) {
+              console.log("memberId missing when loading state")
+          } else {
+            dataPackageToSendToClient.stateToSend.tasks.forEach(task => {
+              if(task.taskId === memberId) {
+                foundMemberCard = task
+              }
+            })
+          }
+          if(foundMemberCard) {
+            console.log("State includes member card:", foundMemberCard)
+          } else {
+            console.log("State does not include member card")
+          }
+          
           aoStore.initializeState(dataPackageToSendToClient.stateToSend)
 
           let metaData = dataPackageToSendToClient.metaData
