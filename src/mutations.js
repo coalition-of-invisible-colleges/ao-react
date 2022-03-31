@@ -460,32 +460,21 @@ function sessionsMuts(sessions, ev) {
 }
 
 let missingTaskIds = []
-let previousXEvents = []
-const numEventsToSave = 0
 function tasksMuts(tasks, ev) {
   let theTask
   let inTask
   let memberTask
-  
-  // Save the last X events for logging in the event a missing member card is found
-  if(numEventsToSave > 0) {
-    if(previousXEvents.length >= numEventsToSave) previousXEvents.shift()
-    previousXEvents.push(ev)
-  }
   
   // Most tasks have a taskId and memberId, and many have an inId, so pull these out in a standard way
   const memberTaskId = ev.memberId || ev.blame
   if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
     memberTask = getTask(tasks, memberTaskId)
     if(!memberTask && ev.type !== 'member-created' && ev.type !== 'member-purged') {
-      if(!missingTaskIds.includes(memberTaskId)) missingTaskIds.push(memberTaskId)
-      // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
-      console.log(ev.type + ': first missing member task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
-      if(numEventsToSave > 0) {
-        console.log('previous', numEventsToSave, 'events:', previousXEvents)
+      if(!missingTaskIds.includes(memberTaskId)) {
+        missingTaskIds.push(memberTaskId)
+        console.log(ev.type + ': first missing member task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
+        return
       }
-      //memberTask = blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
-      //tasks.push(memberTask)
     }
   }
   
@@ -648,26 +637,7 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'task-grabbed':
-      // First make sure they have a valid member card to grab with,
-      // since it will show up on the "Where is this card" list
-      tasks.forEach(task => {
-        if (task.taskId === ev.taskId) {
-          // Add the card to their member card
-          if (task.passed.find(d => d[1] === ev.memberId)) {
-            tasks.forEach(t => {
-              if (t.taskId === ev.memberId) {
-                t.subTasks.push(ev.taskId)
-              }
-            })
-          }
-          clearPassesTo(tasks, task, ev.memberId)
-          if (task.deck.indexOf(ev.memberId) === -1) {
-            if (ev.taskId !== ev.memberId && ev.memberId) {
-              task.deck.push(ev.memberId)
-            }
-          }
-        }
-      })
+      grabTask(tasks, task, ev.memberId)
       break
     case 'task-seen':
       tasks.forEach(task => {

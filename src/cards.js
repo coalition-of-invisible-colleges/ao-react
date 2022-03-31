@@ -127,7 +127,11 @@ export function clearPassesTo(tasks, task, memberId, alsoClearFrom = false) {
 
 // Takes a member card and increases or decreases its .giftCount property, adding it if necessary
 export function changeGiftCount(memberCard, amount) {
-  if(!memberCard?.hasOwnProperty('giftCount')) {
+  if(!memberCard) {
+    return
+  }
+  
+  if(!memberCard.hasOwnProperty('giftCount')) {
     memberCard.giftCount = 0
   }
   
