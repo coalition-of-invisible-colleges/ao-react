@@ -61,33 +61,26 @@ export function blankPinboard(height = 3, width = 3, spread = 'pyramid') {
 let dupesGlossary = {}
 // Adds a synonym taskId for another taskId to the duplicates glossary
 export function registerDuplicateTaskId(originalTaskId, duplicateTaskId) {
-  if(!dupesGlossary[originalTaskId]) {
-    dupesGlossary[originalTaskId] = [ duplicateTaskId ]
-    return
-  }
-  if(duplicateTaskId && !dupesGlossary[originalTaskId].includes(duplicateTaskId)) {
-    dupesGlossary[originalTaskId].push(duplicateTaskId)
+  if(!dupesGlossary[duplicateTaskId]) {
+    dupesGlossary[duplicateTaskId] = originalTaskId
   }
 }
 
 // Returns the task with the given taskId from the given list of tasks, or null
 // Uses the duplicates glossary to return synonymous tasks that were created by junk task-created events
 export function getTask(tasks, taskId) {
+  // Look up duplicate tasks in the duplicates glossary to politely overlook duplicate task-created mutations
+  let loops = 0
+  while(dupesGlossary[taskId] && loops < 4) {
+    taskId = dupesGlossary[taskId]
+    loops++
+  }
+  if(loops >= 4) {
+    console.log("Woah, four or more redirects in the duplicates glossary, something weird")
+  }
 	return tasks.find(task => {
 		if (task.taskId === taskId) {
 			return task
-		}
-		// Look up duplicate tasks in the duplicates glossary to politely overlook duplicate task-created mutations
-		let foundGlossaryTask
-		Object.entries(dupesGlossary).some(([originalTaskId, duplicateTaskIds]) => {
-			if(duplicateTaskIds.includes(taskId)) {
-				foundGlossaryTask = task
-				return true
-			}
-		})
-		if(foundGlossaryTask) {
-			console.log("Looked up a duplicate task:", taskId)
-			return foundGlossaryTask
 		}
 	})
 }
