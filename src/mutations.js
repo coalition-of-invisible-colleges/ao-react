@@ -477,7 +477,7 @@ function tasksMuts(tasks, ev) {
     if(!memberTask && ev.type !== 'member-created') {
       if(!missingTaskIds.includes(memberTaskId)) missingTaskIds.push(memberTaskId)
       // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
-      console.log(ev.type + ': FIXING missing task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
+      console.log(ev.type + ': FIXING missing member task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
       console.log('previous', numEventsToSave, 'events:', previousXEvents)
       memberTask = blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
       tasks.push(memberTask)
@@ -488,8 +488,10 @@ function tasksMuts(tasks, ev) {
   if(theTaskId) {
     theTask = getTask(tasks, theTaskId)
     if(!theTask && ev.type !== 'task-created' && ev.type !== 'grid-created' && ev.type !== 'resource-created' && ev.type !== 'meme-added') {
-      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
-      console.log(ev.type + ': missing task for taskId', theTaskId, '(' + missingTaskIds.length + ') ev:', ev)
+      if(!missingTaskIds.includes(theTaskId)) {
+        missingTaskIds.push(theTaskId)
+        console.log(ev.type + ': first missing task event for taskId', theTaskId, '(' + missingTaskIds.length + ') ev:', ev)
+      }
       return // continuing may crash, but returning may cause further inconsistencies going forward
     }
   }
@@ -497,8 +499,10 @@ function tasksMuts(tasks, ev) {
   if(ev.inId) {
     inTask = getTask(tasks, ev.inId)
     if(!inTask && ev.type !== 'task-created') {
-      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
-      console.log(ev.type + ': missing task for inId', ev.inId, '(' + missingTaskIds.length + ')')
+      if(!missingTaskIds.includes(theTaskId)) {
+        missingTaskIds.push(theTaskId)
+        console.log(ev.type + ': first missing task event for inId', ev.inId, '(' + missingTaskIds.length + ') ev:', ev)
+      }
       return // continuing may crash, but returning may cause further inconsistencies going forward
     }
   }
