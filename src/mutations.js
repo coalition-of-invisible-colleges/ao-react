@@ -459,19 +459,37 @@ function sessionsMuts(sessions, ev) {
 }
 
 let missingTaskIds = []
+let previousXEvents = []
+const numEventsToSave = 10
 function tasksMuts(tasks, ev) {
   let theTask
   let inTask
   let memberTask
   
+  // Save the last X events for logging in the event a missing member card is found
+  if(previousXEvents.length >= numEventsToSave) previousXEvents.shift()
+  previousXEvents.push(ev)
+  
   // Most tasks have a taskId and memberId, and many have an inId, so pull these out in a standard way
+  const memberTaskId = ev.memberId || ev.blame
+  if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
+    memberTask = getTask(tasks, memberTaskId)
+    if(!memberTask && ev.type !== 'member-created') {
+      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
+      // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
+      console.log(ev.type + ': FIXING missing task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
+      console.log('previous', numEventsToSave, 'events:', previousXEvents)
+      tasks.push(blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp))
+    }
+  }
+  
   const theTaskId = ev.taskId || ev.subTask || ev.resourceId || ev?.from?.taskId || ev?.to?.taskId
   if(theTaskId) {
     theTask = getTask(tasks, theTaskId)
     if(!theTask && ev.type !== 'task-created' && ev.type !== 'grid-created' && ev.type !== 'resource-created' && ev.type !== 'meme-added') {
       if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
-      console.log(ev.type + ': missing task for taskId', theTaskId, '(' + missingTaskIds.length + ')')
-      return
+      console.log(ev.type + ': missing task for taskId', theTaskId, '(' + missingTaskIds.length + ') ev:', ev)
+      return // continuing may crash, but returning may cause further inconsistencies going forward
     }
   }
   
@@ -480,17 +498,7 @@ function tasksMuts(tasks, ev) {
     if(!inTask && ev.type !== 'task-created') {
       if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
       console.log(ev.type + ': missing task for inId', ev.inId, '(' + missingTaskIds.length + ')')
-      return
-    }
-  }
-  
-  const memberTaskId = ev.memberId || ev.blame
-  if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
-    memberTask = getTask(tasks, memberTaskId)
-    if(!memberTask && ev.type !== 'member-created') {
-      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
-      console.log(ev.type + ': missing task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
-      return
+      return // continuing may crash, but returning may cause further inconsistencies going forward
     }
   }
   
@@ -581,7 +589,7 @@ function tasksMuts(tasks, ev) {
       break
     case 'task-created':
       if(getTaskBy(tasks, ev.name, 'name')) {
-        console.log("Attempted to create a duplicate task, ignored at mutation level.")
+        console.log("Attempted to create a duplicate task, ignored at mutation level. name:", ev.name)
         break
       }
       tasks.push(

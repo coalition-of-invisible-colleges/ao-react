@@ -1240,7 +1240,7 @@ router.post( '/events', ( req, res, next ) => {
         validators.isMemberId( req.body.memberId, errRes ) &&
         Number.isInteger( req.body.area )
       ) {
-        events.trigger(
+        events.triggerShadowPlease(
           eventType, {
             taskId: req.body.taskId,
             memberId: req.body.memberId,

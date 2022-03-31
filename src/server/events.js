@@ -1,8 +1,14 @@
 import { insertEvent, triggerShadow } from './dctrlDb.js'
 
 function trigger(type, eventData, callback) {
-  let newEvent = { type, ...eventData }
+  let newEvent = {type, ...eventData}
   insertEvent(newEvent, callback)
+}
+
+function triggerShadowPlease(type, eventData, callback) {
+  let newEvent = {type, ...eventData}
+  triggerShadow(newEvent)
+  callback() // db call is synchronous (?) so just do it here I guess
 }
 
 function getNodeInfo(info, callback) {
@@ -14,6 +20,7 @@ function getNodeInfo(info, callback) {
 }
 
 export default {
+  triggerShadowPlease,
   trigger,
   getNodeInfo,
 }
