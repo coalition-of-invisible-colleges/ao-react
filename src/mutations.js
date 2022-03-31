@@ -475,7 +475,7 @@ function tasksMuts(tasks, ev) {
   if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
     memberTask = getTask(tasks, memberTaskId)
     if(!memberTask && ev.type !== 'member-created') {
-      if(!missingTaskIds.includes(theTaskId)) missingTaskIds.push(theTaskId)
+      if(!missingTaskIds.includes(memberTaskId)) missingTaskIds.push(theTaskId)
       // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
       console.log(ev.type + ': FIXING missing task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
       console.log('previous', numEventsToSave, 'events:', previousXEvents)
