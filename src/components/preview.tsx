@@ -53,7 +53,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
   @computed get subCardCount() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return null
-    console.log("counting! card is", card)
+    
     const subCardCount =
       card.pins.length +
       card.subTasks.length

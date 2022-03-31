@@ -324,13 +324,12 @@ export default function AoPinboard(props: PinboardProps) {
           )
         } else {
           render.push(
-            <div className='runeItem' style={inlineStyle}>
+            <div className='runeItem' style={inlineStyle} key={i}>
               <AoDropZoneSimple
                 onDrop={dropToSquareCaller}
                 onClick={onClickCaller}
                 dropHoverMessage='drop to place'
-                className='rune'
-                key={i}>
+                className='rune'>
                 {tId ? (
                   <AoDragZone
                     taskId={tId}
