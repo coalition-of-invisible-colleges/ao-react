@@ -479,7 +479,8 @@ function tasksMuts(tasks, ev) {
       // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
       console.log(ev.type + ': FIXING missing task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
       console.log('previous', numEventsToSave, 'events:', previousXEvents)
-      tasks.push(blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp))
+      memberTask = blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
+      tasks.push(memberTask)
     }
   }
   
