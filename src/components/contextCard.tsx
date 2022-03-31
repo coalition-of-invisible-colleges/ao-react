@@ -1420,7 +1420,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           fromMemberName = aoStore.state.members.find(
             member => member.memberId === fromMemberId
           )?.name || 'missing member'
-          }
         }
         
         return (
