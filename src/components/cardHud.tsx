@@ -126,7 +126,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'context':
 				return (
 					<div className="hud">
-						{taskId === aoStore.memberCard.taskId && <AoGifts />}
+						{taskId === aoStore?.memberCard?.taskId && <AoGifts />}
 						<AoMission taskId={taskId} hudStyle={hudStyle} />
 						<AoPreview
 							taskId={taskId}
@@ -193,7 +193,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 			case 'full before':
 				return (
 					<React.Fragment>
-						{taskId === aoStore.memberCard.taskId && <AoGifts />}
+						{taskId === aoStore?.memberCard?.taskId && <AoGifts />}
 						<div className={'hud ' + hudStyle}>
 							<AoTimeClock taskId={taskId} hudStyle={hudStyle} />
 							<AoTally taskId={taskId} hudStyle={hudStyle} />
