@@ -637,7 +637,7 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'task-grabbed':
-      grabTask(tasks, task, ev.memberId)
+      grabTask(tasks, theTask, ev.memberId)
       break
     case 'task-seen':
       tasks.forEach(task => {
