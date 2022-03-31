@@ -474,7 +474,7 @@ function tasksMuts(tasks, ev) {
   // Most tasks have a taskId and memberId, and many have an inId, so pull these out in a standard way
   const memberTaskId = ev.memberId || ev.blame
   if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
-    memberTask = getTask(tasks, memberTaskId)
+    memberTask = getTask(tasks, memberTaskId, dupesGlossary)
     if(!memberTask && ev.type !== 'member-created') {
       if(!missingTaskIds.includes(memberTaskId)) missingTaskIds.push(memberTaskId)
       // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
@@ -487,7 +487,7 @@ function tasksMuts(tasks, ev) {
   
   const theTaskId = ev.taskId || ev.subTask || ev.resourceId || ev?.from?.taskId || ev?.to?.taskId
   if(theTaskId) {
-    theTask = getTask(tasks, theTaskId)
+    theTask = getTask(tasks, theTaskId, dupesGlossary)
     if(!theTask && ev.type !== 'task-created' && ev.type !== 'grid-created' && ev.type !== 'resource-created' && ev.type !== 'meme-added') {
       if(!missingTaskIds.includes(theTaskId)) {
         missingTaskIds.push(theTaskId)
@@ -498,7 +498,7 @@ function tasksMuts(tasks, ev) {
   }
   
   if(ev.inId) {
-    inTask = getTask(tasks, ev.inId)
+    inTask = getTask(tasks, ev.inId, dupesGlossary)
     if(!inTask && ev.type !== 'task-created') {
       if(!missingTaskIds.includes(ev.inId)) {
         missingTaskIds.push(ev.inId)
@@ -643,7 +643,7 @@ function tasksMuts(tasks, ev) {
         })
       ) {
         theTask.passed.push(pass)
-        const recipient = getTask(tasks, ev.toMemberId)
+        const recipient = getTask(tasks, ev.toMemberId, dupesGlossary)
         if(recipient) {
           changeGiftCount(recipient, 1)
         }
@@ -688,7 +688,7 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-started':
-      const tsFound = getTask(tasks, ev.taskId)
+      const tsFound = theTask
 
       if (tsFound) {
         if (!tsFound.timelog) {
@@ -707,7 +707,7 @@ function tasksMuts(tasks, ev) {
       break
     case 'task-stopped':
       // console.log('task-stopped 1')
-      const tstFound = getTask(tasks, ev.taskId)
+      const tstFound = theTask
       // console.log('task-stopped 2')
       if (tstFound) {
         // console.log('task-stopped 3')
@@ -894,7 +894,7 @@ function tasksMuts(tasks, ev) {
     case 'task-stashed':
       // I think the spec is only run on event creation, not load from database,
       // so make sure the task exists before linking to it from another card
-      const toStash = getTask(tasks, ev.taskId)
+      const toStash = theTask
       if (toStash) {
         grabTask(tasks, toStash, ev.blame)
         addParent(toStash, ev.inId)
@@ -909,8 +909,8 @@ function tasksMuts(tasks, ev) {
     case 'task-unstashed':
       // I think the spec is only run on event creation, not load from database,
       // so make sure the task exists before linking to it from another card
-      const toUnstash = getTask(tasks, ev.taskId)
-      const unstashParentCard = getTask(tasks, ev.inId)
+      const toUnstash = theTask
+      const unstashParentCard = inTask
       if (toUnstash && unstashParentCard) {
         grabTask(tasks, toUnstash, ev.blame)
 
@@ -1131,7 +1131,7 @@ function tasksMuts(tasks, ev) {
       break
     case 'task-emptied':
       let updateParents = []
-      const emptiedParent = getTask(tasks, ev.taskId)
+      const emptiedParent = theTask
       updateParents = [...theTask.priorities, ...theTask.subTasks]
       theTask.priorities = []
       theTask.subTasks = []
@@ -1300,10 +1300,9 @@ function tasksMuts(tasks, ev) {
     case 'resource-used':
       const charged = parseFloat(ev.charged)
       if (charged > 0) {
-        const memberCard = getTask(tasks, ev.memberId)
-        memberCard.boost -= charged
+        memberTask.boost -= charged
         
-        const resourceCard = getTask(tasks, ev.resourceId)
+        const resourceCard = theTask
         resourceCard.boost += charged
       }
       break
