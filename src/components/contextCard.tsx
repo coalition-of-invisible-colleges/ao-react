@@ -1417,10 +1417,9 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if(fromMemberId.includes('.onion')) {
           fromMemberName = fromMemberId
         } else {
-          if(aoStore.state.members && Array.isArray(aoStore.state.members)) {
-            fromMemberName = aoStore.state.members.find(
-              member => member.memberId === fromMemberId
-            ).name
+          fromMemberName = aoStore.state.members.find(
+            member => member.memberId === fromMemberId
+          )?.name || 'missing member'
           }
         }
         

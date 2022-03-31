@@ -20,7 +20,7 @@ function cleanup() {
     .filter(t => {
       const isUnheld = t.deck.length <= 0
       const isOld = Date.now() - t.created > deleteAfterMs
-      const isMemberCard = t.taskId === t.name
+      const isMemberCard = t.taskId === t.name || serverState.members.some(member => member.memberId === t.taskId)
       const isReservedCard = ['community hub'].includes(t.name)
       return isUnheld && isOld && !isMemberCard && !isReservedCard
     })
