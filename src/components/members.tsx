@@ -190,7 +190,7 @@ export default class AoMembers extends React.Component<{}, State> {
       })
     } else if (this.state.sort === 'alphabetical') {
       members.sort((a, b) => {
-        return b.name ? b.name.localeCompare(a.name, { sensitivity: 'base' }) : 0
+        return b.name ? b.name.localeCompare(a.name, 'en', { sensitivity: 'base' }) : 0
       })
     }
 
