@@ -234,6 +234,12 @@ export default function applyRouter(app) {
 
     dataPackageToSendToClient.metaData = { memberDeckSize, bookmarksTaskId }
     
+    if(stateToSend.tasks.some(taskItem => taskItem.taskId.trim().toLowerCase() === reqOwner.trim().toLowerCase()) {
+      console.log('Member card is included in outgoing state cards.')
+    } else {
+      console.log('Member card is missing from outgoing state cards for memberId', reqOwner)
+    }
+    
     console.log('POST stateToSend.tasks.length is', stateToSend.tasks.length)
     res.json(dataPackageToSendToClient)
   })
