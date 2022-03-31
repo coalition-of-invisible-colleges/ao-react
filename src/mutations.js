@@ -460,7 +460,7 @@ function sessionsMuts(sessions, ev) {
 
 let missingTaskIds = []
 let previousXEvents = []
-const numEventsToSave = 10
+const numEventsToSave = 1
 function tasksMuts(tasks, ev) {
   let theTask
   let inTask
