@@ -127,7 +127,7 @@ export function clearPassesTo(tasks, task, memberId, alsoClearFrom = false) {
 
 // Takes a member card and increases or decreases its .giftCount property, adding it if necessary
 export function changeGiftCount(memberCard, amount) {
-  if(!memberCard.hasOwnProperty('giftCount')) {
+  if(!memberCard?.hasOwnProperty('giftCount')) {
     memberCard.giftCount = 0
   }
   
@@ -677,7 +677,7 @@ export function countCurrentSignatures(signed) {
 // Crawls through all cards, starting with the given task
 // Return all parents of the card that you are hodling
 export function allReachableHeldParents(tasks, origin, memberId) {
-	if (!origin.hasOwnProperty('taskId')) {
+	if (!origin?.hasOwnProperty('taskId')) {
 		return []
 	}
 	let queue = [origin]
