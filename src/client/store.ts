@@ -272,7 +272,8 @@ class AoStore {
   @observable localPriorityMode?: boolean
   @observable deckTab: DeckTab = 'all'
   @observable currentColor: Color = 'blue'
-
+  @observable isPinboardResizing?
+  
   bookmarksTaskId?: string
 
   constructor() {
@@ -766,6 +767,9 @@ class AoStore {
   }
 
   @computed get eventsAsAgenda() {
+    if(!this.member) {
+      return null
+    }
     let events = this.allEvents
 
     const todayMs = 64800000 // 18 hours
@@ -1304,6 +1308,11 @@ class AoStore {
   @action.bound
   setCurrentColor(newColor: Color) {
     this.currentColor = newColor
+  }
+  
+  @action.bound
+  setIsPinboardResizing(timer) {
+    this.isPinboardResizing = timer
   }
 }
 const aoStore = new AoStore()

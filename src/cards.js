@@ -73,6 +73,7 @@ export function getTask(tasks, taskId) {
   let loops = 0
   while(dupesGlossary[taskId] && loops < 4) {
     taskId = dupesGlossary[taskId]
+    console.log("Looked up duplicate task:", taskId, " (", Object.keys(dupesGlossary).length, " duplicated)")
     loops++
   }
   if(loops >= 4) {
