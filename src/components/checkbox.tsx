@@ -28,13 +28,13 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
   @computed get isCompleted() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return undefined
-    return card.claimed.indexOf(aoStore.member.memberId) >= 0
+    return card.claimed.indexOf(aoStore?.member?.memberId) >= 0
   }
 
   @computed get isGrabbed() {
     const card = aoStore.hashMap.get(this.props.taskId)
     if (!card) return undefined
-    return card.deck.indexOf(aoStore.member.memberId) >= 0
+    return card.deck.indexOf(aoStore?.member?.memberId) >= 0
   }
 
   grabCard(event) {
@@ -50,7 +50,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
     if (!card || card.taskId === aoStore?.memberCard?.taskId) return null
 
     const showTinyCheckbox =
-      (aoStore.member.priorityMode || aoStore.localPriorityMode) &&
+      (aoStore?.member?.priorityMode || aoStore.localPriorityMode) &&
       card?.priorities?.length >= 1
     const onClick = event => {
       event.stopPropagation()
