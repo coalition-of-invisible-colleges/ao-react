@@ -59,25 +59,23 @@ export function blankPinboard(height = 3, width = 3, spread = 'pyramid') {
 }
 
 // Returns the task with the given taskId from the given list of tasks, or null
-export function getTask(tasks, taskId, dupesGlossary = null) {
+export function getTask(tasks, taskId, dupesGlossary = {}) {
 	return tasks.find(task => {
 		if (task.taskId === taskId) {
 			return task
 		}
 		// Look up duplicate tasks in the duplicates glossary to politely overlook duplicate task-created mutations
 		let foundGlossaryTask
-		if(dupesGlossary && Array.isArray(dupesGlossary)) {
-  		Object.entries(dupesGlossary).some(([originalTaskId, duplicateTaskIds]) => {
-  		  if(duplicateTaskIds.includes(taskId)) {
-  		    foundGlossaryTask = task
-  		    return true
-  		  }
-  		})
-  		if(foundGlossaryTask) {
-  		  console.log("Looked up a duplicate task:", taskId)
-  		  return foundGlossaryTask
-  		}
-    }
+		Object.entries(dupesGlossary).some(([originalTaskId, duplicateTaskIds]) => {
+			if(duplicateTaskIds.includes(taskId)) {
+				foundGlossaryTask = task
+				return true
+			}
+		})
+		if(foundGlossaryTask) {
+			console.log("Looked up a duplicate task:", taskId)
+			return foundGlossaryTask
+		}
 	})
 }
 
