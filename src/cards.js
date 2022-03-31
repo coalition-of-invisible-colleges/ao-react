@@ -74,6 +74,7 @@ export function getTask(tasks, taskId, dupesGlossary = null) {
   		  }
   		})
   		if(foundGlossaryTask) {
+  		  console.log("Looked up a duplicate task:", taskId)
   		  return foundGlossaryTask
   		}
     }
