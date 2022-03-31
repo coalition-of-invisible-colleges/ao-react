@@ -473,8 +473,8 @@ function tasksMuts(tasks, ev) {
       if(!missingTaskIds.includes(memberTaskId)) {
         missingTaskIds.push(memberTaskId)
         console.log(ev.type + ': first missing member task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
-        return
       }
+      return
     }
   }
   
