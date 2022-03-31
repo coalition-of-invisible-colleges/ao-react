@@ -468,18 +468,22 @@ function tasksMuts(tasks, ev) {
   let memberTask
   
   // Save the last X events for logging in the event a missing member card is found
-  if(previousXEvents.length >= numEventsToSave) previousXEvents.shift()
-  previousXEvents.push(ev)
+  if(numEventsToSave > 0) {
+    if(previousXEvents.length >= numEventsToSave) previousXEvents.shift()
+    previousXEvents.push(ev)
+  }
   
   // Most tasks have a taskId and memberId, and many have an inId, so pull these out in a standard way
   const memberTaskId = ev.memberId || ev.blame
   if(memberTaskId && memberTaskId !== 'cleanup' && (typeof memberTaskId === 'string' && !memberTaskId.includes('.onion'))) {
     memberTask = getTask(tasks, memberTaskId, dupesGlossary)
-    if(!memberTask && ev.type !== 'member-created') {
+    if(!memberTask && ev.type !== 'member-created' && ev.type !== 'member-purged') {
       if(!missingTaskIds.includes(memberTaskId)) missingTaskIds.push(memberTaskId)
       // Rogue tasks-removed events were deleting member cards, so let's simply fix missing member cards and log
       console.log(ev.type + ': FIXING missing member task for memberId', memberTaskId, '(' + missingTaskIds.length + ')')
-      console.log('previous', numEventsToSave, 'events:', previousXEvents)
+      if(numEventsToSave > 0) {
+        console.log('previous', numEventsToSave, 'events:', previousXEvents)
+      }
       memberTask = blankCard(ev.memberId, ev.memberId, 'blue', ev.timestamp)
       tasks.push(memberTask)
     }
@@ -596,11 +600,12 @@ function tasksMuts(tasks, ev) {
     case 'task-created':
       const foundExistingTask = getTaskBy(tasks, ev.name, 'name')
       if(foundExistingTask?.taskId) {
-        console.log("Attempted to create a duplicate task, ignored at mutation level. name:", ev.name)
+        console.log("Attempted to create a duplicate task, ignored at mutation level. name:", ev.name, 'taskId:', ev.taskId)
         if(!dupesGlossary[foundExistingTask.taskId]) {
           dupesGlossary[foundExistingTask.taskId] = []
         }
         if(ev.taskId && !dupesGlossary[foundExistingTask.taskId].includes(ev.taskId)) {
+          console.log("dupesGlossary is now:", dupesGlossary)
           dupesGlossary[foundExistingTask.taskId].push(ev.taskId)
         }
         break
