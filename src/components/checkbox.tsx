@@ -47,7 +47,7 @@ export default class AoCheckbox extends React.PureComponent<CheckboxProps> {
   render() {
     const taskId = this.props.taskId
     const card = aoStore.hashMap.get(taskId)
-    if (!card || card.taskId === aoStore.memberCard.taskId) return null
+    if (!card || card.taskId === aoStore?.memberCard?.taskId) return null
 
     const showTinyCheckbox =
       (aoStore.member.priorityMode || aoStore.localPriorityMode) &&

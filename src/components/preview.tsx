@@ -41,7 +41,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
 
   togglePriors(event) {
     event.stopPropagation()
-    if (aoStore.member.priorityMode || aoStore.localPriorityMode) {
+    if (aoStore?.member?.priorityMode || aoStore.localPriorityMode) {
       aoStore.hidePriors()
       api.updateMemberField('priorityMode', false)
     } else {
@@ -176,7 +176,7 @@ export default class AoPreview extends React.PureComponent<PreviewProps> {
         }
       case 'mini after':
         const showPrioritiesPrior =
-          aoStore.member.priorityMode || aoStore.localPriorityMode
+          aoStore?.member?.priorityMode || aoStore.localPriorityMode
 
         if (delay === undefined) {
           delay = [625, 200]
