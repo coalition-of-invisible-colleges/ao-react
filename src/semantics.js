@@ -3,7 +3,6 @@ import config from '../configuration.js'
 const defaultSemantics = {
 	glossary: {
 		card: 'card',
-		guild: 'mission',
 		user: 'member',
 		username: 'hackername',
 		proposal: 'proposition',

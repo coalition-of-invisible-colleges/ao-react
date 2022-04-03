@@ -142,6 +142,7 @@ export async function onDropToPinboard(from: CardLocation, to: CardLocation): Pr
   if (cardTo) {
     to.inId = cardTo.taskId
     to.taskId = cardFrom.taskId
+    to.zone = 'subTasks'
   } else {
     to.taskId = from.taskId
   } // could implement Ctrl-Drag to copy instead of move here
