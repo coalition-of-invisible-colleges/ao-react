@@ -152,10 +152,10 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 							onTogglePriorities={this.props.onTogglePriorities}
 							priorPriors={this.props.priorPriors}
 						/>
+						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 						<AoCountdown taskId={taskId} hudStyle={hudStyle} />
 						<AoTally taskId={taskId} hudStyle={hudStyle} />
 						<AoCrowdfund taskId={taskId} hudStyle={hudStyle} />
-						<AoCheckbox taskId={taskId} hudStyle={hudStyle} />
 					</div>
 				)
 			case 'collapsed-mission':

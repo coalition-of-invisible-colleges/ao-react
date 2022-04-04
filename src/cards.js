@@ -481,6 +481,17 @@ export function atomicCardPlay(tasks, fromLocation = null, toLocation, memberId)
     if(fromLocation.zone != 'completed' && toLocation.zone === 'discard' && theCard && theCard.claimed && theCard.claimed.length >= 1) {
       addCompletedTask(theCardMovedFrom, taskId)
     }
+    
+    // If removing from priorities, remove allocations that were on the card from theCardMovedFrom
+    if(fromLocation?.zone === 'priorities' && toLocation.zone !== 'priorities' && theCardMovedFrom.allocations && Array.isArray(theCardMovedFrom.allocations)) {
+      theCardMovedFrom.allocations = theCardMovedFrom.allocations.filter(al => {
+        if (al.allocatedId === taskId) {
+          theCardMovedFrom.boost += al.amount
+          return false
+        }
+        return true
+      })
+    }
   }
 
   // Move card to wherever it was moved to

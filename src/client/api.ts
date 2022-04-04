@@ -670,7 +670,7 @@ class AoApi {
       allocatedId: taskId,
       amount: points,
       blame: aoStore.member.memberId,
-      inId: inId,
+      //inId: inId,
     }
     return request
       .post('/events')

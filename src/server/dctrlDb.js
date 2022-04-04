@@ -71,7 +71,8 @@ function initializeSqlite(cb) {
       type: 'grid-added',
       taskId: bookmarksCardTaskId,
       height: 1,
-      width: 6,
+      width: 1,
+      spread: 'grid'
     })
 
     let blankCardEvent = blankCard(v1(), 'community hub', 'yellow', now, [

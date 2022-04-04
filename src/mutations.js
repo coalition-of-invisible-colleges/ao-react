@@ -1035,18 +1035,6 @@ function tasksMuts(tasks, ev) {
       break
     case 'task-refocused':
       atomicCardPlay(tasks, { taskId: ev.taskId, inId: ev.inId, zone: 'priorities'}, { taskId: ev.taskId, inId: ev.inId, zone: 'subTasks'})
-      /*
-          if (task.allocations && Array.isArray(task.allocations)) {
-            task.allocations = _.filter(task.allocations, al => {
-              if (al.allocatedId !== ev.taskId) {
-                return true
-              } else {
-                task.boost = task.boost + al.amount
-                return false
-              }
-            })
-          }
-      */
       break
     case 'pile-refocused':
       tasks.forEach(task => {
@@ -1110,10 +1098,6 @@ function tasksMuts(tasks, ev) {
       })
       break
     case 'task-guilded':
-      if(!theTask) {
-        console.log("Missing task for task-guilded")
-        break
-      }
       theTask.guild = ev.guild
       break
     case 'task-property-set':
@@ -1234,33 +1218,35 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'task-allocated':
-      if (theTask.boost >= 1) {
-        theTask.boost--
-        if (
-          !theTask.hasOwnProperty('allocations') ||
-          !Array.isArray(theTask.allocations)
-        ) {
-          theTask.allocations = []
-        }
-        let alreadyPointed = theTask.allocations.some(als => {
-          if (als.allocatedId === ev.allocatedId) {
-            als.amount += 1
-            return true
-          }
-        })
-        if (!alreadyPointed) {
-          if (!ev.amount || !Number.isInteger(ev.amount) || ev.amount < 1) {
-            ev.amount = 1
-          }
-          theTask.allocations.push(ev)
-        }
+      if (!Number.isInteger(ev.amount) || ev.amount < 0) {
+        break
       }
-      let reprioritized = _.filter(
-        theTask.priorities,
-        d => d !== ev.allocatedId
-      )
-      reprioritized.push(ev.allocatedId)
-      theTask.priorities = reprioritized
+      if (!theTask.hasOwnProperty('allocations') || !Array.isArray(theTask.allocations)) {
+        theTask.allocations = []
+      }
+      if(ev.amount === 0) {
+        theTask.allocations = theTask.allocations.filter(als => {
+          if(als.allocatedId == ev.allocatedId) {
+            theTask.boost += als.amount
+            return false
+          }
+          return true
+        })
+        break
+      }
+      const alreadyPointed = theTask.allocations.some(als => {
+        const diff = ev.amount - als.amount
+        if(als.allocatedId !== ev.allocatedId) return false
+        if(diff > theTask.boost) return true
+        theTask.boost -= diff
+        als.amount = ev.amount
+        return true
+      })
+      if (!alreadyPointed) {
+        theTask.allocations.push(ev)
+        theTask.boost -= ev.amount
+      }
+      addPriority(theTask, ev.allocatedId)
       break
     case 'resource-booked':
       theTask.book = ev

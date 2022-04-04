@@ -111,6 +111,10 @@ body.florid {
 	.tally > img {
 		filter: brightness(0.001);
 	}
+	
+	.card.priority > .hud > .checkbox {
+		filter: unset;
+	}
 
 	#hopper img.inPort {
 		opacity: 0.5;

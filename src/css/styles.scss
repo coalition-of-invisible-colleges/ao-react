@@ -167,8 +167,8 @@ body {
   box-shadow: -7px 7px 14px 1px rgba(21, 21, 21, 0.5);
 }
 
-.card.full .content,
-.card.face .content {
+.card.full > .content,
+.card.face > .content {
   margin-top: 2.5em;
   margin-bottom: 0;
   min-height: 3em;
@@ -285,10 +285,6 @@ body {
     padding-bottom: 0.25em;
   }
 
-  .content {
-    padding: 0.55em 1em 0.55em 1em;
-  }
-
   // remove when coin is removed
   .coin {
     transform: unset;
@@ -307,7 +303,6 @@ body {
 }
 
 // card hud on a priority- or mission-style card
-.card.priority > .hud,
 .card.mission > .hud {
   z-index: 1;
   position: relative;
@@ -358,11 +353,6 @@ body {
     top: 0.4em;
   }
 
-  .cardMenuButton {
-    font-size: 1.15em;
-    padding: 0.35em 0.25em;
-  }
-
   .action {
     display: inline;
     margin-right: 0.5em;
@@ -372,6 +362,10 @@ body {
 
 // mission-style card shows in the Guilds Index
 .card.mission {
+1 .content {
+    padding: 0.55em 1em 0.55em 1em;
+  }
+  
   .coin {
     .hodls {
       top: 0.25em;
@@ -404,10 +398,49 @@ body {
 // priority-style card
 .card.priority {
   min-height: 2.325em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  min-width: 20em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
 
   .unread {
     transform: translateY(0.135em);
     margin-right: 1.5em;
+  }
+  
+  &>.hud {
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    
+    .tally, .preview {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      float: right;
+      margin-right: 0.5em;
+    }
+    
+    .preview {
+      font-size: 1.25em;
+      margin-top: -0.25em;
+    }
+    
+    &> .checkbox {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateX(-100%) translateY(-50%);
+      margin-left: -1em;
+    }
+  }
+  
+  .content {
+    margin-left: 1em;
+    margin-bottom: 0.5em;
+    padding-top: 0.5em;
   }
 }
 
@@ -2109,15 +2142,6 @@ body {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     max-width: 30em;
-
-    &.priority {
-      min-width: 20em;
-      margin-top: 0.375em;
-      margin-bottom: 0.375em;
-      max-width: 70%;
-      //position: relative;
-      //left: calc(50% + 1.5em);
-    }
   }
   textarea {
     position: relative;
@@ -2371,10 +2395,6 @@ img.icon {
 
   .action {
     margin-bottom: 1em;
-  }
-
-  .dragZone {
-    // display: inline;
   }
 }
 
@@ -3528,23 +3548,6 @@ pre {
   }
 }
 
-// stash/dropbox on a card
-/*.stash {
-  position: absolute;
-  left: 0.5em;
-  top: 5em;
-  min-width: 14em;
-
-  .stack > .dragZone > .card {
-    margin-left: 0;  
-  }
-  
-  p {
-    margin-top: 4em;
-    max-width: 25em;
-  }
-}*/
-
 // the text box to create a new crypto ticker in the main menu
 #mainMenu .ticker textarea {
   max-width: 10em;
@@ -3729,13 +3732,6 @@ input[type='text'].error {
   }
 }
 
-// drag-and-drop source zone
-.dragZone {
-  // width: 100%;
-  // height: 100%;
-  // position: relative;
-}
-
 // cards while they are loading
 .card.loading,
 .card.mini.loading,
@@ -3762,22 +3758,41 @@ input[type='text'].error {
   color: white;
   font-size: 1.5em;
   cursor: pointer;
-  top: -0.45em;
-  left: 1em;
+  top: calc(50% - 2.15em);
+  transform: translateY(-50%);
+  left: calc(100% + 0.75em);
 
   img {
     width: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 0.22;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  
+  .allocation + img {
+    opacity: 0.33;
   }
 
   .allocation {
     position: absolute;
-    left: calc(50% + 0.15em);
+    left: 50%;
     transform: translateX(-50%);
     text-shadow: 2px 2px 2px rgba(0.05, 0.05, 0.05, 0.5);
+    top: 0.70em;
+  }
+  
+  input, button {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    margin: 0;    
+  }
+  
+  button {
+    top: 2em;
   }
 }
 
@@ -4610,11 +4625,19 @@ div.legendAction {
   }
   
   &.priorities {
-    padding-right: 3em;
+    //padding-right: 5.5em;
     
     .stack {
       margin-top: 2em;
       margin-left: 4em;
+      
+      .dragZone {
+        padding-right: 4.5em;
+      }
+      
+      .dragZone:hover .allocate img {
+        opacity: 0.33;
+      }
     }
   }
   
@@ -4825,7 +4848,6 @@ div.legendAction {
   align-items: center;
   align-content: center;
   gap: 1em;
-  width: calc(100% + 2em);
   
   h2 {
     margin-left: auto;

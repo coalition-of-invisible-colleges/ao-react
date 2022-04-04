@@ -37,6 +37,7 @@ import AoPrice from './price'
 import AoFund from './fund'
 import AoStash from './stash'
 import AoGridResizer from './gridResizer'
+import AoParameterEditor from './parameterEditor'
 import BlankBadge from '../assets/images/badge_blank.svg'
 import Badge from '../assets/images/bulletin.svg'
 import Gift from '../assets/images/gift.svg'
@@ -44,6 +45,8 @@ import Boat from '../assets/images/boat.svg'
 import Clipboard from '../assets/images/clipboard.svg'
 import Timecube from '../assets/images/timecube.svg'
 import Chest from '../assets/images/chest.svg'
+import ChestClosed from '../assets/images/chestClosed.svg'
+import ChestOpen from '../assets/images/chestOpen.svg'
 import Lilypad from '../assets/images/chatroom.svg'
 import Checkmark from '../assets/images/completed.svg'
 import Checkbox from '../assets/images/uncompleted.svg'
@@ -121,6 +124,7 @@ interface State {
   closingRightDrawerTimeout?
   closingLeftDrawerTimeout?
   closingBottomDrawerTimeout?
+  selectedBountyEditor?: number
 }
 
 export async function onDropToPinboard(from: CardLocation, to: CardLocation): Promise<request.Response> {
@@ -179,6 +183,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.renderCardContent = this.renderCardContent.bind(this)
     this.clearPendingPromise = this.clearPendingPromise.bind(this)
     this.dropToCard = this.dropToCard.bind(this)
+    this.forceRerender = this.forceRerender.bind(this)
 
     this.taskHasLoadedAllChildren = false
   }
@@ -206,7 +211,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       stateRequiresUpdate => {
         if (stateRequiresUpdate === true) {
           this.taskHasLoadedAllChildren = true
-          this.setState({ renderMeNowPlease: true })
+          this.forceRerender()
         }
       }
     )
@@ -256,7 +261,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           this.taskHasLoadedAllChildren === true &&
           this.props.task.aoGridToolDoNotUpdateUI !== true
         ) {
-          this.setState({ renderMeNowPlease: true })
+          this.forceRerender()
         }
       },
       { equals: comparer.structural }
@@ -391,7 +396,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       inId: card.taskId,
       zone: 'priorities'
     }
-    api.createAndPlayCard(name, 'blue', false, toLocation).then(() => this.setState({ renderMeNowPlease: true }))
+    api.createAndPlayCard(name, 'blue', false, toLocation).then(this.forceRerender)
   }
 
   newSubTask(name: string) {
@@ -404,7 +409,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
       zone: 'priorities'
     }
     api.createAndPlayCard(name, 'blue', false, toLocation)
-      .then(() => this.setState({ renderMeNowPlease: true }))
+      .then(this.forceRerender)
   }
 
   goInCard(event = null) {
@@ -576,16 +581,32 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         })
       }
       const totalAllocatedHere = priority.boost + allocatedHere
-      upboats[priority.taskId] = (
-        <div
-          onClick={() => api.allocatePriority(card.taskId, priority.taskId)}
-          className="allocate">
-          <img src={Boat} />
+      const onAllocatePriority = (newValue) => {
+        newValue = newValue.length > 0 ? parseInt(newValue) : 0
+        api.allocatePriority(card.taskId, priority.taskId, newValue).then(this.forceRerender)
+        this.setState({selectedBountyEditor: null})
+      }
+      const chestIsOpen = totalAllocatedHere > 0 && priority.claimed.includes(aoStore.member.memberId)
+      const tooltip = chestIsOpen ? "Click to claim bounty" : totalAllocatedHere > 0 ? 'Click to edit bounty amount' : 'Click to add bounty'
+      const selectBountyEditor = (event) => {
+        this.setState({selectedBountyEditor: i})
+      }
+      upboats[priority.taskId] =
+        <AoParameterEditor
+          startingValue={totalAllocatedHere.toString()}
+          label='Bounty'
+          onSet={onAllocatePriority}
+          className='allocate'
+          tooltip={tooltip}
+          isEditing={this.state.selectedBountyEditor === i}
+          onClick={selectBountyEditor}
+        >
           {totalAllocatedHere > 0 && (
             <div className="allocation">{totalAllocatedHere}</div>
           )}
-        </div>
-      )
+          <img src={chestIsOpen ? ChestOpen : ChestClosed} />
+        </AoParameterEditor>
+      
       if (i === this.priorityCards.length - 1) {
         upboats[priority.taskId] = (
           <div>
@@ -755,7 +776,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
               onTogglePriorities={this.togglePriorities}
             />
             <div className={contentClass}>
-              <AoCoin taskId={taskId} noPopups={this.props.noPopups} />
               {member && <AoMemberIcon memberId={taskId} />}
               <AoAttachment taskId={taskId} inId={this.props.inId} />
               {this.renderCardContent(content)}
@@ -861,7 +881,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             }
             const promise = api.createAndPlayCard(name, aoStore.currentColor, false, moveTo).then((res) => {
               callbackToClear()
-              this.setState({ renderMeNowPlease: true })
+              this.forceRerender()
               return res
             })
             resolve(promise)
