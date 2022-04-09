@@ -75,7 +75,7 @@
     "markdown-to-jsx": "^7.1.3",
     "mobx": "^6.3.2",
     "mobx-react": "^7.2.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "multer": "^1.4.2",
     "node-localstorage": "^2.2.1",
     "node-polyfill-webpack-plugin": "^1.1.4",
