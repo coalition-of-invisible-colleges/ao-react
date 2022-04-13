@@ -129,7 +129,7 @@ router.post( '/events', ( req, res, next ) => {
           req.body.secret, {
             type: 'ao-inbound-connected',
             address: state.serverState.cash.address,
-            secret: req.body.secret, //
+            secret: req.body.secret,
           },
           subscriptionResponse => {
             if ( !subscriptionResponse || !subscriptionResponse?.lastInsertRowid ) {

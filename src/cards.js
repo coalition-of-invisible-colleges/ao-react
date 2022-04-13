@@ -615,41 +615,20 @@ export function safeMerge(cardA, cardZ) {
 	cardA.completed = [
 		...new Set(cardA.completed.concat(filterNull(cardZ.completed))),
 	]
+	
+	// Replace the pinboard (maybe they could merge? or at least drop existing pins down to subTasks)
 	if (cardZ.pinboard && cardZ.pinboard.height >= 1 && cardZ.pinboard.width >= 1) {
 		if (!cardA.pinboard) {
 			cardA.pinboard = blankPinboard()
 		}
 		cardA.pinboard.height = Math.max(cardA.pinboard.height, cardZ.pinboard.height)
 		cardA.pinboard.width = Math.max(cardA.pinboard.width, cardZ.pinboard.width)
+		cardA.pinboard.spread = cardZ.pinboard.spread
+	  if(cardZ.pins && Array.isArray(cardZ.pins)) {
+	    cardA.pins = cardZ.pins
+	  }
 	}
 
-	/*todo: do this in a pins way
-		
-		if (_.has(cardZ, 'grid.rows')) {
-			Object.entries(cardZ.grid.rows).forEach(([x, row]) => {
-				const filteredRow = {}
-
-				if (row) {
-					Object.entries(row).forEach(([y, stId]) => {
-						if (stId !== null && stId !== undefined) {
-							filteredRow[y] = stId
-						}
-					})
-
-					if (Object.keys(filteredRow).length >= 1) {
-						if (!cardA.grid.rows) {
-							cardA.grid.rows = {}
-						}
-						cardA.grid.rows[x] = filteredRow
-					}
-				}
-			})
-			if (Object.keys(cardA.grid.rows).length < 1) {
-				cardA.grid = false
-			}
-		}
-	}
-  */
 	cardA.passed = [...new Set([...cardA.passed, ...filterNull(cardZ.passed)])]
 	// Remove duplicate passes
 	let passesNoDuplicates = []

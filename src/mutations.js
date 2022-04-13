@@ -1324,19 +1324,10 @@ function tasksMuts(tasks, ev) {
       }
       break
     case 'tasks-received':
-      const startLength = tasks.length
-      //let changedIndexes = []
       ev.tasks.forEach(newT => {
-        if (
-          !tasks.some((cur, i) => {
-            if (cur.taskId === newT.taskId) {
-              safeMerge(cur, newT)
-              //changedIndexes.push(i)
-              return true
-            }
-          })
-        ) {
-          let safeClone = blankCard(
+        let existingTask = getTask(tasks, newT.taskId)
+        if(!existingTask) {
+          existingTask = blankCard(
             newT.taskId,
             newT.name,
             newT.color,
@@ -1345,10 +1336,9 @@ function tasksMuts(tasks, ev) {
             newT.height,
             newT.width
           )
-          safeMerge(safeClone, newT)
-          tasks.push(safeClone)
-          //changedIndexes.push(tasks.length - 1)
+          tasks.push(existingTask)
         }
+        safeMerge(existingTask, newT)
       })
 
       // Loop through the new cards and remove invalid references to cards that don't exist on this server

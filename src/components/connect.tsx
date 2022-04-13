@@ -10,6 +10,7 @@ import { CardPlay } from '../cardTypes'
 import config from '../../configuration'
 import { formatDistanceToNow } from 'date-fns'
 import Clipboard from '../assets/images/clipboard.svg'
+import Arrow from '../assets/images/up.svg'
 
 interface State {
   open?: boolean
@@ -99,7 +100,7 @@ export default class AoConnect extends React.Component<{}, State> {
           api.deleteAoConnection(ao.address)
         }
       }
-
+      
       return (
         <fieldset key={ao.address} className='connectedAo'>
           <legend>{ao?.name || ao.address.slice(0, 12)}...</legend>
@@ -110,7 +111,7 @@ export default class AoConnect extends React.Component<{}, State> {
             <textarea readOnly={true} value={ao.address} className='torAddress' />
           </div>
           <br />
-          Direction: Unknown {/* !ao.outboundSecret ? 'Inbound' : 'Outbound' */}
+          Direction: {ao.outboundSecret && <object type="image/svg+xml" data={Arrow} className='trafficArrow download' />}{ao.inboundSecret && <object type="image/svg+xml" data={Arrow} className='trafficArrow upload' />}{(!ao.outboundSecret && !ao.inboundSecret) && 'Disconnected'}
           <br />
           Linked cards:{' '}
           <AoStack

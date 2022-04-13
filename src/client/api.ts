@@ -1473,6 +1473,21 @@ class AoApi {
         return res
       })
   }
+  
+  async requestLightningInvoice(taskId: string, amount = 0): Promise<request.Response> {
+    const act = {
+      type: 'invoice-created',
+      taskId,
+      amount: amount,
+    }
+    return request
+      .post('/events')
+      .set('Authorization', aoStore.state.token)
+      .send(act)
+      .then(res => {
+        return res
+      })
+  }
 
   startSocketListeners() {
     this.socket.connect()

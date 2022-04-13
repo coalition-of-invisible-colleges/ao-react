@@ -9,7 +9,6 @@ import AoDock from './dock'
 import AoMissions from './missions'
 import AoMembers from './members'
 import AoCalendar from './calendar'
-import AoBounties from './bounties'
 import AoSearch from './search'
 import AoTickerHud, { AoTicker } from './tickerHud'
 import AoScore from './score'
@@ -172,8 +171,6 @@ export default class AoHud extends React.Component<{}, HudState> {
         return <AoMissions />
       case 'calendar':
         return <AoCalendar />
-      case 'bounties':
-        return <AoBounties />
       case 'search':
         return <AoSearch ref={this.searchRef} />
       case 'deck':
@@ -189,7 +186,7 @@ export default class AoHud extends React.Component<{}, HudState> {
       aoStore.closeRightSidebar()
       return
     }
-    aoStore.setRightSidebar('resources')
+    aoStore.openRightSidebar()
   } 
   
   renderRightSidebar() {
@@ -352,13 +349,6 @@ export default class AoHud extends React.Component<{}, HudState> {
             badge={renderedCalendarBadge}
             tooltipPlacement="right"
             id="tour-calendar"
-          />
-          <AoSidebarButton
-            sidebarTab="bounties"
-            iconSrc={Chest}
-            tooltipText={gloss('Bounties')}
-            tooltipPlacement="right"
-            id="tour-bounties"
           />
           <AoSidebarButton
             sidebarTab="search"

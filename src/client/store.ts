@@ -268,6 +268,7 @@ class AoStore {
   @observable mediaPlayHead: { inId: string; taskId: string }
   @observable leftSidebar?: LeftSidebarTab
   @observable rightSidebar?: RightSidebarTab
+  previousRightSidebar?: RightSidebarTab = 'resources'
   @observable cardTab?: CardTab
   @observable localPriorityMode?: boolean
   @observable deckTab: DeckTab = 'all'
@@ -1276,7 +1277,13 @@ class AoStore {
   }
 
   @action.bound
+  openRightSidebar() {
+    this.rightSidebar = this.previousRightSidebar    
+  }
+  
+  @action.bound
   closeRightSidebar() {
+    this.previousRightSidebar = this.rightSidebar
     this.rightSidebar = null
   }
 

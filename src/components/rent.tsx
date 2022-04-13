@@ -4,6 +4,7 @@ import { observer } from 'mobx-react'
 import aoStore from '../client/store'
 import api from '../client/api'
 import AoTip from './tip'
+import AoHiddenFieldset from './hiddenFieldset'
 import AoQuorum from './quorum'
 import { getSemantics, gloss } from '../semantics'
 
@@ -82,16 +83,13 @@ export default class AoRent extends React.PureComponent<{}> {
     ))
 
     return (
-      <div id="glossary">
-        <h4>Glossary</h4>
-        <table>
-          <tr>
-            <th>Word</th>
-            <th>Gloss</th>
-          </tr>
-          {renderedGlossary}
-        </table>
-      </div>
+      <table>
+        <tr>
+          <th>Word</th>
+          <th>Gloss</th>
+        </tr>
+        {renderedGlossary}
+      </table>
     )
   }
 
@@ -101,29 +99,21 @@ export default class AoRent extends React.PureComponent<{}> {
 
     return (
       <React.Fragment>
-        <h3>
-          Rent Split{' '}
-          <AoTip text="Each month the node cost is split between accounts." />
-        </h3>
-        <p>Monthly cost: {monthlyCost} [set]</p>
-        <p>Monthly cap: {monthlyCap} max [set]</p>
-        <p>Active members: {this.activeMembers}</p>
-        {this.activeMembers >= 1 ? (
-          <p>= {this.perMember} each</p>
-        ) : (
-          'No active members to charge a monthly membership fee.'
-        )}
-        {this.renderPendingDeactivation()}
-        <div>
-          Quorum{' '}
-          <AoTip
-            text={`Number of signatures required to pass a proposal. Passed proposals appear in the Passed Proposals section of each {gloss('guild')}. Anyone can change this setting at any time to change how proposals are displayed in ${gloss(
-              'guild'
-            )}s.`}
-          />
-          : <AoQuorum />
-        </div>
-        {this.renderedGlossary}
+        <AoHiddenFieldset heading='Rent Split' startOpen={true}>
+          <p>Each month the node cost is split between accounts.</p>
+          <p>Monthly cost: {monthlyCost}</p>
+          <p>Monthly cap: {monthlyCap} max</p>
+          <p>Active members: {this.activeMembers}</p>
+          {this.activeMembers >= 1 ? (
+            <p>= {this.perMember} each</p>
+          ) : (
+            'No active members to charge a monthly membership fee.'
+          )}
+          {this.renderPendingDeactivation()}
+        </AoHiddenFieldset>
+        <AoHiddenFieldset heading='Server Glossary' startOpen={true}>
+          {this.renderedGlossary}
+        </AoHiddenFieldset>
       </React.Fragment>
     )
   }

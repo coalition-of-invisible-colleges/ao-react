@@ -595,11 +595,6 @@ body {
       margin: 0;
       background-color: rgba(0, 0, 0, 0.2);
 
-      &.clickable {
-        cursor: pointer;
-        pointer-events: auto;
-      }
-
       &.showingPriors {
         color: red;
         font-weight: bold;
@@ -1643,7 +1638,7 @@ body {
 }
 
 // small action buttons on sidebar
-#leftSidebar .toolbar .action,
+#leftSidebar > .toolbar .action,
 #leftSidebar > .action,
 #leftSidebar > div > .action,
 .connectToAo > .action {
@@ -1844,18 +1839,6 @@ body {
   #missions {
     &> h2 {
       color: black;
-    }
-    
-    .toolbar {
-      .action {
-        background: #222b;
-        
-        &.selected {
-          background: rgba(127, 255, 255, 0.5);
-          color: black;        
-          border: solid black 0.2em;
-        }
-      }
     }
   }
 }
@@ -2291,7 +2274,14 @@ img.icon {
     padding: 0.25em 0.5em;
     border-color: #333;
     background-color: #111;
+    background: #222b;
     color: white;
+    
+    &.selected {
+      background: rgba(127, 255, 255, 0.5);
+      color: black;        
+      border: solid black 0.2em;
+    }
   }
 }
 
@@ -4932,6 +4922,30 @@ div.legendAction {
   left: 0;
   bottom: 0;
   cursor: pointer;
+}
+
+// Shorter select box that cuts off the content with an ellipsis
+.truncatedSelect {
+  max-width: 14em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Adds the pointer hand cursor and makes the element clickable if it wasn't
+.clickable {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.trafficArrow {
+  .download {
+    transform: rotate(-180deg);    
+  }
+  
+  .upload {
+    filter: hue-rotate(-38deg);
+  }
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

@@ -394,6 +394,7 @@ export default function applyRouter(app) {
     let foundThisTaskList = state.pubState.tasks.filter(taskItem => {
       return taskItem.deck.includes(req.reqOwner)
     })
+    
     // Also return the first priority for each card we are returning, since priorities show up prior to the card in priority mode
     let priorityIdList = []
     foundThisTaskList.forEach(foundTask => {
@@ -415,6 +416,7 @@ export default function applyRouter(app) {
       }
     })
     let foundAllTaskItems = foundAllPriorityItems
+    
     // Also return all the member cards of members who are holding this card
     let holderIdList = []
     foundThisTaskList.forEach(foundTask => {
@@ -462,29 +464,19 @@ export default function applyRouter(app) {
     } else {
       res.status(200).json({ foundThisTaskList })
     }
-
-    // }
-    // else
-    // {
-    //   errRes.push("AO: server/router.js: fetchTaskByID: task not found ", { "req.body": req.body, foundThisTask});
-    //   res.status(400).send({ "success": false, "errorList": errRes });
-    // }
   })
 
   app.post(
     '/fetchTaskByName',
-    // bodyParser.json(),
     (req, res) => {
       let errRes = []
       let foundThisTask
 
-       console.log('AO: server/router.js: fetchTaskByName: start: ')
       const trimmedTaskName = req.body.taskName.trim().toLowerCase()
       if (validators.isTaskName_sane(req.body.taskName, errRes)) {
         let taskName = req.body.taskName
         state.pubState.tasks.some(taskItem => {
           if (taskItem.name.toLowerCase() === trimmedTaskName) {
-           console.log("AO: server/router.js: fetchTaskByName: iterative search: ", { "taskName": req.body.taskName, taskItem });
             foundThisTask = taskItem
             return true
           }
@@ -504,6 +496,8 @@ export default function applyRouter(app) {
               return true
             }
           })
+          
+          // Also return the pins and the first subTask of each color so they show up right away? Or make it so piles load asynchronously
 
           // Also return all the member cards of members who are holding this card
           let holderIdList = []

@@ -69,7 +69,7 @@ export default class AoMemberIcon extends React.PureComponent<MemberIconProps> {
   @computed get renderRecentStatusIcon() {
     return (
       <img
-        src={this.isRecent ? LoggedIn : LoggedOut}
+        src={this.isActive ? LoggedIn : LoggedOut}
         className="memberIcon"
         draggable={false}
       />

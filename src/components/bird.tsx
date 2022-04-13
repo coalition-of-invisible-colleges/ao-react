@@ -423,10 +423,10 @@ export default class AoBird extends React.Component<Props, State> {
     } 
     
     const renderedAoList = connectedAos && connectedAos.length >= 1 ?
-      <select onChange={onChangeAoSelect}>
+      <select onChange={onChangeAoSelect} className='truncatedSelect'>
         <option>{THIS_SERVER}</option>
         {connectedAos.map(ao => {
-            return <option>{ao.address.slice(0, 12)}...</option>
+            return <option>{ao.address}</option>
         })}
       </select> : null
     
@@ -453,7 +453,7 @@ export default class AoBird extends React.Component<Props, State> {
               <div className="action inline" onClick={this.passCard}>
                 {thisServerIsSelected ? 'Give' : 'Send'}
               </div>
-              {(!thisServerIsSelected && aoStore.currentCard !== aoStore.member.memberId) && <div><input type='checkbox' onChange={setIncludeCrawlerCards} checked={this.state.includeCrawlerCards} /> also send all cards within this card</div>}
+              {(!thisServerIsSelected && aoStore.currentCard !== aoStore.member.memberId) && <div><input type='checkbox' onChange={setIncludeCrawlerCards} checked={this.state.includeCrawlerCards} id='recursive' /> <label htmlFor='recursive' className='clickable'>also send all cards within this card</label></div>}
               {sendLabel === 'Migrate' && <div>Send your entire deck to another server</div>}
               {!!renderedAoList && <div className='normalFlex'><div className='specialAt'>@</div>{renderedAoList}</div>}
               {this.state.error && <div className={this.state.error.includes('Success') ? 'greenText' : 'redText'}>{this.state.error}</div>}

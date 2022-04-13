@@ -61,7 +61,7 @@ function fundGuilds() {
   })
   if (Object.keys(activeMembers).length >= 1) {
     const multiplier =
-      config?.jubilee?.multiplier > 0 ? config.jubilee.multiplier : 100
+      config?.jubilee?.multiplier > 0 ? config.jubilee.multiplier : 10
     serverState.tasks.forEach(task => {
       if (task.guild) {
         let hodlrsNoDuplicates = [...task?.deck]
