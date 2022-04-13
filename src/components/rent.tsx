@@ -107,7 +107,7 @@ export default class AoRent extends React.PureComponent<{}> {
           {this.activeMembers >= 1 ? (
             <p>= {this.perMember} each</p>
           ) : (
-            'No active members to charge a monthly membership fee.'
+            <p>No active members to charge a monthly membership fee.</p>
           )}
           {this.renderPendingDeactivation()}
         </AoHiddenFieldset>
