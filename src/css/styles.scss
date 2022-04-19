@@ -13,8 +13,7 @@ body {
   color: white;
   font-size: 1.25em;
   background-color: black;
-  overflow-x: hidden;
-  padding-bottom: 26.5em;
+  //overflow-x: hidden;
 }
 
 // card: main element
@@ -26,7 +25,6 @@ body {
   width: fit-content;
   padding: 0.5em 1.5em;
   background-color: black;
-  margin-bottom: 1em;
   cursor: crosshair;
 }
 
@@ -3518,7 +3516,7 @@ pre {
 
 // a wrapper for the current card
 #tour-current-card {
-  padding-bottom: 12.5em;
+  //padding-bottom: 12.5em;
 }
 
 // star / medals / badges / accomplishments button on a card
@@ -4506,12 +4504,11 @@ div.legendAction {
 }
 
 .bottomEdge {
-  //position: absolute;
-  //top: unset;
   position: absolute;
-  top: 100%;
   left: 50%;
   transform: translateX(-50%);
+  margin-top: -1px;
+  z-index: 1;
   
   .cardTab {
     border-bottom-right-radius: 40%;
@@ -4638,8 +4635,8 @@ div.legendAction {
 }
 
 #bottomCardDrawer {
-  position: absolute;
-  top: 0;
+  position: relative;
+  top: -100%;
   left: 50%;
   transform: translateX(-50%);
   border-top-left-radius: 0.8em;
@@ -4649,6 +4646,8 @@ div.legendAction {
   border-top: none;
   padding: 1.125em 1.5em 1.05em 1.75em;
   width: calc(100vw - 15em);
+  margin-top: -1px;
+  margin-bottom: -3em;
   
   animation: slideInBottom 0.35s forwards;
 
@@ -4685,13 +4684,13 @@ div.legendAction {
 
 // Show animation for #bottomCardDrawer
 @keyframes slideInBottom {
-    100% { top: 100%; opacity: 1; }
+    100% { top: 0; opacity: 1; }
 }
 
 // Hide animation for #bottomCardDrawer
 @keyframes slideOutBottom {
-    0% { top: 100%; opacity: 1; }
-    100% { top: 0; opacity: 0; }
+    0% { top: 0; opacity: 1; }
+    100% { top: -100%; opacity: 0; }
 }
 
 // Index list in the sidebar
@@ -4946,6 +4945,11 @@ div.legendAction {
   .upload {
     filter: hue-rotate(-38deg);
   }
+}
+
+// Wrapper to prevent dock-blocking
+.contextCardWrapper {
+  padding-bottom: 18em;
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

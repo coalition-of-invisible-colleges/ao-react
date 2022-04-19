@@ -1185,7 +1185,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
           </Observer> : null
         
         return (
-          <React.Fragment>
+          <div className='contextCardWrapper'>
             {this.props.noContextOnFull ? (
               ''
             ) : (
@@ -1233,7 +1233,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   {rightDrawerContent}
                 </div>
               }
-              {bottomDrawerContent}
               <Observer>
                 {() => {
                   return (
@@ -1316,11 +1315,12 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   </AoCardHud>
                 }}
               </Observer>
-              <AoCardTab icon={FivePiles} onClick={toggleBottomDrawer} onDrop={onDropToSubTasksTab} dropHoverMessage='Play card within this card' tooltip='Cards within this card' edge='bottom' isSelected={this.state.bottomDrawerOpen}
-                content={card.subTasks && card.subTasks.length >= 1 ? <div>{card.subTasks.length}</div> : null}
-              />
             </div>
-          </React.Fragment>
+            <AoCardTab icon={FivePiles} onClick={toggleBottomDrawer} onDrop={onDropToSubTasksTab} dropHoverMessage='Play card within this card' tooltip='Cards within this card' edge='bottom' isSelected={this.state.bottomDrawerOpen}
+              content={card.subTasks && card.subTasks.length >= 1 ? <div>{card.subTasks.length}</div> : null}
+            />
+            {bottomDrawerContent}
+          </div>
         )
       case 'checkmark':
         return (
@@ -1429,6 +1429,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
             inId: aoStore.memberCard.taskId,
             zone: 'subTasks'
           }
+          api.playCard(fromLocation, toLocation)
         }
 
         const fromMemberId = card.passed.find(
