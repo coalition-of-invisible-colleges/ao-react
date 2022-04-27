@@ -1195,9 +1195,27 @@ function tasksMuts(tasks, ev) {
         })
       }
       break
-    case 'task-reset': // unused
-      theTask.claimed = []
-      theTask.lastClaimed = ev.timestamp
+    case 'task-reset':
+      const clearAllCheckmarksFromTask = (taskToReset) => {
+        if(!taskToReset) return
+        taskToReset.claimed = []
+        taskToReset.lastClaimed = ev.timestamp
+      }
+      if(theTask.uncheckThisCard) {
+        clearAllCheckmarksFromTask(theTask)
+      }
+      if(theTask.uncheckPriorities && theTask.priorities && theTask.priorities.length >= 1) {
+        theTask.priorities.forEach((tId) =>{
+          const priorityCard = getTask(tasks, tId)
+          clearAllCheckmarksFromTask(priorityCard)
+        })
+      }
+      if(theTask.uncheckPinned && theTask.pins && theTask.pins.length >= 1) {
+        theTask.pins.forEach(pin => {
+          const pinnedCard = getTask(tasks, pin.taskId)
+          clearAllCheckmarksFromTask(pinnedCard)
+        })
+      }
       break
     case 'task-boosted':
       let amount = parseFloat(ev.amount)

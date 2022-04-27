@@ -146,6 +146,7 @@ export default class AoDock extends React.Component<{}, State> {
                   onNewCard={onNewDockCard}
                   inId={this.state.bookmarksTaskId}
                   isPinboardResizing={aoStore.isPinboardResizing}
+                  dimChecked={card.dimChecked}
                 />
               )
             }}

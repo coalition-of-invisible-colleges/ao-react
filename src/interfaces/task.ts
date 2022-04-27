@@ -23,6 +23,11 @@ export interface Task {
     parents: string[]           // *List of this cards parents, ought to be kept updated by mutations.
     claimed: string[]           // Lists of taskIds who have checked this card (thus claiming the bounty)
     claimInterval?: number      // Automatic uncheck timer in milliseconds [this feature will change to uncheck the cards within]
+    //uncheckInterval             // Rename of claimInterval to be rolled out
+    uncheckThisCard: boolean    // Unchecks this card every uncheckInterval if true
+    uncheckPriorities: boolean  // Unchecks prioritized cards every uncheckInterval if true
+    uncheckPinned: boolean      // Unchecks pinned cards every uncheckInterval if true (maybe could combine with uncheckPriorities)
+    dimChecked: boolean         // If true, checked cards on the pinboard and in the priorities list will display visually dimmed to make tasking easier
     signed: Signature[]         // Members can explicitly sign cards to endorse them (future option to counter-sign as -1 is already built-in)
     passed: string[][]          // Array of [senderMemberId, receiverMemberId] pairs of pending gifts sent to the receiving member. Cleared when opened.
     giftCount?: number          // Count of unopened gift cards that ought to be kept automatically updated, for showing this number ot other members
@@ -44,16 +49,10 @@ export interface Task {
     unionHazard: number         // Hazard level for the task (0-5)
     loadedFromServer?: boolean  // True if the card has been loaded from the server, false if empty placeholder taskId object
     aoGridToolDoNotUpdateUI?: boolean // Rendering hack, maybe this can be improved and removed
+    stars: number               // Can be simple number or later a Rating[]
     // *These properties contain taskIds of cards that are within or closely associated with this card, for the purposes of search, content buffering, etc.
     // There are four main zones within a card: the priorities, the optional pinboard (grid/pyramid), the subTasks (main pile), and completed cards
 }
-
-/*export interface Grid { // Old way of doing grid, will be replaced by Pinboard
-    rows: {}
-    height: number
-    width: number
-    size: number
-}*/
 
 // Defines the dimensions and other properties of a spread or layout of cards.
 // Could be expanded or inherited from to create new types of spreads such as a freeform canvas or non-euclidian pinboard.
@@ -83,6 +82,11 @@ export interface Signature {
     memberId: string
     timestamp: Date
     opinion: number | string
+}
+
+export interface Rating {
+  memberId: string
+  stars: number
 }
 
 export interface Userseen {

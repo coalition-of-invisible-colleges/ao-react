@@ -18,6 +18,7 @@ import AoTally from './tally'
 import AoLilypad from './lilypad'
 import AoStash from './stash'
 import AoFund from './fund'
+import AoFiveStars from './fiveStars'
 import AoReminder from './reminder'
 import AoHiddenFieldset from './hiddenFieldset'
 import { gloss, capitalize } from '../semantics'
@@ -303,6 +304,7 @@ export default class CardHud extends React.Component<CardHudProps, State> {
 								<AoStash taskId={taskId} hudStyle={hudStyle} />
 							</AoHiddenFieldset>
 						)}
+						<AoFiveStars taskId={taskId} stars={card.stars} />
 						{showCacheButton && 
 						  <fieldset>
 						    <legend>Media</legend>

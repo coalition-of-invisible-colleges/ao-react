@@ -455,7 +455,7 @@ body {
 
   &:hover {
   }
-
+  
   & > .content {
     position: absolute;
     margin: 0;
@@ -3642,6 +3642,9 @@ input[type='text'].error {
 .claimInterval.menu {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
 
   img,
   object {
@@ -3651,6 +3654,24 @@ input[type='text'].error {
 
   input[type='text'] {
     text-align: center;
+  }
+  
+  .leftItem {
+    font-size: 1.2em;
+    text-align: left;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+  }
+  
+  .leftItem, .leftItem > input, .leftItem > label {
+    cursor: pointer;
+  }
+  
+  p {
+    max-width: 24em;
+    transform: translateX(-50%);
+    position: relative;
+    left: 50%;
   }
 }
 
@@ -4813,6 +4834,13 @@ div.legendAction {
   }
 }
 
+// Tab button to open the priorities tab
+.prioritiesTabButton {
+  object {
+    width: 4em;
+  }
+}
+
 // Flexible horizontal tabs that will try to stay on one line but wrap if necessary
 .flexTabs {
   display: flex;
@@ -4889,10 +4917,15 @@ div.legendAction {
     &>.stack {
       flex-basis: 33%;
       min-width: 15em;
-      
+      padding: 1.75em;
+      box-shadow: inset 0px -1px 1px rgba(255,255,255,0.4), inset 0px 1px 1px rgba(0,0,0,0.5);
+      border-radius: 1.2em;
+      margin-bottom: 1em;
+    
       .dropZone.subTasks {
         min-height: unset;
         height: 100%;
+        box-shadow: 0px 7px 7px 1px rgba(21, 21, 21, 0.4);
       }
     }
   }
@@ -4950,6 +4983,51 @@ div.legendAction {
 // Wrapper to prevent dock-blocking
 .contextCardWrapper {
   padding-bottom: 18em;
+}
+
+.dimChecked {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #111;
+  opacity: 0.75;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.fiveStars {
+  margin-top: 1.5em;
+  margin-bottom: 1em;
+
+  img {
+    width: 2.3em;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+    cursor: pointer;
+  }
+}
+
+.prioriTEA {
+  width: 4.5em;
+  position: fixed;
+  left: 0;
+  top: 11em;
+  padding: 0.5em;
+  cursor: pointer;
+  z-index: 1;
+  pointer-events: auto;
+  
+  &:hover {
+    width: 6.5em;
+    transition: width 0.25s;
+  }
+}
+
+// Big boat icon on the blank / draw card screen
+.masthead {
+  width: 17em;
+  margin-top: 3em;
+  margin-bottom: 2em;
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array

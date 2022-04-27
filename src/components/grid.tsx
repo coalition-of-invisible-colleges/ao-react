@@ -18,7 +18,8 @@ interface PinboardProps extends Pinboard {
   spread: PinboardStyle
   onDropToSquare: (from: CardLocation, to?: CardLocation) => Promise<request.Response>
   onNewCard: (name: string, coords?: Coords, callbackToClear?: () => void) => Promise<request.Response>
-  isPinboardResizing: number
+  isPinboardResizing: number,
+  dimChecked: boolean
 }
 
 const AoGridRowObserver = observer(
@@ -32,7 +33,8 @@ const AoGridRowObserver = observer(
     selectGridSquare: (selection: Coords) => void
     onDropToSquare: (from: CardLocation, to: CardLocation) => Promise<request.Response>
     spread: PinboardStyle,
-    inId: string
+    inId: string,
+    dimChecked: boolean
   }) => {
     let render: JSX.Element[] = []
     for (let i = 0; i < props.width; i++) {
@@ -80,6 +82,8 @@ const AoGridRowObserver = observer(
         props.selectGridSquare({y: props.y, x: i})
       }
       
+      const isChecked = props.dimChecked && card.claimed.includes(aoStore.member.memberId)
+
       render.push(
         <AoDropZoneSimple
           onDrop={onDropToSquareCaller}
@@ -97,6 +101,7 @@ const AoGridRowObserver = observer(
                 y: props.y,
               }}>
               <AoContextCard task={card} cardStyle="mini" /*inId={props.inId}*/ />
+              {props.dimChecked && isChecked && <div className='dimChecked' />}
             </AoDragZone>
           ) : null}
         </AoDropZoneSimple>
@@ -184,6 +189,7 @@ export default function AoPinboard(props: PinboardProps) {
               key={j}
               spread="grid"
               inId={props.inId}
+              dimChecked={props.dimChecked}
             />
           </React.Fragment>
         )
@@ -237,6 +243,7 @@ export default function AoPinboard(props: PinboardProps) {
               key={j}
               spread="pyramid"
               inId={props.inId}
+              dimChecked={props.dimChecked}
             />
           </div>
         )
@@ -308,6 +315,8 @@ export default function AoPinboard(props: PinboardProps) {
         // Rotate the item itself, move it outwards (along the rotated axis), then rotate it back, then center it
         const inlineStyle = props.width >= 2 ? { transform: 'rotate(' + rot + 'deg) translate(' + moreSquareWidth + ') rotate(' + (-rot) + 'deg) translateY(-50%) translateX(-50%)', height: squareWidth, width: squareWidth } : null
           
+        const isChecked = props.dimChecked && card?.claimed.includes(aoStore.member.memberId)
+                              
         if (
           selected &&
           selected.x == i &&
@@ -340,6 +349,7 @@ export default function AoPinboard(props: PinboardProps) {
                       y: 0,
                     }}>
                     <AoContextCard task={card} cardStyle="mini" />
+                    {props.dimChecked && isChecked && <div className='dimChecked' />}
                   </AoDragZone>
                 ) : null}
               </AoDropZoneSimple>

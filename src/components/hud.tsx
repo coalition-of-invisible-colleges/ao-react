@@ -40,7 +40,8 @@ import MoonBag from '../assets/images/moonbag.svg'
 import Scroll from '../assets/images/scroll.svg'
 import Bull from '../assets/images/bull.svg'
 import Dolphins from '../assets/images/fobtap.svg'
-import RedBoat from '../assets/images/nodes.svg'
+import Nodes from '../assets/images/nodes.svg'
+import RedBoat from '../assets/images/boatbtnselected.svg'
 import LightningBolt from '../assets/images/lightning.svg'
 import GoldenDoge from '../assets/images/goldendoge.svg'
 import Tippy from '@tippyjs/react'
@@ -48,6 +49,9 @@ import 'tippy.js/dist/tippy.css'
 import { gloss } from '../semantics'
 import config from '../../configuration'
 import AoDeck from './deck'
+import { Placement, hideAll as hideAllTippys } from 'tippy.js'
+import 'tippy.js/dist/tippy.css'
+import 'tippy.js/themes/translucent.css'
 
 interface State {
   theme: number
@@ -240,7 +244,7 @@ export default class AoHud extends React.Component<{}, HudState> {
     return <React.Fragment>
       <div className="toolbar">
         {renderPageButton('resources', 'Hardware', Dolphins)}
-        {renderPageButton('p2p', 'AO p2p', RedBoat)}
+        {renderPageButton('p2p', 'AO p2p', Nodes)}
         {renderPageButton('crypto', 'Crypto', LightningBolt)}
         {renderPageButton('membership', 'Membership', GoldenDoge)}
       </div>
@@ -317,6 +321,20 @@ export default class AoHud extends React.Component<{}, HudState> {
           }}>
           <div className="leftBorder" />
           {this.renderLeftSidebar()}
+          <Tippy
+    				zIndex={4}
+    				theme="translucent"
+    				content={
+    					<span className="largeTooltip">
+    						Clear my schedule!
+    					</span>
+    				}
+    				placement='right'>
+            <img src={RedBoat} className='prioriTEA' onClick={() => {
+                aoStore.setCurrentCard(null)
+                aoStore.clearContext()
+              }} />
+          </Tippy>
           <AoSidebarButton
             sidebarTab="deck"
             iconSrc={MoonBag}

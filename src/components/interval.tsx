@@ -93,29 +93,54 @@ export default class AoInterval extends React.Component<Props, State> {
         const changedAndValid =
           !this.state.error &&
           parseFloat(this.state.text) !== card.claimInterval
+        const setUncheckThisCard = (event) => {
+          if(!event.target) return
+          console.log('checked is', event.target.checked)
+          api.setCardProperty(this.props.taskId, 'uncheckThisCard', event.target.checked)
+        }
+        const setUncheckPriorities = (event) => {
+          if(!event.target) return
+          api.setCardProperty(this.props.taskId, 'uncheckPriorities', event.target.checked)
+        }
+        const setUncheckPinned = (event) => {
+          if(!event.target) return
+          api.setCardProperty(this.props.taskId, 'uncheckPinned', event.target.checked)
+        }
+        const setDimChecked = (event) => {
+          if(!event.target) return
+          api.setCardProperty(this.props.taskId, 'dimChecked', event.target.checked)
+        }
         return (
           <div className="claimInterval menu">
-            <img
-              src={CheckmarkRecurring}
-              alt="a checkmark with two circular arrows around it"
-            />
-            uncheck every{' '}
-            <input
-              type="text"
-              onChange={this.onChange}
-              onKeyDown={this.onKeyDown}
-              value={this.state.text}
-              size={2}
-              autoFocus
-            />{' '}
-            hours
-            <button
-              type="button"
-              className="action inline"
-              onClick={this.saveValue}
-              disabled={!changedAndValid}>
-              Set
-            </button>
+            <div>
+              <img
+                src={CheckmarkRecurring}
+                alt="a checkmark with two circular arrows around it"
+              />
+              uncheck every{' '}
+              <input
+                type="text"
+                onChange={this.onChange}
+                onKeyDown={this.onKeyDown}
+                value={this.state.text}
+                size={2}
+                autoFocus
+              />{' '}
+              hours
+              <button
+                type="button"
+                className="action inline"
+                onClick={this.saveValue}
+                disabled={!changedAndValid}>
+                Set
+              </button>
+            </div>
+            <div className='leftItem'><input type="checkbox" id="uncheckThisCard" checked={card?.uncheckThisCard} onChange={setUncheckThisCard} /><label htmlFor="uncheckThisCard">Uncheck this card</label></div>
+            <div className='leftItem'><input type="checkbox" id="uncheckPriorities" checked={card?.uncheckPriorities} onChange={setUncheckPriorities} /><label htmlFor="uncheckPriorities">Uncheck priorities within this card</label></div>
+            <div className='leftItem'><input type="checkbox" id="uncheckPinned" checked={card?.uncheckPinned} onChange={setUncheckPinned} /><label htmlFor="uncheckPinned">Uncheck pinned cards within this card</label></div>
+            <div className='leftItem'><input type="checkbox" id="dimChecked" checked={card?.dimChecked} onChange={setDimChecked} /><label htmlFor="dimChecked">Dim already checked pinned cards (requires refresh)</label></div>
+            <p><small>Cards are reset at five minute intervals.</small></p>
+            <p><small>Timer for this card resets whenever this card is checked or unchecked (or fob tapped for member/resource).</small></p>
           </div>
         )
       default:
@@ -123,7 +148,7 @@ export default class AoInterval extends React.Component<Props, State> {
           return null
         }
         const tooltip =
-          'checkmark will clear every ' + card.claimInterval + ' hours'
+          'uncheck will trigger every ' + card.claimInterval + ' hours'
         return (
           <div className="claimInterval full">
             <Tippy

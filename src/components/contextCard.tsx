@@ -48,8 +48,6 @@ import Chest from '../assets/images/chest.svg'
 import ChestClosed from '../assets/images/chestClosed.svg'
 import ChestOpen from '../assets/images/chestOpen.svg'
 import Lilypad from '../assets/images/chatroom.svg'
-import Checkmark from '../assets/images/completed.svg'
-import Checkbox from '../assets/images/uncompleted.svg'
 import Star from '../assets/images/star.svg'
 import Stash from '../assets/images/stash.svg'
 import Controls from '../assets/images/controls.svg'
@@ -923,7 +921,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         const tabs: CardTab[] = [
             {
               id: CardTabId.priorities,
-              icon: priorityCards?.length >= 1 ? Checkbox : Checkmark,
+              icon: Boat,
               tooltip: 'Priorities',
               content: [(prioritiesSummary || recurrenceSummary) ? <React.Fragment>{prioritiesSummary}{recurrenceSummary}</React.Fragment> : null, completedSummary],
               onDrop: onDropToPrioritiesTab,
@@ -1283,6 +1281,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                             onNewCard={onNewPinboardCard}
                             inId={taskId}
                             isPinboardResizing={aoStore.isPinboardResizing}
+                            dimChecked={card.dimChecked}
                           />
                         } }
                       </Observer>
@@ -1504,7 +1503,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         if (shortened.length > 32) {
           shortened = shortened.substr(0, shortened.lastIndexOf(' ', 32))
         }
-
+        
         return (
           <div
             id={'card-' + taskId}

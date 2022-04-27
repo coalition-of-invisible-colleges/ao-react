@@ -4,6 +4,7 @@ import { computed, makeObservable } from 'mobx'
 import aoStore from '../client/store'
 import { Task } from '../interfaces'
 import { goInCard, findOrphans, findFirstCardInCard } from '../cardTypes'
+import AoContextCard from './contextCard' 
 import BuddhaDoge from '../assets/images/buddadoge.svg'
 import RedBoat from '../assets/images/boatbtnselected.svg'
 import Badge from '../assets/images/heartnet.svg'
@@ -91,7 +92,8 @@ export default class AoDrawPile extends React.PureComponent {
 
     return missions[0]
   }
-
+  
+  // This now clears all cards and then goes to your first priority
   goNextCard(event) {
     event.stopPropagation()
     // aoStore.dab()
@@ -121,7 +123,15 @@ export default class AoDrawPile extends React.PureComponent {
 
   render() {
     return (
-      <div id="drawPile">
+      <div>
+        <img src={RedBoat} className='masthead' />
+        <AoContextCard task={this.nextCard} cardStyle='face' />
+      </div>
+    )
+  }
+}
+
+/*<div id="drawPile">
         <div className="drawSource" onClick={this.meditate}>
           <img src={BuddhaDoge} />
           <div>Draw</div>
@@ -152,7 +162,4 @@ export default class AoDrawPile extends React.PureComponent {
             </div>
           )}
         </div>
-      </div>
-    )
-  }
-}
+      </div>*/

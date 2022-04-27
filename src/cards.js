@@ -88,6 +88,7 @@ export function getTask(tasks, taskId) {
 }
 
 // Returns the first task that exactly matches the given value of the given property
+// Todo: move property to be the first argument
 export function getTaskBy(tasks, value, property) {
 	return tasks.find(task => {
 		if (task[property] === value) {

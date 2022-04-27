@@ -119,7 +119,7 @@ export default class AoDiscardZone extends React.Component<Props> {
 						this.props.children
 					)}
 				</AoDropZoneSimple>
-        <AoDataVis totalLocalTasks={aoStore.state.tasks.length} />
+        {/*<AoDataVis totalLocalTasks={aoStore.state.tasks.length} />*/}
 			</div>
 		)
 	}
