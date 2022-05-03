@@ -158,6 +158,34 @@ export async function onDropToPinboard(from: CardLocation, to: CardLocation): Pr
     })
   })
 }
+
+async function dropToCard(move: CardPlay) {
+  if (!move.from.taskId) {
+    return
+  }
+
+  const cardFrom = aoStore.hashMap.get(move.from.taskId)
+  if (!cardFrom) {
+    return
+  }
+
+  const cardTo = aoStore.hashMap.get(move.to.taskId)
+  console.log("dropToCard 3.5 card is", cardTo)
+  if (!cardTo) {
+    return
+  }
+
+  const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
+
+  return new Promise((resolve, reject) => {
+    if (move.to.taskId === nameTo) {
+      api.passCard(move.from.taskId, move.to.taskId)
+    } else {
+      api.playCard(move.from, move.to).then(resolve)
+    }
+  })
+  console.log("dropToCard 6")
+}
         
 export default class AoContextCard extends React.Component<CardProps, State> {
   constructor(props) {
@@ -180,7 +208,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     this.onSwitchTab = this.onSwitchTab.bind(this)
     this.renderCardContent = this.renderCardContent.bind(this)
     this.clearPendingPromise = this.clearPendingPromise.bind(this)
-    this.dropToCard = this.dropToCard.bind(this)
     this.forceRerender = this.forceRerender.bind(this)
 
     this.taskHasLoadedAllChildren = false
@@ -428,32 +455,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
     api.refocusPile(this.props.task.taskId)
   }
 
-  async dropToCard(move: CardPlay) {
-    if (!move.from.taskId) {
-      return
-    }
-    const cardFrom = aoStore.hashMap.get(move.from.taskId)
-    if (!cardFrom) {
-      return
-    }
-    const nameFrom = cardFrom.name
-
-    const cardTo = aoStore.cardByName.get(move.to.taskId)
-    if (!cardTo) {
-      return
-    }
-
-    const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
-
-    return new Promise((resolve, reject) => {
-      if (move.to.taskId === nameTo) {
-        api.passCard(move.from.taskId, move.to.taskId)
-      } else {
-        api.playCard(move.from, move.to).then(resolve)
-      }
-    })
-  }
-
   @computed get applyClassIfCurrentSearchResult() {
     if (this.props.noFindOnPage) {
       return ''
@@ -652,20 +653,42 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         return null
       }
       const colorCards = allCards.filter(st => st.color === color)
-      const changeCardColor = (move: CardPlay) => {
+      const changeCardColor = (from: CardLocation) => {
+        const move: CardPlay = {
+          from,
+          to: {
+            inId: from.inId || taskId,
+            zone: 'subTasks',
+            coords: { y: 0 }
+          }
+        }
         api.colorCard(
-          move.from.taskId,
+          from.taskId,
           color
         ).then(() => subTaskCard(move)) // move card to top of pile
       }
-      const renderedColorStack = <AoStack
-        inId={taskId}
-        cards={colorCards}
-        showAdd={false}
-        cardStyle="face"
-        onDrop={changeCardColor}
-        zone="subTasks"
-      />
+      const dropToThisCard = (move: CardPlay) => {
+        if(!colorCards[0] || !colorCards[0].taskId) {
+          return
+        }
+        move.to.taskId = move.from.taskId
+        move.to.inId = colorCards[0].taskId
+        move.to.zone = 'subTasks'
+        console.log("dropToThisCard move is", move)
+        dropToCard(move)
+      }
+      const renderedColorStack = <div className="relativePosition">
+        <AoDropZoneSimple onDrop={changeCardColor} dropHoverMessage='Drop to change color'>
+          <AoStack
+            inId={taskId}
+            cards={colorCards}
+            showAdd={false}
+            cardStyle="face"
+            onDrop={dropToThisCard}
+            zone="subTasks"
+          />
+        </AoDropZoneSimple>
+      </div>
       return renderedColorStack
     }
     let renderedRedPile
@@ -711,7 +734,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         return (
           <AoDropZone
             taskId={taskId}
-            onDrop={this.dropToCard}
+            onDrop={dropToCard}
             zoneStyle="panel"
             dropHoverMessage="drop to give card to this member">
             <div
@@ -951,8 +974,6 @@ export default class AoContextCard extends React.Component<CardProps, State> {
         		if (!cardFrom) {
         			return
         		}
-        		const nameFrom = cardFrom.name
-        
         		const cardTo = card
         		const nameTo = cardTo && cardTo.name ? cardTo.name : undefined
         
@@ -1400,7 +1421,7 @@ export default class AoContextCard extends React.Component<CardProps, State> {
                   <span onClick={this.toggleProjects} className={'triangle' + (card.color ? ' ' + card.color + 'Text' : '')}>&#9654;</span> )) : (  <span className={'triangle nohover' + (card.color ? ' ' + card.color + 'Text' : '')}>&#8226;</span> )}
                   <AoDropZone
                     taskId={taskId}
-                    onDrop={this.dropToCard}
+                    onDrop={dropToCard}
                     zoneStyle="panel"
                     dropHoverMessage="drop to categorize here">
                       {this.renderCardContent(content, null, true, !youAreHere ? this.goInCard : undefined)}

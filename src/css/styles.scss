@@ -4917,9 +4917,6 @@ div.legendAction {
     &>.stack {
       flex-basis: 33%;
       min-width: 15em;
-      padding: 1.75em;
-      box-shadow: inset 0px -1px 1px rgba(255,255,255,0.4), inset 0px 1px 1px rgba(0,0,0,0.5);
-      border-radius: 1.2em;
       margin-bottom: 1em;
     
       .dropZone.subTasks {
@@ -5028,6 +5025,16 @@ div.legendAction {
   width: 17em;
   margin-top: 3em;
   margin-bottom: 2em;
+}
+
+.relativePosition {
+  position: relative;
+}
+
+#bottomCardDrawer > div > div > .dropZone {
+ padding: 1.75em;
+ box-shadow: inset 0px -1px 1px rgba(255,255,255,0.4), inset 0px 1px 1px rgba(0,0,0,0.5);
+ border-radius: 1.2em;  
 }
 
 // Future Update: procedurally map through the css/themes folder and map all filenames found there into an array
