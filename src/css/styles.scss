@@ -109,6 +109,7 @@ body {
   .content {
     position: relative;
     top: unset;
+    overflow-wrap: anywhere;
     //   transform: tranlateY(-50%);
     //   margin-top: 0;
   }
@@ -3236,6 +3237,7 @@ pre {
 
   img {
     max-width: 100%;
+    height: auto;
   }
 
   .action {
@@ -5008,7 +5010,7 @@ div.legendAction {
   width: 4.5em;
   position: fixed;
   left: 0;
-  top: calc(45vh - 17.5em);
+  top: calc(45vh - 15em);
   padding: 0.5em;
   cursor: pointer;
   z-index: 1;
@@ -5027,8 +5029,10 @@ div.legendAction {
   margin-bottom: 2em;
 }
 
+// Wrapper for each colored card pile
 .relativePosition {
   position: relative;
+  width: 23vw;
 }
 
 #bottomCardDrawer > div > div > .dropZone {
