@@ -1398,17 +1398,17 @@ body {
 
 // Members sidebar button
 #tour-members {
-  top: calc(45vh - 9em);
+  top: calc(45vh - 3em);
 }
 
 // Guilds sidebar button
 #tour-missions {
-  top: calc(45vh - 3em);
+  top: calc(45vh + 3em);
 }
 
 // Calendar sidebar button
 #tour-calendar {
-  top: calc(45vh + 3em);
+  top: calc(45vh + 9em);
 }
 
 // Bounties sidebar button
@@ -1434,7 +1434,7 @@ body {
 
 // Deck sidebar button
 #tour-deck {
-  top: calc(45vh - 15em);
+  top: calc(45vh - 9em);
 }
 
 // The search box in the sidebar
@@ -5008,7 +5008,7 @@ div.legendAction {
   width: 4.5em;
   position: fixed;
   left: 0;
-  top: 11em;
+  top: calc(45vh - 17.5em);
   padding: 0.5em;
   cursor: pointer;
   z-index: 1;
